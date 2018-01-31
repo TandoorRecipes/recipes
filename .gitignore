@@ -56,3 +56,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+\.idea/dataSources/
+
+\.idea/dataSources\.xml
+
+\.idea/dataSources\.local\.xml

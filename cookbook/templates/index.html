@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Rezepte{% endblock %}
+
+{% block content %}
+
+    <h1>Übersicht</h1>
+
+    <table class="table table-bordered table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Kategorie</th>
+    </tr>
+        {% for recipe in recipes %}
+            <tr>
+                <td>{{ recipe.name }}</td>
+                <td>{{ recipe.category }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
