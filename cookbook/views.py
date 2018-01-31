@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django_tables2 import RequestConfig
@@ -6,9 +7,12 @@ from cookbook.tables import RecipeTable
 
 
 def index(request):
-    table = RecipeTable(Recipe.objects.all())
-    RequestConfig(request, paginate={'per_page': 3}).configure(table)
-    return render(request, 'index.html', {'recipes': table})
+    if request.user.is_authenticated:
+        table = RecipeTable(Recipe.objects.all())
+        RequestConfig(request, paginate={'per_page': 3}).configure(table)
+        return render(request, 'index.html', {'recipes': table})
+    else:
+        return render(request, 'index.html')
 
 
 @login_required
@@ -39,7 +43,7 @@ def new_category(request):
     else:
         form = CategoryForm()
 
-    return render(request, 'new_recipe.html', {'form': form})
+    return render(request, 'new_category.html', {'form': form})
 
 
 @login_required

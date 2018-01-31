@@ -5,9 +5,16 @@
 
 {% block content %}
 
-    <h1>Übersicht</h1>
+     <h3>
+        Rezepte
+    </h3>
 
-
-    {% render_table recipes %}
+    {% if recipes %}
+        {% render_table recipes %}
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+          Log dich ein um die Rezepte zu sehen!
+        </div>
+    {% endif %}
 
 {% endblock %}
