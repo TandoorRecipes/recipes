@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load django_tables2 %}
+{% load i18n %}
 
 {% block title %}Rezepte{% endblock %}
 
 {% block content %}
 
      <h3>
-        Rezepte
+        {% trans "Cookbook" %}
     </h3>
 
     {% if recipes %}
