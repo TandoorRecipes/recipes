@@ -1,11 +1,14 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django_tables2 import RequestConfig
 from cookbook.forms import *
+from cookbook.tables import RecipeTable
 
 
 def index(request):
-    recipes = Recipe.objects.all()
-    return render(request, 'index.html', {'recipes': recipes})
+    table = RecipeTable(Recipe.objects.all())
+    RequestConfig(request, paginate={'per_page': 3}).configure(table)
+    return render(request, 'index.html', {'recipes': table})
 
 
 @login_required
@@ -16,6 +19,7 @@ def new_recipe(request):
             recipe = form.save(commit=False)
             recipe.created_by = request.user.id
             recipe.save()
+            form.save_m2m()
             return redirect('index')
     else:
         form = RecipeForm()

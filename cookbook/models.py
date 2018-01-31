@@ -34,3 +34,7 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def all_tags(self):
+        return ', '.join([x.name for x in self.keywords.all()])

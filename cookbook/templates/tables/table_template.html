@@ -1,0 +1,100 @@
+{% load django_tables2 %}
+{% load i18n %}
+{% block table-wrapper %}
+    <div class="row">
+        <div class="col">
+            {% block table %}
+                <table {% if table.attrs %}
+                    {{ table.attrs.as_html }}{% else %}class="table table-bordered table-hover"{% endif %}>
+                    {% block table.thead %}
+                        {% if table.show_header %}
+                            <thead>
+                            <tr>
+                                {% for column in table.columns %}
+                                    {% if column.orderable %}
+                                        <th {{ column.attrs.th.as_html }}><a
+                                                href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header }}</a>
+                                        </th>
+                                    {% else %}
+                                        <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                        {% endif %}
+                    {% endblock table.thead %}
+                    {% block table.tbody %}
+                        <tbody>
+                        {% for row in table.page.object_list|default:table.rows %} {# support pagination #}
+                            {% block table.tbody.row %}
+                                <tr {{ row.attrs.as_html }}>
+                                    {% for column, cell in row.items %}
+                                        <td {{ column.attrs.td.as_html }}>
+                                            {% if column.localize == None %}{{ cell }}{% else %}{% if column.localize %}
+                                                {{ cell|localize }}{% else %}{{ cell|unlocalize }}
+                                            {% endif %}{% endif %}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endblock table.tbody.row %}
+                        {% empty %}
+                            {% if table.empty_text %}
+                                {% block table.tbody.empty_text %}
+                                    <tr>
+                                        <td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td>
+                                    </tr>
+                                {% endblock table.tbody.empty_text %}
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    {% endblock table.tbody %}
+                    {% block table.tfoot %}
+                        {% if table.has_footer %}
+                            <tfoot>
+                            <tr>
+                                {% for column in table.columns %}
+                                    <td {{ column.attrs.tf.as_html }}>{{ column.footer }}</td>
+                                {% endfor %}
+                            </tr>
+                            </tfoot>
+                        {% endif %}
+                    {% endblock table.tfoot %}
+                </table>
+            {% endblock table %}
+
+            {% if table.page and table.paginator.num_pages > 1 %}
+                {% with current_page=table.page.number page_count=table.paginator.num_pages rows_per_page=table.page.object_list|length total_rows=table.page.paginator.count %}
+                    {% block pagination %}
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                {% block pagination.allpages %}
+                                    <li class="page-item">
+                                        {% blocktrans %}{% endblocktrans %}
+                                    </li>
+                                    {% for page in table.paginator.page_range %}
+                                        {% with range_start=current_page|add:"-3" range_end=current_page|add:"3" page_count_minus_5=page_count|add:"-5" page_count_minus_1=page_count|add:"-1" %}
+                                            {% if page == current_page %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="#">{{ page }}</a>
+
+                                                </li>
+                                            {% elif page == 1 or page >= range_start and page <= range_end or page == page_count %}
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       href="{% querystring table.prefixed_page_field=page %}">{{ page }}</a>
+                                                </li>
+                                            {% endif %}
+                                            {% if page == 1 and current_page > 5 or pagina == page_count_minus_1 and current_page <= page_count_minus_5 %}
+                                                <li class="page-item"></li>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                {% endblock pagination.allpages %}
+                            </ul>
+                        </nav>
+                    {% endblock pagination %}
+                {% endwith %}
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock table-wrapper %}
