@@ -1,11 +1,10 @@
-from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django_tables2 import RequestConfig
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
-from cookbook.tables import RecipeTable
+from cookbook.tables import RecipeTable, CategoryTable, KeywordTable
 
 
 def index(request):
@@ -18,6 +17,21 @@ def index(request):
         return render(request, 'index.html', {'recipes': table, 'filter': f})
     else:
         return render(request, 'index.html')
+
+
+@login_required
+def edit_recipe(request, id):
+    return render(request, 'index.html')
+
+
+@login_required
+def edit_category(request, id):
+    return render(request, 'index.html')
+
+
+@login_required
+def edit_keyword(request, id):
+    return render(request, 'index.html')
 
 
 @login_required
@@ -44,11 +58,14 @@ def new_category(request):
             category = form.save(commit=False)
             category.created_by = request.user.id
             category.save()
-            return redirect('index')
+            return redirect('new_category')
     else:
         form = CategoryForm()
 
-    return render(request, 'new_category.html', {'form': form})
+    table = CategoryTable(Category.objects.all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(request, 'new_category.html', {'form': form, 'table': table})
 
 
 @login_required
@@ -59,8 +76,11 @@ def new_keyword(request):
             keyword = form.save(commit=False)
             keyword.created_by = request.user.id
             keyword.save()
-            return redirect('index')
+            return redirect('new_keyword')
     else:
         form = KeywordForm()
 
-    return render(request, 'new_keyword.html', {'form': form})
+    table = KeywordTable(Keyword.objects.all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(request, 'new_keyword.html', {'form': form, 'table': table})

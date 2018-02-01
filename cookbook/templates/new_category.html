@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load django_tables2 %}
 
 {% block title %}{% trans 'New Category' %}{% endblock %}
 
@@ -15,4 +16,7 @@
         {% crispy form %}
     </form>
 
+    {% if table %}
+        {% render_table table %}
+    {% endif %}
 {% endblock %}

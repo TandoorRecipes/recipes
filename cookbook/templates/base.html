@@ -28,7 +28,8 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}">{% trans 'Cookbook' %}<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'index' %}">{% trans 'Cookbook' %}<span
+                        class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'new_recipe' %}">{% trans 'New Recipe' %}</a>
@@ -40,13 +41,20 @@
                 <a class="nav-link" href="{% url 'new_keyword' %}">{% trans 'New Keyword' %}</a>
             </li>
         </ul>
-        <span class="navbar-text">
-              {% if user.is_authenticated %}
-                  <a href="{% url 'logout' %}">Logout {{ user.get_username }}</a>
-              {% else %}
-                  <a href="{% url 'login' %}">Login</a>
-              {% endif %}
-    </span>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin:index' %}">{% trans 'Admin' %}</a>
+            </li>
+            <li class="nav-item">
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'logout' %}">{% trans 'Logout' %} {{ user.get_username }}</a>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %}</a>
+                {% endif %}
+            </li>
+        </ul>
+
     </div>
 </nav>
 <br/>
