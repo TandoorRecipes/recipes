@@ -24,7 +24,7 @@ class CategoryTable(tables.Table):
 
 class KeywordTable(tables.Table):
     id = tables.LinkColumn('edit_recipe', args=[A('id')])
-    
+
     class Meta:
         model = Keyword
         template_name = 'tables/table_template.html'

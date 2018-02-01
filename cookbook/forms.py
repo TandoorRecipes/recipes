@@ -14,7 +14,6 @@ class RecipeForm(forms.ModelForm):
             'name': _('Name'),
             'category': _('Category'),
             'keywords': _('Keywords'),
-
         }
 
         help_texts = {
@@ -62,12 +61,13 @@ class KeywordForm(forms.ModelForm):
         self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
 
 
-class EditCategoryForm(forms.ModelForm):
+class EditRecipeForm(forms.ModelForm):
     class Meta:
-        model = Keyword
-        fields = ('name', 'description')
+        model = Recipe
+        fields = ('name', 'category', 'keywords')
 
         labels = {
             'name': _('Name'),
-            'description': _('Description'),
+            'category': _('Category'),
+            'keywords': _('Keywords'),
         }

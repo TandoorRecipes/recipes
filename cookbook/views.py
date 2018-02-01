@@ -21,7 +21,19 @@ def index(request):
 
 @login_required
 def edit_recipe(request, id):
-    return render(request, 'index.html')
+    if request.method == "POST":
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.created_by = request.user.id
+            recipe.save()
+            form.save_m2m()
+            return redirect('edit_recipe/' + id)
+    else:
+        recipe = Recipe.objects.get(id=id)
+        form = EditRecipeForm(instance=recipe)
+
+    return render(request, 'new_recipe.html', {'from': form})
 
 
 @login_required
