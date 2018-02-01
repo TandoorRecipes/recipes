@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load django_tables2 %}
+{% load crispy_forms_tags %}
 {% load i18n %}
 
 {% block title %}{% trans "Cookbook" %}{% endblock %}
@@ -12,7 +13,7 @@
         </div>
         <div class="card-body">
             <form action="" method="get">
-                {{ filter.form.as_p }}
+                {%  crispy filter.form  %}
                 <input type="submit"/>
             </form>
         </div>

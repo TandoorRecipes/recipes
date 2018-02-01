@@ -4,7 +4,7 @@ from cookbook.models import Recipe
 
 
 class RecipeFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='iexact')
+    name = django_filters.CharFilter(lookup_expr='contains')
 
     class Meta:
         model = Recipe
