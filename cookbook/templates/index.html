@@ -15,15 +15,12 @@
                 {{ filter.form.as_p }}
                 <input type="submit"/>
             </form>
-            {% for obj in filter.qs %}
-                {{ obj.name }} - ${{ obj.price }}<br/>
-            {% endfor %}
         </div>
     </div>
     <br/>
 
     {% if recipes %}
-        {% render_table table %}
+        {% render_table recipes %}
     {% else %}
         <div class="alert alert-danger" role="alert">
             {% trans "Log in to view Recipies" %}

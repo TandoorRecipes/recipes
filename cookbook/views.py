@@ -12,7 +12,7 @@ def index(request):
     if request.user.is_authenticated:
         f = RecipeFilter(request.GET, queryset=Recipe.objects.all())
 
-        table = RecipeTable(f.queryset)
+        table = RecipeTable(f.qs)
         RequestConfig(request, paginate={'per_page': 3}).configure(table)
 
         return render(request, 'index.html', {'recipes': table, 'filter': f})
