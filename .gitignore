@@ -62,3 +62,5 @@ target/
 \.idea/dataSources\.xml
 
 \.idea/dataSources\.local\.xml
+
+venv/
