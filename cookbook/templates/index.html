@@ -2,19 +2,31 @@
 {% load django_tables2 %}
 {% load i18n %}
 
-{% block title %}Rezepte{% endblock %}
+{% block title %}{% trans "Cookbook" %}{% endblock %}
 
 {% block content %}
 
-     <h3>
-        {% trans "Cookbook" %}
-    </h3>
+    <div class="card">
+        <div class="card-header">
+            {% trans "Search" %}
+        </div>
+        <div class="card-body">
+            <form action="" method="get">
+                {{ filter.form.as_p }}
+                <input type="submit"/>
+            </form>
+            {% for obj in filter.qs %}
+                {{ obj.name }} - ${{ obj.price }}<br/>
+            {% endfor %}
+        </div>
+    </div>
+    <br/>
 
     {% if recipes %}
-        {% render_table recipes %}
+        {% render_table table %}
     {% else %}
         <div class="alert alert-danger" role="alert">
-          Log dich ein um die Rezepte zu sehen!
+            {% trans "Log in to view Recipies" %}
         </div>
     {% endif %}
 

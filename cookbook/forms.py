@@ -54,3 +54,5 @@ class KeywordForm(forms.ModelForm):
         super(KeywordForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['description'].widget.attrs.update({'class': 'form-control'})
+
+

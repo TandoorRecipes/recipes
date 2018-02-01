@@ -2,15 +2,20 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django_tables2 import RequestConfig
+
+from cookbook.filters import RecipeFilter
 from cookbook.forms import *
 from cookbook.tables import RecipeTable
 
 
 def index(request):
     if request.user.is_authenticated:
-        table = RecipeTable(Recipe.objects.all())
+        f = RecipeFilter(request.GET, queryset=Recipe.objects.all())
+
+        table = RecipeTable(f.queryset)
         RequestConfig(request, paginate={'per_page': 3}).configure(table)
-        return render(request, 'index.html', {'recipes': table})
+
+        return render(request, 'index.html', {'recipes': table, 'filter': f})
     else:
         return render(request, 'index.html')
 

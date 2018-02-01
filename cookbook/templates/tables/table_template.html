@@ -68,7 +68,7 @@
                             <ul class="pagination justify-content-center">
                                 {% block pagination.allpages %}
                                     <li class="page-item">
-                                        {% blocktrans %}{% endblocktrans %}
+
                                     </li>
                                     {% for page in table.paginator.page_range %}
                                         {% with range_start=current_page|add:"-3" range_end=current_page|add:"3" page_count_minus_5=page_count|add:"-5" page_count_minus_1=page_count|add:"-1" %}

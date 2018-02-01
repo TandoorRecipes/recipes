@@ -1,35 +1,50 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% trans "Your username and password didn't match. Please try again." %}
+        </div>
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
     {% endif %}
-{% endif %}
 
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
 
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+    <form role="form" class="form-horizontal" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="form-group">
+
+            <div class="form-group row">
+                <label for='{{ form.username.label_tag }}' class="col-sm-2 col-form-label">{{ form.username.label }}</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="{{ form.username.id_for_label }}"
+                           name="{{ form.username.html_name }}"/>
+                </div>
+                {% if form.username.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ form.username.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group row">
+                <label for='{{ form.password.label_tag }}' class="col-sm-2 col-form-label">{{ form.password.label }}</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="{{ form.password.id_for_label }}"
+                           name="{{ form.password.html_name }}" type="password"/>
+                </div>
+                {% if form.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ form.password.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="login"/>
+            <input type="hidden" name="next" value="{{ next }}"/>
+        </div>
+    </form>
+
 
 {% endblock %}
