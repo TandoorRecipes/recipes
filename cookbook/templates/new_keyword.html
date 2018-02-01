@@ -1,9 +1,18 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}{% trans 'New Keyword' %}{% endblock %}
 
 {% block content %}
+
+    <h3>
+        {% trans 'New Keyword' %}
+        <small class="text-muted">{% trans 'New recipe Keyword' %}</small>
+    </h3>
+
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-        </form>
+        {% crispy form %}
+    </form>
 
 {% endblock %}

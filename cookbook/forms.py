@@ -1,3 +1,6 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from django.utils.translation import gettext as _
 from django import forms
 from .models import *
 
@@ -8,13 +11,14 @@ class RecipeForm(forms.ModelForm):
         fields = ('name', 'category', 'keywords')
 
         labels = {
-            'name': 'Name',
-            'category': 'Kategorie',
-            'keywords': 'Tags',
+            'name': _('Name'),
+            'category': _('Category'),
+            'keywords': _('Keywords'),
+
         }
 
         help_texts = {
-            'keywords': 'Strg+Click für Mehrfachauswahl',
+            'keywords': _('Ctrl+Click to select multiple keywords'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -30,14 +34,15 @@ class CategoryForm(forms.ModelForm):
         fields = ('name', 'description')
 
         labels = {
-            'name': 'Name',
-            'description': 'Beschreibung',
+            'name': _('Name'),
+            'description': _('Description'),
         }
 
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs.update({'class': 'form-control'})
-        self.fields['description'].widget.attrs.update({'class': 'form-control'})
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
 
 
 class KeywordForm(forms.ModelForm):
@@ -46,13 +51,23 @@ class KeywordForm(forms.ModelForm):
         fields = ('name', 'description')
 
         labels = {
-            'name': 'Name',
-            'description': 'Beschreibung',
+            'name': _('Name'),
+            'description': _('Description'),
         }
 
     def __init__(self, *args, **kwargs):
         super(KeywordForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs.update({'class': 'form-control'})
-        self.fields['description'].widget.attrs.update({'class': 'form-control'})
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
 
 
+class EditCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Keyword
+        fields = ('name', 'description')
+
+        labels = {
+            'name': _('Name'),
+            'description': _('Description'),
+        }

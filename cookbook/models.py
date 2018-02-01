@@ -3,7 +3,7 @@ from django.db import models
 
 class Keyword(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(default="")
+    description = models.TextField(default="", blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -14,7 +14,7 @@ class Keyword(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(default="")
+    description = models.TextField(default="", blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

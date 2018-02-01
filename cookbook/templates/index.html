@@ -13,14 +13,13 @@
             </div>
             <div class="card-body">
                 <form action="" method="get">
-                    {% crispy filter.form %}
-                    <input type="submit"/>
+                    {{ filter.form|crispy }}
+                    <input class="btn btn-primary" type="submit"/>
                 </form>
             </div>
         </div>
     {% endif %}
     <br/>
-
 
     {% if recipes %}
         {% render_table recipes %}
