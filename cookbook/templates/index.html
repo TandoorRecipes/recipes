@@ -6,19 +6,21 @@
 {% block title %}{% trans "Cookbook" %}{% endblock %}
 
 {% block content %}
-
-    <div class="card">
-        <div class="card-header">
-            {% trans "Search" %}
+    {% if filter %}
+        <div class="card">
+            <div class="card-header">
+                {% trans "Search" %}
+            </div>
+            <div class="card-body">
+                <form action="" method="get">
+                    {% crispy filter.form %}
+                    <input type="submit"/>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form action="" method="get">
-                {%  crispy filter.form  %}
-                <input type="submit"/>
-            </form>
-        </div>
-    </div>
+    {% endif %}
     <br/>
+
 
     {% if recipes %}
         {% render_table recipes %}
