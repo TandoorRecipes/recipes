@@ -25,6 +25,9 @@ class RecipeForm(forms.ModelForm):
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['category'].widget.attrs.update({'class': 'form-control'})
         self.fields['keywords'].widget.attrs.update({'class': 'form-control'})
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
 
 
 class CategoryForm(forms.ModelForm):

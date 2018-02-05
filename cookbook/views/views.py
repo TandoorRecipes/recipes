@@ -4,6 +4,7 @@ from django_tables2 import RequestConfig
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
+from cookbook.helper import dropbox
 from cookbook.tables import RecipeTable, CategoryTable, KeywordTable
 
 
@@ -12,7 +13,7 @@ def index(request):
         f = RecipeFilter(request.GET, queryset=Recipe.objects.all())
 
         table = RecipeTable(f.qs)
-        RequestConfig(request, paginate={'per_page': 3}).configure(table)
+        RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         return render(request, 'index.html', {'recipes': table, 'filter': f})
     else:
@@ -24,7 +25,7 @@ def import_recipes(request):
     if request.method == "POST":
         form = ImportForm(request.POST)
         if form.is_valid():
-
+            dropbox.import_all(form.cleaned_data['path'])
             return redirect('index')
     else:
         form = ImportForm()
