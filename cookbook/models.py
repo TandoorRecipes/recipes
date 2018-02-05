@@ -13,6 +13,7 @@ class Keyword(models.Model):
 
 
 class Category(models.Model):
+    # TODO unique name or model with id
     name = models.CharField(max_length=64)
     description = models.TextField(default="", blank=True)
     created_by = models.IntegerField(default=0)

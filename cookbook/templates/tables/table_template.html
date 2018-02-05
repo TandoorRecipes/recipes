@@ -2,10 +2,10 @@
 {% load i18n %}
 {% block table-wrapper %}
     <div class="row">
-        <div class="col">
+        <div class="table-responsive">
             {% block table %}
                 <table {% if table.attrs %}
-                    {{ table.attrs.as_html }}{% else %}class="table table-bordered table-hover"{% endif %}>
+                    {{ table.attrs.as_html }}{% else %}class="table table-bordered table-lg"{% endif %}>
                     {% block table.thead %}
                         {% if table.show_header %}
                             <thead>

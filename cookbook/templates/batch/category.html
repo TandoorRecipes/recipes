@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load django_tables2 %}
+
+{% block title %}{% trans 'Batch edit Category' %}{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% trans 'Batch edit Category' %}
+        <small class="text-muted">{% trans 'Add the specified category to all recipes containing a word' %}</small>
+    </h3>
+
+    <form method="POST" class="post-form">{% csrf_token %}
+        {% crispy form %}
+    </form>
+    
+{% endblock %}

@@ -31,14 +31,26 @@
                 <a class="nav-link" href="{% url 'index' %}">{% trans 'Cookbook' %}<span
                         class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'new_recipe' %}">{% trans 'New Recipe' %}</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    {% trans 'New' %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'new_recipe' %}">{% trans 'Recipe' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_category' %}">{% trans 'Category' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_keyword' %}">{% trans 'Keyword' %}</a>
+                </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'new_category' %}">{% trans 'New Category' %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'new_keyword' %}">{% trans 'New Keyword' %}</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    {% trans 'Manage Data' %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'batch_import' %}">{% trans 'Import' %}</a>
+                    <a class="dropdown-item" href="{% url 'batch_category' %}">{% trans 'Mass Category' %}</a>
+                </div>
             </li>
         </ul>
 
