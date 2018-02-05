@@ -1,4 +1,6 @@
+requests
 django
 django-tables2
 django-filter
 django-crispy-forms
+djangorestframework

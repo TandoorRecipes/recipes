@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views,api
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('edit_recipe/<int:id>/', views.edit_recipe, name='edit_recipe'),
     path('edit_category/<int:id>/', views.edit_category, name='edit_category'),
     path('edit_keyword/<int:id>/', views.new_keyword, name='edit_keyword'),
+    path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='get_file_link'),
 ]
