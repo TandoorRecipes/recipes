@@ -25,7 +25,7 @@ class Category(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=64)
-    path = models.CharField
+    path = models.CharField(max_length=512, default="")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     keywords = models.ManyToManyField(Keyword)
     created_by = models.IntegerField(default=0)

@@ -20,7 +20,7 @@ def index(request):
 
 
 @login_required
-def edit_recipe(request, id):
+def edit_recipe(request, recipe_id):
     if request.method == "POST":
         form = RecipeForm(request.POST)
         if form.is_valid():
@@ -28,21 +28,21 @@ def edit_recipe(request, id):
             recipe.created_by = request.user.id
             recipe.save()
             form.save_m2m()
-            return redirect('edit_recipe/' + id)
+            return redirect('edit_recipe/' + recipe_id)
     else:
-        recipe = Recipe.objects.get(id=id)
+        recipe = Recipe.objects.get(id=recipe_id)
         form = EditRecipeForm(instance=recipe)
 
     return render(request, 'new_recipe.html', {'from': form})
 
 
 @login_required
-def edit_category(request, id):
+def edit_category(request, category_id):
     return render(request, 'index.html')
 
 
 @login_required
-def edit_keyword(request, id):
+def edit_keyword(request, keyword_id):
     return render(request, 'index.html')
 
 
