@@ -23,5 +23,5 @@ msgid "Cookbook"
 msgstr "Kochbuch"
 
 #: .\templates\index.html:17
-msgid "Log in to view Recipies"
+msgid "Log in to view recipes"
 msgstr "Log dich ein um die Rezepte zu sehen"
