@@ -64,3 +64,5 @@ target/
 \.idea/dataSources\.local\.xml
 
 venv/
+
+Recipies/secret_settings\.py
