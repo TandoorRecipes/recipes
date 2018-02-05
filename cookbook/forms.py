@@ -71,3 +71,14 @@ class EditRecipeForm(forms.ModelForm):
             'category': _('Category'),
             'keywords': _('Keywords'),
         }
+
+
+class ImportForm(forms.Form):
+    path = forms.CharField(label=_('Path'))
+
+    def __init__(self, *args, **kwargs):
+        super(ImportForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('import', _('Import'), css_class='btn-primary'))
+

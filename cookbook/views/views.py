@@ -20,6 +20,19 @@ def index(request):
 
 
 @login_required
+def import_recipes(request):
+    if request.method == "POST":
+        form = ImportForm(request.POST)
+        if form.is_valid():
+
+            return redirect('index')
+    else:
+        form = ImportForm()
+
+    return render(request, 'storage/import.html', {'form': form})
+
+
+@login_required
 def edit_recipe(request, recipe_id):
     if request.method == "POST":
         form = RecipeForm(request.POST)

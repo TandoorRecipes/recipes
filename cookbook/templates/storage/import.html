@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load django_tables2 %}
+
+{% block title %}{% trans 'Import Recipes' %}{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% trans 'Import Recipes' %}
+        <small class="text-muted">{% trans 'Import Recipes from Dropbox Storage' %}</small>
+    </h3>
+
+    <form method="POST" class="post-form">{% csrf_token %}
+        {% crispy form %}
+    </form>
+    
+{% endblock %}

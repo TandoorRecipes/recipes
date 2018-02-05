@@ -2,6 +2,7 @@ import requests
 import json
 from django.conf import settings
 
+
 def import_all(base_path):
     print("test")
 
@@ -15,8 +16,8 @@ def get_share_link(recipe_path):
     }
 
     data = {
-        "path": recipe.path
+        "path": recipe_path
     }
 
     r = requests.post(url, headers=headers, data=json.dumps(data))
-    return r.content
+    return r.json()

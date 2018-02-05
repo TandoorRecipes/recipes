@@ -12,6 +12,7 @@ urlpatterns = [
     path('edit_category/<int:category_id>/', views.edit_category, name='edit_category'),
     path('edit_keyword/<int:keyword_id>/', views.new_keyword, name='edit_keyword'),
 
+    path('storage/import_recipes', views.import_recipes, name='import_recipes'),
+
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='get_file_link'),
-    path('api/import_recipes', api.get_file_link, name='get_file_link'),
 ]

@@ -6,6 +6,7 @@ from .models import *
 
 class RecipeTable(tables.Table):
     id = tables.LinkColumn('edit_recipe', args=[A('id')])
+    name = tables.TemplateColumn("<a href='#' onClick='openRecipe({{record.id}})'>{{record.name}}</a>")
 
     class Meta:
         model = Recipe
