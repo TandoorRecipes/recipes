@@ -5,13 +5,13 @@ from cookbook.views import api
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('new/recipe', views.new_recipe, name='new_recipe'),
-    path('new/category', views.new_category, name='new_category'),
-    path('new/keyword', views.new_keyword, name='new_keyword'),
+    path('new/recipe', new.recipe, name='new_recipe'),
+    path('new/category', new.category, name='new_category'),
+    path('new/keyword', new.keyword, name='new_keyword'),
 
-    path('edit/recipe/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
-    path('edit/category/<int:category_id>/', views.edit_category, name='edit_category'),
-    path('edit/keyword/<int:keyword_id>/', views.new_keyword, name='edit_keyword'),
+    path('edit/recipe/<int:recipe_id>/', edit.recipe, name='edit_recipe'),
+    path('edit/category/<int:category_id>/', edit.category, name='edit_category'),
+    path('edit/keyword/<int:keyword_id>/', edit.keyword, name='edit_keyword'),
 
     path('batch/import', batch.batch_import, name='batch_import'),
     path('batch/category', batch.batch_edit, name='batch_edit'),
