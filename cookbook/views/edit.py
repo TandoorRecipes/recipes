@@ -1,25 +1,28 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from cookbook.forms import RecipeForm, EditRecipeForm
-from cookbook.models import Recipe
+from cookbook.models import Recipe, Category
 
 
 @login_required
 def recipe(request, recipe_id):
+    recipe_obj = Recipe.objects.get(id=recipe_id)
     if request.method == "POST":
-        form = RecipeForm(request.POST)
+        form = EditRecipeForm(request.POST)
         if form.is_valid():
-            recipe_obj = form.save(commit=False)
-            recipe_obj.created_by = request.user.id
+            recipe_obj.name = form.cleaned_data['name']
+            recipe_obj.path = form.cleaned_data['path']
+            recipe_obj.category = Category.objects.get(name=form.cleaned_data['category'])
+            recipe_obj.keywords.clear()
+            recipe_obj.keywords.add(*list(form.cleaned_data['keywords']))
             recipe_obj.save()
-            form.save_m2m()
-            return redirect('edit_recipe/' + recipe_id)
+            return redirect(reverse('edit_recipe', args=[recipe_id]))
     else:
-        recipe_obj = Recipe.objects.get(id=recipe_id)
         form = EditRecipeForm(instance=recipe_obj)
 
-    return render(request, 'new_recipe.html', {'from': form})
+    return render(request, 'edit/recipe.html', {'form': form})
 
 
 @login_required

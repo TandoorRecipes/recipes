@@ -2,12 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f314243c-cf5d-48a7-b986-5e05ee924c9f" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/cookbook/views/new.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/cookbook/templates/edit/recipe.html" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/cookbook/urls.py" afterPath="$PROJECT_DIR$/cookbook/urls.py" />
-      <change beforePath="$PROJECT_DIR$/cookbook/views/__init__.py" afterPath="$PROJECT_DIR$/cookbook/views/__init__.py" />
+      <change beforePath="$PROJECT_DIR$/cookbook/forms.py" afterPath="$PROJECT_DIR$/cookbook/forms.py" />
+      <change beforePath="$PROJECT_DIR$/cookbook/templates/new_category.html" afterPath="$PROJECT_DIR$/cookbook/templates/new/category.html" />
+      <change beforePath="$PROJECT_DIR$/cookbook/templates/new_keyword.html" afterPath="$PROJECT_DIR$/cookbook/templates/new/keyword.html" />
+      <change beforePath="$PROJECT_DIR$/cookbook/templates/new_recipe.html" afterPath="$PROJECT_DIR$/cookbook/templates/new/recipe.html" />
       <change beforePath="$PROJECT_DIR$/cookbook/views/edit.py" afterPath="$PROJECT_DIR$/cookbook/views/edit.py" />
-      <change beforePath="$PROJECT_DIR$/cookbook/views/views.py" afterPath="$PROJECT_DIR$/cookbook/views/views.py" />
+      <change beforePath="$PROJECT_DIR$/cookbook/views/new.py" afterPath="$PROJECT_DIR$/cookbook/views/new.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -50,59 +52,59 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="batch.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cookbook/views/batch.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="900">
-              <caret line="36" column="0" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="new.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cookbook/views/new.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="edit.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cookbook/views/edit.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="14" column="29" lean-forward="true" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cookbook/forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
-              <caret line="34" column="24" lean-forward="true" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+            <state relative-caret-position="351">
+              <caret line="63" column="20" lean-forward="false" selection-start-line="63" selection-start-column="6" selection-end-line="63" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cookbook/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="617">
+              <caret line="28" column="8" lean-forward="false" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cookbook/urls.py">
+      <file leaf-file-name="batch.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cookbook/views/batch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="12" column="58" lean-forward="false" selection-start-line="12" selection-start-column="58" selection-end-line="12" selection-end-column="58" />
+            <state relative-caret-position="825">
+              <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="73" />
               <folding>
-                <element signature="e#0#28#0" expanded="true" />
+                <element signature="e#0#57#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cookbook/views/edit.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="550">
+              <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
+              <folding>
+                <element signature="e#0#57#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="new.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cookbook/views/new.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="675">
+              <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+              <folding>
+                <element signature="e#0#57#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -113,8 +115,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -165,13 +167,14 @@
         <option value="$PROJECT_DIR$/cookbook/templates/index.html" />
         <option value="$PROJECT_DIR$/cookbook/templates/batch/category.html" />
         <option value="$PROJECT_DIR$/cookbook/templates/base.html" />
-        <option value="$PROJECT_DIR$/cookbook/forms.py" />
         <option value="$PROJECT_DIR$/cookbook/views/batch.py" />
         <option value="$PROJECT_DIR$/cookbook/views/__init__.py" />
         <option value="$PROJECT_DIR$/cookbook/views/new.py" />
         <option value="$PROJECT_DIR$/cookbook/views/views.py" />
-        <option value="$PROJECT_DIR$/cookbook/views/edit.py" />
         <option value="$PROJECT_DIR$/cookbook/urls.py" />
+        <option value="$PROJECT_DIR$/cookbook/templates/edit/recipe.html" />
+        <option value="$PROJECT_DIR$/cookbook/forms.py" />
+        <option value="$PROJECT_DIR$/cookbook/views/edit.py" />
       </list>
     </option>
   </component>
@@ -261,6 +264,20 @@
               <item name="Recipies" type="462c0819:PsiDirectoryNode" />
               <item name="cookbook" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="edit" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Recipies" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Recipies" type="462c0819:PsiDirectoryNode" />
+              <item name="cookbook" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Recipies" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Recipies" type="462c0819:PsiDirectoryNode" />
+              <item name="cookbook" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="tables" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -287,11 +304,12 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="Sqlite (Xerial)" />
-    <property name="SearchEverywhereHistoryKey" value="urls&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/urls.py&#10;base&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/base.html&#10;index&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/index.html&#10;dropb&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/helper/dropbox.py&#10;model&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/models.py&#10;views&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/views/views.py&#10;import&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/storage/import.html&#10;api&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/views/api.py&#10;new_rec&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/new_recipe.html&#10;forms&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/forms.py&#10;inde&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/index.html&#10;setting&#9;FILE&#9;file://F:/Developement/Django/Recipies/recipes/settings.py&#10;tables&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/tables.py&#10;models&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/models.py&#10;new_&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/cookbook/templates/new_keyword.html&#10;tabl&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/cookbook/tables.py&#10;tablees&#9;null&#9;null&#10;view&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/cookbook/views.py&#10;sett&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/Recipies/settings.py&#10;settings&#9;FILE&#9;file://F:/Developement/Django/Recipies/Recipies/settings.py&#10;mode&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/models.py&#10;settin&#9;FILE&#9;file://F:/Developement/Django/Recipies/Recipies/settings.py" />
+    <property name="SearchEverywhereHistoryKey" value="batch&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/views/batch.py&#10;form&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/forms.py&#10;new&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/views/new.py&#10;urls&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/urls.py&#10;base&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/base.html&#10;index&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/index.html&#10;dropb&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/helper/dropbox.py&#10;model&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/models.py&#10;views&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/views/views.py&#10;import&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/storage/import.html&#10;api&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/views/api.py&#10;new_rec&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/new_recipe.html&#10;forms&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/forms.py&#10;inde&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/templates/index.html&#10;setting&#9;FILE&#9;file://F:/Developement/Django/Recipies/recipes/settings.py&#10;tables&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/tables.py&#10;models&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/models.py&#10;new_&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/cookbook/templates/new_keyword.html&#10;tabl&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/cookbook/tables.py&#10;tablees&#9;null&#9;null&#10;view&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/cookbook/views.py&#10;sett&#9;FILE&#9;file://C:/Users/bene/Documents/Developement/Django/recipies/Recipies/settings.py&#10;settings&#9;FILE&#9;file://F:/Developement/Django/Recipies/Recipies/settings.py&#10;mode&#9;FILE&#9;file://F:/Developement/Django/Recipies/cookbook/models.py&#10;settin&#9;FILE&#9;file://F:/Developement/Django/Recipies/Recipies/settings.py" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/venv" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Developement\Django\Recipies\cookbook\templates\new" />
       <recent name="F:\Developement\Django\Recipies\cookbook\helper" />
       <recent name="F:\Developement\Django\Recipies\cookbook\views" />
       <recent name="F:\Developement\Django\Recipies\cookbook\templates" />
@@ -367,7 +385,7 @@
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39958268" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39958268" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -393,7 +411,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="28" />
+      <option name="time" value="31" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -442,13 +460,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cookbook/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/85add68a-b15d-441c-9865-ed9a59ea29b9/console.sql" />
     <entry file="das://table:/76de5693/85add68a-b15d-441c-9865-ed9a59ea29b9/main.auth_user" />
     <entry file="file://$PROJECT_DIR$/cookbook/templates/registration.html" />
@@ -496,7 +507,7 @@
     </entry>
     <entry file="das://table:/56d3b8/f5b7f69c-b9f9-4846-8e67-767055475cbc/main.cookbook_category" />
     <entry file="das://table:/56d3b8/f5b7f69c-b9f9-4846-8e67-767055475cbc/main.cookbook_keyword" />
-    <entry file="file://$PROJECT_DIR$/cookbook/templates/new_keyword.html">
+    <entry file="file://$PROJECT_DIR$/cookbook/templates/new/keyword.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="522">
           <caret line="18" column="18" lean-forward="true" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
@@ -554,13 +565,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/recipes/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="20" column="36" lean-forward="false" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/recipes/secret_settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="625">
@@ -593,20 +597,6 @@
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/templates/new_recipe.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="14" lean-forward="true" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/templates/new_category.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="32" lean-forward="true" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -667,24 +657,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="32" column="30" lean-forward="false" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/views/batch.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="36" column="0" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cookbook/views/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
@@ -705,16 +677,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="12" column="58" lean-forward="false" selection-start-line="12" selection-start-column="58" selection-end-line="12" selection-end-column="58" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cookbook/templates/batch/edit.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -723,28 +685,90 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/forms.py">
+    <entry file="file://$PROJECT_DIR$/cookbook/templates/new/recipe.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="34" column="24" lean-forward="true" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+        <state relative-caret-position="125">
+          <caret line="5" column="14" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/views/edit.py">
+    <entry file="file://$PROJECT_DIR$/cookbook/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="14" column="29" lean-forward="true" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+        <state relative-caret-position="275">
+          <caret line="11" column="52" lean-forward="false" selection-start-line="11" selection-start-column="46" selection-end-line="11" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cookbook/templates/new/category.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="25" lean-forward="true" selection-start-line="0" selection-start-column="25" selection-end-line="0" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cookbook/templates/edit/recipe.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="5" column="14" lean-forward="true" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/recipes/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="10" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cookbook/views/new.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
           <folding>
             <element signature="e#0#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cookbook/views/new.py">
+    <entry file="file://$PROJECT_DIR$/cookbook/views/batch.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+        <state relative-caret-position="825">
+          <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="73" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cookbook/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="617">
+          <caret line="28" column="8" lean-forward="false" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cookbook/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="63" column="20" lean-forward="false" selection-start-line="63" selection-start-column="6" selection-end-line="63" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cookbook/views/edit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
           <folding>
             <element signature="e#0#57#0" expanded="true" />
           </folding>

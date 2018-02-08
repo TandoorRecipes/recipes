@@ -20,7 +20,7 @@ def recipe(request):
     else:
         form = RecipeForm()
 
-    return render(request, 'new_recipe.html', {'form': form})
+    return render(request, 'new/recipe.html', {'form': form})
 
 
 @login_required
@@ -38,7 +38,7 @@ def category(request):
     table = CategoryTable(Category.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(request, 'new_category.html', {'form': form, 'table': table})
+    return render(request, 'new/category.html', {'form': form, 'table': table})
 
 
 @login_required
@@ -56,4 +56,4 @@ def keyword(request):
     table = KeywordTable(Keyword.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(request, 'new_keyword.html', {'form': form, 'table': table})
+    return render(request, 'new/keyword.html', {'form': form, 'table': table})
