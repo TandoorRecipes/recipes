@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse_lazy
 
-from cookbook.forms import RecipeForm, EditRecipeForm
+from cookbook.forms import EditRecipeForm
 from cookbook.models import Recipe, Category
 
 
@@ -18,7 +18,7 @@ def recipe(request, recipe_id):
             recipe_obj.keywords.clear()
             recipe_obj.keywords.add(*list(form.cleaned_data['keywords']))
             recipe_obj.save()
-            return redirect(reverse('edit_recipe', args=[recipe_id]))
+            return redirect(reverse_lazy('edit_recipe', args=[recipe_id]))
     else:
         form = EditRecipeForm(instance=recipe_obj)
 
