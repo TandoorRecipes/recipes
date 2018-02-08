@@ -21,34 +21,6 @@ def index(request):
 
 
 @login_required
-def batch_import(request):
-    if request.method == "POST":
-        form = ImportForm(request.POST)
-        if form.is_valid():
-            dropbox.import_all(form.cleaned_data['path'])
-            return redirect('index')
-    else:
-        form = ImportForm()
-
-    return render(request, 'batch/import.html', {'form': form})
-
-
-@login_required
-def batch_category(request):
-    if request.method == "POST":
-        form = BatchCategoryForm(request.POST)
-        if form.is_valid():
-            word = form.cleaned_data['search']
-            category = form.cleaned_data['category']
-            Recipe.objects.filter(name__contains=word).update(category=(Category.objects.get(name=category)).id)
-            return redirect('index')
-    else:
-        form = BatchCategoryForm()
-
-    return render(request, 'batch/category.html', {'form': form})
-
-
-@login_required
 def edit_recipe(request, recipe_id):
     if request.method == "POST":
         form = RecipeForm(request.POST)

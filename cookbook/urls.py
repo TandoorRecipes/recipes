@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from .views import *
 from cookbook.views import api
 
 urlpatterns = [
@@ -13,8 +13,8 @@ urlpatterns = [
     path('edit/category/<int:category_id>/', views.edit_category, name='edit_category'),
     path('edit/keyword/<int:keyword_id>/', views.new_keyword, name='edit_keyword'),
 
-    path('batch/import', views.batch_import, name='batch_import'),
-    path('batch/category', views.batch_category, name='batch_category'),
+    path('batch/import', batch.batch_import, name='batch_import'),
+    path('batch/category', batch.batch_edit, name='batch_edit'),
 
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='get_file_link'),
 ]

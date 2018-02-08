@@ -86,13 +86,13 @@ class ImportForm(forms.Form):
         self.helper.add_input(Submit('import', _('Import'), css_class='btn-primary'))
 
 
-class BatchCategoryForm(forms.Form):
+class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
-    category = forms.ModelChoiceField(queryset=Category.objects.all().order_by('id'))
+    category = forms.ModelChoiceField(queryset=Category.objects.all().order_by('id'), required=False)
+    keyword = forms.ModelMultipleChoiceField(queryset=Keyword.objects.all().order_by('id'), required=False)
 
     def __init__(self, *args, **kwargs):
-        super(BatchCategoryForm, self).__init__(*args, **kwargs)
+        super(BatchEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.add_input(Submit('import', _('Import'), css_class='btn-primary'))
-
+        self.helper.add_input(Submit('update', _('Update'), css_class='btn-primary'))

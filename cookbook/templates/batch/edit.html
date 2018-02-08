@@ -8,8 +8,8 @@
 {% block content %}
 
     <h3>
-        {% trans 'Batch edit Category' %}
-        <small class="text-muted">{% trans 'Add the specified category to all recipes containing a word' %}</small>
+        {% trans 'Batch edit Recipes' %}
+        <small class="text-muted">{% trans 'Add the specified category and keywords to all recipes containing a word' %}</small>
     </h3>
 
     <form method="POST" class="post-form">{% csrf_token %}
