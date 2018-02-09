@@ -6,7 +6,12 @@ from .models import *
 
 class RecipeTable(tables.Table):
     id = tables.LinkColumn('edit_recipe', args=[A('id')])
-    name = tables.TemplateColumn("<a href='#' onClick='openRecipe({{record.id}})'>{{record.name}}</a>")
+    name = tables.TemplateColumn(
+        "<a href='#' onClick='openRecipe({{record.id}})'>{{record.name}}</a>")
+    category = tables.Column(
+        attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
+    all_tags = tables.Column(
+        attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
 
     class Meta:
         model = Recipe

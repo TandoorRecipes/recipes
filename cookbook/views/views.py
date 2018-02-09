@@ -18,3 +18,7 @@ def index(request):
         return render(request, 'index.html', {'recipes': table, 'filter': f})
     else:
         return render(request, 'index.html')
+
+
+def test(request):
+    return render(request, 'test.html')

@@ -6,19 +6,25 @@
 {% block title %}{% trans "Cookbook" %}{% endblock %}
 
 {% block content %}
-    {% if filter %}
-        <div class="card">
-            <div class="card-header">
-                {% trans "Search" %}
-            </div>
-            <div class="card-body">
-                <form action="" method="get">
-                    {{ filter.form|crispy }}
-                    <input class="btn btn-primary" type="submit"/>
-                </form>
-            </div>
+
+    <div class="row">
+        <div class="col md-12">
+            {% if filter %}
+                <div class="card">
+                    <div class="card-header">
+                        {% trans "Search" %}
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="get">
+                            {{ filter.form|crispy }}
+                            <input class="btn btn-primary" type="submit"/>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
+
     <br/>
 
     {% if recipes %}
@@ -93,7 +99,7 @@
             xhttp.send();
         }
 
-        function afterClick(){
+        function afterClick() {
             $('#modal_recipe').modal('hide');
             return true;
         }

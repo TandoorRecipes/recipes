@@ -5,6 +5,8 @@ from cookbook.views import api
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('test', views.test, name='test'),
+
     path('new/recipe', new.recipe, name='new_recipe'),
     path('new/category', new.category, name='new_category'),
     path('new/keyword', new.keyword, name='new_keyword'),

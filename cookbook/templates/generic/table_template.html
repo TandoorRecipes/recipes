@@ -4,8 +4,8 @@
     <div class="row">
         <div class="table-responsive">
             {% block table %}
-                <table {% if table.attrs %}
-                    {{ table.attrs.as_html }}{% else %}class="table table-bordered table-lg"{% endif %}>
+                <table style='font-size: 24px' {% if table.attrs %}
+                    {{ table.attrs.as_html }}{% else %}class="table table-bordered table-xl"{% endif %}>
                     {% block table.thead %}
                         {% if table.show_header %}
                             <thead>
