@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Keyword(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     description = models.TextField(default="", blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -13,8 +13,7 @@ class Keyword(models.Model):
 
 
 class Category(models.Model):
-    # TODO unique name or model with id
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     description = models.TextField(default="", blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,7 +27,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=64)
     path = models.CharField(max_length=512, default="")
     link = models.CharField(max_length=512, default="")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=0)
     keywords = models.ManyToManyField(Keyword, blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -10,7 +10,7 @@ class RecipeTable(tables.Table):
 
     class Meta:
         model = Recipe
-        template_name = 'tables/table_template.html'
+        template_name = 'generic/table_template.html'
         fields = ('id', 'name', 'category', 'all_tags')
 
 
@@ -19,7 +19,7 @@ class CategoryTable(tables.Table):
 
     class Meta:
         model = Category
-        template_name = 'tables/table_template.html'
+        template_name = 'generic/table_template.html'
         fields = ('id', 'name')
 
 
@@ -28,5 +28,5 @@ class KeywordTable(tables.Table):
 
     class Meta:
         model = Keyword
-        template_name = 'tables/table_template.html'
+        template_name = 'generic/table_template.html'
         fields = ('id', 'name')

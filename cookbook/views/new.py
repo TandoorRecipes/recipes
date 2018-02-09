@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django_tables2 import RequestConfig
+from django.utils.translation import gettext as _
 
 from cookbook.forms import CategoryForm, KeywordForm, RecipeForm
 from cookbook.models import Category, Keyword
@@ -16,6 +18,7 @@ def recipe(request):
             recipe_obj.created_by = request.user.id
             recipe_obj.save()
             form.save_m2m()
+            messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
             return redirect('index')
     else:
         form = RecipeForm()
@@ -31,6 +34,7 @@ def category(request):
             category_obj = form.save(commit=False)
             category_obj.created_by = request.user.id
             category_obj.save()
+            messages.add_message(request, messages.SUCCESS, _('Category saved!'))
             return redirect('new_category')
     else:
         form = CategoryForm()
@@ -49,6 +53,7 @@ def keyword(request):
             keyword_obj = form.save(commit=False)
             keyword_obj.created_by = request.user.id
             keyword_obj.save()
+            messages.add_message(request, messages.SUCCESS, _('Keyword saved!'))
             return redirect('new_keyword')
     else:
         form = KeywordForm()

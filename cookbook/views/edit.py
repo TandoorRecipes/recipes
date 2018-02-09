@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.translation import gettext as _
 
 from cookbook.forms import EditRecipeForm
 from cookbook.models import Recipe, Category
@@ -18,7 +20,10 @@ def recipe(request, recipe_id):
             recipe_obj.keywords.clear()
             recipe_obj.keywords.add(*list(form.cleaned_data['keywords']))
             recipe_obj.save()
+            messages.add_message(request, messages.SUCCESS, _('Recipe updated'))
             return redirect(reverse_lazy('edit_recipe', args=[recipe_id]))
+        else:
+            messages.add_message(request, messages.ERROR, _('Recipe update failed'))
     else:
         form = EditRecipeForm(instance=recipe_obj)
 
