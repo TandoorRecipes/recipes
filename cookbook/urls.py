@@ -17,6 +17,10 @@ urlpatterns = [
     path('edit/category/<int:pk>/', edit.CategoryUpdate.as_view(), name='edit_category'),
     path('edit/monitor/<int:pk>/', edit.MonitorUpdate.as_view(), name='edit_monitor'),
 
+    path('delete/keyword/<int:pk>/', edit.KeywordDelete.as_view(), name='delete_keyword'),
+    path('delete/category/<int:pk>/', edit.CategoryDelete.as_view(), name='delete_category'),
+    path('delete/monitor/<int:pk>/', edit.MonitorDelete.as_view(), name='delete_monitor'),
+
     path('batch/import', batch.batch_import, name='batch_import'),
     path('batch/category', batch.batch_edit, name='batch_edit'),
 

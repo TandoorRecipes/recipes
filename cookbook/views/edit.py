@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import EditRecipeForm
 from cookbook.models import Recipe, Category, Monitor, Keyword
@@ -48,3 +48,22 @@ def recipe(request, recipe_id):
         form = EditRecipeForm(instance=recipe_obj)
 
     return render(request, 'edit/recipe.html', {'form': form})
+
+
+# Generic Delete views
+class MonitorDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic\delete_template.html"
+    model = Monitor
+    success_url = reverse_lazy('index')
+
+
+class CategoryDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic\delete_template.html"
+    model = Category
+    success_url = reverse_lazy('index')
+
+
+class KeywordDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic\delete_template.html"
+    model = Keyword
+    success_url = reverse_lazy('index')

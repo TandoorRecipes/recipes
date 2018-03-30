@@ -1,5 +1,6 @@
 import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
+from django.utils.translation import gettext as _
 
 from .models import *
 
@@ -38,7 +39,7 @@ class KeywordTable(tables.Table):
 
 
 class MonitoredPathTable(tables.Table):
-    edit = tables.TemplateColumn("<a href='#' >Löschen</a>")
+    edit = tables.TemplateColumn("<a href='{% url 'delete_monitor' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
         model = Keyword
