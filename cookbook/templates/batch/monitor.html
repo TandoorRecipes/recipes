@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load django_tables2 %}
+
+{% block title %}{% trans 'Sync' %}{% endblock %}
+
+{% block content %}
+
+    <h3>{% trans 'Manage watched Folders' %}</h3>
+
+    {% trans 'On this Page you can manage all DropBox folder locations that should be monitored and synced' %} <br/>
+    {% trans 'The path must be in the following format' %} <code>/Folder/RecipesFolder</code>
+    <br/>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {% crispy form %}
+    </form>
+
+    {% render_table monitored_paths %}
+
+{% endblock %}

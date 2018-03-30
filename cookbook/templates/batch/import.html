@@ -1,21 +1,16 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 {% load i18n %}
 {% load django_tables2 %}
 
-{% block title %}{% trans 'Import Recipes' %}{% endblock %}
+{% block title %}{% trans 'Imported Recipes' %}{% endblock %}
 
 {% block content %}
 
-    <h3>
-        {% trans 'Import Recipes' %}
-        <small class="text-muted">{% trans 'Manage all paths that should be imported' %}</small>
-    </h3>
+    <h3>{% trans 'Update imported Recipes' %}</h3>
+    <br>
+    <button class="btn btn-primary">Auto-Import all</button>
+    <br>
 
-    <form method="POST" class="post-form">{% csrf_token %}
-        {% crispy form %}
-    </form>
-
-    {% render_table monitored_paths %}
+    {% render_table imported_recipes %}
 
 {% endblock %}

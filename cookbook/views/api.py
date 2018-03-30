@@ -20,4 +20,4 @@ def get_file_link(request, recipe_id):
 @login_required
 def dropbox_sync(request):
     dropbox.sync_all()
-    return HttpResponse("Import Successful")
+    return HttpResponse("Import Successful ... or not ? WIP")

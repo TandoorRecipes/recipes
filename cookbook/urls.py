@@ -20,7 +20,9 @@ urlpatterns = [
     path('delete/keyword/<int:pk>/', edit.KeywordDelete.as_view(), name='delete_keyword'),
     path('delete/category/<int:pk>/', edit.CategoryDelete.as_view(), name='delete_category'),
     path('delete/monitor/<int:pk>/', edit.MonitorDelete.as_view(), name='delete_monitor'),
+    path('delete/new_recipe/<int:pk>/', edit.NewRecipeDelete.as_view(), name='delete_new_recipe'),
 
+    path('batch/monitor', batch.batch_monitor, name='batch_monitor'),
     path('batch/import', batch.batch_import, name='batch_import'),
     path('batch/category', batch.batch_edit, name='batch_edit'),
 

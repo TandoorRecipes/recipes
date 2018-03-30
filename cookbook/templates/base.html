@@ -51,7 +51,8 @@
                     {% trans 'Manage Data' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'batch_import' %}">{% trans 'Import' %}</a>
+                    <a class="dropdown-item" href="{% url 'batch_monitor' %}">{% trans 'Configure Sync' %}</a>
+                    <a class="dropdown-item" href="{% url 'batch_import' %}">{% trans 'Manage imported Recipes' %}</a>
                     <a class="dropdown-item" href="{% url 'batch_edit' %}">{% trans 'Batch Edit' %}</a>
                 </div>
             </li>

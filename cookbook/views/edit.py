@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import EditRecipeForm
-from cookbook.models import Recipe, Category, Monitor, Keyword
+from cookbook.models import Recipe, Category, Monitor, Keyword, NewRecipe
 
 
 class MonitorUpdate(LoginRequiredMixin, UpdateView):
@@ -67,3 +67,9 @@ class KeywordDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = Keyword
     success_url = reverse_lazy('index')
+
+
+class NewRecipeDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic\delete_template.html"
+    model = NewRecipe
+    success_url = reverse_lazy('batch_import')

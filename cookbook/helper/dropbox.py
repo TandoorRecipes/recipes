@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 import requests
 import json
 from django.conf import settings
@@ -44,6 +46,10 @@ def import_all(monitor):
 
     log_entry = ImportLog(status='SUCCESS', msg='Imported ' + str(import_count) + ' recipes', monitor=monitor)
     log_entry.save()
+
+    monitor.last_checked = datetime.now()
+    monitor.save()
+
     return True
 
 
