@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django_tables2 import RequestConfig
 
 from cookbook.forms import ImportForm, BatchEditForm
 from cookbook.helper import dropbox
-from cookbook.models import Recipe, Category
+from cookbook.models import Recipe, Category, Monitor
+from cookbook.tables import MonitoredPathTable
 
 
 @login_required
@@ -11,12 +15,18 @@ def batch_import(request):
     if request.method == "POST":
         form = ImportForm(request.POST)
         if form.is_valid():
-            dropbox.import_all(form.cleaned_data['path'])
-            return redirect('index')
+            new_path = Monitor()
+            new_path.path = form.cleaned_data['path']
+            new_path.last_checked = datetime.now()
+            new_path.save()
+            return redirect('batch_import')
     else:
         form = ImportForm()
 
-    return render(request, 'batch/import.html', {'form': form})
+    monitored_paths = MonitoredPathTable(Monitor.objects.all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
+
+    return render(request, 'batch/import.html', {'form': form, 'monitored_paths': monitored_paths})
 
 
 @login_required

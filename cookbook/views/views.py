@@ -1,11 +1,9 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django_tables2 import RequestConfig
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
-from cookbook.helper import dropbox
-from cookbook.tables import RecipeTable, CategoryTable, KeywordTable
+from cookbook.tables import RecipeTable
 
 
 def index(request):

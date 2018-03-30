@@ -91,7 +91,7 @@ class ImportForm(forms.Form):
         super(ImportForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.add_input(Submit('import', _('Import'), css_class='btn-primary'))
+        self.helper.add_input(Submit('import', _('Sync'), css_class='btn-primary'))
 
 
 class BatchEditForm(forms.Form):

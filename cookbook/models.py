@@ -39,3 +39,10 @@ class Recipe(models.Model):
     @property
     def all_tags(self):
         return ', '.join([x.name for x in self.keywords.all()])
+
+
+class Monitor(models.Model):
+    path = models.CharField(max_length=512, default="")
+    last_checked = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

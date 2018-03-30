@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}{% trans 'Delete' %}{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% trans 'Delete' %}
+        <small class="text-muted">{% trans 'Delete this Object' %}</small>
+    </h3>
+
+    <form action="." method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Submit" class="btn btn-success">
+    </form>
+
+{% endblock %}

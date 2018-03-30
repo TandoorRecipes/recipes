@@ -1,11 +1,31 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
+from django.views.generic import UpdateView
 
 from cookbook.forms import EditRecipeForm
-from cookbook.models import Recipe, Category
+from cookbook.models import Recipe, Category, Monitor, Keyword
+
+
+class MonitorUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic\edit_template.html"
+    model = Monitor
+    fields = ['path']
+
+
+class CategoryUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic\edit_template.html"
+    model = Category
+    fields = ['name', 'description']
+
+
+class KeywordUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic\edit_template.html"
+    model = Keyword
+    fields = ['name', 'description']
 
 
 @login_required
@@ -28,13 +48,3 @@ def recipe(request, recipe_id):
         form = EditRecipeForm(instance=recipe_obj)
 
     return render(request, 'edit/recipe.html', {'form': form})
-
-
-@login_required
-def category(request, category_id):
-    return render(request, 'index.html')
-
-
-@login_required
-def keyword(request, keyword_id):
-    return render(request, 'index.html')

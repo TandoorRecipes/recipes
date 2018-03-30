@@ -20,7 +20,7 @@ class RecipeTable(tables.Table):
 
 
 class CategoryTable(tables.Table):
-    id = tables.LinkColumn('edit_recipe', args=[A('id')])
+    id = tables.LinkColumn('edit_category', args=[A('id')])
 
     class Meta:
         model = Category
@@ -29,9 +29,18 @@ class CategoryTable(tables.Table):
 
 
 class KeywordTable(tables.Table):
-    id = tables.LinkColumn('edit_recipe', args=[A('id')])
+    id = tables.LinkColumn('edit_keyword', args=[A('id')])
 
     class Meta:
         model = Keyword
         template_name = 'generic/table_template.html'
         fields = ('id', 'name')
+
+
+class MonitoredPathTable(tables.Table):
+    edit = tables.TemplateColumn("<a href='#' >Löschen</a>")
+
+    class Meta:
+        model = Keyword
+        template_name = 'generic/table_template.html'
+        fields = ('path', 'last_checked')

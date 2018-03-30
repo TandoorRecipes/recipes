@@ -9,11 +9,13 @@
 
     <h3>
         {% trans 'Import Recipes' %}
-        <small class="text-muted">{% trans 'Import Recipes from Dropbox Storage' %}</small>
+        <small class="text-muted">{% trans 'Manage all paths that should be imported' %}</small>
     </h3>
 
     <form method="POST" class="post-form">{% csrf_token %}
         {% crispy form %}
     </form>
-    
+
+    {% render_table monitored_paths %}
+
 {% endblock %}
