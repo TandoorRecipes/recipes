@@ -24,6 +24,8 @@ urlpatterns = [
     path('batch/import', batch.batch_import, name='batch_import'),
     path('batch/category', batch.batch_edit, name='batch_edit'),
 
-    path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='get_file_link'),
+    path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),
+    path('api/sync_all/', api.dropbox_sync, name='api_dropbox_sync'),
+
 ]
 

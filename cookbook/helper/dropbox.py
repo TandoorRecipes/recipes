@@ -3,10 +3,17 @@ import requests
 import json
 from django.conf import settings
 
-from cookbook.models import Recipe, Category
+from cookbook.models import Recipe, Monitor, NewRecipe, ImportLog
 
 
-def import_all(base_path):
+def sync_all():
+    monitors = Monitor.objects.all()
+
+    for monitor in monitors:
+        import_all(monitor)
+
+
+def import_all(monitor):
     url = "https://api.dropboxapi.com/2/files/list_folder"
 
     headers = {
@@ -15,20 +22,28 @@ def import_all(base_path):
     }
 
     data = {
-        "path": base_path
+        "path": monitor.path
     }
 
     r = requests.post(url, headers=headers, data=json.dumps(data))
     try:
         recipes = r.json()
     except ValueError:
+        log_entry = ImportLog(status='ERROR', msg=str(r), monitor=monitor)
+        log_entry.save()
         return r
 
+    import_count = 0
     for recipe in recipes['entries']:
-        name = os.path.splitext(recipe['name'])[0]
-        insert = Recipe(name=name, path=recipe['path_lower'], category=Category.objects.get(id=0))
-        insert.save()
+        path = recipe['path_lower']
+        if not Recipe.objects.filter(path=path).exists() and not NewRecipe.objects.filter(path=path).exists():
+            name = os.path.splitext(recipe['name'])[0]
+            new_recipe = NewRecipe(name=name, path=path)
+            new_recipe.save()
+            import_count += 1
 
+    log_entry = ImportLog(status='SUCCESS', msg='Imported ' + str(import_count) + ' recipes', monitor=monitor)
+    log_entry.save()
     return True
 
 

@@ -81,7 +81,7 @@
             var link = $('#a_recipe_open');
             link.hide();
 
-            url = "{% url 'get_file_link' recipe_id=12345 %}".replace(/12345/, id);
+            url = "{% url 'api_get_file_link' recipe_id=12345 %}".replace(/12345/, id);
 
             link.text("{% trans 'Open Recipe' %}");
             $('#modal_recipe').modal('show');
