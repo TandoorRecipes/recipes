@@ -12,6 +12,8 @@
     {% trans 'On this Page you can manage all DropBox folder locations that should be monitored and synced' %} <br/>
     {% trans 'The path must be in the following format' %} <code>/Folder/RecipesFolder</code>
     <br/>
+    <a href="{% url 'api_dropbox_sync' %}" class="btn btn-success">{% trans 'Sync Now!' %}</a>
+    <br/>
     <form method="POST" class="post-form">{% csrf_token %}
         {% crispy form %}
     </form>

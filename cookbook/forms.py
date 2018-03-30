@@ -84,11 +84,11 @@ class EditRecipeForm(forms.ModelForm):
         self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
 
 
-class ImportForm(forms.Form):
+class MonitorForm(forms.Form):
     path = forms.CharField(label=_('Path'))
 
     def __init__(self, *args, **kwargs):
-        super(ImportForm, self).__init__(*args, **kwargs)
+        super(MonitorForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('import', _('Sync'), css_class='btn-primary'))

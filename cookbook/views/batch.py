@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django_tables2 import RequestConfig
 
-from cookbook.forms import ImportForm, BatchEditForm, NewRecipe
+from cookbook.forms import MonitorForm, BatchEditForm, NewRecipe
 from cookbook.models import Recipe, Category, Monitor
 from cookbook.tables import MonitoredPathTable, NewRecipeTable
 
@@ -12,7 +12,7 @@ from cookbook.tables import MonitoredPathTable, NewRecipeTable
 @login_required
 def batch_monitor(request):
     if request.method == "POST":
-        form = ImportForm(request.POST)
+        form = MonitorForm(request.POST)
         if form.is_valid():
             new_path = Monitor()
             new_path.path = form.cleaned_data['path']
@@ -20,7 +20,7 @@ def batch_monitor(request):
             new_path.save()
             return redirect('batch_import')
     else:
-        form = ImportForm()
+        form = MonitorForm()
 
     monitored_paths = MonitoredPathTable(Monitor.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
@@ -34,6 +34,18 @@ def batch_import(request):
     RequestConfig(request, paginate={'per_page': 25}).configure(imported_recipes)
 
     return render(request, 'batch/import.html', {'imported_recipes': imported_recipes})
+
+
+@login_required
+def batch_import_all(request):
+    if request.method == "POST":
+        imports = NewRecipe.objects.all()
+        for new_recipe in imports:
+            recipe = Recipe(name=new_recipe.name, path=new_recipe.path, category=(Category.objects.get(id=0)))
+            recipe.save()
+            new_recipe.delete()
+
+    return redirect('batch_import')
 
 
 @login_required

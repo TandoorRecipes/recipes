@@ -8,7 +8,10 @@
 
     <h3>{% trans 'Update imported Recipes' %}</h3>
     <br>
-    <button class="btn btn-primary">Auto-Import all</button>
+    <form action="{% url 'batch_import_all' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="{% trans 'Auto import all' %}" class="btn btn-primary"/>
+    </form>
     <br>
 
     {% render_table imported_recipes %}

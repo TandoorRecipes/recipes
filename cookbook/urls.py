@@ -23,8 +23,9 @@ urlpatterns = [
     path('delete/new_recipe/<int:pk>/', edit.NewRecipeDelete.as_view(), name='delete_new_recipe'),
 
     path('batch/monitor', batch.batch_monitor, name='batch_monitor'),
-    path('batch/import', batch.batch_import, name='batch_import'),
     path('batch/category', batch.batch_edit, name='batch_edit'),
+    path('batch/import', batch.batch_import, name='batch_import'),
+    path('batch/import/all', batch.batch_import_all, name='batch_import_all'),
 
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),
     path('api/sync_all/', api.dropbox_sync, name='api_dropbox_sync'),
