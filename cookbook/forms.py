@@ -4,6 +4,8 @@ from django.utils.translation import gettext as _
 from django import forms
 from .models import *
 
+from dal import autocomplete
+
 
 class RecipeForm(forms.ModelForm):
     class Meta:
@@ -73,8 +75,8 @@ class EditRecipeForm(forms.ModelForm):
             'path': _('Path'),
         }
 
-        help_texts = {
-            'keywords': _('Ctrl+Click to select multiple keywords'),
+        widgets = {
+            'keywords': autocomplete.ModelSelect2Multiple(url='dal_keyword')
         }
 
     def __init__(self, *args, **kwargs):

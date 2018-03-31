@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import *
 from cookbook.views import api
+from cookbook.helper import dal
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -29,6 +30,8 @@ urlpatterns = [
 
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),
     path('api/sync_all/', api.dropbox_sync, name='api_dropbox_sync'),
+
+    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
 
 ]
 
