@@ -12,7 +12,7 @@ urlpatterns = [
     path('new/category', new.category, name='new_category'),
     path('new/keyword', new.keyword, name='new_keyword'),
 
-    path('edit/recipe/<int:recipe_id>/', edit.recipe, name='edit_recipe'),
+    path('edit/recipe/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_recipe'),
 
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
     path('edit/category/<int:pk>/', edit.CategoryUpdate.as_view(), name='edit_category'),

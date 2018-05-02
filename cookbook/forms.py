@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 from django import forms
 from .models import *
 
+# noinspection PyPackageRequirements
 from dal import autocomplete
 
 
@@ -66,17 +67,13 @@ class KeywordForm(forms.ModelForm):
 class EditRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'category', 'keywords','path')
+        fields = ('name', 'category', 'keywords', 'path')
 
         labels = {
             'name': _('Name'),
             'category': _('Category'),
             'keywords': _('Keywords'),
             'path': _('Path'),
-        }
-
-        widgets = {
-            'keywords': autocomplete.ModelSelect2Multiple(url='dal_keyword')
         }
 
     def __init__(self, *args, **kwargs):

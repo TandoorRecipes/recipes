@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
@@ -15,6 +15,9 @@ class MonitorUpdate(LoginRequiredMixin, UpdateView):
     model = Monitor
     fields = ['path']
 
+    def get_success_url(self):
+        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+
     def get_context_data(self, **kwargs):
         context = super(MonitorUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Monitor")
@@ -25,6 +28,9 @@ class CategoryUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = Category
     fields = ['name', 'description']
+
+    def get_success_url(self):
+        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(CategoryUpdate, self).get_context_data(**kwargs)
@@ -37,9 +43,34 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
     model = Keyword
     fields = ['name', 'description']
 
+    def get_success_url(self):
+        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+
     def get_context_data(self, **kwargs):
         context = super(KeywordUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
+        return context
+
+
+class RecipeUpdate(LoginRequiredMixin, UpdateView):
+    model = Recipe
+    form_class = EditRecipeForm
+    template_name = "generic\edit_template.html"
+
+    def form_valid(self, form):
+        messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
+        return super(RecipeUpdate, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, _('Error saving changes!'))
+        return super(RecipeUpdate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe")
         return context
 
 

@@ -18,7 +18,10 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="{% static "fontawesome/fontawesome-all.css" %}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="{% static "fontawesome/fontawesome-all.css" %}">
 
     <style>
         @media (max-width: 1025px) {
@@ -50,9 +53,12 @@
                     {% trans 'New' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'new_recipe' %}"><i class="fas fa-book"></i> {% trans 'Recipe' %}</a>
-                    <a class="dropdown-item" href="{% url 'new_category' %}"><i class="fas fa-archive"></i> {% trans 'Category' %}</a>
-                    <a class="dropdown-item" href="{% url 'new_keyword' %}"><i class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_recipe' %}"><i
+                            class="fas fa-book"></i> {% trans 'Recipe' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_category' %}"><i
+                            class="fas fa-archive"></i> {% trans 'Category' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_keyword' %}"><i
+                            class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -61,8 +67,10 @@
                     {% trans 'List' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'new_category' %}"><i class="fas fa-archive"></i> {% trans 'Category' %}</a>
-                    <a class="dropdown-item" href="{% url 'new_keyword' %}"><i class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_category' %}"><i
+                            class="fas fa-archive"></i> {% trans 'Category' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_keyword' %}"><i
+                            class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -71,9 +79,12 @@
                     {% trans 'Manage Data' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'batch_monitor' %}"><i class="fas fa-sync-alt"></i> {% trans 'Configure Sync' %}</a>
-                    <a class="dropdown-item" href="{% url 'batch_import' %}"><i class="fas fa-wrench"></i> {% trans 'Manage imported Recipes' %}</a>
-                    <a class="dropdown-item" href="{% url 'batch_edit' %}"><i class="fas fa-edit"></i> {% trans 'Batch Edit' %}</a>
+                    <a class="dropdown-item" href="{% url 'batch_monitor' %}"><i
+                            class="fas fa-sync-alt"></i> {% trans 'Configure Sync' %}</a>
+                    <a class="dropdown-item" href="{% url 'batch_import' %}"><i
+                            class="fas fa-wrench"></i> {% trans 'Manage imported Recipes' %}</a>
+                    <a class="dropdown-item" href="{% url 'batch_edit' %}"><i
+                            class="fas fa-edit"></i> {% trans 'Batch Edit' %}</a>
                 </div>
             </li>
         </ul>
@@ -84,9 +95,10 @@
             </li>
             <li class="nav-item">
                 {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'logout' %}">{% trans 'Logout' %} {{ user.get_username }}</a>
+                    <a class="nav-link" href="{% url 'logout' %}">{% trans 'Logout' %} {{ user.get_username }} <i
+                            class="fas fa-sign-out-alt"></i></a>
                 {% else %}
-                    <a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %}</a>
+                    <a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %} <i class="fas fa-sign-in-alt"></i></a>
                 {% endif %}
             </li>
         </ul>
