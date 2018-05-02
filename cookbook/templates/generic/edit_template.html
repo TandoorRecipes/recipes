@@ -2,14 +2,11 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block title %}{% trans 'Edit' %}{% endblock %}
+{% block title %}{% trans 'Edit' %} - {{ title }}{% endblock %}
 
 {% block content %}
 
-    <h3>
-        {% trans 'Edit' %}
-        <small class="text-muted">{% trans 'Edit this Object' %}</small>
-    </h3>
+    <h3>{% trans 'Edit' %} {{ title }}</h3>
 
     <form action="." method="post">
         {% csrf_token %}

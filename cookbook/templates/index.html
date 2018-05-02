@@ -12,7 +12,7 @@
             {% if filter %}
                 <div class="card">
                     <div class="card-header">
-                        {% trans "Search" %}
+                        <i class="fas fa-search"></i> {% trans "Search" %}
                     </div>
                     <div class="card-body">
                         <form action="" method="get">
@@ -81,7 +81,7 @@
             var link = $('#a_recipe_open');
             link.hide();
 
-            url = "{% url 'api_get_file_link' recipe_id=12345 %}".replace(/12345/, id);
+            var url = "{% url 'api_get_file_link' recipe_id=12345 %}".replace(/12345/, id);
 
             link.text("{% trans 'Open Recipe' %}");
             $('#modal_recipe').modal('show');

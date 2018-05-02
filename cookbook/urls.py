@@ -18,6 +18,7 @@ urlpatterns = [
     path('edit/category/<int:pk>/', edit.CategoryUpdate.as_view(), name='edit_category'),
     path('edit/monitor/<int:pk>/', edit.MonitorUpdate.as_view(), name='edit_monitor'),
 
+    path('delete/recipe/<int:pk>/', edit.RecipeDelete.as_view(), name='delete_recipe'),
     path('delete/keyword/<int:pk>/', edit.KeywordDelete.as_view(), name='delete_keyword'),
     path('delete/category/<int:pk>/', edit.CategoryDelete.as_view(), name='delete_category'),
     path('delete/monitor/<int:pk>/', edit.MonitorDelete.as_view(), name='delete_monitor'),

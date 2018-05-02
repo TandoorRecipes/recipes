@@ -41,7 +41,7 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}">{% trans 'Cookbook' %}<span
+                <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-book"></i> {% trans 'Cookbook' %}<span
                         class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
@@ -51,6 +51,16 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'new_recipe' %}"><i class="fas fa-book"></i> {% trans 'Recipe' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_category' %}"><i class="fas fa-archive"></i> {% trans 'Category' %}</a>
+                    <a class="dropdown-item" href="{% url 'new_keyword' %}"><i class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    {% trans 'List' %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'new_category' %}"><i class="fas fa-archive"></i> {% trans 'Category' %}</a>
                     <a class="dropdown-item" href="{% url 'new_keyword' %}"><i class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
                 </div>
