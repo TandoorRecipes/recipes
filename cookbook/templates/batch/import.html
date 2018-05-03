@@ -6,11 +6,11 @@
 
 {% block content %}
 
-    <h3>{% trans 'Update imported Recipes' %}</h3>
+    <h3>{% trans 'Imported Recipes' %}</h3>
     <br>
     <form action="{% url 'batch_import_all' %}" method="post">
         {% csrf_token %}
-        <input type="submit" value="{% trans 'Auto import all' %}" class="btn btn-primary"/>
+        <input type="submit" value="{% trans 'import all' %}" class="btn btn-primary"/>
     </form>
     <br>
 
