@@ -45,7 +45,7 @@ class MonitoredPathTable(tables.Table):
     delete = tables.TemplateColumn("<a href='{% url 'delete_monitor' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
-        model = Keyword
+        model = Monitor
         template_name = 'generic/table_template.html'
         fields = ('path', 'last_checked')
 
@@ -54,6 +54,6 @@ class NewRecipeTable(tables.Table):
     delete = tables.TemplateColumn("<a href='{% url 'delete_new_recipe' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
-        model = Keyword
+        model = NewRecipe
         template_name = 'generic/table_template.html'
         fields = ('name','path')

@@ -12,8 +12,10 @@ urlpatterns = [
     path('new/category', new.category, name='new_category'),
     path('new/keyword', new.keyword, name='new_keyword'),
 
-    path('edit/recipe/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_recipe'),
+    path('list/keyword', lists.keyword_list, name='list_keyword'),
+    path('list/category', lists.category_list, name='list_category'),
 
+    path('edit/recipe/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_recipe'),
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
     path('edit/category/<int:pk>/', edit.CategoryUpdate.as_view(), name='edit_category'),
     path('edit/monitor/<int:pk>/', edit.MonitorUpdate.as_view(), name='edit_monitor'),
