@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-01 11:27+0100\n"
+"POT-Creation-Date: 2018-05-03 21:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,208 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\cookbook\forms.py:14 .\cookbook\forms.py:32
+msgid "Name"
+msgstr ""
 
-#: .\templates\index.html:10
+#: .\cookbook\forms.py:15 .\cookbook\forms.py:33
+#: .\cookbook\templates\base.html:59 .\cookbook\templates\base.html:71
+#: .\cookbook\views\edit.py:37 .\cookbook\views\edit.py:107
+#: .\cookbook\views\lists.py:15 .\cookbook\views\new.py:29
+msgid "Category"
+msgstr ""
+
+#: .\cookbook\forms.py:16 .\cookbook\forms.py:34
+msgid "Keywords"
+msgstr ""
+
+#: .\cookbook\forms.py:23 .\cookbook\forms.py:42
+msgid "Save"
+msgstr ""
+
+#: .\cookbook\forms.py:35 .\cookbook\forms.py:46
+msgid "Path"
+msgstr ""
+
+#: .\cookbook\forms.py:52 .\cookbook\templates\batch\monitor.html:6
+msgid "Sync"
+msgstr ""
+
+#: .\cookbook\forms.py:56
+msgid "Search String"
+msgstr ""
+
+#: .\cookbook\forms.py:64
+msgid "Update"
+msgstr ""
+
+#: .\cookbook\tables.py:16 .\cookbook\tables.py:26 .\cookbook\tables.py:36
+#: .\cookbook\tables.py:45 .\cookbook\tables.py:54
+#: .\cookbook\templates\generic\delete_template.html:5
+#: .\cookbook\templates\generic\delete_template.html:9
+msgid "Delete"
+msgstr ""
+
+#: .\cookbook\templates\base.html:39 .\cookbook\templates\base.html:47
+#: .\cookbook\templates\index.html:6
 msgid "Cookbook"
-msgstr "Kochbuch"
+msgstr ""
 
-#: .\templates\index.html:17
-msgid "Log in to view recipes"
-msgstr "Log dich ein um die Rezepte zu sehen"
+#: .\cookbook\templates\base.html:53
+#: .\cookbook\templates\generic\new_template.html:5
+#: .\cookbook\templates\generic\new_template.html:9
+msgid "New"
+msgstr ""
+
+#: .\cookbook\templates\base.html:57 .\cookbook\templates\index.html:62
+#: .\cookbook\views\edit.py:73 .\cookbook\views\edit.py:85
+#: .\cookbook\views\new.py:17
+msgid "Recipe"
+msgstr ""
+
+#: .\cookbook\templates\base.html:61 .\cookbook\templates\base.html:73
+#: .\cookbook\views\edit.py:51 .\cookbook\views\edit.py:118
+#: .\cookbook\views\lists.py:23 .\cookbook\views\new.py:41
+msgid "Keyword"
+msgstr ""
+
+#: .\cookbook\templates\base.html:67
+#: .\cookbook\templates\generic\list_template.html:6
+#: .\cookbook\templates\generic\list_template.html:10
+msgid "List"
+msgstr ""
+
+#: .\cookbook\templates\base.html:79
+msgid "Manage Data"
+msgstr ""
+
+#: .\cookbook\templates\base.html:83
+msgid "Configure Sync"
+msgstr ""
+
+#: .\cookbook\templates\base.html:85
+msgid "Manage imported Recipes"
+msgstr ""
+
+#: .\cookbook\templates\base.html:87
+msgid "Batch Edit"
+msgstr ""
+
+#: .\cookbook\templates\base.html:94
+msgid "Admin"
+msgstr ""
+
+#: .\cookbook\templates\base.html:98
+msgid "Logout"
+msgstr ""
+
+#: .\cookbook\templates\base.html:101
+msgid "Login"
+msgstr ""
+
+#: .\cookbook\templates\batch\edit.html:6
+msgid "Batch edit Category"
+msgstr ""
+
+#: .\cookbook\templates\batch\edit.html:11
+msgid "Batch edit Recipes"
+msgstr ""
+
+#: .\cookbook\templates\batch\edit.html:12
+msgid ""
+"Add the specified category and keywords to all recipes containing a word"
+msgstr ""
+
+#: .\cookbook\templates\batch\import.html:5
+msgid "Imported Recipes"
+msgstr ""
+
+#: .\cookbook\templates\batch\import.html:9
+msgid "Update imported Recipes"
+msgstr ""
+
+#: .\cookbook\templates\batch\import.html:13
+msgid "Auto import all"
+msgstr ""
+
+#: .\cookbook\templates\batch\monitor.html:10
+msgid "Manage watched Folders"
+msgstr ""
+
+#: .\cookbook\templates\batch\monitor.html:12
+msgid ""
+"On this Page you can manage all DropBox folder locations that should be "
+"monitored and synced"
+msgstr ""
+
+#: .\cookbook\templates\batch\monitor.html:13
+msgid "The path must be in the following format"
+msgstr ""
+
+#: .\cookbook\templates\batch\monitor.html:15
+msgid "Sync Now!"
+msgstr ""
+
+#: .\cookbook\templates\generic\delete_template.html:14
+#, python-format
+msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
+msgstr ""
+
+#: .\cookbook\templates\generic\edit_template.html:5
+#: .\cookbook\templates\generic\edit_template.html:9
+msgid "Edit"
+msgstr ""
+
+#: .\cookbook\templates\index.html:15
+msgid "Search"
+msgstr ""
+
+#: .\cookbook\templates\index.html:34
+msgid "Log in to view Recipies"
+msgstr ""
+
+#: .\cookbook\templates\index.html:73
+msgid "Close"
+msgstr ""
+
+#: .\cookbook\templates\index.html:86
+msgid "Open Recipe"
+msgstr ""
+
+#: .\cookbook\templates\new\category.html:6
+#: .\cookbook\templates\new\category.html:11
+msgid "New Category"
+msgstr ""
+
+#: .\cookbook\templates\new\category.html:12
+msgid "New recipe Category"
+msgstr ""
+
+#: .\cookbook\templates\new\keyword.html:6
+#: .\cookbook\templates\new\keyword.html:11
+msgid "New Keyword"
+msgstr ""
+
+#: .\cookbook\templates\new\keyword.html:12
+msgid "New recipe Keyword"
+msgstr ""
+
+#: .\cookbook\templates\registration\login.html:8
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+
+#: .\cookbook\views\edit.py:23 .\cookbook\views\edit.py:96
+msgid "Monitor"
+msgstr ""
+
+#: .\cookbook\views\edit.py:61
+msgid "Changes saved!"
+msgstr ""
+
+#: .\cookbook\views\edit.py:65
+msgid "Error saving changes!"
+msgstr ""
+
+#: .\cookbook\views\edit.py:129
+msgid "Import Recipe"
+msgstr ""
