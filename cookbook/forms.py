@@ -4,9 +4,6 @@ from django.utils.translation import gettext as _
 from django import forms
 from .models import *
 
-# noinspection PyPackageRequirements
-from dal import autocomplete
-
 
 class RecipeForm(forms.ModelForm):
     class Meta:
@@ -19,46 +16,8 @@ class RecipeForm(forms.ModelForm):
             'keywords': _('Keywords'),
         }
 
-        help_texts = {
-            'keywords': _('Ctrl+Click to select multiple keywords'),
-        }
-
     def __init__(self, *args, **kwargs):
         super(RecipeForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
-
-
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = ('name', 'description')
-
-        labels = {
-            'name': _('Name'),
-            'description': _('Description'),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(CategoryForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
-
-
-class KeywordForm(forms.ModelForm):
-    class Meta:
-        model = Keyword
-        fields = ('name', 'description')
-
-        labels = {
-            'name': _('Name'),
-            'description': _('Description'),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(KeywordForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))

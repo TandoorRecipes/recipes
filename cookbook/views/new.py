@@ -1,64 +1,42 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django_tables2 import RequestConfig
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
+from django.views.generic import CreateView
 
-from cookbook.forms import CategoryForm, KeywordForm, RecipeForm
-from cookbook.models import Category, Keyword
-from cookbook.tables import CategoryTable, KeywordTable
-
-
-@login_required
-def recipe(request):
-    if request.method == "POST":
-        form = RecipeForm(request.POST)
-        if form.is_valid():
-            recipe_obj = form.save(commit=False)
-            recipe_obj.created_by = request.user.id
-            recipe_obj.save()
-            form.save_m2m()
-            messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
-            return redirect('index')
-    else:
-        form = RecipeForm()
-
-    return render(request, 'new/recipe.html', {'form': form})
+from cookbook.models import Category, Keyword, Recipe
 
 
-@login_required
-def category(request):
-    if request.method == "POST":
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            category_obj = form.save(commit=False)
-            category_obj.created_by = request.user.id
-            category_obj.save()
-            messages.add_message(request, messages.SUCCESS, _('Category saved!'))
-            return redirect('new_category')
-    else:
-        form = CategoryForm()
+class RecipeCreate(LoginRequiredMixin, CreateView):  # this exists for completeness but is not in use at the moment
+    template_name = "generic\\new_template.html"
+    model = Recipe
+    fields = ['name', 'category', 'keywords']
+    success_url = reverse_lazy('list_category')
 
-    table = CategoryTable(Category.objects.all())
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
-    return render(request, 'new/category.html', {'form': form, 'table': table})
+    def get_context_data(self, **kwargs):
+        context = super(RecipeCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe")
+        return context
 
 
-@login_required
-def keyword(request):
-    if request.method == "POST":
-        form = KeywordForm(request.POST)
-        if form.is_valid():
-            keyword_obj = form.save(commit=False)
-            keyword_obj.created_by = request.user.id
-            keyword_obj.save()
-            messages.add_message(request, messages.SUCCESS, _('Keyword saved!'))
-            return redirect('new_keyword')
-    else:
-        form = KeywordForm()
+class CategoryCreate(LoginRequiredMixin, CreateView):
+    template_name = "generic\\new_template.html"
+    model = Category
+    fields = ['name', 'description']
+    success_url = reverse_lazy('list_category')
 
-    table = KeywordTable(Keyword.objects.all())
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+    def get_context_data(self, **kwargs):
+        context = super(CategoryCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Category")
+        return context
 
-    return render(request, 'new/keyword.html', {'form': form, 'table': table})
+
+class KeywordCreate(LoginRequiredMixin, CreateView):
+    template_name = "generic\\new_template.html"
+    model = Keyword
+    fields = ['name', 'description']
+    success_url = reverse_lazy('list_keyword')
+
+    def get_context_data(self, **kwargs):
+        context = super(KeywordCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Keyword")
+        return context

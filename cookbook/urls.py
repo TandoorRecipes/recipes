@@ -8,9 +8,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('test', views.test, name='test'),
 
-    path('new/recipe', new.recipe, name='new_recipe'),
-    path('new/category', new.category, name='new_category'),
-    path('new/keyword', new.keyword, name='new_keyword'),
+    path('new/recipe', new.RecipeCreate.as_view(), name='new_recipe'),
+    path('new/category', new.CategoryCreate.as_view(), name='new_category'),
+    path('new/keyword', new.KeywordCreate.as_view(), name='new_keyword'),
 
     path('list/keyword', lists.keyword_list, name='list_keyword'),
     path('list/category', lists.category_list, name='list_category'),
