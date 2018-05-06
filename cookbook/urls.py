@@ -9,6 +9,7 @@ urlpatterns = [
     path('test', views.test, name='test'),
 
     path('new/recipe', new.RecipeCreate.as_view(), name='new_recipe'),
+    path('new/recipe_import/<int:import_id>/', new.create_new_recipe, name='new_recipe_import'),
     path('new/category', new.CategoryCreate.as_view(), name='new_category'),
     path('new/keyword', new.KeywordCreate.as_view(), name='new_keyword'),
 
@@ -37,6 +38,4 @@ urlpatterns = [
     path('api/sync_all/', api.dropbox_sync, name='api_dropbox_sync'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
-
 ]
-

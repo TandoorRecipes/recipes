@@ -14,6 +14,7 @@
 
     <form method="POST" class="post-form">{% csrf_token %}
         {% crispy form %}
+        <input type="submit" value="Submit" class="btn btn-success">
     </form>
-    
+
 {% endblock %}

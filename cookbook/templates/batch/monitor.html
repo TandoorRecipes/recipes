@@ -16,7 +16,9 @@
     <br/>
     <form method="POST" class="post-form">{% csrf_token %}
         {% crispy form %}
+        <input type="submit" value="Submit" class="btn btn-success">
     </form>
+    <br/><br/>
 
     {% render_table monitored_paths %}
 
