@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
-from cookbook.models import Category, Keyword, ImportLog, NewRecipe
+from cookbook.models import Category, Keyword, SyncLog, RecipeImport
 from cookbook.tables import CategoryTable, KeywordTable, ImportLogTable, ImportTable
 
 
@@ -26,7 +26,7 @@ def keyword(request):
 
 @login_required
 def import_log(request):
-    table = ImportLogTable(ImportLog.objects.all().order_by(Lower('created_at').desc()))
+    table = ImportLogTable(SyncLog.objects.all().order_by(Lower('created_at').desc()))
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {'title': _("Import Log"), 'table': table})
@@ -34,7 +34,7 @@ def import_log(request):
 
 @login_required
 def new_recipe(request):
-    table = ImportTable(NewRecipe.objects.all())
+    table = ImportTable(RecipeImport.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {'title': _("Import"), 'table': table})

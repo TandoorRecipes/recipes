@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django_tables2 import RequestConfig
 
-from cookbook.forms import MonitorForm, BatchEditForm, NewRecipe
-from cookbook.models import Recipe, Category, Monitor
+from cookbook.forms import MonitorForm, BatchEditForm, RecipeImport
+from cookbook.models import Recipe, Category, Sync
 from cookbook.tables import MonitoredPathTable
 
 
@@ -14,7 +14,7 @@ def batch_monitor(request):
     if request.method == "POST":
         form = MonitorForm(request.POST)
         if form.is_valid():
-            new_path = Monitor()
+            new_path = Sync()
             new_path.path = form.cleaned_data['path']
             new_path.last_checked = datetime.now()
             new_path.save()
@@ -22,7 +22,7 @@ def batch_monitor(request):
     else:
         form = MonitorForm()
 
-    monitored_paths = MonitoredPathTable(Monitor.objects.all())
+    monitored_paths = MonitoredPathTable(Sync.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
 
     return render(request, 'batch/monitor.html', {'form': form, 'monitored_paths': monitored_paths})
@@ -31,7 +31,7 @@ def batch_monitor(request):
 @login_required
 def batch_import_all(request):
     if request.method == "POST":
-        imports = NewRecipe.objects.all()
+        imports = RecipeImport.objects.all()
         for new_recipe in imports:
             recipe = Recipe(name=new_recipe.name, path=new_recipe.path, category=(Category.objects.get(id=0)))
             recipe.save()

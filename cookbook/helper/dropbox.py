@@ -5,11 +5,11 @@ import requests
 import json
 from django.conf import settings
 
-from cookbook.models import Recipe, Monitor, NewRecipe, ImportLog
+from cookbook.models import Recipe, Sync, RecipeImport, SyncLog
 
 
 def sync_all():
-    monitors = Monitor.objects.all()
+    monitors = Sync.objects.all()
 
     for monitor in monitors:
         ret = import_all(monitor)
@@ -35,20 +35,20 @@ def import_all(monitor):
     try:
         recipes = r.json()
     except ValueError:
-        log_entry = ImportLog(status='ERROR', msg=str(r), monitor=monitor)
+        log_entry = SyncLog(status='ERROR', msg=str(r), monitor=monitor)
         log_entry.save()
         return r
 
     import_count = 0
     for recipe in recipes['entries']:
         path = recipe['path_lower']
-        if not Recipe.objects.filter(path=path).exists() and not NewRecipe.objects.filter(path=path).exists():
+        if not Recipe.objects.filter(path=path).exists() and not RecipeImport.objects.filter(path=path).exists():
             name = os.path.splitext(recipe['name'])[0]
-            new_recipe = NewRecipe(name=name, path=path)
+            new_recipe = RecipeImport(name=name, path=path)
             new_recipe.save()
             import_count += 1
 
-    log_entry = ImportLog(status='SUCCESS', msg='Imported ' + str(import_count) + ' recipes', monitor=monitor)
+    log_entry = SyncLog(status='SUCCESS', msg='Imported ' + str(import_count) + ' recipes', monitor=monitor)
     log_entry.save()
 
     monitor.last_checked = datetime.now()

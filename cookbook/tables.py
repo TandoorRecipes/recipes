@@ -45,7 +45,7 @@ class ImportLogTable(tables.Table):
     monitor_id = tables.LinkColumn('edit_monitor', args=[A('monitor_id')])
 
     class Meta:
-        model = ImportLog
+        model = SyncLog
         template_name = 'generic/table_template.html'
         fields = ('status', 'msg', 'monitor_id', 'created_at')
 
@@ -55,7 +55,7 @@ class MonitoredPathTable(tables.Table):
     delete = tables.TemplateColumn("<a href='{% url 'delete_monitor' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
-        model = Monitor
+        model = Sync
         template_name = 'generic/table_template.html'
         fields = ('id', 'path', 'last_checked')
 
@@ -65,6 +65,6 @@ class ImportTable(tables.Table):
     delete = tables.TemplateColumn("<a href='{% url 'delete_import' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
-        model = NewRecipe
+        model = RecipeImport
         template_name = 'generic/table_template.html'
         fields = ('id', 'name', 'path')

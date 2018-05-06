@@ -8,10 +8,10 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('test', views.test, name='test'),
 
-    path('new/recipe', new.RecipeCreate.as_view(), name='new_recipe'),
+    path('new/recipe/', new.RecipeCreate.as_view(), name='new_recipe'),
     path('new/recipe_import/<int:import_id>/', new.create_new_recipe, name='new_recipe_import'),
-    path('new/category', new.CategoryCreate.as_view(), name='new_category'),
-    path('new/keyword', new.KeywordCreate.as_view(), name='new_keyword'),
+    path('new/category/', new.CategoryCreate.as_view(), name='new_category'),
+    path('new/keyword/', new.KeywordCreate.as_view(), name='new_keyword'),
 
     path('list/keyword', lists.keyword, name='list_keyword'),
     path('list/category', lists.category, name='list_category'),

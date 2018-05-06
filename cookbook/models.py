@@ -41,21 +41,21 @@ class Recipe(models.Model):
         return ', '.join([x.name for x in self.keywords.all()])
 
 
-class NewRecipe(models.Model):
+class RecipeImport(models.Model):
     name = models.CharField(max_length=128)
     path = models.CharField(max_length=512, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Monitor(models.Model):
+class Sync(models.Model):
     path = models.CharField(max_length=512, default="")
     last_checked = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class ImportLog(models.Model):
-    monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
+class SyncLog(models.Model):
+    monitor = models.ForeignKey(Sync, on_delete=models.CASCADE)
     status = models.CharField(max_length=32)
     msg = models.TextField(default="")
     created_at = models.DateTimeField(auto_now_add=True)

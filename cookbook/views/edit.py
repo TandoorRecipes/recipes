@@ -5,12 +5,12 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import EditRecipeForm
-from cookbook.models import Recipe, Category, Monitor, Keyword, NewRecipe
+from cookbook.models import Recipe, Category, Sync, Keyword, RecipeImport
 
 
 class MonitorUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
-    model = Monitor
+    model = Sync
     fields = ['path']
 
     def get_success_url(self):
@@ -52,7 +52,7 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
 
 class ImportUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
-    model = NewRecipe
+    model = RecipeImport
     fields = ['name', 'path']
 
     def get_success_url(self):
@@ -100,7 +100,7 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
 
 class ImportDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
-    model = NewRecipe
+    model = RecipeImport
     success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
@@ -111,7 +111,7 @@ class ImportDelete(LoginRequiredMixin, DeleteView):
 
 class MonitorDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
-    model = Monitor
+    model = Sync
     success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
