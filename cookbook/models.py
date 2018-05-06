@@ -27,7 +27,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=128)
     path = models.CharField(max_length=512, default="")
     link = models.CharField(max_length=512, default="")
-    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=0)
+    category = models.ForeignKey(Category, blank=True, on_delete=models.PROTECT, null=True)
     keywords = models.ManyToManyField(Keyword, blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

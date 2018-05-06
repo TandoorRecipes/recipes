@@ -15,10 +15,9 @@
     <a href="{% url 'api_dropbox_sync' %}" class="btn btn-success">{% trans 'Sync Now!' %}</a>
     <br/>
     <form method="POST" class="post-form">{% csrf_token %}
-        {% crispy form %}
+        {{ form|crispy }}
         <input type="submit" value="Submit" class="btn btn-success">
     </form>
-    <br/><br/>
 
     {% render_table monitored_paths %}
 

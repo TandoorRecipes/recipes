@@ -24,7 +24,7 @@ def dropbox_sync(request):
     ret = dropbox.sync_all()
     if ret:
         messages.add_message(request, messages.SUCCESS, _('Sync successful!'))
-        return redirect('batch_import')
+        return redirect('list_import')
     else:
         messages.add_message(request, messages.ERROR, _('Error synchronizing with Storage'))
-        return redirect('batch_monitor')
+        return redirect('list_import')

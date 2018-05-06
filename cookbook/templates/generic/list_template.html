@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% load django_tables2 %}
+{% load class_tag %}
 
 {% block title %}{% trans 'List' %} - {{ title }}{% endblock %}
 
@@ -9,6 +10,12 @@
 
     <h3>{{ title }} {% trans 'List' %}</h3>
     <br/>
+
+    {% if table.Meta.model|get_class == 'RecipeImport' %}
+        <a href="{% url 'batch_import_all' %}" class="btn btn-warning">{% trans 'Import all' %}</a>
+        <br/>
+        <br/>
+    {% endif %}
 
     {% if table %}
         {% render_table table %}

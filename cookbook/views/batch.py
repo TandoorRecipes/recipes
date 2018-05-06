@@ -18,7 +18,7 @@ def batch_monitor(request):
             new_path.path = form.cleaned_data['path']
             new_path.last_checked = datetime.now()
             new_path.save()
-            return redirect('batch_import')
+            return redirect('batch_monitor')
     else:
         form = MonitorForm()
 
@@ -33,11 +33,11 @@ def batch_import_all(request):
     if request.method == "POST":
         imports = RecipeImport.objects.all()
         for new_recipe in imports:
-            recipe = Recipe(name=new_recipe.name, path=new_recipe.path, category=(Category.objects.get(id=0)))
+            recipe = Recipe(name=new_recipe.name, path=new_recipe.path)
             recipe.save()
             new_recipe.delete()
 
-    return redirect('batch_import')
+    return redirect('list_import')
 
 
 @login_required

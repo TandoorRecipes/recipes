@@ -15,8 +15,8 @@ urlpatterns = [
 
     path('list/keyword', lists.keyword, name='list_keyword'),
     path('list/category', lists.category, name='list_category'),
-    path('list/import_log', lists.import_log, name='list_import_log'),
-    path('list/import', lists.new_recipe, name='list_import'),
+    path('list/import_log', lists.sync_log, name='list_import_log'),
+    path('list/import', lists.recipe_import, name='list_import'),
 
     path('edit/recipe/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_recipe'),
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),

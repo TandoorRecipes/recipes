@@ -112,7 +112,7 @@ class ImportDelete(LoginRequiredMixin, DeleteView):
 class MonitorDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = Sync
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('batch_monitor')
 
     def get_context_data(self, **kwargs):
         context = super(MonitorDelete, self).get_context_data(**kwargs)
