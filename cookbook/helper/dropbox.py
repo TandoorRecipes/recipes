@@ -12,7 +12,11 @@ def sync_all():
     monitors = Monitor.objects.all()
 
     for monitor in monitors:
-        import_all(monitor)
+        ret = import_all(monitor)
+        if not ret:
+            return ret
+
+    return True
 
 
 def import_all(monitor):

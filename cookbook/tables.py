@@ -41,13 +41,23 @@ class KeywordTable(tables.Table):
         fields = ('id', 'name')
 
 
+class ImportLogTable(tables.Table):
+    monitor_id = tables.LinkColumn('edit_monitor', args=[A('monitor_id')])
+
+    class Meta:
+        model = ImportLog
+        template_name = 'generic/table_template.html'
+        fields = ('status', 'msg', 'monitor_id', 'created_at')
+
+
 class MonitoredPathTable(tables.Table):
+    id = tables.LinkColumn('edit_monitor', args=[A('id')])
     delete = tables.TemplateColumn("<a href='{% url 'delete_monitor' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
         model = Monitor
         template_name = 'generic/table_template.html'
-        fields = ('path', 'last_checked')
+        fields = ('id', 'path', 'last_checked')
 
 
 class NewRecipeTable(tables.Table):
@@ -56,4 +66,4 @@ class NewRecipeTable(tables.Table):
     class Meta:
         model = NewRecipe
         template_name = 'generic/table_template.html'
-        fields = ('name','path')
+        fields = ('id', 'name', 'path')
