@@ -4,8 +4,8 @@ from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
-from cookbook.models import Category, Keyword, ImportLog
-from cookbook.tables import CategoryTable, KeywordTable, ImportLogTable
+from cookbook.models import Category, Keyword, ImportLog, NewRecipe
+from cookbook.tables import CategoryTable, KeywordTable, ImportLogTable, ImportTable
 
 
 @login_required
@@ -30,3 +30,11 @@ def import_log(request):
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {'title': _("Import Log"), 'table': table})
+
+
+@login_required
+def new_recipe(request):
+    table = ImportTable(NewRecipe.objects.all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(request, 'generic/list_template.html', {'title': _("Import"), 'table': table})

@@ -1,7 +1,5 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
@@ -52,6 +50,20 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
+class ImportUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic\edit_template.html"
+    model = NewRecipe
+    fields = ['name', 'path']
+
+    def get_success_url(self):
+        return reverse('edit_import',  kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(ImportUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Import")
+        return context
+
+
 class RecipeUpdate(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = EditRecipeForm
@@ -86,6 +98,17 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
+class ImportDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic\delete_template.html"
+    model = NewRecipe
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, **kwargs):
+        context = super(ImportDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Import")
+        return context
+
+
 class MonitorDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = Monitor
@@ -116,15 +139,4 @@ class KeywordDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(KeywordDelete, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
-        return context
-
-
-class NewRecipeDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
-    model = NewRecipe
-    success_url = reverse_lazy('batch_import')
-
-    def get_context_data(self, **kwargs):
-        context = super(NewRecipeDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Import Recipe")
         return context

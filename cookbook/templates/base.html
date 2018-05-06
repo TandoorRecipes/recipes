@@ -71,6 +71,8 @@
                             class="fas fa-archive"></i> {% trans 'Category' %}</a>
                     <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
                             class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
+                    <a class="dropdown-item" href="{% url 'list_import' %}"><i
+                            class="far fa-file-alt"></i> {% trans 'New Recipes' %}</a>
                     <a class="dropdown-item" href="{% url 'list_import_log' %}"><i
                             class="fas fa-history"></i> {% trans 'Import Log' %}</a>
                 </div>
@@ -83,8 +85,6 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'batch_monitor' %}"><i
                             class="fas fa-sync-alt"></i> {% trans 'Configure Sync' %}</a>
-                    <a class="dropdown-item" href="{% url 'batch_import' %}"><i
-                            class="fas fa-wrench"></i> {% trans 'Manage imported Recipes' %}</a>
                     <a class="dropdown-item" href="{% url 'batch_edit' %}"><i
                             class="fas fa-edit"></i> {% trans 'Batch Edit' %}</a>
                 </div>

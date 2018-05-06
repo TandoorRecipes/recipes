@@ -60,8 +60,9 @@ class MonitoredPathTable(tables.Table):
         fields = ('id', 'path', 'last_checked')
 
 
-class NewRecipeTable(tables.Table):
-    delete = tables.TemplateColumn("<a href='{% url 'delete_new_recipe' record.id %}' >" + _('Delete') + "</a>")
+class ImportTable(tables.Table):
+    id = tables.LinkColumn('edit_import', args=[A('id')])
+    delete = tables.TemplateColumn("<a href='{% url 'delete_import' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
         model = NewRecipe
