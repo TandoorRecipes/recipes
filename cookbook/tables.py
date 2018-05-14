@@ -1,6 +1,6 @@
 import django_tables2 as tables
-from django_tables2.utils import A  # alias for Accessor
 from django.utils.translation import gettext as _
+from django_tables2.utils import A  # alias for Accessor
 
 from .models import *
 
@@ -13,7 +13,8 @@ class RecipeTable(tables.Table):
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
     all_tags = tables.Column(
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
-    delete = tables.TemplateColumn("<a href='{% url 'delete_recipe' record.id %}' >" + _('Delete') + "</a>")  # TODO remove and put into edit page
+    delete = tables.TemplateColumn(
+        "<a href='{% url 'delete_recipe' record.id %}' >" + _('Delete') + "</a>")  # TODO remove and put into edit page
 
     class Meta:
         model = Recipe
@@ -28,7 +29,7 @@ class CategoryTable(tables.Table):
     class Meta:
         model = Category
         template_name = 'generic/table_template.html'
-        fields = ('id', 'name')
+        fields = ('id', 'icon', 'name')
 
 
 class KeywordTable(tables.Table):
@@ -38,7 +39,7 @@ class KeywordTable(tables.Table):
     class Meta:
         model = Keyword
         template_name = 'generic/table_template.html'
-        fields = ('id', 'name')
+        fields = ('id', 'icon', 'name')
 
 
 class ImportLogTable(tables.Table):

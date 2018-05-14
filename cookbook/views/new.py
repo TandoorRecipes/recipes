@@ -25,7 +25,7 @@ class RecipeCreate(LoginRequiredMixin, CreateView):  # this exists for completen
 class CategoryCreate(LoginRequiredMixin, CreateView):
     template_name = "generic\\new_template.html"
     model = Category
-    fields = ['name', 'description']
+    fields = ['name', 'icon', 'description']
     success_url = reverse_lazy('list_category')
 
     def get_context_data(self, **kwargs):
@@ -37,7 +37,7 @@ class CategoryCreate(LoginRequiredMixin, CreateView):
 class KeywordCreate(LoginRequiredMixin, CreateView):
     template_name = "generic\\new_template.html"
     model = Keyword
-    fields = ['name', 'description']
+    fields = ['name', 'icon', 'description']
     success_url = reverse_lazy('list_keyword')
 
     def get_context_data(self, **kwargs):

@@ -14,7 +14,7 @@ class MonitorUpdate(LoginRequiredMixin, UpdateView):
     fields = ['path']
 
     def get_success_url(self):
-        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(MonitorUpdate, self).get_context_data(**kwargs)
@@ -25,10 +25,10 @@ class MonitorUpdate(LoginRequiredMixin, UpdateView):
 class CategoryUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = Category
-    fields = ['name', 'description']
+    fields = ['name', 'icon', 'description']
 
     def get_success_url(self):
-        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(CategoryUpdate, self).get_context_data(**kwargs)
@@ -39,10 +39,10 @@ class CategoryUpdate(LoginRequiredMixin, UpdateView):
 class KeywordUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = Keyword
-    fields = ['name', 'description']
+    fields = ['name', 'icon', 'description']
 
     def get_success_url(self):
-        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(KeywordUpdate, self).get_context_data(**kwargs)
@@ -56,7 +56,7 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
     fields = ['name', 'path']
 
     def get_success_url(self):
-        return reverse('edit_import',  kwargs={'pk': self.object.pk})
+        return reverse('edit_import', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(ImportUpdate, self).get_context_data(**kwargs)
@@ -78,7 +78,7 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
         return super(RecipeUpdate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('edit_recipe',  kwargs={'pk': self.object.pk})
+        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(RecipeUpdate, self).get_context_data(**kwargs)

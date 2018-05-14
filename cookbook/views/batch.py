@@ -30,12 +30,11 @@ def batch_monitor(request):
 
 @login_required
 def batch_import_all(request):
-    if request.method == "POST":
-        imports = RecipeImport.objects.all()
-        for new_recipe in imports:
-            recipe = Recipe(name=new_recipe.name, path=new_recipe.path)
-            recipe.save()
-            new_recipe.delete()
+    imports = RecipeImport.objects.all()
+    for new_recipe in imports:
+        recipe = Recipe(name=new_recipe.name, path=new_recipe.path)
+        recipe.save()
+        new_recipe.delete()
 
     return redirect('list_import')
 

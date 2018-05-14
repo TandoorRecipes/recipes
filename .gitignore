@@ -70,5 +70,3 @@ secret_settings\.py
 *.sqlite3
 
 \.idea/workspace\.xml
-
-cookbook/migrations/
