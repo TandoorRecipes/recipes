@@ -70,3 +70,7 @@ secret_settings\.py
 *.sqlite3
 
 \.idea/workspace\.xml
+
+\.idea/misc\.xml
+
+\.idea/recipes\.iml
