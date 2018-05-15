@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django_tables2.utils import A  # alias for Accessor
 
@@ -45,6 +46,13 @@ class KeywordTable(tables.Table):
 class ImportLogTable(tables.Table):
     monitor_id = tables.LinkColumn('edit_monitor', args=[A('monitor_id')])
 
+    @staticmethod
+    def render_status(value):
+        if value == 'SUCCESS':
+            return format_html('<span class="badge badge-success">%s</span>' % value)
+        else:
+            return format_html('<span class="badge badge-error">%s</span>' % value)
+
     class Meta:
         model = SyncLog
         template_name = 'generic/table_template.html'
@@ -54,6 +62,10 @@ class ImportLogTable(tables.Table):
 class MonitoredPathTable(tables.Table):
     id = tables.LinkColumn('edit_monitor', args=[A('id')])
     delete = tables.TemplateColumn("<a href='{% url 'delete_monitor' record.id %}' >" + _('Delete') + "</a>")
+
+    @staticmethod
+    def render_path(value):
+        return format_html('<code>%s</code>' % value)
 
     class Meta:
         model = Sync

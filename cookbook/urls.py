@@ -31,7 +31,7 @@ urlpatterns = [
     path('delete/import/<int:pk>/', edit.ImportDelete.as_view(), name='delete_import'),
 
     path('batch/monitor', batch.batch_monitor, name='batch_monitor'),
-    path('batch/category', batch.batch_edit, name='batch_edit'),
+    path('batch/edit', batch.batch_edit, name='batch_edit'),
     path('batch/import/all', batch.batch_import_all, name='batch_import_all'),
 
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),

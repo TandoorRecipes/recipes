@@ -1,5 +1,3 @@
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 from django.utils.translation import gettext as _
 from django import forms
 from .models import *
@@ -16,12 +14,6 @@ class EditRecipeForm(forms.ModelForm):
             'keywords': _('Keywords'),
             'path': _('Path'),
         }
-
-    def __init__(self, *args, **kwargs):
-        super(EditRecipeForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.add_input(Submit('save', _('Save'), css_class='btn-primary'))
 
 
 class MonitorForm(forms.Form):

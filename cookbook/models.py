@@ -10,7 +10,7 @@ class Keyword(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return "{0} {1}".format(self.icon, self.name)
 
 
 class Category(models.Model):
@@ -22,7 +22,7 @@ class Category(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return "{0} {1}".format(self.icon, self.name)
 
 
 class Recipe(models.Model):

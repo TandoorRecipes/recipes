@@ -8,16 +8,24 @@
 {% block content %}
 
     <h3>{% trans 'Manage watched Folders' %}</h3>
+    <div class="card border-info">
+        <div class="card-body text-info">
+            <p class="card-text">
+                {% trans 'On this Page you can manage all DropBox folder locations that should be monitored and synced' %}
+                <br/>
+                {% trans 'The path must be in the following format' %} <code>/Folder/RecipesFolder</code>
+            </p>
+            <form method="POST" class="post-form">{% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Submit" class="btn btn-success">
+            </form>
 
-    {% trans 'On this Page you can manage all DropBox folder locations that should be monitored and synced' %} <br/>
-    {% trans 'The path must be in the following format' %} <code>/Folder/RecipesFolder</code>
+        </div>
+    </div>
+
     <br/>
-    <a href="{% url 'api_dropbox_sync' %}" class="btn btn-success">{% trans 'Sync Now!' %}</a>
-    <br/>
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Submit" class="btn btn-success">
-    </form>
+    <a href="{% url 'api_dropbox_sync' %}" class="btn btn-warning">{% trans 'Sync Now!' %}</a>
+    <br/><br/>
 
     {% render_table monitored_paths %}
 
