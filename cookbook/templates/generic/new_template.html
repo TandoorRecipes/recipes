@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load class_tag %}
 
 {% block title %}{% trans 'New' %} - {{ title }}{% endblock %}
 
 {% block content %}
 
-    <h3>{% trans 'New' %} {{ title }}</h3>
+    <h3>{% trans 'New' %} {{ title }} </h3>
 
     <form action="." method="post">
         {% csrf_token %}

@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django_tables2 import RequestConfig
@@ -7,6 +8,7 @@ from django_tables2 import RequestConfig
 from cookbook.forms import MonitorForm, BatchEditForm, RecipeImport
 from cookbook.models import Recipe, Category, Sync
 from cookbook.tables import MonitoredPathTable
+from django.utils.translation import gettext as _, ngettext
 
 
 @login_required
@@ -49,13 +51,27 @@ def batch_edit(request):
             keyword = form.cleaned_data['keyword']
 
             recipes = Recipe.objects.filter(name__contains=word)
+            count = 0
             for recipe in recipes:
+                edit = False
                 if category is not None:
                     recipe.category = Category.objects.get(name=category)
+                    edit = True
                 if keyword.__sizeof__() > 0:
                     recipe.keywords.add(*list(keyword))
+                    edit = True
+                if edit:
+                    count = count + 1
 
                 recipe.save()
+
+            msg = ngettext(
+                'Batch edit done. %(count)d recipe where updated.',
+                'Batch edit done. %(count)d Recipes where updated.',
+                count) % {
+                      'count': count,
+                  }
+            messages.add_message(request, messages.SUCCESS, msg)
 
             return redirect('batch_edit')
     else:

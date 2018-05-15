@@ -8,7 +8,13 @@
 
 {% block content %}
 
-    <h3>{{ title }} {% trans 'List' %}</h3>
+    <h3>{{ title }} {% trans 'List' %}
+    {% if table.Meta.model|get_class == 'Category' %}
+        <a href="{% url 'new_category' %}" ><i class="fal fa-plus-circle"></i></a>
+    {% elif table.Meta.model|get_class == 'Keyword' %}
+        <a href="{% url 'new_keyword' %}" ><i class="fal fa-plus-circle"></i></a>
+    {% endif %}
+    </h3>
     <br/>
 
     {% if table.Meta.model|get_class == 'RecipeImport' %}

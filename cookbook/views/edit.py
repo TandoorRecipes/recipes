@@ -13,8 +13,10 @@ class MonitorUpdate(LoginRequiredMixin, UpdateView):
     model = Sync
     fields = ['path']
 
+    # TODO add msg box
+
     def get_success_url(self):
-        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
+        return reverse('edit_monitor', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(MonitorUpdate, self).get_context_data(**kwargs)
@@ -27,8 +29,10 @@ class CategoryUpdate(LoginRequiredMixin, UpdateView):
     model = Category
     fields = ['name', 'icon', 'description']
 
+    # TODO add msg box
+
     def get_success_url(self):
-        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
+        return reverse('edit_category', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(CategoryUpdate, self).get_context_data(**kwargs)
@@ -41,8 +45,10 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
     model = Keyword
     fields = ['name', 'icon', 'description']
 
+    # TODO add msg box
+
     def get_success_url(self):
-        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
+        return reverse('edit_keyword', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(KeywordUpdate, self).get_context_data(**kwargs)
@@ -54,6 +60,8 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = RecipeImport
     fields = ['name', 'path']
+
+    # TODO add msg box
 
     def get_success_url(self):
         return reverse('edit_import', kwargs={'pk': self.object.pk})
@@ -101,7 +109,7 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
 class ImportDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = RecipeImport
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('list_import')
 
     def get_context_data(self, **kwargs):
         context = super(ImportDelete, self).get_context_data(**kwargs)
@@ -123,7 +131,7 @@ class MonitorDelete(LoginRequiredMixin, DeleteView):
 class CategoryDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = Category
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('list_category')
 
     def get_context_data(self, **kwargs):
         context = super(CategoryDelete, self).get_context_data(**kwargs)
@@ -134,7 +142,7 @@ class CategoryDelete(LoginRequiredMixin, DeleteView):
 class KeywordDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = Keyword
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('list_keyword')
 
     def get_context_data(self, **kwargs):
         context = super(KeywordDelete, self).get_context_data(**kwargs)
