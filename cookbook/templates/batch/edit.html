@@ -5,6 +5,10 @@
 
 {% block title %}{% trans 'Batch edit Category' %}{% endblock %}
 
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
 {% block content %}
 
     <h3>
@@ -23,12 +27,4 @@
         <input type="submit" value="Submit" class="btn btn-success">
     </form>
 
-    <script>
-        //TODO clean this up
-        //converts multiselct in recipe edit to searchable multiselect
-        //shitty solution that needs to be redone at some point
-        $(document).ready(function () {
-            $('#id_keyword').select2();
-        });
-    </script>
 {% endblock %}

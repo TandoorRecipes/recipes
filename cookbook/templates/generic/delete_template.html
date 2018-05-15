@@ -4,6 +4,10 @@
 
 {% block title %}{% trans 'Delete' %} - {{ title }}{% endblock %}
 
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
 {% block content %}
 
     <h3>{% trans 'Delete' %} {{ title }}</h3>

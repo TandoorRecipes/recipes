@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, RecipeImport
+from cookbook.forms import ImportRecipeForm, RecipeImport, CategoryForm, KeywordForm
 from cookbook.models import Category, Keyword, Recipe
 
 
@@ -25,7 +25,7 @@ class RecipeCreate(LoginRequiredMixin, CreateView):  # this exists for completen
 class CategoryCreate(LoginRequiredMixin, CreateView):
     template_name = "generic\\new_template.html"
     model = Category
-    fields = ['name', 'icon', 'description']
+    form_class = CategoryForm
     success_url = reverse_lazy('list_category')
 
     def get_context_data(self, **kwargs):
@@ -37,7 +37,7 @@ class CategoryCreate(LoginRequiredMixin, CreateView):
 class KeywordCreate(LoginRequiredMixin, CreateView):
     template_name = "generic\\new_template.html"
     model = Keyword
-    fields = ['name', 'icon', 'description']
+    form_class = KeywordForm
     success_url = reverse_lazy('list_keyword')
 
     def get_context_data(self, **kwargs):

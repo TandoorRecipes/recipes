@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import EditRecipeForm, EditCategoryForm
+from cookbook.forms import EditRecipeForm, CategoryForm, KeywordForm
 from cookbook.models import Recipe, Category, Sync, Keyword, RecipeImport
 
 
@@ -27,7 +27,7 @@ class MonitorUpdate(LoginRequiredMixin, UpdateView):
 class CategoryUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = Category
-    form_class = EditCategoryForm
+    form_class = CategoryForm
 
     # TODO add msg box
 
@@ -43,7 +43,7 @@ class CategoryUpdate(LoginRequiredMixin, UpdateView):
 class KeywordUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = Keyword
-    fields = ['name', 'icon', 'description']
+    form_class = KeywordForm
 
     # TODO add msg box
 

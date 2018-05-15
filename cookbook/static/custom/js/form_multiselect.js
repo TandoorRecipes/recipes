@@ -1,3 +1,3 @@
 $(document).ready(function () {
-    $('#id_keywords').select2();
+    $('.selectmultiple').select2();
 });
