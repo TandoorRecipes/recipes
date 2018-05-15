@@ -4,6 +4,10 @@
 
 {% block title %}{% trans 'Edit' %} - {{ title }}{% endblock %}
 
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
 {% block content %}
 
     <h3>{% trans 'Edit' %} {{ title }}</h3>
@@ -14,14 +18,4 @@
         <input type="submit" value="Submit" class="btn btn-success">
     </form>
 
-
-    <script>
-        //TODO clean this up
-        //converts multiselct in recipe edit to searchable multiselect
-        //shitty solution that needs to be redone at some point
-        $(document).ready(function () {
-            $('#id_keywords').select2();
-            $('#id_icon').emojioneArea();
-        });
-    </script>
 {% endblock %}

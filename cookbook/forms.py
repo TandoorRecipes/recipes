@@ -1,6 +1,17 @@
 from django.utils.translation import gettext as _
 from django import forms
 from .models import *
+from django.forms import widgets, TextInput, DateField
+
+
+class MultiSelectWidget(widgets.SelectMultiple):
+    class Media:
+        js = ('custom/js/from_multiselect.js',)
+
+
+class EmojiWidget(forms.TextInput):
+    class Media:
+        js = 'custom/js/form_emoji.js'
 
 
 class EditRecipeForm(forms.ModelForm):
@@ -14,6 +25,15 @@ class EditRecipeForm(forms.ModelForm):
             'keywords': _('Keywords'),
             'path': _('Path'),
         }
+
+
+class EditCategoryForm(forms.ModelForm):
+    class Media:
+        js = ('custom/js/form_emoji.js',)
+
+    class Meta:
+        model = Category
+        fields = ('name', 'icon', 'description')
 
 
 class MonitorForm(forms.Form):

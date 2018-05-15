@@ -26,6 +26,9 @@
     <link rel="stylesheet" href="{% static "emojionearea/emojionearea.min.css" %}">
     <script type="text/javascript" src="{% static "emojionearea/emojionearea.min.js" %}"></script>
 
+    {% block extra_head %} <!-- block for templates to put stuff into header -->
+    {% endblock %}
+
     <style>
         @media (max-width: 1025px) {
             .container {
