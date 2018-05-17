@@ -6,3 +6,4 @@ django-filter
 django-crispy-forms
 djangorestframework
 django-autocomplete-light
+django-watson

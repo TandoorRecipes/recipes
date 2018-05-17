@@ -1,3 +1,3 @@
 $(document).ready(function () {
-    $('.selectmultiple').select2();
+    $('.multiselectwidget').select2();
 });

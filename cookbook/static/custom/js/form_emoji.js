@@ -1,3 +1,3 @@
 $(document).ready(function () {
-    $('#id_icon').emojioneArea();
+    $('.emojiwidget').emojioneArea();
 });

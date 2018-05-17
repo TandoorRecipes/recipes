@@ -12,8 +12,7 @@ class MultiSelectWidget(widgets.SelectMultiple):
 class EmojiWidget(forms.TextInput):
     class Media:
         js = ('custom/js/form_emoji.js',)
-        # TODO add class to input fields so there is no longer a static reference to #id_icon in the js but a class based like in multiselect
-        
+
 
 class EditRecipeForm(forms.ModelForm):
     class Meta:
