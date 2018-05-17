@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'rest_framework',
-    'watson',
     'cookbook.apps.CookbookConfig',
 ]
 
