@@ -5,36 +5,42 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django_tables2 import RequestConfig
 
-from cookbook.forms import MonitorForm, BatchEditForm, RecipeImport
+from cookbook.forms import SyncForm, BatchEditForm, RecipeImport
 from cookbook.models import Recipe, Category, Sync
-from cookbook.tables import MonitoredPathTable
+from cookbook.tables import SyncTable
 from django.utils.translation import gettext as _, ngettext
 
 
 @login_required
 def batch_monitor(request):
     if request.method == "POST":
-        form = MonitorForm(request.POST)
+        form = SyncForm(request.POST)
         if form.is_valid():
             new_path = Sync()
             new_path.path = form.cleaned_data['path']
+            new_path.storage = form.cleaned_data['storage']
             new_path.last_checked = datetime.now()
             new_path.save()
             return redirect('batch_monitor')
     else:
-        form = MonitorForm()
+        form = SyncForm()
 
-    monitored_paths = MonitoredPathTable(Sync.objects.all())
+    monitored_paths = SyncTable(Sync.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
 
     return render(request, 'batch/monitor.html', {'form': form, 'monitored_paths': monitored_paths})
 
 
 @login_required
+def sync_wait(request):
+    return render(request, 'batch/waiting.html')
+
+
+@login_required
 def batch_import_all(request):
     imports = RecipeImport.objects.all()
     for new_recipe in imports:
-        recipe = Recipe(name=new_recipe.name, path=new_recipe.path)
+        recipe = Recipe(name=new_recipe.name, path=new_recipe.path, storage=new_recipe.storage)
         recipe.save()
         new_recipe.delete()
 

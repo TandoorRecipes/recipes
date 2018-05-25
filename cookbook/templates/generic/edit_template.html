@@ -13,6 +13,17 @@
 
     <h3>{% trans 'Edit' %} {{ title }}</h3>
 
+    {% if form.Meta.model|get_class == 'Storage' %} <!-- TODO make one include for this text block -->
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><i class="far fa-exclamation-triangle"></i> {% trans 'Security Warning' %}</h4>
+            <p>{% blocktrans %}
+                The <b>Password and Token</b> field are stored as <b>plain text</b> inside the database.
+                This is necessary because they are needed to make API requests, but it also increases the risk of someone stealing it. <br/>
+                To limit the possible damage use read only tokens or accounts if available or create separate accounts with limited access (only to recipes).
+            {% endblocktrans %}</p>
+        </div>
+    {% endif %}
+
     <form action="." method="post">
         {% csrf_token %}
         {{ form|crispy }}

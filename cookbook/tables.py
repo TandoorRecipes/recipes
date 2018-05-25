@@ -39,8 +39,17 @@ class KeywordTable(tables.Table):
         fields = ('id', 'icon', 'name')
 
 
+class StorageTable(tables.Table):
+    id = tables.LinkColumn('edit_storage', args=[A('id')])
+
+    class Meta:
+        model = Storage
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'name', 'method')
+
+
 class ImportLogTable(tables.Table):
-    monitor_id = tables.LinkColumn('edit_monitor', args=[A('monitor_id')])
+    sync_id = tables.LinkColumn('edit_sync', args=[A('sync_id')])
 
     @staticmethod
     def render_status(value):
@@ -52,20 +61,24 @@ class ImportLogTable(tables.Table):
     class Meta:
         model = SyncLog
         template_name = 'generic/table_template.html'
-        fields = ('status', 'msg', 'monitor_id', 'created_at')
+        fields = ('status', 'msg', 'sync_id', 'created_at')
 
 
-class MonitoredPathTable(tables.Table):
-    id = tables.LinkColumn('edit_monitor', args=[A('id')])
+class SyncTable(tables.Table):
+    id = tables.LinkColumn('edit_sync', args=[A('id')])
 
     @staticmethod
     def render_path(value):
         return format_html('<code>%s</code>' % value)
 
+    @staticmethod
+    def render_storage(value):
+        return format_html('<span class="badge badge-success">%s</span>' % value)
+
     class Meta:
         model = Sync
         template_name = 'generic/table_template.html'
-        fields = ('id', 'path', 'last_checked')
+        fields = ('id', 'path', 'storage', 'last_checked')
 
 
 class RecipeImportTable(tables.Table):

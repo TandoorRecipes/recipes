@@ -17,7 +17,7 @@ class EmojiWidget(forms.TextInput):
 class EditRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'category', 'keywords', 'path')
+        fields = ('name', 'category', 'keywords', 'path', 'storage')
 
         labels = {
             'name': _('Name'),
@@ -42,8 +42,20 @@ class KeywordForm(forms.ModelForm):
         widgets = {'icon': EmojiWidget}
 
 
-class MonitorForm(forms.Form):
-    path = forms.CharField(label=_('Path'))
+class StorageForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password'}), required=False)
+    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}), required=False)
+    token = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}), required=False)
+
+    class Meta:
+        model = Storage
+        fields = ('name', 'method', 'username', 'password', 'token', 'url')
+
+
+class SyncForm(forms.ModelForm):
+    class Meta:
+        model = Sync
+        fields = ('storage', 'path')
 
 
 class BatchEditForm(forms.Form):

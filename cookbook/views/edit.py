@@ -5,23 +5,23 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import EditRecipeForm, CategoryForm, KeywordForm
-from cookbook.models import Recipe, Category, Sync, Keyword, RecipeImport
+from cookbook.forms import EditRecipeForm, CategoryForm, KeywordForm, StorageForm, SyncForm
+from cookbook.models import Recipe, Category, Sync, Keyword, RecipeImport, Storage
 
 
-class MonitorUpdate(LoginRequiredMixin, UpdateView):
+class SyncUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic\edit_template.html"
     model = Sync
-    fields = ['path']
+    form_class = SyncForm
 
     # TODO add msg box
 
     def get_success_url(self):
-        return reverse('edit_monitor', kwargs={'pk': self.object.pk})
+        return reverse('edit_sync', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        context = super(MonitorUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Monitor")
+        context = super(SyncUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Sync")
         return context
 
 
@@ -54,6 +54,22 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(KeywordUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
+        return context
+
+
+class StorageUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic\edit_template.html"
+    model = Storage
+    form_class = StorageForm
+
+    # TODO add msg box
+
+    def get_success_url(self):
+        return reverse('edit_storage', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(StorageUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Storage Backend")
         return context
 
 
@@ -153,4 +169,15 @@ class KeywordDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(KeywordDelete, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
+        return context
+
+
+class StorageDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic\delete_template.html"
+    model = Storage
+    success_url = reverse_lazy('list_storage')
+
+    def get_context_data(self, **kwargs):
+        context = super(StorageDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Storage Backend")
         return context

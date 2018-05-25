@@ -24,7 +24,7 @@
     </div>
 
     <br/>
-    <a href="{% url 'api_dropbox_sync' %}" class="btn btn-warning">{% trans 'Sync Now!' %}</a>
+    <a href="{% url 'batch_sync_wait' %}" class="btn btn-warning">{% trans 'Sync Now!' %}</a>
     <br/><br/>
 
     {% render_table monitored_paths %}

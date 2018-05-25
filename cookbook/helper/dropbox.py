@@ -8,22 +8,11 @@ from django.conf import settings
 from cookbook.models import Recipe, Sync, RecipeImport, SyncLog
 
 
-def sync_all():
-    monitors = Sync.objects.all()
-
-    for monitor in monitors:
-        ret = import_all(monitor)
-        if not ret:
-            return ret
-
-    return True
-
-
 def import_all(monitor):
     url = "https://api.dropboxapi.com/2/files/list_folder"
 
     headers = {
-        "Authorization": "Bearer " + settings.DROPBOX_API_KEY,
+        "Authorization": "Bearer " + monitor.storage.token,
         "Content-Type": "application/json"
     }
 
@@ -40,15 +29,15 @@ def import_all(monitor):
         return r
 
     import_count = 0
-    for recipe in recipes['entries']:
+    for recipe in recipes['entries']:  # TODO check if has_more is set and import that as well
         path = recipe['path_lower']
         if not Recipe.objects.filter(path=path).exists() and not RecipeImport.objects.filter(path=path).exists():
             name = os.path.splitext(recipe['name'])[0]
-            new_recipe = RecipeImport(name=name, path=path)
+            new_recipe = RecipeImport(name=name, path=path, storage=monitor.storage)
             new_recipe.save()
             import_count += 1
 
-    log_entry = SyncLog(status='SUCCESS', msg='Imported ' + str(import_count) + ' recipes', monitor=monitor)
+    log_entry = SyncLog(status='SUCCESS', msg='Imported ' + str(import_count) + ' recipes', sync=monitor)
     log_entry.save()
 
     monitor.last_checked = datetime.now()

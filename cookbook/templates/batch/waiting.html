@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Importing Recipes' %}{% endblock %}
+
+
+{% block content %}
+
+    <h3>
+        {% trans 'Importing Recipes' %}
+    </h3>
+<br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="text-center">
+        <i class="fas fa-sync fa-spin fa-10x"></i>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            window.location.href = "http://192.168.178.27:8000/cookbook/api/sync_all"
+        });
+    </script>
+
+{% endblock %}

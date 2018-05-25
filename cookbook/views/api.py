@@ -4,25 +4,35 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
-from cookbook.models import Recipe
+from cookbook.models import Recipe, Sync, Storage
 from cookbook.helper import dropbox
 
 
 @login_required
 def get_file_link(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
-    if recipe.link == "":
-        response = dropbox.get_share_link(recipe.path)  # TODO response validation
-        recipe.link = response['url']
-        recipe.save()
+
+    if recipe.storage.method == Storage.DROPBOX:
+        if recipe.link == "":
+            response = dropbox.get_share_link(recipe.path)  # TODO response validation
+            recipe.link = response['url']
+            recipe.save()
 
     return HttpResponse(recipe.link)
 
 
 @login_required
-def dropbox_sync(request):
-    ret = dropbox.sync_all()
-    if ret:
+def sync_all(request):
+    monitors = Sync.objects.all()
+
+    error = False
+    for monitor in monitors:
+        if monitor.storage.method == Storage.DROPBOX:
+            ret = dropbox.import_all(monitor)
+            if not ret:
+                error = True
+
+    if not error:
         messages.add_message(request, messages.SUCCESS, _('Sync successful!'))
         return redirect('list_import')
     else:

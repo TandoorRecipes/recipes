@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, RecipeImport, CategoryForm, KeywordForm
+from cookbook.forms import ImportRecipeForm, RecipeImport, CategoryForm, KeywordForm, Storage, StorageForm
 from cookbook.models import Category, Keyword, Recipe
 
 
@@ -43,6 +43,18 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(KeywordCreate, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
+        return context
+
+
+class StorageCreate(LoginRequiredMixin, CreateView):
+    template_name = "generic\\new_template.html"
+    model = Storage
+    form_class = StorageForm
+    success_url = reverse_lazy('list_storage')
+
+    def get_context_data(self, **kwargs):
+        context = super(StorageCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Storage Backend")
         return context
 
 
