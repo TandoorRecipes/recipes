@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% load django_tables2 %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% load i18n %}
 
 {% block title %}{% trans "Cookbook" %}{% endblock %}
+
+{% block extra_head %}
+    {{ filter.form.media }}
+{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -14,9 +19,11 @@
                         <i class="fas fa-search"></i> {% trans "Search" %}
                     </div>
                     <div class="card-body">
-                        <form action="" method="get">
+                        <form action="" method="get" id="search_form">
                             {{ filter.form|crispy }}
                             <input class="btn btn-primary" type="submit"/>
+                            <a href="#" onclick="window.location = window.location.pathname;"
+                               class="btn btn-warning">{% trans 'Reset' %}</a>
                         </form>
                     </div>
                 </div>
