@@ -14,8 +14,6 @@ class RecipeTable(tables.Table):
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
     all_tags = tables.Column(
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
-    delete = tables.TemplateColumn(
-        "<a href='{% url 'delete_recipe' record.id %}' >" + _('Delete') + "</a>")  # TODO remove and put into edit page
 
     class Meta:
         model = Recipe
@@ -25,7 +23,6 @@ class RecipeTable(tables.Table):
 
 class CategoryTable(tables.Table):
     id = tables.LinkColumn('edit_category', args=[A('id')])
-    delete = tables.TemplateColumn("<a href='{% url 'delete_category' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
         model = Category
@@ -35,7 +32,6 @@ class CategoryTable(tables.Table):
 
 class KeywordTable(tables.Table):
     id = tables.LinkColumn('edit_keyword', args=[A('id')])
-    delete = tables.TemplateColumn("<a href='{% url 'delete_keyword' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
         model = Keyword
@@ -61,7 +57,6 @@ class ImportLogTable(tables.Table):
 
 class MonitoredPathTable(tables.Table):
     id = tables.LinkColumn('edit_monitor', args=[A('id')])
-    delete = tables.TemplateColumn("<a href='{% url 'delete_monitor' record.id %}' >" + _('Delete') + "</a>")
 
     @staticmethod
     def render_path(value):

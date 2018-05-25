@@ -24,6 +24,8 @@ urlpatterns = [
     path('edit/monitor/<int:pk>/', edit.MonitorUpdate.as_view(), name='edit_monitor'),
     path('edit/import/<int:pk>/', edit.ImportUpdate.as_view(), name='edit_import'),
 
+    path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
+
     path('delete/recipe/<int:pk>/', edit.RecipeDelete.as_view(), name='delete_recipe'),
     path('delete/keyword/<int:pk>/', edit.KeywordDelete.as_view(), name='delete_keyword'),
     path('delete/category/<int:pk>/', edit.CategoryDelete.as_view(), name='delete_category'),

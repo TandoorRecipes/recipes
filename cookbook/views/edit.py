@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
@@ -95,6 +96,11 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
 
 
 # Generic Delete views
+
+def delete_redirect(request, name, pk):
+    return redirect(('delete_' + name), pk)
+
+
 class RecipeDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic\delete_template.html"
     model = Recipe

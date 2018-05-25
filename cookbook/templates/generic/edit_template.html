@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load class_tag %}
 
 {% block title %}{% trans 'Edit' %} - {{ title }}{% endblock %}
 
@@ -16,6 +17,7 @@
         {% csrf_token %}
         {{ form|crispy }}
         <input type="submit" value="Submit" class="btn btn-success">
+        <a href="{% url 'redirect_delete' form.instance|get_class|lower form.instance.pk %}" class="btn btn-danger">{% trans 'Delete' %}</a>
     </form>
 
 {% endblock %}
