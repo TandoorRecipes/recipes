@@ -36,10 +36,11 @@ urlpatterns = [
     path('delete/import/<int:pk>/', edit.ImportDelete.as_view(), name='delete_import'),
     path('delete/storage/<int:pk>/', edit.StorageDelete.as_view(), name='delete_storage'),
 
-    path('batch/sync', batch.batch_monitor, name='batch_monitor'),  # TODO move to generic "new" view
-    path('batch/edit', batch.batch_edit, name='batch_edit'),
-    path('batch/import/all', batch.batch_import_all, name='batch_import_all'),
-    path('batch/sync/wait', batch.sync_wait, name='batch_sync_wait'),
+    path('data/sync', data.sync, name='data_sync'),  # TODO move to generic "new" view
+    path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
+    path('data/batch/import', data.batch_import, name='data_batch_import'),
+    path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
+    path('data/statistics', data.statistics, name='data_stats'),
 
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),
     path('api/sync_all/', api.sync_all, name='api_sync'),

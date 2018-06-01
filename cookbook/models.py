@@ -23,6 +23,9 @@ class Sync(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.path
+
 
 class SyncLog(models.Model):
     sync = models.ForeignKey(Sync, on_delete=models.CASCADE)
@@ -79,3 +82,6 @@ class RecipeImport(models.Model):
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
     path = models.CharField(max_length=512, default="")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

@@ -1,7 +1,8 @@
-from django.utils.translation import gettext as _
 from django import forms
-from .models import *
 from django.forms import widgets
+from django.utils.translation import gettext as _
+
+from .models import *
 
 
 class MultiSelectWidget(widgets.SelectMultiple):
@@ -44,8 +45,10 @@ class KeywordForm(forms.ModelForm):
 
 class StorageForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password'}), required=False)
-    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}), required=False)
-    token = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}), required=False)
+    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
+                               required=False)
+    token = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
+                            required=False)
 
     class Meta:
         model = Storage
@@ -61,10 +64,8 @@ class SyncForm(forms.ModelForm):
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     category = forms.ModelChoiceField(queryset=Category.objects.all().order_by('id'), required=False)
-    keywords = forms.ModelMultipleChoiceField(queryset=Keyword.objects.all().order_by('id'), required=False)
-
-    class Media:
-        js = ('custom/js/form_multiselect.js',)
+    keywords = forms.ModelMultipleChoiceField(queryset=Keyword.objects.all().order_by('id'), required=False,
+                                              widget=MultiSelectWidget)
 
 
 class ImportRecipeForm(forms.ModelForm):

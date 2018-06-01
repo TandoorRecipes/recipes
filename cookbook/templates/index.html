@@ -16,18 +16,16 @@
             {% if filter %}
                 <div class="card">
                     <div class="card-header">
-                        <i class="fas fa-search"></i> {% trans "Search" %} <input type="text" class="form-control">
-                        <a data-toggle="collapse" href="#collapse_search" role="button" aria-expanded="false" aria-controls="collapse_search">{% trans 'Advanced Search' %}</a>
+                        <i class="fas fa-search"></i> {% trans "Search" %}
                     </div>
-                    <div class="collapse" id="collapse_search">
-                        <div class="card-body">
-                            <form action="" method="get" id="search_form">
-                                {{ filter.form|crispy }}
-                                <input class="btn btn-primary" type="submit"/>
-                                <a href="#" onclick="window.location = window.location.pathname;"
-                                   class="btn btn-warning">{% trans 'Reset' %}</a>
-                            </form>
-                        </div>
+                    <div class="card-body">
+                        <form action="" method="get" id="search_form">
+                            {{ filter.form|crispy }}
+                            <input class="btn btn-primary" type="submit"/>
+                            <a href="#" onclick="window.location = window.location.pathname;"
+                               class="btn btn-warning">{% trans 'Reset' %}</a>
+                        </form>
+
                     </div>
                 </div>
             {% endif %}
