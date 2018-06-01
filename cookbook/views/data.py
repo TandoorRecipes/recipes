@@ -6,8 +6,8 @@ from django.shortcuts import redirect, render
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
 
-from cookbook.forms import SyncForm, BatchEditForm, RecipeImport
-from cookbook.models import Recipe, Sync
+from cookbook.forms import SyncForm, BatchEditForm
+from cookbook.models import *
 from cookbook.tables import SyncTable
 
 
@@ -86,6 +86,19 @@ def batch_edit(request):
     return render(request, 'batch/edit.html', {'form': form})
 
 
+class Object(object):
+    pass
+
+
 @login_required
 def statistics(request):
-    return render(request, 'index.html')
+    counts = Object()
+    counts.recipes = Recipe.objects.count()
+    counts.categories = Category.objects.count()
+    counts.keywords = Keyword.objects.count()
+    counts.recipe_import = RecipeImport.objects.count()
+
+    counts.recipes_no_category = Recipe.objects.filter(category__isnull=True).count()
+    counts.recipes_no_keyword = Recipe.objects.filter(keywords=None).count()
+
+    return render(request, 'stats.html', {'counts': counts})
