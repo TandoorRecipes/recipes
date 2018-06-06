@@ -33,7 +33,7 @@ def import_all(monitor):
         path = recipe['path_lower']
         if not Recipe.objects.filter(path=path).exists() and not RecipeImport.objects.filter(path=path).exists():
             name = os.path.splitext(recipe['name'])[0]
-            new_recipe = RecipeImport(name=name, path=path, storage=monitor.storage)
+            new_recipe = RecipeImport(name=name, path=path, storage=monitor.storage, file_uid=recipe['id'])
             new_recipe.save()
             import_count += 1
 

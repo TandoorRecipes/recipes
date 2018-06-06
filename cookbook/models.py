@@ -62,6 +62,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=128)
     path = models.CharField(max_length=512, default="")
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
+    file_uid = models.CharField(max_length=256, default="")
     link = models.CharField(max_length=512, default="")
     category = models.ForeignKey(Category, blank=True, on_delete=models.SET_NULL, null=True)
     keywords = models.ManyToManyField(Keyword, blank=True)
@@ -80,6 +81,7 @@ class Recipe(models.Model):
 class RecipeImport(models.Model):
     name = models.CharField(max_length=128)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
+    file_uid = models.CharField(max_length=256, default="")
     path = models.CharField(max_length=512, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 

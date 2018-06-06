@@ -63,9 +63,12 @@ def create_new_recipe(request, import_id):
     if request.method == "POST":
         form = ImportRecipeForm(request.POST)
         if form.is_valid():
+            new_recipe = RecipeImport.objects.get(id=import_id)
             recipe = Recipe()
+            recipe.storage = new_recipe.storage
             recipe.name = form.cleaned_data['name']
             recipe.path = form.cleaned_data['path']
+            recipe.file_uid = form.cleaned_data['file_uid']
             recipe.category = form.cleaned_data['category']
 
             recipe.save()
@@ -80,6 +83,6 @@ def create_new_recipe(request, import_id):
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:
         new_recipe = RecipeImport.objects.get(id=import_id)
-        form = ImportRecipeForm(initial={'path': new_recipe.path, 'name': new_recipe.name})
+        form = ImportRecipeForm(initial={'path': new_recipe.path, 'name': new_recipe.name, 'file_uid': new_recipe.file_uid})
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})

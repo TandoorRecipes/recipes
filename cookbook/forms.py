@@ -18,13 +18,14 @@ class EmojiWidget(forms.TextInput):
 class EditRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'category', 'keywords', 'path', 'storage')
+        fields = ('name', 'category', 'keywords', 'path', 'storage', 'file_uid')
 
         labels = {
             'name': _('Name'),
             'category': _('Category'),
             'keywords': _('Keywords'),
             'path': _('Path'),
+            'file_uid': _('Storage UID'),
         }
         widgets = {'keywords': MultiSelectWidget}
 
@@ -71,12 +72,13 @@ class BatchEditForm(forms.Form):
 class ImportRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'category', 'keywords', 'path')
+        fields = ('name', 'category', 'keywords', 'path', 'file_uid')
 
         labels = {
             'name': _('Name'),
             'category': _('Category'),
             'keywords': _('Keywords'),
             'path': _('Path'),
+            'file_uid': _('File ID'),
         }
         widgets = {'keywords': MultiSelectWidget}

@@ -13,6 +13,8 @@
         <a href="{% url 'new_category' %}" ><i class="fal fa-plus-circle"></i></a>
     {% elif table.Meta.model|get_class == 'Keyword' %}
         <a href="{% url 'new_keyword' %}" ><i class="fal fa-plus-circle"></i></a>
+    {% elif table.Meta.model|get_class == 'Storage' %}
+        <a href="{% url 'new_storage' %}" ><i class="fal fa-plus-circle"></i></a>
     {% endif %}
     </h3>
     <br/>
