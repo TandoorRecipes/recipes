@@ -42,3 +42,7 @@ To start developing:
 
 ##Contributing
 Pull Requests and ideas are welcome, feel free to contribute in any way.
+
+##License
+This project is licensed under the MIT license. Even though it is not required to publish derivatives i highly encourage
+pushing changes upstream and letting people profit from any work done on this project.
