@@ -40,7 +40,7 @@ def sync_wait(request):
 def batch_import(request):
     imports = RecipeImport.objects.all()
     for new_recipe in imports:
-        recipe = Recipe(name=new_recipe.name, file_path=new_recipe.path, storage=new_recipe.storage, file_uid=new_recipe.file_uid)
+        recipe = Recipe(name=new_recipe.name, file_path=new_recipe.file_path, storage=new_recipe.storage, file_uid=new_recipe.file_uid)
         recipe.save()
         new_recipe.delete()
 

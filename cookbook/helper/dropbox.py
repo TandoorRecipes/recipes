@@ -46,7 +46,7 @@ def import_all(monitor):
     return True
 
 
-def get_share_link(recipe):
+def create_share_link(recipe):
     url = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
 
     headers = {
@@ -59,4 +59,27 @@ def get_share_link(recipe):
     }
 
     r = requests.post(url, headers=headers, data=json.dumps(data))
+
     return r.json()
+
+
+def get_share_link(recipe):
+    url = "https://api.dropboxapi.com/2/sharing/list_shared_links"
+
+    headers = {
+        "Authorization": "Bearer " + recipe.storage.token,
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "path": recipe.file_uid
+    }
+
+    r = requests.post(url, headers=headers, data=json.dumps(data))
+    p = r.json()
+
+    for l in p['links']:
+        return l['url']
+
+    response = create_share_link(recipe)
+    return response['url']
