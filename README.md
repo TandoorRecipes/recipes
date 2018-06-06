@@ -38,7 +38,8 @@ To start developing:
 3. Copy `secret_settings.template` to `secret_settings.py`
 4. Configure preferred database backend in `secret_settings.py`, default is sqlite
 5. Run migrations with `manage.py migrate`
-6. Start development server with `manage.py runserver`
+6. Create a first user with `manage.py createsuperuser`
+7. Start development server with `manage.py runserver`
 
 ## Contributing
 Pull Requests and ideas are welcome, feel free to contribute in any way.
