@@ -31,9 +31,9 @@ def import_all(monitor):
     import_count = 0
     for recipe in recipes['entries']:  # TODO check if has_more is set and import that as well
         path = recipe['path_lower']
-        if not Recipe.objects.filter(path=path).exists() and not RecipeImport.objects.filter(path=path).exists():
+        if not Recipe.objects.filter(file_path=path).exists() and not RecipeImport.objects.filter(file_path=path).exists():
             name = os.path.splitext(recipe['name'])[0]
-            new_recipe = RecipeImport(name=name, path=path, storage=monitor.storage, file_uid=recipe['id'])
+            new_recipe = RecipeImport(name=name, file_path=path, storage=monitor.storage, file_uid=recipe['id'])
             new_recipe.save()
             import_count += 1
 
@@ -46,16 +46,16 @@ def import_all(monitor):
     return True
 
 
-def get_share_link(recipe_path):
-    url = "https://api.dropboxapi.com/2/sharing/create_shared_link"
+def get_share_link(recipe):
+    url = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
 
     headers = {
-        "Authorization": "Bearer " + settings.DROPBOX_API_KEY,
+        "Authorization": "Bearer " + recipe.storage.token,
         "Content-Type": "application/json"
     }
 
     data = {
-        "path": recipe_path
+        "path": recipe.file_uid
     }
 
     r = requests.post(url, headers=headers, data=json.dumps(data))

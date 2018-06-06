@@ -14,7 +14,7 @@ def get_file_link(request, recipe_id):
 
     if recipe.storage.method == Storage.DROPBOX:
         if recipe.link == "":
-            response = dropbox.get_share_link(recipe.path)  # TODO response validation
+            response = dropbox.get_share_link(recipe)  # TODO response validation
             recipe.link = response['url']
             recipe.save()
 

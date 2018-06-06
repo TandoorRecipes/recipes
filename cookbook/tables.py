@@ -78,7 +78,7 @@ class SyncTable(tables.Table):
     class Meta:
         model = Sync
         template_name = 'generic/table_template.html'
-        fields = ('id', 'path', 'storage', 'last_checked')
+        fields = ('id', 'file_path', 'storage', 'last_checked')
 
 
 class RecipeImportTable(tables.Table):
@@ -88,4 +88,4 @@ class RecipeImportTable(tables.Table):
     class Meta:
         model = RecipeImport
         template_name = 'generic/table_template.html'
-        fields = ('id', 'name', 'path')
+        fields = ('id', 'name', 'file_path')
