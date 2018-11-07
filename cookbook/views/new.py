@@ -11,7 +11,7 @@ from cookbook.models import Category, Keyword, Recipe
 
 
 class RecipeCreate(LoginRequiredMixin, CreateView):  # this exists for completeness but is not in use at the moment
-    template_name = "generic\\new_template.html"
+    template_name = "generic/new_template.html"
     model = Recipe
     fields = ['name', 'category', 'keywords']
     success_url = reverse_lazy('index')
@@ -23,7 +23,7 @@ class RecipeCreate(LoginRequiredMixin, CreateView):  # this exists for completen
 
 
 class CategoryCreate(LoginRequiredMixin, CreateView):
-    template_name = "generic\\new_template.html"
+    template_name = "generic/new_template.html"
     model = Category
     form_class = CategoryForm
     success_url = reverse_lazy('list_category')
@@ -35,7 +35,7 @@ class CategoryCreate(LoginRequiredMixin, CreateView):
 
 
 class KeywordCreate(LoginRequiredMixin, CreateView):
-    template_name = "generic\\new_template.html"
+    template_name = "generic/new_template.html"
     model = Keyword
     form_class = KeywordForm
     success_url = reverse_lazy('list_keyword')
@@ -47,7 +47,7 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
 
 
 class StorageCreate(LoginRequiredMixin, CreateView):
-    template_name = "generic\\new_template.html"
+    template_name = "generic/new_template.html"
     model = Storage
     form_class = StorageForm
     success_url = reverse_lazy('list_storage')

@@ -65,8 +65,6 @@ target/
 
 venv/
 
-secret_settings\.py
-
 *.sqlite3
 
 \.idea/workspace\.xml
@@ -76,3 +74,9 @@ secret_settings\.py
 \.idea/recipes\.iml
 
 recipes/settings\.py
+
+# Deployment
+
+\.env
+\.env\.secret
+staticfiles/
