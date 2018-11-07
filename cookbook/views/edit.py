@@ -10,7 +10,7 @@ from cookbook.models import Recipe, Category, Sync, Keyword, RecipeImport, Stora
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic\edit_template.html"
+    template_name = "generic/edit_template.html"
     model = Sync
     form_class = SyncForm
 
@@ -26,7 +26,7 @@ class SyncUpdate(LoginRequiredMixin, UpdateView):
 
 
 class CategoryUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic\edit_template.html"
+    template_name = "generic/edit_template.html"
     model = Category
     form_class = CategoryForm
 
@@ -42,7 +42,7 @@ class CategoryUpdate(LoginRequiredMixin, UpdateView):
 
 
 class KeywordUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic\edit_template.html"
+    template_name = "generic/edit_template.html"
     model = Keyword
     form_class = KeywordForm
 
@@ -58,7 +58,7 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
 
 
 class StorageUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic\edit_template.html"
+    template_name = "generic/edit_template.html"
     model = Storage
     form_class = StorageForm
 
@@ -74,7 +74,7 @@ class StorageUpdate(LoginRequiredMixin, UpdateView):
 
 
 class ImportUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic\edit_template.html"
+    template_name = "generic/edit_template.html"
     model = RecipeImport
     fields = ['name', 'path']
 
@@ -92,7 +92,7 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
 class RecipeUpdate(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = EditRecipeForm
-    template_name = "generic\edit_template.html"
+    template_name = "generic/edit_template.html"
 
     def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
@@ -118,7 +118,7 @@ def delete_redirect(request, name, pk):
 
 
 class RecipeDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
+    template_name = "generic/delete_template.html"
     model = Recipe
     success_url = reverse_lazy('index')
 
@@ -129,7 +129,7 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
 
 
 class ImportDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
+    template_name = "generic/delete_template.html"
     model = RecipeImport
     success_url = reverse_lazy('list_import')
 
@@ -140,7 +140,7 @@ class ImportDelete(LoginRequiredMixin, DeleteView):
 
 
 class MonitorDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
+    template_name = "generic/delete_template.html"
     model = Sync
     success_url = reverse_lazy('data_sync')
 
@@ -151,7 +151,7 @@ class MonitorDelete(LoginRequiredMixin, DeleteView):
 
 
 class CategoryDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
+    template_name = "generic/delete_template.html"
     model = Category
     success_url = reverse_lazy('list_category')
 
@@ -162,7 +162,7 @@ class CategoryDelete(LoginRequiredMixin, DeleteView):
 
 
 class KeywordDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
+    template_name = "generic/delete_template.html"
     model = Keyword
     success_url = reverse_lazy('list_keyword')
 
@@ -173,7 +173,7 @@ class KeywordDelete(LoginRequiredMixin, DeleteView):
 
 
 class StorageDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic\delete_template.html"
+    template_name = "generic/delete_template.html"
     model = Storage
     success_url = reverse_lazy('list_storage')
 
