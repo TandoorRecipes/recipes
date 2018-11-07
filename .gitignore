@@ -74,3 +74,5 @@ secret_settings\.py
 \.idea/misc\.xml
 
 \.idea/recipes\.iml
+
+recipes/settings\.py
