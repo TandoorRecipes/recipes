@@ -5,8 +5,8 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import EditRecipeForm, CategoryForm, KeywordForm, StorageForm, SyncForm
-from cookbook.models import Recipe, Category, Sync, Keyword, RecipeImport, Storage
+from cookbook.forms import EditRecipeForm, KeywordForm, StorageForm, SyncForm
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
@@ -22,22 +22,6 @@ class SyncUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(SyncUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Sync")
-        return context
-
-
-class CategoryUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic/edit_template.html"
-    model = Category
-    form_class = CategoryForm
-
-    # TODO add msg box
-
-    def get_success_url(self):
-        return reverse('edit_category', kwargs={'pk': self.object.pk})
-
-    def get_context_data(self, **kwargs):
-        context = super(CategoryUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Category")
         return context
 
 
@@ -147,17 +131,6 @@ class MonitorDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(MonitorDelete, self).get_context_data(**kwargs)
         context['title'] = _("Monitor")
-        return context
-
-
-class CategoryDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic/delete_template.html"
-    model = Category
-    success_url = reverse_lazy('list_category')
-
-    def get_context_data(self, **kwargs):
-        context = super(CategoryDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Category")
         return context
 
 

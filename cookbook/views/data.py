@@ -53,16 +53,12 @@ def batch_edit(request):
         form = BatchEditForm(request.POST)
         if form.is_valid():
             word = form.cleaned_data['search']
-            category = form.cleaned_data['category']
             keywords = form.cleaned_data['keywords']
 
             recipes = Recipe.objects.filter(name__contains=word)
             count = 0
             for recipe in recipes:
                 edit = False
-                if category is not None:
-                    recipe.category = category
-                    edit = True
                 if keywords.__sizeof__() > 0:
                     recipe.keywords.add(*list(keywords))
                     edit = True
@@ -94,11 +90,9 @@ class Object(object):
 def statistics(request):
     counts = Object()
     counts.recipes = Recipe.objects.count()
-    counts.categories = Category.objects.count()
     counts.keywords = Keyword.objects.count()
     counts.recipe_import = RecipeImport.objects.count()
 
-    counts.recipes_no_category = Recipe.objects.filter(category__isnull=True).count()
     counts.recipes_no_keyword = Recipe.objects.filter(keywords=None).count()
 
     return render(request, 'stats.html', {'counts': counts})

@@ -6,31 +6,19 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, RecipeImport, CategoryForm, KeywordForm, Storage, StorageForm
-from cookbook.models import Category, Keyword, Recipe
+from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm
+from cookbook.models import Keyword, Recipe
 
 
 class RecipeCreate(LoginRequiredMixin, CreateView):  # this exists for completeness but is not in use at the moment
     template_name = "generic/new_template.html"
     model = Recipe
-    fields = ['name', 'category', 'keywords']
+    fields = ['name', 'keywords']
     success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
         context = super(RecipeCreate, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
-        return context
-
-
-class CategoryCreate(LoginRequiredMixin, CreateView):
-    template_name = "generic/new_template.html"
-    model = Category
-    form_class = CategoryForm
-    success_url = reverse_lazy('list_category')
-
-    def get_context_data(self, **kwargs):
-        context = super(CategoryCreate, self).get_context_data(**kwargs)
-        context['title'] = _("Category")
         return context
 
 
@@ -69,7 +57,6 @@ def create_new_recipe(request, import_id):
             recipe.name = form.cleaned_data['name']
             recipe.file_path = form.cleaned_data['file_path']
             recipe.file_uid = form.cleaned_data['file_uid']
-            recipe.category = form.cleaned_data['category']
 
             recipe.save()
 

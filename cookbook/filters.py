@@ -19,15 +19,14 @@ class RecipeFilter(django_filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['name', 'category', 'keywords']
+        fields = ['name', 'keywords']
 
 
 class QuickRecipeFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_expr='contains')
-    category = django_filters.CharFilter(lookup_expr='contains')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
 
     class Meta:
         model = Recipe
-        fields = ['name', 'category', 'keywords']
+        fields = ['name', 'keywords']
