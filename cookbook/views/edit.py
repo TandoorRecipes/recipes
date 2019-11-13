@@ -40,7 +40,7 @@ def internal_recipe_update(request, pk):
         else:
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:
-        form = InternalRecipeForm(recipe_instance)
+        form = InternalRecipeForm(instance=recipe_instance)
 
     return render(request, 'forms/edit_internal_recipe.html', {'form': form})
 
