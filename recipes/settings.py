@@ -27,7 +27,7 @@ LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap4.html'
+DJANGO_TABLES2_TEMPLATE = 'cookbook/templates/generic/table_template.html'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

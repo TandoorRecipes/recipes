@@ -34,7 +34,7 @@
 
     <br/>
 
-    {% if recipes %}
+    {% if user.is_authenticated and recipes %}
         {% render_table recipes %}
     {% else %}
         <div class="alert alert-danger" role="alert">

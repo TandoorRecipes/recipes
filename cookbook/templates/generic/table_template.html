@@ -1,100 +1,117 @@
-{% load django_tables2 %}
+{% load crispy_forms_tags %}
 {% load i18n %}
-{% block table-wrapper %}
-    <div class="row">
-        <div class="table-responsive">
-            {% block table %}
-                <table  {% if table.attrs %} <!-- style='font-size: 24px' removed because smaller looked better -->
-                    {{ table.attrs.as_html }}{% else %}class="table table-bordered"{% endif %}>
-                    {% block table.thead %}
-                        {% if table.show_header %}
-                            <thead>
-                            <tr>
-                                {% for column in table.columns %}
+{% load django_tables2 %}
+{% block content %}
+
+
+
+    <div class="table-container">
+        {% if create_url %}
+            <a href="{% url create_url %}">
+                <button class="btn btn-primary float-right">{% trans 'New' %} <i class="fal fa-plus-circle"></i>
+                </button>
+            </a>
+        {% endif %}
+        </h3>
+
+        {% block table %}
+            <table {% render_attrs table.attrs class="table" %}>
+                {% block table.thead %}
+                    {% if table.show_header %}
+                        <thead {{ table.attrs.thead.as_html }}>
+                        <tr>
+                            {% for column in table.columns %}
+                                <th {{ column.attrs.th.as_html }}>
                                     {% if column.orderable %}
-                                        <th {{ column.attrs.th.as_html }}><a
-                                                href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header }}</a>
-                                        </th>
+                                        <a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header }}</a>
                                     {% else %}
-                                        <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                                        {{ column.header }}
                                     {% endif %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    {% endif %}
+                {% endblock table.thead %}
+                {% block table.tbody %}
+                    <tbody {{ table.attrs.tbody.as_html }}>
+                    {% for row in table.paginated_rows %}
+                        {% block table.tbody.row %}
+                            <tr {{ row.attrs.as_html }}>
+                                {% for column, cell in row.items %}
+                                    <td {{ column.attrs.td.as_html }}>
+                                        {% if column.localize == None %}{{ cell }}{% else %}{% if column.localize %}
+                                            {{ cell|localize }}{% else %}{{ cell|unlocalize }}
+                                        {% endif %}{% endif %}</td>
                                 {% endfor %}
                             </tr>
-                            </thead>
-                        {% endif %}
-                    {% endblock table.thead %}
-                    {% block table.tbody %}
-                        <tbody>
-                        {% for row in table.page.object_list|default:table.rows %} {# support pagination #}
-                            {% block table.tbody.row %}
-                                <tr {{ row.attrs.as_html }}>
-                                    {% for column, cell in row.items %}
-                                        <td {{ column.attrs.td.as_html }}>
-                                            {% if column.localize == None %}{{ cell }}{% else %}{% if column.localize %}
-                                                {{ cell|localize }}{% else %}{{ cell|unlocalize }}
-                                            {% endif %}{% endif %}</td>
-                                    {% endfor %}
+                        {% endblock table.tbody.row %}
+                    {% empty %}
+                        {% if table.empty_text %}
+                            {% block table.tbody.empty_text %}
+                                <tr>
+                                    <td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td>
                                 </tr>
-                            {% endblock table.tbody.row %}
-                        {% empty %}
-                            {% if table.empty_text %}
-                                {% block table.tbody.empty_text %}
-                                    <tr>
-                                        <td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td>
-                                    </tr>
-                                {% endblock table.tbody.empty_text %}
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    {% endblock table.tbody %}
-                    {% block table.tfoot %}
-                        {% if table.has_footer %}
-                            <tfoot>
-                            <tr>
-                                {% for column in table.columns %}
-                                    <td {{ column.attrs.tf.as_html }}>{{ column.footer }}</td>
-                                {% endfor %}
-                            </tr>
-                            </tfoot>
+                            {% endblock table.tbody.empty_text %}
                         {% endif %}
-                    {% endblock table.tfoot %}
-                </table>
-            {% endblock table %}
+                    {% endfor %}
+                    </tbody>
+                {% endblock table.tbody %}
+                {% block table.tfoot %}
+                    {% if table.has_footer %}
+                        <tfoot {{ table.attrs.tfoot.as_html }}>
+                        <tr>
+                            {% for column in table.columns %}
+                                <td {{ column.attrs.tf.as_html }}>{{ column.footer }}</td>
+                            {% endfor %}
+                        </tr>
+                        </tfoot>
+                    {% endif %}
+                {% endblock table.tfoot %}
+            </table>
+        {% endblock table %}
 
+        {% block pagination %}
             {% if table.page and table.paginator.num_pages > 1 %}
-                {% with current_page=table.page.number page_count=table.paginator.num_pages rows_per_page=table.page.object_list|length total_rows=table.page.paginator.count %}
-                    {% block pagination %}
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                {% block pagination.allpages %}
-                                    <li class="page-item">
-
+                <nav aria-label="Table navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if table.page.has_previous %}
+                            {% block pagination.previous %}
+                                <li class="previous page-item">
+                                    <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}"
+                                       class="page-link">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        {% trans 'previous' %}
+                                    </a>
+                                </li>
+                            {% endblock pagination.previous %}
+                        {% endif %}
+                        {% if table.page.has_previous or table.page.has_next %}
+                            {% block pagination.range %}
+                                {% for p in table.page|table_page_range:table.paginator %}
+                                    <li class="page-item{% if table.page.number == p %} active{% endif %}">
+                                        <a class="page-link"
+                                           {% if p != '...' %}href="{% querystring table.prefixed_page_field=p %}"{% endif %}>
+                                            {{ p }}
+                                        </a>
                                     </li>
-                                    {% for page in table.paginator.page_range %}
-                                        {% with range_start=current_page|add:"-3" range_end=current_page|add:"3" page_count_minus_5=page_count|add:"-5" page_count_minus_1=page_count|add:"-1" %}
-                                            {% if page == current_page %}
-                                                <li class="page-item active">
-                                                    <a class="page-link" href="#">{{ page }}</a>
-
-                                                </li>
-                                            {% elif page == 1 or page >= range_start and page <= range_end or page == page_count %}
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       href="{% querystring table.prefixed_page_field=page %}">{{ page }}</a>
-                                                </li>
-                                            {% endif %}
-                                            {% if page == 1 and current_page > 5 or pagina == page_count_minus_1 and current_page <= page_count_minus_5 %}
-                                                <li class="page-item"></li>
-                                            {% endif %}
-                                        {% endwith %}
-                                    {% endfor %}
-                                {% endblock pagination.allpages %}
-                            </ul>
-                        </nav>
-                    {% endblock pagination %}
-                {% endwith %}
+                                {% endfor %}
+                            {% endblock pagination.range %}
+                        {% endif %}
+                        {% if table.page.has_next %}
+                            {% block pagination.next %}
+                                <li class="next page-item">
+                                    <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}"
+                                       class="page-link">
+                                        {% trans 'next' %}
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endblock pagination.next %}
+                        {% endif %}
+                    </ul>
+                </nav>
             {% endif %}
-
-        </div>
+        {% endblock pagination %}
     </div>
-{% endblock table-wrapper %}
+{% endblock content %}

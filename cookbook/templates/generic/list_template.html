@@ -2,31 +2,21 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% load django_tables2 %}
-{% load class_tag %}
 
-{% block title %}{% trans 'List' %} - {{ title }}{% endblock %}
+
 
 {% block content %}
 
-    <h3>{{ title }} {% trans 'List' %}
-    {% if table.Meta.model|get_class == 'Category' %}
-        <a href="{% url 'new_category' %}" ><i class="fal fa-plus-circle"></i></a>
-    {% elif table.Meta.model|get_class == 'Keyword' %}
-        <a href="{% url 'new_keyword' %}" ><i class="fal fa-plus-circle"></i></a>
-    {% elif table.Meta.model|get_class == 'Storage' %}
-        <a href="{% url 'new_storage' %}" ><i class="fal fa-plus-circle"></i></a>
-    {% endif %}
-    </h3>
-    <br/>
-
-    {% if table.Meta.model|get_class == 'RecipeImport' %}
-        <a href="{% url 'data_batch_import' %}" class="btn btn-warning">{% trans 'Import all' %}</a>
-        <br/>
-        <br/>
-    {% endif %}
-
-    {% if table %}
+    <div class="table-container">
+        <h3>{{ title }} {% trans 'List' %}
+            {% if create_url %}
+                <a href="{% url create_url %}">
+                    <button class="btn btn-primary float-right">{% trans 'New' %} <i class="fal fa-plus-circle"></i>
+                    </button>
+                </a>
+            {% endif %}
+        </h3>
         {% render_table table %}
-    {% endif %}
+    </div>
 
-{% endblock %}
+{% endblock content %}
