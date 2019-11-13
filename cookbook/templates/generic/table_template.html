@@ -6,14 +6,6 @@
 
 
     <div class="table-container">
-        {% if create_url %}
-            <a href="{% url create_url %}">
-                <button class="btn btn-primary float-right">{% trans 'New' %} <i class="fal fa-plus-circle"></i>
-                </button>
-            </a>
-        {% endif %}
-        </h3>
-
         {% block table %}
             <table {% render_attrs table.attrs class="table" %}>
                 {% block table.thead %}
