@@ -17,9 +17,10 @@
 
     <div class="card border-info" >
         <div class="card-body text-info">
-            <p class="card-text">{% trans 'Add the specified category and keywords to all recipes containing a word' %}</p>
+            <p class="card-text">{% trans 'Add the specified keywords to all recipes containing a word' %}</p>
         </div>
     </div>
+    <br/>
 
     <form method="POST" class="post-form">
         {% csrf_token %}
