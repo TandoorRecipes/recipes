@@ -46,9 +46,14 @@ class Keyword(models.Model):
         return "{0} {1}".format(self.icon, self.name)
 
 
+class Ingredients(models.Model):
+    name = models.CharField(max_length=128)
+
+
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
-    storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
+    instructions = models.TextField(blank=True)
+    storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="")
     file_path = models.CharField(max_length=512, default="")
     link = models.CharField(max_length=512, default="")
@@ -63,6 +68,12 @@ class Recipe(models.Model):
     @property
     def all_tags(self):
         return ', '.join([(x.icon + x.name) for x in self.keywords.all()])
+
+
+class RecipeIngredients(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    unit = models.CharField(max_length=128)
+    ingredient = models.ForeignKey(Ingredients, models.PROTECT)
 
 
 class RecipeImport(models.Model):

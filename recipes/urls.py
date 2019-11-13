@@ -18,8 +18,7 @@ from django.urls import include, path
 from django.contrib import admin
 
 urlpatterns = [
-    path('', lambda r: HttpResponseRedirect('cookbook/')),
+    path('', include('cookbook.urls')),
     path('admin/', admin.site.urls),
-    path('cookbook/', include('cookbook.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

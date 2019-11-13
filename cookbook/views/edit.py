@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import EditRecipeForm, KeywordForm, StorageForm, SyncForm
+from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage
 
 
@@ -75,7 +75,7 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
 
 class RecipeUpdate(LoginRequiredMixin, UpdateView):
     model = Recipe
-    form_class = EditRecipeForm
+    form_class = ExternalRecipeForm
     template_name = "generic/edit_template.html"
 
     def form_valid(self, form):

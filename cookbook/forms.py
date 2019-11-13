@@ -15,7 +15,7 @@ class EmojiWidget(forms.TextInput):
         js = ('custom/js/form_emoji.js',)
 
 
-class EditRecipeForm(forms.ModelForm):
+class ExternalRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ('name', 'keywords', 'file_path', 'storage', 'file_uid')
@@ -25,6 +25,19 @@ class EditRecipeForm(forms.ModelForm):
             'keywords': _('Keywords'),
             'file_path': _('Path'),
             'file_uid': _('Storage UID'),
+        }
+        widgets = {'keywords': MultiSelectWidget}
+
+
+class InternalRecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ('name', 'instructions', 'keywords')
+
+        labels = {
+            'name': _('Name'),
+            'keywords': _('Keywords'),
+            'instructions': _('Instructions'),
         }
         widgets = {'keywords': MultiSelectWidget}
 
