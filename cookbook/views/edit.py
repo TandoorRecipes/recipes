@@ -1,12 +1,38 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm
+from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage
+
+
+@login_required
+def edit_internal_recipe(request, pk):
+    recipe_instance = get_object_or_404(Recipe, pk=pk)
+
+    if request.method == "POST":
+        form = InternalRecipeForm(request.POST)
+        if form.is_valid():
+            recipe = Recipe()
+            recipe.name = form.cleaned_data['name']
+            recipe.instructions = form.cleaned_data['instructions']
+
+            recipe.save()
+
+            recipe.keywords.set(form.cleaned_data['keywords'])
+
+            messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
+            return redirect('index')
+        else:
+            messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
+    else:
+        form = InternalRecipeForm(recipe_instance)
+
+    return render(request, 'forms/edit_internal_recipe.html', {'form': form})
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):

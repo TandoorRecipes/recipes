@@ -47,7 +47,7 @@ class StorageCreate(LoginRequiredMixin, CreateView):
 
 
 @login_required
-def create_new_recipe(request, import_id):
+def create_new_external_recipe(request, import_id):
     if request.method == "POST":
         form = ImportRecipeForm(request.POST)
         if form.is_valid():
