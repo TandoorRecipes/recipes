@@ -73,6 +73,7 @@ class Recipe(models.Model):
 class RecipeIngredients(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     unit = models.CharField(max_length=128)
+    amount = models.DecimalField(default=0)
     ingredient = models.ForeignKey(Ingredients, models.PROTECT)
 
 
