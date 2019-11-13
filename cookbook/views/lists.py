@@ -31,7 +31,7 @@ def recipe_import(request):
 
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(request, 'generic/list_template.html', {'title': _("Import"), 'table': table})
+    return render(request, 'generic/list_template.html', {'title': _("Import"), 'table': table, 'import_btn': True})
 
 
 @login_required
