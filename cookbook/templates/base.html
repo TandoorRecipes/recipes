@@ -64,10 +64,6 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
                             class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_import' %}"><i
-                            class="far fa-file-alt"></i> {% trans 'New Recipes' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_import_log' %}"><i
-                            class="fas fa-history"></i> {% trans 'Import Log' %}</a>
                     <a class="dropdown-item" href="{% url 'list_storage' %}"><i
                             class="fas fa-database"></i> {% trans 'Storage Backends' %}</a>
                 </div>
@@ -80,6 +76,10 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'data_sync' %}"><i
                             class="fas fa-sync-alt"></i> {% trans 'Configure Sync' %}</a>
+                    <a class="dropdown-item" href="{% url 'list_import' %}"><i
+                            class="far fa-file-alt"></i> {% trans 'Import Recipes' %}</a>
+                    <a class="dropdown-item" href="{% url 'list_import_log' %}"><i
+                            class="fas fa-history"></i> {% trans 'Import Log' %}</a>
                     <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
                             class="fas fa-edit"></i> {% trans 'Batch Edit' %}</a>
                     <a class="dropdown-item" href="{% url 'data_stats' %}"><i
