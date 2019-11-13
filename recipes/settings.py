@@ -13,10 +13,6 @@ import os
 from django.contrib import messages
 from dotenv import load_dotenv
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
@@ -24,7 +20,7 @@ SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else '728f4t5438
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
