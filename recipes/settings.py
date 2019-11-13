@@ -11,19 +11,18 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import os
 from django.contrib import messages
-
 from dotenv import load_dotenv
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
-# Get vars from .env files
-SECRET_KEY = os.getenv('SECRET_KEY')
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = bool(int(os.getenv('DEBUG', False)))
+# Get vars from .env files
+SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else '728f4t5438rz0748fa89esf9e'
+
+DEBUG = bool(int(os.getenv('DEBUG', True)))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else []
 
@@ -31,6 +30,7 @@ LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap4.html'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
@@ -87,15 +87,14 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 
 # Database
 # Load settings from env files
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': os.getenv('DB_ENGINE') if os.getenv('DB_ENGINE') else 'django.db.backends.sqlite3',
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'NAME': os.getenv('POSTGRES_DB'),
+        'NAME': os.getenv('POSTGRES_DB') if os.getenv('POSTGRES_DB') else 'db.sqlite3',
     }
 }
 
@@ -122,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'DE-de'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 

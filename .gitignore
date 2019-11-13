@@ -73,10 +73,7 @@ venv/
 
 \.idea/recipes\.iml
 
-recipes/settings\.py
-
 # Deployment
 
 \.env
-\.env\.secret
 staticfiles/
