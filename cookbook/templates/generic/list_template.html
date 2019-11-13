@@ -14,11 +14,15 @@
                 </a>
             {% endif %}
         </h3>
-        {% render_table table %}
-
         {% if import_btn %}
             <a href="{% url 'data_batch_import' %}" class="btn btn-warning">{% trans 'Import all' %}</a>
+            <br/>
+            <br/>
         {% endif %}
+
+        {% render_table table %}
+
+
     </div>
 
 {% endblock content %}
