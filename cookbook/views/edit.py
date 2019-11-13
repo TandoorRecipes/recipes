@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
@@ -11,7 +12,16 @@ from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage
 
 
 @login_required
-def edit_internal_recipe(request, pk):
+def switch_recipe(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.instructions:
+        return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
+    else:
+        return HttpResponseRedirect(reverse('edit_external_recipe', args=[pk]))
+
+
+@login_required
+def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
 
     if request.method == "POST":

@@ -18,7 +18,10 @@ urlpatterns = [
     path('list/import', lists.recipe_import, name='list_import'),
     path('list/storage', lists.storage, name='list_storage'),
 
-    path('edit/recipe/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_recipe'),
+    path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
+    path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),  # for internal use only
+    path('edit/recipe/external/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_external_recipe'),  # for internal use only
+
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
     path('edit/sync/<int:pk>/', edit.SyncUpdate.as_view(), name='edit_sync'),
     path('edit/import/<int:pk>/', edit.ImportUpdate.as_view(), name='edit_import'),
