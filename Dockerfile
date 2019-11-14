@@ -17,8 +17,8 @@ RUN apk --no-cache add \
     postgresql-dev \
     build-base \
     gettext \
-    libxml2-dev libxslt-dev \
-    libcurl4-openssl-dev python-pycurl
+    libgcrypt-dev libressl-dev curl-dev \
+    libxml2-dev libxslt-dev python-dev
 
 RUN pip3 install --upgrade pip
 

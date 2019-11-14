@@ -1,9 +1,7 @@
 import os
 from datetime import datetime
-import json
 import webdav3.client as wc
 import requests
-import xmltodict
 
 from requests.auth import HTTPBasicAuth
 
