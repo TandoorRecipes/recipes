@@ -7,7 +7,11 @@
 
 {% block content %}
 
-    <h3>{{ recipe.name }}</h3>
+    <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}"><i class="fas fa-pencil-alt"></i></a></h3>
+    {% if recipe.all_tags %}
+        {{ recipe.all_tags }}
+        <br/>
+    {% endif %}
     <br/>
     <div class="card" style="width: 18rem;">
         <div class="card-body">

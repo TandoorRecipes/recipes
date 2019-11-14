@@ -67,7 +67,7 @@ class Recipe(models.Model):
 
     @property
     def all_tags(self):
-        return ', '.join([(x.icon + x.name) for x in self.keywords.all()])
+        return ' '.join([(x.icon + x.name) for x in self.keywords.all()])
 
 
 class RecipeIngredients(models.Model):
