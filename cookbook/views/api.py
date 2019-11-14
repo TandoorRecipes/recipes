@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from cookbook.models import Recipe, Sync, Storage
 from cookbook.provider import dropbox
 from cookbook.provider.dropbox import Dropbox
+from cookbook.provider.nextcloud import Nextcloud
 
 
 @login_required
@@ -20,18 +21,26 @@ def get_file_link(request, recipe_id):
         if recipe.link == "":
             recipe.link = Dropbox.get_share_link(recipe)  # TODO response validation
             recipe.save()
+    if recipe.storage.method == Storage.NEXTCLOUD:
+        if recipe.link == "":
+            recipe.link = Nextcloud.get_share_link(recipe)  # TODO response validation
+            #recipe.save()
 
     return HttpResponse(recipe.link)
 
 
 @login_required
 def sync_all(request):
-    monitors = Sync.objects.all()
+    monitors = Sync.objects.filter(active=True)
 
     error = False
     for monitor in monitors:
         if monitor.storage.method == Storage.DROPBOX:
             ret = Dropbox.import_all(monitor)
+            if not ret:
+                error = True
+        if monitor.storage.method == Storage.NEXTCLOUD:
+            ret = Nextcloud.import_all(monitor)
             if not ret:
                 error = True
 

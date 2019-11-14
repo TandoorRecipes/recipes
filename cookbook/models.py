@@ -4,8 +4,8 @@ from django.db import models
 
 class Storage(models.Model):
     DROPBOX = 'DB'
-    DAV = 'DAV'
-    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (DAV, 'WebDAV'))
+    NEXTCLOUD = 'NEXTCLOUD'
+    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (NEXTCLOUD, 'Nextcloud'))
 
     name = models.CharField(max_length=128)
     method = models.CharField(choices=STORAGE_TYPES, max_length=128, default=DROPBOX)
@@ -21,6 +21,7 @@ class Storage(models.Model):
 class Sync(models.Model):
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
     path = models.CharField(max_length=512, default="")
+    active = models.BooleanField(default=True)
     last_checked = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

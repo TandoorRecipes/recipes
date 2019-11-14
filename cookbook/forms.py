@@ -81,7 +81,7 @@ class StorageForm(forms.ModelForm):
 class SyncForm(forms.ModelForm):
     class Meta:
         model = Sync
-        fields = ('storage', 'path')
+        fields = ('storage', 'path', 'active')
 
 
 class BatchEditForm(forms.Form):
