@@ -46,6 +46,19 @@ class InternalRecipeForm(forms.ModelForm):
         widgets = {'keywords': MultiSelectWidget}
 
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text', )
+
+        labels = {
+            'text': _('Add your comment: '),
+        }
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': 15}),
+        }
+
+
 class KeywordForm(forms.ModelForm):
     class Meta:
         model = Keyword

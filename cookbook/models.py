@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -75,6 +76,14 @@ class RecipeIngredients(models.Model):
     unit = models.CharField(max_length=128)
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
     ingredient = models.ForeignKey(Ingredients, models.PROTECT)
+
+
+class Comment(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class RecipeImport(models.Model):

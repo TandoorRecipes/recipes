@@ -29,4 +29,27 @@
 
     {{ recipe.instructions | markdown | safe }}
 
+    <br/>
+    <br/>
+
+    <h5>{% trans 'Comments' %}</h5>
+
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Submit" class="btn btn-success">
+    </form>
+
+
+
+    {% for c in comments %}
+        <div class="card">
+            <div class="card-body">
+                <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <br/>
+                {{ c.text }}
+            </div>
+            <br/>
+        </div>
+    {% endfor %}
+
 {% endblock %}

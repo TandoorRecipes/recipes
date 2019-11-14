@@ -1,6 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django_tables2 import RequestConfig
+from django.utils.translation import gettext as _
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
@@ -23,8 +27,26 @@ def index(request):
 def recipe_view(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     ingredients = RecipeIngredients.objects.filter(recipe=recipe)
+    comments = Comment.objects.filter(recipe=recipe)
 
-    return render(request, 'recipe_view.html', {'recipe': recipe, 'ingredients': ingredients})
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = Comment()
+            comment.recipe = recipe
+            comment.text = form.cleaned_data['text']
+            comment.created_by = request.user
+
+            comment.save()
+
+            messages.add_message(request, messages.SUCCESS, _('Comment saved!'))
+            return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+        else:
+            messages.add_message(request, messages.ERROR, _('There was an error saving this comment!'))
+    else:
+        form = CommentForm()
+
+    return render(request, 'recipe_view.html', {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'form': form})
 
 
 def test(request):
