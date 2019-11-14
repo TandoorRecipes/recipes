@@ -16,6 +16,10 @@ class EmojiWidget(forms.TextInput):
 
 
 class ExternalRecipeForm(forms.ModelForm):
+    file_path = forms.CharField(disabled=True, required=False)
+    storage = forms.ModelChoiceField(queryset=Storage.objects.all(), disabled=True, required=False)
+    file_uid = forms.CharField(disabled=True, required=False)
+
     class Meta:
         model = Recipe
         fields = ('name', 'keywords', 'file_path', 'storage', 'file_uid')
