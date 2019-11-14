@@ -24,7 +24,7 @@ def get_file_link(request, recipe_id):
     if recipe.storage.method == Storage.NEXTCLOUD:
         if recipe.link == "":
             recipe.link = Nextcloud.get_share_link(recipe)  # TODO response validation
-            #recipe.save()
+            recipe.save()
 
     return HttpResponse(recipe.link)
 

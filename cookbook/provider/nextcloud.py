@@ -43,54 +43,36 @@ class Nextcloud(Provider):
         return True
 
     @staticmethod
-    def url_from_ocs_response(response):
-        if response['ocs']['data']:
-            elements = response['ocs']['data']['element']
-            if isinstance(elements, list):
-                for element in elements:
-                    if element['share_type'] == '3':
-                        return element['url']
-            else:
-                if elements['share_type'] == '3':
-                    return elements['url']
-
-        return False
-
-    @staticmethod
     def create_share_link(recipe):
-        url = recipe.storage.url + '/ocs/v2.php/apps/files_sharing/api/v1/shares'
+        url = recipe.storage.url + '/ocs/v2.php/apps/files_sharing/api/v1/shares?format=json'
 
         headers = {
             "OCS-APIRequest": "true",
             "Content-Type": "application/x-www-form-urlencoded"
         }
 
-        data = {
-            "path": recipe.file_path,
-            "shareType ": 3
-        }
+        data = {'path': recipe.file_path, 'shareType': 3}
 
-        r = requests.post(url, headers=headers, auth=HTTPBasicAuth(recipe.storage.username, recipe.storage.password), data=json.dumps(data))
+        r = requests.post(url, headers=headers, auth=HTTPBasicAuth(recipe.storage.username, recipe.storage.password), data=data)
 
-        json_response = xmltodict.parse(r.text)
+        response_json = r.json()
 
-        return Nextcloud.url_from_ocs_response(json_response)
+        return response_json['ocs']['data']['url']
 
     @staticmethod
     def get_share_link(recipe):
-        url = recipe.storage.url + '/ocs/v2.php/apps/files_sharing/api/v1/shares?path=' + recipe.file_path
+        url = recipe.storage.url + '/ocs/v2.php/apps/files_sharing/api/v1/shares?format=json&path=' + recipe.file_path
 
         headers = {
             "OCS-APIRequest": "true",
-            "Content-Type": "application/xml"
+            "Content-Type": "application/json"
         }
 
         r = requests.get(url, headers=headers, auth=HTTPBasicAuth(recipe.storage.username, recipe.storage.password))
 
-        json_response = xmltodict.parse(r.text)
-
-        url = Nextcloud.url_from_ocs_response(json_response)
-        if url:
-            return url
+        response_json = r.json()
+        for element in response_json['ocs']['data']:
+            if element['share_type'] == '3':
+                return element['url']
 
         return Nextcloud.create_share_link(recipe)
