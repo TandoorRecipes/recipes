@@ -18,7 +18,9 @@ RUN apk --no-cache add \
     build-base \
     gettext \
     libxslt1-dev \
-    libxml2-dev
+    libxml2-dev \
+    libxslt-dev \
+    libcurl4-openssl-dev
 
 RUN pip3 install --upgrade pip
 
