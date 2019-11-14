@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
@@ -13,8 +14,16 @@ from cookbook.models import Keyword, Recipe
 class RecipeCreate(LoginRequiredMixin, CreateView):
     template_name = "generic/new_template.html"
     model = Recipe
-    form_class = InternalRecipeForm
-    success_url = reverse_lazy('index')
+    fields = ('name', )
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.created_by = self.request.user
+        obj.save()
+        return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
+
+    def get_success_url(self):
+        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(RecipeCreate, self).get_context_data(**kwargs)

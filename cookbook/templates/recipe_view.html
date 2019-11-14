@@ -8,18 +8,18 @@
 {% block content %}
 
     <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}"><i class="fas fa-pencil-alt"></i></a></h3>
-    {% if ingredients %}
-        <small>{% trans 'by' %} {{ recipe.created_by.username }}</small><br/><br/>
-    {% else %}
+    {% if recipe.storage %}
         <small>{% trans 'in' %} <a
-                href="{% url 'edit_storage' recipe.storage.pk %}">{{ recipe.storage.name }}</a></small><br/><br/>
+            href="{% url 'edit_storage' recipe.storage.pk %}">{{ recipe.storage.name }}</a></small><br/><br/>
+    {% else %}
+        <small>{% trans 'by' %} {{ recipe.created_by.username }}</small><br/><br/>
     {% endif %}
 
     {% if recipe.all_tags %}
         {{ recipe.all_tags }}
         <br/>
+        <br/>
     {% endif %}
-    <br/>
 
     {% if ingredients %}
         <div class="card" style="width: 18rem;">
@@ -35,10 +35,13 @@
         </div>
         <br/>
         <br/>
-        {{ recipe.instructions | markdown | safe }}
+    {% endif %}
 
-    {% else %}
-        {% trans 'This is an external recipe.' %}
+    {% if recipe.instructions %}
+        {{ recipe.instructions | markdown | safe }}
+    {% endif %}
+
+    {% if recipe.storage %}
         <a href='#' onClick='openRecipe({{ recipe.id }})'>{% trans 'Open recipe' %} <i
                 class="fas fa-external-link-alt"></i></a>
     {% endif %}

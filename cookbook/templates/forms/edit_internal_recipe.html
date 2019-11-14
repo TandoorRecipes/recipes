@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load custom_tags %}
 
 {% block title %}{% trans 'Edit Recipe' %}{% endblock %}
 
 {% block extra_head %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/js/tabulator.min.js" integrity="sha256-u2YCVBkzzkIuLh6bMHUmqv6uuuHLxGgc6XF+rCJUV5k=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/css/bootstrap/tabulator_bootstrap4.min.css" integrity="sha256-+AmauyGZPl0HNTBQ5AMZBxfzP+rzXJjraezMKpWwWSE=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/js/tabulator.min.js"
+            integrity="sha256-u2YCVBkzzkIuLh6bMHUmqv6uuuHLxGgc6XF+rCJUV5k=" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/css/bootstrap/tabulator_bootstrap4.min.css"
+          integrity="sha256-+AmauyGZPl0HNTBQ5AMZBxfzP+rzXJjraezMKpWwWSE=" crossorigin="anonymous"/>
 {% endblock %}
 
 {% block content %}
@@ -19,6 +23,8 @@
         <div id="ingredients-table"></div>
         <input type="hidden" id="ingredients_data_input" name="ingredients">
         <input type="submit" value="Submit" class="btn btn-success">
+        <a href="{% url 'redirect_delete' form.instance|get_class|lower form.instance.pk %}"
+           class="btn btn-danger">{% trans 'Delete' %}</a>
         {% if view_url %}
             <a href="{{ view_url }}" class="btn btn-info">{% trans 'View' %} <i class="far fa-eye"></i></a>
         {% endif %}
@@ -38,17 +44,29 @@
                 reactiveData: true,
                 data: data,
                 columns: [
-                    {title: "{% trans 'ingredient' %}", field: "ingredient", validator: "required", editor:"select", editorParams:{values:{"test1":"Test1", "test2":"Test2"}}},
+                    {
+                        title: "{% trans 'ingredient' %}",
+                        field: "ingredient",
+                        validator: "required",
+                        editor: "select",
+                        editorParams: {values: {"test1": "Test1", "test2": "Test2"}}
+                    },
                     {title: "{% trans 'amount' %}", field: "amount", validator: "required", editor: "input"},
                     {title: "{% trans 'unit' %}", field: "unit", validator: "required", editor: "input"},
-                    {title: "{% trans 'delete' %}", field:"delete", align:"center", editor:true, formatter:"tickCross"},
+                    {
+                        title: "{% trans 'delete' %}",
+                        field: "delete",
+                        align: "center",
+                        editor: true,
+                        formatter: "tickCross"
+                    },
                     {title: "id", field: "id", visible: false}
                 ],
                 dataEdited: function (data) {
                     $('#ingredients_data_input').val(JSON.stringify(data))
 
                     data.forEach(function (cur, i) {
-                        if(cur.delete) {
+                        if (cur.delete) {
                             table.deleteRow(cur.id);
                         }
                     })

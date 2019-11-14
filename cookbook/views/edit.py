@@ -14,10 +14,10 @@ from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage
 @login_required
 def switch_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
-    if recipe.instructions:
-        return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
-    else:
+    if recipe.storage and not recipe.instructions:
         return HttpResponseRedirect(reverse('edit_external_recipe', args=[pk]))
+    else:
+        return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
 
 
 @login_required
