@@ -13,7 +13,7 @@ from cookbook.tables import RecipeTable
 
 def index(request):
     if request.user.is_authenticated:
-        f = RecipeFilter(request.GET, queryset=Recipe.objects.all())
+        f = RecipeFilter(request.GET, queryset=Recipe.objects.all().order_by('name'))
 
         table = RecipeTable(f.qs)
         RequestConfig(request, paginate={'per_page': 25}).configure(table)

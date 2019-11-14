@@ -19,6 +19,9 @@
         <div id="ingredients-table"></div>
         <input type="hidden" id="ingredients_data_input" name="ingredients">
         <input type="submit" value="Submit" class="btn btn-success">
+        {% if view_url %}
+            <a href="{{ view_url }}" class="btn btn-info">{% trans 'View' %} <i class="far fa-eye"></i></a>
+        {% endif %}
     </form>
 
     <script>

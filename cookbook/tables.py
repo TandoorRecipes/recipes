@@ -7,7 +7,7 @@ from .models import *
 
 
 class RecipeTable(tables.Table):
-    id = tables.LinkColumn('edit_recipe', args=[A('id')])
+    id = tables.LinkColumn('view_recipe', args=[A('id')])
     name = tables.TemplateColumn(
         "<a href='#' onClick='openRecipe({{record.id}})'>{{record.name}}</a>")
     all_tags = tables.Column(

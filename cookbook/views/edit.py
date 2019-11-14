@@ -42,7 +42,7 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    return render(request, 'forms/edit_internal_recipe.html', {'form': form})
+    return render(request, 'forms/edit_internal_recipe.html', {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
@@ -128,6 +128,7 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(RecipeUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
+        context['view_url'] = reverse('view_recipe', args=[self.object.pk])
         return context
 
 
