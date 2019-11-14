@@ -4,6 +4,11 @@
 
 {% block title %}{% trans 'Edit Recipe' %}{% endblock %}
 
+{% block extra_head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/js/tabulator.min.js" integrity="sha256-u2YCVBkzzkIuLh6bMHUmqv6uuuHLxGgc6XF+rCJUV5k=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/css/bootstrap/tabulator_bootstrap4.min.css" integrity="sha256-+AmauyGZPl0HNTBQ5AMZBxfzP+rzXJjraezMKpWwWSE=" crossorigin="anonymous" />
+{% endblock %}
+
 {% block content %}
 
     <h3>{% trans 'Edit Recipe' %}</h3>
@@ -11,6 +16,8 @@
     <form action="." method="post">
         {% csrf_token %}
         {{ form|crispy }}
+        <div id="ingredients-table"></div>
+        <input type="hidden" id="ingredients_data_input" name="ingredients">
         <input type="submit" value="Submit" class="btn btn-success">
     </form>
 
@@ -19,6 +26,31 @@
         //shitty solution that needs to be redone at some point
         $(document).ready(function () {
             $('#id_keywords').select2();
+
+            var data = []
+
+            var table = new Tabulator("#ingredients-table", {
+                index: "id",
+                layout: "fitColumns",
+                reactiveData: true,
+                data: data,
+                columns: [
+                    {title: "{% trans 'ingredient' %}", field: "ingredient", validator: "required", editor:"select", editorParams:{values:{"test1":"Test1", "test2":"Test2"}}},
+                    {title: "{% trans 'amount' %}", field: "amount", validator: "required", editor: "input"},
+                    {title: "{% trans 'unit' %}", field: "unit", validator: "required", editor: "input"},
+                    {title: "{% trans 'delete' %}", field:"delete", align:"center", editor:true, formatter:"tickCross"},
+                    {title: "id", field: "id", visible: false}
+                ],
+                dataEdited: function (data) {
+                    $('#ingredients_data_input').val(JSON.stringify(data))
+
+                    data.forEach(function (cur, i) {
+                        if(cur.delete) {
+                            table.deleteRow(cur.id);
+                        }
+                    })
+                }
+            });
         });
     </script>
 {% endblock %}
