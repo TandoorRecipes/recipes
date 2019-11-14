@@ -8,6 +8,20 @@
 {% block content %}
 
     <h3>{{ recipe.name }}</h3>
+    <br/>
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">{% trans 'Ingredients' %}</h5>
+
+
+            {% for i in ingredients %}
+                {{ i.amount }} {{ i.unit }} {{ i.ingredient.name }} <br/>
+            {% endfor %}
+
+        </div>
+    </div>
+    <br/>
+    <br/>
 
     {{ recipe.instructions | markdown | safe }}
 

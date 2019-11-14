@@ -27,7 +27,7 @@ def internal_recipe_update(request, pk):
     if request.method == "POST":
         form = InternalRecipeForm(request.POST)
         if form.is_valid():
-            recipe = Recipe()
+            recipe = recipe_instance
             recipe.name = form.cleaned_data['name']
             recipe.instructions = form.cleaned_data['instructions']
 
@@ -36,7 +36,7 @@ def internal_recipe_update(request, pk):
             recipe.keywords.set(form.cleaned_data['keywords'])
 
             messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
-            return redirect('index')
+            return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
         else:
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:

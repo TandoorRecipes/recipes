@@ -22,7 +22,9 @@ def index(request):
 @login_required
 def recipe_view(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
-    return render(request, 'recipe_view.html', {'recipe': recipe})
+    ingredients = RecipeIngredients.objects.filter(recipe=recipe)
+
+    return render(request, 'recipe_view.html', {'recipe': recipe, 'ingredients': ingredients})
 
 
 def test(request):
