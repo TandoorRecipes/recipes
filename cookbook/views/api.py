@@ -1,12 +1,13 @@
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy, reverse
+from django.http import HttpResponse
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 from cookbook.models import Recipe, Sync, Storage
-from cookbook.helper import dropbox
+from cookbook.provider import dropbox
+from cookbook.provider.dropbox import Dropbox
 
 
 @login_required
@@ -17,7 +18,7 @@ def get_file_link(request, recipe_id):
         return HttpResponse(reverse('view_recipe', args=[recipe_id]))
     if recipe.storage.method == Storage.DROPBOX:
         if recipe.link == "":
-            recipe.link = dropbox.get_share_link(recipe)  # TODO response validation
+            recipe.link = Dropbox.get_share_link(recipe)  # TODO response validation
             recipe.save()
 
     return HttpResponse(recipe.link)
@@ -30,7 +31,7 @@ def sync_all(request):
     error = False
     for monitor in monitors:
         if monitor.storage.method == Storage.DROPBOX:
-            ret = dropbox.import_all(monitor)
+            ret = Dropbox.import_all(monitor)
             if not ret:
                 error = True
 

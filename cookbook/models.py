@@ -4,7 +4,8 @@ from django.db import models
 
 class Storage(models.Model):
     DROPBOX = 'DB'
-    STORAGE_TYPES = ((DROPBOX, 'Dropbox'),)
+    DAV = 'DAV'
+    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (DAV, 'WebDAV'))
 
     name = models.CharField(max_length=128)
     method = models.CharField(choices=STORAGE_TYPES, max_length=128, default=DROPBOX)
