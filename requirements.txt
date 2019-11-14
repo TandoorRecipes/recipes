@@ -1,5 +1,6 @@
 six
 requests
+markdown
 django
 django-tables2
 django-filter

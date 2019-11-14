@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
 from django_tables2 import RequestConfig
 
 from cookbook.filters import RecipeFilter
@@ -16,6 +17,12 @@ def index(request):
         return render(request, 'index.html', {'recipes': table, 'filter': f})
     else:
         return render(request, 'index.html')
+
+
+@login_required
+def recipe_view(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    return render(request, 'recipe_view.html', {'recipe': recipe})
 
 
 def test(request):

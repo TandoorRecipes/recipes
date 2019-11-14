@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load custom_tags %}
+
+{% block title %}{% trans 'View' %}{% endblock %}
+
+{% block content %}
+
+    <h3>{{ recipe.name }}</h3>
+
+    {{ recipe.instructions | markdown | safe }}
+
+{% endblock %}
