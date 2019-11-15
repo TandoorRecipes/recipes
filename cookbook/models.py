@@ -61,7 +61,7 @@ class Recipe(models.Model):
     file_path = models.CharField(max_length=512, default="")
     link = models.CharField(max_length=512, default="")
     keywords = models.ManyToManyField(Keyword, blank=True)
-    time = models.IntegerField(blank=True)
+    time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
