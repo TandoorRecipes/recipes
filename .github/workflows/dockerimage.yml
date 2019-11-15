@@ -1,0 +1,24 @@
+name: Build Docker Image
+on: 
+  push:
+     branches:
+      - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build . --tag recipes:$(date +%s)
+      
+    - name: Dockerize
+      if: success()
+      uses: manusa/actions-publish-docker@master
+      with:
+        name: vabene1111/recipes
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
