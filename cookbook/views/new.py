@@ -19,6 +19,7 @@ class RecipeCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.created_by = self.request.user
+        obj.internal = True
         obj.save()
         return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
 
