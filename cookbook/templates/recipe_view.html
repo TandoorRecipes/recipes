@@ -10,10 +10,14 @@
     <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}"><i class="fas fa-pencil-alt"></i></a></h3>
     {% if recipe.storage %}
         <small>{% trans 'in' %} <a
-            href="{% url 'edit_storage' recipe.storage.pk %}">{{ recipe.storage.name }}</a></small><br/><br/>
-    {% else %}
-        <small>{% trans 'by' %} {{ recipe.created_by.username }}</small><br/><br/>
+                href="{% url 'edit_storage' recipe.storage.pk %}">{{ recipe.storage.name }}</a></small><br/>
     {% endif %}
+
+    {% if recipe.internal %}
+        <small>{% trans 'by' %} {{ recipe.created_by.username }}</small><br/>
+    {% endif %}
+
+    <br/>
 
     {% if recipe.all_tags %}
         {{ recipe.all_tags }}
@@ -42,8 +46,30 @@
     {% endif %}
 
     {% if recipe.storage %}
-        <a href='#' onClick='openRecipe({{ recipe.id }})'>{% trans 'Open recipe' %} <i
+        <a href='#' onClick='openRecipe({{ recipe.id }})'>{% trans 'View external recipe' %} <i
                 class="fas fa-external-link-alt"></i></a>
+    {% endif %}
+
+    {% if not recipe.internal %}
+        <br/>
+        <br/>
+        <br/>
+        <div class="card border-info">
+            <div class="card-body text-info">
+                <h5 class="card-title">{% trans 'External recipe' %}</h5>
+                <p class="card-text">
+                    {% blocktrans %}
+                        This is an external recipe, which means you can only view it by opening the link above.
+                        You can convert this recipe to a fancy recipe by pressing the convert button. The original file
+                        will still be accessible.
+                    {% endblocktrans %}.
+                    <br/>
+                    <br/>
+                    <a href="{% url 'edit_convert_recipe' recipe.pk %}"
+                       class="card-link btn btn-info">{% trans 'Convert now!' %}</a>
+                </p>
+            </div>
+        </div>
     {% endif %}
 
     <br/>
@@ -53,21 +79,27 @@
 
     <form method="POST" class="post-form">
         {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+        <div class="input-group mb-3">
+            <textarea name="text" cols="15" rows="2" class="textarea form-control" required id="id_text">
+            </textarea>
+            <div class="input-group-append">
+                <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+            </div>
+        </div>
     </form>
 
     {% for c in comments %}
         <div class="card">
             <div class="card-body">
-                <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <br/>
+                <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
+                    href="{% url 'edit_comment' c.pk %}"><i class="fas fa-pencil-alt"></i></a><br/>
                 {{ c.text }}
             </div>
-            <br/>
         </div>
+        <br/>
     {% endfor %}
 
-    {% if not ingredients %}
+    {% if recipe.storage %}
         {% include 'include/recipe_open_modal.html' %}
     {% endif %}
 {% endblock %}

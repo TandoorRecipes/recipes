@@ -7,16 +7,25 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage
+from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment
 
 
 @login_required
 def switch_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
-    if recipe.storage and not recipe.instructions:
-        return HttpResponseRedirect(reverse('edit_external_recipe', args=[pk]))
+    if recipe.internal:
+        return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
     else:
+        return HttpResponseRedirect(reverse('edit_external_recipe', args=[pk]))
+
+
+@login_required
+def convert_recipe(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if not recipe.internal:
+        recipe.internal = True
+        recipe.save()
         return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
 
 
@@ -90,6 +99,23 @@ class StorageUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(StorageUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
+        return context
+
+
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic/edit_template.html"
+    model = Comment
+    form_class = CommentForm
+
+    # TODO add msg box
+
+    def get_success_url(self):
+        return reverse('edit_comment', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(CommentUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Comment")
+        context['view_url'] = reverse('view_recipe', args=[self.object.recipe.pk])
         return context
 
 
@@ -190,4 +216,15 @@ class StorageDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(StorageDelete, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
+        return context
+
+
+class CommentDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = Comment
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, **kwargs):
+        context = super(CommentDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Comment")
         return context

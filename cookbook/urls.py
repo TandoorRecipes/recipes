@@ -23,11 +23,13 @@ urlpatterns = [
     path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
     path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),  # for internal use only
     path('edit/recipe/external/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_external_recipe'),  # for internal use only
+    path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'), # for internal use only
 
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
     path('edit/sync/<int:pk>/', edit.SyncUpdate.as_view(), name='edit_sync'),
     path('edit/import/<int:pk>/', edit.ImportUpdate.as_view(), name='edit_import'),
     path('edit/storage/<int:pk>/', edit.StorageUpdate.as_view(), name='edit_storage'),
+    path('edit/comment/<int:pk>/', edit.CommentUpdate.as_view(), name='edit_comment'),
 
     path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
 
@@ -36,6 +38,7 @@ urlpatterns = [
     path('delete/sync/<int:pk>/', edit.MonitorDelete.as_view(), name='delete_sync'),
     path('delete/import/<int:pk>/', edit.ImportDelete.as_view(), name='delete_import'),
     path('delete/storage/<int:pk>/', edit.StorageDelete.as_view(), name='delete_storage'),
+    path('delete/comment/<int:pk>/', edit.CommentDelete.as_view(), name='delete_comment'),
 
     path('data/sync', data.sync, name='data_sync'),  # TODO move to generic "new" view
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
