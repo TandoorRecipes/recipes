@@ -20,5 +20,5 @@ jobs:
       uses: manusa/actions-publish-docker@master
       with:
         name: vabene1111/recipes
-        username: ${{ secrets.DOCKER_HUB_USER }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
