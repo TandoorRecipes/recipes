@@ -25,6 +25,12 @@
         <br/>
     {% endif %}
 
+    {% if recipe.time and recipe.time != 0 %}
+        <small>{% trans 'Preparation time ca.' %} {{ recipe.time }} min </small>
+        <br/>
+        <br/>
+    {% endif %}
+
     {% if ingredients %}
         <div class="card" style="width: 18rem;">
             <div class="card-body">
