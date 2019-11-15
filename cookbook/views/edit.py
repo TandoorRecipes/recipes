@@ -39,6 +39,7 @@ def internal_recipe_update(request, pk):
             recipe = recipe_instance
             recipe.name = form.cleaned_data['name']
             recipe.instructions = form.cleaned_data['instructions']
+            recipe.time = form.cleaned_data['time']
 
             recipe.save()
 

@@ -22,11 +22,12 @@ class ExternalRecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('name', 'keywords', 'file_path', 'storage', 'file_uid')
+        fields = ('name', 'keywords', 'time', 'file_path', 'storage', 'file_uid')
 
         labels = {
             'name': _('Name'),
             'keywords': _('Keywords'),
+            'time': _('Preparation time in minutes'),
             'file_path': _('Path'),
             'file_uid': _('Storage UID'),
         }
@@ -36,12 +37,13 @@ class ExternalRecipeForm(forms.ModelForm):
 class InternalRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'instructions', 'keywords')
+        fields = ('name', 'instructions', 'time', 'keywords')
 
         labels = {
             'name': _('Name'),
             'keywords': _('Keywords'),
             'instructions': _('Instructions'),
+            'time': _('Preparation time in minutes'),
         }
         widgets = {'keywords': MultiSelectWidget}
 
@@ -49,7 +51,7 @@ class InternalRecipeForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('text', )
+        fields = ('text',)
 
         labels = {
             'text': _('Add your comment: '),
