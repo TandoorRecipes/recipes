@@ -1,8 +1,16 @@
-# Recipies
-Recipes is a Django application that allows tagging of arbitrary numbers of recipes (or in fact any other file) in a storage backend.
-It also allows the easy creation of recipes directly on the page.
-Currently the only supported storage backend is dropbox, but this can easily be changed as the system is modular and 
-already has fields to support different backends.
+# Recipes
+Recipes is a django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
+
+
+
+<u>Features</u>
+
+- Sync files with Dropbox and Nextcloud (more can easily be added)
+- Create and search for tags, assign them in batch to all files matching certain filters
+- Create recipes locally within a nice, standardized webinterface
+- Share recipes with friends and comment on them to suggest or remember changes you made
+
+This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission System will be implemented but this is not meant as a public website.
 
 ## Usage
 Most things should be straight forward but there are some more complicated things.
@@ -21,8 +29,7 @@ Then enter the path you want to monitor starting at the storage root (e.g. `/Fol
 ##### Syncing Data
 To sync the recipes app with the storage backends press `Sync now` under `Manage Data >> Configure Sync`.
 ##### Import Recipes
-All files found by the sync can be found under `Manage Data >> Import recipes`. There you can either import all at once without
-modifying them or import one by one, adding Category and Tags while importing.
+All files found by the sync can be found under `Manage Data >> Import recipes`. There you can either import all at once without modifying them or import one by one, adding Category and Tags while importing.
 ##### Batch Edit
 If you have many untagged recipes you may want to edit them all at once. For this go to
 `Manage Data >> Batch Edit`. Enter a word which should be contained in the recipe name and select the tags you want to apply.
@@ -57,5 +64,4 @@ To start developing:
 Pull Requests and ideas are welcome, feel free to contribute in any way.
 
 ## License
-This project is licensed under the MIT license. Even though it is not required to publish derivatives i highly encourage
-pushing changes upstream and letting people profit from any work done on this project.
+This project is licensed under the MIT license. Even though it is not required to publish derivatives i highly encourage pushing changes upstream and letting people profit from any work done on this project.

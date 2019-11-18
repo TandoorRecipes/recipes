@@ -86,8 +86,7 @@
     <form method="POST" class="post-form">
         {% csrf_token %}
         <div class="input-group mb-3">
-            <textarea name="text" cols="15" rows="2" class="textarea form-control" required id="id_text">
-            </textarea>
+            <textarea name="text" cols="15" rows="2" class="textarea form-control" required id="id_text"></textarea>
             <div class="input-group-append">
                 <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
             </div>
