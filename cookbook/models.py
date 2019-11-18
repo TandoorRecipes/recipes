@@ -49,10 +49,6 @@ class Keyword(models.Model):
         return "{0} {1}".format(self.icon, self.name)
 
 
-class Ingredients(models.Model):
-    name = models.CharField(max_length=128)
-
-
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
     instructions = models.TextField(blank=True)
@@ -79,7 +75,7 @@ class RecipeIngredients(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     unit = models.CharField(max_length=128)
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
-    ingredient = models.ForeignKey(Ingredients, models.PROTECT)
+    ingredient = models.CharField(max_length=128)
 
 
 class Comment(models.Model):
