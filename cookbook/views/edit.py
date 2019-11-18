@@ -52,7 +52,8 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    return render(request, 'forms/edit_internal_recipe.html', {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
+    return render(request, 'forms/edit_internal_recipe.html',
+                  {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
@@ -101,6 +102,40 @@ class StorageUpdate(LoginRequiredMixin, UpdateView):
         context = super(StorageUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
         return context
+
+
+@login_required
+def edit_storage(request, pk):
+    instance = get_object_or_404(Storage, pk=pk)
+
+    if request.method == "POST":
+        form = StorageForm(request.POST)
+        if form.is_valid():
+            instance.name = form.cleaned_data['name']
+            instance.method = form.cleaned_data['method']
+            instance.username = form.cleaned_data['username']
+            instance.url = form.cleaned_data['url']
+
+            if form.cleaned_data['password'] != '__NO__CHANGE__':
+                instance.password = form.cleaned_data['password']
+
+            if form.cleaned_data['token'] != '__NO__CHANGE__':
+                instance.token = form.cleaned_data['token']
+
+            instance.save()
+
+            messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
+            return HttpResponseRedirect(reverse('edit_storage', args=[pk]))
+        else:
+            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend.!'))
+    else:
+        pseudo_instance = instance
+        pseudo_instance.password = '__NO__CHANGE__'
+        pseudo_instance.token = '__NO__CHANGE__'
+        form = InternalRecipeForm(instance=pseudo_instance)
+
+    return render(request, 'forms/edit_internal_recipe.html',
+                  {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
 
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
