@@ -25,6 +25,7 @@
                 {{ field|as_crispy_field }}
             </div>
             {% if field.name == 'name' %}
+                {% trans 'Ingredients' %}
                 <div id="ingredients-table"></div>
                 <br>
                 <div class="table-controls">
