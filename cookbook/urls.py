@@ -50,4 +50,5 @@ urlpatterns = [
     path('api/sync_all/', api.sync_all, name='api_sync'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
+    path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),
 ]
