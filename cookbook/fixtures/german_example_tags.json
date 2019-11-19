@@ -1,0 +1,230 @@
+[
+  {
+    "model": "cookbook.keyword",
+    "pk": 1,
+    "fields": {
+      "name": "Hauptgang",
+      "icon": "\ud83c\udf7d",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:07:08.957Z",
+      "updated_at": "2019-11-15T14:07:08.957Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 2,
+    "fields": {
+      "name": "Vorspeise",
+      "icon": "\ud83e\udd63",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:07:31.863Z",
+      "updated_at": "2019-11-15T14:07:31.863Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 3,
+    "fields": {
+      "name": "Nachtisch",
+      "icon": "\ud83c\udf68",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:07:49.873Z",
+      "updated_at": "2019-11-15T14:07:49.873Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 4,
+    "fields": {
+      "name": "Salat",
+      "icon": "\ud83e\udd57",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:07:58.033Z",
+      "updated_at": "2019-11-15T14:07:58.034Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 5,
+    "fields": {
+      "name": "Rind",
+      "icon": "\ud83d\udc04",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:08:24.881Z",
+      "updated_at": "2019-11-15T14:08:24.881Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 6,
+    "fields": {
+      "name": "Schwein",
+      "icon": "\ud83d\udc16",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:08:35.754Z",
+      "updated_at": "2019-11-15T14:08:35.754Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 7,
+    "fields": {
+      "name": "Huhn",
+      "icon": "\ud83d\udc14",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:08:43.360Z",
+      "updated_at": "2019-11-15T14:08:43.360Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 8,
+    "fields": {
+      "name": "Wild",
+      "icon": "\ud83e\udd8c",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:08:52.137Z",
+      "updated_at": "2019-11-15T14:08:52.137Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 9,
+    "fields": {
+      "name": "Kuchen",
+      "icon": "\ud83c\udf70",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:09:00.433Z",
+      "updated_at": "2019-11-15T14:09:00.433Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 10,
+    "fields": {
+      "name": "Nudeln",
+      "icon": "\ud83c\udf5d",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:09:25.839Z",
+      "updated_at": "2019-11-15T14:09:25.839Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 11,
+    "fields": {
+      "name": "Reis",
+      "icon": "\ud83c\udf5a",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:09:31.879Z",
+      "updated_at": "2019-11-15T14:09:31.879Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 12,
+    "fields": {
+      "name": "Kartoffeln",
+      "icon": "\ud83e\udd54",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:09:39.023Z",
+      "updated_at": "2019-11-15T14:09:39.023Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 13,
+    "fields": {
+      "name": "Suppe",
+      "icon": "\ud83c\udf72",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:14:54.922Z",
+      "updated_at": "2019-11-15T14:14:54.922Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 14,
+    "fields": {
+      "name": "Thermomix",
+      "icon": "\u2699",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:15:35.806Z",
+      "updated_at": "2019-11-15T14:15:35.806Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 15,
+    "fields": {
+      "name": "S\u00fc\u00df",
+      "icon": "\ud83c\udf6f",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:19:03.339Z",
+      "updated_at": "2019-11-15T14:19:03.339Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 16,
+    "fields": {
+      "name": "Auflauf",
+      "icon": "\ud83e\udd58",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:19:21.874Z",
+      "updated_at": "2019-11-15T14:19:21.874Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 17,
+    "fields": {
+      "name": "Backen",
+      "icon": "\ud83d\udd25",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:21:19.399Z",
+      "updated_at": "2019-11-15T14:21:19.399Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 18,
+    "fields": {
+      "name": "Fisch",
+      "icon": "\ud83d\udc1f",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-15T14:23:32.303Z",
+      "updated_at": "2019-11-15T14:23:32.303Z"
+    }
+  },
+  {
+    "model": "cookbook.keyword",
+    "pk": 19,
+    "fields": {
+      "name": "Dip",
+      "icon": "\ud83e\udd6b",
+      "description": "",
+      "created_by": 0,
+      "created_at": "2019-11-16T13:32:42.625Z",
+      "updated_at": "2019-11-16T13:43:28.404Z"
+    }
+  }
+]

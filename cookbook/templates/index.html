@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <form action="" method="get" id="search_form">
                             {{ filter.form|crispy }}
-                            <input class="btn btn-primary" type="submit"/>
+                            <input class="btn btn-primary" type="submit" value="{% trans 'Search' %}"/>
                             <a href="#" onclick="window.location = window.location.pathname;"
                                class="btn btn-warning">{% trans 'Reset' %}</a>
                             <a href="{% url 'new_recipe' %}" class="btn btn-success">{% trans 'New' %}</a>

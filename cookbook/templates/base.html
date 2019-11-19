@@ -24,7 +24,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
-    <link rel="stylesheet" href="{% static "fontawesome/fontawesome-all.css" %}">
+    <link rel="stylesheet" href="{% static "fontawesome/fontawesome_all.min.css" %}">
 
     <link rel="stylesheet" href="{% static "emojionearea/emojionearea.min.css" %}">
     <script type="text/javascript" src="{% static "emojionearea/emojionearea.min.js" %}"></script>
@@ -59,29 +59,29 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    {% trans 'List' %}
+                    {% trans 'Tags' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
                             class="fas fa-tags"></i> {% trans 'Keyword' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_storage' %}"><i
-                            class="fas fa-database"></i> {% trans 'Storage Backends' %}</a>
+                    <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
+                            class="fas fa-edit"></i> {% trans 'Batch Edit' %}</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    {% trans 'Manage Data' %}
+                    {% trans 'Storage Data' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'list_storage' %}"><i
+                            class="fas fa-database"></i> {% trans 'Storage Backends' %}</a>
                     <a class="dropdown-item" href="{% url 'data_sync' %}"><i
                             class="fas fa-sync-alt"></i> {% trans 'Configure Sync' %}</a>
                     <a class="dropdown-item" href="{% url 'list_import' %}"><i
                             class="far fa-file-alt"></i> {% trans 'Import Recipes' %}</a>
                     <a class="dropdown-item" href="{% url 'list_import_log' %}"><i
                             class="fas fa-history"></i> {% trans 'Import Log' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
-                            class="fas fa-edit"></i> {% trans 'Batch Edit' %}</a>
                     <a class="dropdown-item" href="{% url 'data_stats' %}"><i
                             class="fas fa-chart-line"></i> {% trans 'Statistics' %}</a>
                 </div>
