@@ -20,12 +20,18 @@
     <form action="." method="post">
         {% csrf_token %}
 
-        {{ form|crispy }}
-        <div id="ingredients-table"></div>
-        <br>
-        <div class="table-controls">
-            <button class="btn" id="new_empty" type="button"><i class="fas fa-plus-circle"></i></button>
-        </div>
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field|as_crispy_field }}
+            </div>
+            {% if field.name == 'name' %}
+                <div id="ingredients-table"></div>
+                <br>
+                <div class="table-controls">
+                    <button class="btn" id="new_empty" type="button"><i class="fas fa-plus-circle"></i></button>
+                </div>
+            {% endif %}
+        {% endfor %}
 
         <input type="hidden" id="ingredients_data_input" name="ingredients">
         <hr>
@@ -45,9 +51,9 @@
 
             var ingredients = {{ ingredients|safe }}
 
-            ingredients.forEach(function (cur, i) {
-                cur.delete = false
-            })
+                ingredients.forEach(function (cur, i) {
+                    cur.delete = false
+                })
 
             var data = ingredients
 
