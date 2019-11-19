@@ -19,6 +19,7 @@
 
     <form action="." method="post">
         {% csrf_token %}
+
         {{ form|crispy }}
         <div id="ingredients-table"></div>
         <br>
@@ -84,6 +85,8 @@
                 }
             });
 
+            // load initial value
+            $('#ingredients_data_input').val(JSON.stringify(data))
 
             document.getElementById("new_empty").addEventListener("click", function () {
                 data.push({
