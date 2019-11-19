@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients
 
 
 @login_required
@@ -52,8 +52,10 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
+    ingredients = RecipeIngredients.objects.filter(recipe=recipe_instance)
+
     return render(request, 'forms/edit_internal_recipe.html',
-                  {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
+                  {'form': form, 'ingredients': ingredients, 'view_url': reverse('view_recipe', args=[pk])})
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
