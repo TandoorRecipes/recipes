@@ -21,7 +21,13 @@
         {% csrf_token %}
         {{ form|crispy }}
         <div id="ingredients-table"></div>
+        <br>
+        <div class="table-controls">
+            <button class="btn" id="new_empty" type="button"><i class="far fa-plus"></i></button>
+        </div>
+
         <input type="hidden" id="ingredients_data_input" name="ingredients">
+        <hr>
         <input type="submit" value="Submit" class="btn btn-success">
         <a href="{% url 'redirect_delete' form.instance|get_class|lower form.instance.pk %}"
            class="btn btn-danger">{% trans 'Delete' %}</a>
@@ -48,8 +54,7 @@
                         title: "{% trans 'ingredient' %}",
                         field: "ingredient",
                         validator: "required",
-                        editor: "select",
-                        editorParams: {values: {"test1": "Test1", "test2": "Test2"}}
+                        editor: "input"
                     },
                     {title: "{% trans 'amount' %}", field: "amount", validator: "required", editor: "input"},
                     {title: "{% trans 'unit' %}", field: "unit", validator: "required", editor: "input"},
@@ -72,6 +77,18 @@
                     })
                 }
             });
+
+
+            document.getElementById("new_empty").addEventListener("click", function () {
+                data.push({
+                    ingredient: "{% trans 'ingredient' %}",
+                    amount: "100",
+                    unit: "g",
+                    id: Math.floor(Math.random() * 10000000),
+                    delete: false,
+                });
+            });
         });
+
     </script>
 {% endblock %}
