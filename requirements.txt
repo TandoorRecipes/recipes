@@ -7,9 +7,9 @@ django-autocomplete-light
 six
 requests
 markdown
+simplejson
 lxml
 webdavclient3
 python-dotenv==0.7.1
 psycopg2==2.7.4
 gunicorn==19.7.1
-simplejson
