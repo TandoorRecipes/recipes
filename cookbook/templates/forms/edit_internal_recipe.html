@@ -42,7 +42,13 @@
         $(document).ready(function () {
             $('#id_keywords').select2();
 
-            var data = []
+            var ingredients = {{ ingredients|safe }}
+
+            ingredients.forEach(function (cur, i) {
+                cur.delete = false
+            })
+
+            var data = ingredients
 
             var table = new Tabulator("#ingredients-table", {
                 index: "id",
