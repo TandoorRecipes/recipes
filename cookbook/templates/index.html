@@ -21,10 +21,10 @@
                     <div class="card-body">
                         <form action="" method="get" id="search_form">
                             {{ filter.form|crispy }}
-                            <input class="btn btn-primary" type="submit" value="{% trans 'Search' %}"/>
+                            <button class="btn btn-primary" value="1"><i class="fas fa-search"></i> {% trans 'Search' %}</button>
                             <a href="#" onclick="window.location = window.location.pathname;"
-                               class="btn btn-warning">{% trans 'Reset' %}</a>
-                            <a href="{% url 'new_recipe' %}" class="btn btn-success">{% trans 'New' %}</a>
+                               class="btn btn-warning"><i class="fas fa-backspace"></i> {% trans 'Reset' %}</a>
+                            <a href="{% url 'new_recipe' %}" class="btn btn-success"><i class="fas fa-plus-circle"></i> {% trans 'New' %}</a>
                         </form>
 
                     </div>
