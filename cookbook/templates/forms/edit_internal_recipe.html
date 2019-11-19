@@ -23,7 +23,7 @@
         <div id="ingredients-table"></div>
         <br>
         <div class="table-controls">
-            <button class="btn" id="new_empty" type="button"><i class="far fa-plus"></i></button>
+            <button class="btn" id="new_empty" type="button"><i class="fas fa-plus-circle"></i></button>
         </div>
 
         <input type="hidden" id="ingredients_data_input" name="ingredients">
@@ -57,15 +57,15 @@
                 data: data,
                 columns: [
                     {
-                        title: "{% trans 'ingredient' %}",
-                        field: "ingredient",
+                        title: "{% trans 'Ingredient' %}",
+                        field: "name",
                         validator: "required",
                         editor: "input"
                     },
-                    {title: "{% trans 'amount' %}", field: "amount", validator: "required", editor: "input"},
-                    {title: "{% trans 'unit' %}", field: "unit", validator: "required", editor: "input"},
+                    {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "input"},
+                    {title: "{% trans 'Unit' %}", field: "unit", validator: "required", editor: "input"},
                     {
-                        title: "{% trans 'delete' %}",
+                        title: "{% trans 'Delete' %}",
                         field: "delete",
                         align: "center",
                         editor: true,
@@ -87,7 +87,7 @@
 
             document.getElementById("new_empty").addEventListener("click", function () {
                 data.push({
-                    ingredient: "{% trans 'ingredient' %}",
+                    name: "{% trans 'Ingredient' %}",
                     amount: "100",
                     unit: "g",
                     id: Math.floor(Math.random() * 10000000),

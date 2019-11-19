@@ -45,6 +45,17 @@ def internal_recipe_update(request, pk):
 
             recipe.save()
 
+            form_ingredients = json.loads(form.data['ingredients'])
+            RecipeIngredients.objects.filter(recipe=recipe_instance).delete()
+
+            for i in form_ingredients:
+                ingredient = RecipeIngredients()
+                ingredient.recipe = recipe_instance
+                ingredient.name = i['name']
+                ingredient.amount = i['amount']
+                ingredient.unit = i['unit']
+                ingredient.save()
+
             recipe.keywords.set(form.cleaned_data['keywords'])
 
             messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
@@ -55,8 +66,6 @@ def internal_recipe_update(request, pk):
         form = InternalRecipeForm(instance=recipe_instance)
 
     ingredients = RecipeIngredients.objects.filter(recipe=recipe_instance)
-
-    print(list(ingredients))
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients.values())), 'view_url': reverse('view_recipe', args=[pk])})
