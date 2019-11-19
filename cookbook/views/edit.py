@@ -1,3 +1,5 @@
+import simplejson as json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -54,8 +56,10 @@ def internal_recipe_update(request, pk):
 
     ingredients = RecipeIngredients.objects.filter(recipe=recipe_instance)
 
+    print(list(ingredients))
+
     return render(request, 'forms/edit_internal_recipe.html',
-                  {'form': form, 'ingredients': ingredients, 'view_url': reverse('view_recipe', args=[pk])})
+                  {'form': form, 'ingredients': json.dumps(list(ingredients.values())), 'view_url': reverse('view_recipe', args=[pk])})
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
