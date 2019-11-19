@@ -35,11 +35,9 @@ class ExternalRecipeForm(forms.ModelForm):
 
 
 class InternalRecipeForm(forms.ModelForm):
-    table_pos = forms.CharField(show_hidden_initial=True, required=False, widget=forms.HiddenInput())
-
     class Meta:
         model = Recipe
-        fields = ('name', 'table_pos', 'instructions', 'time', 'keywords')
+        fields = ('name', 'instructions', 'time', 'keywords')
 
         labels = {
             'name': _('Name'),
