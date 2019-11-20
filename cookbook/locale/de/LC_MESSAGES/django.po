@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-03 21:37+0200\n"
+"POT-Creation-Date: 2019-11-20 10:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,193 +18,453 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\cookbook\forms.py:14 .\cookbook\forms.py:32
+#: cookbook/forms.py:28 cookbook/forms.py:43 cookbook/forms.py:101
 msgid "Name"
 msgstr ""
 
-#: .\cookbook\forms.py:15 .\cookbook\forms.py:33
-#: .\cookbook\templates\base.html:59 .\cookbook\templates\base.html:71
-#: .\cookbook\views\edit.py:37 .\cookbook\views\edit.py:107
-#: .\cookbook\views\lists.py:15 .\cookbook\views\new.py:29
-msgid "Category"
-msgstr "Kategorie"
-
-#: .\cookbook\forms.py:16 .\cookbook\forms.py:34
+#: cookbook/forms.py:29 cookbook/forms.py:44 cookbook/forms.py:102
+#: cookbook/templates/stats.html:22
 msgid "Keywords"
 msgstr "Schlagwörter"
 
-#: .\cookbook\forms.py:23 .\cookbook\forms.py:42
-msgid "Save"
-msgstr "Speichern"
+#: cookbook/forms.py:30 cookbook/forms.py:46
+msgid "Preparation time in minutes"
+msgstr ""
 
-#: .\cookbook\forms.py:35 .\cookbook\forms.py:46
+#: cookbook/forms.py:31 cookbook/forms.py:103
 msgid "Path"
 msgstr "Pfad"
 
-#: .\cookbook\forms.py:52 .\cookbook\templates\batch\monitor.html:6
-msgid "Sync"
-msgstr "Synchronisieren"
+#: cookbook/forms.py:32
+msgid "Storage UID"
+msgstr ""
 
-#: .\cookbook\forms.py:56
+#: cookbook/forms.py:45
+msgid "Instructions"
+msgstr ""
+
+#: cookbook/forms.py:57
+msgid "Add your comment: "
+msgstr ""
+
+#: cookbook/forms.py:90
 msgid "Search String"
 msgstr "Such Wort"
 
-#: .\cookbook\forms.py:64
-msgid "Update"
-msgstr "Aktualisieren"
+#: cookbook/forms.py:104
+msgid "File ID"
+msgstr ""
 
-#: .\cookbook\tables.py:16 .\cookbook\tables.py:26 .\cookbook\tables.py:36
-#: .\cookbook\tables.py:45 .\cookbook\tables.py:54
-#: .\cookbook\templates\generic\delete_template.html:5
-#: .\cookbook\templates\generic\delete_template.html:9
+#: cookbook/tables.py:75 cookbook/templates/forms/edit_internal_recipe.html:41
+#: cookbook/templates/forms/edit_internal_recipe.html:78
+#: cookbook/templates/generic/delete_template.html:5
+#: cookbook/templates/generic/delete_template.html:13
+#: cookbook/templates/generic/edit_template.html:25
 msgid "Delete"
 msgstr "Löschen"
 
-#: .\cookbook\templates\base.html:39 .\cookbook\templates\base.html:47
-#: .\cookbook\templates\index.html:6
+#: cookbook/templates/base.html:48 cookbook/templates/base.html:56
+#: cookbook/templates/index.html:7
 msgid "Cookbook"
 msgstr "Kochbuch"
 
-#: .\cookbook\templates\base.html:53
-#: .\cookbook\templates\generic\new_template.html:5
-#: .\cookbook\templates\generic\new_template.html:9
-msgid "New"
-msgstr "Neu"
+#: cookbook/templates/base.html:62
+msgid "Tags"
+msgstr ""
 
-#: .\cookbook\templates\base.html:57 .\cookbook\templates\index.html:62
-#: .\cookbook\views\edit.py:73 .\cookbook\views\edit.py:85
-#: .\cookbook\views\new.py:17
-msgid "Recipe"
-msgstr "Rezept"
-
-#: .\cookbook\templates\base.html:61 .\cookbook\templates\base.html:73
-#: .\cookbook\views\edit.py:51 .\cookbook\views\edit.py:118
-#: .\cookbook\views\lists.py:23 .\cookbook\views\new.py:41
+#: cookbook/templates/base.html:66 cookbook/views/edit.py:102
+#: cookbook/views/edit.py:258 cookbook/views/lists.py:17
+#: cookbook/views/new.py:43
 msgid "Keyword"
 msgstr "Schlagwort"
 
-#: .\cookbook\templates\base.html:67
-#: .\cookbook\templates\generic\list_template.html:6
-#: .\cookbook\templates\generic\list_template.html:10
-msgid "List"
-msgstr "Liste"
-
-#: .\cookbook\templates\base.html:79
-msgid "Manage Data"
-msgstr "Daten Verwalten"
-
-#: .\cookbook\templates\base.html:83
-msgid "Configure Sync"
-msgstr "Sync Einstellen"
-
-#: .\cookbook\templates\base.html:85
-msgid "Manage imported Recipes"
-msgstr "Importe verwalten"
-
-#: .\cookbook\templates\base.html:87
+#: cookbook/templates/base.html:68
 msgid "Batch Edit"
 msgstr "Massenbearbeitung"
 
-#: .\cookbook\templates\base.html:94
+#: cookbook/templates/base.html:73
+#, fuzzy
+#| msgid "Manage Data"
+msgid "Storage Data"
+msgstr "Daten Verwalten"
+
+#: cookbook/templates/base.html:77
+msgid "Storage Backends"
+msgstr ""
+
+#: cookbook/templates/base.html:79
+msgid "Configure Sync"
+msgstr "Sync Einstellen"
+
+#: cookbook/templates/base.html:81
+#, fuzzy
+#| msgid "Import Recipe"
+msgid "Import Recipes"
+msgstr "Rezept Importieren"
+
+#: cookbook/templates/base.html:83 cookbook/views/lists.py:25
+#, fuzzy
+#| msgid "Import Recipe"
+msgid "Import Log"
+msgstr "Rezept Importieren"
+
+#: cookbook/templates/base.html:85 cookbook/templates/stats.html:10
+msgid "Statistics"
+msgstr ""
+
+#: cookbook/templates/base.html:92
 msgid "Admin"
 msgstr "Admin"
 
-#: .\cookbook\templates\base.html:98
+#: cookbook/templates/base.html:96
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: .\cookbook\templates\base.html:101
+#: cookbook/templates/base.html:99
 msgid "Login"
 msgstr "Einloggen"
 
-#: .\cookbook\templates\batch\edit.html:6
+#: cookbook/templates/batch/edit.html:6
 msgid "Batch edit Category"
 msgstr "Kategorie massenbearbeitung"
 
-#: .\cookbook\templates\batch\edit.html:11
+#: cookbook/templates/batch/edit.html:15
 msgid "Batch edit Recipes"
 msgstr "Rezept massenbearbeitung"
 
-#: .\cookbook\templates\batch\edit.html:12
-msgid ""
-"Add the specified category and keywords to all recipes containing a word"
+#: cookbook/templates/batch/edit.html:20
+#, fuzzy
+#| msgid ""
+#| "Add the specified category and keywords to all recipes containing a word"
+msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
 "Ausgewählte Kategorie und Schlagwörtern zu allen Rezepten die das Suchwort "
 "enthalten hinzufügen"
 
-#: .\cookbook\templates\batch\import.html:5
-#: .\cookbook\templates\batch\import.html:9
-msgid "Imported Recipes"
-msgstr "Importierte Rezepte"
+#: cookbook/templates/batch/monitor.html:6 cookbook/views/edit.py:86
+msgid "Sync"
+msgstr "Synchronisieren"
 
-#: .\cookbook\templates\batch\import.html:13
-#, fuzzy
-#| msgid "Auto import all"
-msgid "import all"
-msgstr "Alle importieren"
-
-#: .\cookbook\templates\batch\monitor.html:10
+#: cookbook/templates/batch/monitor.html:10
 msgid "Manage watched Folders"
 msgstr "Überwachte Ordner verwalten"
 
-#: .\cookbook\templates\batch\monitor.html:12
+#: cookbook/templates/batch/monitor.html:14
+#, fuzzy
+#| msgid ""
+#| "On this Page you can manage all DropBox folder locations that should be "
+#| "monitored and synced"
 msgid ""
-"On this Page you can manage all DropBox folder locations that should be "
+"On this Page you can manage all storage folder locations that should be "
 "monitored and synced"
 msgstr ""
-"Auf dieser Seite kannst du alle Dropbox Ordner verwalten die überwacht und synchronisiert werden sollen"
+"Auf dieser Seite kannst du alle Dropbox Ordner verwalten die überwacht und "
+"synchronisiert werden sollen"
 
-
-#: .\cookbook\templates\batch\monitor.html:13
+#: cookbook/templates/batch/monitor.html:16
 msgid "The path must be in the following format"
 msgstr "Der Pfad muss in folgendem Format sein"
 
-#: .\cookbook\templates\batch\monitor.html:15
+#: cookbook/templates/batch/monitor.html:27
 msgid "Sync Now!"
 msgstr "Jetzt Synchronisieren!"
 
-#: .\cookbook\templates\generic\delete_template.html:14
+#: cookbook/templates/batch/waiting.html:4
+#: cookbook/templates/batch/waiting.html:10
+#, fuzzy
+#| msgid "Import Recipe"
+msgid "Importing Recipes"
+msgstr "Rezept Importieren"
+
+#: cookbook/templates/batch/waiting.html:23
+msgid ""
+"This can take a few minutes, depending on the number of recipes in sync, "
+"please wait."
+msgstr ""
+
+#: cookbook/templates/forms/edit_import_recipe.html:5
+#: cookbook/templates/forms/edit_import_recipe.html:9
+#, fuzzy
+#| msgid "Import Recipe"
+msgid "Import new Recipe"
+msgstr "Rezept Importieren"
+
+#: cookbook/templates/forms/edit_internal_recipe.html:6
+#: cookbook/templates/forms/edit_internal_recipe.html:18
+#, fuzzy
+#| msgid "Recipe"
+msgid "Edit Recipe"
+msgstr "Rezept"
+
+#: cookbook/templates/forms/edit_internal_recipe.html:28
+#: cookbook/templates/recipe_view.html:37
+msgid "Ingredients"
+msgstr ""
+
+#: cookbook/templates/forms/edit_internal_recipe.html:43
+#: cookbook/templates/generic/edit_template.html:27
+#: cookbook/templates/recipe_view.html:6
+msgid "View"
+msgstr ""
+
+#: cookbook/templates/forms/edit_internal_recipe.html:70
+#: cookbook/templates/forms/edit_internal_recipe.html:102
+msgid "Ingredient"
+msgstr ""
+
+#: cookbook/templates/forms/edit_internal_recipe.html:75
+msgid "Amount"
+msgstr ""
+
+#: cookbook/templates/forms/edit_internal_recipe.html:76
+msgid "Unit"
+msgstr ""
+
+#: cookbook/templates/generic/delete_template.html:18
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr "Bist du sicher das %(title)s: <b>%(object)s</b> gelöscht werden soll"
 
-#: .\cookbook\templates\generic\edit_template.html:5
-#: .\cookbook\templates\generic\edit_template.html:9
+#: cookbook/templates/generic/edit_template.html:6
+#: cookbook/templates/generic/edit_template.html:14
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: .\cookbook\templates\index.html:15
-msgid "Search"
-msgstr "Suche"
+#: cookbook/templates/generic/list_template.html:6
+#: cookbook/templates/generic/list_template.html:12
+msgid "List"
+msgstr "Liste"
 
-#: .\cookbook\templates\index.html:34
-msgid "Log in to view Recipies"
-msgstr "Bitte einloggen um Rezepte zu sehen"
+#: cookbook/templates/generic/list_template.html:19
+#, fuzzy
+#| msgid "Auto import all"
+msgid "Import all"
+msgstr "Alle importieren"
 
-#: .\cookbook\templates\index.html:73
+#: cookbook/templates/generic/new_template.html:6
+#: cookbook/templates/generic/new_template.html:14
+#: cookbook/templates/index.html:27
+msgid "New"
+msgstr "Neu"
+
+#: cookbook/templates/generic/table_template.html:76
+msgid "previous"
+msgstr ""
+
+#: cookbook/templates/generic/table_template.html:98
+msgid "next"
+msgstr ""
+
+#: cookbook/templates/include/recipe_open_modal.html:28
+#: cookbook/views/edit.py:207 cookbook/views/edit.py:225
+#: cookbook/views/new.py:31
+msgid "Recipe"
+msgstr "Rezept"
+
+#: cookbook/templates/include/recipe_open_modal.html:39
 msgid "Close"
 msgstr "Schließen"
 
-#: .\cookbook\templates\index.html:86
+#: cookbook/templates/include/recipe_open_modal.html:52
 msgid "Open Recipe"
 msgstr "Rezept öffnen"
 
-#: .\cookbook\templates\registration\login.html:8
+#: cookbook/templates/include/storage_backend_warning.html:4
+msgid "Security Warning"
+msgstr ""
+
+#: cookbook/templates/include/storage_backend_warning.html:5
+msgid ""
+"\n"
+"        The <b>Password and Token</b> field are stored as <b>plain text</b> "
+"inside the database.\n"
+"        This is necessary because they are needed to make API requests, but "
+"it also increases the risk of\n"
+"        someone stealing it. <br/>\n"
+"        To limit the possible damage use read only tokens or accounts if "
+"available or create separate accounts\n"
+"        with limited access (only to recipes).\n"
+"    "
+msgstr ""
+
+#: cookbook/templates/index.html:19 cookbook/templates/index.html:24
+msgid "Search"
+msgstr "Suche"
+
+#: cookbook/templates/index.html:26
+msgid "Reset"
+msgstr ""
+
+#: cookbook/templates/index.html:28
+msgid "Random"
+msgstr ""
+
+#: cookbook/templates/index.html:43
+msgid "Log in to view Recipies"
+msgstr "Bitte einloggen um Rezepte zu sehen"
+
+#: cookbook/templates/recipe_view.html:12
+msgid "in"
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:17
+#: cookbook/templates/recipe_view.html:99
+msgid "by"
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:29
+msgid "Preparation time ca."
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:55
+msgid "View external recipe"
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:65
+#, fuzzy
+#| msgid "Open Recipe"
+msgid "External recipe"
+msgstr "Rezept öffnen"
+
+#: cookbook/templates/recipe_view.html:67
+msgid ""
+"\n"
+"                        This is an external recipe, which means you can only "
+"view it by opening the link above.\n"
+"                        You can convert this recipe to a fancy recipe by "
+"pressing the convert button. The original file\n"
+"                        will still be accessible.\n"
+"                    "
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:75
+msgid "Convert now!"
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:84
+msgid "Comments"
+msgstr ""
+
+#: cookbook/templates/recipe_view.html:91 cookbook/views/edit.py:168
+#: cookbook/views/edit.py:280
+msgid "Comment"
+msgstr ""
+
+#: cookbook/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."
 msgstr "Nutzername oder Passwort falsch. Bitte versuch es erneut."
 
-#: .\cookbook\views\edit.py:23 .\cookbook\views\edit.py:96
-msgid "Monitor"
+#: cookbook/templates/stats.html:4
+msgid "Stats"
 msgstr ""
 
-#: .\cookbook\views\edit.py:61
+#: cookbook/templates/stats.html:17
+msgid "Number of objects"
+msgstr ""
+
+#: cookbook/templates/stats.html:20
+#, fuzzy
+#| msgid "Recipe"
+msgid "Recipes"
+msgstr "Rezept"
+
+#: cookbook/templates/stats.html:24
+#, fuzzy
+#| msgid "Recipe"
+msgid "Recipe Imports"
+msgstr "Rezept"
+
+#: cookbook/templates/stats.html:32
+msgid "Objects stats"
+msgstr ""
+
+#: cookbook/templates/stats.html:35
+msgid "Recipes without Keywords"
+msgstr ""
+
+#: cookbook/views/api.py:48
+msgid "Sync successful!"
+msgstr ""
+
+#: cookbook/views/api.py:51
+msgid "Error synchronizing with Storage"
+msgstr ""
+
+#: cookbook/views/data.py:71
+#, python-format
+msgid "Batch edit done. %(count)d recipe where updated."
+msgid_plural "Batch edit done. %(count)d Recipes where updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: cookbook/views/edit.py:61
+#, fuzzy
+#| msgid "Recipe"
+msgid "Recipe saved!"
+msgstr "Rezept"
+
+#: cookbook/views/edit.py:64 cookbook/views/new.py:80
+msgid "There was an error importing this recipe!"
+msgstr ""
+
+#: cookbook/views/edit.py:118 cookbook/views/edit.py:269
+#: cookbook/views/lists.py:42 cookbook/views/new.py:55
+msgid "Storage Backend"
+msgstr ""
+
+#: cookbook/views/edit.py:142
+#, fuzzy
+#| msgid "Changes saved!"
+msgid "Storage saved!"
+msgstr "Änderungen gespeichert"
+
+#: cookbook/views/edit.py:145
+msgid "There was an error updating this storage backend.!"
+msgstr ""
+
+#: cookbook/views/edit.py:185 cookbook/views/edit.py:236
+#: cookbook/views/lists.py:34
+#, fuzzy
+#| msgid "Import Recipe"
+msgid "Import"
+msgstr "Rezept Importieren"
+
+#: cookbook/views/edit.py:195
 msgid "Changes saved!"
 msgstr "Änderungen gespeichert"
 
-#: .\cookbook\views\edit.py:65
+#: cookbook/views/edit.py:199
 msgid "Error saving changes!"
 msgstr "Fehler beim Speichern der Daten."
 
-#: .\cookbook\views\edit.py:129
-msgid "Import Recipe"
-msgstr "Rezept Importieren"
+#: cookbook/views/edit.py:247
+msgid "Monitor"
+msgstr ""
+
+#: cookbook/views/new.py:77
+#, fuzzy
+#| msgid "Imported Recipes"
+msgid "Imported new recipe!"
+msgstr "Importierte Rezepte"
+
+#: cookbook/views/views.py:42
+#, fuzzy
+#| msgid "Changes saved!"
+msgid "Comment saved!"
+msgstr "Änderungen gespeichert"
+
+#: cookbook/views/views.py:45
+msgid "There was an error saving this comment!"
+msgstr ""
+
+#~ msgid "Category"
+#~ msgstr "Kategorie"
+
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#~ msgid "Update"
+#~ msgstr "Aktualisieren"
+
+#~ msgid "Manage imported Recipes"
+#~ msgstr "Importe verwalten"
