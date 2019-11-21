@@ -147,9 +147,9 @@ def edit_storage(request, pk):
         pseudo_instance = instance
         pseudo_instance.password = '__NO__CHANGE__'
         pseudo_instance.token = '__NO__CHANGE__'
-        form = InternalRecipeForm(instance=pseudo_instance)
+        form = StorageForm(instance=pseudo_instance)
 
-    return render(request, 'forms/edit_internal_recipe.html',
+    return render(request, 'generic/edit_template.html',
                   {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
 
 

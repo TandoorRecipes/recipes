@@ -28,7 +28,7 @@ urlpatterns = [
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
     path('edit/sync/<int:pk>/', edit.SyncUpdate.as_view(), name='edit_sync'),
     path('edit/import/<int:pk>/', edit.ImportUpdate.as_view(), name='edit_import'),
-    path('edit/storage/<int:pk>/', edit.StorageUpdate.as_view(), name='edit_storage'),
+    path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
     path('edit/comment/<int:pk>/', edit.CommentUpdate.as_view(), name='edit_comment'),
 
     path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
