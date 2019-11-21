@@ -68,7 +68,7 @@ def batch_edit(request):
                 recipe.save()
 
             msg = ngettext(
-                'Batch edit done. %(count)d recipe where updated.',
+                'Batch edit done. %(count)d recipe was updated.',
                 'Batch edit done. %(count)d Recipes where updated.',
                 count) % {
                       'count': count,
