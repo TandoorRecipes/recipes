@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-20 10:22+0100\n"
+"POT-Creation-Date: 2019-11-21 14:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: cookbook/forms.py:28 cookbook/forms.py:43 cookbook/forms.py:101
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: cookbook/forms.py:29 cookbook/forms.py:44 cookbook/forms.py:102
 #: cookbook/templates/stats.html:22
@@ -29,7 +29,7 @@ msgstr "Schlagwörter"
 
 #: cookbook/forms.py:30 cookbook/forms.py:46
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Zubereitungszeit in Minuten"
 
 #: cookbook/forms.py:31 cookbook/forms.py:103
 msgid "Path"
@@ -37,15 +37,15 @@ msgstr "Pfad"
 
 #: cookbook/forms.py:32
 msgid "Storage UID"
-msgstr ""
+msgstr "Speicher ID"
 
 #: cookbook/forms.py:45
 msgid "Instructions"
-msgstr ""
+msgstr "Anleitung"
 
 #: cookbook/forms.py:57
 msgid "Add your comment: "
-msgstr ""
+msgstr "Schreibe einen Kommentar:"
 
 #: cookbook/forms.py:90
 msgid "Search String"
@@ -53,7 +53,7 @@ msgstr "Such Wort"
 
 #: cookbook/forms.py:104
 msgid "File ID"
-msgstr ""
+msgstr "Datei ID"
 
 #: cookbook/tables.py:75 cookbook/templates/forms/edit_internal_recipe.html:41
 #: cookbook/templates/forms/edit_internal_recipe.html:78
@@ -70,7 +70,7 @@ msgstr "Kochbuch"
 
 #: cookbook/templates/base.html:62
 msgid "Tags"
-msgstr ""
+msgstr "Schlagwörter"
 
 #: cookbook/templates/base.html:66 cookbook/views/edit.py:102
 #: cookbook/views/edit.py:258 cookbook/views/lists.py:17
@@ -90,7 +90,7 @@ msgstr "Daten Verwalten"
 
 #: cookbook/templates/base.html:77
 msgid "Storage Backends"
-msgstr ""
+msgstr "Speicher Quellen"
 
 #: cookbook/templates/base.html:79
 msgid "Configure Sync"
@@ -110,7 +110,7 @@ msgstr "Rezept Importieren"
 
 #: cookbook/templates/base.html:85 cookbook/templates/stats.html:10
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiken"
 
 #: cookbook/templates/base.html:92
 msgid "Admin"
@@ -181,6 +181,8 @@ msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
+"Abhängig von der Anzahl der Rezepte kann dieser Vorgang einige Minuten "
+"dauern, bitte warten."
 
 #: cookbook/templates/forms/edit_import_recipe.html:5
 #: cookbook/templates/forms/edit_import_recipe.html:9
@@ -199,26 +201,26 @@ msgstr "Rezept"
 #: cookbook/templates/forms/edit_internal_recipe.html:28
 #: cookbook/templates/recipe_view.html:37
 msgid "Ingredients"
-msgstr ""
+msgstr "Zutaten"
 
 #: cookbook/templates/forms/edit_internal_recipe.html:43
 #: cookbook/templates/generic/edit_template.html:27
 #: cookbook/templates/recipe_view.html:6
 msgid "View"
-msgstr ""
+msgstr "Angucken"
 
 #: cookbook/templates/forms/edit_internal_recipe.html:70
 #: cookbook/templates/forms/edit_internal_recipe.html:102
 msgid "Ingredient"
-msgstr ""
+msgstr "Zutat"
 
 #: cookbook/templates/forms/edit_internal_recipe.html:75
 msgid "Amount"
-msgstr ""
+msgstr "Menge"
 
 #: cookbook/templates/forms/edit_internal_recipe.html:76
 msgid "Unit"
-msgstr ""
+msgstr "Einheit"
 
 #: cookbook/templates/generic/delete_template.html:18
 #, python-format
@@ -249,11 +251,11 @@ msgstr "Neu"
 
 #: cookbook/templates/generic/table_template.html:76
 msgid "previous"
-msgstr ""
+msgstr "vorherige"
 
 #: cookbook/templates/generic/table_template.html:98
 msgid "next"
-msgstr ""
+msgstr "nächste"
 
 #: cookbook/templates/include/recipe_open_modal.html:28
 #: cookbook/views/edit.py:207 cookbook/views/edit.py:225
@@ -271,7 +273,7 @@ msgstr "Rezept öffnen"
 
 #: cookbook/templates/include/storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Sicherheitswarnung"
 
 #: cookbook/templates/include/storage_backend_warning.html:5
 msgid ""
@@ -286,6 +288,15 @@ msgid ""
 "        with limited access (only to recipes).\n"
 "    "
 msgstr ""
+"\n"
+"        Das  <b>Password und Token</b> werden im <b>Klartext</b> in der "
+"Datenbank gespeichert.\n"
+"        Dies ist notwendig da Passwort oder Token benötigt werden um API "
+"anfragen zu machen, bringt jedoch auch ein Sicherheitsrisiko mit sich. <br/"
+">\n"
+"        Um das Risiko zu minimieren sollten, wenn möglich, Tokens benutzt "
+"werden die keinen Schreibzugriff haben. Alternativ können vollständig "
+"seperate Accounts mit limitiertem Zugriff genutzt werden\n"
 
 #: cookbook/templates/index.html:19 cookbook/templates/index.html:24
 msgid "Search"
@@ -293,11 +304,11 @@ msgstr "Suche"
 
 #: cookbook/templates/index.html:26
 msgid "Reset"
-msgstr ""
+msgstr "Reset"
 
 #: cookbook/templates/index.html:28
 msgid "Random"
-msgstr ""
+msgstr "Zufällig"
 
 #: cookbook/templates/index.html:43
 msgid "Log in to view Recipies"
@@ -305,20 +316,20 @@ msgstr "Bitte einloggen um Rezepte zu sehen"
 
 #: cookbook/templates/recipe_view.html:12
 msgid "in"
-msgstr ""
+msgstr "in"
 
 #: cookbook/templates/recipe_view.html:17
 #: cookbook/templates/recipe_view.html:99
 msgid "by"
-msgstr ""
+msgstr "von"
 
 #: cookbook/templates/recipe_view.html:29
 msgid "Preparation time ca."
-msgstr ""
+msgstr "Zubereitungszeit ca."
 
 #: cookbook/templates/recipe_view.html:55
 msgid "View external recipe"
-msgstr ""
+msgstr "Externes Rezept ansehen"
 
 #: cookbook/templates/recipe_view.html:65
 #, fuzzy
@@ -336,19 +347,25 @@ msgid ""
 "                        will still be accessible.\n"
 "                    "
 msgstr ""
+"\n"
+"                        Dies ist ein externes Rezept. Das bedeutet das es "
+"nur durch klicken auf den link geöffnet werden kann.\n"
+"                        Das Rezept kann durch drücken des Umwandeln Knopfes "
+"in ein schickes lokales Rezept verwandelt werden.  Die originale Datei "
+"bleibt weiterhin verfügbar\n"
 
 #: cookbook/templates/recipe_view.html:75
 msgid "Convert now!"
-msgstr ""
+msgstr "Jetzt umwandeln!"
 
 #: cookbook/templates/recipe_view.html:84
 msgid "Comments"
-msgstr ""
+msgstr "Kommentare"
 
 #: cookbook/templates/recipe_view.html:91 cookbook/views/edit.py:168
 #: cookbook/views/edit.py:280
 msgid "Comment"
-msgstr ""
+msgstr "Kommentar"
 
 #: cookbook/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."
@@ -356,46 +373,48 @@ msgstr "Nutzername oder Passwort falsch. Bitte versuch es erneut."
 
 #: cookbook/templates/stats.html:4
 msgid "Stats"
-msgstr ""
+msgstr "Statistiken"
 
 #: cookbook/templates/stats.html:17
 msgid "Number of objects"
-msgstr ""
+msgstr "Anzahl der Objekte"
 
 #: cookbook/templates/stats.html:20
 #, fuzzy
 #| msgid "Recipe"
 msgid "Recipes"
-msgstr "Rezept"
+msgstr "Rezepte"
 
 #: cookbook/templates/stats.html:24
 #, fuzzy
 #| msgid "Recipe"
 msgid "Recipe Imports"
-msgstr "Rezept"
+msgstr "Rezept Importe"
 
 #: cookbook/templates/stats.html:32
 msgid "Objects stats"
-msgstr ""
+msgstr "Objekt Statistiken"
 
 #: cookbook/templates/stats.html:35
 msgid "Recipes without Keywords"
-msgstr ""
+msgstr "Rezepte ohne Schlagwort"
 
 #: cookbook/views/api.py:48
 msgid "Sync successful!"
-msgstr ""
+msgstr "Synchronisation erfolgreich!"
 
 #: cookbook/views/api.py:51
 msgid "Error synchronizing with Storage"
-msgstr ""
+msgstr "Fehler beim Synchronisieren"
 
 #: cookbook/views/data.py:71
-#, python-format
-msgid "Batch edit done. %(count)d recipe where updated."
+#, fuzzy, python-format
+#| msgid "Batch edit done. %(count)d recipe where updated."
+#| msgid_plural "Batch edit done. %(count)d Recipes where updated."
+msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Massenbearbeitung erfolgreich. %(count)d Rezept wurde aktualisiert."
+msgstr[1] "Massenbearbeitung erfolgreich. %(count)d Rezepte wurden aktualisiert."
 
 #: cookbook/views/edit.py:61
 #, fuzzy
@@ -405,12 +424,12 @@ msgstr "Rezept"
 
 #: cookbook/views/edit.py:64 cookbook/views/new.py:80
 msgid "There was an error importing this recipe!"
-msgstr ""
+msgstr "Beim importieren des Rezeptes ist ein Fehler aufgetreten"
 
 #: cookbook/views/edit.py:118 cookbook/views/edit.py:269
 #: cookbook/views/lists.py:42 cookbook/views/new.py:55
 msgid "Storage Backend"
-msgstr ""
+msgstr "Speicher Quelle"
 
 #: cookbook/views/edit.py:142
 #, fuzzy
@@ -420,7 +439,7 @@ msgstr "Änderungen gespeichert"
 
 #: cookbook/views/edit.py:145
 msgid "There was an error updating this storage backend.!"
-msgstr ""
+msgstr "Es gab einen Fehler beim aktualisierung dieser Speicher Quelle"
 
 #: cookbook/views/edit.py:185 cookbook/views/edit.py:236
 #: cookbook/views/lists.py:34
@@ -439,7 +458,7 @@ msgstr "Fehler beim Speichern der Daten."
 
 #: cookbook/views/edit.py:247
 msgid "Monitor"
-msgstr ""
+msgstr "Monitor"
 
 #: cookbook/views/new.py:77
 #, fuzzy
@@ -455,7 +474,7 @@ msgstr "Änderungen gespeichert"
 
 #: cookbook/views/views.py:45
 msgid "There was an error saving this comment!"
-msgstr ""
+msgstr "Es gab einen Fehler beim speichern dieses Kommentars"
 
 #~ msgid "Category"
 #~ msgstr "Kategorie"
