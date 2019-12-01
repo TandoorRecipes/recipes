@@ -73,7 +73,7 @@ venv/
 
 \.env
 staticfiles/
-
+ postgresql/
 
 # User-specific stuff
 .idea/**/workspace.xml
