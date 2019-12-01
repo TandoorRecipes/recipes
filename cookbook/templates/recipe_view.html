@@ -37,12 +37,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{% trans 'Ingredients' %}</h5>
-                        <table>
+                        <table class="">
                             {% for i in ingredients %}
                                 <tr>
-                                    <td>{{ i.amount.normalize }} </td>
-                                    <td>{{ i.unit }} </td>
-                                    <td>{{ i.name }}</td>
+                                    <td>{{ i.amount.normalize }} {{ i.unit }}</td>
+                                    <td style="padding-left: 8px">{{ i.name }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
