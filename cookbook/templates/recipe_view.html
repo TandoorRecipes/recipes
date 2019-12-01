@@ -32,15 +32,22 @@
     {% endif %}
 
     {% if ingredients %}
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{% trans 'Ingredients' %}</h5>
-
-
-                {% for i in ingredients %}
-                    {{ i.amount }} {{ i.unit }} {{ i.name }} <br/>
-                {% endfor %}
-
+        <div class="row">
+            <div class="col col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{% trans 'Ingredients' %}</h5>
+                        <table>
+                            {% for i in ingredients %}
+                                <tr>
+                                    <td>{{ i.amount.normalize }} </td>
+                                    <td>{{ i.unit }} </td>
+                                    <td>{{ i.name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <br/>
