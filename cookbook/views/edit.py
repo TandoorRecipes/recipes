@@ -52,7 +52,10 @@ def internal_recipe_update(request, pk):
                 ingredient = RecipeIngredients()
                 ingredient.recipe = recipe_instance
                 ingredient.name = i['name']
-                ingredient.amount = i['amount']
+                if isinstance(i['amount'], str):
+                    ingredient.amount = float(i['amount'].replace(',', '.'))
+                else:
+                    ingredient.amount = i['amount']
                 ingredient.unit = i['unit']
                 ingredient.save()
 
