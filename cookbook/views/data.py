@@ -55,7 +55,7 @@ def batch_edit(request):
             word = form.cleaned_data['search']
             keywords = form.cleaned_data['keywords']
 
-            recipes = Recipe.objects.filter(name__contains=word)
+            recipes = Recipe.objects.filter(name__icontains=word)
             count = 0
             for recipe in recipes:
                 edit = False
