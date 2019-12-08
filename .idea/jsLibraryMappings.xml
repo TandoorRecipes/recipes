@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$" libraries="{jquery-3.4.1.slim, tabulator_bootstrap4}" />
+    <file url="file://$PROJECT_DIR$" libraries="{jquery-3.4.1.slim, select2-bootstrap, tabulator_bootstrap4}" />
   </component>
 </project>
