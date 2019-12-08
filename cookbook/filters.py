@@ -3,6 +3,7 @@ from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Q
 from cookbook.forms import MultiSelectWidget
 from cookbook.models import Recipe, Keyword
+from django.conf import settings
 
 
 class RecipeFilter(django_filters.FilterSet):
@@ -22,8 +23,10 @@ class RecipeFilter(django_filters.FilterSet):
     def filter_name(queryset, name, value):
         if not name == 'name':
             return queryset
-
-        queryset = Recipe.objects.annotate(similarity=TrigramSimilarity('name', value), ).filter(Q(similarity__gt=0.3) | Q(name__icontains=value)).order_by('-similarity')
+        if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2':
+            queryset = Recipe.objects.annotate(similarity=TrigramSimilarity('name', value), ).filter(Q(similarity__gt=0.3) | Q(name__icontains=value)).order_by('-similarity')
+        else:
+            queryset = queryset.filter(name__icontains=value)
         return queryset
 
     class Meta:
