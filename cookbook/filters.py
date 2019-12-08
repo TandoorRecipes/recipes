@@ -5,7 +5,7 @@ from cookbook.models import Recipe, Keyword
 
 
 class RecipeFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='trigram_similar')
+    name = django_filters.CharFilter(lookup_expr='icontains')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
 
