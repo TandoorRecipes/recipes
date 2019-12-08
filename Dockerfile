@@ -1,32 +1,24 @@
-
-FROM alpine
-
-# Project Files and Settings
+FROM ubuntu:18.04
 
 RUN mkdir /Recipes
 WORKDIR /Recipes
 
 ADD . /Recipes/
 
-RUN apk update
-RUN apk upgrade
-RUN apk --no-cache add \
+RUN apt-get update
+RUN apt-get -y upgrade
+RUN apt-get install -y \
     python3 \
-    python3-dev \
+    python3-pip \
     postgresql-client \
-    postgresql-dev \
-    build-base \
-    gettext \
-    libgcrypt-dev libressl-dev curl-dev \
-    libxml2-dev libxslt-dev python-dev
+    gettext
 
 RUN pip3 install --upgrade pip
 
 RUN pip3 install -r requirements.txt
 
-RUN apk del -r python3-dev
+RUN apt-get autoremove -y
 
 ENV PYTHONUNBUFFERED 1
 
-# Server
 EXPOSE 8080
