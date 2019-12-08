@@ -11,29 +11,45 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col md-12">
-            {% if filter %}
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-search"></i> {% trans "Search" %}
-                    </div>
-                    <div class="card-body">
-                        <form action="" method="get" id="search_form">
-                            {{ filter.form|crispy }}
-                            <button class="btn btn-primary" value="1"><i class="fas fa-search"></i> {% trans 'Search' %}</button>
-                            <a href="#" onclick="window.location = window.location.pathname;"
-                               class="btn btn-warning"><i class="fas fa-backspace"></i> {% trans 'Reset' %}</a>
-                            <a href="{% url 'new_recipe' %}" class="btn btn-success"><i class="fas fa-plus-circle"></i> {% trans 'New' %}</a>
-                            <a href="" class="btn btn-info"><i class="fas fa-dice"></i> {% trans 'Random' %}</a>
-                        </form>
+    {% if filter %}
+        <form action="" method="get" id="search_form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="row">
+                <div class="col md-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="{% trans 'Search recipe ...' %}"
+                               id="{{ filter.form.name.id_for_label }}" name="{{ filter.form.name.name }}"
+                               aria-describedby="button-addon4">
+                        <div class="input-group-append" id="button-addon4">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                            <button class="btn btn-warning" type="button" onclick="window.location = window.location.pathname;"><i class="fas fa-backspace"></i></button>
+                            <button class="btn btn-success" type="button" onclick="location.href='{% url 'new_recipe' %}'"><i class="fas fa-plus-circle"></i></button>
 
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-md-2 offset-md-10" style="text-align: right">
+                    <a class="" data-toggle="collapse" href="#collapse_adv_search" role="button"
+                       aria-expanded="false"
+                       aria-controls="collapse_adv_search"><i
+                            class="fas fa-search"></i> {% trans 'Advanced Search' %}</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="collapse col-md-12" id="collapse_adv_search">
+                    <div>
+                        {{ filter.form.keywords | as_crispy_field }}
                     </div>
                 </div>
-            {% endif %}
-        </div>
-    </div>
-
+            </div>
+        </form>
+    {% endif %}
     <br/>
 
     {% if user.is_authenticated and recipes %}
