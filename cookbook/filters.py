@@ -23,7 +23,7 @@ class RecipeFilter(django_filters.FilterSet):
         if not name == 'name':
             return queryset
 
-        queryset = Recipe.objects.annotate(similarity=TrigramSimilarity('name', value), ).filter(Q(similarity__gt=1) | Q(name__icontains=value)).order_by('-similarity')
+        queryset = Recipe.objects.annotate(similarity=TrigramSimilarity('name', value), ).filter(Q(similarity__gt=0.3) | Q(name__icontains=value)).order_by('-similarity')
         return queryset
 
     class Meta:
