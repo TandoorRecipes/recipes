@@ -2,15 +2,13 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% load custom_tags %}
+{% load static %}
 
 {% block title %}{% trans 'Edit Recipe' %}{% endblock %}
 
 {% block extra_head %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/js/tabulator.min.js"
-            integrity="sha256-u2YCVBkzzkIuLh6bMHUmqv6uuuHLxGgc6XF+rCJUV5k=" crossorigin="anonymous"></script>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/css/bootstrap/tabulator_bootstrap4.min.css"
-          integrity="sha256-+AmauyGZPl0HNTBQ5AMZBxfzP+rzXJjraezMKpWwWSE=" crossorigin="anonymous"/>
+    <script src="{% static 'tabulator/tabulator.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'tabulator/tabulator_bootstrap4.min.css' %}"/>
 {% endblock %}
 
 {% block content %}
@@ -45,6 +43,23 @@
     </form>
 
     <script>
+        function selectText(node) {
+
+    if (document.body.createTextRange) {
+        const range = document.body.createTextRange();
+        range.moveToElementText(node);
+        range.select();
+    } else if (window.getSelection) {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else {
+        console.warn("Could not select text in node: Unsupported browser.");
+    }
+}
+
         //converts multiselct in recipe edit to searchable multiselect
         //shitty solution that needs to be redone at some point
         $(document).ready(function () {
@@ -91,7 +106,12 @@
                             table.deleteRow(cur.id);
                         }
                     })
-                }
+                },
+                cellClick: function (e, cell) {
+                    input = cell.getElement().childNodes[0]
+                    input.focus()
+                    input.select()
+                },
             });
 
             // load initial value
