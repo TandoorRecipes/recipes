@@ -1,11 +1,12 @@
 import django_filters
-
+from django.contrib.postgres.search import TrigramSimilarity
+from django.db.models import Q
 from cookbook.forms import MultiSelectWidget
 from cookbook.models import Recipe, Keyword
 
 
 class RecipeFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='icontains')
+    name = django_filters.CharFilter(method='filter_name')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
 
@@ -15,6 +16,14 @@ class RecipeFilter(django_filters.FilterSet):
             return queryset
         for x in value:
             queryset = queryset.filter(keywords=x)
+        return queryset
+
+    @staticmethod
+    def filter_name(queryset, name, value):
+        if not name == 'name':
+            return queryset
+
+        queryset = Recipe.objects.annotate(similarity=TrigramSimilarity('name', value), ).filter(Q(similarity__gt=1) | Q(name__icontains=value)).order_by('-similarity')
         return queryset
 
     class Meta:
