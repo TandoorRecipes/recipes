@@ -3,7 +3,7 @@ Recipes is a django application to manage, tag and search recipes using either b
 
 ![Preview](preview.png)
 
-<u>Features</u>
+### Features
 
 - :package: Sync files with Dropbox and Nextcloud (more can easily be added)
 - :mag: Powerful search with djangos [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
