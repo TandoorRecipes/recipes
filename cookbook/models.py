@@ -13,6 +13,7 @@ class Storage(models.Model):
     password = models.CharField(max_length=128, blank=True, null=True)
     token = models.CharField(max_length=512, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
