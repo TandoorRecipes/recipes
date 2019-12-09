@@ -164,11 +164,12 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
 
     # TODO add msg box
 
-    def get_object(self, *args, **kwargs):
-        obj = super(CommentUpdate, self).get_object(*args, **kwargs)
-        if not obj.created_by == self.request.user:
-            return obj # TODO move to dispatch or build custom exception
-        return obj
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if not obj.created_by == request.user:
+            messages.add_message(request, messages.ERROR, _('You cannot edit this comment!'))
+            return HttpResponseRedirect(reverse('view_recipe', args=[obj.recipe.pk]))
+        return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('edit_comment', kwargs={'pk': self.object.pk})
