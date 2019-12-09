@@ -1,38 +1,40 @@
 # Recipes
 Recipes is a django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
 
-
+![Preview](preview.png)
 
 <u>Features</u>
 
-- Sync files with Dropbox and Nextcloud (more can easily be added)
-- Create and search for tags, assign them in batch to all files matching certain filters
-- Create recipes locally within a nice, standardized webinterface
-- Share recipes with friends and comment on them to suggest or remember changes you made
+- :package: Sync files with Dropbox and Nextcloud (more can easily be added)
+- :mag: Powerful search with djangos [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
+- :label: Create and search for tags, assign them in batch to all files matching certain filters
+- :page_facing_up: Create recipes locally within a nice, standardized webinterface 
+- :person_with_blond_hair: Share recipes with friends and comment on them to suggest or remember changes you made
+- :whale: Easy setup with Docker
 
-This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission System will be implemented but this is not meant as a public website.
+This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
 
-## Usage
+# Documentation
+
 Most things should be straight forward but there are some more complicated things.
-##### General
-Different kinds of objects, like tags or storage backends, can be viewed under the lists tab. This is also were you create
-new objects by pressing the plus button.
-Management options for your data, like batch edits and import logs, can be found under `Manage Data`.
 ##### Storage Backends
-Currently only dropbox is supported as a storage backend. To add a new Dropbox go to `Lists >> Storage Backend` and add a new backend. 
+A `Storage Backend` is a remote storage location where files are stored. To add a new backend klick on `Storage Data` and then on `Storage Backends`. There click the plus button.
+
 Enter a name (just a display name for you to identify it) and an API access Token for the account you want to use.
-You can obtain the API token on [Dropboxes API explorer](https://dropbox.github.io/dropbox-api-v2-explorer/#auth_token/from_oauth1)
-with the button on the top right.
+Dropboxes API tokens can be found on the [Dropboxes API explorer](https://dropbox.github.io/dropbox-api-v2-explorer/#auth_token/from_oauth1)
+with the button on the top right. For Nextcloud you can use a App apssword created in the settings.
+
 ##### Adding Synced Path's
-To add a new path from your Storage backend to the sync list, go to `Manage Data >> Configure Sync` and select the storage backend you want to use.
+To add a new path from your Storage backend to the sync list, go to `Storage Data >> Configure Sync` and select the storage backend you want to use.
 Then enter the path you want to monitor starting at the storage root (e.g. `/Folder/RecipesFolder`) and save it.
+
 ##### Syncing Data
-To sync the recipes app with the storage backends press `Sync now` under `Manage Data >> Configure Sync`.
+To sync the recipes app with the storage backends press `Sync now` under `Storage Data >> Configure Sync`.
 ##### Import Recipes
-All files found by the sync can be found under `Manage Data >> Import recipes`. There you can either import all at once without modifying them or import one by one, adding Category and Tags while importing.
+All files found by the sync can be found under `Manage Data >> Import recipes`. There you can either import all at once without modifying them or import one by one, adding tags while importing.
 ##### Batch Edit
 If you have many untagged recipes you may want to edit them all at once. For this go to
-`Manage Data >> Batch Edit`. Enter a word which should be contained in the recipe name and select the tags you want to apply.
+`Storage Data >> Batch Edit`. Enter a word which should be contained in the recipe name and select the tags you want to apply.
 When clicking submit every recipe containing the word will be updated (tags are added).
 
 > Currently the only option is word contains, maybe some more SQL like operators will be added later.
@@ -40,8 +42,7 @@ When clicking submit every recipe containing the word will be updated (tags are 
 ## Installation
 
 ### Docker-Compose
-A docker-compose file is included in the repository. It is made for setups already running an nginx-reverse proxy network with 
-lets encrypt companion. Copy `.env.template` to `.env` and fill in the missing values accordingly.  
+When cloning this repository a simple docker-compose file is included. It is made for setups already running an nginx-reverse proxy network with lets encrypt companion but can be changed easily. Copy `.env.template` to `.env` and fill in the missing values accordingly.  
 Now simply start the containers and run the `update.sh` script which will apply all migrations and collect static files.
 Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
 
