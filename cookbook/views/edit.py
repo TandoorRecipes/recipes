@@ -71,7 +71,8 @@ def internal_recipe_update(request, pk):
     ingredients = RecipeIngredients.objects.filter(recipe=recipe_instance)
 
     return render(request, 'forms/edit_internal_recipe.html',
-                  {'form': form, 'ingredients': json.dumps(list(ingredients.values())), 'view_url': reverse('view_recipe', args=[pk])})
+                  {'form': form, 'ingredients': json.dumps(list(ingredients.values())),
+                   'view_url': reverse('view_recipe', args=[pk])})
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
@@ -162,6 +163,12 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
     form_class = CommentForm
 
     # TODO add msg box
+
+    def get_object(self, *args, **kwargs):
+        obj = super(CommentUpdate, self).get_object(*args, **kwargs)
+        if not obj.created_by == self.request.user:
+            return obj # TODO move to dispatch or build custom exception
+        return obj
 
     def get_success_url(self):
         return reverse('edit_comment', kwargs={'pk': self.object.pk})
