@@ -50,6 +50,12 @@ class StorageCreate(LoginRequiredMixin, CreateView):
     form_class = StorageForm
     success_url = reverse_lazy('list_storage')
 
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.created_by = self.request.user
+        obj.save()
+        return HttpResponseRedirect(reverse('edit_storage', kwargs={'pk': obj.pk}))
+
     def get_context_data(self, **kwargs):
         context = super(StorageCreate, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")

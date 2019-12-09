@@ -107,25 +107,13 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class StorageUpdate(LoginRequiredMixin, UpdateView):
-    template_name = "generic/edit_template.html"
-    model = Storage
-    form_class = StorageForm
-
-    # TODO add msg box
-
-    def get_success_url(self):
-        return reverse('edit_storage', kwargs={'pk': self.object.pk})
-
-    def get_context_data(self, **kwargs):
-        context = super(StorageUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Storage Backend")
-        return context
-
-
 @login_required
 def edit_storage(request, pk):
     instance = get_object_or_404(Storage, pk=pk)
+
+    if not (instance.created_by == request.user or request.user.is_superuser):
+        messages.add_message(request, messages.ERROR, _('You cannot edit this comment!'))
+        return HttpResponseRedirect(reverse('list_storage'))
 
     if request.method == "POST":
         form = StorageForm(request.POST)
@@ -166,7 +154,7 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        if not obj.created_by == request.user:
+        if not (obj.created_by == request.user or request.user.is_superuser):
             messages.add_message(request, messages.ERROR, _('You cannot edit this comment!'))
             return HttpResponseRedirect(reverse('view_recipe', args=[obj.recipe.pk]))
         return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
