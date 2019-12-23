@@ -46,6 +46,7 @@
     function openRecipe(id) {
         var link = $('#a_recipe_open');
         link.hide();
+         $('#div_loader').show();
 
         var url = "{% url 'api_get_file_link' recipe_id=12345 %}".replace(/12345/, id);
 
@@ -55,7 +56,7 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
-                if (navigator.userAgent.toLowerCase().indexOf('safari/') > -1){
+                if ( /^((?!chrome|android).)*safari/i.test(navigator.userAgent)){
                     link.attr("href", this.responseText);
                     link.show();
                 }else{
