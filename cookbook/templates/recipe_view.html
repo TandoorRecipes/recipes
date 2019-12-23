@@ -40,6 +40,7 @@
                         <table class="">
                             {% for i in ingredients %}
                                 <tr>
+                                    <td><input type="checkbox"></td>
                                     <td>{{ i.amount.normalize }} {{ i.unit }}</td>
                                     <td style="padding-left: 8px">{{ i.name }}</td>
                                 </tr>
