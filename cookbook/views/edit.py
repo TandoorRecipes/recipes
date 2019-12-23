@@ -11,6 +11,7 @@ from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients
+from cookbook.provider.dropbox import Dropbox
 
 
 @login_required
@@ -191,6 +192,14 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
+        old_recipe = Recipe.objects.get(pk=self.object.pk)
+        if not old_recipe.name == self.object.name:
+            if self.object.storage.method == Storage.DROPBOX:
+                Dropbox.rename_file(old_recipe, self.object.name) # TODO central location to handle storage type switches
+                self.object.file_path = os.path.dirname(self.object.file_path) + '/' + self.object.name + os.path.splitext(self.object.file_path)[1]
+            # TODO add nextcloud
+
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
         return super(RecipeUpdate, self).form_valid(form)
 

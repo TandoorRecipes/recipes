@@ -34,7 +34,8 @@ class Dropbox(Provider):
         import_count = 0
         for recipe in recipes['entries']:  # TODO check if has_more is set and import that as well
             path = recipe['path_lower']
-            if not Recipe.objects.filter(file_path=path).exists() and not RecipeImport.objects.filter(file_path=path).exists():
+            if not Recipe.objects.filter(file_path=path).exists() and not RecipeImport.objects.filter(
+                    file_path=path).exists():
                 name = os.path.splitext(recipe['name'])[0]
                 new_recipe = RecipeImport(name=name, file_path=path, storage=monitor.storage, file_uid=recipe['id'])
                 new_recipe.save()
@@ -75,7 +76,7 @@ class Dropbox(Provider):
         }
 
         data = {
-            "path": recipe.file_uid
+            "path": recipe.file_path,
         }
 
         r = requests.post(url, headers=headers, data=json.dumps(data))
@@ -86,3 +87,21 @@ class Dropbox(Provider):
 
         response = Dropbox.create_share_link(recipe)
         return response['url']
+
+    @staticmethod
+    def rename_file(recipe, new_name):
+        url = "https://api.dropboxapi.com/2/files/move_v2"
+
+        headers = {
+            "Authorization": "Bearer " + recipe.storage.token,
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "from_path": recipe.file_path,
+            "to_path": os.path.dirname(recipe.file_path) + '/' + new_name + os.path.splitext(recipe.file_path)[1]
+        }
+
+        r = requests.post(url, headers=headers, data=json.dumps(data))
+
+        return r.json()
