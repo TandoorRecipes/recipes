@@ -14,7 +14,3 @@ class Provider:
     @staticmethod
     def rename_file(recipe, new_name):
         raise Exception('Method not implemented in storage provider')
-
-    @staticmethod
-    def delete_file(recipe):
-        raise Exception('Method not implemented in storage provider')

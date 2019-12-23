@@ -10,6 +10,6 @@ markdown
 simplejson
 lxml
 webdavclient3
-python-dotenv==0.7.1
+python-dotenv==0.10.3
 psycopg2
 gunicorn==19.7.1
