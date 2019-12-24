@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load l10n %}
 {% load custom_tags %}
 
 {% block title %}{% trans 'View' %}{% endblock %}
@@ -41,7 +42,23 @@
             <div class="col col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">{% trans 'Ingredients' %}</h5>
+                        <div class="row">
+                            <div class="col col-md-9">
+                                <h5 class="card-title">{% trans 'Ingredients' %}</h5>
+                            </div>
+                            <div class="col col-md-3">
+
+                                <div class="input-group">
+                                    <input type="number" value="1" maxlength="3" class="form-control" id="in_factor"
+                                           onchange="reloadIngredients()"/>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
                         <table class="">
                             {% for i in ingredients %}
                                 <tr>
@@ -49,7 +66,9 @@
                                         <div class="pretty p-default p-curve">
                                             <input type="checkbox"/>
                                             <div class="state p-success">
-                                                <label>{{ i.amount.normalize }} {{ i.unit }}</label>
+                                                <label><span
+                                                        id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span> {{ i.unit }}
+                                                </label>
                                             </div>
                                         </div>
 
@@ -58,6 +77,8 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                        <br/>
+
                     </div>
                 </div>
             </div>
@@ -127,4 +148,20 @@
         {% include 'include/recipe_open_modal.html' %}
     {% endif %}
 
+    <script type="text/javascript">
+
+        function reloadIngredients() {
+            factor = Number($('#in_factor').val())
+            ingredients = {
+            {% for i in ingredients %}
+                {{ i.pk }}: {{ i.amount|unlocalize }},
+            {% endfor %}
+        }
+
+            for (var key in ingredients) {
+                $('#ing_' + key).html(Math.round(ingredients[key] * factor))
+            }
+        }
+
+    </script>
 {% endblock %}
