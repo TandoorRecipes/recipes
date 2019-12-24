@@ -5,6 +5,11 @@
 
 {% block title %}{% trans 'View' %}{% endblock %}
 
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
+          integrity="sha384-ICB8i/maQ/5+tGLDUEcswB7Ch+OO9Oj8Z4Ov/Gs0gxqfTgLLkD3F43MhcEJ2x6/D" crossorigin="anonymous">
+{% endblock %}
+
 {% block content %}
 
     <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}"><i class="fas fa-pencil-alt"></i></a></h3>
@@ -40,9 +45,16 @@
                         <table class="">
                             {% for i in ingredients %}
                                 <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>{{ i.amount.normalize }} {{ i.unit }}</td>
-                                    <td style="padding-left: 8px">{{ i.name }}</td>
+                                    <td style="font-size: large">
+                                        <div class="pretty p-default p-curve">
+                                            <input type="checkbox"/>
+                                            <div class="state p-success">
+                                                <label>{{ i.amount.normalize }} {{ i.unit }}</label>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td style="font-size: large">{{ i.name }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -114,4 +126,5 @@
     {% if recipe.storage %}
         {% include 'include/recipe_open_modal.html' %}
     {% endif %}
+
 {% endblock %}
