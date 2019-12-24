@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Recipe Books' %}{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col col-md-9">
+            <h2>{% trans 'Recipe Books' %}</h2>
+        </div>
+        <div class="col col-md-3" style="text-align: right">
+            <a href="{% url 'new_book' %}" class="btn btn-success"><i
+                    class="fas fa-plus-circle"></i> {% trans 'New Book' %}</a>
+        </div>
+    </div>
+    <br/>
+    <br/>
+
+    {% for b in book_list %}
+        <div class="row">
+            <div class="col col-md-12">
+                <a data-toggle="collapse" href="#collapse_{{ b.book.pk }}" role="button" aria-expanded="false"
+                   aria-controls="collapse_{{ b.book.pk }}"><h4>{{ b.book.name }}</h4></a>
+                <hr/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-12">
+                <div class="collapse" id="collapse_{{ b.book.pk }}">
+                Test
+                    {% for r in b.recipes %}
+                        {{ r }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <br/>
+    {% endfor %}
+{% endblock %}

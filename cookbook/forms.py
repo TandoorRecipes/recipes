@@ -76,6 +76,12 @@ class StorageForm(forms.ModelForm):
         fields = ('name', 'method', 'username', 'password', 'token', 'url')
 
 
+class RecipeBookForm(forms.ModelForm):
+    class Meta:
+        model = RecipeBook
+        fields = ('name',)
+
+
 class SyncForm(forms.ModelForm):
     class Meta:
         model = Sync

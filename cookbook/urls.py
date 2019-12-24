@@ -6,7 +6,7 @@ from cookbook.helper import dal
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('test', views.test, name='test'),
+    path('books', views.books, name='view_books'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
 
@@ -14,6 +14,7 @@ urlpatterns = [
     path('new/recipe_import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
     path('new/keyword/', new.KeywordCreate.as_view(), name='new_keyword'),
     path('new/storage/', new.StorageCreate.as_view(), name='new_storage'),
+    path('new/book/', new.RecipeBookCreate.as_view(), name='new_book'),
 
     path('list/keyword', lists.keyword, name='list_keyword'),
     path('list/import_log', lists.sync_log, name='list_import_log'),
@@ -21,9 +22,11 @@ urlpatterns = [
     path('list/storage', lists.storage, name='list_storage'),
 
     path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
-    path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),  # for internal use only
-    path('edit/recipe/external/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_external_recipe'),  # for internal use only
-    path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'), # for internal use only
+    path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),
+    # for internal use only
+    path('edit/recipe/external/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_external_recipe'),
+    # for internal use only
+    path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),  # for internal use only
 
     path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
     path('edit/sync/<int:pk>/', edit.SyncUpdate.as_view(), name='edit_sync'),

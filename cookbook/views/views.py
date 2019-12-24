@@ -46,8 +46,17 @@ def recipe_view(request, pk):
     else:
         form = CommentForm()
 
-    return render(request, 'recipe_view.html', {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'form': form})
+    return render(request, 'recipe_view.html',
+                  {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'form': form})
 
 
-def test(request):
-    return render(request, 'test.html')
+@login_required()
+def books(request):
+    book_list = []
+
+    books = RecipeBook.objects.filter(user=request.user).all()
+
+    for b in books:
+        book_list.append( {'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
+
+    return render(request, 'books.html', {'book_list': book_list})

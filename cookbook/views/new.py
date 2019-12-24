@@ -7,14 +7,15 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm
-from cookbook.models import Keyword, Recipe
+from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
+    RecipeBookForm
+from cookbook.models import Keyword, Recipe, RecipeBook
 
 
 class RecipeCreate(LoginRequiredMixin, CreateView):
     template_name = "generic/new_template.html"
     model = Recipe
-    fields = ('name', )
+    fields = ('name',)
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -86,6 +87,25 @@ def create_new_external_recipe(request, import_id):
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:
         new_recipe = RecipeImport.objects.get(id=import_id)
-        form = ImportRecipeForm(initial={'file_path': new_recipe.file_path, 'name': new_recipe.name, 'file_uid': new_recipe.file_uid})
+        form = ImportRecipeForm(
+            initial={'file_path': new_recipe.file_path, 'name': new_recipe.name, 'file_uid': new_recipe.file_uid})
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
+
+
+class RecipeBookCreate(LoginRequiredMixin, CreateView):
+    template_name = "generic/new_template.html"
+    model = RecipeBook
+    form_class = RecipeBookForm
+    success_url = reverse_lazy('view_books')
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return HttpResponseRedirect(reverse('view_books'))
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeBookCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe Book")
+        return context
