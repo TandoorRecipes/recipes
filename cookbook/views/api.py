@@ -15,7 +15,7 @@ from cookbook.provider.nextcloud import Nextcloud
 def get_file_link(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
 
-    if recipe.instructions:
+    if recipe.internal:
         return HttpResponse(reverse('view_recipe', args=[recipe_id]))
     if recipe.storage.method == Storage.DROPBOX:
         if recipe.link == "":
