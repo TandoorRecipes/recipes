@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext as _
+from emoji_picker.widgets import EmojiPickerTextInput
 
 from .models import *
 
@@ -8,11 +9,6 @@ from .models import *
 class MultiSelectWidget(widgets.SelectMultiple):
     class Media:
         js = ('custom/js/form_multiselect.js',)
-
-
-class EmojiWidget(forms.TextInput):
-    class Media:
-        js = ('custom/js/form_emoji.js',)
 
 
 class ExternalRecipeForm(forms.ModelForm):
@@ -65,7 +61,7 @@ class KeywordForm(forms.ModelForm):
     class Meta:
         model = Keyword
         fields = ('name', 'icon', 'description')
-        widgets = {'icon': EmojiWidget}
+        widgets = {'icon': EmojiPickerTextInput}
 
 
 class StorageForm(forms.ModelForm):
