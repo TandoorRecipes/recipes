@@ -232,6 +232,11 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
     model = Recipe
     success_url = reverse_lazy('index')
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+
+        return super(RecipeDelete, self).form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super(RecipeDelete, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")

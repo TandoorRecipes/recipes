@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'django_filters',
     'crispy_forms',
+    'emoji_picker',
     'rest_framework',
     'cookbook.apps.CookbookConfig',
 ]
