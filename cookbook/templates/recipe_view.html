@@ -45,8 +45,9 @@
         <br/>
     {% endif %}
 
-    {% if ingredients %}
-        <div class="row">
+
+    <div class="row">
+        {% if ingredients %}
             <div class="col col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -89,7 +90,15 @@
                     </div>
                 </div>
             </div>
-        </div>
+
+        {% endif %}
+        {% if recipe.image %}
+            <div class="col col-md-6">
+                <img class="img img-fluid rounded" src="{{ recipe.image.url }}">
+            </div>
+        {% endif %}
+    </div>
+    {% if recipe.ingredients or recipe.image %}
         <br/>
         <br/>
     {% endif %}

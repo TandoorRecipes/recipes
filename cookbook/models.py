@@ -1,4 +1,8 @@
+from io import BytesIO
+
+from PIL import Image
 from django.contrib.auth.models import User
+from django.core.files import File
 from django.db import models
 
 
@@ -53,6 +57,7 @@ class Keyword(models.Model):
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
     instructions = models.TextField(blank=True)
+    image = models.ImageField(upload_to='recipes/', blank=True, null=True)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="")
     file_path = models.CharField(max_length=512, default="")
@@ -66,6 +71,14 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            im = Image.open(self.image)
+            im_io = BytesIO()
+            im.save(im_io, 'JPEG', quality=70)
+            self.image = File(im_io, name=(str(self.pk)+'.jpeg'))
+        super().save(*args, **kwargs)
 
     @property
     def all_tags(self):

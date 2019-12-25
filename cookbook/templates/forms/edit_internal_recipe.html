@@ -15,7 +15,7 @@
 
     <h3>{% trans 'Edit Recipe' %}</h3>
 
-    <form action="." method="post">
+    <form action="." method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         {% for field in form %}

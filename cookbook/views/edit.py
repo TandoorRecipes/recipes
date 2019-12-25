@@ -40,12 +40,17 @@ def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
 
     if request.method == "POST":
-        form = InternalRecipeForm(request.POST)
+        form = InternalRecipeForm(request.POST, request.FILES)
         if form.is_valid():
             recipe = recipe_instance
             recipe.name = form.cleaned_data['name']
             recipe.instructions = form.cleaned_data['instructions']
             recipe.time = form.cleaned_data['time']
+
+            if form.cleaned_data['image']:
+                recipe.image = form.cleaned_data['image']
+            else:
+                recipe.image = None
 
             recipe.save()
 
