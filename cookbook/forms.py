@@ -33,7 +33,7 @@ class ExternalRecipeForm(forms.ModelForm):
 class InternalRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'instructions', 'time', 'keywords')
+        fields = ('name', 'instructions', 'image', 'time', 'keywords')
 
         labels = {
             'name': _('Name'),

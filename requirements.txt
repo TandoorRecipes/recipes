@@ -1,10 +1,12 @@
 django
+Pillow
 django-tables2
 django-filter
 django-crispy-forms
 djangorestframework
 django-autocomplete-light
 django-emoji-picker
+django-cleanup
 six
 requests
 markdown

@@ -61,6 +61,8 @@ target/
 
 venv/
 
+mediafiles/
+
 *.sqlite3
 
 \.idea/workspace\.xml
