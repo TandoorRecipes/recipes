@@ -45,6 +45,8 @@ class InternalRecipeForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    prefix = 'comment'
+
     class Meta:
         model = Comment
         fields = ('text',)
@@ -80,6 +82,14 @@ class RecipeBookForm(forms.ModelForm):
     class Meta:
         model = RecipeBook
         fields = ('name',)
+
+
+class RecipeBookEntryForm(forms.ModelForm):
+    prefix = 'bookmark'
+
+    class Meta:
+        model = RecipeBookEntry
+        fields = ('book',)
 
 
 class SyncForm(forms.ModelForm):
