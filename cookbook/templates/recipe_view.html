@@ -48,7 +48,7 @@
 
     <div class="row">
         {% if ingredients %}
-            <div class="col col-md-6">
+            <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -93,8 +93,10 @@
 
         {% endif %}
         {% if recipe.image %}
-            <div class="col col-md-6">
-                <img class="img img-fluid rounded" src="{{ recipe.image.url }}">
+            <div class="col-md-6 order-md-2 col-sm-12 order-sm-1 col-12 order-1 " style="text-align: center">
+                <img class="img img-fluid rounded" src="{{ recipe.image.url }}" style="max-height: 30vh;" alt="{% trans 'Recipe Image' %}">
+                <br/>
+                <br/>
             </div>
         {% endif %}
     </div>
