@@ -110,7 +110,7 @@
     {% endif %}
 
     {% if recipe.storage %}
-        <a href='#' onClick='openRecipe({{ recipe.id }})'>{% trans 'View external recipe' %} <i
+        <a href='#' onClick='openRecipe({{ recipe.id }}, true)'>{% trans 'View external recipe' %} <i
                 class="fas fa-external-link-alt"></i></a>
     {% endif %}
 

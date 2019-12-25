@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 from cookbook.models import Recipe, Sync, Storage
-from cookbook.provider import dropbox
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -17,7 +16,23 @@ def get_file_link(request, recipe_id):
 
     if recipe.internal:
         return HttpResponse(reverse('view_recipe', args=[recipe_id]))
-    if recipe.storage.method == Storage.DROPBOX:
+    if recipe.storage.method == Storage.DROPBOX: # TODO move to central location (as all provider related functions)
+        if recipe.link == "":
+            recipe.link = Dropbox.get_share_link(recipe)  # TODO response validation
+            recipe.save()
+    if recipe.storage.method == Storage.NEXTCLOUD:
+        if recipe.link == "":
+            recipe.link = Nextcloud.get_share_link(recipe)  # TODO response validation
+            recipe.save()
+
+    return HttpResponse(recipe.link)
+
+
+@login_required
+def get_external_file_link(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+
+    if recipe.storage.method == Storage.DROPBOX: # TODO move to central location (as all provider related functions)
         if recipe.link == "":
             recipe.link = Dropbox.get_share_link(recipe)  # TODO response validation
             recipe.save()
