@@ -40,25 +40,29 @@
         {% if view_url %}
             <a href="{{ view_url }}" class="btn btn-info">{% trans 'View' %} <i class="far fa-eye"></i></a>
         {% endif %}
+        {% if form.instance.storage %}
+            <a href="{% url 'delete_recipe_source' form.instance.pk %}" class="btn btn-warning"><i
+                    class="fas fa-exclamation-triangle"></i> {% trans 'Delete original file' %}</a>
+        {% endif %}
     </form>
 
     <script>
         function selectText(node) {
 
-    if (document.body.createTextRange) {
-        const range = document.body.createTextRange();
-        range.moveToElementText(node);
-        range.select();
-    } else if (window.getSelection) {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    } else {
-        console.warn("Could not select text in node: Unsupported browser.");
-    }
-}
+            if (document.body.createTextRange) {
+                const range = document.body.createTextRange();
+                range.moveToElementText(node);
+                range.select();
+            } else if (window.getSelection) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(node);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            } else {
+                console.warn("Could not select text in node: Unsupported browser.");
+            }
+        }
 
         //converts multiselct in recipe edit to searchable multiselect
         //shitty solution that needs to be redone at some point

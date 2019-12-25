@@ -26,6 +26,9 @@
         {% if view_url %}
             <a href="{{ view_url }}" class="btn btn-info">{% trans 'View' %} <i class="far fa-eye"></i></a>
         {% endif %}
+        {% if delete_external_url %}
+            <a href="{{ delete_external_url }}" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i> {% trans 'Delete original file' %}</a>
+        {% endif %}
     </form>
 
 {% endblock %}
