@@ -12,5 +12,5 @@ simplejson
 lxml
 webdavclient3
 python-dotenv==0.10.3
-psycopg2
+psycopg2-binary
 gunicorn==19.7.1
