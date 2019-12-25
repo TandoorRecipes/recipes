@@ -30,24 +30,33 @@ def recipe_view(request, pk):
     comments = Comment.objects.filter(recipe=recipe)
 
     if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
+        comment_form = CommentForm(request.POST, prefix='comment')
+        if comment_form.is_valid():
             comment = Comment()
             comment.recipe = recipe
-            comment.text = form.cleaned_data['text']
+            comment.text = comment_form.cleaned_data['text']
             comment.created_by = request.user
 
             comment.save()
 
             messages.add_message(request, messages.SUCCESS, _('Comment saved!'))
-            return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
-        else:
-            messages.add_message(request, messages.ERROR, _('There was an error saving this comment!'))
-    else:
-        form = CommentForm()
+
+        bookmark_form = RecipeBookEntryForm(request.POST, prefix='bookmark')
+        if bookmark_form.is_valid():
+            bookmark = RecipeBookEntry()
+            bookmark.recipe = recipe
+            bookmark.book = bookmark_form.cleaned_data['book']
+
+            bookmark.save()
+
+            messages.add_message(request, messages.SUCCESS, _('Bookmark saved!'))
+
+    comment_form = CommentForm()
+    bookmark_form = RecipeBookEntryForm()
 
     return render(request, 'recipe_view.html',
-                  {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'form': form})
+                  {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'comment_form': comment_form,
+                   'bookmark_form': bookmark_form})
 
 
 @login_required()
@@ -57,6 +66,6 @@ def books(request):
     books = RecipeBook.objects.filter(user=request.user).all()
 
     for b in books:
-        book_list.append( {'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
+        book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
 
     return render(request, 'books.html', {'book_list': book_list})

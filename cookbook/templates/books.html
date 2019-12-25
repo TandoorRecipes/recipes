@@ -29,13 +29,22 @@
         <div class="row">
             <div class="col col-md-12">
                 <div class="collapse" id="collapse_{{ b.book.pk }}">
-                Test
-                    {% for r in b.recipes %}
-                        {{ r }}
-                    {% endfor %}
+                    {% if b.recipes %}
+                        <ul>
+                            {% for r in b.recipes %}
+                                <li><a href="#" onClick='openRecipe({{r.recipe.pk}})'>{{ r.recipe.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+
+                    {% else %}
+                        {% trans 'There are no recipes in this book yet.' %}
+
+                    {% endif %}
                 </div>
             </div>
         </div>
         <br/>
     {% endfor %}
+
+    {% include 'include/recipe_open_modal.html' %}
 {% endblock %}
