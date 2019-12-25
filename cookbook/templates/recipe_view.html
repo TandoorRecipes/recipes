@@ -133,7 +133,8 @@
     <form method="POST" class="post-form">
         {% csrf_token %}
         <div class="input-group mb-3">
-            <textarea name="comment-text" cols="15" rows="2" class="textarea form-control" required id="comment-id_text"></textarea>
+            <textarea name="comment-text" cols="15" rows="2" class="textarea form-control" required
+                      id="comment-id_text"></textarea>
             <div class="input-group-append">
                 <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
             </div>
@@ -166,17 +167,19 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form method="POST" class="post-form">
+                <form method="POST" class="post-form">
+                    <div class="modal-body">
+
                         {% csrf_token %}
                         {{ bookmark_form|crispy }}
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <input type="submit" value="{% trans 'Save' %}" class="btn btn-success">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

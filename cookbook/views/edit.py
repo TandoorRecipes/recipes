@@ -11,7 +11,8 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients, RecipeBook, \
+    RecipeBookEntry
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -188,6 +189,22 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
+class RecipeBookUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic/edit_template.html"
+    model = RecipeBook
+    fields = ['name']
+
+    # TODO add msg box
+
+    def get_success_url(self):
+        return reverse('view_books')
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeBookUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe Book")
+        return context
+
+
 class RecipeUpdate(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = ExternalRecipeForm
@@ -198,11 +215,13 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
         old_recipe = Recipe.objects.get(pk=self.object.pk)
         if not old_recipe.name == self.object.name:
             if self.object.storage.method == Storage.DROPBOX:
-                Dropbox.rename_file(old_recipe, self.object.name) # TODO central location to handle storage type switches
+                Dropbox.rename_file(old_recipe,
+                                    self.object.name)  # TODO central location to handle storage type switches
             if self.object.storage.method == Storage.NEXTCLOUD:
                 Nextcloud.rename_file(old_recipe, self.object.name)
 
-            self.object.file_path = os.path.dirname(self.object.file_path) + '/' + self.object.name + os.path.splitext(self.object.file_path)[1]
+            self.object.file_path = os.path.dirname(self.object.file_path) + '/' + self.object.name + \
+                                    os.path.splitext(self.object.file_path)[1]
 
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
         return super(RecipeUpdate, self).form_valid(form)
@@ -295,4 +314,26 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(CommentDelete, self).get_context_data(**kwargs)
         context['title'] = _("Comment")
+        return context
+
+
+class RecipeBookDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = RecipeBook
+    success_url = reverse_lazy('view_books')
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeBookDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe Book")
+        return context
+
+
+class RecipeBookEntryDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = RecipeBookEntry
+    success_url = reverse_lazy('view_books')
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeBookEntryDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Bookmarks")
         return context

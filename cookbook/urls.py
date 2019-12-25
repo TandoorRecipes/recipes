@@ -33,6 +33,7 @@ urlpatterns = [
     path('edit/import/<int:pk>/', edit.ImportUpdate.as_view(), name='edit_import'),
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
     path('edit/comment/<int:pk>/', edit.CommentUpdate.as_view(), name='edit_comment'),
+    path('edit/recipe-book/<int:pk>/', edit.RecipeBookUpdate.as_view(), name='edit_recipe_book'),
 
     path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
 
@@ -42,6 +43,8 @@ urlpatterns = [
     path('delete/import/<int:pk>/', edit.ImportDelete.as_view(), name='delete_import'),
     path('delete/storage/<int:pk>/', edit.StorageDelete.as_view(), name='delete_storage'),
     path('delete/comment/<int:pk>/', edit.CommentDelete.as_view(), name='delete_comment'),
+    path('delete/recipe-book/<int:pk>/', edit.RecipeBookDelete.as_view(), name='delete_recipe_book'),
+    path('delete/recipe-book-entry/<int:pk>/', edit.RecipeBookEntryDelete.as_view(), name='delete_recipe_book_entry'),
 
     path('data/sync', data.sync, name='data_sync'),  # TODO move to generic "new" view
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
