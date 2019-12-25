@@ -74,9 +74,15 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            im = Image.open(self.image)
+            img = Image.open(self.image)
+
+            basewidth = 720
+            wpercent = (basewidth / float(img.size[0]))
+            hsize = int((float(img.size[1]) * float(wpercent)))
+            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
             im_io = BytesIO()
-            im.save(im_io, 'JPEG', quality=70)
+            img.save(im_io, 'JPEG', quality=70)
             self.image = File(im_io, name=(str(self.pk)+'.jpeg'))
         super().save(*args, **kwargs)
 
