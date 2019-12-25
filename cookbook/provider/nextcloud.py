@@ -12,13 +12,17 @@ from cookbook.provider.provider import Provider
 class Nextcloud(Provider):
 
     @staticmethod
-    def import_all(monitor):
+    def get_client(storage):
         options = {
-            'webdav_hostname': monitor.storage.url + '/remote.php/dav/files/' + monitor.storage.username,
-            'webdav_login': monitor.storage.username,
-            'webdav_password': monitor.storage.password
+            'webdav_hostname': storage.url + '/remote.php/dav/files/' + storage.username,
+            'webdav_login': storage.username,
+            'webdav_password': storage.password
         }
-        client = wc.Client(options)
+        return wc.Client(options)
+
+    @staticmethod
+    def import_all(monitor):
+        client = Nextcloud.get_client(monitor.storage)
 
         files = client.list(monitor.path)
         files.pop(0)  # remove first element because its the folder itself
@@ -79,14 +83,17 @@ class Nextcloud(Provider):
 
     @staticmethod
     def rename_file(recipe, new_name):
-        options = {
-            'webdav_hostname': recipe.storage.url + '/remote.php/dav/files/' + recipe.storage.username,
-            'webdav_login': recipe.storage.username,
-            'webdav_password': recipe.storage.password
-        }
-        client = wc.Client(options)
+        client = Nextcloud.get_client(recipe.storage)
 
         client.move(recipe.file_path,
                     os.path.dirname(recipe.file_path) + '/' + new_name + os.path.splitext(recipe.file_path)[1])
+
+        return True
+
+    @staticmethod
+    def delete_file(recipe):
+        client = Nextcloud.get_client(recipe.storage)
+
+        client.clean(recipe.file_path)
 
         return True

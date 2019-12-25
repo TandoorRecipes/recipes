@@ -38,6 +38,7 @@ urlpatterns = [
     path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
 
     path('delete/recipe/<int:pk>/', edit.RecipeDelete.as_view(), name='delete_recipe'),
+    path('delete/recipe-source/<int:pk>/', edit.RecipeSourceDelete.as_view(), name='delete_recipe_source'),
     path('delete/keyword/<int:pk>/', edit.KeywordDelete.as_view(), name='delete_keyword'),
     path('delete/sync/<int:pk>/', edit.MonitorDelete.as_view(), name='delete_sync'),
     path('delete/import/<int:pk>/', edit.ImportDelete.as_view(), name='delete_import'),

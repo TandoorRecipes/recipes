@@ -237,6 +237,8 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
         context = super(RecipeUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
         context['view_url'] = reverse('view_recipe', args=[self.object.pk])
+        if self.object.storage:
+            context['delete_external_url'] = reverse('delete_recipe_source', args=[self.object.pk])
         return context
 
 
@@ -251,13 +253,28 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
     model = Recipe
     success_url = reverse_lazy('index')
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-
-        return super(RecipeDelete, self).form_valid(form)
-
     def get_context_data(self, **kwargs):
         context = super(RecipeDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe")
+        return context
+
+
+class RecipeSourceDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = Recipe
+    success_url = reverse_lazy('index')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.storage.method == Storage.DROPBOX:
+            Dropbox.delete_file(self.object)  # TODO central location to handle storage type switches
+        if self.object.storage.method == Storage.NEXTCLOUD:
+            Nextcloud.delete_file(self.object)
+
+        return super(RecipeSourceDelete, self).delete(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeSourceDelete, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
         return context
 

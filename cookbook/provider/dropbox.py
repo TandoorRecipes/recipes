@@ -27,7 +27,7 @@ class Dropbox(Provider):
         try:
             recipes = r.json()
         except ValueError:
-            log_entry = SyncLog(status='ERROR', msg=str(r), monitor=monitor)
+            log_entry = SyncLog(status='ERROR', msg=str(r), sync=monitor)
             log_entry.save()
             return r
 
@@ -100,6 +100,23 @@ class Dropbox(Provider):
         data = {
             "from_path": recipe.file_path,
             "to_path": os.path.dirname(recipe.file_path) + '/' + new_name + os.path.splitext(recipe.file_path)[1]
+        }
+
+        r = requests.post(url, headers=headers, data=json.dumps(data))
+
+        return r.json()
+
+    @staticmethod
+    def delete_file(recipe):
+        url = "https://api.dropboxapi.com/2/files/delete_v2"
+
+        headers = {
+            "Authorization": "Bearer " + recipe.storage.token,
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "path": recipe.file_path
         }
 
         r = requests.post(url, headers=headers, data=json.dumps(data))
