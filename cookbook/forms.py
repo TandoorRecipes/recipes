@@ -18,12 +18,13 @@ class ExternalRecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('name', 'keywords', 'time', 'file_path', 'storage', 'file_uid')
+        fields = ('name', 'keywords', 'working_time', 'waiting_time', 'file_path', 'storage', 'file_uid')
 
         labels = {
             'name': _('Name'),
             'keywords': _('Keywords'),
-            'time': _('Preparation time in minutes'),
+            'working_time': _('Preparation time in minutes'),
+            'waiting_time': _('Waiting time (cooking/baking) in minutes'),
             'file_path': _('Path'),
             'file_uid': _('Storage UID'),
         }
@@ -33,13 +34,14 @@ class ExternalRecipeForm(forms.ModelForm):
 class InternalRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name', 'instructions', 'image', 'time', 'keywords')
+        fields = ('name', 'instructions', 'image', 'working_time', 'waiting_time', 'keywords')
 
         labels = {
             'name': _('Name'),
             'keywords': _('Keywords'),
             'instructions': _('Instructions'),
-            'time': _('Preparation time in minutes'),
+            'working_time': _('Preparation time in minutes'),
+            'waiting_time': _('Waiting time (cooking/baking) in minutes'),
         }
         widgets = {'keywords': MultiSelectWidget}
 

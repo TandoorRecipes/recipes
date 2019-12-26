@@ -45,7 +45,8 @@ def internal_recipe_update(request, pk):
             recipe = recipe_instance
             recipe.name = form.cleaned_data['name']
             recipe.instructions = form.cleaned_data['instructions']
-            recipe.time = form.cleaned_data['time']
+            recipe.working_time = form.cleaned_data['working_time']
+            recipe.waiting_time = form.cleaned_data['waiting_time']
 
             if form.cleaned_data['image']:
                 recipe.image = form.cleaned_data['image']
