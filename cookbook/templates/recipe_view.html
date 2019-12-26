@@ -14,9 +14,9 @@
 {% block content %}
     <div class="row">
         <div class="col col-md-9">
-            <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}"><i class="fas fa-pencil-alt"></i></a></h3>
+            <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i class="fas fa-pencil-alt"></i></a></h3>
         </div>
-        <div class="col col-md-3" style="text-align: right">
+        <div class="col col-md-3 d-print-none" style="text-align: right">
             <button class="btn btn-success" onclick="$('#bookmarkModal').modal({'show':true})"><i
                     class="fas fa-bookmark"></i></button>
         </div>
@@ -29,7 +29,7 @@
 
     {% if recipe.internal %}
         <small>{% trans 'by' %} {{ recipe.created_by.username }}<br/></small>
-         <br/>
+        <br/>
     {% endif %}
 
     {% if recipe.all_tags %}
@@ -63,7 +63,7 @@
                             </div>
                             <div class="col col-md-3">
 
-                                <div class="input-group">
+                                <div class="input-group d-print-none">
                                     <input type="number" value="1" maxlength="3" class="form-control" id="in_factor"
                                            onchange="reloadIngredients()"/>
                                     <div class="input-group-append">
@@ -117,8 +117,9 @@
     {% endif %}
 
     {% if recipe.storage %}
-        <a href='#' onClick='openRecipe({{ recipe.id }}, true)'>{% trans 'View external recipe' %} <i
-                class="fas fa-external-link-alt"></i></a>
+        <a href='#' onClick='openRecipe({{ recipe.id }}, true)' class="d-print-none">{% trans 'View external recipe' %}
+            <i
+                    class="fas fa-external-link-alt"></i></a>
     {% endif %}
 
     {% if not recipe.internal %}
@@ -147,23 +148,25 @@
     <br/>
 
     <h5>{% trans 'Comments' %}</h5>
+    <div class="d-print-none">
 
-    <form method="POST" class="post-form">
-        {% csrf_token %}
-        <div class="input-group mb-3">
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            <div class="input-group mb-3">
             <textarea name="comment-text" cols="15" rows="2" class="textarea form-control" required
                       id="comment-id_text"></textarea>
-            <div class="input-group-append">
-                <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+                <div class="input-group-append">
+                    <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
     {% for c in comments %}
         <div class="card">
             <div class="card-body">
                 <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
-                    href="{% url 'edit_comment' c.pk %}"><i class="fas fa-pencil-alt"></i></a><br/>
+                    href="{% url 'edit_comment' c.pk %}" class="d-print-none"><i class="fas fa-pencil-alt"></i></a><br/>
                 {{ c.text }}
             </div>
         </div>
