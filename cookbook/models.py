@@ -1,8 +1,5 @@
-from io import BytesIO
-
-from PIL import Image
 from django.contrib.auth.models import User
-from django.core.files import File
+
 from django.db import models
 
 
@@ -72,20 +69,6 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if self.image:
-            img = Image.open(self.image)
-
-            basewidth = 720
-            wpercent = (basewidth / float(img.size[0]))
-            hsize = int((float(img.size[1]) * float(wpercent)))
-            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-            im_io = BytesIO()
-            img.save(im_io, 'JPEG', quality=70)
-            self.image = File(im_io, name=(str(self.pk)+'.jpeg'))
-        super().save(*args, **kwargs)
 
     @property
     def all_tags(self):
