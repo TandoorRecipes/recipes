@@ -28,10 +28,9 @@
     {% endif %}
 
     {% if recipe.internal %}
-        <small>{% trans 'by' %} {{ recipe.created_by.username }}</small><br/>
+        <small>{% trans 'by' %} {{ recipe.created_by.username }}<br/></small>
+         <br/>
     {% endif %}
-
-    <br/>
 
     {% if recipe.all_tags %}
         {{ recipe.all_tags }}
@@ -39,12 +38,19 @@
         <br/>
     {% endif %}
 
-    {% if recipe.time and recipe.time != 0 %}
-        <small>{% trans 'Preparation time ca.' %} {{ recipe.time }} min </small>
+    {% if recipe.working_time and recipe.working_time != 0 %}
+        <span class="badge badge-secondary">{% trans 'Preparation time ca.' %} {{ recipe.working_time }} min </span>
+    {% endif %}
+
+    {% if recipe.waiting_time and recipe.waiting_time != 0 %}
+        <span
+                class="badge badge-secondary">{% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
+    {% endif %}
+
+    {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 %}
         <br/>
         <br/>
     {% endif %}
-
 
     <div class="row">
         {% if ingredients %}
@@ -94,7 +100,8 @@
         {% endif %}
         {% if recipe.image %}
             <div class="col-md-6 order-md-2 col-sm-12 order-sm-1 col-12 order-1 " style="text-align: center">
-                <img class="img img-fluid rounded" src="{{ recipe.image.url }}" style="max-height: 30vh;" alt="{% trans 'Recipe Image' %}">
+                <img class="img img-fluid rounded" src="{{ recipe.image.url }}" style="max-height: 30vh;"
+                     alt="{% trans 'Recipe Image' %}">
                 <br/>
                 <br/>
             </div>
