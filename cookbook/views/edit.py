@@ -1,9 +1,12 @@
 import os
+from io import BytesIO
 import simplejson as json
+from PIL import Image
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
@@ -50,7 +53,18 @@ def internal_recipe_update(request, pk):
 
             if form.cleaned_data['image']:
                 recipe.image = form.cleaned_data['image']
-            else:
+
+                img = Image.open(recipe.image)
+
+                basewidth = 720
+                wpercent = (basewidth / float(img.size[0]))
+                hsize = int((float(img.size[1]) * float(wpercent)))
+                img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+                im_io = BytesIO()
+                img.save(im_io, 'JPEG', quality=70)
+                recipe.image = File(im_io, name=(str(recipe.pk) + '.jpeg'))
+            elif 'image' in form.changed_data and form.cleaned_data['image'] is False:
                 recipe.image = None
 
             recipe.save()
