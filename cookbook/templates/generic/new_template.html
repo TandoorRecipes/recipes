@@ -20,7 +20,7 @@
     <form action="." method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" value="Submit" class="btn btn-success">
+        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
     </form>
 
 {% endblock %}
