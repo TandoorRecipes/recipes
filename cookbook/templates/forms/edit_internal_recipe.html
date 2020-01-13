@@ -34,11 +34,11 @@
 
         <input type="hidden" id="ingredients_data_input" name="ingredients">
         <hr>
-        <input type="submit" value="Submit" class="btn btn-success">
+        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
         <a href="{% url 'redirect_delete' form.instance|get_class|lower form.instance.pk %}"
-           class="btn btn-danger">{% trans 'Delete' %}</a>
+           class="btn btn-danger"><i class="fas fa-trash-alt"></i> {% trans 'Delete' %}</a>
         {% if view_url %}
-            <a href="{{ view_url }}" class="btn btn-info">{% trans 'View' %} <i class="far fa-eye"></i></a>
+            <a href="{{ view_url }}" class="btn btn-info"><i class="far fa-eye"></i> {% trans 'View' %}</a>
         {% endif %}
         {% if form.instance.storage %}
             <a href="{% url 'delete_recipe_source' form.instance.pk %}" class="btn btn-warning"><i
