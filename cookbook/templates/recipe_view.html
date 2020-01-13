@@ -14,7 +14,8 @@
 {% block content %}
     <div class="row">
         <div class="col col-md-9">
-            <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i class="fas fa-pencil-alt"></i></a></h3>
+            <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i
+                    class="fas fa-pencil-alt"></i></a></h3>
         </div>
         <div class="col col-md-3 d-print-none" style="text-align: right">
             <button class="btn btn-success" onclick="$('#bookmarkModal').modal({'show':true})"><i
@@ -80,8 +81,13 @@
                                         <div class="pretty p-default p-curve">
                                             <input type="checkbox"/>
                                             <div class="state p-success">
-                                                <label><span
-                                                        id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span> {{ i.unit }}
+                                                <label>
+                                                    {% if i.amount != 0 %}
+                                                        <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
+                                                        {{ i.unit }}
+                                                    {% else %}
+                                                        <span>&#x2063;</span>
+                                                    {% endif %}
                                                 </label>
                                             </div>
                                         </div>
