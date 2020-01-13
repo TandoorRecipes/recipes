@@ -71,13 +71,20 @@ class KeywordForm(forms.ModelForm):
 class StorageForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password'}), required=False)
     password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
-                               required=False)
+                               required=False,
+                               help_text=_('Leave empty for dropbox and enter app password for nextcloud.'))
     token = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
-                            required=False)
+                            required=False,
+                            help_text=_('Leave empty for nextcloud and enter api token for dropbox.'))
 
     class Meta:
         model = Storage
         fields = ('name', 'method', 'username', 'password', 'token', 'url')
+
+        help_texts = {
+            'url': _(
+                'Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically.'),
+        }
 
 
 class RecipeBookForm(forms.ModelForm):
