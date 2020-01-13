@@ -83,7 +83,7 @@ class StorageForm(forms.ModelForm):
 
         help_texts = {
             'url': _(
-                'Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically.'),
+                'Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
         }
 
 
