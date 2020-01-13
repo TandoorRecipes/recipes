@@ -18,7 +18,7 @@
             {% blocktrans %}Are you sure you want to delete the {{ title }}: <b>{{ object }}</b> {% endblocktrans %}
         </div>
         {{ form|crispy }}
-        <input type="submit" value="Submit" class="btn btn-success">
+        <button class="btn btn-success" type="submit"><i class="fas fa-trash-alt"></i> {% trans 'Confirm' %}</button>
     </form>
 
 {% endblock %}
