@@ -18,7 +18,7 @@ This application is meant for people with a collection of recipes they want to s
 
 Most things should be straight forward but there are some more complicated things.
 ##### Storage Backends
-A `Storage Backend` is a remote storage location where files are stored. To add a new backend klick on `Storage Data` and then on `Storage Backends`. There click the plus button.
+A `Storage Backend` is a remote storage location where files are stored. To add a new backend click on `Storage Data` and then on `Storage Backends`. There click the plus button.
 
 Enter a name (just a display name for you to identify it) and an API access Token for the account you want to use.
 Dropboxes API tokens can be found on the [Dropboxes API explorer](https://dropbox.github.io/dropbox-api-v2-explorer/#auth_token/from_oauth1)
@@ -33,23 +33,23 @@ To sync the recipes app with the storage backends press `Sync now` under `Storag
 ##### Import Recipes
 All files found by the sync can be found under `Manage Data >> Import recipes`. There you can either import all at once without modifying them or import one by one, adding tags while importing.
 ##### Batch Edit
-If you have many untagged recipes you may want to edit them all at once. For this go to
+If you have many untagged recipes, you may want to edit them all at once. To do so, go to
 `Storage Data >> Batch Edit`. Enter a word which should be contained in the recipe name and select the tags you want to apply.
-When clicking submit every recipe containing the word will be updated (tags are added).
+When clicking submit, every recipe containing the word will be updated (tags are added).
 
 > Currently the only option is word contains, maybe some more SQL like operators will be added later.
 
 ## Installation
 
 ### Docker-Compose
-When cloning this repository a simple docker-compose file is included. It is made for setups already running an nginx-reverse proxy network with lets encrypt companion but can be changed easily. Copy `.env.template` to `.env` and fill in the missing values accordingly.  
-Now simply start the containers and run the `update.sh` script which will apply all migrations and collect static files.
+When cloning this repository, a simple docker-compose file is included. It is made for setups already running an nginx-reverse proxy network with let’s encrypt companion but can be changed easily. Copy `.env.template` to `.env` and fill in the missing values accordingly.  
+Now simply start the containers and run the `update.sh` script that will apply all migrations and collect static files.
 Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
 
 ### Manual
 Copy `.env.template` to `.env` and fill in the missing values accordingly.  
 You can leave out the docker specific variables (VIRTUAL_HOST, LETSENCRYPT_HOST, LETSENCRYPT_EMAIL). 
-Make sure all variables are available to whatever servers your application.
+Make sure all variables are available to whatever serves your application.
 
 Otherwise simply follow the instructions for any django based deployment
 (for example this one http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html).
@@ -66,4 +66,4 @@ To start developing:
 Pull Requests and ideas are welcome, feel free to contribute in any way.
 
 ## License
-This project is licensed under the MIT license. Even though it is not required to publish derivatives i highly encourage pushing changes upstream and letting people profit from any work done on this project.
+This project is licensed under the MIT license. Even though it is not required to publish derivatives, I highly encourage pushing changes upstream and letting people profit from any work done on this project.
