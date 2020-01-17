@@ -129,3 +129,6 @@ class MealPlan(models.Model):
     meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
     note = models.TextField(blank=True)
     date = models.DateField()
+
+    def __str__(self):
+        return self.meal + ' (' + str(self.date) + ') ' + str(self.recipe)
