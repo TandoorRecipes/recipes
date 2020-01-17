@@ -1,6 +1,5 @@
-from dal_select2.widgets import ModelSelect2
 from django import forms
-from django.forms import widgets, SelectDateWidget
+from django.forms import widgets
 from django.utils.translation import gettext as _
 from emoji_picker.widgets import EmojiPickerTextInput
 
@@ -20,6 +19,10 @@ class MultiSelectWidget(widgets.SelectMultiple):
 # yes there are some stupid browsers that still dont support this but i dont support people using these browsers
 class DateWidget(forms.DateInput):
     input_type = 'date'
+
+    def __init__(self, **kwargs):
+        kwargs["format"] = "%Y-%m-%d"
+        super().__init__(**kwargs)
 
 
 class ExternalRecipeForm(forms.ModelForm):
