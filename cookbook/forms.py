@@ -1,14 +1,25 @@
+from dal_select2.widgets import ModelSelect2
 from django import forms
-from django.forms import widgets
+from django.forms import widgets, SelectDateWidget
 from django.utils.translation import gettext as _
 from emoji_picker.widgets import EmojiPickerTextInput
 
 from .models import *
 
 
+class SelectWidget(widgets.Select):
+    class Media:
+        js = ('custom/js/form_select.js',)
+
+
 class MultiSelectWidget(widgets.SelectMultiple):
     class Media:
         js = ('custom/js/form_multiselect.js',)
+
+
+# yes there are some stupid browsers that still dont support this but i dont support people using these browsers
+class DateWidget(forms.DateInput):
+    input_type = 'date'
 
 
 class ExternalRecipeForm(forms.ModelForm):
@@ -87,12 +98,6 @@ class StorageForm(forms.ModelForm):
         }
 
 
-class RecipeBookForm(forms.ModelForm):
-    class Meta:
-        model = RecipeBook
-        fields = ('name',)
-
-
 class RecipeBookEntryForm(forms.ModelForm):
     prefix = 'bookmark'
 
@@ -125,3 +130,17 @@ class ImportRecipeForm(forms.ModelForm):
             'file_uid': _('File ID'),
         }
         widgets = {'keywords': MultiSelectWidget}
+
+
+class RecipeBookForm(forms.ModelForm):
+    class Meta:
+        model = RecipeBook
+        fields = ('name',)
+
+
+class MealPlanForm(forms.ModelForm):
+    class Meta:
+        model = MealPlan
+        fields = ('recipe', 'meal', 'note', 'date')
+
+        widgets = {'recipe': SelectWidget, 'date': DateWidget}

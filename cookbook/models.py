@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-
+from django.utils.translation import gettext as _
 from django.db import models
 
 
@@ -115,3 +115,17 @@ class RecipeBookEntry(models.Model):
 
     def __str__(self):
         return self.recipe.name
+
+
+class MealPlan(models.Model):
+    BREAKFAST = 'BREAKFAST'
+    LUNCH = 'LUNCH'
+    DINNER = 'DINNER'
+    OTHER = 'OTHER'
+    MEAL_TYPES = ((BREAKFAST, _('Breakfast')), (LUNCH, _('Lunch')), (DINNER, _('Dinner')), (OTHER, _('Other')),)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
+    note = models.TextField(blank=True)
+    date = models.DateField()

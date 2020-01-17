@@ -8,8 +8,8 @@ from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
 from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
-    RecipeBookForm
-from cookbook.models import Keyword, Recipe, RecipeBook
+    RecipeBookForm, MealPlanForm
+from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan
 
 
 class RecipeCreate(LoginRequiredMixin, CreateView):
@@ -108,4 +108,22 @@ class RecipeBookCreate(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(RecipeBookCreate, self).get_context_data(**kwargs)
         context['title'] = _("Recipe Book")
+        return context
+
+
+class MealPlanCreate(LoginRequiredMixin, CreateView):
+    template_name = "generic/new_template.html"
+    model = MealPlan
+    form_class = MealPlanForm
+    success_url = reverse_lazy('view_plan')
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super(MealPlanCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Meal-Plan")
         return context
