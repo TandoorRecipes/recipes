@@ -24,7 +24,7 @@ Enter a name (just a display name for you to identify it) and an API access Toke
 Dropboxes API tokens can be found on the [Dropboxes API explorer](https://dropbox.github.io/dropbox-api-v2-explorer/#auth_token/from_oauth1)
 with the button on the top right. For Nextcloud you can use a App apssword created in the settings.
 
-##### Adding Synced Path's
+##### Adding Synced Paths
 To add a new path from your Storage backend to the sync list, go to `Storage Data >> Configure Sync` and select the storage backend you want to use.
 Then enter the path you want to monitor starting at the storage root (e.g. `/Folder/RecipesFolder`) and save it.
 
