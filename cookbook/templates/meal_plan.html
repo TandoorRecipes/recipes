@@ -15,9 +15,11 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form>
+            <form action="{% url 'view_plan' %}" method="post">
+                {% csrf_token %}
                 <label>{% trans 'Week' %}
-                    <input id="id_week" class="form-control" type="week" onchange="document.forms[0].submit()">
+                    <input name="week" id="id_week" class="form-control" type="week"
+                           onchange="document.forms[0].submit()" value="{{ js_week }}">
                 </label>
             </form>
         </div>
@@ -27,50 +29,30 @@
         <div class="col-md-12 table-responsive">
             <table class="table table-bordered">
                 <tr style="text-align: center">
-                    <th id="th_day_1">?</th>
-                    <th id="th_day_2">?</th>
-                    <th id="th_day_3">?</th>
-                    <th id="th_day_4">?</th>
-                    <th id="th_day_5">?</th>
-                    <th id="th_day_6">?</th>
-                    <th id="th_day_7">?</th>
+                    {% for d in days %}
+                        <th>{{ d }}</th>
+                    {% endfor %}
                 </tr>
-                <tr>
-                    <td colspan="7" style="text-align: center"><h5>{% trans 'Breakfast' %}</h5></td>
-                </tr>
-                <tr>
-                    <td id="td_breakfast_1"></td>
-                    <td id="td_breakfast_2"></td>
-                    <td id="td_breakfast_3"></td>
-                    <td id="td_breakfast_4"></td>
-                    <td id="td_breakfast_5"></td>
-                    <td id="td_breakfast_6"></td>
-                    <td id="td_breakfast_7"></td>
-                </tr>
+                {% for plan_key, plan_value in plan.items %}
 
-                <tr>
-                    <td colspan="7" style="text-align: center"><h5>{% trans 'Lunch' %}</h5></td>
-                </tr>
-                <tr>
+                    <tr>
+                        <td colspan="7" style="text-align: center"><h5>{{ plan_value.type_name }}</h5></td>
+                    </tr>
+                    <tr>
+                        {% for day_key, days_value in plan_value.days.items %}
+                            <td>
+                                {% for mp in days_value %}
+                                    <a href="#" onclick="openRecipe({{ mp.recipe.id }})">{{ mp.recipe.name }}</a><br/>
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
 
-                </tr>
-
-                <tr>
-                    <td colspan="7" style="text-align: center"><h5>{% trans 'Dinner' %}</h5></td>
-                </tr>
-                <tr>
-
-                </tr>
-
-                <tr>
-                    <td colspan="7" style="text-align: center"><h5>{% trans 'Other' %}</h5></td>
-                </tr>
-                <tr>
-
-                </tr>
             </table>
         </div>
     </div>
 
+    {% include 'include/recipe_open_modal.html' %}
 
 {% endblock %}
