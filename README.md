@@ -11,6 +11,7 @@ Recipes is a django application to manage, tag and search recipes using either b
 - :page_facing_up: **Create recipes** locally within a nice, standardized web interface 
 - :person_with_blond_hair: **Share** recipes with friends and comment on them to suggest or remember changes you made
 - :whale: Easy setup with **Docker**
+- :heavy_plus_sign: Many more like recipe scaling, image compression, cookbooks, ...
 
 This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
 
