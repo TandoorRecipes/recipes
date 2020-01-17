@@ -1,3 +1,6 @@
+import copy
+from datetime import datetime, timedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
@@ -69,7 +72,42 @@ def books(request):
     return render(request, 'books.html', {'book_list': book_list})
 
 
+def get_start_end_from_week(p_year, p_week):
+    first_day_of_week = datetime.strptime(f'{p_year}-W{int(p_week) - 1}-1', "%Y-W%W-%w").date()
+    last_day_of_week = first_day_of_week + timedelta(days=6.9)
+    return first_day_of_week, last_day_of_week
+
+
+def get_days_from_week(start, end):
+    delta = end - start
+    days = []
+    for i in range(delta.days + 1):
+        days.append(start + timedelta(days=i))
+    return days
+
+
 @login_required()
 def meal_plan(request):
-    form = MealPlanForm()
-    return render(request, 'meal_plan.html', {'form': form})
+    js_week = datetime.now().strftime("%Y-W%V")
+    if request.method == "POST":
+        js_week = request.POST['week']
+
+    year, week = js_week.split('-')
+    first_day, last_day = get_start_end_from_week(year, week.replace('W', ''))
+
+    days = get_days_from_week(first_day, last_day)
+    days_dict = {}
+    for d in days:
+        days_dict[d] = []
+
+    plan = {}
+    for t in MealPlan.MEAL_TYPES:
+        plan[t[0]] = {'type_name': t[1], 'days': copy.deepcopy(days_dict)}
+
+    for d in days:
+        plan_day = MealPlan.objects.filter(date=d).all()
+        for p in plan_day:
+            plan[p.meal]['days'][d].append(p)
+
+    print(plan)
+    return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days})

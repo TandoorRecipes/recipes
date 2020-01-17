@@ -121,7 +121,7 @@ class MealPlanCreate(LoginRequiredMixin, CreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
         obj.save()
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(reverse('view_plan'))
 
     def get_context_data(self, **kwargs):
         context = super(MealPlanCreate, self).get_context_data(**kwargs)
