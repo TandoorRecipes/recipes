@@ -1,8 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
@@ -69,3 +67,9 @@ def books(request):
         book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
 
     return render(request, 'books.html', {'book_list': book_list})
+
+
+@login_required()
+def meal_plan(request):
+    form = MealPlanForm()
+    return render(request, 'meal_plan.html', {'form': form})

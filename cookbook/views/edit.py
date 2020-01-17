@@ -13,9 +13,9 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm
+from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, MealPlanForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients, RecipeBook, \
-    RecipeBookEntry
+    RecipeBookEntry, MealPlan
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -225,6 +225,22 @@ class RecipeBookUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
+class MealPlanUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic/edit_template.html"
+    model = MealPlan
+    form_class = MealPlanForm
+
+    # TODO add msg box
+
+    def get_success_url(self):
+        return reverse('view_plan')
+
+    def get_context_data(self, **kwargs):
+        context = super(MealPlanUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Meal-Plan")
+        return context
+
+
 class RecipeUpdate(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = ExternalRecipeForm
@@ -373,4 +389,15 @@ class RecipeBookEntryDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(RecipeBookEntryDelete, self).get_context_data(**kwargs)
         context['title'] = _("Bookmarks")
+        return context
+
+
+class MealPlanDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = MealPlan
+    success_url = reverse_lazy('view_plan')
+
+    def get_context_data(self, **kwargs):
+        context = super(MealPlanDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Meal-Plan")
         return context

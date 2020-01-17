@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Meal-Plan' %}{% endblock %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        {% trans 'Meal-Plan' %} <a href="{% url 'new_plan' %}"><i class="fas fa-plus-circle"></i></a>
+    </h3>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+                <label>{% trans 'Week' %}
+                    <input id="id_week" class="form-control" type="week" onchange="document.forms[0].submit()">
+                </label>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-bordered">
+                <tr style="text-align: center">
+                    <th id="th_day_1">?</th>
+                    <th id="th_day_2">?</th>
+                    <th id="th_day_3">?</th>
+                    <th id="th_day_4">?</th>
+                    <th id="th_day_5">?</th>
+                    <th id="th_day_6">?</th>
+                    <th id="th_day_7">?</th>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: center"><h5>{% trans 'Breakfast' %}</h5></td>
+                </tr>
+                <tr>
+                    <td id="td_breakfast_1"></td>
+                    <td id="td_breakfast_2"></td>
+                    <td id="td_breakfast_3"></td>
+                    <td id="td_breakfast_4"></td>
+                    <td id="td_breakfast_5"></td>
+                    <td id="td_breakfast_6"></td>
+                    <td id="td_breakfast_7"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="7" style="text-align: center"><h5>{% trans 'Lunch' %}</h5></td>
+                </tr>
+                <tr>
+
+                </tr>
+
+                <tr>
+                    <td colspan="7" style="text-align: center"><h5>{% trans 'Dinner' %}</h5></td>
+                </tr>
+                <tr>
+
+                </tr>
+
+                <tr>
+                    <td colspan="7" style="text-align: center"><h5>{% trans 'Other' %}</h5></td>
+                </tr>
+                <tr>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}

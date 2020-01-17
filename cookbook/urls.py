@@ -7,6 +7,7 @@ from cookbook.helper import dal
 urlpatterns = [
     path('', views.index, name='index'),
     path('books', views.books, name='view_books'),
+    path('plan', views.meal_plan, name='view_plan'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
 
@@ -15,6 +16,7 @@ urlpatterns = [
     path('new/keyword/', new.KeywordCreate.as_view(), name='new_keyword'),
     path('new/storage/', new.StorageCreate.as_view(), name='new_storage'),
     path('new/book/', new.RecipeBookCreate.as_view(), name='new_book'),
+    path('new/plan/', new.MealPlanCreate.as_view(), name='new_plan'),
 
     path('list/keyword', lists.keyword, name='list_keyword'),
     path('list/import_log', lists.sync_log, name='list_import_log'),
@@ -34,6 +36,7 @@ urlpatterns = [
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
     path('edit/comment/<int:pk>/', edit.CommentUpdate.as_view(), name='edit_comment'),
     path('edit/recipe-book/<int:pk>/', edit.RecipeBookUpdate.as_view(), name='edit_recipe_book'),
+    path('edit/plan/<int:pk>/', edit.MealPlanUpdate.as_view(), name='edit_plan'),
 
     path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
 
@@ -46,6 +49,7 @@ urlpatterns = [
     path('delete/comment/<int:pk>/', edit.CommentDelete.as_view(), name='delete_comment'),
     path('delete/recipe-book/<int:pk>/', edit.RecipeBookDelete.as_view(), name='delete_recipe_book'),
     path('delete/recipe-book-entry/<int:pk>/', edit.RecipeBookEntryDelete.as_view(), name='delete_recipe_book_entry'),
+    path('delete/plan/<int:pk>/', edit.MealPlanDelete.as_view(), name='delete_plan'),
 
     path('data/sync', data.sync, name='data_sync'),  # TODO move to generic "new" view
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
@@ -55,7 +59,6 @@ urlpatterns = [
 
     path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
-
 
     path('api/sync_all/', api.sync_all, name='api_sync'),
 
