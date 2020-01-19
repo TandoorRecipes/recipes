@@ -95,6 +95,8 @@ def meal_plan(request):
     year, week = js_week.split('-')
     first_day, last_day = get_start_end_from_week(year, week.replace('W', ''))
 
+    surrounding_weeks = {'next': (last_day + timedelta(3)).strftime("%Y-W%V"), 'prev': (first_day - timedelta(3)).strftime("%Y-W%V")}
+
     days = get_days_from_week(first_day, last_day)
     days_dict = {}
     for d in days:
@@ -109,5 +111,4 @@ def meal_plan(request):
         for p in plan_day:
             plan[p.meal]['days'][d].append(p)
 
-    print(plan)
-    return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days})
+    return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days, 'surrounding_weeks': surrounding_weeks})

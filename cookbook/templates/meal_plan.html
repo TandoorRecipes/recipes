@@ -14,12 +14,26 @@
     </h3>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" style="text-align: center">
             <form action="{% url 'view_plan' %}" method="post">
                 {% csrf_token %}
                 <label>{% trans 'Week' %}
-                    <input name="week" id="id_week" class="form-control" type="week"
-                           onchange="document.forms[0].submit()" value="{{ js_week }}">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" id="btn_prev"
+                                    onclick="$('#id_week').val('{{ surrounding_weeks.prev }}'); document.forms[0].submit()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                        </div>
+                        <input name="week" id="id_week" class="form-control" type="week"
+                               onchange="document.forms[0].submit()" value="{{ js_week }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" id="btn_next"
+                                    onclick="$('#id_week').val('{{ surrounding_weeks.next }}'); document.forms[0].submit()">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </label>
             </form>
         </div>
@@ -30,7 +44,7 @@
             <table class="table table-bordered">
                 <tr style="text-align: center">
                     {% for d in days %}
-                        <th>{{ d }}</th>
+                        <th>{{ d | date:"l" }}<br/>{{ d }}</th>
                     {% endfor %}
                 </tr>
                 {% for plan_key, plan_value in plan.items %}
