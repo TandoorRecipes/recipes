@@ -81,6 +81,9 @@ class RecipeIngredients(models.Model):
     unit = models.CharField(max_length=128)
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
 
+    def __str__(self):
+        return str(self.amount) + ' ' + self.unit + ' ' + self.name
+
 
 class Comment(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -88,6 +91,9 @@ class Comment(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.text
 
 
 class RecipeImport(models.Model):

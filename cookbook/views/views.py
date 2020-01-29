@@ -1,4 +1,5 @@
 import copy
+import re
 from datetime import datetime, timedelta
 
 from django.contrib import messages
@@ -112,3 +113,31 @@ def meal_plan(request):
             plan[p.meal]['days'][d].append(p)
 
     return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days, 'surrounding_weeks': surrounding_weeks})
+
+
+@login_required
+def shopping_list(request):
+    if request.method == "POST":
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipes = form.cleaned_data['recipe']
+        else:
+            recipes = []
+    else:
+        raw_list = request.GET.getlist('r')
+
+        recipes = []
+        for r in raw_list:
+            if re.match(r'^([1-9])+$', r):
+                if Recipe.objects.filter(pk=int(r)).exists():
+                    recipes.append(int(r))
+
+        form = RecipeForm(initial={'recipe': recipes})
+
+    ingredients = []
+
+    for r in recipes:
+        for i in RecipeIngredients.objects.filter(recipe=r).all():
+            ingredients.append(i)
+
+    return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form})
