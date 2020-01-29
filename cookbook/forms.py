@@ -1,3 +1,4 @@
+from dal import autocomplete
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext as _
@@ -58,6 +59,13 @@ class InternalRecipeForm(forms.ModelForm):
             'waiting_time': _('Waiting time (cooking/baking) in minutes'),
         }
         widgets = {'keywords': MultiSelectWidget}
+
+
+class RecipeForm(forms.Form):
+    recipe = forms.ModelMultipleChoiceField(
+        queryset=Recipe.objects.all(),
+        widget=MultiSelectWidget
+    )
 
 
 class CommentForm(forms.ModelForm):
