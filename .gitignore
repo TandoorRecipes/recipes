@@ -63,7 +63,7 @@ venv/
 
 mediafiles/
 
-*.sqlite3
+*.sqlite3*
 
 \.idea/workspace\.xml
 

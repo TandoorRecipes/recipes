@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files import File
+from django.db.models import Value, CharField
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
@@ -15,7 +16,7 @@ from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, MealPlanForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients, RecipeBook, \
-    RecipeBookEntry, MealPlan
+    RecipeBookEntry, MealPlan, Unit
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -80,7 +81,15 @@ def internal_recipe_update(request, pk):
                     ingredient.amount = float(i['amount'].replace(',', '.'))
                 else:
                     ingredient.amount = i['amount']
-                ingredient.unit = i['unit']
+
+                if Unit.objects.filter(name=i['unit__name']).exists():
+                    ingredient.unit = Unit.objects.get(name=i['unit__name'])
+                else:
+                    unit = Unit()
+                    unit.name = i['unit__name']
+                    unit.save()
+                    ingredient.unit = unit
+
                 ingredient.save()
 
             recipe.keywords.set(form.cleaned_data['keywords'])
@@ -92,10 +101,10 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredients.objects.filter(recipe=recipe_instance)
+    ingredients = RecipeIngredients.objects.select_related('unit__name').filter(recipe=recipe_instance).values('name', 'unit__name', 'amount')
 
     return render(request, 'forms/edit_internal_recipe.html',
-                  {'form': form, 'ingredients': json.dumps(list(ingredients.values())),
+                  {'form': form, 'ingredients': json.dumps(list(ingredients)),
                    'view_url': reverse('view_recipe', args=[pk])})
 
 
