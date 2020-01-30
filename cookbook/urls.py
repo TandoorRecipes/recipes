@@ -65,4 +65,5 @@ urlpatterns = [
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),
+    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
 ]

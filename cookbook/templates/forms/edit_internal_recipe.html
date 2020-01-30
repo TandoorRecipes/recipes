@@ -46,7 +46,54 @@
         {% endif %}
     </form>
 
+    <select class="form-control" id="test"></select>
+
     <script>
+
+        $('#test').select2({
+            tags: true,
+            ajax: {
+                url: '{% url 'dal_unit' %}',
+                dataType: 'json',
+
+            }
+        });
+
+
+        var select2Editor = function (cell, onRendered, success, cancel, editorParams) {
+
+            //create input element to hold select
+            var editor = document.createElement("select");
+            editor.setAttribute("class", "form-control");
+            editor.setAttribute("style", "height: 100%");
+
+            onRendered(function () {
+                var select_2 = $(editor);
+
+                select_2.select2({
+                    tags: true,
+                    ajax: {
+                        url: '{% url 'dal_unit' %}',
+                        dataType: 'json'
+
+                    }
+                });
+
+                select_2.on('change', function (e) {
+                    success(select_2.text());
+                });
+
+
+                select_2.on('blur', function (e) {
+                    cancel();
+                });
+            });
+
+
+            //add editor to cell
+            return editor;
+        }
+
         function selectText(node) {
 
             if (document.body.createTextRange) {
@@ -73,9 +120,9 @@
 
                 ingredients.forEach(function (cur, i) {
                     cur.delete = false
-                })
+                });
 
-            var data = ingredients
+            var data = ingredients;
 
             var table = new Tabulator("#ingredients-table", {
                 index: "id",
@@ -85,7 +132,15 @@
                 movableRows: true,
                 headerSort: false,
                 columns: [
-                    { title: "<i class='fas fa-sort'></i>", rowHandle:true, formatter:"handle", headerSort:false, frozen:true, width:36, minWidth:36},
+                    {
+                        title: "<i class='fas fa-sort'></i>",
+                        rowHandle: true,
+                        formatter: "handle",
+                        headerSort: false,
+                        frozen: true,
+                        width: 36,
+                        minWidth: 36
+                    },
                     {
                         title: "{% trans 'Ingredient' %}",
                         field: "name",
@@ -93,7 +148,7 @@
                         editor: "input"
                     },
                     {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "input"},
-                    {title: "{% trans 'Unit' %}", field: "unit", validator: "required", editor: "input"},
+                    {title: "{% trans 'Unit' %}", field: "unit__name", validator: "required", editor: select2Editor},
                     {
                         title: "{% trans 'Delete' %}",
                         field: "delete",
@@ -113,9 +168,9 @@
                     })
                 },
                 cellClick: function (e, cell) {
-                    input = cell.getElement().childNodes[0]
-                    input.focus()
-                    input.select()
+                    //input = cell.getElement().childNodes[0]
+                    //input.focus()
+                    //input.select()
                 },
             });
 

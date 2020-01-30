@@ -75,14 +75,22 @@ class Recipe(models.Model):
         return ' '.join([(x.icon + x.name) for x in self.keywords.all()])
 
 
+class Unit(models.Model):
+    name = models.CharField(unique=True, max_length=128)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class RecipeIngredients(models.Model):
     name = models.CharField(max_length=128)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    unit = models.CharField(max_length=128)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True)
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
 
     def __str__(self):
-        return str(self.amount) + ' ' + self.unit + ' ' + self.name
+        return str(self.amount) + ' ' + str(self.unit) + ' ' + self.name
 
 
 class Comment(models.Model):
