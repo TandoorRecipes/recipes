@@ -76,28 +76,20 @@
                     ajax: {
                         url: '{% url 'dal_unit' %}',
                         dataType: 'json'
-
                     }
                 });
 
                 select_2.select2('open');
 
-                select_2.on('change', function (e) {
-                    console.log("CHANGE")
-                    success(select_2.val());
+                select_2.on('select2:select', function (e) {
+                    success(e.params.data.text);
                 });
 
-
-                function blur() {
-                    console.log("BLUR")
-                    select_2.select2('close');
-                    cancel();
-                }
-
-                select_2.on('blur', blur);
-                editor.addEventListener("blur", blur);
-                editor.on("blur", blur);
-                select_2.addEventListener("blur", blur);
+                select_2.on('select2:close', function (e) {
+                    if (e.target.textContent === "") {
+                        cancel();
+                    }
+                });
             });
 
 
@@ -180,9 +172,9 @@
                 },
                 cellClick: function (e, cell) {
                     if (cell._cell.column.definition.editor === "input") {
-                        input = cell.getElement().childNodes[0]
-                        input.focus()
-                        input.select()
+                        //input = cell.getElement().childNodes[0]
+                        //input.focus()
+                        //input.select()
                     }
                 },
             });
