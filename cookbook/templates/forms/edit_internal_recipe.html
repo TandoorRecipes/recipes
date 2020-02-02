@@ -32,7 +32,6 @@
             {% endif %}
         {% endfor %}
 
-        <input type="hidden" id="ingredients_data_input" name="ingredients">
         <hr>
         <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
         <a href="{% url 'redirect_delete' form.instance|get_class|lower form.instance.pk %}"
@@ -153,7 +152,7 @@
                     {title: "id", field: "id", visible: false}
                 ],
                 dataEdited: function (data) {
-                    $('#ingredients_data_input').val(JSON.stringify(data))
+                    $('#id_ingredients').val(JSON.stringify(data))
 
                     data.forEach(function (cur, i) {
                         if (cur.delete) {
@@ -171,13 +170,13 @@
             });
 
             // load initial value
-            $('#ingredients_data_input').val(JSON.stringify(data))
+            $('#id_ingredients').val(JSON.stringify(data))
 
             document.getElementById("new_empty").addEventListener("click", function () {
                 data.push({
                     name: "{% trans 'Ingredient' %}",
                     amount: "100",
-                    unit: "g",
+                    unit__name: "g",
                     id: Math.floor(Math.random() * 10000000),
                     delete: false,
                 });

@@ -47,6 +47,8 @@ class ExternalRecipeForm(forms.ModelForm):
 
 
 class InternalRecipeForm(forms.ModelForm):
+    ingredients = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Recipe
         fields = ('name', 'instructions', 'image', 'working_time', 'waiting_time', 'keywords')
