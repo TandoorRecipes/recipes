@@ -1,5 +1,7 @@
 from django import template
 import markdown as md
+import bleach
+from bleach_whitelist import markdown_tags, markdown_attrs
 
 register = template.Library()
 
@@ -11,4 +13,4 @@ def get_class(value):
 
 @register.filter()
 def markdown(value):
-    return md.markdown(value, extensions=['markdown.extensions.fenced_code'])
+    return bleach.clean(md.markdown(value, extensions=['markdown.extensions.fenced_code']), markdown_tags, markdown_attrs)

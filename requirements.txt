@@ -7,6 +7,8 @@ djangorestframework
 django-autocomplete-light
 django-emoji-picker
 django-cleanup
+bleach
+bleach-whitelist
 six
 requests
 markdown
