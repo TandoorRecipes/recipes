@@ -73,7 +73,7 @@ def internal_recipe_update(request, pk):
 
             recipe.save()
 
-            form_ingredients = json.loads(form.data['ingredients'])
+            form_ingredients = json.loads(form.cleaned_data['ingredients'])
             RecipeIngredients.objects.filter(recipe=recipe_instance).delete()
 
             for i in form_ingredients:
