@@ -42,9 +42,12 @@ def convert_recipe(request, pk):
 @login_required
 def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
+    status = 200
 
     if request.method == "POST":
         form = InternalRecipeForm(request.POST, request.FILES)
+        form.instance = recipe_instance
+
         if form.is_valid():
             recipe = recipe_instance
             recipe.name = form.cleaned_data['name']
@@ -95,9 +98,9 @@ def internal_recipe_update(request, pk):
             recipe.keywords.set(form.cleaned_data['keywords'])
 
             messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
-            return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
         else:
-            messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
+            messages.add_message(request, messages.ERROR, _('There was an error saving this recipe!'))
+            status = 403
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
@@ -105,7 +108,7 @@ def internal_recipe_update(request, pk):
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients)),
-                   'view_url': reverse('view_recipe', args=[pk])})
+                   'view_url': reverse('view_recipe', args=[pk])}, status=status)
 
 
 class SyncUpdate(LoginRequiredMixin, UpdateView):
