@@ -46,30 +46,16 @@
         {% endif %}
     </form>
 
-    <select class="form-control" id="test"></select>
-
     <script>
 
-        $('#test').select2({
-            tags: true,
-            ajax: {
-                url: '{% url 'dal_unit' %}',
-                dataType: 'json',
+        let select2Editor = function (cell, onRendered, success, cancel, editorParams) {
 
-            }
-        });
-
-
-        var select2Editor = function (cell, onRendered, success, cancel, editorParams) {
-
-            //create input element to hold select
-            var editor = document.createElement("select");
+            let editor = document.createElement("select");
             editor.setAttribute("class", "form-control");
             editor.setAttribute("style", "height: 100%");
 
             onRendered(function () {
-                var select_2 = $(editor);
-
+                let select_2 = $(editor);
 
                 select_2.select2({
                     tags: true,
@@ -95,7 +81,7 @@
 
             //add editor to cell
             return editor;
-        }
+        };
 
         function selectText(node) {
 
@@ -119,15 +105,15 @@
         $(document).ready(function () {
             $('#id_keywords').select2();
 
-            var ingredients = {{ ingredients|safe }}
+            let ingredients = {{ ingredients|safe }}
 
                 ingredients.forEach(function (cur, i) {
                     cur.delete = false
                 });
 
-            var data = ingredients;
+            let data = ingredients;
 
-            var table = new Tabulator("#ingredients-table", {
+            let table = new Tabulator("#ingredients-table", {
                 index: "id",
                 layout: "fitColumns",
                 reactiveData: true,
@@ -153,11 +139,16 @@
                     {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "input"},
                     {title: "{% trans 'Unit' %}", field: "unit__name", validator: "required", editor: select2Editor},
                     {
-                        title: "{% trans 'Delete' %}",
-                        field: "delete",
+                        formatter: function (cell, formatterParams) {
+                            return "<span style='color:red'><i class=\"fas fa-trash-alt\"></i></span>"
+                        },
                         align: "center",
-                        editor: true,
-                        formatter: "tickCross"
+                        title: "{% trans 'Delete' %}",
+                        headerSort: false,
+                        cellClick: function (e, cell) {
+                            if (confirm('{% trans 'Are you sure that you want to delete this ingredient?' %}'))
+                                cell.getRow().delete();
+                        }
                     },
                     {title: "id", field: "id", visible: false}
                 ],
@@ -172,9 +163,9 @@
                 },
                 cellClick: function (e, cell) {
                     if (cell._cell.column.definition.editor === "input") {
-                        //input = cell.getElement().childNodes[0]
-                        //input.focus()
-                        //input.select()
+                        input = cell.getElement().childNodes[0];
+                        input.focus();
+                        input.select();
                     }
                 },
             });
