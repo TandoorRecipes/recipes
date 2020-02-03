@@ -20,6 +20,8 @@
         <div class="col col-md-3 d-print-none" style="text-align: right">
             <button class="btn btn-success" onclick="$('#bookmarkModal').modal({'show':true})"><i
                     class="fas fa-bookmark"></i></button>
+            <a class="btn btn-warning" href="{% url 'view_shopping' %}?r={{ recipe.pk }}"><i class="fas fa-shopping-cart"></i></a>
+            <a class="btn btn-info" href="{% url 'new_plan' %}?recipe={{ recipe.pk }}"><i class="fas fa-calendar"></i></a>
         </div>
     </div>
 
