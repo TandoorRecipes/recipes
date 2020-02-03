@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load django_tables2 %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Cookbook" %}{% endblock %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <h2><i class="fas fa-shopping-cart"></i> {% trans 'Edit Ingredients' %}</h2>
+    {% blocktrans %}
+        The following form can be used if, accidentally, two (or more) units or ingredients where created that should be
+        the same.
+        It merges two units or ingredients and updates all recipes using them.
+    {% endblocktrans %}
+    <br/>
+    <br/>
+
+    <h4>{% trans 'Units' %}</h4>
+    <form action="{% url 'edit_ingredient' %}" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-danger" type="submit"
+                onclick="confirm('{% trans 'Are you sure that you want to merge these two units ?' %}')"><i
+                class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
+    </form>
+
+
+{% endblock %}

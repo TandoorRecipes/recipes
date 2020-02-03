@@ -70,6 +70,23 @@ class RecipeForm(forms.Form):
     )
 
 
+class UnitMergeForm(forms.Form):
+    prefix = 'unit'
+
+    new_unit = forms.ModelChoiceField(
+        queryset=Unit.objects.all(),
+        widget=SelectWidget,
+        label=_('New Unit'),
+        help_text=_('New unit that other gets replaced by.'),
+    )
+    old_unit = forms.ModelChoiceField(
+        queryset=Unit.objects.all(),
+        widget=SelectWidget,
+        label=_('Old Unit'),
+        help_text=_('Unit that should be replaced.'),
+    )
+
+
 class CommentForm(forms.ModelForm):
     prefix = 'comment'
 

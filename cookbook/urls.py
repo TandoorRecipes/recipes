@@ -38,6 +38,7 @@ urlpatterns = [
     path('edit/comment/<int:pk>/', edit.CommentUpdate.as_view(), name='edit_comment'),
     path('edit/recipe-book/<int:pk>/', edit.RecipeBookUpdate.as_view(), name='edit_recipe_book'),
     path('edit/plan/<int:pk>/', edit.MealPlanUpdate.as_view(), name='edit_plan'),
+    path('edit/ingredient/', edit.edit_ingredients, name='edit_ingredient'),
 
     path('redirect/delete/<slug:name>/<int:pk>/', edit.delete_redirect, name='redirect_delete'),
 
