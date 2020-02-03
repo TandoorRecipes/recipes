@@ -11,10 +11,11 @@ from django.db.models import Value, CharField
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 from django.views.generic import UpdateView, DeleteView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, MealPlanForm
+from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
+    MealPlanForm, UnitMergeForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients, RecipeBook, \
     RecipeBookEntry, MealPlan, Unit
 from cookbook.provider.dropbox import Dropbox
@@ -104,7 +105,9 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredients.objects.select_related('unit__name').filter(recipe=recipe_instance).values('name', 'unit__name', 'amount')
+    ingredients = RecipeIngredients.objects.select_related('unit__name').filter(recipe=recipe_instance).values('name',
+                                                                                                               'unit__name',
+                                                                                                               'amount')
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients)),
@@ -290,8 +293,29 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-# Generic Delete views
+@login_required
+def edit_ingredients(request):
+    if request.method == "POST":
+        form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix)
+        if form.is_valid():
+            new_unit = form.cleaned_data['new_unit']
+            old_unit = form.cleaned_data['old_unit']
+            ingredients = RecipeIngredients.objects.filter(unit=old_unit).all()
+            for i in ingredients:
+                i.unit = new_unit
+                i.save()
 
+            old_unit.delete()
+            messages.add_message(request, messages.SUCCESS, _('Units merged!'))
+        else:
+            messages.add_message(request, messages.WARNING, _('There was an error in your form.'))
+    else:
+        form = UnitMergeForm()
+
+    return render(request, 'forms/ingredients.html', {'form': form})
+
+
+# Generic Delete views
 def delete_redirect(request, name, pk):
     return redirect(('delete_' + name), pk)
 
