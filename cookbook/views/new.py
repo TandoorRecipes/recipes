@@ -1,3 +1,5 @@
+import re
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -126,4 +128,11 @@ class MealPlanCreate(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(MealPlanCreate, self).get_context_data(**kwargs)
         context['title'] = _("Meal-Plan")
+
+        recipe = self.request.GET.get('recipe')
+        if recipe:
+            if re.match(r'^([0-9])+$', recipe):
+                if Recipe.objects.filter(pk=int(recipe)).exists():
+                    context['default_recipe'] = Recipe.objects.get(pk=int(recipe))
+
         return context
