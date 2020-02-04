@@ -141,3 +141,8 @@ def shopping_list(request):
             ingredients.append(i)
 
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form})
+
+
+@login_required
+def settings(request):
+    return render(request, 'settings.html', {})
