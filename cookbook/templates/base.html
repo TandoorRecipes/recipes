@@ -137,9 +137,15 @@
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'admin:index' %}"><i
-                        class="fas fa-user-shield"></i> {% trans 'Admin' %}</a>
+                <a class="nav-link" href="{% url 'view_settings' %}"><i
+                        class="fas fa-user-cog"></i> {% trans 'Settings' %}</a>
             </li>
+            {% if user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}"><i
+                            class="fas fa-user-shield"></i> {% trans 'Admin' %}</a>
+                </li>
+            {% endif %}
             <li class="nav-item">
                 {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'logout' %}">{% trans 'Logout' %} {{ user.get_username }} <i
