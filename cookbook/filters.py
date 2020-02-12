@@ -36,7 +36,7 @@ class RecipeFilter(django_filters.FilterSet):
 
 
 class QuickRecipeFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='contains')
+    name = django_filters.CharFilter(lookup_expr='icontains')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
 
