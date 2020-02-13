@@ -145,7 +145,10 @@ def shopping_list(request):
 
 @login_required
 def settings(request):
-    up = request.user.userpreference
+    try:
+        up = request.user.userpreference
+    except UserPreference.DoesNotExist:
+        up = None
 
     if request.method == "POST":
         form = UserPreferenceForm(request.POST)
