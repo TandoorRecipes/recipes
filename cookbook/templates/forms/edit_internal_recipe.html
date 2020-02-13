@@ -2,13 +2,15 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% load custom_tags %}
+{% load theming_tags %}
 {% load static %}
 
 {% block title %}{% trans 'Edit Recipe' %}{% endblock %}
 
 {% block extra_head %}
     <script src="{% static 'tabulator/tabulator.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'tabulator/tabulator_bootstrap4.min.css' %}"/>
+    <link rel="stylesheet" href="{% tabulator_theme_url request %}"/>
+
 {% endblock %}
 
 {% block content %}
@@ -51,7 +53,7 @@
 
             let editor = document.createElement("select");
             editor.setAttribute("class", "form-control");
-            editor.setAttribute("style", "height: 100%");
+            editor.setAttribute("style", "height: 100%; color: #00ff00");
 
             onRendered(function () {
                 let select_2 = $(editor);
