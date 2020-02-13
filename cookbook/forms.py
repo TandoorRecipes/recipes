@@ -26,6 +26,12 @@ class DateWidget(forms.DateInput):
         super().__init__(**kwargs)
 
 
+class UserPreferenceForm(forms.ModelForm):
+    class Meta:
+        model = UserPreference
+        fields = ('theme',)
+
+
 class ExternalRecipeForm(forms.ModelForm):
     file_path = forms.CharField(disabled=True, required=False)
     storage = forms.ModelChoiceField(queryset=Storage.objects.all(), disabled=True, required=False)

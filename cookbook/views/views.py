@@ -145,4 +145,19 @@ def shopping_list(request):
 
 @login_required
 def settings(request):
-    return render(request, 'settings.html', {})
+    up = request.user.userpreference
+
+    if request.method == "POST":
+        form = UserPreferenceForm(request.POST)
+        if form.is_valid():
+            if not up:
+                up = UserPreference(user=request.user)
+            up.theme = form.cleaned_data['theme']
+            up.save()
+
+    if up:
+        form = UserPreferenceForm(instance=up)
+    else:
+        form = UserPreferenceForm()
+
+    return render(request, 'settings.html', {'form': form})
