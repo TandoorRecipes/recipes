@@ -1,6 +1,6 @@
 {% load static %}
 {% load i18n %}
-{% load custom_tags %}
+{% load theming_tags %}
 
 <html>
 <head>
@@ -39,6 +39,10 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.css"
           integrity="sha256-zFnNbsU+u3l0K+MaY92RvJI6AdAVAxK3/QrBApHvlH8=" crossorigin="anonymous"/>
+
+    <link rel="stylesheet"
+          href="{% static 'themes/select2-bootstrap-theme.css' %}"
+          crossorigin="anonymous"/>
 
     <script type="text/javascript">
         $.fn.select2.defaults.set("theme", "bootstrap");
