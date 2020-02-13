@@ -3,6 +3,18 @@ from django.utils.translation import gettext as _
 from django.db import models
 
 
+class UserPreference(models.Model):
+    BOOTSTRAP = 'BOOTSTRAP'
+    DARKLY = 'DARKLY'
+    FLATLY = 'FLATLY'
+    SUPERHERO = 'SUPERHERO'
+
+    THEMES = ((BOOTSTRAP, 'Bootstrap'), (DARKLY, 'Darkly'), (FLATLY, 'Flatly'), (SUPERHERO, 'Superhero'))
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    theme = models.CharField(choices=THEMES, max_length=128, default=BOOTSTRAP)
+
+
 class Storage(models.Model):
     DROPBOX = 'DB'
     NEXTCLOUD = 'NEXTCLOUD'

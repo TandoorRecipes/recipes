@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load custom_tags %}
 
 <html>
 <head>
@@ -18,30 +19,10 @@
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
     <!-- Bootstrap 4 -->
-    <link id="id_main_css" rel="stylesheet"
-          href="{% static 'themes/darkly.min.css' %}">
+    <link id="id_main_css" href="{% theme_url request %}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.4.1.js"
             integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
             crossorigin="anonymous"></script>
-
-    <script type="text/javascript">
-        function getCookieValue(a) {
-            let b = document.cookie.match('(^|[^;]+)\\s*' + a + '\\s*=\\s*([^;]+)');
-            return b ? b.pop() : '';
-        }
-
-        let theme_list = ['{% static 'themes/bootstrap.min.css' %}', '{% static 'themes/flatly.min.css' %}', '{% static 'themes/superhero.min.css' %}'];
-
-        let css = $('#id_main_css');
-        let theme = getCookieValue('theme');
-        if (theme !== "" && theme_list.includes(theme)) {
-            css.attr('href', theme);
-        } else {
-            css.attr('href', '{% static 'themes/bootstrap.min.css' %}');
-        }
-
-    </script>
-
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -161,15 +142,6 @@
 <br/>
 <br/>
 
-<!-- Navbar theming, run before content to avoid flickering -->
-<script type="text/javascript">
-    let nav_color = getCookieValue('color');
-    if (nav_color !== "") {
-        $('#id_main_nav').attr('class', 'navbar navbar-expand-lg navbar-dark bg-' + nav_color)
-    }
-</script>
-
-
 <div class="container">
 
     {% for message in messages %}
@@ -185,6 +157,8 @@
     {% endblock %}
 </div>
 
+{% block script %}
+{% endblock script %}
 
 </body>
 </html>
