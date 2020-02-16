@@ -20,7 +20,7 @@ def theme_url(request):
         else:
             raise AttributeError
     except AttributeError:
-        return static('themes/bootstrap.min.css')
+        return static('themes/flatly.min.css')
 
 
 @register.simple_tag
