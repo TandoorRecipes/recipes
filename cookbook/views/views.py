@@ -28,7 +28,7 @@ def index(request):
 @login_required
 def recipe_view(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
-    ingredients = RecipeIngredients.objects.filter(recipe=recipe)
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
     comments = Comment.objects.filter(recipe=recipe)
 
     if request.method == "POST":
@@ -137,7 +137,7 @@ def shopping_list(request):
     ingredients = []
 
     for r in recipes:
-        for i in RecipeIngredients.objects.filter(recipe=r).all():
+        for i in RecipeIngredient.objects.filter(recipe=r).all():
             ingredients.append(i)
 
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form})
