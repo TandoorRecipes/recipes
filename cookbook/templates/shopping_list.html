@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col col-md-12">
             <!--// @formatter:off-->
-            <textarea id="id_list" style="height: 50vh" class="form-control">{% for i in ingredients %}- [ ] {{ i.amount.normalize }} {{ i.unit }} {{ i.name }}&#10;{% endfor %}</textarea>
+            <textarea id="id_list" style="height: 50vh" class="form-control">{% for i in ingredients %}- [ ] {{ i.amount.normalize }} {{ i.unit }} {{ i.ingredient.name }}&#10;{% endfor %}</textarea>
             <!--// @formatter:on-->
         </div>
     </div>
