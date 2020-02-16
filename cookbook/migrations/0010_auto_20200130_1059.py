@@ -5,14 +5,14 @@ from django.db import migrations
 
 def migrate_ingredient_units(apps, schema_editor):
     Unit = apps.get_model('cookbook', 'Unit')
-    RecipeIngredient = apps.get_model('cookbook', 'RecipeIngredient')
+    RecipeIngredients = apps.get_model('cookbook', 'RecipeIngredients')
 
-    for u in RecipeIngredient.objects.values('unit').distinct():
+    for u in RecipeIngredients.objects.values('unit').distinct():
         unit = Unit()
         unit.name = u['unit']
         unit.save()
 
-    for i in RecipeIngredient.objects.all():
+    for i in RecipeIngredients.objects.all():
         i.unit_key = Unit.objects.get(name=i.unit)
         i.save()
 
