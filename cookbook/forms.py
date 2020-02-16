@@ -29,7 +29,11 @@ class DateWidget(forms.DateInput):
 class UserPreferenceForm(forms.ModelForm):
     class Meta:
         model = UserPreference
-        fields = ('theme',)
+        fields = ('theme', 'nav_color')
+
+        help_texts = {
+            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!')
+        }
 
 
 class ExternalRecipeForm(forms.ModelForm):

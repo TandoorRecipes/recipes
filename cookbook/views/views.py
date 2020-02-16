@@ -156,6 +156,7 @@ def settings(request):
             if not up:
                 up = UserPreference(user=request.user)
             up.theme = form.cleaned_data['theme']
+            up.nav_color = form.cleaned_data['nav_color']
             up.save()
 
     if up:

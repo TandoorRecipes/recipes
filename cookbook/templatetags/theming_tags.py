@@ -24,6 +24,14 @@ def theme_url(request):
 
 
 @register.simple_tag
+def nav_color(request):
+    try:
+        return request.user.userpreference.nav_color
+    except AttributeError:
+        return 'primary'
+
+
+@register.simple_tag
 def tabulator_theme_url(request):
     try:
         themes = {
