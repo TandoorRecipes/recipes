@@ -1,18 +1,21 @@
 # Recipes ![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=master)
-Recipes is a django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
+Recipes is a Django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
 
 ![Preview](preview.png)
 
 ### Features
 
 - :package: **Sync** files with Dropbox and Nextcloud (more can easily be added)
-- :mag: Powerful **search** with djangos [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
+- :mag: Powerful **search** with Djangos [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
 - :label: Create and search for **tags**, assign them in batch to all files matching certain filters
 - :page_facing_up: **Create recipes** locally within a nice, standardized web interface 
 - :iphone: Optimized for use on **mobile** devices like phones and tablets
+- :shopping_cart: Generate **shopping** lists from recipes
+- :calendar: Create a **Plan** on what to eat when
 - :person_with_blond_hair: **Share** recipes with friends and comment on them to suggest or remember changes you made
 - :whale: Easy setup with **Docker**
-- :heavy_plus_sign: Many more like recipe scaling, image compression, cookbooks, ...
+- :art: Customize your interface with **themes**
+- :heavy_plus_sign: Many more like recipe scaling, image compression, cookbooks, printing views, ...
 
 This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
 
