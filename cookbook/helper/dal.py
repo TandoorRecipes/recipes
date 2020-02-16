@@ -1,6 +1,6 @@
 from dal import autocomplete
 
-from cookbook.models import Keyword, RecipeIngredients, Recipe, Unit
+from cookbook.models import Keyword, RecipeIngredient, Recipe, Unit
 
 
 class KeywordAutocomplete(autocomplete.Select2QuerySetView):
@@ -19,9 +19,9 @@ class KeywordAutocomplete(autocomplete.Select2QuerySetView):
 class IngredientsAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-            return RecipeIngredients.objects.none()
+            return RecipeIngredient.objects.none()
 
-        qs = RecipeIngredients.objects.all()
+        qs = RecipeIngredient.objects.all()
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)

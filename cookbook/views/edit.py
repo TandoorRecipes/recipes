@@ -16,7 +16,7 @@ from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
     MealPlanForm, UnitMergeForm
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredients, RecipeBook, \
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
     RecipeBookEntry, MealPlan, Unit
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
@@ -75,10 +75,10 @@ def internal_recipe_update(request, pk):
             recipe.save()
 
             form_ingredients = json.loads(form.cleaned_data['ingredients'])
-            RecipeIngredients.objects.filter(recipe=recipe_instance).delete()
+            RecipeIngredient.objects.filter(recipe=recipe_instance).delete()
 
             for i in form_ingredients:
-                ingredient = RecipeIngredients()
+                ingredient = RecipeIngredient()
                 ingredient.recipe = recipe_instance
                 ingredient.name = i['name']
                 if isinstance(i['amount'], str):
@@ -105,7 +105,7 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredients.objects.select_related('unit__name').filter(recipe=recipe_instance).values('name',
+    ingredients = RecipeIngredient.objects.select_related('unit__name').filter(recipe=recipe_instance).values('name',
                                                                                                                'unit__name',
                                                                                                                'amount')
 
@@ -300,7 +300,7 @@ def edit_ingredients(request):
         if form.is_valid():
             new_unit = form.cleaned_data['new_unit']
             old_unit = form.cleaned_data['old_unit']
-            ingredients = RecipeIngredients.objects.filter(unit=old_unit).all()
+            ingredients = RecipeIngredient.objects.filter(unit=old_unit).all()
             for i in ingredients:
                 i.unit = new_unit
                 i.save()

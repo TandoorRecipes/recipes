@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from cookbook.models import Recipe, RecipeIngredients
+from cookbook.models import Recipe, RecipeIngredient
 
 
 class TestViews(TestCase):
@@ -69,4 +69,4 @@ class TestViews(TestCase):
         r = self.client.post(url,
                              {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'ingredients': '[{"name":"Tomato","unit__name":"g","amount":100,"delete":false},{"name":"Egg","unit__name":"Piece","amount":2,"delete":false}]'})
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(2, RecipeIngredients.objects.filter(recipe=recipe).count())
+        self.assertEqual(2, RecipeIngredient.objects.filter(recipe=recipe).count())
