@@ -37,4 +37,4 @@ def tabulator_theme_url(request):
         else:
             raise AttributeError
     except AttributeError:
-        return static('themes/bootstrap.min.css')
+        return static('tabulator/tabulator_bootstrap4.min.css')
