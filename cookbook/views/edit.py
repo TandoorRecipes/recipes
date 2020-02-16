@@ -17,7 +17,7 @@ from django.views.generic import UpdateView, DeleteView
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
     MealPlanForm, UnitMergeForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
-    RecipeBookEntry, MealPlan, Unit
+    RecipeBookEntry, MealPlan, Unit, Ingredient
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -78,23 +78,31 @@ def internal_recipe_update(request, pk):
             RecipeIngredient.objects.filter(recipe=recipe_instance).delete()
 
             for i in form_ingredients:
-                ingredient = RecipeIngredient()
-                ingredient.recipe = recipe_instance
-                ingredient.name = i['name']
-                if isinstance(i['amount'], str):
-                    ingredient.amount = float(i['amount'].replace(',', '.'))
+                recipe_ingredient = RecipeIngredient()
+                recipe_ingredient.recipe = recipe_instance
+
+                if Ingredient.objects.filter(name=i['ingredient__name']).exists():
+                    recipe_ingredient.ingredient = Ingredient.objects.get(name=i['ingredient__name'])
                 else:
-                    ingredient.amount = i['amount']
+                    ingredient = Ingredient()
+                    ingredient.name = i['ingredient__name']
+                    ingredient.save()
+                    recipe_ingredient.ingredient = ingredient
+
+                if isinstance(i['amount'], str):
+                    recipe_ingredient.amount = float(i['amount'].replace(',', '.'))
+                else:
+                    recipe_ingredient.amount = i['amount']
 
                 if Unit.objects.filter(name=i['unit__name']).exists():
-                    ingredient.unit = Unit.objects.get(name=i['unit__name'])
+                    recipe_ingredient.unit = Unit.objects.get(name=i['unit__name'])
                 else:
                     unit = Unit()
                     unit.name = i['unit__name']
                     unit.save()
-                    ingredient.unit = unit
+                    recipe_ingredient.unit = unit
 
-                ingredient.save()
+                recipe_ingredient.save()
 
             recipe.keywords.set(form.cleaned_data['keywords'])
 
@@ -105,9 +113,7 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredient.objects.select_related('unit__name').filter(recipe=recipe_instance).values('name',
-                                                                                                               'unit__name',
-                                                                                                               'amount')
+    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount')
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients)),
