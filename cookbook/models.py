@@ -12,7 +12,7 @@ class UserPreference(models.Model):
     THEMES = ((BOOTSTRAP, 'Bootstrap'), (DARKLY, 'Darkly'), (FLATLY, 'Flatly'), (SUPERHERO, 'Superhero'))
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    theme = models.CharField(choices=THEMES, max_length=128, default=BOOTSTRAP)
+    theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
 
 
 class Storage(models.Model):
