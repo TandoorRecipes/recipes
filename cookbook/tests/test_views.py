@@ -67,6 +67,7 @@ class TestViews(TestCase):
         self.assertEqual('Changed', recipe.name)
 
         r = self.client.post(url,
-                             {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'ingredients': '[{"name":"Tomato","unit__name":"g","amount":100,"delete":false},{"name":"Egg","unit__name":"Piece","amount":2,"delete":false}]'})
+                             {'name': 'Changed', 'working_time': 15, 'waiting_time': 15,
+                              'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":2,"delete":false}]'})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(2, RecipeIngredient.objects.filter(recipe=recipe).count())
