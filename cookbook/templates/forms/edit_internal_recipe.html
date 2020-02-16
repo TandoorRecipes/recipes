@@ -49,7 +49,15 @@
 
     <script>
 
-        let select2Editor = function (cell, onRendered, success, cancel, editorParams) {
+        let select2UnitEditor = function (cell, onRendered, success, cancel, editorParams) {
+            return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_unit' %}')
+        };
+
+        let select2IngredientEditor = function (cell, onRendered, success, cancel, editorParams) {
+            return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_ingredient' %}')
+        };
+
+        let select2Editor = function (cell, onRendered, success, cancel, editorParams, url) {
 
             let editor = document.createElement("select");
             editor.setAttribute("class", "form-control");
@@ -61,7 +69,7 @@
                 select_2.select2({
                     tags: true,
                     ajax: {
-                        url: '{% url 'dal_unit' %}',
+                        url: url,
                         dataType: 'json'
                     }
                 });
@@ -78,7 +86,6 @@
                     }
                 });
             });
-
 
             //add editor to cell
             return editor;
@@ -133,12 +140,12 @@
                     },
                     {
                         title: "{% trans 'Ingredient' %}",
-                        field: "name",
+                        field: "ingredient__name",
                         validator: "required",
-                        editor: "input"
+                        editor: select2IngredientEditor
                     },
                     {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "input"},
-                    {title: "{% trans 'Unit' %}", field: "unit__name", validator: "required", editor: select2Editor},
+                    {title: "{% trans 'Unit' %}", field: "unit__name", validator: "required", editor: select2UnitEditor},
                     {
                         formatter: function (cell, formatterParams) {
                             return "<span style='color:red'><i class=\"fas fa-trash-alt\"></i></span>"
@@ -176,7 +183,7 @@
 
             document.getElementById("new_empty").addEventListener("click", function () {
                 data.push({
-                    name: "{% trans 'Ingredient' %}",
+                    ingredient__name: "{% trans 'Ingredient' %}",
                     amount: "100",
                     unit__name: "g",
                     id: Math.floor(Math.random() * 10000000),
