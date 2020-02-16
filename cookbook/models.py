@@ -4,6 +4,7 @@ from django.db import models
 
 
 class UserPreference(models.Model):
+    # Themes
     BOOTSTRAP = 'BOOTSTRAP'
     DARKLY = 'DARKLY'
     FLATLY = 'FLATLY'
@@ -11,8 +12,21 @@ class UserPreference(models.Model):
 
     THEMES = ((BOOTSTRAP, 'Bootstrap'), (DARKLY, 'Darkly'), (FLATLY, 'Flatly'), (SUPERHERO, 'Superhero'))
 
+    # Nav colors
+    PRIMARY = 'PRIMARY'
+    SECONDARY = 'SECONDARY'
+    SUCCESS = 'SUCCESS'
+    INFO = 'INFO'
+    WARNING = 'WARNING'
+    DANGER = 'DANGER'
+    LIGHT = 'LIGHT'
+    DARK = 'DARK'
+
+    COLORS = ((PRIMARY, 'Primary'), (SECONDARY, 'Secondary'), (SUCCESS, 'Success'), (INFO, 'Info'), (WARNING, 'Warning'), (DANGER, 'Danger'), (LIGHT, 'Light'), (DARK, 'Dark'))
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
+    nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
 
 
 class Storage(models.Model):
