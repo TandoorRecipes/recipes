@@ -17,7 +17,7 @@
 
     <h3>{% trans 'Edit Recipe' %}</h3>
 
-    <form action="." method="post" enctype="multipart/form-data">
+    <form action="." method="post" enctype="multipart/form-data" id="id_form">
         {% csrf_token %}
 
         {% for field in form %}
@@ -28,8 +28,17 @@
                 <label>{% trans 'Ingredients' %}</label>
                 <div id="ingredients-table"></div>
                 <br>
-                <div class="table-controls">
-                    <button class="btn" id="new_empty" type="button"><i class="fas fa-plus-circle"></i></button>
+                <div class="table-controls" style="text-align: center">
+                    <button class="btn btn-success" id="new_empty" type="button" style="min-width: 20vw"><i
+                            class="fas fa-plus-circle"></i></button>
+
+                    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover"
+                            data-placement="right" data-html="true" data-trigger="focus"
+                            data-content="{% trans 'Use <b>Ctrl</b>+<b>Space</b> to insert new Ingredient!<br/>You can also save the recipe using <b>Ctrl</b>+<b>Shift</b>+<b>S</b>.' %}">
+                        <i class="fas fa-question"></i>
+                    </button>
+                    <br/>
+                    <br/>
                 </div>
             {% endif %}
         {% endfor %}
@@ -48,6 +57,14 @@
     </form>
 
     <script>
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        });
+
+        $('.popover-dismiss').popover({
+            trigger: 'focus'
+        });
 
         let select2UnitEditor = function (cell, onRendered, success, cancel, editorParams) {
             return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_unit' %}')
@@ -145,7 +162,12 @@
                         editor: select2IngredientEditor
                     },
                     {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "input"},
-                    {title: "{% trans 'Unit' %}", field: "unit__name", validator: "required", editor: select2UnitEditor},
+                    {
+                        title: "{% trans 'Unit' %}",
+                        field: "unit__name",
+                        validator: "required",
+                        editor: select2UnitEditor
+                    },
                     {
                         formatter: function (cell, formatterParams) {
                             return "<span style='color:red'><i class=\"fas fa-trash-alt\"></i></span>"
@@ -181,7 +203,7 @@
             // load initial value
             $('#id_ingredients').val(JSON.stringify(data))
 
-            document.getElementById("new_empty").addEventListener("click", function () {
+            function addIngredientRow() {
                 data.push({
                     ingredient__name: "{% trans 'Ingredient' %}",
                     amount: "100",
@@ -189,7 +211,17 @@
                     id: Math.floor(Math.random() * 10000000),
                     delete: false,
                 });
-            });
+            }
+
+            document.onkeyup = function (e) {
+                if (e.shiftKey && e.ctrlKey && (e.which === 83 || e.keyCode === 83)) {
+                    $('#id_form').submit()
+                } else if (e.ctrlKey && (e.which === 83 || e.keyCode === 32)) {
+                    addIngredientRow();
+                }
+            };
+
+            document.getElementById("new_empty").addEventListener("click", addIngredientRow);
         });
 
     </script>
