@@ -22,12 +22,20 @@
 
     <br/>
     <br/>
-    <button class="btn btn-success" onclick="copy()"><i class="far fa-copy"></i></button>
+
     <div class="row">
         <div class="col col-md-12">
             <!--// @formatter:off-->
-            <textarea id="id_list" style="height: 50vh" class="form-control">{% for i in ingredients %}{% if markdown_format %}- [ ]{% endif %} {{ i.amount.normalize }} {{ i.unit }} {{ i.ingredient.name }}&#10;{% endfor %}</textarea>
+            <textarea id="id_list" class="form-control" rows="{{ ingredients|length|add:1 }}">{% for i in ingredients %}{% if markdown_format %}- [ ]{% endif %} {{ i.amount.normalize }} {{ i.unit }} {{ i.ingredient.name }}&#10;{% endfor %}</textarea>
             <!--// @formatter:on-->
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col col-md-12 text-center">
+            <button class="btn btn-success" onclick="copy()" style="width: 15vw" data-toggle="tooltip"
+                    data-placement="top" title="{% trans 'Copy list to clipboard' %}" id="id_btn_copy" onmouseout="resetTooltip()"><i
+                    class="far fa-copy"></i></button>
         </div>
     </div>
 
@@ -37,8 +45,20 @@
 
             list.select();
 
+            $('#id_btn_copy').attr('data-original-title','{% trans 'Copied!' %}').tooltip('show');
+
             document.execCommand("copy");
         }
+
+        function resetTooltip() {
+            setTimeout(function () {
+                $('#id_btn_copy').attr('data-original-title','{% trans 'Copy list to clipboard' %}');
+            }, 300);
+        }
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
 
 {% endblock %}
