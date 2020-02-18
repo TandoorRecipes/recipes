@@ -2,14 +2,17 @@ import django_filters
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Q
 from cookbook.forms import MultiSelectWidget
-from cookbook.models import Recipe, Keyword
+from cookbook.models import Recipe, Keyword, Ingredient
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 
 class RecipeFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(method='filter_name')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
+    ingredients = django_filters.ModelMultipleChoiceFilter(queryset=Ingredient.objects.all(), widget=MultiSelectWidget,
+                                                           method='filter_ingredients', label=_('Ingredients'))
 
     @staticmethod
     def filter_keywords(queryset, name, value):
@@ -17,6 +20,14 @@ class RecipeFilter(django_filters.FilterSet):
             return queryset
         for x in value:
             queryset = queryset.filter(keywords=x)
+        return queryset
+
+    @staticmethod
+    def filter_ingredients(queryset, name, value):
+        if not name == 'ingredients':
+            return queryset
+        for x in value:
+            queryset = queryset.filter(recipeingredient__ingredient=x).distinct()
         return queryset
 
     @staticmethod
@@ -32,14 +43,4 @@ class RecipeFilter(django_filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['name', 'keywords']
-
-
-class QuickRecipeFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='icontains')
-    keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
-                                                        method='filter_keywords')
-
-    class Meta:
-        model = Recipe
-        fields = ['name', 'keywords']
+        fields = ['name', 'keywords', 'ingredients']
