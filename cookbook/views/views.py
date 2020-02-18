@@ -137,8 +137,16 @@ def shopping_list(request):
     ingredients = []
 
     for r in recipes:
-        for i in RecipeIngredient.objects.filter(recipe=r).all():
-            ingredients.append(i)
+        for ri in RecipeIngredient.objects.filter(recipe=r).all():
+            index = None
+            for x, ig in enumerate(ingredients):
+                if ri.ingredient == ig.ingredient and ri.unit == ig.unit:
+                    index = x
+
+            if index:
+                ingredients[index].amount = ingredients[index].amount + ri.amount
+            else:
+                ingredients.append(ri)
 
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form})
 
