@@ -74,19 +74,19 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item {% if request.resolver_match.url_name == "index" %}active{% endif %}">
                 <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-book"></i> {% trans 'Cookbook' %}<span
                         class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if request.resolver_match.url_name == "view_books" %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_books' %}"><i class="fas fa-bookmark"></i> {% trans 'Books' %}
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if request.resolver_match.url_name == "view_plan" %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_plan' %}"><i class="fas fa-calendar"></i> {% trans 'Meal-Plan' %}
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if request.resolver_match.url_name == "view_shopping" %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_shopping' %}"><i class="fas fa-shopping-cart"></i> {% trans 'Shopping' %}
                 </a>
             </li>
@@ -125,7 +125,7 @@
         </ul>
 
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <li class="nav-item {% if request.resolver_match.url_name == "view_settings" %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_settings' %}"><i
                         class="fas fa-user-cog"></i> {% trans 'Settings' %}</a>
             </li>
