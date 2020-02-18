@@ -117,10 +117,13 @@ def meal_plan(request):
 
 @login_required
 def shopping_list(request):
+    markdown_format = True
+
     if request.method == "POST":
-        form = RecipeForm(request.POST)
+        form = ShoppingForm(request.POST)
         if form.is_valid():
             recipes = form.cleaned_data['recipe']
+            markdown_format = form.cleaned_data['markdown_format']
         else:
             recipes = []
     else:
@@ -132,7 +135,7 @@ def shopping_list(request):
                 if Recipe.objects.filter(pk=int(r)).exists():
                     recipes.append(int(r))
 
-        form = RecipeForm(initial={'recipe': recipes})
+        form = ShoppingForm(initial={'recipe': recipes})
 
     ingredients = []
 
@@ -148,7 +151,7 @@ def shopping_list(request):
             else:
                 ingredients.append(ri)
 
-    return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form})
+    return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
 
 
 @login_required

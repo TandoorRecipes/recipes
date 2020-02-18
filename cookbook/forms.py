@@ -73,10 +73,15 @@ class InternalRecipeForm(forms.ModelForm):
         widgets = {'keywords': MultiSelectWidget}
 
 
-class RecipeForm(forms.Form):
+class ShoppingForm(forms.Form):
     recipe = forms.ModelMultipleChoiceField(
         queryset=Recipe.objects.all(),
         widget=MultiSelectWidget
+    )
+    markdown_format = forms.BooleanField(
+        help_text=_('Include <code>- [ ]</code> in list for easier usage in markdown based documents.'),
+        required=False,
+        initial=True
     )
 
 
