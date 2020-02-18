@@ -23,14 +23,15 @@
         <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
     </form>
 
+    {% if default_recipe %}
+        <script type="text/javascript">
 
-    <script type="text/javascript">
-        {% if default_recipe %}
             $(document).ready(function () {
                 $('#id_recipe').val({{ default_recipe.pk }}).trigger('change');
             });
-        {% endif %}
-    </script>
+
+        </script>
+    {% endif %}
 
 
 {% endblock %}
