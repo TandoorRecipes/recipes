@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _, ngettext
 from django.views.generic import UpdateView, DeleteView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm
+    MealPlanForm, UnitMergeForm, IngredientMergeForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
     RecipeBookEntry, MealPlan, Unit, Ingredient
 from cookbook.provider.dropbox import Dropbox
@@ -302,23 +302,41 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
 @login_required
 def edit_ingredients(request):
     if request.method == "POST":
-        form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix)
-        if form.is_valid():
-            new_unit = form.cleaned_data['new_unit']
-            old_unit = form.cleaned_data['old_unit']
-            ingredients = RecipeIngredient.objects.filter(unit=old_unit).all()
-            for i in ingredients:
+        success = False
+        units_form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix)
+        if units_form.is_valid():
+            new_unit = units_form.cleaned_data['new_unit']
+            old_unit = units_form.cleaned_data['old_unit']
+            recipe_ingredients = RecipeIngredient.objects.filter(unit=old_unit).all()
+            for i in recipe_ingredients:
                 i.unit = new_unit
                 i.save()
 
             old_unit.delete()
+            success = True
             messages.add_message(request, messages.SUCCESS, _('Units merged!'))
-        else:
-            messages.add_message(request, messages.WARNING, _('There was an error in your form.'))
-    else:
-        form = UnitMergeForm()
 
-    return render(request, 'forms/ingredients.html', {'form': form})
+        ingredients_form = IngredientMergeForm(request.POST, prefix=IngredientMergeForm.prefix)
+        if ingredients_form.is_valid():
+            new_ingredient = ingredients_form.cleaned_data['new_ingredient']
+            old_ingredient = ingredients_form.cleaned_data['old_ingredient']
+            recipe_ingredients = RecipeIngredient.objects.filter(ingredient=old_ingredient).all()
+            for i in recipe_ingredients:
+                i.ingredient = new_ingredient
+                i.save()
+
+            old_ingredient.delete()
+            success = True
+            messages.add_message(request, messages.SUCCESS, _('Ingredients merged!'))
+
+        if success:
+            units_form = UnitMergeForm()
+            ingredients_form = IngredientMergeForm()
+    else:
+        units_form = UnitMergeForm()
+        ingredients_form = IngredientMergeForm()
+
+    return render(request, 'forms/ingredients.html', {'units_form': units_form, 'ingredients_form': ingredients_form})
 
 
 # Generic Delete views
