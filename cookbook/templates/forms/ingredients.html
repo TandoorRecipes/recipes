@@ -7,7 +7,7 @@
 {% block title %}{% trans "Cookbook" %}{% endblock %}
 
 {% block extra_head %}
-    {{ form.media }}
+    {{ units_form.media }}
 {% endblock %}
 
 {% block content %}
@@ -24,11 +24,19 @@
     <h4>{% trans 'Units' %}</h4>
     <form action="{% url 'edit_ingredient' %}" method="post">
         {% csrf_token %}
-        {{ form|crispy }}
+        {{ units_form|crispy }}
         <button class="btn btn-danger" type="submit"
                 onclick="confirm('{% trans 'Are you sure that you want to merge these two units ?' %}')"><i
                 class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
     </form>
 
+    <h4>{% trans 'Ingredients' %}</h4>
+    <form action="{% url 'edit_ingredient' %}" method="post">
+        {% csrf_token %}
+        {{ ingredients_form|crispy }}
+        <button class="btn btn-danger" type="submit"
+                onclick="confirm('{% trans 'Are you sure that you want to merge these two ingredients ?' %}')"><i
+                class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
+    </form>
 
 {% endblock %}
