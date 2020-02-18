@@ -81,7 +81,7 @@ class ShoppingForm(forms.Form):
     markdown_format = forms.BooleanField(
         help_text=_('Include <code>- [ ]</code> in list for easier usage in markdown based documents.'),
         required=False,
-        initial=True
+        initial=False
     )
 
 
