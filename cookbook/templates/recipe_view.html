@@ -140,7 +140,11 @@
 
                 <div class="col col-md-12" style="margin-top: 2vh">
                     <div class="loader" id="id_loader"></div>
-                    <canvas id="id_pdf_canvas" class="border"></canvas>
+
+                    <div id="viewerContainer">
+                        <div id="viewer" class="pdfViewer"></div>
+                    </div>
+
                     <div class="alert alert-warning" role="alert" id="id_warning_no_preview" style="display: none">
                         {% trans 'Cloud not show a file preview. Maybe its not a PDF ?' %}
                     </div>
@@ -171,13 +175,20 @@
                     </div>
                 </div>
 
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf_viewer.css"
+                      integrity="sha256-nvlJy0rIG6//KEsNEGdz5ilsdHyAYvIDx5O6qH7Aatg=" crossorigin="anonymous"/>
+
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.min.js"
                         integrity="sha256-J4Z8Fhj2MITUakMQatkqOVdtqodUlwHtQ/ey6fSsudE="
                         crossorigin="anonymous"></script>
 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf_viewer.js"
+                        integrity="sha256-JW7ackRikw8/UM/hHV6vKaZBYc+t2ZQ77sd3LWR8vh8="
+                        crossorigin="anonymous"></script>
+
                 <script type="text/javascript">
                     var url = "{% url 'api_get_recipe_file' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
-                    $('#id_pdf_canvas').hide();
+                    //$('#id_pdf_canvas').hide();
 
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
@@ -185,36 +196,43 @@
                             var base64Pdf = atob(this.responseText);
                             $('#id_loader').hide();
 
-                            var loadingTask = pdfjsLib.getDocument({data: base64Pdf});
-                            loadingTask.promise.then(function (pdf) {
-                                $('#id_pdf_canvas').show();
+                            var container = document.getElementById("viewerContainer");
 
-                                // Fetch the first page
-                                var pageNumber = 1;
-                                pdf.getPage(pageNumber).then(function (page) {
-                                    var scale = 1.5;
-                                    var viewport = page.getViewport({scale: scale * 0.8});
+// (Optionally) enable hyperlinks within PDF files.
+                            var pdfLinkService = new pdfjsViewer.PDFLinkService();
 
-                                    // Prepare canvas using PDF page dimensions
-                                    var canvas = document.getElementById('id_pdf_canvas');
-                                    var context = canvas.getContext('2d');
-                                    canvas.height = viewport.height;
-                                    canvas.width = viewport.width;
+// (Optionally) enable find controller.
+                            var pdfFindController = new pdfjsViewer.PDFFindController({
+                                linkService: pdfLinkService,
+                            });
 
-                                    // Render PDF page into canvas context
-                                    var renderContext = {
-                                        canvasContext: context,
-                                        viewport: viewport
-                                    };
-                                    var renderTask = page.render(renderContext);
-                                    renderTask.promise.then(function () {
-                                        console.log('Page rendered');
-                                    });
-                                });
-                            }, function (reason) {
-                                // PDF loading error
-                                console.error(reason);
-                                $('#id_warning_no_preview').show()
+                            var pdfViewer = new pdfjsViewer.PDFViewer({
+                                container: container,
+                                linkService: pdfLinkService,
+                                findController: pdfFindController,
+                            });
+                            pdfLinkService.setViewer(pdfViewer);
+
+                            document.addEventListener("pagesinit", function () {
+                                // We can use pdfViewer now, e.g. let's change default scale.
+                                pdfViewer.currentScaleValue = "page-width";
+
+                                // We can try searching for things.
+                                if (SEARCH_FOR) {
+                                    pdfFindController.executeCommand("find", {query: SEARCH_FOR});
+                                }
+                            });
+
+// Loading document.
+                            var loadingTask = pdfjsLib.getDocument({
+                                data:base64Pdf
+                            });
+                            loadingTask.promise.then(function (pdfDocument) {
+                                // Document loaded, specifying document for the viewer and
+                                // the (optional) linkService.
+                                pdfViewer.setDocument(pdfDocument);
+
+                                pdfLinkService.setDocument(pdfDocument, null);
                             });
                         }
 
