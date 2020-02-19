@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
@@ -10,21 +10,18 @@ from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
 
-def update_recipe_links(recipe):
+def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:
-        provider = Dropbox
+        return Dropbox
     elif recipe.storage.method == Storage.NEXTCLOUD:
-        provider = Nextcloud
+        return Nextcloud
     else:
         raise Exception('Provider not implemented')
 
+
+def update_recipe_links(recipe):
     if not recipe.link:
-        recipe.link = provider.get_share_link(recipe)  # TODO response validation in apis
-    if not recipe.cors_link:
-        try:
-            recipe.cors_link = provider.get_cors_link(recipe)
-        except Exception:
-            pass
+        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)  # TODO response validation in apis
 
     recipe.save()
 
@@ -39,12 +36,12 @@ def get_external_file_link(request, recipe_id):
 
 
 @login_required
-def get_cors_file_link(request, recipe_id):
+def get_recipe_file(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
     if not recipe.cors_link:
         update_recipe_links(recipe)
 
-    return HttpResponse(recipe.cors_link)
+    return HttpResponse(get_recipe_provider(recipe).get_base64_file(recipe))
 
 
 @login_required

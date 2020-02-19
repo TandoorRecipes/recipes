@@ -61,7 +61,7 @@ urlpatterns = [
     path('data/statistics', data.statistics, name='data_stats'),
 
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
-    path('api/get_cors_file_link/<int:recipe_id>/', api.get_cors_file_link, name='api_get_cors_file_link'),
+    path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
 
     path('api/sync_all/', api.sync_all, name='api_sync'),
 
