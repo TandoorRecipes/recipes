@@ -89,6 +89,16 @@ class Dropbox(Provider):
         return response['url']
 
     @staticmethod
+    def get_cors_link(recipe):
+        if not recipe.link:
+            recipe.link = Dropbox.get_share_link(recipe)
+            recipe.save()
+
+        recipe.cors_link = recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.')
+
+        return recipe.cors_link
+
+    @staticmethod
     def rename_file(recipe, new_name):
         url = "https://api.dropboxapi.com/2/files/move_v2"
 

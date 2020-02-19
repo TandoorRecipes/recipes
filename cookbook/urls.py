@@ -60,8 +60,8 @@ urlpatterns = [
     path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
     path('data/statistics', data.statistics, name='data_stats'),
 
-    path('api/get_file_link/<int:recipe_id>/', api.get_file_link, name='api_get_file_link'),
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
+    path('api/get_cors_file_link/<int:recipe_id>/', api.get_cors_file_link, name='api_get_cors_file_link'),
 
     path('api/sync_all/', api.sync_all, name='api_sync'),
 

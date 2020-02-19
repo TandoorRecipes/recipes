@@ -134,83 +134,95 @@
     {% if recipe.storage %}
         <div class="row">
             {% if recipe.internal %}
-                <a href='#' onClick='openRecipe({{ recipe.id }}, true)'
+                <a href='#' onClick='openRecipe({{ recipe.id }})'
                    class="d-print-none">{% trans 'View external recipe' %} <i class="fas fa-external-link-alt"></i></a>
             {% else %}
 
-                <canvas id="id_pdf_canvas" class="border"></canvas>
+                <div class="col col-md-12" style="margin-top: 2vh">
+                    <div class="loader" id="id_loader"></div>
+                    <canvas id="id_pdf_canvas" class="border"></canvas>
+                </div>
 
-                <br/>
-                <br/>
-                <br/>
-                <div class="card border-info">
-                    <div class="card-body text-info">
-                        <h5 class="card-title">{% trans 'External recipe' %}</h5>
-                        <p class="card-text">
-                            {% blocktrans %}
-                                This is an external recipe, which means you can only view it by opening the link above.
-                                You can convert this recipe to a fancy recipe by pressing the convert button. The
-                                original
-                                file
-                                will still be accessible.
-                            {% endblocktrans %}.
-                            <br/>
-                            <br/>
-                            <a href="{% url 'edit_convert_recipe' recipe.pk %}"
-                               class="card-link btn btn-info">{% trans 'Convert now!' %}</a>
-                        </p>
+                <div class="col col-md-12" style="margin-top: 2vh">
+                    <div class="card border-info">
+                        <div class="card-body text-info">
+                            <h5 class="card-title">{% trans 'External recipe' %}</h5>
+                            <p class="card-text">
+                                {% blocktrans %}
+                                    This is an external recipe, which means you can only view it by opening the link
+                                    above.
+                                    You can convert this recipe to a fancy recipe by pressing the convert button. The
+                                    original
+                                    file
+                                    will still be accessible.
+                                {% endblocktrans %}.
+                                <br/>
+                                <br/>
+                                <a href="{% url 'edit_convert_recipe' recipe.pk %}"
+                                   class="card-link btn btn-info">{% trans 'Convert now!' %}</a>
+                                <a href='#' onClick='openRecipe({{ recipe.id }})'
+                                   class="d-print-none btn btn-warning">{% trans 'View external recipe' %} <i
+                                        class="fas fa-external-link-alt"></i></a>
+                            </p>
+                        </div>
                     </div>
                 </div>
+
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.min.js"
                         integrity="sha256-J4Z8Fhj2MITUakMQatkqOVdtqodUlwHtQ/ey6fSsudE="
                         crossorigin="anonymous"></script>
 
                 <script type="text/javascript">
-                    var url = "{% url 'api_get_external_file_link' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
-
+                    var url = "{% url 'api_get_cors_file_link' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
+                    $('#id_pdf_canvas').hide();
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
                         if (this.readyState === 4 && this.status === 200) {
                             var url = this.responseText;
+                            $('#id_loader').hide();
 
-                            var loadingTask = pdfjsLib.getDocument(url.replace('www.dropbox.', 'dl.dropboxusercontent.'));
-                            loadingTask.promise.then(function (pdf) {
-                                console.log('PDF loaded');
+                            if (url === "None") {
+                                // direct previews are not supported for this provider
+                                //TODO implement something useful for providers not allowing cors links
+                            } else {
+                                var loadingTask = pdfjsLib.getDocument(url);
+                                loadingTask.promise.then(function (pdf) {
+                                    $('#id_pdf_canvas').show();
 
-                                // Fetch the first page
-                                var pageNumber = 1;
-                                pdf.getPage(pageNumber).then(function (page) {
-                                    console.log('Page loaded');
+                                    // Fetch the first page
+                                    var pageNumber = 1;
+                                    pdf.getPage(pageNumber).then(function (page) {
 
-                                    var scale = 1.5;
-                                    var viewport = page.getViewport({scale: scale*0.8});
 
-                                    // Prepare canvas using PDF page dimensions
-                                    var canvas = document.getElementById('id_pdf_canvas');
-                                    var context = canvas.getContext('2d');
-                                    canvas.height = viewport.height;
-                                    canvas.width = viewport.width;
+                                        var scale = 1.5;
+                                        var viewport = page.getViewport({scale: scale * 0.8});
 
-                                    // Render PDF page into canvas context
-                                    var renderContext = {
-                                        canvasContext: context,
-                                        viewport: viewport
-                                    };
-                                    var renderTask = page.render(renderContext);
-                                    renderTask.promise.then(function () {
-                                        console.log('Page rendered');
+                                        // Prepare canvas using PDF page dimensions
+                                        var canvas = document.getElementById('id_pdf_canvas');
+                                        var context = canvas.getContext('2d');
+                                        canvas.height = viewport.height;
+                                        canvas.width = viewport.width;
+
+                                        // Render PDF page into canvas context
+                                        var renderContext = {
+                                            canvasContext: context,
+                                            viewport: viewport
+                                        };
+                                        var renderTask = page.render(renderContext);
+                                        renderTask.promise.then(function () {
+                                            console.log('Page rendered');
+                                        });
                                     });
+                                }, function (reason) {
+                                    // PDF loading error
+                                    console.error(reason);
                                 });
-                            }, function (reason) {
-                                // PDF loading error
-                                console.error(reason);
-                            });
+                            }
                         }
                     };
                     xhttp.open("GET", url, true);
                     xhttp.send();
-
 
                 </script>
             {% endif %}

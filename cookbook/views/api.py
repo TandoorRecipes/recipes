@@ -10,38 +10,41 @@ from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
 
-@login_required
-def get_file_link(request, recipe_id):
-    recipe = Recipe.objects.get(id=recipe_id)
+def update_recipe_links(recipe):
+    if recipe.storage.method == Storage.DROPBOX:
+        provider = Dropbox
+    elif recipe.storage.method == Storage.NEXTCLOUD:
+        provider = Nextcloud
+    else:
+        raise Exception('Provider not implemented')
 
-    if recipe.internal:
-        return HttpResponse(reverse('view_recipe', args=[recipe_id]))
-    if recipe.storage.method == Storage.DROPBOX: # TODO move to central location (as all provider related functions)
-        if recipe.link == "":
-            recipe.link = Dropbox.get_share_link(recipe)  # TODO response validation
-            recipe.save()
-    if recipe.storage.method == Storage.NEXTCLOUD:
-        if recipe.link == "":
-            recipe.link = Nextcloud.get_share_link(recipe)  # TODO response validation
-            recipe.save()
+    if not recipe.link:
+        recipe.link = provider.get_share_link(recipe)  # TODO response validation in apis
+    if not recipe.cors_link:
+        try:
+            recipe.cors_link = provider.get_cors_link(recipe)
+        except Exception:
+            pass
 
-    return HttpResponse(recipe.link)
+    recipe.save()
 
 
 @login_required
 def get_external_file_link(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
-
-    if recipe.storage.method == Storage.DROPBOX: # TODO move to central location (as all provider related functions)
-        if recipe.link == "":
-            recipe.link = Dropbox.get_share_link(recipe)  # TODO response validation
-            recipe.save()
-    if recipe.storage.method == Storage.NEXTCLOUD:
-        if recipe.link == "":
-            recipe.link = Nextcloud.get_share_link(recipe)  # TODO response validation
-            recipe.save()
+    if not recipe.link:
+        update_recipe_links(recipe)
 
     return HttpResponse(recipe.link)
+
+
+@login_required
+def get_cors_file_link(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+    if not recipe.cors_link:
+        update_recipe_links(recipe)
+
+    return HttpResponse(recipe.cors_link)
 
 
 @login_required
