@@ -43,15 +43,12 @@
 </div>
 
 <script type="text/javascript">
-    function openRecipe(id, force_external = false) {
+    function openRecipe(id) {
         var link = $('#a_recipe_open');
         link.hide();
         $('#div_loader').show();
 
-        var url = "{% url 'api_get_file_link' recipe_id=12345 %}".replace(/12345/, id);
-        if (force_external) {
-            url = "{% url 'api_get_external_file_link' recipe_id=12345 %}".replace(/12345/, id);
-        }
+        var url = "{% url 'api_get_external_file_link' recipe_id=12345 %}".replace(/12345/, id);
 
         link.text("{% trans 'Open Recipe' %}");
         $('#modal_recipe').modal('show');

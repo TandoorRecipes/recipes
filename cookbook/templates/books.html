@@ -41,7 +41,7 @@
                             {% for r in b.recipes %}
                                 <div class="row">
                                     <div class="col col-md-10">
-                                        <li><a href="#" onClick='openRecipe({{ r.recipe.pk }})'>{{ r.recipe.name }}</a></li>
+                                        <li><a href="{% url 'view_recipe' r.recipe.pk %}">{{ r.recipe.name }}</a></li>
                                     </div>
                                     <div class="col col-md-2" style="text-align: right">
                                         <a href="{% url 'delete_recipe_book_entry' r.pk %}"><i class="fas fa-trash-alt"></i></a>
@@ -58,5 +58,4 @@
         <br/>
     {% endfor %}
 
-    {% include 'include/recipe_open_modal.html' %}
 {% endblock %}
