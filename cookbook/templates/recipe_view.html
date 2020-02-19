@@ -141,6 +141,9 @@
                 <div class="col col-md-12" style="margin-top: 2vh">
                     <div class="loader" id="id_loader"></div>
                     <canvas id="id_pdf_canvas" class="border"></canvas>
+                    <div class="alert alert-warning" role="alert" id="id_warning_no_preview" style="display: none">
+                        {% trans 'Cloud not show a file preview. Maybe its not a PDF ?' %}
+                    </div>
                 </div>
 
                 <div class="col col-md-12" style="margin-top: 2vh">
@@ -168,58 +171,53 @@
                     </div>
                 </div>
 
-
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.min.js"
                         integrity="sha256-J4Z8Fhj2MITUakMQatkqOVdtqodUlwHtQ/ey6fSsudE="
                         crossorigin="anonymous"></script>
 
                 <script type="text/javascript">
-                    var url = "{% url 'api_get_cors_file_link' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
+                    var url = "{% url 'api_get_recipe_file' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
                     $('#id_pdf_canvas').hide();
+
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
                         if (this.readyState === 4 && this.status === 200) {
-                            var url = this.responseText;
+                            var base64Pdf = atob(this.responseText);
                             $('#id_loader').hide();
 
-                            if (url === "None") {
-                                // direct previews are not supported for this provider
-                                //TODO implement something useful for providers not allowing cors links
-                            } else {
-                                var loadingTask = pdfjsLib.getDocument(url);
-                                loadingTask.promise.then(function (pdf) {
-                                    $('#id_pdf_canvas').show();
+                            var loadingTask = pdfjsLib.getDocument({data: base64Pdf});
+                            loadingTask.promise.then(function (pdf) {
+                                $('#id_pdf_canvas').show();
 
-                                    // Fetch the first page
-                                    var pageNumber = 1;
-                                    pdf.getPage(pageNumber).then(function (page) {
+                                // Fetch the first page
+                                var pageNumber = 1;
+                                pdf.getPage(pageNumber).then(function (page) {
+                                    var scale = 1.5;
+                                    var viewport = page.getViewport({scale: scale * 0.8});
 
+                                    // Prepare canvas using PDF page dimensions
+                                    var canvas = document.getElementById('id_pdf_canvas');
+                                    var context = canvas.getContext('2d');
+                                    canvas.height = viewport.height;
+                                    canvas.width = viewport.width;
 
-                                        var scale = 1.5;
-                                        var viewport = page.getViewport({scale: scale * 0.8});
-
-                                        // Prepare canvas using PDF page dimensions
-                                        var canvas = document.getElementById('id_pdf_canvas');
-                                        var context = canvas.getContext('2d');
-                                        canvas.height = viewport.height;
-                                        canvas.width = viewport.width;
-
-                                        // Render PDF page into canvas context
-                                        var renderContext = {
-                                            canvasContext: context,
-                                            viewport: viewport
-                                        };
-                                        var renderTask = page.render(renderContext);
-                                        renderTask.promise.then(function () {
-                                            console.log('Page rendered');
-                                        });
+                                    // Render PDF page into canvas context
+                                    var renderContext = {
+                                        canvasContext: context,
+                                        viewport: viewport
+                                    };
+                                    var renderTask = page.render(renderContext);
+                                    renderTask.promise.then(function () {
+                                        console.log('Page rendered');
                                     });
-                                }, function (reason) {
-                                    // PDF loading error
-                                    console.error(reason);
                                 });
-                            }
+                            }, function (reason) {
+                                // PDF loading error
+                                console.error(reason);
+                                $('#id_warning_no_preview').show()
+                            });
                         }
+
                     };
                     xhttp.open("GET", url, true);
                     xhttp.send();

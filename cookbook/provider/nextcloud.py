@@ -1,8 +1,10 @@
+import base64
 import os
+import tempfile
 from datetime import datetime
 import webdav3.client as wc
 import requests
-
+from io import BytesIO
 from requests.auth import HTTPBasicAuth
 
 from cookbook.models import Recipe, RecipeImport, SyncLog
@@ -80,6 +82,20 @@ class Nextcloud(Provider):
                 return element['url']
 
         return Nextcloud.create_share_link(recipe)
+
+    @staticmethod
+    def get_base64_file(recipe):
+        client = Nextcloud.get_client(recipe.storage)
+
+        tmp_file_path = tempfile.gettempdir() + '/' + recipe.name + '.pdf'
+
+        client.download_file(remote_path=recipe.file_path, local_path=tmp_file_path)
+
+        val = base64.b64encode(open(tmp_file_path, 'rb').read())
+
+        os.remove(tmp_file_path)
+
+        return val
 
     @staticmethod
     def rename_file(recipe, new_name):
