@@ -9,10 +9,6 @@
 {% block extra_head %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
           integrity="sha384-ICB8i/maQ/5+tGLDUEcswB7Ch+OO9Oj8Z4Ov/Gs0gxqfTgLLkD3F43MhcEJ2x6/D" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf_viewer.css"
-          integrity="sha256-nvlJy0rIG6//KEsNEGdz5ilsdHyAYvIDx5O6qH7Aatg=" crossorigin="anonymous"/>
-
 {% endblock %}
 
 {% block content %}
@@ -142,10 +138,10 @@
                    class="d-print-none">{% trans 'View external recipe' %} <i class="fas fa-external-link-alt"></i></a>
             {% else %}
 
-                <div class="col col-md-12" style="margin-top: 2vh">
+                <div class="col col-12" style="margin-top: 2vh">
                     <div class="loader" id="id_loader"></div>
 
-                    <div id="viewerContainer">
+                    <div id="viewerContainer" class="border">
                         <div id="viewer" class="pdfViewer"></div>
                     </div>
 
@@ -154,7 +150,7 @@
                     </div>
                 </div>
 
-                <div class="col col-md-12" style="margin-top: 2vh">
+                <div class="col col-12" style="margin-top: 2vh">
                     <div class="card border-info">
                         <div class="card-body text-info">
                             <h5 class="card-title">{% trans 'External recipe' %}</h5>
@@ -179,7 +175,6 @@
                     </div>
                 </div>
 
-
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.min.js"
                         integrity="sha256-J4Z8Fhj2MITUakMQatkqOVdtqodUlwHtQ/ey6fSsudE="
                         crossorigin="anonymous"></script>
@@ -190,33 +185,24 @@
 
                 <script type="text/javascript">
                     var url = "{% url 'api_get_recipe_file' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
-                    //$('#id_pdf_canvas').hide();
+                    $('#viewerContainer').hide();
 
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
                         if (this.readyState === 4 && this.status === 200) {
                             var base64Pdf = atob(this.responseText);
                             $('#id_loader').hide();
-
-                            pdfjsLib.GlobalWorkerOptions.workerSrc =
-                                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.worker.js";
-
-                            var SEARCH_FOR = "";
+                            $('#viewerContainer').show();
 
                             var container = document.getElementById("viewerContainer");
 
-// (Optionally) enable hyperlinks within PDF files.
+                            // (Optionally) enable hyperlinks within PDF files.
                             var pdfLinkService = new pdfjsViewer.PDFLinkService();
 
-// (Optionally) enable find controller.
-                            var pdfFindController = new pdfjsViewer.PDFFindController({
-                                linkService: pdfLinkService,
-                            });
 
                             var pdfViewer = new pdfjsViewer.PDFViewer({
                                 container: container,
                                 linkService: pdfLinkService,
-                                findController: pdfFindController,
                             });
                             pdfLinkService.setViewer(pdfViewer);
 
@@ -224,13 +210,8 @@
                                 // We can use pdfViewer now, e.g. let's change default scale.
                                 pdfViewer.currentScaleValue = "page-width";
 
-                                // We can try searching for things.
-                                if (SEARCH_FOR) {
-                                    pdfFindController.executeCommand("find", {query: SEARCH_FOR});
-                                }
                             });
 
-// Loading document.
                             var loadingTask = pdfjsLib.getDocument({
                                 data: base64Pdf
                             });
