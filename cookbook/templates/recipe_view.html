@@ -9,6 +9,10 @@
 {% block extra_head %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
           integrity="sha384-ICB8i/maQ/5+tGLDUEcswB7Ch+OO9Oj8Z4Ov/Gs0gxqfTgLLkD3F43MhcEJ2x6/D" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf_viewer.css"
+          integrity="sha256-nvlJy0rIG6//KEsNEGdz5ilsdHyAYvIDx5O6qH7Aatg=" crossorigin="anonymous"/>
+
 {% endblock %}
 
 {% block content %}
@@ -175,8 +179,6 @@
                     </div>
                 </div>
 
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf_viewer.css"
-                      integrity="sha256-nvlJy0rIG6//KEsNEGdz5ilsdHyAYvIDx5O6qH7Aatg=" crossorigin="anonymous"/>
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.min.js"
                         integrity="sha256-J4Z8Fhj2MITUakMQatkqOVdtqodUlwHtQ/ey6fSsudE="
@@ -195,6 +197,11 @@
                         if (this.readyState === 4 && this.status === 200) {
                             var base64Pdf = atob(this.responseText);
                             $('#id_loader').hide();
+
+                            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.worker.js";
+
+                            var SEARCH_FOR = "";
 
                             var container = document.getElementById("viewerContainer");
 
@@ -225,7 +232,7 @@
 
 // Loading document.
                             var loadingTask = pdfjsLib.getDocument({
-                                data:base64Pdf
+                                data: base64Pdf
                             });
                             loadingTask.promise.then(function (pdfDocument) {
                                 // Document loaded, specifying document for the viewer and
