@@ -9,6 +9,19 @@
 {% block extra_head %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
           integrity="sha384-ICB8i/maQ/5+tGLDUEcswB7Ch+OO9Oj8Z4Ov/Gs0gxqfTgLLkD3F43MhcEJ2x6/D" crossorigin="anonymous">
+
+
+    <!-- prevent weired character stuff escaping the pdf box -->
+    <style>
+        .textLayer > span {
+            color: transparent;
+            position: absolute;
+            white-space: pre;
+            cursor: text;
+            transform-origin: 0% 0%;
+        }
+    </style>
+    
 {% endblock %}
 
 {% block content %}
@@ -196,15 +209,9 @@
 
                             var container = document.getElementById("viewerContainer");
 
-                            // (Optionally) enable hyperlinks within PDF files.
-                            var pdfLinkService = new pdfjsViewer.PDFLinkService();
-
-
                             var pdfViewer = new pdfjsViewer.PDFViewer({
                                 container: container,
-                                linkService: pdfLinkService,
                             });
-                            pdfLinkService.setViewer(pdfViewer);
 
                             document.addEventListener("pagesinit", function () {
                                 // We can use pdfViewer now, e.g. let's change default scale.
@@ -215,12 +222,12 @@
                             var loadingTask = pdfjsLib.getDocument({
                                 data: base64Pdf
                             });
+
                             loadingTask.promise.then(function (pdfDocument) {
                                 // Document loaded, specifying document for the viewer and
                                 // the (optional) linkService.
                                 pdfViewer.setDocument(pdfDocument);
 
-                                pdfLinkService.setDocument(pdfDocument, null);
                             });
                         }
 
