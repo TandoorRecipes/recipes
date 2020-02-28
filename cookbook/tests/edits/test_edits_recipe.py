@@ -1,50 +1,56 @@
 from django.contrib import auth
-from django.contrib.auth.models import User
-from django.test import TestCase, Client
 from django.urls import reverse
 
 from cookbook.models import Recipe, RecipeIngredient
+from cookbook.tests.views.test_views import TestViews
 
 
-class TestViews(TestCase):
+class TestEditsRecipe(TestViews):
 
-    def setUp(self):
-        self.client = Client()
-        self.anonymous_client = Client()
-        self.client.force_login(User.objects.get_or_create(username='test')[0])
-        user = auth.get_user(self.client)
-        self.assertTrue(user.is_authenticated)
+    def test_switch_recipe(self):
+        internal_recipe = Recipe.objects.create(
+            name='Test',
+            internal=True,
+            created_by=auth.get_user(self.client)
+        )
 
-    def test_index(self):
-        r = self.client.get(reverse('index'))
-        self.assertEqual(r.status_code, 200)
+        external_recipe = Recipe.objects.create(
+            name='Test',
+            internal=False,
+            created_by=auth.get_user(self.client)
+        )
 
-        r = self.anonymous_client.get(reverse('index'))
-        self.assertEqual(r.status_code, 200)
-
-    def test_books(self):
-        url = reverse('view_books')
+        url = reverse('edit_recipe', args=[internal_recipe.pk])
         r = self.client.get(url)
-        self.assertEqual(r.status_code, 200)
-
-        r = self.anonymous_client.get(url)
         self.assertEqual(r.status_code, 302)
 
-    def test_plan(self):
-        url = reverse('view_plan')
-        r = self.client.get(url)
-        self.assertEqual(r.status_code, 200)
+        r = self.client.get(r.url)
+        self.assertTemplateUsed(r, 'forms/edit_internal_recipe.html')
 
-        r = self.anonymous_client.get(url)
+        url = reverse('edit_recipe', args=[external_recipe.pk])
+        r = self.client.get(url)
         self.assertEqual(r.status_code, 302)
 
-    def test_shopping(self):
-        url = reverse('view_shopping')
-        r = self.client.get(url)
-        self.assertEqual(r.status_code, 200)
+        r = self.client.get(r.url)
+        self.assertTemplateUsed(r, 'generic/edit_template.html')
 
-        r = self.anonymous_client.get(url)
+    def test_convert_recipe(self):
+        url = reverse('edit_convert_recipe', args=[42])
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 404)
+
+        external_recipe = Recipe.objects.create(
+            name='Test',
+            internal=False,
+            created_by=auth.get_user(self.client)
+        )
+
+        url = reverse('edit_convert_recipe', args=[external_recipe.pk])
+        r = self.client.get(url)
         self.assertEqual(r.status_code, 302)
+
+        recipe = Recipe.objects.get(pk=external_recipe.pk)
+        self.assertTrue(recipe.internal)
 
     def test_internal_recipe_update(self):
         recipe = Recipe.objects.create(
