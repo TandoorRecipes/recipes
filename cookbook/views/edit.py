@@ -1,5 +1,7 @@
 import os
 from io import BytesIO
+
+import simplejson
 import simplejson as json
 from PIL import Image
 
@@ -37,7 +39,8 @@ def convert_recipe(request, pk):
     if not recipe.internal:
         recipe.internal = True
         recipe.save()
-        return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
+
+    return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
 
 
 @login_required
@@ -74,7 +77,11 @@ def internal_recipe_update(request, pk):
 
             recipe.save()
 
-            form_ingredients = json.loads(form.cleaned_data['ingredients'])
+            try:
+                form_ingredients = json.loads(form.cleaned_data['ingredients'])
+            except simplejson.errors.JSONDecodeError:
+                form_ingredients = []
+
             RecipeIngredient.objects.filter(recipe=recipe_instance).delete()
 
             for i in form_ingredients:
