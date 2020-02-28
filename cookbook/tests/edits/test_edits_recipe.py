@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.urls import reverse
 
-from cookbook.models import Recipe, RecipeIngredient
+from cookbook.models import Recipe, RecipeIngredient, Ingredient, Unit
 from cookbook.tests.views.test_views import TestViews
 
 
@@ -52,6 +52,10 @@ class TestEditsRecipe(TestViews):
         recipe = Recipe.objects.get(pk=external_recipe.pk)
         self.assertTrue(recipe.internal)
 
+        url = reverse('edit_convert_recipe', args=[recipe.pk])
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 302)
+
     def test_internal_recipe_update(self):
         recipe = Recipe.objects.create(
             name='Test',
@@ -72,8 +76,20 @@ class TestEditsRecipe(TestViews):
         recipe = Recipe.objects.get(pk=recipe.pk)
         self.assertEqual('Changed', recipe.name)
 
+        Ingredient.objects.create(name='Egg')
+        Unit.objects.create(name='g')
+
         r = self.client.post(url,
                              {'name': 'Changed', 'working_time': 15, 'waiting_time': 15,
-                              'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":2,"delete":false}]'})
+                              'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":"2,5","delete":false}]'})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(2, RecipeIngredient.objects.filter(recipe=recipe).count())
+
+        r = self.client.post(url,
+                             {'name': "Test", 'working_time': "Test", 'waiting_time': 15,
+                              'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":"2,5","delete":false}]'})
+        self.assertEqual(r.status_code, 403)
+
+        with open('cookbook/tests/resources/image.jpg', 'rb') as file:
+            r = self.client.post(url, {'name': "Changed", 'working_time': 15, 'waiting_time': 15, 'image': file})
+            self.assertEqual(r.status_code, 200)
