@@ -16,5 +16,5 @@ def get_class(value):
 @register.filter()
 def markdown(value):
     tags = markdown_tags + ['pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead']
-    test = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables', MarkdownFormatExtension()])
-    return bleach.clean(test, tags, print_attrs, markdown_attrs)
+    parsed_md = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables', MarkdownFormatExtension()])
+    return bleach.clean(parsed_md, tags, print_attrs, markdown_attrs)
