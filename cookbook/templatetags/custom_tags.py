@@ -1,7 +1,9 @@
 from django import template
 import markdown as md
 import bleach
-from bleach_whitelist import markdown_tags, markdown_attrs
+from bleach_whitelist import markdown_tags, markdown_attrs, all_styles, print_attrs
+
+from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 
 register = template.Library()
 
@@ -13,7 +15,6 @@ def get_class(value):
 
 @register.filter()
 def markdown(value):
-    return bleach.clean(md.markdown(value, extensions=['markdown.extensions.fenced_code']), markdown_tags, markdown_attrs)
-
-
-
+    tags = markdown_tags + ['pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead']
+    test = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables', MarkdownFormatExtension()])
+    return bleach.clean(test, tags, print_attrs, markdown_attrs)
