@@ -75,7 +75,7 @@ class InternalRecipeForm(forms.ModelForm):
 
 class ShoppingForm(forms.Form):
     recipe = forms.ModelMultipleChoiceField(
-        queryset=Recipe.objects.all(),
+        queryset=Recipe.objects.filter(internal=True).all(),
         widget=MultiSelectWidget
     )
     markdown_format = forms.BooleanField(
