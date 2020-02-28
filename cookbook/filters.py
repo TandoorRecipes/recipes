@@ -43,4 +43,4 @@ class RecipeFilter(django_filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['name', 'keywords', 'ingredients']
+        fields = ['name', 'keywords', 'ingredients', 'internal']

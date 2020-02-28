@@ -168,8 +168,10 @@
     {% if recipe.storage %}
         <div class="row">
             {% if recipe.internal %}
-                <a href='#' onClick='openRecipe({{ recipe.id }})'
-                   class="d-print-none">{% trans 'View external recipe' %} <i class="fas fa-external-link-alt"></i></a>
+                <div class="col col-12" style="margin-top: 2vh">
+                    <a href='#' onClick='openRecipe({{ recipe.id }})'
+                       class="d-print-none">{% trans 'View external recipe' %} <i class="fas fa-external-link-alt"></i></a>
+                </div>
             {% else %}
 
                 <div class="col col-12" style="margin-top: 2vh">
