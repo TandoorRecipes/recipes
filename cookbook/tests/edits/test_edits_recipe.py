@@ -93,3 +93,7 @@ class TestEditsRecipe(TestViews):
         with open('cookbook/tests/resources/image.jpg', 'rb') as file:
             r = self.client.post(url, {'name': "Changed", 'working_time': 15, 'waiting_time': 15, 'image': file})
             self.assertEqual(r.status_code, 200)
+
+        with open('cookbook/tests/resources/image.png', 'rb') as file:
+            r = self.client.post(url, {'name': "Changed", 'working_time': 15, 'waiting_time': 15, 'image': file})
+            self.assertEqual(r.status_code, 200)
