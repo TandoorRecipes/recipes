@@ -70,8 +70,8 @@ def internal_recipe_update(request, pk):
                 img = img.resize((basewidth, hsize), Image.ANTIALIAS)
 
                 im_io = BytesIO()
-                img.save(im_io, 'JPEG', quality=70)
-                recipe.image = File(im_io, name=(str(recipe.pk) + '.jpeg'))
+                img.save(im_io, 'PNG', quality=70)
+                recipe.image = File(im_io, name=(str(recipe.pk) + '.png'))
             elif 'image' in form.changed_data and form.cleaned_data['image'] is False:
                 recipe.image = None
 
