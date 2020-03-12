@@ -30,6 +30,8 @@ var/
 *.manifest
 *.spec
 
+./docker-compose.yml
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -69,13 +71,11 @@ mediafiles/
 
 \.idea/misc\.xml
 
-\.idea/recipes\.iml
-
 # Deployment
 
 \.env
 staticfiles/
- postgresql/
+postgresql/
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -95,3 +95,4 @@ staticfiles/
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+
