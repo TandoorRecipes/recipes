@@ -1,7 +1,7 @@
 # Recipes ![Continous Integration](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop)
 Recipes is a Django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
 
-![Preview](preview.png)
+![Preview](docs/preview.png)
 
 ### Features
 
