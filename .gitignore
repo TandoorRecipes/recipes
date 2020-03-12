@@ -76,3 +76,4 @@ staticfiles/
 postgresql/
 
 
+/docker-compose.yml
