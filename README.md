@@ -1,4 +1,4 @@
-# Recipes ![Continous Integration](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop)
+# Recipes ![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop)
 Recipes is a Django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
 
 ![Preview](docs/preview.png)
@@ -47,28 +47,29 @@ When clicking submit, every recipe containing the word will be updated (tags are
 ## Installation
 
 ### Docker-Compose
-When cloning this repository, a simple docker-compose file is included. It is made for setups already running an nginx-reverse proxy network with let’s encrypt companion but can be changed easily. Copy `.env.template` to `.env` and fill in the missing values accordingly.  
-Now simply start the containers and run the `update.sh` script that will apply all migrations and collect static files.
-Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
+1. Clone this repository to your desired install location
+2. Choose one of the included `docker-compose.yml` files [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
+3. Copy it to the root directory (where this readme is)
+4. Start the container (`docker-compose up -d`)
+5. This time and **on each update** run `update.sh` to apply migrations and collect static files
+6. Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
 
 ### Manual
 Copy `.env.template` to `.env` and fill in the missing values accordingly.  
-You can leave out the docker specific variables (VIRTUAL_HOST, LETSENCRYPT_HOST, LETSENCRYPT_EMAIL). 
 Make sure all variables are available to whatever serves your application.
 
 Otherwise simply follow the instructions for any django based deployment
-(for example this one http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html).
+(for example [this one](http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html)).
 
-To start developing:
-1. Clone the repository using your preferred method
-2. Install requirements from `requirements.txt` either globally or in a virtual environment
-3. Run migrations with `manage.py migrate`
-4. Create a first user with `manage.py createsuperuser`
-5. Start development server with `manage.py runserver`
+## Updating
+0. Before updating it is recommended to **backup your database**
+1. Stop the container using `docker-compose down`. 
+2. Pull the project files and start the container again using `docker-compose up -d --build`.
+3. Run `update.sh`
 
 ## Contributing
-
 Pull Requests and ideas are welcome, feel free to contribute in any way.
+For any questions on how to work with django please refer to their excellent [documentation](https://www.djangoproject.com/start/).
 
 ## License
 This project is licensed under the MIT license. Even though it is not required to publish derivatives, I highly encourage pushing changes upstream and letting people profit from any work done on this project.

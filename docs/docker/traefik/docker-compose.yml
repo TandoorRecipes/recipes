@@ -30,7 +30,7 @@ services:
     - ./mediafiles:/media
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`) || Host(`recipes.myotherdomain.com`)"
+      - "traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`, `recipes.myotherdomain.com`)"
       - "traefik.http.routers.recipes.entrypoints=web_secure"
       - "traefik.http.routers.recipes.tls.certresolver=le_resolver"
 
