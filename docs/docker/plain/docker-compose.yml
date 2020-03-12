@@ -1,0 +1,40 @@
+version: "3"
+services:
+  db_recipes:
+    restart: always
+    image: "postgres:11-alpine"
+    volumes:
+    - ./postgresql:/var/lib/postgresql/data
+    env_file:
+    - ./.env
+    networks:
+    - default
+
+  web_recipes:
+    build: .
+    restart: always
+    env_file:
+    - ./.env
+    command: "gunicorn --bind 0.0.0.0:8080 recipes.wsgi"
+    volumes:
+    - .:/Recipes
+    depends_on:
+    - db_recipes
+    networks:
+    - default
+
+  nginx_recipes:
+    image: "nginx"
+    restart: always
+    env_file:
+    - ./.env
+    volumes:
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    - ./staticfiles:/static
+    - ./mediafiles:/media
+    ports:
+    - 80:80
+    networks:
+    - default
+    depends_on:
+    - web_recipes
