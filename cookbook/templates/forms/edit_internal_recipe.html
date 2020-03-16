@@ -108,23 +108,6 @@
             return editor;
         };
 
-        function selectText(node) {
-
-            if (document.body.createTextRange) {
-                const range = document.body.createTextRange();
-                range.moveToElementText(node);
-                range.select();
-            } else if (window.getSelection) {
-                const selection = window.getSelection();
-                const range = document.createRange();
-                range.selectNodeContents(node);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            } else {
-                console.warn("Could not select text in node: Unsupported browser.");
-            }
-        }
-
         //converts multiselct in recipe edit to searchable multiselect
         //shitty solution that needs to be redone at some point
         $(document).ready(function () {
@@ -132,9 +115,9 @@
 
             let ingredients = {{ ingredients|safe }}
 
-                ingredients.forEach(function (cur, i) {
-                    cur.delete = false
-                });
+            ingredients.forEach(function (cur, i) {
+                cur.delete = false
+            });
 
             let data = ingredients;
 
