@@ -115,9 +115,9 @@
 
             let ingredients = {{ ingredients|safe }}
 
-            ingredients.forEach(function (cur, i) {
-                cur.delete = false
-            });
+                ingredients.forEach(function (cur, i) {
+                    cur.delete = false
+                });
 
             let data = ingredients;
 
@@ -165,15 +165,6 @@
                     },
                     {title: "id", field: "id", visible: false}
                 ],
-                dataEdited: function (data) {
-                    $('#id_ingredients').val(JSON.stringify(data))
-
-                    data.forEach(function (cur, i) {
-                        if (cur.delete) {
-                            table.deleteRow(cur.id);
-                        }
-                    })
-                },
                 cellClick: function (e, cell) {
                     if (cell._cell.column.definition.editor === "input") {
                         input = cell.getElement().childNodes[0];
@@ -181,6 +172,12 @@
                         input.select();
                     }
                 },
+            });
+
+            // save ingredient data before submitting form
+            $('#id_form').submit(function () {
+                $('#id_ingredients').val(JSON.stringify(table.getData()));
+                return true;
             });
 
             // load initial value
