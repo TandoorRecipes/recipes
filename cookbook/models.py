@@ -74,7 +74,10 @@ class Keyword(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{0} {1}".format(self.icon, self.name)
+        if self.icon:
+            return f"{self.icon} {self.name}"
+        else:
+            return f"{self.name}"
 
 
 class Recipe(models.Model):
@@ -99,7 +102,7 @@ class Recipe(models.Model):
 
     @property
     def all_tags(self):
-        return ' '.join([(x.icon + x.name) for x in self.keywords.all()])
+        return ' '.join([(str(x)) for x in self.keywords.all()])
 
 
 class Unit(models.Model):
