@@ -70,11 +70,12 @@
 
     {% if recipe.internal %}
         <small>{% trans 'by' %} {{ recipe.created_by.username }}<br/></small>
-        <br/>
     {% endif %}
 
-    {% if recipe.all_tags %}
-        {{ recipe.all_tags }}
+    {% if recipe.keywords %}
+        {% for x in recipe.keywords.all %}
+            <span class="badge badge-pill badge-light">{{ x }}</span>
+        {% endfor %}
         <br/>
         <br/>
     {% endif %}
