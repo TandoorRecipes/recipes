@@ -44,7 +44,7 @@ class ImportLogTable(tables.Table):
         if value == 'SUCCESS':
             return format_html('<span class="badge badge-success">%s</span>' % value)
         else:
-            return format_html('<span class="badge badge-error">%s</span>' % value)
+            return format_html('<span class="badge badge-danger">%s</span>' % value)
 
     class Meta:
         model = SyncLog
