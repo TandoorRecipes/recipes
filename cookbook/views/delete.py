@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
@@ -20,24 +22,20 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class RecipeSourceDelete(LoginRequiredMixin, DeleteView):
-    template_name = "generic/delete_template.html"
-    model = Recipe
-    success_url = reverse_lazy('index')
+def delete_recipe_source(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object.storage.method == Storage.DROPBOX:
-            Dropbox.delete_file(self.object)  # TODO central location to handle storage type switches
-        if self.object.storage.method == Storage.NEXTCLOUD:
-            Nextcloud.delete_file(self.object)
+    if recipe.storage.method == Storage.DROPBOX:
+        Dropbox.delete_file(recipe)  # TODO central location to handle storage type switches
+    if recipe.storage.method == Storage.NEXTCLOUD:
+        Nextcloud.delete_file(recipe)
 
-        return super(RecipeSourceDelete, self).delete(request, *args, **kwargs)
+    recipe.storage = None
+    recipe.file_path = ''
+    recipe.file_uid = ''
+    recipe.save()
 
-    def get_context_data(self, **kwargs):
-        context = super(RecipeSourceDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Recipe")
-        return context
+    return HttpResponseRedirect(reverse('edit_recipe', args=[recipe.pk]))
 
 
 class RecipeImportDelete(LoginRequiredMixin, DeleteView):
