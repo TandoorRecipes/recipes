@@ -162,11 +162,11 @@ def edit_storage(request, pk):
     instance = get_object_or_404(Storage, pk=pk)
 
     if not (instance.created_by == request.user or request.user.is_superuser):
-        messages.add_message(request, messages.ERROR, _('You cannot edit this comment!'))
+        messages.add_message(request, messages.ERROR, _('You cannot edit this storage!'))
         return HttpResponseRedirect(reverse('list_storage'))
 
     if request.method == "POST":
-        form = StorageForm(request.POST)
+        form = StorageForm(request.POST, instance=instance)
         if form.is_valid():
             instance.name = form.cleaned_data['name']
             instance.method = form.cleaned_data['method']
@@ -182,7 +182,6 @@ def edit_storage(request, pk):
             instance.save()
 
             messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
-            return HttpResponseRedirect(reverse('edit_storage', args=[pk]))
         else:
             messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend.!'))
     else:
@@ -191,8 +190,7 @@ def edit_storage(request, pk):
         pseudo_instance.token = '__NO__CHANGE__'
         form = StorageForm(instance=pseudo_instance)
 
-    return render(request, 'generic/edit_template.html',
-                  {'form': form})
+    return render(request, 'generic/edit_template.html', {'form': form})
 
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
