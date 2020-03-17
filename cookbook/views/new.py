@@ -84,7 +84,7 @@ def create_new_external_recipe(request, import_id):
             RecipeImport.objects.get(id=import_id).delete()
 
             messages.add_message(request, messages.SUCCESS, _('Imported new recipe!'))
-            return redirect('list_import')
+            return redirect('list_recipe_import')
         else:
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:

@@ -15,10 +15,11 @@ urlpatterns = [
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
 
-    path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),
-    # for internal use only
-    path('edit/recipe/external/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_external_recipe'),
-    # for internal use only
+    path('new/recipe_import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
+
+    path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
+    path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),  # for internal use only
+    path('edit/recipe/external/<int:pk>/', edit.ExternalRecipeUpdate.as_view(), name='edit_external_recipe'),  # for internal use only
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),  # for internal use only
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),

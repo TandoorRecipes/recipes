@@ -40,13 +40,13 @@ class RecipeSourceDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class ImportDelete(LoginRequiredMixin, DeleteView):
+class RecipeImportDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic/delete_template.html"
     model = RecipeImport
-    success_url = reverse_lazy('list_import')
+    success_url = reverse_lazy('list_recipe_import')
 
     def get_context_data(self, **kwargs):
-        context = super(ImportDelete, self).get_context_data(**kwargs)
+        context = super(RecipeImportDelete, self).get_context_data(**kwargs)
         context['title'] = _("Import")
         return context
 
