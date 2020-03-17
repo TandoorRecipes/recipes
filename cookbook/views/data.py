@@ -44,7 +44,7 @@ def batch_import(request):
         recipe.save()
         new_recipe.delete()
 
-    return redirect('list_import')
+    return redirect('list_recipe_import')
 
 
 @login_required

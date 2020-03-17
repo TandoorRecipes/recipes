@@ -267,7 +267,7 @@ class MealPlanUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class RecipeUpdate(LoginRequiredMixin, UpdateView):
+class ExternalRecipeUpdate(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = ExternalRecipeForm
     template_name = "generic/edit_template.html"
@@ -286,17 +286,17 @@ class RecipeUpdate(LoginRequiredMixin, UpdateView):
                                     os.path.splitext(self.object.file_path)[1]
 
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
-        return super(RecipeUpdate, self).form_valid(form)
+        return super(ExternalRecipeUpdate, self).form_valid(form)
 
     def form_invalid(self, form):
         messages.add_message(self.request, messages.ERROR, _('Error saving changes!'))
-        return super(RecipeUpdate, self).form_valid(form)
+        return super(ExternalRecipeUpdate, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        context = super(RecipeUpdate, self).get_context_data(**kwargs)
+        context = super(ExternalRecipeUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
         context['view_url'] = reverse('view_recipe', args=[self.object.pk])
         if self.object.storage:

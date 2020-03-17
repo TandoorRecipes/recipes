@@ -61,7 +61,7 @@ def sync_all(request):
 
     if not error:
         messages.add_message(request, messages.SUCCESS, _('Sync successful!'))
-        return redirect('list_import')
+        return redirect('list_recipe_import')
     else:
         messages.add_message(request, messages.ERROR, _('Error synchronizing with Storage'))
-        return redirect('list_import')
+        return redirect('list_recipe_import')

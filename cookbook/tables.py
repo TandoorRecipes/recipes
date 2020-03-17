@@ -71,7 +71,7 @@ class SyncTable(tables.Table):
 
 class RecipeImportTable(tables.Table):
     id = tables.LinkColumn('new_recipe_import', args=[A('id')])
-    delete = tables.TemplateColumn("<a href='{% url 'delete_import' record.id %}' >" + _('Delete') + "</a>")
+    delete = tables.TemplateColumn("<a href='{% url 'delete_recipe_import' record.id %}' >" + _('Delete') + "</a>")
 
     class Meta:
         model = RecipeImport
