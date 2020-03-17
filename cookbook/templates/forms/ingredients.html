@@ -22,21 +22,22 @@
     <br/>
 
     <h4>{% trans 'Units' %}</h4>
-    <form action="{% url 'edit_ingredient' %}" method="post">
+    <form action="{% url 'edit_ingredient' %}" method="post"
+          onsubmit="return confirm('{% trans 'Are you sure that you want to merge these two units ?' %}')">
         {% csrf_token %}
         {{ units_form|crispy }}
         <button class="btn btn-danger" type="submit"
-                onclick="confirm('{% trans 'Are you sure that you want to merge these two units ?' %}')"><i
+        ><i
                 class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
     </form>
 
     <h4>{% trans 'Ingredients' %}</h4>
-    <form action="{% url 'edit_ingredient' %}" method="post">
+    <form action="{% url 'edit_ingredient' %}" method="post"
+          onsubmit="return confirm('{% trans 'Are you sure that you want to merge these two ingredients ?' %}')">
         {% csrf_token %}
         {{ ingredients_form|crispy }}
-        <button class="btn btn-danger" type="submit"
-                onclick="confirm('{% trans 'Are you sure that you want to merge these two ingredients ?' %}')"><i
-                class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
+        <button class="btn btn-danger" type="submit">
+            <i class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
     </form>
 
 {% endblock %}
