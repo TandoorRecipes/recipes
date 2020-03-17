@@ -86,7 +86,8 @@ def internal_recipe_update(request, pk):
                 recipe_ingredient = RecipeIngredient()
                 recipe_ingredient.recipe = recipe_instance
 
-                recipe_ingredient.note = i['note']
+                if 'note' in i:
+                    recipe_ingredient.note = i['note']
 
                 if Ingredient.objects.filter(name=i['ingredient__name']).exists():
                     recipe_ingredient.ingredient = Ingredient.objects.get(name=i['ingredient__name'])
