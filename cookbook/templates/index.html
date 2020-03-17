@@ -21,29 +21,35 @@
                         <input type="text" class="form-control" placeholder="{% trans 'Search recipe ...' %}"
                                id="{{ filter.form.name.id_for_label }}" name="{{ filter.form.name.name }}"
                                aria-describedby="button-addon4">
-                        <div class="input-group-append" id="button-addon4">
-                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-                            <button class="btn btn-warning" type="button" onclick="window.location = window.location.pathname;"><i class="fas fa-backspace"></i></button>
-                            <button class="btn btn-success" type="button" onclick="location.href='{% url 'new_recipe' %}'"><i class="fas fa-plus-circle"></i></button>
 
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item" type="button"
+                                        onclick="location.href='{% url 'new_recipe' %}'"><i
+                                        class="fas fa-plus-circle fa-fw"></i> {% trans 'New Recipe' %}</button>
+                                <button data-toggle="collapse" href="#collapse_adv_search"
+                                        role="button" class="dropdown-item"
+                                        aria-expanded="false" type="button"
+                                        aria-controls="collapse_adv_search"><i
+                                        class="fas fa-search-plus fa-fw"></i> {% trans 'Advanced Search' %}
+                                </button>
+                                <button class="dropdown-item" type="button"
+                                        onclick="window.location = window.location.pathname;"><i
+                                        class="fas fa-sync fa-fw"></i> {% trans 'Reset Search' %}</button>
+                            </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-
-            <div class="row ">
-                <div class="col-md-2 offset-md-10" style="text-align: right">
-                    <a class="" data-toggle="collapse" href="#collapse_adv_search" role="button"
-                       aria-expanded="false"
-                       aria-controls="collapse_adv_search"><i
-                            class="fas fa-search"></i> {% trans 'Advanced Search' %}</a>
                 </div>
             </div>
 
             <div class="row">
                 <div class="collapse col-md-12" id="collapse_adv_search">
-                    <div>
+                    <div style="margin-top: 1vh">
                         {{ filter.form.keywords | as_crispy_field }}
                     </div>
                     <div>
