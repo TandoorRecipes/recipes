@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM python:3.8-slim-buster
 
 RUN mkdir /Recipes
 WORKDIR /Recipes
