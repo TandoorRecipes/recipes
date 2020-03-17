@@ -192,7 +192,7 @@ def edit_storage(request, pk):
         form = StorageForm(instance=pseudo_instance)
 
     return render(request, 'generic/edit_template.html',
-                  {'form': form, 'view_url': reverse('view_recipe', args=[pk])})
+                  {'form': form})
 
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
@@ -342,4 +342,3 @@ def edit_ingredients(request):
         ingredients_form = IngredientMergeForm()
 
     return render(request, 'forms/ingredients.html', {'units_form': units_form, 'ingredients_form': ingredients_form})
-

@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
@@ -8,11 +7,6 @@ from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Commen
     RecipeBookEntry, MealPlan
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-
-
-# Generic Delete views
-def delete_redirect(request, name, pk):
-    return redirect(('delete_' + name), pk)
 
 
 class RecipeDelete(LoginRequiredMixin, DeleteView):
@@ -57,13 +51,13 @@ class ImportDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class MonitorDelete(LoginRequiredMixin, DeleteView):
+class SyncDelete(LoginRequiredMixin, DeleteView):
     template_name = "generic/delete_template.html"
     model = Sync
     success_url = reverse_lazy('data_sync')
 
     def get_context_data(self, **kwargs):
-        context = super(MonitorDelete, self).get_context_data(**kwargs)
+        context = super(SyncDelete, self).get_context_data(**kwargs)
         context['title'] = _("Monitor")
         return context
 

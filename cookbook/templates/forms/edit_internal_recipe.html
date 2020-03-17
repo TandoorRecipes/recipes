@@ -45,7 +45,7 @@
 
         <hr>
         <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
-        <a href="{% url 'redirect_delete' form.instance|get_class|lower form.instance.pk %}"
+        <a href="{% delete_url form.instance|get_class form.instance.pk %}"
            class="btn btn-danger"><i class="fas fa-trash-alt"></i> {% trans 'Delete' %}</a>
         {% if view_url %}
             <a href="{{ view_url }}" class="btn btn-info"><i class="far fa-eye"></i> {% trans 'View' %}</a>

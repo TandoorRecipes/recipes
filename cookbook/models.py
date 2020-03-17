@@ -1,6 +1,12 @@
+import re
+
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import models
+
+
+def get_model_name(model):
+    return ('_'.join(re.findall('[A-Z][^A-Z]*', model.__name__))).lower()
 
 
 class UserPreference(models.Model):
