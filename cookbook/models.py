@@ -134,10 +134,11 @@ class Ingredient(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT, null=True)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
+    note = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.ingredient)

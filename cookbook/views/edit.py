@@ -86,6 +86,8 @@ def internal_recipe_update(request, pk):
                 recipe_ingredient = RecipeIngredient()
                 recipe_ingredient.recipe = recipe_instance
 
+                recipe_ingredient.note = i['note']
+
                 if Ingredient.objects.filter(name=i['ingredient__name']).exists():
                     recipe_ingredient.ingredient = Ingredient.objects.get(name=i['ingredient__name'])
                 else:
@@ -118,7 +120,7 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount')
+    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount', 'note')
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients)),
