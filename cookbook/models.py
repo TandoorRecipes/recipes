@@ -28,6 +28,9 @@ class UserPreference(models.Model):
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
 
+    def __str__(self):
+        return self.user
+
 
 class Storage(models.Model):
     DROPBOX = 'DB'
@@ -63,6 +66,9 @@ class SyncLog(models.Model):
     status = models.CharField(max_length=32)
     msg = models.TextField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.created_at}:{self.sync} - {self.status}"
 
 
 class Keyword(models.Model):
