@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.urls import reverse
 
-from cookbook.models import Recipe, RecipeIngredient, Ingredient, Unit
+from cookbook.models import Recipe, RecipeIngredient, Ingredient, Unit, Storage
 from cookbook.tests.views.test_views import TestViews
 
 
@@ -97,3 +97,32 @@ class TestEditsRecipe(TestViews):
         with open('cookbook/tests/resources/image.png', 'rb') as file:
             r = self.client.post(url, {'name': "Changed", 'working_time': 15, 'waiting_time': 15, 'image': file})
             self.assertEqual(r.status_code, 200)
+
+    def test_external_recipe_update(self):
+        storage = Storage.objects.create(
+            name='TestStorage',
+            method=Storage.DROPBOX,
+            created_by=auth.get_user(self.client),
+            token='test',
+            username='test',
+            password='test',
+        )
+
+        recipe = Recipe.objects.create(
+            name='Test',
+            created_by=auth.get_user(self.client),
+            storage=storage,
+        )
+
+        url = reverse('edit_external_recipe', args=[recipe.pk])
+
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+
+        r = self.anonymous_client.get(url)
+        self.assertEqual(r.status_code, 302)
+
+        r = self.client.post(url, {'name': 'Test', 'working_time': 15, 'waiting_time': 15, })
+        recipe.refresh_from_db()
+        self.assertEqual(recipe.working_time, 15)
+        self.assertEqual(recipe.waiting_time, 15)

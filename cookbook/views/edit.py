@@ -277,13 +277,11 @@ class ExternalRecipeUpdate(LoginRequiredMixin, UpdateView):
         old_recipe = Recipe.objects.get(pk=self.object.pk)
         if not old_recipe.name == self.object.name:
             if self.object.storage.method == Storage.DROPBOX:
-                Dropbox.rename_file(old_recipe,
-                                    self.object.name)  # TODO central location to handle storage type switches
+                Dropbox.rename_file(old_recipe, self.object.name)  # TODO central location to handle storage type switches
             if self.object.storage.method == Storage.NEXTCLOUD:
                 Nextcloud.rename_file(old_recipe, self.object.name)
 
-            self.object.file_path = os.path.dirname(self.object.file_path) + '/' + self.object.name + \
-                                    os.path.splitext(self.object.file_path)[1]
+            self.object.file_path = os.path.dirname(self.object.file_path) + '/' + self.object.name + os.path.splitext(self.object.file_path)[1]
 
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
         return super(ExternalRecipeUpdate, self).form_valid(form)
