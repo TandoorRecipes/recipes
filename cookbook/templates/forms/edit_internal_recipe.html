@@ -151,6 +151,7 @@
                         validator: "required",
                         editor: select2UnitEditor
                     },
+                    {title: "{% trans 'Note' %}", field: "note", editor: "input"},
                     {
                         formatter: function (cell, formatterParams) {
                             return "<span style='color:red'><i class=\"fas fa-trash-alt\"></i></span>"
@@ -188,6 +189,7 @@
                     ingredient__name: "{% trans 'Ingredient' %}",
                     amount: "100",
                     unit__name: "g",
+                    note: "",
                     id: Math.floor(Math.random() * 10000000),
                     delete: false,
                 });
