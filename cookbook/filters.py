@@ -44,3 +44,11 @@ class RecipeFilter(django_filters.FilterSet):
     class Meta:
         model = Recipe
         fields = ['name', 'keywords', 'ingredients', 'internal']
+
+
+class IngredientFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Ingredient
+        fields = ['name']

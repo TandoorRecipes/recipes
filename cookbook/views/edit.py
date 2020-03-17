@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, IngredientMergeForm
+    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
     MealPlan, Unit, Ingredient
 from cookbook.provider.dropbox import Dropbox
@@ -154,6 +154,22 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(KeywordUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
+        return context
+
+
+class IngredientUpdate(LoginRequiredMixin, UpdateView):
+    template_name = "generic/edit_template.html"
+    model = Ingredient
+    form_class = IngredientForm
+
+    # TODO add msg box
+
+    def get_success_url(self):
+        return reverse('edit_ingredient', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(IngredientUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Ingredient")
         return context
 
 
