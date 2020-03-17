@@ -498,7 +498,7 @@ msgstr "Zubereitungszeit ca."
 
 #: .\cookbook\templates\recipe_view.html:52
 msgid "Waiting time ca."
-msgstr "Zubereitungszeit ca."
+msgstr "Wartezeit ca."
 
 #: .\cookbook\templates\recipe_view.html:114
 msgid "Recipe Image"
