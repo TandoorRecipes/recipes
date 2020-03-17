@@ -25,7 +25,7 @@ urlpatterns = [
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
     path('edit/ingredient/', edit.edit_ingredients, name='edit_ingredient'),
 
-    path('delete/recipe-source/<int:pk>/', delete.RecipeSourceDelete.as_view(), name='delete_recipe_source'),
+    path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
     path('data/sync', data.sync, name='data_sync'),  # TODO move to generic "new" view
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
