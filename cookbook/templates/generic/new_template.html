@@ -13,7 +13,7 @@
 
     <h3>{% trans 'New' %} {{ title }} </h3>
 
-    {% if form.Meta.model|get_class == 'Storage' %}
+    {% if form.Meta.model|get_class_name == 'Storage' %}
         {% include 'include/storage_backend_warning.html' %}
     {% endif %}
 

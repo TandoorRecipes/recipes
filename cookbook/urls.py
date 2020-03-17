@@ -1,3 +1,5 @@
+from pydoc import locate
+
 from django.urls import path
 
 from .views import *
@@ -13,46 +15,16 @@ urlpatterns = [
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
 
-    path('new/recipe/', new.RecipeCreate.as_view(), name='new_recipe'),
-    path('new/recipe_import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
-    path('new/keyword/', new.KeywordCreate.as_view(), name='new_keyword'),
-    path('new/storage/', new.StorageCreate.as_view(), name='new_storage'),
-    path('new/book/', new.RecipeBookCreate.as_view(), name='new_book'),
-    path('new/plan/', new.MealPlanCreate.as_view(), name='new_plan'),
-
-    path('list/keyword', lists.keyword, name='list_keyword'),
-    path('list/import_log', lists.sync_log, name='list_import_log'),
-    path('list/import', lists.recipe_import, name='list_import'),
-    path('list/storage', lists.storage, name='list_storage'),
-
-    path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
     path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),
     # for internal use only
     path('edit/recipe/external/<int:pk>/', edit.RecipeUpdate.as_view(), name='edit_external_recipe'),
     # for internal use only
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),  # for internal use only
 
-    path('edit/keyword/<int:pk>/', edit.KeywordUpdate.as_view(), name='edit_keyword'),
-    path('edit/sync/<int:pk>/', edit.SyncUpdate.as_view(), name='edit_sync'),
-    path('edit/import/<int:pk>/', edit.ImportUpdate.as_view(), name='edit_import'),
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('edit/comment/<int:pk>/', edit.CommentUpdate.as_view(), name='edit_comment'),
-    path('edit/recipe-book/<int:pk>/', edit.RecipeBookUpdate.as_view(), name='edit_recipe_book'),
-    path('edit/plan/<int:pk>/', edit.MealPlanUpdate.as_view(), name='edit_plan'),
     path('edit/ingredient/', edit.edit_ingredients, name='edit_ingredient'),
 
-    path('redirect/delete/<slug:name>/<int:pk>/', delete.delete_redirect, name='redirect_delete'),
-
-    path('delete/recipe/<int:pk>/', delete.RecipeDelete.as_view(), name='delete_recipe'),
     path('delete/recipe-source/<int:pk>/', delete.RecipeSourceDelete.as_view(), name='delete_recipe_source'),
-    path('delete/keyword/<int:pk>/', delete.KeywordDelete.as_view(), name='delete_keyword'),
-    path('delete/sync/<int:pk>/', delete.MonitorDelete.as_view(), name='delete_sync'),
-    path('delete/import/<int:pk>/', delete.ImportDelete.as_view(), name='delete_import'),
-    path('delete/storage/<int:pk>/', delete.StorageDelete.as_view(), name='delete_storage'),
-    path('delete/comment/<int:pk>/', delete.CommentDelete.as_view(), name='delete_comment'),
-    path('delete/recipe-book/<int:pk>/', delete.RecipeBookDelete.as_view(), name='delete_recipe_book'),
-    path('delete/recipe-book-entry/<int:pk>/', delete.RecipeBookEntryDelete.as_view(), name='delete_recipe_book_entry'),
-    path('delete/plan/<int:pk>/', delete.MealPlanDelete.as_view(), name='delete_plan'),
 
     path('data/sync', data.sync, name='data_sync'),  # TODO move to generic "new" view
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
@@ -69,3 +41,21 @@ urlpatterns = [
     path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
 ]
+
+generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword)
+
+for m in generic_models:
+    py_name = get_model_name(m)
+    url_name = py_name.replace('_', '-')
+
+    if c := locate(f'cookbook.views.new.{m.__name__}Create'):
+        urlpatterns.append(path(f'new/{url_name}/', c.as_view(), name=f'new_{py_name}'))
+
+    if c := locate(f'cookbook.views.edit.{m.__name__}Update'):
+        urlpatterns.append(path(f'edit/{url_name}/<int:pk>/', c.as_view(), name=f'edit_{py_name}'))
+
+    if c := getattr(lists, py_name, None):
+        urlpatterns.append(path(f'list/{url_name}/', c, name=f'list_{py_name}'))
+
+    if c := locate(f'cookbook.views.delete.{m.__name__}Delete'):
+        urlpatterns.append(path(f'delete/{url_name}/<int:pk>/', c.as_view(), name=f'delete_{py_name}'))

@@ -10,7 +10,7 @@
 {% block content %}
 
     <h3>
-        {% trans 'Meal-Plan' %} <a href="{% url 'new_plan' %}"><i class="fas fa-plus-circle"></i></a>
+        {% trans 'Meal-Plan' %} <a href="{% url 'new_meal_plan' %}"><i class="fas fa-plus-circle"></i></a>
     </h3>
 
     <div class="row">
@@ -55,7 +55,7 @@
                         {% for day_key, days_value in plan_value.days.items %}
                             <td>
                                 {% for mp in days_value %}
-                                    <a href="{% url 'edit_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
+                                    <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
                                     <a href="{% url 'view_recipe' mp.recipe.id %}">{{ mp.recipe.name }}</a><br/>
                                 {% endfor %}
                             </td>

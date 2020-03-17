@@ -2,15 +2,27 @@ from django import template
 import markdown as md
 import bleach
 from bleach_whitelist import markdown_tags, markdown_attrs, all_styles, print_attrs
+from django.urls import reverse
 
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
+from cookbook.models import get_model_name
 
 register = template.Library()
 
 
-@register.filter(name='get_class')
-def get_class(value):
+@register.filter()
+def get_class_name(value):
     return value.__class__.__name__
+
+
+@register.filter()
+def get_class(value):
+    return value.__class__
+
+
+@register.simple_tag
+def delete_url(model, pk):
+    return reverse(f'delete_{get_model_name(model)}', args=[pk])
 
 
 @register.filter()
