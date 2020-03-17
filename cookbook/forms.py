@@ -141,6 +141,13 @@ class KeywordForm(forms.ModelForm):
         widgets = {'icon': EmojiPickerTextInput}
 
 
+class IngredientForm(forms.ModelForm):
+    class Meta:
+        model = Ingredient
+        fields = ('name', 'recipe')
+        widgets = {'recipe': SelectWidget}
+
+
 class StorageForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password'}), required=False)
     password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),

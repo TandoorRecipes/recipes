@@ -134,7 +134,13 @@
                                         </div>
 
                                     </td>
-                                    <td style="font-size: large">{{ i.ingredient.name }}</td>
+                                    <td style="font-size: large">
+                                        {% if i.ingredient.recipe %}
+                                            <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}" target="_blank">{{ i.ingredient.name }}</a>
+                                        {% else %}
+                                            {{ i.ingredient.name }}
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </table>

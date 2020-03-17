@@ -43,7 +43,7 @@ urlpatterns = [
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
 ]
 
-generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword)
+generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Ingredient)
 
 for m in generic_models:
     py_name = get_model_name(m)

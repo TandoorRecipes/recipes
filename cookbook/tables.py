@@ -27,6 +27,15 @@ class KeywordTable(tables.Table):
         fields = ('id', 'icon', 'name')
 
 
+class IngredientTable(tables.Table):
+    id = tables.LinkColumn('edit_ingredient', args=[A('id')])
+
+    class Meta:
+        model = Keyword
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'name')
+
+
 class StorageTable(tables.Table):
     id = tables.LinkColumn('edit_storage', args=[A('id')])
 

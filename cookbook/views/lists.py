@@ -5,8 +5,9 @@ from django.urls import reverse_lazy
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
-from cookbook.models import Keyword, SyncLog, RecipeImport, Storage
-from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable
+from cookbook.filters import IngredientFilter
+from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Ingredient
+from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable
 
 
 @login_required
@@ -32,6 +33,16 @@ def recipe_import(request):
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {'title': _("Import"), 'table': table, 'import_btn': True})
+
+
+@login_required
+def ingredient(request):
+    f = IngredientFilter(request.GET, queryset=Ingredient.objects.all().order_by('pk'))
+
+    table = IngredientTable(f.qs)
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(request, 'generic/list_template.html', {'title': _("Ingredients"), 'table': table, 'filter': f})
 
 
 @login_required

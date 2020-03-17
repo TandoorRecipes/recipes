@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
-    RecipeBookEntry, MealPlan
+    RecipeBookEntry, MealPlan, Ingredient
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -70,6 +70,17 @@ class KeywordDelete(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(KeywordDelete, self).get_context_data(**kwargs)
         context['title'] = _("Keyword")
+        return context
+
+
+class IngredientDelete(LoginRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = Ingredient
+    success_url = reverse_lazy('list_ingredient')
+
+    def get_context_data(self, **kwargs):
+        context = super(IngredientDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Ingredient")
         return context
 
 
