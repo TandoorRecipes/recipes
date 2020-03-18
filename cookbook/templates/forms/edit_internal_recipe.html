@@ -182,7 +182,7 @@
             });
 
             // load initial value
-            $('#id_ingredients').val(JSON.stringify(data))
+            $('#id_ingredients').val(JSON.stringify(data));
 
             function addIngredientRow() {
                 data.push({
@@ -193,6 +193,9 @@
                     id: Math.floor(Math.random() * 10000000),
                     delete: false,
                 });
+                input = table.rowManager.rows[((table.rowManager.rows).length) - 1].cells[1].getElement()
+                input.focus();
+                input.select();
             }
 
             document.onkeyup = function (e) {
