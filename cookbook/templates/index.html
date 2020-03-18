@@ -8,6 +8,12 @@
 
 {% block extra_head %}
     {{ filter.form.media }}
+
+    <style>
+        .dropdown-toggle-no-arrow::after {
+            display: none;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -24,8 +30,9 @@
 
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split"
+                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split dropdown-toggle-no-arrow"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu">
