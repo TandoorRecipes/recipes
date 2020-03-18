@@ -76,6 +76,7 @@ def create_new_external_recipe(request, import_id):
             recipe.name = form.cleaned_data['name']
             recipe.file_path = form.cleaned_data['file_path']
             recipe.file_uid = form.cleaned_data['file_uid']
+            recipe.created_by = request.user
 
             recipe.save()
 
