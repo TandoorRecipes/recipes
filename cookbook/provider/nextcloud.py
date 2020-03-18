@@ -32,7 +32,7 @@ class Nextcloud(Provider):
         import_count = 0
         for file in files:
             path = monitor.path + '/' + file
-            if not Recipe.objects.filter(file_path=path).exists() and not RecipeImport.objects.filter(
+            if not Recipe.objects.filter(file_path__iexact=path).exists() and not RecipeImport.objects.filter(
                     file_path=path).exists():
                 name = os.path.splitext(file)[0]
                 new_recipe = RecipeImport(name=name, file_path=path, storage=monitor.storage)

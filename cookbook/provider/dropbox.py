@@ -35,7 +35,7 @@ class Dropbox(Provider):
         import_count = 0
         for recipe in recipes['entries']:  # TODO check if has_more is set and import that as well
             path = recipe['path_lower']
-            if not Recipe.objects.filter(file_path=path).exists() and not RecipeImport.objects.filter(
+            if not Recipe.objects.filter(file_path__iexact=path).exists() and not RecipeImport.objects.filter(
                     file_path=path).exists():
                 name = os.path.splitext(recipe['name'])[0]
                 new_recipe = RecipeImport(name=name, file_path=path, storage=monitor.storage, file_uid=recipe['id'])
