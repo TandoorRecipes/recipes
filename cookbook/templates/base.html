@@ -74,23 +74,32 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if request.resolver_match.url_name == "index" %}active{% endif %}">
+            <li class="nav-item {% if request.resolver_match.url_name in 'index,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-book"></i> {% trans 'Cookbook' %}<span
                         class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item {% if request.resolver_match.url_name == "view_books" %}active{% endif %}">
-                <a class="nav-link" href="{% url 'view_books' %}"><i class="fas fa-bookmark"></i> {% trans 'Books' %}
+
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_ingredient' %}active{% endif %}">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-mortar-pestle"></i> {% trans 'Utensils' %}
                 </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'view_books' %}"><i
+                            class="fas fa-bookmark fa-fw"></i> {% trans 'Books' %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'view_plan' %}"><i
+                            class="fas fa-calendar fa-fw"></i> {% trans 'Meal-Plan' %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'view_shopping' %}"><i
+                            class="fas fa-shopping-cart fa-fw"></i> {% trans 'Shopping' %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'list_ingredient' %}"><i
+                            class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
+                    </a>
+                </div>
             </li>
-            <li class="nav-item {% if request.resolver_match.url_name == "view_plan" %}active{% endif %}">
-                <a class="nav-link" href="{% url 'view_plan' %}"><i class="fas fa-calendar"></i> {% trans 'Meal-Plan' %}
-                </a>
-            </li>
-            <li class="nav-item {% if request.resolver_match.url_name == "view_shopping" %}active{% endif %}">
-                <a class="nav-link" href="{% url 'view_shopping' %}"><i class="fas fa-shopping-cart"></i> {% trans 'Shopping' %}
-                </a>
-            </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,data_batch_edit' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-tags"></i> {% trans 'Tags' %}
@@ -102,7 +111,7 @@
                             class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
                 </div>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_ingredient' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
                 </a>
@@ -125,26 +134,30 @@
         </ul>
 
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item {% if request.resolver_match.url_name == "view_settings" %}active{% endif %}">
-                <a class="nav-link" href="{% url 'view_settings' %}"><i
-                        class="fas fa-user-cog"></i> {% trans 'Settings' %}</a>
-            </li>
-            {% if user.is_superuser %}
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-alt"></i> {{ user.username }}
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'view_settings' %}"><i
+                                class="fas fa-user-cog fa-fw"></i> {% trans 'Settings' %}</a>
+                        {% if user.is_superuser %}
+                            <a class="dropdown-item" href="{% url 'admin:index' %}"><i
+                                    class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}"><i
+                                class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Logout' %}</a>
+                    </div>
+                </li>
+            {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:index' %}"><i
-                            class="fas fa-user-shield"></i> {% trans 'Admin' %}</a>
+                    <a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %} <i class="fas fa-sign-in-alt"></i></a>
                 </li>
             {% endif %}
-            <li class="nav-item">
-                {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'logout' %}">{% trans 'Logout' %} {{ user.get_username }} <i
-                            class="fas fa-sign-out-alt"></i></a>
-                {% else %}
-                    <a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %} <i class="fas fa-sign-in-alt"></i></a>
-                {% endif %}
-            </li>
         </ul>
-
     </div>
 </nav>
 <br/>
