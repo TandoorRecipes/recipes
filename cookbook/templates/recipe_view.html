@@ -81,12 +81,14 @@
     {% endif %}
 
     {% if recipe.working_time and recipe.working_time != 0 %}
-        <span class="badge badge-secondary"><i class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ recipe.working_time }} min </span>
+        <span class="badge badge-secondary"><i
+                class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ recipe.working_time }} min </span>
     {% endif %}
 
     {% if recipe.waiting_time and recipe.waiting_time != 0 %}
         <span
-                class="badge badge-secondary"><i class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
+                class="badge badge-secondary"><i
+                class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
     {% endif %}
 
     {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 %}
@@ -115,10 +117,10 @@
                             </div>
                         </div>
                         <br/>
-                        <table class="table">
+                        <table class="table table-sm">
                             {% for i in ingredients %}
-                                <tr style="margin-top: 1vh">
-                                    <td style="font-size: large">
+                                <tr>
+                                    <td style="vertical-align: middle!important;">
                                         <div class="pretty p-default p-curve">
                                             <input type="checkbox"/>
                                             <div class="state p-success">
@@ -134,7 +136,7 @@
                                         </div>
 
                                     </td>
-                                    <td style="font-size: large">
+                                    <td style="vertical-align: middle!important;">
                                         {% if i.ingredient.recipe %}
                                             <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}" target="_blank">
                                         {% endif %}
@@ -144,9 +146,9 @@
                                         {% endif %}
 
                                     </td>
-                                    <td>
+                                    <td style="vertical-align: middle!important;">
                                         {% if i.note %}
-                                            <button class="btn btn-light" type="button" data-container="body"
+                                            <button class="btn btn-light btn-sm" type="button" data-container="body"
                                                     data-toggle="popover"
                                                     data-placement="right" data-html="true" data-trigger="focus"
                                                     data-content="{{ i.note }}">
@@ -156,8 +158,11 @@
                                     </td>
                                 </tr>
                             {% endfor %}
+                            <tr>
+                                <td></td>
+                            </tr>
                         </table>
-                        <br/>
+
 
                     </div>
                 </div>
