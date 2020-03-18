@@ -81,12 +81,12 @@
     {% endif %}
 
     {% if recipe.working_time and recipe.working_time != 0 %}
-        <span class="badge badge-secondary">{% trans 'Preparation time ca.' %} {{ recipe.working_time }} min </span>
+        <span class="badge badge-secondary"><i class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ recipe.working_time }} min </span>
     {% endif %}
 
     {% if recipe.waiting_time and recipe.waiting_time != 0 %}
         <span
-                class="badge badge-secondary">{% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
+                class="badge badge-secondary"><i class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
     {% endif %}
 
     {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 %}
@@ -96,7 +96,7 @@
 
     <div class="row">
         {% if ingredients %}
-            <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
+            <div class="col-lg-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -115,9 +115,9 @@
                             </div>
                         </div>
                         <br/>
-                        <table class="">
+                        <table class="table">
                             {% for i in ingredients %}
-                                <tr>
+                                <tr style="margin-top: 1vh">
                                     <td style="font-size: large">
                                         <div class="pretty p-default p-curve">
                                             <input type="checkbox"/>
@@ -136,9 +136,22 @@
                                     </td>
                                     <td style="font-size: large">
                                         {% if i.ingredient.recipe %}
-                                            <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}" target="_blank">{{ i.ingredient.name }}</a>
-                                        {% else %}
-                                            {{ i.ingredient.name }}
+                                            <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}" target="_blank">
+                                        {% endif %}
+                                        {{ i.ingredient.name }}
+                                        {% if i.ingredient.recipe %}
+                                            </a>
+                                        {% endif %}
+
+                                    </td>
+                                    <td>
+                                        {% if i.note %}
+                                            <button class="btn btn-light" type="button" data-container="body"
+                                                    data-toggle="popover"
+                                                    data-placement="right" data-html="true" data-trigger="focus"
+                                                    data-content="{{ i.note }}">
+                                                <i class="fas fa-info"></i>
+                                            </button>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -273,7 +286,18 @@
     <br/>
     <br/>
 
-    <h5>{% trans 'Comments' %}</h5>
+    <h5><i class="far fa-comments"></i> {% trans 'Comments' %}</h5>
+    {% for c in comments %}
+        <div class="card">
+            <div class="card-body">
+                <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
+                    href="{% url 'edit_comment' c.pk %}" class="d-print-none"><i class="fas fa-pencil-alt"></i></a><br/>
+                {{ c.text }}
+            </div>
+        </div>
+        <br/>
+    {% endfor %}
+
     <div class="d-print-none">
 
         <form method="POST" class="post-form">
@@ -287,17 +311,6 @@
             </div>
         </form>
     </div>
-
-    {% for c in comments %}
-        <div class="card">
-            <div class="card-body">
-                <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
-                    href="{% url 'edit_comment' c.pk %}" class="d-print-none"><i class="fas fa-pencil-alt"></i></a><br/>
-                {{ c.text }}
-            </div>
-        </div>
-        <br/>
-    {% endfor %}
 
     {% if recipe.storage %}
         {% include 'include/recipe_open_modal.html' %}
@@ -332,6 +345,14 @@
     </div>
 
     <script type="text/javascript">
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        });
+
+        $('.popover-dismiss').popover({
+            trigger: 'focus'
+        });
 
         function reloadIngredients() {
             factor = Number($('#in_factor').val());
