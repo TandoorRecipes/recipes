@@ -162,7 +162,7 @@ def settings(request):
         up = None
 
     if request.method == "POST":
-        form = UserPreferenceForm(request.POST)
+        form = UserPreferenceForm(request.POST, prefix='preference')
         if form.is_valid():
             if not up:
                 up = UserPreference(user=request.user)
@@ -170,9 +170,17 @@ def settings(request):
             up.nav_color = form.cleaned_data['nav_color']
             up.save()
 
-    if up:
-        form = UserPreferenceForm(instance=up)
-    else:
-        form = UserPreferenceForm()
+        form = UserNameForm(request.POST, prefix='name')
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data['first_name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.save()
 
-    return render(request, 'settings.html', {'form': form})
+    if up:
+        preference_form = UserPreferenceForm(instance=up)
+    else:
+        preference_form = UserPreferenceForm()
+
+    user_name_form = UserNameForm(instance=request.user)
+
+    return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form})

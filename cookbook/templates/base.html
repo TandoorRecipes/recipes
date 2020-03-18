@@ -137,7 +137,7 @@
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-alt"></i> {{ user.username }}
+                       aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-alt"></i> {{ user.get_user_name }}
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">

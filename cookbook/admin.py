@@ -2,19 +2,12 @@ from django.contrib import admin
 from .models import *
 
 
-def get_user_name(user):
-    if (name := f"{user.first_name} {user.last_name}") == "":
-        return name
-    else:
-        return user.username
-
-
 class UserPreferenceAdmin(admin.ModelAdmin):
     list_display = ('name', 'theme', 'nav_color')
 
     @staticmethod
     def name(obj):
-        return get_user_name(obj.user)
+        return obj.user.get_user_name()
 
 
 admin.site.register(UserPreference, UserPreferenceAdmin)
@@ -48,7 +41,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @staticmethod
     def created_by(obj):
-        return get_user_name(obj.created_by)
+        return obj.created_by.get_user_name()
 
 
 admin.site.register(Recipe, RecipeAdmin)
@@ -69,10 +62,10 @@ class CommentAdmin(admin.ModelAdmin):
 
     @staticmethod
     def name(obj):
-        return get_user_name(obj.created_by)
+        return obj.created_by.get_user_name()
 
 
-admin.site.register(Comment)
+admin.site.register(Comment, CommentAdmin)
 
 
 class RecipeImportAdmin(admin.ModelAdmin):
@@ -83,11 +76,11 @@ admin.site.register(RecipeImport, RecipeImportAdmin)
 
 
 class RecipeBookAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user')
+    list_display = ('name', 'user_name')
 
     @staticmethod
-    def user(obj):
-        return get_user_name(obj.user)
+    def user_name(obj):
+        return obj.user.get_user_name()
 
 
 admin.site.register(RecipeBook, RecipeBookAdmin)
@@ -105,7 +98,7 @@ class MealPlanAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user(obj):
-        return get_user_name(obj.user)
+        return obj.user.get_user_name()
 
 
 admin.site.register(MealPlan, MealPlanAdmin)
