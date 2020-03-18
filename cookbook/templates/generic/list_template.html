@@ -15,6 +15,17 @@
                 </a>
             {% endif %}
         </h3>
+
+        {% if filter %}
+            <br/>
+            <br/>
+            <form action="." method="get">
+                {% csrf_token %}
+                {{ filter.form|crispy }}
+                <button type="submit" class="btn btn-success">{% trans 'Filter' %}</button>
+            </form>
+        {% endif %}
+
         {% if import_btn %}
             <a href="{% url 'data_batch_import' %}" class="btn btn-warning">{% trans 'Import all' %}</a>
             <br/>
