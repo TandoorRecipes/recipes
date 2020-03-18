@@ -27,12 +27,26 @@ class DateWidget(forms.DateInput):
 
 
 class UserPreferenceForm(forms.ModelForm):
+    prefix = 'preference'
+
     class Meta:
         model = UserPreference
         fields = ('theme', 'nav_color')
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!')
+        }
+
+
+class UserNameForm(forms.ModelForm):
+    prefix = 'name'
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+
+        help_texts = {
+            'first_name': _('Both fields are optional. If none are given the username will be displayed instead')
         }
 
 

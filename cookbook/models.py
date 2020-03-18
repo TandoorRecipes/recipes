@@ -1,8 +1,19 @@
 import re
 
+from django.contrib import auth
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import models
+
+
+def get_user_name(self):
+    if not (name := f"{self.first_name} {self.last_name}") == " ":
+        return name
+    else:
+        return self.username
+
+
+auth.models.User.add_to_class('get_user_name', get_user_name)
 
 
 def get_model_name(model):
