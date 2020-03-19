@@ -48,11 +48,10 @@ When clicking submit, every recipe containing the word will be updated (tags are
 
 ### Docker-Compose
 1. Clone this repository to your desired install location
-2. Choose one of the included `docker-compose.yml` files [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
-3. Copy it to the root directory (where this readme is)
+2. Choose one of the included configurations [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
+3. Copy (if needed) the `docker-compose.override.yml.template` to `docker-compose.override.yml` and uncomment the configurations you need.
 4. Start the container (`docker-compose up -d`)
-5. This time and **on each update** run `update.sh` to apply migrations and collect static files
-6. Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
+5. Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
 
 ### Manual
 Copy `.env.template` to `.env` and fill in the missing values accordingly.  

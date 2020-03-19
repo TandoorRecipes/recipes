@@ -1,5 +1,6 @@
 FROM python:3.8-alpine
 
+# hadolint ignore=DL3018
 RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev libxslt-dev
 ENV PYTHONUNBUFFERED 1
 EXPOSE 8080
@@ -14,6 +15,7 @@ COPY --chown=recipes:recipes . ./
 RUN pwd && ls -lha
 RUN chmod +x boot.sh
 
+# hadolint ignore=DL3018
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev  && \
     python -m venv venv && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
