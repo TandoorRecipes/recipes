@@ -62,9 +62,7 @@ Otherwise simply follow the instructions for any django based deployment
 
 ## Updating
 0. Before updating it is recommended to **backup your database**
-1. Stop the container using `docker-compose down`. 
-2. Pull the project files and start the container again using `docker-compose up -d --build`.
-3. Run `update.sh`
+1. Pull the project files and start the container again using `docker-compose up -d --build`.
 
 ## Contributing
 Pull Requests and ideas are welcome, feel free to contribute in any way.
