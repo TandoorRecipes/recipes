@@ -1,6 +1,7 @@
 Please refer to the traefik documentation on how to setup a docker service in traefik. Since treafik can be a little
 confusing at times, the following are examples of my traefik configuration.
 
+Copy the docker-compose.override.yml.template and uncomment the corresponding part.
 
 You need to create a network called `traefik` using `docker network create traefik`.
 ## docker-compose.yml
