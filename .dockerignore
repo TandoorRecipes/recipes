@@ -8,3 +8,11 @@ docker-compose*
 README.md
 LICENSE
 .vscode
+.env
+.env.template
+.github
+.idea
+LICENSE.md
+docs
+nginx
+update.sh
