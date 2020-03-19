@@ -15,9 +15,6 @@ services:
     restart: always
     env_file:
     - ./.env
-    command: "gunicorn --bind 0.0.0.0:8080 recipes.wsgi"
-    volumes:
-    - .:/Recipes
     depends_on:
     - db_recipes
     networks:
