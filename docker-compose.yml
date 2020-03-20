@@ -2,7 +2,7 @@ version: "3"
 services:
   db_recipes:
     restart: always
-    image: "postgres:11-alpine"
+    image: postgres:11-alpine
     volumes:
       - ./postgresql:/var/lib/postgresql/data
     env_file:
