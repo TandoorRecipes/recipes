@@ -12,7 +12,6 @@ RUN mkdir /opt/recipes
 RUN chown recipes:recipes /opt/recipes
 WORKDIR /opt/recipes
 COPY --chown=recipes:recipes . ./
-RUN pwd && ls -lha
 RUN chmod +x boot.sh
 
 # hadolint ignore=DL3018
