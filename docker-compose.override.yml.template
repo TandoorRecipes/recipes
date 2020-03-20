@@ -11,7 +11,7 @@
 # version: "3"
 # services:
 #   nginx_recipes:
-#     image: "nginx"
+#     image: nginx:mainline-alpine
 #     restart: always
 #     env_file:
 #       - ./.env
