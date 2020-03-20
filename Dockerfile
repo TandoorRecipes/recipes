@@ -12,7 +12,8 @@ RUN mkdir /opt/recipes
 RUN chown recipes:recipes /opt/recipes
 WORKDIR /opt/recipes
 COPY --chown=recipes:recipes . ./
-RUN chmod +x boot.sh
+RUN chmod +x boot.sh setup.sh
+RUN ln -s /opt/recipes/setup.sh /usr/local/bin/createsuperuser
 
 # hadolint ignore=DL3018
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev  && \
