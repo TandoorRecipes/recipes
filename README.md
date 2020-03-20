@@ -51,7 +51,7 @@ When clicking submit, every recipe containing the word will be updated (tags are
 2. Choose one of the included configurations [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
 3. Copy (if needed) the `docker-compose.override.yml.template` to `docker-compose.override.yml` and uncomment the configurations you need.
 4. Start the container (`docker-compose up -d`)
-5. Create a default user by executing into the container with `docker-compose exec web_recipes sh` and run `python3 manage.py createsuperuser`.
+5. Create a default user by running `docker-compose exec -it <web_recipes> createsuperuser`. **Replace "<web_recipes>" with your instance name which can be found via running `docker ps`**
 
 ### Manual
 Copy `.env.template` to `.env` and fill in the missing values accordingly.  
