@@ -1,0 +1,29 @@
+version: "3"
+services:
+  db_recipes:
+    restart: always
+    image: postgres:11-alpine
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    networks:
+      - default
+
+  web_recipes:
+    build: .
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ./staticfiles:/opt/recipes/staticfiles
+      - ./mediafiles:/opt/recipes/mediafiles
+    ports:
+      - 80:8080
+    depends_on:
+      - db_recipes
+    networks:
+      - default
+
+networks:
+  default:
