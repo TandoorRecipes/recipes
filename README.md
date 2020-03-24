@@ -19,11 +19,38 @@ Recipes is a Django application to manage, tag and search recipes using either b
 
 This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
 
+# Installation
+
+The docker image (`vabene1111/recipes`) simply exposes the application on port `8080`. You may choose any preferred installation method, the following are just examples to make it easier.
+
+### Docker-Compose
+
+2. Choose one of the included configurations [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
+2. Download the environment (config) file template and fill it out `wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env `
+3. Start the container `docker-compose up -d`
+4. Create a default user by running `docker-compose exec web_recipes createsuperuser`. 
+
+### Manual
+Copy `.env.template` to `.env` and fill in the missing values accordingly.  
+Make sure all variables are available to whatever serves your application.
+
+Otherwise simply follow the instructions for any django based deployment
+(for example [this one](http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html)).
+
+## Updating
+
+While intermediate updates can be skipped when updating please make sure to **read the release notes** in case some special action is required to update.
+
+0. Before updating it is recommended to **create a backup!**
+1. Stop the container using `docker-compose down`
+2. Pull the latest image using `docker-compose pull`
+3. Start the container again using `docker-compose up -d`
+
 # Documentation
 
 Most things should be straight forward but there are some more complicated things.
 ##### Storage Backends
-A `Storage Backend` is a remote storage location where files are stored. To add a new backend click on `Storage Data` and then on `Storage Backends`. There click the plus button.
+A `Storage Backend` is a remote storage location where PDF files are read from. To add a new backend click on `Storage Data` and then on `Storage Backends`. There click the plus button.
 
 Enter a name (just a display name for you to identify it) and an API access Token for the account you want to use.
 Dropboxes API tokens can be found on the [Dropboxes API explorer](https://dropbox.github.io/dropbox-api-v2-explorer/#auth_token/from_oauth1)
@@ -43,26 +70,6 @@ If you have many untagged recipes, you may want to edit them all at once. To do 
 When clicking submit, every recipe containing the word will be updated (tags are added).
 
 > Currently the only option is word contains, maybe some more SQL like operators will be added later.
-
-## Installation
-
-### Docker-Compose
-1. Clone this repository to your desired install location
-2. Choose one of the included configurations [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
-3. Copy (if needed) the `docker-compose.override.yml.template` to `docker-compose.override.yml` and uncomment the configurations you need.
-4. Start the container (`docker-compose up -d`)
-5. Create a default user by running `docker-compose exec -it <web_recipes> createsuperuser`. **Replace "<web_recipes>" with your instance name which can be found via running `docker ps`**
-
-### Manual
-Copy `.env.template` to `.env` and fill in the missing values accordingly.  
-Make sure all variables are available to whatever serves your application.
-
-Otherwise simply follow the instructions for any django based deployment
-(for example [this one](http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html)).
-
-## Updating
-0. Before updating it is recommended to **backup your database**
-1. Pull the project files and start the container again using `docker-compose up -d --build`.
 
 ## Contributing
 Pull Requests and ideas are welcome, feel free to contribute in any way.
