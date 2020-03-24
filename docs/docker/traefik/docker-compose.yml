@@ -2,39 +2,34 @@ version: "3"
 services:
   db_recipes:
     restart: always
-    image: "postgres:11-alpine"
+    image: postgres:11-alpine
     volumes:
-    - ./postgresql:/var/lib/postgresql/data
+      - ./postgresql:/var/lib/postgresql/data
     env_file:
-    - ./.env
+      - ./.env
+    networks:
+      - default
 
   web_recipes:
-    build: .
+    image: vabene1111/recipes:test
     restart: always
     env_file:
-    - ./.env
-    command: "gunicorn --bind 0.0.0.0:8080 recipes.wsgi"
+      - ./.env
     volumes:
-    - .:/Recipes
+      - ./staticfiles:/opt/recipes/staticfiles
+      - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
-    - db_recipes
-
-  nginx_recipes:
-    image: "nginx"
-    restart: always
-    env_file:
-    - ./.env
-    volumes:
-    - ./nginx/conf.d:/etc/nginx/conf.d
-    - ./staticfiles:/static
-    - ./mediafiles:/media
-    labels:
+      - db_recipes
+    labels: # This lables are only examples!
       - "traefik.enable=true"
       - "traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`, `recipes.myotherdomain.com`)"
       - "traefik.http.routers.recipes.entrypoints=web_secure"
       - "traefik.http.routers.recipes.tls.certresolver=le_resolver"
+    networks:
+      - default
+      - traefik
 
 networks:
-    default:
-       external:
-         name: traefik
+  default:
+  traefik: # This is you external traefic network
+    external: true
