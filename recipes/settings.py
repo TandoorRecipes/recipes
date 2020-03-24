@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,8 +134,8 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = [
-  ('de', _('German')),
-  ('en', _('English')),
+    ('de', _('German')),
+    ('en', _('English')),
 ]
 
 # Static files (CSS, JavaScript, Images)
@@ -145,3 +146,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+
+# Serve static files with gzip
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -17,4 +17,5 @@ lxml
 webdavclient3
 python-dotenv
 psycopg2-binary
+whitenoise
 gunicorn
