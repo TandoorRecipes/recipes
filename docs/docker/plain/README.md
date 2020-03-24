@@ -1,1 +1,0 @@
-Just run docker-compose up in the root of this repository.
