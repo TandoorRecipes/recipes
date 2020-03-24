@@ -7,9 +7,11 @@ services:
       - ./postgresql:/var/lib/postgresql/data
     env_file:
       - ./.env
+    networks:
+      - default
 
   web_recipes:
-    build: .
+    image: vabene1111/recipes:test
     restart: always
     env_file:
       - ./.env
@@ -20,3 +22,8 @@ services:
       - 80:8080
     depends_on:
       - db_recipes
+    networks:
+      - default
+
+networks:
+  default:
