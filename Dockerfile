@@ -6,6 +6,7 @@ EXPOSE 8080
 
 RUN mkdir /opt/recipes
 WORKDIR /opt/recipes
+COPY . ./
 RUN chmod +x boot.sh setup.sh
 RUN ln -s /opt/recipes/setup.sh /usr/local/bin/createsuperuser
 
