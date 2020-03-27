@@ -137,7 +137,8 @@ def shopping_list(request):
                 if Recipe.objects.filter(pk=int(r)).exists():
                     recipes.append(int(r))
 
-        form = ShoppingForm(initial={'recipe': recipes})
+        markdown_format = False
+        form = ShoppingForm(initial={'recipe': recipes, 'markdown_format': False})
 
     ingredients = []
 
