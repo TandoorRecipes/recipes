@@ -29,4 +29,4 @@ def delete_url(model, pk):
 def markdown(value):
     tags = markdown_tags + ['pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead']
     parsed_md = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables', MarkdownFormatExtension()])
-    return bleach.clean(parsed_md, tags, print_attrs, markdown_attrs)
+    return bleach.clean(parsed_md, tags, markdown_attrs)
