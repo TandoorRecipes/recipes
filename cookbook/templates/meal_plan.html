@@ -54,6 +54,7 @@
                     <tr>
                         {% for day_key, days_value in plan_value.days.items %}
                             <td>
+                                <a href="{% url 'new_meal_plan' %}?date={{ day_key|date:'Y-m-d' }}&meal={{ plan_key }}"><i class="fas fa-plus"></i></a><br/>
                                 {% for mp in days_value %}
                                     <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
                                     <a href="{% url 'view_recipe' mp.recipe.id %}">{{ mp.recipe.name }}</a><br/>
