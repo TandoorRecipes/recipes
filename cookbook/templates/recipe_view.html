@@ -4,7 +4,7 @@
 {% load l10n %}
 {% load custom_tags %}
 
-{% block title %}{% trans 'View' %}{% endblock %}
+{% block title %}{{ recipe.name }}{% endblock %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
