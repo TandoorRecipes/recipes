@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -119,6 +120,12 @@ class MealPlanCreate(LoginRequiredMixin, CreateView):
     model = MealPlan
     form_class = MealPlanForm
     success_url = reverse_lazy('view_plan')
+
+    def get_initial(self):
+        return dict(
+            meal=self.request.GET['meal'] if 'meal' in self.request.GET else None,
+            date=datetime.strptime(self.request.GET['date'], '%Y-%m-%d') if 'date' in self.request.GET else None
+        )
 
     def form_valid(self, form):
         obj = form.save(commit=False)
