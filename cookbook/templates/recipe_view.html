@@ -60,6 +60,8 @@
             {% endif %}
             <a class="btn btn-info" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}"><i
                     class="fas fa-calendar"></i></a>
+            <a class="btn btn-light" onclick="window.print()"><i
+                    class="fas fa-print"></i></a>
         </div>
     </div>
 
@@ -98,7 +100,7 @@
 
     <div class="row">
         {% if ingredients %}
-            <div class="col-lg-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
+            <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -148,12 +150,16 @@
                                     </td>
                                     <td style="vertical-align: middle!important;">
                                         {% if i.note %}
-                                            <button class="btn btn-light btn-sm" type="button" data-container="body"
+                                            <button class="btn btn-light btn-sm d-print-none" type="button"
+                                                    data-container="body"
                                                     data-toggle="popover"
                                                     data-placement="right" data-html="true" data-trigger="focus"
                                                     data-content="{{ i.note }}">
                                                 <i class="fas fa-info"></i>
                                             </button>
+                                            <div class="d-none d-print-block">
+                                                <i class="far fa-comment-alt"></i> {{ i.note }}
+                                            </div>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -173,7 +179,7 @@
 
         {% endif %}
         {% if recipe.image %}
-            <div class="col-md-6 order-md-2 col-sm-12 order-sm-1 col-12 order-1 " style="text-align: center">
+            <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2" style="text-align: center">
                 <img class="img img-fluid rounded" src="{{ recipe.image.url }}" style="max-height: 30vh;"
                      alt="{% trans 'Recipe Image' %}">
                 <br/>
@@ -294,7 +300,8 @@
     <br/>
     <br/>
 
-    <h5><i class="far fa-comments"></i> {% trans 'Comments' %}</h5>
+    <h5 {% if not comments %}class="d-print-none" {% endif %}><i class="far fa-comments"></i> {% trans 'Comments' %}
+    </h5>
     {% for c in comments %}
         <div class="card">
             <div class="card-body">
