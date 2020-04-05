@@ -8,6 +8,25 @@
 {% endblock %}
 
 {% block content %}
+    <style>
+        .mealplan-cell .mealplan-add-button{
+            text-align: center;
+            display: block;
+        }
+
+        @media (hover: hover) {
+            .mealplan-cell .mealplan-add-button{
+                visibility: hidden;
+                float: right;
+                display: inline;
+            }
+
+            .mealplan-cell:hover .mealplan-add-button{
+                visibility: initial;
+            }
+        }
+
+    </style>
 
     <h3>
         {% trans 'Meal-Plan' %} <a href="{% url 'new_meal_plan' %}"><i class="fas fa-plus-circle"></i></a>
@@ -53,7 +72,8 @@
                     </tr>
                     <tr>
                         {% for day_key, days_value in plan_value.days.items %}
-                            <td>
+                            <td class="mealplan-cell">
+                                <a class="mealplan-add-button" href="{% url 'new_meal_plan' %}?date={{ day_key|date:'Y-m-d' }}&meal={{ plan_key }}"><i class="fas fa-plus"></i></a>
                                 {% for mp in days_value %}
                                     <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
                                     <a href="{% url 'view_recipe' mp.recipe.id %}">{{ mp.recipe.name }}</a><br/>
