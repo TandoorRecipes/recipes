@@ -90,7 +90,7 @@ class SyncLog(models.Model):
 
 class Keyword(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    icon = models.CharField(max_length=1, blank=True, null=True)
+    icon = models.CharField(max_length=2, blank=True, null=True)
     description = models.TextField(default="", blank=True)
     created_by = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
