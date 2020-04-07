@@ -98,7 +98,10 @@ def internal_recipe_update(request, pk):
                     recipe_ingredient.ingredient = ingredient
 
                 if isinstance(i['amount'], str):
-                    recipe_ingredient.amount = float(i['amount'].replace(',', '.'))
+                    try:
+                        recipe_ingredient.amount = float(i['amount'].replace(',', '.'))
+                    except ValueError:
+                        form.add_error("ingredients", _('There was an error converting your ingredients amount to a number: ') + i['unit__name'])
                 else:
                     recipe_ingredient.amount = i['amount']
 

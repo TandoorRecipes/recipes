@@ -26,6 +26,7 @@
             </div>
             {% if field.name == 'name' %}
                 <label>{% trans 'Ingredients' %}</label>
+                {{ form.ingredients.errors }}
                 <div id="ingredients-table"></div>
                 <br>
                 <div class="table-controls" style="text-align: center">
@@ -144,7 +145,7 @@
                         validator: "required",
                         editor: select2IngredientEditor
                     },
-                    {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "input"},
+                    {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "number"},
                     {
                         title: "{% trans 'Unit' %}",
                         field: "unit__name",
