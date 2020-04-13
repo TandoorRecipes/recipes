@@ -25,7 +25,7 @@ The docker image (`vabene1111/recipes`) simply exposes the application on port `
 
 ### Docker-Compose
 
-2. Choose one of the included configurations [here](https://github.com/vabene1111/recipes/tree/develop/docs/docker).
+2. Choose one of the included configurations [here](docs/docker).
 2. Download the environment (config) file template and fill it out `wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env `
 3. Start the container `docker-compose up -d`
 4. Create a default user by running `docker-compose exec web_recipes createsuperuser`. 
@@ -45,6 +45,10 @@ While intermediate updates can be skipped when updating please make sure to **re
 1. Stop the container using `docker-compose down`
 2. Pull the latest image using `docker-compose pull`
 3. Start the container again using `docker-compose up -d`
+
+## Kubernetes
+
+You can find a basic kubernetes setup [here](docs/k8s/). Please see the README in the folder for more detail.
 
 # Documentation
 
