@@ -194,7 +194,7 @@
 
     <div style="font-size: large">
         {% if recipe.instructions %}
-            {{ recipe.instructions | markdown | safe }}
+            {{ recipe.instructions | markdown | safe | urlize }}
         {% endif %}
     </div>
 
