@@ -20,14 +20,16 @@ from cookbook.tables import RecipeTable
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse_lazy('view_search'))
+    try:
+        page_map = {
+            UserPreference.SEARCH: reverse_lazy('view_search'),
+            UserPreference.PLAN: reverse_lazy('view_plan'),
+            UserPreference.BOOKS: reverse_lazy('view_books'),
+        }
 
-    page_map = {
-        UserPreference.SEARCH: reverse_lazy('view_search'),
-        UserPreference.PLAN: reverse_lazy('view_plan'),
-        UserPreference.BOOKS: reverse_lazy('view_books'),
-    }
-
-    return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
+        return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
+    except UserPreference.DoesNotExist:
+        return HttpResponseRedirect(reverse_lazy('view_search'))
 
 
 def search(request):
