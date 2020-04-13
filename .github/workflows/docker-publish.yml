@@ -1,4 +1,4 @@
-name: Publish latest/develop Docker
+name: Publish branch Docker
 on: [push]
   branches: master, develop
 
