@@ -7,10 +7,10 @@ class TestViewsGeneral(TestViews):
 
     def test_index(self):
         r = self.client.get(reverse('index'))
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 302)
 
         r = self.anonymous_client.get(reverse('index'))
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 302)
 
     def test_books(self):
         url = reverse('view_books')
