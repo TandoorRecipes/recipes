@@ -31,10 +31,11 @@ class UserPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = UserPreference
-        fields = ('theme', 'nav_color')
+        fields = ('default_unit', 'theme', 'nav_color')
 
         help_texts = {
-            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!')
+            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
+            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.')
         }
 
 

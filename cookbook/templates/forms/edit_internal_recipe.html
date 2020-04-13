@@ -189,7 +189,7 @@
                 data.push({
                     ingredient__name: "{% trans 'Ingredient' %}",
                     amount: "100",
-                    unit__name: "g",
+                    unit__name: "{{ request.user.userpreference.default_unit }}",
                     note: "",
                     id: Math.floor(Math.random() * 10000000),
                     delete: false,

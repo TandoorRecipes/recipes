@@ -175,6 +175,7 @@ def settings(request):
                     up = UserPreference(user=request.user)
                 up.theme = form.cleaned_data['theme']
                 up.nav_color = form.cleaned_data['nav_color']
+                up.default_unit = form.cleaned_data['default_unit']
                 up.save()
 
         if 'user_name_form' in request.POST:
