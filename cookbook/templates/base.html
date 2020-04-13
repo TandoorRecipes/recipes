@@ -74,8 +74,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if request.resolver_match.url_name in 'index,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-book"></i> {% trans 'Cookbook' %}<span
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_search,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'view_search' %}"><i class="fas fa-book"></i> {% trans 'Cookbook' %}<span
                         class="sr-only">(current)</span></a>
             </li>
 

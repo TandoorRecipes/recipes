@@ -8,6 +8,7 @@ from cookbook.helper import dal
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('search/', views.search, name='view_search'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
     path('shopping/', views.shopping_list, name='view_shopping'),

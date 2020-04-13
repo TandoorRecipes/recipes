@@ -6,7 +6,9 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
@@ -16,6 +18,19 @@ from cookbook.tables import RecipeTable
 
 
 def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse_lazy('view_search'))
+
+    page_map = {
+        UserPreference.SEARCH: reverse_lazy('view_search'),
+        UserPreference.PLAN: reverse_lazy('view_plan'),
+        UserPreference.BOOKS: reverse_lazy('view_books'),
+    }
+
+    return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
+
+
+def search(request):
     if request.user.is_authenticated:
         f = RecipeFilter(request.GET, queryset=Recipe.objects.all().order_by('name'))
 
@@ -176,6 +191,7 @@ def settings(request):
                 up.theme = form.cleaned_data['theme']
                 up.nav_color = form.cleaned_data['nav_color']
                 up.default_unit = form.cleaned_data['default_unit']
+                up.default_page = form.cleaned_data['default_page']
                 up.save()
 
         if 'user_name_form' in request.POST:
