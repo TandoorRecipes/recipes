@@ -17,6 +17,6 @@ jobs:
               with:
                 publish: true
                 imageName: recipes
-                tag: ${{GITHUB_REF/refs\/tags\//}}
+                tag: test
                 dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
                 dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
