@@ -16,9 +16,10 @@ class Nextcloud(Provider):
     @staticmethod
     def get_client(storage):
         options = {
-            'webdav_hostname': storage.url + '/remote.php/dav/files/' + storage.username,
+            'webdav_hostname': storage.url,
             'webdav_login': storage.username,
-            'webdav_password': storage.password
+            'webdav_password': storage.password,
+            'webdav_root': '/remote.php/dav/files/' + storage.username
         }
         return wc.Client(options)
 
