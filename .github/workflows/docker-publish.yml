@@ -1,5 +1,7 @@
-name: Publish Docker
+name: Publish latest/develop Docker
 on: [push]
+  branches: master, develop
+
 jobs:
   build:
     runs-on: ubuntu-latest

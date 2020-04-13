@@ -1,4 +1,4 @@
-name: Deploy Docker Image
+name: Release DockerHub Version
 
 on:
   push:
@@ -11,12 +11,16 @@ jobs:
         name: Build image job
         steps:
             - name: Checkout master
-              uses: actions/checkout@master
+              uses: actions/checkout@master#
+            - name: Get the version
+              id: get_version
+              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
             - name: Build and publish image
               uses: ilteoood/docker_buildx@master
               with:
                 publish: true
                 imageName: recipes
-                tag: test
+                platform: linux/amd64,linux/arm64
+                tag: ${{ steps.get_version.outputs.VERSION }}
                 dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
                 dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
