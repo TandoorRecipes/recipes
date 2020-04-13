@@ -1,8 +1,9 @@
 name: Publish branch Docker
-on: [push]
-  branches:
-    - master
-    - develop
+on:
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
