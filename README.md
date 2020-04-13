@@ -46,6 +46,10 @@ While intermediate updates can be skipped when updating please make sure to **re
 2. Pull the latest image using `docker-compose pull`
 3. Start the container again using `docker-compose up -d`
 
+## Kubernetes
+
+You can find a basic kubernetes setup [here](docs/k8s/). Please see the README in the folder for more detail.
+
 # Documentation
 
 Most things should be straight forward but there are some more complicated things.
