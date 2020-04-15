@@ -1,4 +1,4 @@
-name: Release DockerHub Version
+name: publish tagged release docker
 
 on:
   push:
@@ -20,7 +20,6 @@ jobs:
               with:
                 publish: true
                 imageName: vabene1111/recipes
-                platform: linux/amd64,linux/arm64
                 tag: ${{ steps.get_version.outputs.VERSION }}
                 dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
                 dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
