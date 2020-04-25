@@ -1,4 +1,3 @@
-from dal import autocomplete
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext as _
@@ -105,6 +104,10 @@ class ExportForm(forms.Form):
         queryset=Recipe.objects.filter(internal=True).all(),
         widget=SelectWidget
     )
+
+
+class ImportForm(forms.Form):
+    recipe = forms.CharField(widget=forms.Textarea)
 
 
 class UnitMergeForm(forms.Form):

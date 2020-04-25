@@ -6,5 +6,14 @@
 {% block title %}{% trans 'Import Recipes' %}{% endblock %}
 
 {% block content %}
-
+    <div class="row">
+        <div class="col col-md-12">
+            <form action="." method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button class="btn btn-success" type="submit"><i class="fas fa-file-import"></i> {% trans 'Import' %}
+                </button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
