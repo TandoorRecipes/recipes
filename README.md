@@ -3,6 +3,8 @@ Recipes is a Django application to manage, tag and search recipes using either b
 
 ![Preview](docs/preview.png)
 
+[More Screenshots](https://imgur.com/a/V01151p)
+
 ### Features
 
 - :package: **Sync** files with Dropbox and Nextcloud (more can easily be added)
@@ -15,10 +17,12 @@ Recipes is a Django application to manage, tag and search recipes using either b
 - :person_with_blond_hair: **Share** recipes with friends and comment on them to suggest or remember changes you made
 - :whale: Easy setup with **Docker**
 - :art: Customize your interface with **themes**
+- :envelope: Export and import recipes from other users
 - :heavy_plus_sign: Many more like recipe scaling, image compression, cookbooks, printing views, ...
 
-This application is meant for people with a collection of recipes they want to share with family and friends or simply store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
-
+This application is meant for people with a collection of recipes they want to share with family and friends or simply 
+store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
+Some Documentation can be found [here](https://github.com/vabene1111/recipes/wiki)
 # Installation
 
 The docker image (`vabene1111/recipes`) simply exposes the application on port `8080`. You may choose any preferred installation method, the following are just examples to make it easier.
@@ -38,7 +42,6 @@ Otherwise simply follow the instructions for any django based deployment
 (for example [this one](http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html)).
 
 ## Updating
-
 While intermediate updates can be skipped when updating please make sure to **read the release notes** in case some special action is required to update.
 
 0. Before updating it is recommended to **create a backup!**
@@ -49,31 +52,6 @@ While intermediate updates can be skipped when updating please make sure to **re
 ## Kubernetes
 
 You can find a basic kubernetes setup [here](docs/k8s/). Please see the README in the folder for more detail.
-
-# Documentation
-
-Most things should be straight forward but there are some more complicated things.
-##### Storage Backends
-A `Storage Backend` is a remote storage location where PDF files are read from. To add a new backend click on `Storage Data` and then on `Storage Backends`. There click the plus button.
-
-Enter a name (just a display name for you to identify it) and an API access Token for the account you want to use.
-Dropboxes API tokens can be found on the [Dropboxes API explorer](https://dropbox.github.io/dropbox-api-v2-explorer/#auth_token/from_oauth1)
-with the button on the top right. For Nextcloud you can use a App apssword created in the settings.
-
-##### Adding Synced Paths
-To add a new path from your Storage backend to the sync list, go to `Storage Data >> Configure Sync` and select the storage backend you want to use.
-Then enter the path you want to monitor starting at the storage root (e.g. `/Folder/RecipesFolder`) and save it.
-
-##### Syncing Data
-To sync the recipes app with the storage backends press `Sync now` under `Storage Data >> Configure Sync`.
-##### Import Recipes
-All files found by the sync can be found under `Manage Data >> Import recipes`. There you can either import all at once without modifying them or import one by one, adding tags while importing.
-##### Batch Edit
-If you have many untagged recipes, you may want to edit them all at once. To do so, go to
-`Storage Data >> Batch Edit`. Enter a word which should be contained in the recipe name and select the tags you want to apply.
-When clicking submit, every recipe containing the word will be updated (tags are added).
-
-> Currently the only option is word contains, maybe some more SQL like operators will be added later.
 
 ## Contributing
 Pull Requests and ideas are welcome, feel free to contribute in any way.
