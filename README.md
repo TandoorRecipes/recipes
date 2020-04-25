@@ -14,7 +14,7 @@ Recipes is a Django application to manage, tag and search recipes using either b
 - :iphone: Optimized for use on **mobile** devices like phones and tablets
 - :shopping_cart: Generate **shopping** lists from recipes
 - :calendar: Create a **Plan** on what to eat when
-- :person_with_blond_hair: **Share** recipes with friends and comment on them to suggest or remember changes you made
+- :family: **Share** recipes with friends and comment on them to suggest or remember changes you made
 - :whale: Easy setup with **Docker**
 - :art: Customize your interface with **themes**
 - :envelope: Export and import recipes from other users
