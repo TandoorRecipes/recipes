@@ -3,7 +3,7 @@ from pydoc import locate
 from django.urls import path
 
 from .views import *
-from cookbook.views import api
+from cookbook.views import api, import_export
 from cookbook.helper import dal
 
 urlpatterns = [
@@ -13,6 +13,9 @@ urlpatterns = [
     path('plan/', views.meal_plan, name='view_plan'),
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('settings/', views.settings, name='view_settings'),
+
+    path('import/', import_export.import_recipe, name='view_import'),
+    path('export/', import_export.export_recipe, name='view_export'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
 
