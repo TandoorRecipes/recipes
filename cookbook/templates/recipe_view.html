@@ -52,17 +52,23 @@
                     class="fas fa-pencil-alt"></i></a></h3>
         </div>
         <div class="col col-md-3 d-print-none" style="text-align: right">
-            <button class="btn btn-success" onclick="$('#bookmarkModal').modal({'show':true})"><i
+            <button class="btn btn-success" onclick="$('#bookmarkModal').modal({'show':true})" data-toggle="tooltip"
+                    data-placement="top" title="{% trans 'Add to Book' %}"><i
                     class="fas fa-bookmark"></i></button>
             {% if ingredients %}
-                <a class="btn btn-warning" href="{% url 'view_shopping' %}?r={{ recipe.pk }}"><i
+                <a class="btn btn-warning" href="{% url 'view_shopping' %}?r={{ recipe.pk }}" data-toggle="tooltip"
+                   data-placement="top" title="{% trans 'Generate shopping list' %}"><i
                         class="fas fa-shopping-cart"></i></a>
             {% endif %}
-            <a class="btn btn-info" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}"><i
+            <a class="btn btn-info" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}" data-toggle="tooltip"
+               data-placement="top" title="{% trans 'Add to Mealplan' %}"><i
                     class="fas fa-calendar"></i></a>
-            <a class="btn btn-light" onclick="window.print()"><i
+            <a class="btn btn-light" onclick="window.print()" data-toggle="tooltip"
+               data-placement="top" title="{% trans 'Print' %}"><i
                     class="fas fa-print"></i></a>
-            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"><i
+            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"
+               data-toggle="tooltip"
+               data-placement="top" title="{% trans 'Export recipe' %}"><i
                     class="fas fa-file-export"></i></a>
         </div>
     </div>
@@ -383,6 +389,10 @@
                 $('#ing_' + key).html(Math.round(ingredients[key] * factor))
             }
         }
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
     </script>
 {% endblock %}
