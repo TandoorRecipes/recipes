@@ -205,7 +205,7 @@ def edit_storage(request, pk):
 
             messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
         else:
-            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend.!'))
+            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend!'))
     else:
         pseudo_instance = instance
         pseudo_instance.password = '__NO__CHANGE__'

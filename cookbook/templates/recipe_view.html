@@ -62,6 +62,8 @@
                     class="fas fa-calendar"></i></a>
             <a class="btn btn-light" onclick="window.print()"><i
                     class="fas fa-print"></i></a>
+            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"><i
+                    class="fas fa-file-export"></i></a>
         </div>
     </div>
 
@@ -194,7 +196,7 @@
 
     <div style="font-size: large">
         {% if recipe.instructions %}
-            {{ recipe.instructions | urlize | markdown | safe  }}
+            {{ recipe.instructions | urlize | markdown | safe }}
         {% endif %}
     </div>
 
