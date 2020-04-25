@@ -104,10 +104,18 @@ class ExportForm(forms.Form):
         queryset=Recipe.objects.filter(internal=True).all(),
         widget=SelectWidget
     )
+    image = forms.BooleanField(
+        help_text=_('Export Base64 encoded image?'),
+        required=False
+    )
+    download = forms.BooleanField(
+        help_text=_('Download export directly or show on page?'),
+        required=False
+    )
 
 
 class ImportForm(forms.Form):
-    recipe = forms.CharField(widget=forms.Textarea)
+    recipe = forms.CharField(widget=forms.Textarea, help_text=_('Simply paste a JSON export into this textarea and click import.'))
 
 
 class UnitMergeForm(forms.Form):

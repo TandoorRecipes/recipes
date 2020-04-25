@@ -75,7 +75,8 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if request.resolver_match.url_name in 'view_search,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'view_search' %}"><i class="fas fa-book"></i> {% trans 'Cookbook' %}<span
+                <a class="nav-link" href="{% url 'view_search' %}"><i
+                        class="fas fa-book"></i> {% trans 'Cookbook' %}<span
                         class="sr-only">(current)</span></a>
             </li>
 
@@ -121,13 +122,15 @@
                     <a class="dropdown-item" href="{% url 'data_sync' %}"><i
                             class="fas fa-sync-alt fa-fw"></i> {% trans 'Configure Sync' %}</a>
                     <a class="dropdown-item" href="{% url 'list_recipe_import' %}"><i
-                            class="far fa-file-alt fa-fw"></i> {% trans 'Import Recipes' %}</a>
+                            class="far fa-file-alt fa-fw"></i> {% trans 'Discovered Recipes' %}</a>
                     <a class="dropdown-item" href="{% url 'list_sync_log' %}"><i
-                            class="fas fa-history fa-fw"></i> {% trans 'Import Log' %}</a>
+                            class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
                     <a class="dropdown-item" href="{% url 'data_stats' %}"><i
                             class="fas fa-chart-line fa-fw"></i> {% trans 'Statistics' %}</a>
                     <a class="dropdown-item" href="{% url 'edit_ingredient' %}"><i
                             class="fas fa-balance-scale fa-fw"></i> {% trans 'Units & Ingredients' %}</a>
+                    <a class="dropdown-item" href="{% url 'view_import' %}"><i
+                            class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
 
                 </div>
             </li>
@@ -137,7 +140,8 @@
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-alt"></i> {{ user.get_user_name }}
+                       aria-haspopup="true" aria-expanded="false"><i
+                            class="fas fa-user-alt"></i> {{ user.get_user_name }}
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
