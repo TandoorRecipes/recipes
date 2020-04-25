@@ -100,6 +100,13 @@ class ShoppingForm(forms.Form):
     )
 
 
+class ExportForm(forms.Form):
+    recipe = forms.ModelChoiceField(
+        queryset=Recipe.objects.filter(internal=True).all(),
+        widget=SelectWidget
+    )
+
+
 class UnitMergeForm(forms.Form):
     prefix = 'unit'
 
