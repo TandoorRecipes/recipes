@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
+from cookbook.helper.group_helper import group_required
 from cookbook.models import Recipe, Sync, Storage
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
@@ -26,7 +27,7 @@ def update_recipe_links(recipe):
     recipe.save()
 
 
-@login_required
+@group_required('user')
 def get_external_file_link(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
     if not recipe.link:
@@ -35,7 +36,7 @@ def get_external_file_link(request, recipe_id):
     return HttpResponse(recipe.link)
 
 
-@login_required
+@group_required('user')
 def get_recipe_file(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
     if not recipe.cors_link:
@@ -44,7 +45,7 @@ def get_recipe_file(request, recipe_id):
     return HttpResponse(get_recipe_provider(recipe).get_base64_file(recipe))
 
 
-@login_required
+@group_required('user')
 def sync_all(request):
     monitors = Sync.objects.filter(active=True)
 

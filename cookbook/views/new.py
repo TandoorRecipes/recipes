@@ -2,8 +2,6 @@ import re
 from datetime import datetime
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -12,10 +10,12 @@ from django.views.generic import CreateView
 
 from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
     RecipeBookForm, MealPlanForm
+from cookbook.helper.group_helper import GroupRequiredMixin, group_required
 from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan
 
 
-class RecipeCreate(LoginRequiredMixin, CreateView):
+class RecipeCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['user']
     template_name = "generic/new_template.html"
     model = Recipe
     fields = ('name',)
@@ -36,7 +36,8 @@ class RecipeCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class KeywordCreate(LoginRequiredMixin, CreateView):
+class KeywordCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['user']
     template_name = "generic/new_template.html"
     model = Keyword
     form_class = KeywordForm
@@ -48,7 +49,8 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class StorageCreate(LoginRequiredMixin, CreateView):
+class StorageCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['admin']
     template_name = "generic/new_template.html"
     model = Storage
     form_class = StorageForm
@@ -66,7 +68,7 @@ class StorageCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-@login_required
+@group_required('user')
 def create_new_external_recipe(request, import_id):
     if request.method == "POST":
         form = ImportRecipeForm(request.POST)
@@ -97,7 +99,8 @@ def create_new_external_recipe(request, import_id):
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
 
 
-class RecipeBookCreate(LoginRequiredMixin, CreateView):
+class RecipeBookCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['user']
     template_name = "generic/new_template.html"
     model = RecipeBook
     form_class = RecipeBookForm
@@ -115,7 +118,8 @@ class RecipeBookCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class MealPlanCreate(LoginRequiredMixin, CreateView):
+class MealPlanCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['user']
     template_name = "generic/new_template.html"
     model = MealPlan
     form_class = MealPlanForm
