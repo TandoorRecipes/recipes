@@ -5,6 +5,7 @@ from bleach_whitelist import markdown_tags, markdown_attrs, all_styles, print_at
 from django.urls import reverse
 
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
+from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import get_model_name
 
 register = template.Library()
@@ -28,5 +29,5 @@ def delete_url(model, pk):
 @register.filter()
 def markdown(value):
     tags = markdown_tags + ['pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead']
-    parsed_md = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables', MarkdownFormatExtension()])
+    parsed_md = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables',  UrlizeExtension(), MarkdownFormatExtension()])
     return bleach.clean(parsed_md, tags, markdown_attrs)

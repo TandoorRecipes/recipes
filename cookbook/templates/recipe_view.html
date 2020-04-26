@@ -202,7 +202,7 @@
 
     <div style="font-size: large">
         {% if recipe.instructions %}
-            {{ recipe.instructions | urlize | markdown | safe }}
+            {{ recipe.instructions | markdown | safe }}
         {% endif %}
     </div>
 
