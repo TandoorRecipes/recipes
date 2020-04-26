@@ -7,11 +7,12 @@ from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
 
 from cookbook.forms import SyncForm, BatchEditForm
+from cookbook.helper.group_helper import group_required
 from cookbook.models import *
 from cookbook.tables import SyncTable
 
 
-@login_required
+@group_required('user')
 def sync(request):
     if request.method == "POST":
         form = SyncForm(request.POST)
@@ -31,12 +32,12 @@ def sync(request):
     return render(request, 'batch/monitor.html', {'form': form, 'monitored_paths': monitored_paths})
 
 
-@login_required
+@group_required('user')
 def sync_wait(request):
     return render(request, 'batch/waiting.html')
 
 
-@login_required
+@group_required('user')
 def batch_import(request):
     imports = RecipeImport.objects.all()
     for new_recipe in imports:
@@ -47,7 +48,7 @@ def batch_import(request):
     return redirect('list_recipe_import')
 
 
-@login_required
+@group_required('user')
 def batch_edit(request):
     if request.method == "POST":
         form = BatchEditForm(request.POST)
@@ -86,7 +87,7 @@ class Object(object):
     pass
 
 
-@login_required
+@group_required('user')
 def statistics(request):
     counts = Object()
     counts.recipes = Recipe.objects.count()

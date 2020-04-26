@@ -5,7 +5,6 @@ import simplejson
 import simplejson as json
 from PIL import Image
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files import File
 from django.http import HttpResponseRedirect
@@ -16,13 +15,14 @@ from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
     MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm
+from cookbook.helper.group_helper import group_required, GroupRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
     MealPlan, Unit, Ingredient
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
 
-@login_required
+@group_required('guest')
 def switch_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     if recipe.internal:
@@ -31,7 +31,7 @@ def switch_recipe(request, pk):
         return HttpResponseRedirect(reverse('edit_external_recipe', args=[pk]))
 
 
-@login_required
+@group_required('user')
 def convert_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     if not recipe.internal:
@@ -41,7 +41,7 @@ def convert_recipe(request, pk):
     return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
 
 
-@login_required
+@group_required('user')
 def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
     status = 200
@@ -131,7 +131,8 @@ def internal_recipe_update(request, pk):
                    'view_url': reverse('view_recipe', args=[pk])}, status=status)
 
 
-class SyncUpdate(LoginRequiredMixin, UpdateView):
+class SyncUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['admin']
     template_name = "generic/edit_template.html"
     model = Sync
     form_class = SyncForm
@@ -147,7 +148,8 @@ class SyncUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class KeywordUpdate(LoginRequiredMixin, UpdateView):
+class KeywordUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = Keyword
     form_class = KeywordForm
@@ -163,7 +165,8 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class IngredientUpdate(LoginRequiredMixin, UpdateView):
+class IngredientUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = Ingredient
     form_class = IngredientForm
@@ -179,7 +182,7 @@ class IngredientUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
+@group_required('admin')
 def edit_storage(request, pk):
     instance = get_object_or_404(Storage, pk=pk)
 
@@ -239,7 +242,8 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class ImportUpdate(LoginRequiredMixin, UpdateView):
+class ImportUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = RecipeImport
     fields = ['name', 'path']
@@ -255,7 +259,8 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class RecipeBookUpdate(LoginRequiredMixin, UpdateView):
+class RecipeBookUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = RecipeBook
     fields = ['name']
@@ -271,7 +276,8 @@ class RecipeBookUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class MealPlanUpdate(LoginRequiredMixin, UpdateView):
+class MealPlanUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = MealPlan
     form_class = MealPlanForm
@@ -287,7 +293,8 @@ class MealPlanUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class ExternalRecipeUpdate(LoginRequiredMixin, UpdateView):
+class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     model = Recipe
     form_class = ExternalRecipeForm
     template_name = "generic/edit_template.html"
@@ -322,7 +329,7 @@ class ExternalRecipeUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
+@group_required('user')
 def edit_ingredients(request):
     if request.method == "POST":
         success = False

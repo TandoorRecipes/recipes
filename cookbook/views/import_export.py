@@ -11,9 +11,11 @@ from django.urls import reverse_lazy
 
 from django.utils.translation import gettext as _
 from cookbook.forms import ExportForm, ImportForm
+from cookbook.helper.group_helper import group_required
 from cookbook.models import RecipeIngredient, Recipe, Unit, Ingredient, Keyword
 
 
+@group_required('user')
 def import_recipe(request):
     if request.method == "POST":
         form = ImportForm(request.POST)
@@ -62,6 +64,7 @@ def import_recipe(request):
     return render(request, 'import.html', {'form': form})
 
 
+@group_required('user')
 def export_recipe(request):
     context = {}
     if request.method == "POST":

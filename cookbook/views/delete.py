@@ -5,13 +5,15 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
+from cookbook.helper.group_helper import GroupRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
     RecipeBookEntry, MealPlan, Ingredient
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
 
-class RecipeDelete(LoginRequiredMixin, DeleteView):
+class RecipeDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = Recipe
     success_url = reverse_lazy('index')
@@ -23,6 +25,7 @@ class RecipeDelete(LoginRequiredMixin, DeleteView):
 
 
 def delete_recipe_source(request, pk):
+    group_required = ['user']
     recipe = get_object_or_404(Recipe, pk=pk)
 
     if recipe.storage.method == Storage.DROPBOX:
@@ -38,7 +41,8 @@ def delete_recipe_source(request, pk):
     return HttpResponseRedirect(reverse('edit_recipe', args=[recipe.pk]))
 
 
-class RecipeImportDelete(LoginRequiredMixin, DeleteView):
+class RecipeImportDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = RecipeImport
     success_url = reverse_lazy('list_recipe_import')
@@ -49,7 +53,8 @@ class RecipeImportDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class SyncDelete(LoginRequiredMixin, DeleteView):
+class SyncDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['admin']
     template_name = "generic/delete_template.html"
     model = Sync
     success_url = reverse_lazy('data_sync')
@@ -60,7 +65,8 @@ class SyncDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class KeywordDelete(LoginRequiredMixin, DeleteView):
+class KeywordDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = Keyword
     success_url = reverse_lazy('list_keyword')
@@ -71,7 +77,8 @@ class KeywordDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class IngredientDelete(LoginRequiredMixin, DeleteView):
+class IngredientDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = Ingredient
     success_url = reverse_lazy('list_ingredient')
@@ -82,7 +89,8 @@ class IngredientDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class StorageDelete(LoginRequiredMixin, DeleteView):
+class StorageDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['admin']
     template_name = "generic/delete_template.html"
     model = Storage
     success_url = reverse_lazy('list_storage')
@@ -104,7 +112,8 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class RecipeBookDelete(LoginRequiredMixin, DeleteView):
+class RecipeBookDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = RecipeBook
     success_url = reverse_lazy('view_books')
@@ -115,7 +124,8 @@ class RecipeBookDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class RecipeBookEntryDelete(LoginRequiredMixin, DeleteView):
+class RecipeBookEntryDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = RecipeBookEntry
     success_url = reverse_lazy('view_books')
@@ -126,7 +136,8 @@ class RecipeBookEntryDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class MealPlanDelete(LoginRequiredMixin, DeleteView):
+class MealPlanDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = MealPlan
     success_url = reverse_lazy('view_plan')

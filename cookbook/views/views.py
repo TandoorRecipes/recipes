@@ -1,10 +1,8 @@
 import copy
-import re
 from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -14,6 +12,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
+from cookbook.helper.group_helper import group_required
 from cookbook.tables import RecipeTable
 
 
@@ -44,7 +43,7 @@ def search(request):
         return render(request, 'index.html')
 
 
-@login_required
+@group_required('guest')
 def recipe_view(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)
@@ -80,7 +79,7 @@ def recipe_view(request, pk):
                    'bookmark_form': bookmark_form})
 
 
-@login_required()
+@group_required('user')
 def books(request):
     book_list = []
 
@@ -106,7 +105,7 @@ def get_days_from_week(start, end):
     return days
 
 
-@login_required()
+@group_required('user')
 def meal_plan(request):
     js_week = datetime.now().strftime("%Y-W%V")
     if request.method == "POST":
@@ -134,7 +133,7 @@ def meal_plan(request):
     return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days, 'surrounding_weeks': surrounding_weeks})
 
 
-@login_required
+@group_required('user')
 def shopping_list(request):
     markdown_format = True
 
@@ -174,7 +173,7 @@ def shopping_list(request):
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
 
 
-@login_required
+@group_required('guest')
 def settings(request):
     try:
         up = request.user.userpreference
