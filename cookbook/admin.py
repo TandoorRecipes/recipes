@@ -80,7 +80,7 @@ class RecipeBookAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user_name(obj):
-        return obj.user.get_user_name()
+        return obj.created_by.get_user_name()
 
 
 admin.site.register(RecipeBook, RecipeBookAdmin)
@@ -98,7 +98,7 @@ class MealPlanAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user(obj):
-        return obj.user.get_user_name()
+        return obj.created_by.get_user_name()
 
 
 admin.site.register(MealPlan, MealPlanAdmin)

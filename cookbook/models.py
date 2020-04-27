@@ -188,7 +188,7 @@ class RecipeImport(models.Model):
 
 class RecipeBook(models.Model):
     name = models.CharField(max_length=128)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -209,7 +209,7 @@ class MealPlan(models.Model):
     OTHER = 'OTHER'
     MEAL_TYPES = ((BREAKFAST, _('Breakfast')), (LUNCH, _('Lunch')), (DINNER, _('Dinner')), (OTHER, _('Other')),)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
     note = models.TextField(blank=True)

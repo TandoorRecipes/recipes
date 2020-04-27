@@ -10,7 +10,7 @@ from django.views.generic import CreateView
 
 from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
     RecipeBookForm, MealPlanForm
-from cookbook.helper.group_helper import GroupRequiredMixin, group_required
+from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
 from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan
 
 
@@ -108,7 +108,7 @@ class RecipeBookCreate(GroupRequiredMixin, CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        obj.user = self.request.user
+        obj.created_by = self.request.user
         obj.save()
         return HttpResponseRedirect(reverse('view_books'))
 
@@ -133,7 +133,7 @@ class MealPlanCreate(GroupRequiredMixin, CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        obj.user = self.request.user
+        obj.created_by = self.request.user
         obj.save()
         return HttpResponseRedirect(reverse('view_plan'))
 
