@@ -1,9 +1,7 @@
 from django.contrib import messages
-from django.http import HttpResponse, FileResponse
-from django.urls import reverse
-from django.utils.translation import gettext as _
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.utils.translation import gettext as _
 
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import Recipe, Sync, Storage
