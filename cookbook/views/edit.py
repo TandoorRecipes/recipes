@@ -217,7 +217,7 @@ def edit_storage(request, pk):
         pseudo_instance.token = '__NO__CHANGE__'
         form = StorageForm(instance=pseudo_instance)
 
-    return render(request, 'generic/edit_template.html', {'form': form})
+    return render(request, 'generic/edit_template.html', {'form': form, 'title': _('Storage')})
 
 
 class CommentUpdate(OwnerRequiredMixin, UpdateView):
