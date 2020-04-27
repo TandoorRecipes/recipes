@@ -12,7 +12,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
-from cookbook.helper.group_helper import group_required
+from cookbook.helper.permission_helper import group_required
 from cookbook.tables import RecipeTable
 
 
@@ -83,7 +83,7 @@ def recipe_view(request, pk):
 def books(request):
     book_list = []
 
-    books = RecipeBook.objects.filter(user=request.user).all()
+    books = RecipeBook.objects.filter(created_by=request.user).all()
 
     for b in books:
         book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})

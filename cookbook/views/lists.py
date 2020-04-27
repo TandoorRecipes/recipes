@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
 from cookbook.filters import IngredientFilter
-from cookbook.helper.group_helper import group_required
+from cookbook.helper.permission_helper import group_required
 from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Ingredient
 from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable
 

@@ -15,7 +15,9 @@ from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
     MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm
-from cookbook.helper.group_helper import group_required, GroupRequiredMixin
+from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
+
+from cookbook.helper.permission_helper import OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
     MealPlan, Unit, Ingredient
 from cookbook.provider.dropbox import Dropbox
@@ -218,19 +220,10 @@ def edit_storage(request, pk):
     return render(request, 'generic/edit_template.html', {'form': form})
 
 
-class CommentUpdate(LoginRequiredMixin, UpdateView):
+class CommentUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = Comment
     form_class = CommentForm
-
-    # TODO add msg box
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if not (obj.created_by == request.user or request.user.is_superuser):
-            messages.add_message(request, messages.ERROR, _('You cannot edit this comment!'))
-            return HttpResponseRedirect(reverse('view_recipe', args=[obj.recipe.pk]))
-        return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('edit_comment', kwargs={'pk': self.object.pk})
@@ -259,13 +252,10 @@ class ImportUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class RecipeBookUpdate(GroupRequiredMixin, UpdateView):
-    groups_required = ['user']
+class RecipeBookUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = RecipeBook
     fields = ['name']
-
-    # TODO add msg box
 
     def get_success_url(self):
         return reverse('view_books')
@@ -276,13 +266,10 @@ class RecipeBookUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class MealPlanUpdate(GroupRequiredMixin, UpdateView):
-    groups_required = ['user']
+class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = MealPlan
     form_class = MealPlanForm
-
-    # TODO add msg box
 
     def get_success_url(self):
         return reverse('view_plan')

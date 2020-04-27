@@ -7,7 +7,7 @@ from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
 
 from cookbook.forms import SyncForm, BatchEditForm
-from cookbook.helper.group_helper import group_required
+from cookbook.helper.permission_helper import group_required
 from cookbook.models import *
 from cookbook.tables import SyncTable
 

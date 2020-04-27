@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 
 from django.utils.translation import gettext as _
 from cookbook.forms import ExportForm, ImportForm
-from cookbook.helper.group_helper import group_required
+from cookbook.helper.permission_helper import group_required
 from cookbook.models import RecipeIngredient, Recipe, Unit, Ingredient, Keyword
 
 

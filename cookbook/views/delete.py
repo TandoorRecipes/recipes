@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -5,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
-from cookbook.helper.group_helper import GroupRequiredMixin
+from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
     RecipeBookEntry, MealPlan, Ingredient
 from cookbook.provider.dropbox import Dropbox
@@ -101,7 +102,7 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
         return context
 
 
-class CommentDelete(LoginRequiredMixin, DeleteView):
+class CommentDelete(OwnerRequiredMixin, DeleteView):
     template_name = "generic/delete_template.html"
     model = Comment
     success_url = reverse_lazy('index')
@@ -112,8 +113,7 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
-class RecipeBookDelete(GroupRequiredMixin, DeleteView):
-    groups_required = ['user']
+class RecipeBookDelete(OwnerRequiredMixin, DeleteView):
     template_name = "generic/delete_template.html"
     model = RecipeBook
     success_url = reverse_lazy('view_books')
@@ -130,14 +130,20 @@ class RecipeBookEntryDelete(GroupRequiredMixin, DeleteView):
     model = RecipeBookEntry
     success_url = reverse_lazy('view_books')
 
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if not (obj.book.created_by == request.user or request.user.is_superuser):
+            messages.add_message(request, messages.ERROR, _('You cannot interact with this object as its not owned by you!'))
+            return HttpResponseRedirect(reverse('index'))
+        return super(RecipeBookEntryDelete, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(RecipeBookEntryDelete, self).get_context_data(**kwargs)
         context['title'] = _("Bookmarks")
         return context
 
 
-class MealPlanDelete(GroupRequiredMixin, DeleteView):
-    groups_required = ['user']
+class MealPlanDelete(OwnerRequiredMixin, DeleteView):
     template_name = "generic/delete_template.html"
     model = MealPlan
     success_url = reverse_lazy('view_plan')

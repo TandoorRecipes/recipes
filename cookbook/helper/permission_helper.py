@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 
 def get_allowed_groups(groups_required):
@@ -51,3 +51,18 @@ class GroupRequiredMixin(object):
                     messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
                     return HttpResponseRedirect(reverse_lazy('index'))
         return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class OwnerRequiredMixin(object):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
+            return HttpResponseRedirect(reverse_lazy('login'))
+        else:
+            obj = self.get_object()
+            if not (obj.created_by == request.user or request.user.is_superuser):
+                messages.add_message(request, messages.ERROR, _('You cannot interact with this object as its not owned by you!'))
+                return HttpResponseRedirect(reverse('index'))
+
+        return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
