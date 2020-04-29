@@ -377,6 +377,10 @@
             trigger: 'focus'
         });
 
+        function roundToTwo(num) {
+            return +(Math.round(num + "e+2")  + "e-2");
+        }
+
         function reloadIngredients() {
             factor = Number($('#in_factor').val());
             ingredients = {
@@ -386,7 +390,7 @@
         }
 
             for (var key in ingredients) {
-                $('#ing_' + key).html(Math.round(ingredients[key] * factor))
+                $('#ing_' + key).html(roundToTwo(ingredients[key] * factor))
             }
         }
 
