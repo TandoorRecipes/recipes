@@ -93,6 +93,12 @@ def statistics(request):
     counts.recipes = Recipe.objects.count()
     counts.keywords = Keyword.objects.count()
     counts.recipe_import = RecipeImport.objects.count()
+    counts.units = Unit.objects.count()
+    counts.ingredients = Ingredient.objects.count()
+    counts.comments = Comment.objects.count()
+
+    counts.recipes_internal = Recipe.objects.filter(internal=True).count()
+    counts.recipes_external = counts.recipes - counts.recipes_internal
 
     counts.recipes_no_keyword = Recipe.objects.filter(keywords=None).count()
 
