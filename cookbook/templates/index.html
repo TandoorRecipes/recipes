@@ -18,56 +18,62 @@
 
 {% block content %}
     {% if filter %}
-        <form action="" method="get" id="search_form">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            <div class="row">
-                <div class="col md-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="{% trans 'Search recipe ...' %}"
-                               id="{{ filter.form.name.id_for_label }}" name="{{ filter.form.name.name }}"
-                               aria-describedby="button-addon4">
+        <div class="row">
+            <div class="col">
+                <form action="" method="get" id="search_form">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="row">
+                        <div class="col md-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="{% trans 'Search recipe ...' %}"
+                                       id="{{ filter.form.name.id_for_label }}" name="{{ filter.form.name.name }}"
+                                       aria-describedby="button-addon4">
 
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split dropdown-toggle-no-arrow"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v"></i>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu">
-                                <button class="dropdown-item" type="button"
-                                        onclick="location.href='{% url 'new_recipe' %}'"><i
-                                        class="fas fa-plus-circle fa-fw"></i> {% trans 'New Recipe' %}</button>
-                                <button data-toggle="collapse" href="#collapse_adv_search"
-                                        role="button" class="dropdown-item"
-                                        aria-expanded="false" type="button"
-                                        aria-controls="collapse_adv_search"><i
-                                        class="fas fa-search-plus fa-fw"></i> {% trans 'Advanced Search' %}
-                                </button>
-                                <button class="dropdown-item" type="button"
-                                        onclick="window.location = window.location.pathname;"><i
-                                        class="fas fa-sync fa-fw"></i> {% trans 'Reset Search' %}</button>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                    <button type="button"
+                                            class="btn btn-light dropdown-toggle dropdown-toggle-split dropdown-toggle-no-arrow"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item" type="button"
+                                                onclick="location.href='{% url 'new_recipe' %}'"><i
+                                                class="fas fa-plus-circle fa-fw"></i> {% trans 'New Recipe' %}</button>
+                                        <button data-toggle="collapse" href="#collapse_adv_search"
+                                                role="button" class="dropdown-item"
+                                                aria-expanded="false" type="button"
+                                                aria-controls="collapse_adv_search"><i
+                                                class="fas fa-search-plus fa-fw"></i> {% trans 'Advanced Search' %}
+                                        </button>
+                                        <button class="dropdown-item" type="button"
+                                                onclick="window.location = window.location.pathname;"><i
+                                                class="fas fa-sync fa-fw"></i> {% trans 'Reset Search' %}</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="collapse col-md-12" id="collapse_adv_search">
-                    <div style="margin-top: 1vh">
-                        {{ filter.form.keywords | as_crispy_field }}
+                    <div class="row">
+                        <div class="collapse col-md-12" id="collapse_adv_search">
+                            <div style="margin-top: 1vh">
+                                {{ filter.form.keywords | as_crispy_field }}
+                            </div>
+                            <div>
+                                {{ filter.form.ingredients | as_crispy_field }}
+                            </div>
+                            <div>
+                                {{ filter.form.internal | as_crispy_field }}
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {{ filter.form.ingredients | as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ filter.form.internal | as_crispy_field }}
-                    </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
+
     {% endif %}
     <br/>
 

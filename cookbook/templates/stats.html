@@ -5,10 +5,12 @@
 
 
 {% block content %}
+    <div class="row">
+        <div class="col col-12">
+            <h3>{% trans 'Statistics' %} </h3>
+        </div>
+    </div>
 
-    <h3>
-        {% trans 'Statistics' %}
-    </h3>
 
     <div class="row">
         <div class="col-md-6">
@@ -37,7 +39,7 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">{% trans 'Recipes without Keywords' %} : <span
-                            class="badge badge-pill badge-info">{{ counts.recipes_no_keyword}}</span></li>
+                            class="badge badge-pill badge-info">{{ counts.recipes_no_keyword }}</span></li>
                     <li class="list-group-item">{% trans 'External Recipes' %} : <span
                             class="badge badge-pill badge-info">{{ counts.recipes_external }}</span></li>
                     <li class="list-group-item">{% trans 'Internal Recipes' %} : <span
