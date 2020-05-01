@@ -14,7 +14,7 @@ class ImageUrlColumn(tables.Column):
 
 
 class RecipeTable(tables.Table):
-    id = tables.LinkColumn('edit_recipe', args=[A('id')])
+    edit = tables.TemplateColumn("<a href='{% url 'edit_recipe' record.id %}' >" + _('Edit') + "</a>")
     name = tables.LinkColumn('view_recipe', args=[A('id')])
     all_tags = tables.Column(
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
@@ -23,7 +23,7 @@ class RecipeTable(tables.Table):
     class Meta:
         model = Recipe
         template_name = 'recipes_table.html'
-        fields = ('id', 'name', 'all_tags', 'image', 'instructions')
+        fields = ('id', 'name', 'all_tags', 'image', 'instructions', 'working_time', 'waiting_time')
 
 
 class KeywordTable(tables.Table):
