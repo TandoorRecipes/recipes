@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load django_tables2 %}
 {% load static %}
+{% load custom_tags %}
 
 {% block content %}
     <div class="row">
@@ -25,11 +26,20 @@
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ row.cells.name }}</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a
-                                                natural
-                                                lead-in to additional content. This content is a little bit longer.</p>
-                                            <p class="card-text"><small class="text-muted">Last updated 3 mins
-                                                ago</small></p>
+                                            <p class="card-text">{{ row.cells.all_tags }}
+                                            </p>
+                                            <p class="card-text"><small class="text-muted">
+                                                {% if row.cells.working_time != 0 %}
+                                                    <span class="badge badge-secondary"><i
+                                                            class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ row.cells.working_time }} min </span>
+                                                {% endif %}
+
+                                                {% if row.cells.waiting_time != 0 %}
+                                                    <span
+                                                            class="badge badge-secondary"><i
+                                                            class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ row.cells.waiting_time }} min </span>
+                                                {% endif %} {{ row.cells.edit }}</small></p>
+
                                         </div>
                                     </div>
                                 </div>
