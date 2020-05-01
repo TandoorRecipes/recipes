@@ -1,0 +1,87 @@
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <div class="table-container">
+                {% block table %}
+                    <table {% render_attrs table.attrs class="table" %}>
+                        {% for row in table.paginated_rows %}
+                            <div class="card">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        {% if row.cells.image|length > 1 %}
+                                            <img src="{{ row.cells.image }}" class="card-img"
+                                                 alt="{% trans 'Recipe Image' %}"
+                                                 style="height: 100%;">
+                                        {% else %}
+                                            <img src="{% static 'recipe_no_image.svg' %}" class="card-img"
+                                                 alt="{% trans 'Recipe Image' %}" style="height: 100%;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ row.cells.name }}</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a
+                                                natural
+                                                lead-in to additional content. This content is a little bit longer.</p>
+                                            <p class="card-text"><small class="text-muted">Last updated 3 mins
+                                                ago</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </table>
+                {% endblock table %}
+            </div>
+        </div>
+    </div>
+    {% block pagination %}
+        {% if table.page and table.paginator.num_pages > 1 %}
+            <nav aria-label="Table navigation">
+                <ul class="pagination justify-content-center flex-wrap">
+                    {% if table.page.has_previous %}
+                        {% block pagination.previous %}
+                            <li class="previous page-item">
+                                <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}"
+                                   class="page-link">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    {% trans 'previous' %}
+                                </a>
+                            </li>
+                        {% endblock pagination.previous %}
+                    {% endif %}
+                    {% if table.page.has_previous or table.page.has_next %}
+                        {% block pagination.range %}
+                            {% for p in table.page|table_page_range:table.paginator %}
+                                <li class="page-item{% if table.page.number == p %} active{% endif %}">
+                                    <a class="page-link"
+                                       {% if p != '...' %}href="{% querystring table.prefixed_page_field=p %}"{% endif %}>
+                                        {{ p }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endblock pagination.range %}
+                    {% endif %}
+                    {% if table.page.has_next %}
+                        {% block pagination.next %}
+                            <li class="next page-item">
+                                <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}"
+                                   class="page-link">
+                                    {% trans 'next' %}
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endblock pagination.next %}
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% endblock pagination %}
+{% endblock content %}

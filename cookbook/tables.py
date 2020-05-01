@@ -6,16 +6,24 @@ from django_tables2.utils import A  # alias for Accessor
 from .models import *
 
 
+class ImageUrlColumn(tables.Column):
+    def render(self, value):
+        if value.url:
+            return value.url
+        return None
+
+
 class RecipeTable(tables.Table):
     id = tables.LinkColumn('edit_recipe', args=[A('id')])
     name = tables.LinkColumn('view_recipe', args=[A('id')])
     all_tags = tables.Column(
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
+    image = ImageUrlColumn()
 
     class Meta:
         model = Recipe
-        template_name = 'generic/table_template.html'
-        fields = ('id', 'name', 'all_tags')
+        template_name = 'recipes_table.html'
+        fields = ('id', 'name', 'all_tags', 'image', 'instructions')
 
 
 class KeywordTable(tables.Table):
