@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
@@ -86,7 +87,7 @@ def recipe_view(request, pk):
 def books(request):
     book_list = []
 
-    books = RecipeBook.objects.filter(created_by=request.user).all()
+    books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).all()
 
     for b in books:
         book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})

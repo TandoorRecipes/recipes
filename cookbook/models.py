@@ -197,6 +197,7 @@ class RecipeBook(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
+    shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
