@@ -11,11 +11,9 @@
                 {% block table %}
                     <table {% render_attrs table.attrs class="table" %}>
                         {% for row in table.paginated_rows %}
-                            <div class="card">
+                            <div class="card" style="margin-top: 2px">
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
-
-
                                         {% if row.cells.image|length > 1 %}
                                             <img src=" {{ row.cells.image }}" alt="{% trans 'Recipe Image' %}"
                                                  class="card-img" style="object-fit: cover; height: 10vh">

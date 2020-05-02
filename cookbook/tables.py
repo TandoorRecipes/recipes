@@ -13,6 +13,18 @@ class ImageUrlColumn(tables.Column):
         return None
 
 
+class RecipeTableSmall(tables.Table):
+    id = tables.LinkColumn('edit_recipe', args=[A('id')])
+    name = tables.LinkColumn('view_recipe', args=[A('id')])
+    all_tags = tables.Column(
+        attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
+
+    class Meta:
+        model = Recipe
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'name', 'all_tags')
+
+
 class RecipeTable(tables.Table):
     edit = tables.TemplateColumn("<a href='{% url 'edit_recipe' record.id %}' >" + _('Edit') + "</a>")
     name = tables.LinkColumn('view_recipe', args=[A('id')])
