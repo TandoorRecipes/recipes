@@ -87,7 +87,7 @@ def recipe_view(request, pk):
 def books(request):
     book_list = []
 
-    books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).all()
+    books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
 
     for b in books:
         book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
