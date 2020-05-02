@@ -179,10 +179,7 @@ def shopping_list(request):
 
 @group_required('guest')
 def settings(request):
-    try:
-        up = request.user.userpreference
-    except UserPreference.DoesNotExist:
-        up = None
+    up = request.user.userpreference
 
     user_name_form = UserNameForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)

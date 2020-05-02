@@ -3,7 +3,7 @@ from .models import *
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color')
+    list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style')
 
     @staticmethod
     def name(obj):
