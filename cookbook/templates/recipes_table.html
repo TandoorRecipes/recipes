@@ -48,9 +48,9 @@
                                                 {% if not row.record.internal %}
                                                     <span class="badge badge-info">{% trans 'External' %} </span>
                                                 {% endif %}
-                                                {% recipe_last row.record request.user as last %}
-                                                {% if last %}
-                                                    <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last|date }}</span>
+                                                {% recipe_last row.record request.user as last_cooked %}
+                                                {% if last_cooked %}
+                                                    <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
                                                 {% endif %}
                                                 <span class="badge badge-light">{{ row.cells.edit }}</span>
                                                 <span class="badge badge-warning"><a href="#" style="color: inherit"
