@@ -1,0 +1,78 @@
+{% load i18n %}
+
+<div class="modal" tabindex="-1" role="dialog" id="id_modal_cook_log">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans 'Log Recipe Cooking' %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans 'All fields are optional and can be left empty.' %}</p>
+                <form>
+
+                    <label for="id_log_servings">{% trans 'Servings' %} </label>
+                    <input class="form-control" type="number" id="id_log_servings">
+                    <br/>
+                    <label for="id_log_rating">{% trans 'Rating' %} - <span id="id_rating_show">0/5</span></label>
+                    <input type="range" class="custom-range" min="0" max="5" id="id_log_rating" name="log_rating"
+                           value="0">
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
+                <button type="button" class="btn btn-primary" onclick="logCook()">{% trans 'Save' %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    let modal = $('#id_modal_cook_log')
+    let rating = $('#id_log_rating')
+
+    function openCookLogModal(id) {
+        modal.data('recipe_id', id)
+        modal.modal('show')
+    }
+
+    //TODO there is definitely a nicer way to do this than this ugly shit
+    function logCook() {
+        let id = modal.data('recipe_id');
+
+        let url = "{% url 'api_log_cooking' recipe_id=12345 %}".replace(/12345/, id);
+
+        let val_servings = $('#id_log_servings').val()
+        if (val_servings !== '' && val_servings !== 0) {
+            url += '?s=' + val_servings
+        }
+
+        let val_rating = rating.val()
+        if (val_rating !== '' && val_rating !== 0) {
+             if (val_servings !== '' && val_servings !== 0) {
+                  url += '&'
+             }else {
+                 url += '?'
+             }
+            url += 'r=' + val_rating
+        }
+
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+
+        };
+        request.open("GET", url, true);
+        request.send();
+
+        modal.modal('hide')
+    }
+
+    rating.on("input", () => {
+        $('#id_rating_show').html(rating.val() + '/5')
+    });
+
+</script>

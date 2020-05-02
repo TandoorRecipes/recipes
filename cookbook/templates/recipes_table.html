@@ -45,6 +45,7 @@
                                                 <span class="badge badge-info">{% trans 'External' %} </span>
                                             {% endif %}
                                                 <span class="badge badge-light">{{ row.cells.edit }}</span>
+                                                <span class="badge badge-warning"><a href="#" style="color: inherit" onclick="openCookLogModal({{ row.record.pk }})">{% trans 'Log' %}</a></span>
                                             </small></p>
 
                                         </div>
