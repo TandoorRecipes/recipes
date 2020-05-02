@@ -227,7 +227,7 @@ class MealPlan(models.Model):
     note = models.TextField(blank=True)
     date = models.DateField()
 
-    def __str__(self):
+    def get_label(self):
         if self.title:
             return self.title
         return str(self.recipe)

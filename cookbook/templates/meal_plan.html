@@ -9,19 +9,19 @@
 
 {% block content %}
     <style>
-        .mealplan-cell .mealplan-add-button{
+        .mealplan-cell .mealplan-add-button {
             text-align: center;
             display: block;
         }
 
         @media (hover: hover) {
-            .mealplan-cell .mealplan-add-button{
+            .mealplan-cell .mealplan-add-button {
                 visibility: hidden;
                 float: right;
                 display: inline;
             }
 
-            .mealplan-cell:hover .mealplan-add-button{
+            .mealplan-cell:hover .mealplan-add-button {
                 visibility: initial;
             }
         }
@@ -73,13 +73,17 @@
                     <tr>
                         {% for day_key, days_value in plan_value.days.items %}
                             <td class="mealplan-cell">
-                                <a class="mealplan-add-button" href="{% url 'new_meal_plan' %}?date={{ day_key|date:'Y-m-d' }}&meal={{ plan_key }}"><i class="fas fa-plus"></i></a>
+                                <a class="mealplan-add-button"
+                                   href="{% url 'new_meal_plan' %}?date={{ day_key|date:'Y-m-d' }}&meal={{ plan_key }}"><i
+                                        class="fas fa-plus"></i></a>
                                 {% for mp in days_value %}
-                                    <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
                                     {% if mp.recipe %}
-                                        <a href="{% url 'view_recipe' mp.recipe.id %}">{{ mp }}</a><br/>
+                                        <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'view_recipe' mp.recipe.pk %}">{{ mp.recipe }}</a><br/>
+                                    {% else %}
+                                        <a href="{% url 'edit_meal_plan' mp.pk %}">{{ mp.title }}</a><br/>
                                     {% endif %}
-                                    <span>{{ mp.note_head }}</span>
+
                                 {% endfor %}
                             </td>
                         {% endfor %}
