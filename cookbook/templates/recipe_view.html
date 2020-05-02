@@ -104,12 +104,12 @@
                 class="badge badge-secondary"><i
                 class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
     {% endif %}
-    {% recipe_last recipe request.user as last %}
-    {% if last %}
-        <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last|date }}</span>
+    {% recipe_last recipe request.user as last_cooked %}
+    {% if last_cooked %}
+        <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
     {% endif %}
 
-    {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 %}
+    {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 or last_cooked%}
         <br/>
         <br/>
     {% endif %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load custom_tags %}
 {% load i18n %}
 
 {% block title %}{% trans 'Recipe Books' %}{% endblock %}
@@ -37,7 +38,15 @@
                                     <li class="list-group-item">
                                         <div class="row">
                                             <div class="col-10">
+                                                {% recipe_last r.recipe request.user as last_cooked %}
                                                 <a href="{% url 'view_recipe' r.recipe.pk %}">{{ r.recipe.name }}</a>
+                                                {% recipe_rating r.recipe request.user as rating %}
+                                                {{ rating|safe }}
+                                                {% if last_cooked %}
+                                                    &nbsp;
+                                                    <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
+                                                {% endif %}
+
                                             </div>
                                             <div class="col-2" style="text-align: right">
                                                 <a href="{% url 'delete_recipe_book_entry' r.pk %}"
