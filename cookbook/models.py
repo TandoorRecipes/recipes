@@ -220,11 +220,17 @@ class MealPlan(models.Model):
     OTHER = 'OTHER'
     MEAL_TYPES = ((BREAKFAST, _('Breakfast')), (LUNCH, _('Lunch')), (DINNER, _('Dinner')), (OTHER, _('Other')),)
 
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
     note = models.TextField(blank=True)
     date = models.DateField()
+
+    def note_head(self):
+        try:
+            return self.note.split('\n')[0]
+        except:
+            return ''
 
     def __str__(self):
         return self.meal + ' (' + str(self.date) + ') ' + str(self.recipe)
