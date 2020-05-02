@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Markdown Info" %}{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .code-block {
+            background: #DDDDDD;
+        }
+
+        blockquote {
+            background: #f9f9f9;
+            border-left: 4px solid #ccc;
+            margin: 1.5em 10px;
+            padding: .5em 10px;
+            quotes: none;
+        }
+
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: .1em;
+            margin-right: .25em;
+            vertical-align: -.4em;
+        }
+
+        blockquote p {
+            display: inline;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'Markdown Info' %}</h1>
+    {% blocktrans %}
+        Markdown is lightweight markup language that can be used to format plain text easily.
+        This site uses the <a href="https://python-markdown.github.io/" target="_blank">Python Markdown</a> library to
+        convert your text into nice looking html. Its full markdown documentation can be found
+        <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">here</a>.
+        An incomplete but most likely sufficient documentation can be found below.
+    {% endblocktrans %}
+
+    <br/>
+    <br/>
+
+    <h2>{% trans 'Headers' %}</h2>
+    <pre class="intro-code code-block"><code>
+    # Header 1
+    ## Header 2
+    ### Header 3
+    #### Header 4
+    ##### Header 5
+    ###### Header 6
+    </code></pre>
+
+    <div style="text-align: center">
+        <i class="fas fa-arrow-down fa-2x"></i>
+        <br/>
+        <br/>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h1>Header 1</h1>
+            <h2>Header 2</h2>
+            <h3>Header 3</h3>
+            <h4>Header 4</h4>
+            <h5>Header 5</h5>
+            <h6>Header 6</h6>
+        </div>
+
+    </div>
+
+    <br/>
+    <h2>{% trans 'Formatting' %}</h2>
+    <pre class="intro-code code-block"><code>
+        {% trans 'Line breaks are inserted by adding two spaces after the end of a line' %}
+        {% trans 'or by leaving a blank line inbetween.' %}
+
+        **{% trans 'This text is bold' %}**
+        *{% trans 'This text is in italics' %}*
+        > {% trans 'Blockquotes are also possible' %}
+    </code></pre>
+
+    <div style="text-align: center">
+        <i class="fas fa-arrow-down fa-2x"></i>
+        <br/>
+        <br/>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% trans 'Line breaks are inserted by adding two spaces after the end of a line' %}<br/>
+            {% trans 'or by leaving a blank line inbetween.' %}<br/><br/>
+            <b>{% trans 'This text is bold' %}</b><br/>
+            <i>{% trans 'This text is in italics' %}</i>
+            <blockquote>
+                <p>{% trans 'Blockquotes are also possible' %}</p>
+            </blockquote>
+        </div>
+
+    </div>
+
+    <br/>
+    <h2>{% trans 'Lists' %}</h2>
+    {% trans 'Lists can ordered or unorderd. It is <b>important to leave a blank line before the list!</b>' %}
+    <pre class="intro-code code-block"><code>
+        {% trans 'Ordered List' %}
+
+        - {% trans 'unordered list item' %}
+        - {% trans 'unordered list item' %}
+        - {% trans 'unordered list item' %}
+
+        {% trans 'Unordered List' %}
+
+        1. {% trans 'ordered list item' %}
+        2. {% trans 'ordered list item' %}
+        3. {% trans 'ordered list item' %}
+    </code></pre>
+
+    <div style="text-align: center">
+        <i class="fas fa-arrow-down fa-2x"></i>
+        <br/>
+        <br/>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% trans 'Ordered List' %}
+            <ul>
+                <li>{% trans 'unordered list item' %}</li>
+                <li>{% trans 'unordered list item' %}</li>
+                <li>{% trans 'unordered list item' %}</li>
+            </ul>
+            {% trans 'Unordered List' %}
+            <ol>
+                <li>{% trans 'ordered list item' %}</li>
+                <li>{% trans 'ordered list item' %}</li>
+                <li>{% trans 'ordered list item' %}</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <br/>
+    <h2>{% trans 'Images & Links' %}</h2>
+    {% trans 'Links can be formatted with Markdown. This applicaiton also allows to paste links directly into markdown fields without any formatting.' %}
+    <pre class="intro-code code-block"><code>
+        https://github.com/vabene1111/recipes
+        [](https://github.com/vabene1111/recipes)
+        [GitHub](https://github.com/vabene1111/recipes)
+
+        ![{% trans 'This will become and Image' %}]({% static 'favicon.png' %})
+    </code></pre>
+
+    <div style="text-align: center">
+        <i class="fas fa-arrow-down fa-2x"></i>
+        <br/>
+        <br/>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <a href="https://github.com/vabene1111/recipes">https://github.com/vabene1111/recipes</a> <br/>
+            <a href="https://github.com/vabene1111/recipes">GitHub</a> <br/>
+            <img src="{% static 'favicon.png' %}" class="img-fluid" alt="{% trans 'This will become and Image' %}"
+                 style="height: 3vw">
+        </div>
+
+    </div>
+
+    <br/>
+    <h2>{% trans 'Tables' %}</h2>
+    {% trans 'Markdown tables are hard to create by hand. It is recommended to use a table editor like <a href="https://www.tablesgenerator.com/markdown_tables" target="_blank">this</a> one.' %}
+    <pre class="intro-code code-block"><code>
+        |  {% trans 'Table' %} | {% trans 'Header' %}  |
+        |--------|---------|
+        | {% trans 'Table' %}  | {% trans 'Cell' %}    |
+    </code></pre>
+
+    <div style="text-align: center">
+        <i class="fas fa-arrow-down fa-2x"></i>
+        <br/>
+        <br/>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>{% trans 'Table' %}</th>
+                    <th>{% trans 'Header' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{% trans 'Table' %}</td>
+                    <td>{% trans 'Cell' %}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <br/>
+    <br/>
+
+{% endblock %}

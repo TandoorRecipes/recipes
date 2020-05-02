@@ -216,3 +216,7 @@ def settings(request):
         preference_form = UserPreferenceForm()
 
     return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form})
+
+
+def markdown_info(request):
+    return render(request, 'markdown_info.html', {})
