@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import widgets
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from emoji_picker.widgets import EmojiPickerTextInput
 
@@ -85,6 +86,9 @@ class InternalRecipeForm(forms.ModelForm):
             'waiting_time': _('Waiting time (cooking/baking) in minutes'),
         }
         widgets = {'keywords': MultiSelectWidget}
+        help_texts = {
+            'instructions': _('You can use markdown to format the instructions. See the <a href="/docs/markdown/">docs here</a>')
+        }
 
 
 class ShoppingForm(forms.Form):

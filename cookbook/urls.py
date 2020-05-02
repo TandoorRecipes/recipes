@@ -45,6 +45,8 @@ urlpatterns = [
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
+
+    path('docs/markdown/', views.markdown_info, name='docs_markdown'),
 ]
 
 generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Ingredient)
