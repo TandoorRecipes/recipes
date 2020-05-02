@@ -1,24 +1,38 @@
 from django.contrib import auth
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.test import TestCase, Client
 
 
 class TestBase(TestCase):
+    user_client_1 = None
+    user_client_2 = None
+    admin_client_1 = None
+    admin_client_2 = None
+    guest_client_1 = None
+    guest_client_2 = None
+    superuser_client = None
+
+    def create_login_user(self, name, group):
+        client = Client()
+        setattr(self, name, client)
+        client.force_login(User.objects.get_or_create(username=name)[0])
+        user = auth.get_user(getattr(self, name))
+        user.groups.add(Group.objects.get(name=group))
+        self.assertTrue(user.is_authenticated)
+        return user
 
     def setUp(self):
+        self.create_login_user('admin_client_1', 'admin')
+        self.create_login_user('admin_client_2', 'admin')
+
+        self.create_login_user('user_client_1', 'user')
+        self.create_login_user('user_client_2', 'user')
+
+        self.create_login_user('guest_client_1', 'guest')
+        self.create_login_user('guest_client_2', 'guest')
+
         self.anonymous_client = Client()
 
-        self.client = Client()
-        self.client.force_login(User.objects.get_or_create(username='client')[0])
-        user = auth.get_user(self.client)
-        self.assertTrue(user.is_authenticated)
-
-        self.another_client = Client()
-        self.another_client.force_login(User.objects.get_or_create(username='another_client')[0])
-        user = auth.get_user(self.another_client)
-        self.assertTrue(user.is_authenticated)
-
-        self.superuser_client = Client()
-        self.superuser_client.force_login(User.objects.get_or_create(username='superuser_client', is_superuser=True)[0])
-        user = auth.get_user(self.superuser_client)
-        self.assertTrue(user.is_authenticated)
+        user = self.create_login_user('superuser_client', 'admin')
+        user.is_superuser = True
+        user.save()

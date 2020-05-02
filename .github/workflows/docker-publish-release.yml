@@ -1,0 +1,25 @@
+name: publish tagged release docker
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  build:
+        runs-on: ubuntu-latest
+        name: Build image job
+        steps:
+            - name: Checkout master
+              uses: actions/checkout@master#
+            - name: Get the version
+              id: get_version
+              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+            - name: Build and publish image
+              uses: ilteoood/docker_buildx@master
+              with:
+                publish: true
+                imageName: vabene1111/recipes
+                tag: ${{ steps.get_version.outputs.VERSION }}
+                dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
+                dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}

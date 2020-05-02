@@ -1,0 +1,104 @@
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load django_tables2 %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <div class="table-container">
+                {% block table %}
+                    <table {% render_attrs table.attrs class="table" %}>
+                        {% for row in table.paginated_rows %}
+                            <div class="card" style="margin-top: 2px">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        {% if row.cells.image|length > 1 %}
+                                            <img src=" {{ row.cells.image }}" alt="{% trans 'Recipe Image' %}"
+                                                 class="card-img" style="object-fit: cover; height: 10vh">
+                                        {% else %}
+                                            <img src="{% static 'recipe_no_image.svg' %}"
+                                                 alt="{% trans 'Recipe Image' %}"
+                                                 class="card-img d-none d-lg-block" style="object-fit: inherit; height: 10vh">
+
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ row.cells.name }}</h5>
+                                            <p class="card-text{% if not row.record.all_tags %} d-none d-lg-block{% endif %}">
+                                                {{ row.cells.all_tags }}
+                                            </p>
+                                            <p class="card-text"><small class="text-muted">
+                                                {% if row.cells.working_time != 0 %}
+                                                    <span class="badge badge-secondary"><i
+                                                            class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ row.cells.working_time }} min </span>
+                                                {% endif %}
+
+                                                {% if row.cells.waiting_time != 0 %}
+                                                    <span
+                                                            class="badge badge-secondary"><i
+                                                            class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ row.cells.waiting_time }} min </span>
+                                                {% endif %}{% if not row.record.internal %}
+                                                <span class="badge badge-info">{% trans 'External' %} </span>
+                                            {% endif %}
+                                                <span class="badge badge-light">{{ row.cells.edit }}</span>
+                                            </small></p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </table>
+                {% endblock table %}
+            </div>
+        </div>
+    </div>
+    {% block pagination %}
+        {% if table.page and table.paginator.num_pages > 1 %}
+            <nav aria-label="Table navigation">
+                <ul class="pagination justify-content-center flex-wrap">
+                    {% if table.page.has_previous %}
+                        {% block pagination.previous %}
+                            <li class="previous page-item">
+                                <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}"
+                                   class="page-link">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    {% trans 'previous' %}
+                                </a>
+                            </li>
+                        {% endblock pagination.previous %}
+                    {% endif %}
+                    {% if table.page.has_previous or table.page.has_next %}
+                        {% block pagination.range %}
+                            {% for p in table.page|table_page_range:table.paginator %}
+                                <li class="page-item{% if table.page.number == p %} active{% endif %}">
+                                    <a class="page-link"
+                                       {% if p != '...' %}href="{% querystring table.prefixed_page_field=p %}"{% endif %}>
+                                        {{ p }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endblock pagination.range %}
+                    {% endif %}
+                    {% if table.page.has_next %}
+                        {% block pagination.next %}
+                            <li class="next page-item">
+                                <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}"
+                                   class="page-link">
+                                    {% trans 'next' %}
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endblock pagination.next %}
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% endblock pagination %}
+{% endblock content %}

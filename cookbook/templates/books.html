@@ -16,46 +16,48 @@
     </div>
     <br/>
     <br/>
-
     {% for b in book_list %}
         <div class="row">
-            <div class="col col-md-10">
-                <a data-toggle="collapse" href="#collapse_{{ b.book.pk }}" role="button" aria-expanded="false"
-                   aria-controls="collapse_{{ b.book.pk }}"><h4>{{ b.book.name }}</h4></a>
-            </div>
-            <div class="col col-md-2" style="text-align: right">
-                <h4>
-
-                    <a href="{% url 'edit_recipe_book' b.book.pk %}"> <i class="fas fa-pencil-alt"></i></a>
-                    <a href="{% url 'delete_recipe_book' b.book.pk %}"><i class="fas fa-trash-alt"></i></a>
-                </h4>
-            </div>
-            <hr/>
-        </div>
-
-        <div class="row">
-            <div class="col col-md-12">
-                <div class="collapse" id="collapse_{{ b.book.pk }}">
-                    {% if b.recipes %}
-                        <ul>
-                            {% for r in b.recipes %}
-                                <div class="row">
-                                    <div class="col col-md-10">
-                                        <li><a href="{% url 'view_recipe' r.recipe.pk %}">{{ r.recipe.name }}</a></li>
-                                    </div>
-                                    <div class="col col-md-2" style="text-align: right">
-                                        <a href="{% url 'delete_recipe_book_entry' r.pk %}"><i class="fas fa-trash-alt"></i></a>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        {% trans 'There are no recipes in this book yet.' %}
-                    {% endif %}
+            <div class="col-12">
+                <div class="card" style="margin-top: 2px">
+                    <div class="card-body">
+                        <h5 class="card-title">{% if b.book.icon %}{{ b.book.icon }} {% endif %}{{ b.book.name }}</h5>
+                        {% if b.book.description %}
+                            <p class="card-text">{{ b.book.description }}</p>
+                        {% endif %}
+                        <a data-toggle="collapse" href="#collapse_{{ b.book.pk }}" role="button" aria-expanded="false"
+                           aria-controls="collapse_{{ b.book.pk }}" class="card-link">{% trans 'Toggle Recipes' %}</a>
+                        <a href="{% url 'edit_recipe_book' b.book.pk %}" class="card-link">{% trans 'Edit' %}</a>
+                        <a href="{% url 'delete_recipe_book' b.book.pk %}" class="card-link">{% trans 'Delete' %}</a>
+                    </div>
+                    <div class="collapse" id="collapse_{{ b.book.pk }}">
+                        {% if b.recipes %}
+                            <ul class="list-group list-group-flush">
+                                {% for r in b.recipes %}
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <a href="{% url 'view_recipe' r.recipe.pk %}">{{ r.recipe.name }}</a>
+                                            </div>
+                                            <div class="col-2" style="text-align: right">
+                                                <a href="{% url 'delete_recipe_book_entry' r.pk %}"
+                                                   class="pull-right"><i class="fas fa-trash-alt"></i></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="card-body">
+                                <p>
+                                    {% trans 'There are no recipes in this book yet.' %}
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-        <br/>
     {% endfor %}
 
 {% endblock %}
