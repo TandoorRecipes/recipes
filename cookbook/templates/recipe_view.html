@@ -48,7 +48,8 @@
 {% block content %}
     <div class="row">
         <div class="col col-md-8">
-            <h3>{{ recipe.name }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i
+            {% recipe_rating recipe request.user as rating %}
+            <h3>{{ recipe.name }} {{ rating|safe }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i
                     class="fas fa-pencil-alt"></i></a></h3>
         </div>
         <div class="col col-md-4 d-print-none" style="text-align: right">
@@ -64,7 +65,8 @@
                data-placement="top" title="{% trans 'Add to Mealplan' %}"><i
                     class="fas fa-calendar"></i></a>
             <button class="btn btn-warning" onclick="openCookLogModal({{ recipe.pk }})" data-toggle="tooltip"
-               data-placement="top" title="{% trans 'Log Cooking' %}"><i class="fas fa-clipboard-list"></i></button>
+                    data-placement="top" title="{% trans 'Log Cooking' %}"><i class="fas fa-clipboard-list"></i>
+            </button>
             <a class="btn btn-light" onclick="window.print()" data-toggle="tooltip"
                data-placement="top" title="{% trans 'Print' %}"><i
                     class="fas fa-print"></i></a>
@@ -101,6 +103,10 @@
         <span
                 class="badge badge-secondary"><i
                 class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
+    {% endif %}
+    {% recipe_last recipe request.user as last %}
+    {% if last %}
+        <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last|date }}</span>
     {% endif %}
 
     {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 %}
@@ -382,7 +388,7 @@
         });
 
         function roundToTwo(num) {
-            return +(Math.round(num + "e+2")  + "e-2");
+            return +(Math.round(num + "e+2") + "e-2");
         }
 
         function reloadIngredients() {
