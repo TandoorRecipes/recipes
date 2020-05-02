@@ -242,8 +242,17 @@ class RecipeBookForm(forms.ModelForm):
 
 
 class MealPlanForm(forms.ModelForm):
+
+    def clean(self):
+        cleaned_data = super(MealPlanForm, self).clean()
+
+        if cleaned_data['title'] == '' and cleaned_data['recipe'] is None:
+            raise forms.ValidationError(_('You must provide at least a recipe or a title.'))
+
+        return cleaned_data
+
     class Meta:
         model = MealPlan
-        fields = ('recipe', 'meal', 'note', 'date')
+        fields = ('recipe', 'title', 'meal', 'note', 'date')
 
         widgets = {'recipe': SelectWidget, 'date': DateWidget}

@@ -77,7 +77,7 @@
                                 {% for mp in days_value %}
                                     <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
                                     {% if mp.recipe %}
-                                        <a href="{% url 'view_recipe' mp.recipe.id %}">{{ mp.recipe.name }}</a><br/>
+                                        <a href="{% url 'view_recipe' mp.recipe.id %}">{{ mp }}</a><br/>
                                     {% endif %}
                                     <span>{{ mp.note_head }}</span>
                                 {% endfor %}
