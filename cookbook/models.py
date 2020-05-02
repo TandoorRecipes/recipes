@@ -1,5 +1,6 @@
 import re
 
+from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
@@ -41,12 +42,28 @@ class UserPreference(models.Model):
 
     COLORS = ((PRIMARY, 'Primary'), (SECONDARY, 'Secondary'), (SUCCESS, 'Success'), (INFO, 'Info'), (WARNING, 'Warning'), (DANGER, 'Danger'), (LIGHT, 'Light'), (DARK, 'Dark'))
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    # Default Page
+    SEARCH = 'SEARCH'
+    PLAN = 'PLAN'
+    BOOKS = 'BOOKS'
+
+    PAGES = ((SEARCH, _('Search')), (PLAN, _('Meal-Plan')), (BOOKS, _('Books')), )
+
+    # Search Style
+    SMALL = 'SMALL'
+    LARGE = 'LARGE'
+
+    SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')),)
+
+    user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
+    default_unit = models.CharField(max_length=32, default='g')
+    default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
+    search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
 
     def __str__(self):
-        return self.user
+        return str(self.user)
 
 
 class Storage(models.Model):
@@ -145,8 +162,8 @@ class Ingredient(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
     note = models.CharField(max_length=64, null=True, blank=True)
@@ -179,7 +196,10 @@ class RecipeImport(models.Model):
 
 class RecipeBook(models.Model):
     name = models.CharField(max_length=128)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
+    icon = models.CharField(max_length=16, blank=True, null=True)
+    shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -200,8 +220,8 @@ class MealPlan(models.Model):
     OTHER = 'OTHER'
     MEAL_TYPES = ((BREAKFAST, _('Breakfast')), (LUNCH, _('Lunch')), (DINNER, _('Dinner')), (OTHER, _('Other')),)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
     note = models.TextField(blank=True)
     date = models.DateField()

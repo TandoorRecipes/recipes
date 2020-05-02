@@ -1,4 +1,3 @@
-from dal import autocomplete
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext as _
@@ -31,10 +30,11 @@ class UserPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = UserPreference
-        fields = ('theme', 'nav_color')
+        fields = ('default_unit', 'theme', 'nav_color', 'default_page', 'search_style')
 
         help_texts = {
-            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!')
+            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
+            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.')
         }
 
 
@@ -97,6 +97,25 @@ class ShoppingForm(forms.Form):
         required=False,
         initial=False
     )
+
+
+class ExportForm(forms.Form):
+    recipe = forms.ModelChoiceField(
+        queryset=Recipe.objects.filter(internal=True).all(),
+        widget=SelectWidget
+    )
+    image = forms.BooleanField(
+        help_text=_('Export Base64 encoded image?'),
+        required=False
+    )
+    download = forms.BooleanField(
+        help_text=_('Download export directly or show on page?'),
+        required=False
+    )
+
+
+class ImportForm(forms.Form):
+    recipe = forms.CharField(widget=forms.Textarea, help_text=_('Simply paste a JSON export into this textarea and click import.'))
 
 
 class UnitMergeForm(forms.Form):
@@ -218,7 +237,8 @@ class ImportRecipeForm(forms.ModelForm):
 class RecipeBookForm(forms.ModelForm):
     class Meta:
         model = RecipeBook
-        fields = ('name',)
+        fields = ('name', 'icon', 'description', 'shared')
+        widgets = {'icon': EmojiPickerTextInput, 'shared': MultiSelectWidget}
 
 
 class MealPlanForm(forms.ModelForm):

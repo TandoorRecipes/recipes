@@ -3,7 +3,7 @@ from .models import *
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color')
+    list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style')
 
     @staticmethod
     def name(obj):
@@ -80,7 +80,7 @@ class RecipeBookAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user_name(obj):
-        return obj.user.get_user_name()
+        return obj.created_by.get_user_name()
 
 
 admin.site.register(RecipeBook, RecipeBookAdmin)
@@ -98,7 +98,7 @@ class MealPlanAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user(obj):
-        return obj.user.get_user_name()
+        return obj.created_by.get_user_name()
 
 
 admin.site.register(MealPlan, MealPlanAdmin)

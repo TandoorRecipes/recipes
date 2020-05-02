@@ -31,6 +31,7 @@ SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_TABLES2_TEMPLATE = 'cookbook/templates/generic/table_template.html'
+DJANGO_TABLES2_PAGE_RANGE = 8
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

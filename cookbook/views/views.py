@@ -1,25 +1,45 @@
 import copy
-import re
 from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
-from cookbook.tables import RecipeTable
+from cookbook.helper.permission_helper import group_required
+from cookbook.tables import RecipeTable, RecipeTableSmall
 
 
 def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse_lazy('view_search'))
+    try:
+        page_map = {
+            UserPreference.SEARCH: reverse_lazy('view_search'),
+            UserPreference.PLAN: reverse_lazy('view_plan'),
+            UserPreference.BOOKS: reverse_lazy('view_books'),
+        }
+
+        return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
+    except UserPreference.DoesNotExist:
+        return HttpResponseRedirect(reverse_lazy('view_search'))
+
+
+def search(request):
     if request.user.is_authenticated:
         f = RecipeFilter(request.GET, queryset=Recipe.objects.all().order_by('name'))
 
-        table = RecipeTable(f.qs)
+        if request.user.userpreference.search_style == UserPreference.LARGE:
+            table = RecipeTable(f.qs)
+        else:
+            table = RecipeTableSmall(f.qs)
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         return render(request, 'index.html', {'recipes': table, 'filter': f})
@@ -27,7 +47,7 @@ def index(request):
         return render(request, 'index.html')
 
 
-@login_required
+@group_required('guest')
 def recipe_view(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)
@@ -63,11 +83,11 @@ def recipe_view(request, pk):
                    'bookmark_form': bookmark_form})
 
 
-@login_required()
+@group_required('user')
 def books(request):
     book_list = []
 
-    books = RecipeBook.objects.filter(user=request.user).all()
+    books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).all()
 
     for b in books:
         book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
@@ -89,7 +109,7 @@ def get_days_from_week(start, end):
     return days
 
 
-@login_required()
+@group_required('user')
 def meal_plan(request):
     js_week = datetime.now().strftime("%Y-W%V")
     if request.method == "POST":
@@ -117,7 +137,7 @@ def meal_plan(request):
     return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days, 'surrounding_weeks': surrounding_weeks})
 
 
-@login_required
+@group_required('user')
 def shopping_list(request):
     markdown_format = True
 
@@ -157,12 +177,9 @@ def shopping_list(request):
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
 
 
-@login_required
+@group_required('guest')
 def settings(request):
-    try:
-        up = request.user.userpreference
-    except UserPreference.DoesNotExist:
-        up = None
+    up = request.user.userpreference
 
     user_name_form = UserNameForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
@@ -175,6 +192,9 @@ def settings(request):
                     up = UserPreference(user=request.user)
                 up.theme = form.cleaned_data['theme']
                 up.nav_color = form.cleaned_data['nav_color']
+                up.default_unit = form.cleaned_data['default_unit']
+                up.default_page = form.cleaned_data['default_page']
+                up.search_style = form.cleaned_data['search_style']
                 up.save()
 
         if 'user_name_form' in request.POST:

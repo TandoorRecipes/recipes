@@ -5,7 +5,6 @@ import simplejson
 import simplejson as json
 from PIL import Image
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files import File
 from django.http import HttpResponseRedirect
@@ -15,14 +14,17 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm
+    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm, RecipeBookForm
+from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
+
+from cookbook.helper.permission_helper import OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
     MealPlan, Unit, Ingredient
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
 
-@login_required
+@group_required('guest')
 def switch_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     if recipe.internal:
@@ -31,7 +33,7 @@ def switch_recipe(request, pk):
         return HttpResponseRedirect(reverse('edit_external_recipe', args=[pk]))
 
 
-@login_required
+@group_required('user')
 def convert_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     if not recipe.internal:
@@ -41,7 +43,7 @@ def convert_recipe(request, pk):
     return HttpResponseRedirect(reverse('edit_internal_recipe', args=[pk]))
 
 
-@login_required
+@group_required('user')
 def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
     status = 200
@@ -131,7 +133,8 @@ def internal_recipe_update(request, pk):
                    'view_url': reverse('view_recipe', args=[pk])}, status=status)
 
 
-class SyncUpdate(LoginRequiredMixin, UpdateView):
+class SyncUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['admin']
     template_name = "generic/edit_template.html"
     model = Sync
     form_class = SyncForm
@@ -147,7 +150,8 @@ class SyncUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class KeywordUpdate(LoginRequiredMixin, UpdateView):
+class KeywordUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = Keyword
     form_class = KeywordForm
@@ -163,7 +167,8 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class IngredientUpdate(LoginRequiredMixin, UpdateView):
+class IngredientUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = Ingredient
     form_class = IngredientForm
@@ -179,7 +184,7 @@ class IngredientUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
+@group_required('admin')
 def edit_storage(request, pk):
     instance = get_object_or_404(Storage, pk=pk)
 
@@ -205,29 +210,20 @@ def edit_storage(request, pk):
 
             messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
         else:
-            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend.!'))
+            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend!'))
     else:
         pseudo_instance = instance
         pseudo_instance.password = '__NO__CHANGE__'
         pseudo_instance.token = '__NO__CHANGE__'
         form = StorageForm(instance=pseudo_instance)
 
-    return render(request, 'generic/edit_template.html', {'form': form})
+    return render(request, 'generic/edit_template.html', {'form': form, 'title': _('Storage')})
 
 
-class CommentUpdate(LoginRequiredMixin, UpdateView):
+class CommentUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = Comment
     form_class = CommentForm
-
-    # TODO add msg box
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if not (obj.created_by == request.user or request.user.is_superuser):
-            messages.add_message(request, messages.ERROR, _('You cannot edit this comment!'))
-            return HttpResponseRedirect(reverse('view_recipe', args=[obj.recipe.pk]))
-        return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('edit_comment', kwargs={'pk': self.object.pk})
@@ -239,7 +235,8 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class ImportUpdate(LoginRequiredMixin, UpdateView):
+class ImportUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = RecipeImport
     fields = ['name', 'path']
@@ -255,12 +252,10 @@ class ImportUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class RecipeBookUpdate(LoginRequiredMixin, UpdateView):
+class RecipeBookUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = RecipeBook
-    fields = ['name']
-
-    # TODO add msg box
+    form_class = RecipeBookForm
 
     def get_success_url(self):
         return reverse('view_books')
@@ -271,12 +266,10 @@ class RecipeBookUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class MealPlanUpdate(LoginRequiredMixin, UpdateView):
+class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = MealPlan
     form_class = MealPlanForm
-
-    # TODO add msg box
 
     def get_success_url(self):
         return reverse('view_plan')
@@ -287,7 +280,8 @@ class MealPlanUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-class ExternalRecipeUpdate(LoginRequiredMixin, UpdateView):
+class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['user']
     model = Recipe
     form_class = ExternalRecipeForm
     template_name = "generic/edit_template.html"
@@ -322,7 +316,7 @@ class ExternalRecipeUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
+@group_required('user')
 def edit_ingredients(request):
     if request.method == "POST":
         success = False
