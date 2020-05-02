@@ -47,7 +47,7 @@ class UserPreference(models.Model):
     PLAN = 'PLAN'
     BOOKS = 'BOOKS'
 
-    PAGES = ((SEARCH, _('Search')), (PLAN, _('Meal-Plan')), (BOOKS, _('Books')), )
+    PAGES = ((SEARCH, _('Search')), (PLAN, _('Meal-Plan')), (BOOKS, _('Books')),)
 
     # Search Style
     SMALL = 'SMALL'
@@ -220,11 +220,15 @@ class MealPlan(models.Model):
     OTHER = 'OTHER'
     MEAL_TYPES = ((BREAKFAST, _('Breakfast')), (LUNCH, _('Lunch')), (DINNER, _('Dinner')), (OTHER, _('Other')),)
 
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
+    title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
     note = models.TextField(blank=True)
     date = models.DateField()
 
     def __str__(self):
-        return self.meal + ' (' + str(self.date) + ') ' + str(self.recipe)
+        if self.title:
+            return self.title
+        return str(self.recipe)
+
