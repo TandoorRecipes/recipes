@@ -32,6 +32,8 @@
                 <div class="table-controls" style="text-align: center">
                     <button class="btn btn-success" id="new_empty" type="button" style="min-width: 20vw"><i
                             class="fas fa-plus-circle"></i></button>
+                    <button class="btn btn-warning" id="new_header" type="button" data-toggle="tooltip"
+                    data-placement="top" title="{% trans 'Insert a header between the ingredients.' %}"><i class="fas fa-heading"></i></button>
 
                     <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover"
                             data-placement="right" data-html="true" data-trigger="focus"
@@ -57,7 +59,7 @@
         {% endif %}
     </form>
 
-    <script>
+    <script type="application/javascript">
 
         $(function () {
             $('[data-toggle="popover"]').popover()
@@ -199,6 +201,20 @@
                 input.select();
             }
 
+            function addHeaderRow(type) {
+                data.push({
+                    ingredient__name: '{% trans 'Header' %}',
+                    amount: "0",
+                    unit__name: "Special:Header",
+                    note: "{% trans 'write header here' %}",
+                    id: Math.floor(Math.random() * 10000000),
+                    delete: false,
+                });
+                input = table.rowManager.rows[((table.rowManager.rows).length) - 1].cells[4].getElement()
+                input.focus();
+                input.select();
+            }
+
             document.onkeyup = function (e) {
                 if (e.shiftKey && e.ctrlKey && (e.which === 83 || e.keyCode === 83)) {
                     $('#id_form').submit()
@@ -208,7 +224,12 @@
             };
 
             document.getElementById("new_empty").addEventListener("click", addIngredientRow);
+            document.getElementById("new_header").addEventListener("click", addHeaderRow);
         });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
     </script>
 {% endblock %}

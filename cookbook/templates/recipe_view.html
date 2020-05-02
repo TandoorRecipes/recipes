@@ -109,7 +109,7 @@
         <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
     {% endif %}
 
-    {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 or last_cooked%}
+    {% if recipe.waiting_time and recipe.waiting_time != 0 or recipe.working_time and recipe.working_time != 0 or last_cooked %}
         <br/>
         <br/>
     {% endif %}
@@ -137,48 +137,61 @@
                         <br/>
                         <table class="table table-sm">
                             {% for i in ingredients %}
-                                <tr>
-                                    <td style="vertical-align: middle!important;">
-                                        <div class="pretty p-default p-curve">
-                                            <input type="checkbox"/>
-                                            <div class="state p-success">
-                                                <label>
-                                                    {% if i.amount != 0 %}
-                                                        <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
-                                                        {{ i.unit }}
-                                                    {% else %}
-                                                        <span>&#x2063;</span>
-                                                    {% endif %}
-                                                </label>
-                                            </div>
-                                        </div>
+                                {% if i.unit.name == 'Special:Header' %}
+                                    <tr>
+                                        <td style="padding-top: 8px!important; ">
+                                            <b>{{ i.note }}</b>
+                                        </td>
+                                        <td>
 
-                                    </td>
-                                    <td style="vertical-align: middle!important;">
-                                        {% if i.ingredient.recipe %}
-                                            <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}" target="_blank">
-                                        {% endif %}
-                                        {{ i.ingredient.name }}
-                                        {% if i.ingredient.recipe %}
-                                            </a>
-                                        {% endif %}
-
-                                    </td>
-                                    <td style="vertical-align: middle!important;">
-                                        {% if i.note %}
-                                            <button class="btn btn-light btn-sm d-print-none" type="button"
-                                                    data-container="body"
-                                                    data-toggle="popover"
-                                                    data-placement="right" data-html="true" data-trigger="focus"
-                                                    data-content="{{ i.note }}">
-                                                <i class="fas fa-info"></i>
-                                            </button>
-                                            <div class="d-none d-print-block">
-                                                <i class="far fa-comment-alt"></i> {{ i.note }}
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td style="vertical-align: middle!important;">
+                                            <div class="pretty p-default p-curve">
+                                                <input type="checkbox"/>
+                                                <div class="state p-success">
+                                                    <label>
+                                                        {% if i.amount != 0 %}
+                                                            <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
+                                                            {{ i.unit }}
+                                                        {% else %}
+                                                            <span>&#x2063;</span>
+                                                        {% endif %}
+                                                    </label>
+                                                </div>
                                             </div>
-                                        {% endif %}
-                                    </td>
-                                </tr>
+
+                                        </td>
+                                        <td style="vertical-align: middle!important;">
+                                            {% if i.ingredient.recipe %}
+                                                <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}"
+                                                   target="_blank">
+                                            {% endif %}
+                                            {{ i.ingredient.name }}
+                                            {% if i.ingredient.recipe %}
+                                                </a>
+                                            {% endif %}
+
+                                        </td>
+                                        <td style="vertical-align: middle!important;">
+                                            {% if i.note %}
+                                                <button class="btn btn-light btn-sm d-print-none" type="button"
+                                                        data-container="body"
+                                                        data-toggle="popover"
+                                                        data-placement="right" data-html="true" data-trigger="focus"
+                                                        data-content="{{ i.note }}">
+                                                    <i class="fas fa-info"></i>
+                                                </button>
+                                                <div class="d-none d-print-block">
+                                                    <i class="far fa-comment-alt"></i> {{ i.note }}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                             <!-- Bottom border -->
                             <tr>
