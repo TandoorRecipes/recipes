@@ -126,7 +126,7 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount', 'note')
+    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount', 'note').order_by('id')
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients)),
