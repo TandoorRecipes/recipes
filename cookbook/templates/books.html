@@ -23,13 +23,20 @@
                 <div class="card" style="margin-top: 2px">
                     <div class="card-body">
                         <h5 class="card-title">{% if b.book.icon %}{{ b.book.icon }} {% endif %}{{ b.book.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{% if b.book.created_by != request.user %}
+                            {% trans 'by' %} {{ b.book.created_by.get_user_name }}
+                        {% endif %}</h6>
+
                         {% if b.book.description %}
                             <p class="card-text">{{ b.book.description }}</p>
                         {% endif %}
                         <a data-toggle="collapse" href="#collapse_{{ b.book.pk }}" role="button" aria-expanded="false"
                            aria-controls="collapse_{{ b.book.pk }}" class="card-link">{% trans 'Toggle Recipes' %}</a>
-                        <a href="{% url 'edit_recipe_book' b.book.pk %}" class="card-link">{% trans 'Edit' %}</a>
-                        <a href="{% url 'delete_recipe_book' b.book.pk %}" class="card-link">{% trans 'Delete' %}</a>
+                        {% if b.book.created_by == request.user or request.user.is_superuser %}
+                            <a href="{% url 'edit_recipe_book' b.book.pk %}" class="card-link">{% trans 'Edit' %}</a>
+                            <a href="{% url 'delete_recipe_book' b.book.pk %}"
+                               class="card-link">{% trans 'Delete' %}</a>
+                        {% endif %}
                     </div>
                     <div class="collapse" id="collapse_{{ b.book.pk }}">
                         {% if b.recipes %}
@@ -48,10 +55,12 @@
                                                 {% endif %}
 
                                             </div>
-                                            <div class="col-2" style="text-align: right">
-                                                <a href="{% url 'delete_recipe_book_entry' r.pk %}"
-                                                   class="pull-right"><i class="fas fa-trash-alt"></i></a>
-                                            </div>
+                                            {% if b.book.created_by == request.user or request.user.is_superuser %}
+                                                <div class="col-2" style="text-align: right">
+                                                    <a href="{% url 'delete_recipe_book_entry' r.pk %}"
+                                                       class="pull-right"><i class="fas fa-trash-alt"></i></a>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </li>
                                 {% endfor %}
