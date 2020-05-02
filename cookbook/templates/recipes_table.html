@@ -20,14 +20,17 @@
                                         {% else %}
                                             <img src="{% static 'recipe_no_image.svg' %}"
                                                  alt="{% trans 'Recipe Image' %}"
-                                                 class="card-img d-none d-lg-block" style="object-fit: inherit; height: 10vh">
+                                                 class="card-img d-none d-lg-block"
+                                                 style="object-fit: inherit; height: 10vh">
 
                                         {% endif %}
-
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ row.cells.name }}</h5>
+                                            <h5 class="card-title">{{ row.cells.name }}
+                                                {% recipe_rating row.record request.user as rating %}
+                                                {{ rating|safe }}
+                                            </h5>
                                             <p class="card-text{% if not row.record.all_tags %} d-none d-lg-block{% endif %}">
                                                 {{ row.cells.all_tags }}
                                             </p>
@@ -41,11 +44,17 @@
                                                     <span
                                                             class="badge badge-secondary"><i
                                                             class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ row.cells.waiting_time }} min </span>
-                                                {% endif %}{% if not row.record.internal %}
-                                                <span class="badge badge-info">{% trans 'External' %} </span>
-                                            {% endif %}
+                                                {% endif %}
+                                                {% if not row.record.internal %}
+                                                    <span class="badge badge-info">{% trans 'External' %} </span>
+                                                {% endif %}
+                                                {% recipe_last row.record request.user as last %}
+                                                {% if last %}
+                                                    <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last|date }}</span>
+                                                {% endif %}
                                                 <span class="badge badge-light">{{ row.cells.edit }}</span>
-                                                <span class="badge badge-warning"><a href="#" style="color: inherit" onclick="openCookLogModal({{ row.record.pk }})">{% trans 'Log' %}</a></span>
+                                                <span class="badge badge-warning"><a href="#" style="color: inherit"
+                                                                                     onclick="openCookLogModal({{ row.record.pk }})">{% trans 'Log' %}</a></span>
                                             </small></p>
 
                                         </div>
