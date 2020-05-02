@@ -14,19 +14,24 @@
                             <div class="card">
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
+
+
                                         {% if row.cells.image|length > 1 %}
-                                            <img src="{{ row.cells.image }}" class="card-img"
-                                                 alt="{% trans 'Recipe Image' %}"
-                                                 style="height: 100%;">
+                                            <img src=" {{ row.cells.image }}" alt="{% trans 'Recipe Image' %}"
+                                                 class="card-img" style="object-fit: cover; height: 10vh">
                                         {% else %}
-                                            <img src="{% static 'recipe_no_image.svg' %}" class="card-img"
-                                                 alt="{% trans 'Recipe Image' %}" style="height: 100%;">
+                                            <img src="{% static 'recipe_no_image.svg' %}"
+                                                 alt="{% trans 'Recipe Image' %}"
+                                                 class="card-img d-none d-lg-block" style="object-fit: inherit; height: 10vh">
+
                                         {% endif %}
+
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ row.cells.name }}</h5>
-                                            <p class="card-text">{{ row.cells.all_tags }}
+                                            <p class="card-text{% if not row.record.all_tags %} d-none d-lg-block{% endif %}">
+                                                {{ row.cells.all_tags }}
                                             </p>
                                             <p class="card-text"><small class="text-muted">
                                                 {% if row.cells.working_time != 0 %}
@@ -38,7 +43,11 @@
                                                     <span
                                                             class="badge badge-secondary"><i
                                                             class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ row.cells.waiting_time }} min </span>
-                                                {% endif %} {{ row.cells.edit }}</small></p>
+                                                {% endif %}{% if not row.record.internal %}
+                                                <span class="badge badge-info">{% trans 'External' %} </span>
+                                            {% endif %}
+                                                <span class="badge badge-light">{{ row.cells.edit }}</span>
+                                            </small></p>
 
                                         </div>
                                     </div>
