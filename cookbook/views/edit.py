@@ -14,7 +14,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm
+    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm, RecipeBookForm
 from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
 
 from cookbook.helper.permission_helper import OwnerRequiredMixin
@@ -255,7 +255,7 @@ class ImportUpdate(GroupRequiredMixin, UpdateView):
 class RecipeBookUpdate(OwnerRequiredMixin, UpdateView):
     template_name = "generic/edit_template.html"
     model = RecipeBook
-    fields = ['name']
+    form_class = RecipeBookForm
 
     def get_success_url(self):
         return reverse('view_books')
