@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
 from cookbook.helper.permission_helper import group_required
-from cookbook.tables import RecipeTable
+from cookbook.tables import RecipeTable, RecipeTableSmall
 
 
 def index(request):
@@ -35,7 +35,10 @@ def search(request):
     if request.user.is_authenticated:
         f = RecipeFilter(request.GET, queryset=Recipe.objects.all().order_by('name'))
 
-        table = RecipeTable(f.qs)
+        if request.user.userpreference.search_style == UserPreference.LARGE:
+            table = RecipeTable(f.qs)
+        else:
+            table = RecipeTableSmall(f.qs)
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         return render(request, 'index.html', {'recipes': table, 'filter': f})
@@ -193,6 +196,7 @@ def settings(request):
                 up.nav_color = form.cleaned_data['nav_color']
                 up.default_unit = form.cleaned_data['default_unit']
                 up.default_page = form.cleaned_data['default_page']
+                up.search_style = form.cleaned_data['search_style']
                 up.save()
 
         if 'user_name_form' in request.POST:

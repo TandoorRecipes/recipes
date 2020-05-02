@@ -48,11 +48,18 @@ class UserPreference(models.Model):
 
     PAGES = ((SEARCH, _('Search')), (PLAN, _('Meal-Plan')), (BOOKS, _('Books')), )
 
+    # Search Style
+    SMALL = 'SMALL'
+    LARGE = 'LARGE'
+
+    SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')),)
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
+    search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
 
     def __str__(self):
         return self.user

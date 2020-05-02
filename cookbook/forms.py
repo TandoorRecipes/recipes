@@ -30,7 +30,7 @@ class UserPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = UserPreference
-        fields = ('default_unit', 'theme', 'nav_color', 'default_page')
+        fields = ('default_unit', 'theme', 'nav_color', 'default_page', 'search_style')
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
