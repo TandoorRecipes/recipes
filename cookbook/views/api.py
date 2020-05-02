@@ -1,10 +1,14 @@
+import re
+
+from annoying.decorators import ajax_request
+from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Recipe, Sync, Storage
+from cookbook.models import Recipe, Sync, Storage, CookLog
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -64,3 +68,22 @@ def sync_all(request):
     else:
         messages.add_message(request, messages.ERROR, _('Error synchronizing with Storage'))
         return redirect('list_recipe_import')
+
+
+@group_required('user')
+@ajax_request
+def log_cooking(request, recipe_id):
+    recipe = get_object_or_None(Recipe, id=recipe_id)
+    if recipe:
+        log = CookLog.objects.create(created_by=request.user, recipe=recipe)
+        servings = request.GET['s'] if 's' in request.GET else None
+        if servings and re.match(r'^([1-9])+$', servings):
+            log.servings = int(servings)
+
+        rating = request.GET['r'] if 'r' in request.GET else None
+        if rating and re.match(r'^([1-9])+$', rating):
+            log.rating = int(rating)
+        log.save()
+        return {'msg': 'updated successfully'}
+
+    return {'error': 'recipe does not exist'}

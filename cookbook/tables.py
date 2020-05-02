@@ -26,7 +26,7 @@ class RecipeTableSmall(tables.Table):
 
 
 class RecipeTable(tables.Table):
-    edit = tables.TemplateColumn("<a href='{% url 'edit_recipe' record.id %}' >" + _('Edit') + "</a>")
+    edit = tables.TemplateColumn("<a style='color: inherit' href='{% url 'edit_recipe' record.id %}' >" + _('Edit') + "</a>")
     name = tables.LinkColumn('view_recipe', args=[A('id')])
     all_tags = tables.Column(
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
