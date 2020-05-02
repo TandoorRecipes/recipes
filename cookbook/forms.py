@@ -237,7 +237,9 @@ class ImportRecipeForm(forms.ModelForm):
 class RecipeBookForm(forms.ModelForm):
     class Meta:
         model = RecipeBook
-        fields = ('name',)
+        fields = ('name', 'icon', 'description')
+
+        widgets = {'icon': EmojiPickerTextInput}
 
 
 class MealPlanForm(forms.ModelForm):
