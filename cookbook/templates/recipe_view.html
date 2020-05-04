@@ -13,6 +13,13 @@
 
     <!-- prevent weired character stuff escaping the pdf box -->
     <style>
+        /* fixes print layout being disturbed by print button tooltip */
+        @media print {
+            .tooltip {
+                display: none;
+            }
+        }
+
         .textLayer > span {
             color: transparent;
             position: absolute;
@@ -21,6 +28,7 @@
             transform-origin: 0% 0%;
         }
 
+        /* css classes needed to render markdown blockquotes */
         blockquote {
             background: #f9f9f9;
             border-left: 4px solid #ccc;
