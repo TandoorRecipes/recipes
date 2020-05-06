@@ -35,6 +35,8 @@ The docker image (`vabene1111/recipes`) simply exposes the application on port `
 4. Create a default user by running `docker-compose exec web_recipes createsuperuser`. 
 
 ### Manual
+**Python >= 3.8** is required to run this! 
+
 Copy `.env.template` to `.env` and fill in the missing values accordingly.  
 Make sure all variables are available to whatever serves your application.
 
