@@ -31,11 +31,16 @@ class UserPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = UserPreference
-        fields = ('default_unit', 'theme', 'nav_color', 'default_page', 'search_style')
+        fields = ('default_unit', 'theme', 'nav_color', 'default_page', 'search_style', 'plan_share')
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
-            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.')
+            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),
+            'plan_share': _('Default user to share newly created meal plan entries with.')
+        }
+
+        widgets = {
+            'plan_share': MultiSelectWidget
         }
 
 
@@ -257,6 +262,6 @@ class MealPlanForm(forms.ModelForm):
 
     class Meta:
         model = MealPlan
-        fields = ('recipe', 'title', 'meal', 'note', 'date')
+        fields = ('recipe', 'title', 'meal', 'note', 'date', 'shared')
 
-        widgets = {'recipe': SelectWidget, 'date': DateWidget}
+        widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}

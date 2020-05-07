@@ -61,6 +61,7 @@ class UserPreference(models.Model):
     default_unit = models.CharField(max_length=32, default='g')
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
     search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
+    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
 
     def __str__(self):
         return str(self.user)
@@ -223,6 +224,7 @@ class MealPlan(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
     meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
     note = models.TextField(blank=True)
     date = models.DateField()
