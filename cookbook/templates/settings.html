@@ -5,6 +5,11 @@
 
 {% block title %}{% trans 'Settings' %}{% endblock %}
 
+{% block extra_head %}
+    {{ preference_form.media }}
+{% endblock %}
+
+
 {% block content %}
 
     <h3>

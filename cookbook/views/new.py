@@ -128,7 +128,8 @@ class MealPlanCreate(GroupRequiredMixin, CreateView):
     def get_initial(self):
         return dict(
             meal=self.request.GET['meal'] if 'meal' in self.request.GET else None,
-            date=datetime.strptime(self.request.GET['date'], '%Y-%m-%d') if 'date' in self.request.GET else None
+            date=datetime.strptime(self.request.GET['date'], '%Y-%m-%d') if 'date' in self.request.GET else None,
+            shared=self.request.user.userpreference.plan_share.all() if self.request.user.userpreference.plan_share else None
         )
 
     def form_valid(self, form):

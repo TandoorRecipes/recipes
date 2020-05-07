@@ -130,7 +130,7 @@ def meal_plan(request):
         plan[t[0]] = {'type_name': t[1], 'days': copy.deepcopy(days_dict)}
 
     for d in days:
-        plan_day = MealPlan.objects.filter(date=d).all()
+        plan_day = MealPlan.objects.filter(date=d).filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
         for p in plan_day:
             plan[p.meal]['days'][d].append(p)
 
@@ -195,6 +195,7 @@ def settings(request):
                 up.default_unit = form.cleaned_data['default_unit']
                 up.default_page = form.cleaned_data['default_page']
                 up.search_style = form.cleaned_data['search_style']
+                up.plan_share.set(form.cleaned_data['plan_share'])
                 up.save()
 
         if 'user_name_form' in request.POST:
