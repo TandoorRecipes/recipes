@@ -138,6 +138,19 @@ def meal_plan(request):
 
 
 @group_required('user')
+def meal_plan_entry(request, pk):
+    plan = MealPlan.objects.get(pk=pk)
+
+    if plan.created_by != request.user and plan.shared != request.user:
+        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+        return HttpResponseRedirect(reverse_lazy('index'))
+
+    same_day_plan = MealPlan.objects.filter(date=plan.date).exclude(pk=plan.pk).filter(Q(created_by=request.user) | Q(shared=request.user)).order_by('meal').all()
+
+    return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
+
+
+@group_required('user')
 def shopping_list(request):
     markdown_format = True
 

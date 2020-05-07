@@ -272,7 +272,7 @@ class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
     form_class = MealPlanForm
 
     def get_success_url(self):
-        return reverse('view_plan')
+        return reverse('view_plan_entry', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(MealPlanUpdate, self).get_context_data(**kwargs)

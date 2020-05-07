@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% load l10n %}
@@ -10,8 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
           integrity="sha384-ICB8i/maQ/5+tGLDUEcswB7Ch+OO9Oj8Z4Ov/Gs0gxqfTgLLkD3F43MhcEJ2x6/D" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
 
-    <!-- prevent weired character stuff escaping the pdf box -->
     <style>
         /* fixes print layout being disturbed by print button tooltip */
         @media print {
@@ -20,34 +21,13 @@
             }
         }
 
+        /* prevent weired character stuff escaping the pdf box */
         .textLayer > span {
             color: transparent;
             position: absolute;
             white-space: pre;
             cursor: text;
             transform-origin: 0% 0%;
-        }
-
-        /* css classes needed to render markdown blockquotes */
-        blockquote {
-            background: #f9f9f9;
-            border-left: 4px solid #ccc;
-            margin: 1.5em 10px;
-            padding: .5em 10px;
-            quotes: none;
-        }
-
-        blockquote:before {
-            color: #ccc;
-            content: open-quote;
-            font-size: 4em;
-            line-height: .1em;
-            margin-right: .25em;
-            vertical-align: -.4em;
-        }
-
-        blockquote p {
-            display: inline;
         }
     </style>
 

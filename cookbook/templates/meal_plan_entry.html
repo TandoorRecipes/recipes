@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block title %}{% trans 'Meal Plan View' %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col col-12">
+            <h3>{{ plan.get_meal_name }} {{ plan.date }} <a href="{% url 'edit_meal_plan' plan.pk %}"
+                                                            class="d-print-none"><i class="fas fa-pencil-alt"></i></a>
+            </h3>
+            <small class="text-muted">{% trans 'Created by' %} {{ plan.created_by.get_user_name }}</small>
+            {% if plan.shared.all %}
+                <br/><small class="text-muted">{% trans 'Shared with' %}
+                {% for x in plan.shared.all %}{{ x.get_user_name }}{% if not forloop.last %}, {% endif %} {% endfor %}</small>
+            {% endif %}
+
+        </div>
+    </div>
+    <br/>
+    <br/>
+
+    {% if plan.title %}
+        <div class="row">
+            <div class="col col-12">
+                <h4>{{ plan.title }}</h4>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if plan.recipe %}
+        <div class="row">
+            <div class="col col-12">
+                <div class="card">
+                    <div class="card-body">
+                        {% recipe_rating plan.recipe request.user as rating %}
+                        <h5 class="card-title"><a
+                                href="{% url 'view_recipe' plan.recipe.pk %}">{{ plan.recipe }}</a> {{ rating|safe }}
+                        </h5>
+                        {% recipe_last plan.recipe request.user as last_cooked %}
+                        {% if last_cooked %}
+                            {% trans 'Last cooked' %} {{ last_cooked|date }}
+                        {% else %}
+                            {% trans 'Never cooked before.' %}
+                        {% endif %}
+                        {% if plan.recipe.keywords %}
+                            <br/>
+                            <br/>
+                            {{ plan.recipe.all_tags }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if plan.note %}
+        <br/>
+        <div class="row">
+            <div class="col col-12">
+                {{ plan.note | markdown | safe }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if same_day_plan %}
+        <br/>
+        <h4>{% trans 'Other meals on this day' %}</h4>
+        <ul class="list-group list-group-flush">
+            {% for x in same_day_plan %}
+                <li class="list-group-item"><a href="{% url 'view_plan_entry' x.pk %}">{{ x.get_label }}
+                    ({{ x.get_meal_name }})</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

@@ -70,7 +70,7 @@
                         class="sr-only">(current)</span></a>
             </li>
 
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_ingredient' %}active{% endif %}">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_ingredient,view_plan_entry' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-mortar-pestle"></i> {% trans 'Utensils' %}
