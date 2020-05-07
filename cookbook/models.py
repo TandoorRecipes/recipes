@@ -234,6 +234,10 @@ class MealPlan(models.Model):
             return self.title
         return str(self.recipe)
 
+    def get_meal_name(self):
+        meals = dict(self.MEAL_TYPES)
+        return meals.get(self.meal)
+
 
 class CookLog(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

@@ -92,7 +92,7 @@ class InternalRecipeForm(forms.ModelForm):
         }
         widgets = {'keywords': MultiSelectWidget}
         help_texts = {
-            'instructions': _('You can use markdown to format the instructions. See the <a href="/docs/markdown/">docs here</a>')
+            'instructions': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
         }
 
 
@@ -263,5 +263,10 @@ class MealPlanForm(forms.ModelForm):
     class Meta:
         model = MealPlan
         fields = ('recipe', 'title', 'meal', 'note', 'date', 'shared')
+
+        help_texts = {
+            'shared': _('You can list default users to share recipes with in the settings.'),
+            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
+        }
 
         widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}

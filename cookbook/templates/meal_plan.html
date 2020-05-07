@@ -77,13 +77,13 @@
                                    href="{% url 'new_meal_plan' %}?date={{ day_key|date:'Y-m-d' }}&meal={{ plan_key }}"><i
                                         class="fas fa-plus"></i></a>
                                 {% for mp in days_value %}
-                                    {% if mp.recipe %}
-                                        <a href="{% url 'edit_meal_plan' mp.pk %}"><i class="fas fa-edit"></i></a>
-                                        <a href="{% url 'view_recipe' mp.recipe.pk %}">{{ mp.recipe }}</a><br/>
-                                    {% else %}
-                                        <a href="{% url 'edit_meal_plan' mp.pk %}">{{ mp.title }}</a><br/>
-                                    {% endif %}
-
+                                    <a href="{% url 'view_plan_entry' mp.pk %}">
+                                        {% if mp.recipe %}
+                                            {{ mp.recipe }}
+                                        {% else %}
+                                            {{ mp.title }}
+                                        {% endif %}
+                                    </a><br/>
                                 {% endfor %}
                             </td>
                         {% endfor %}
