@@ -5,32 +5,7 @@
 {% block title %}{% trans "Markdown Info" %}{% endblock %}
 
 {% block extra_head %}
-    <style>
-        .code-block {
-            background: #DDDDDD;
-        }
-
-        blockquote {
-            background: #f9f9f9;
-            border-left: 4px solid #ccc;
-            margin: 1.5em 10px;
-            padding: .5em 10px;
-            quotes: none;
-        }
-
-        blockquote:before {
-            color: #ccc;
-            content: open-quote;
-            font-size: 4em;
-            line-height: .1em;
-            margin-right: .25em;
-            vertical-align: -.4em;
-        }
-
-        blockquote p {
-            display: inline;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
 {% endblock %}
 
 {% block content %}
