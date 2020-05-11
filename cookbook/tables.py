@@ -106,3 +106,21 @@ class RecipeImportTable(tables.Table):
         model = RecipeImport
         template_name = 'generic/table_template.html'
         fields = ('id', 'name', 'file_path')
+
+
+class ViewLogTable(tables.Table):
+    recipe = tables.LinkColumn('view_recipe', args=[A('recipe_id')])
+
+    class Meta:
+        model = ViewLog
+        template_name = 'generic/table_template.html'
+        fields = ('recipe', 'created_at')
+
+
+class CookLogTable(tables.Table):
+    recipe = tables.LinkColumn('view_recipe', args=[A('recipe_id')])
+
+    class Meta:
+        model = CookLog
+        template_name = 'generic/table_template.html'
+        fields = ('recipe', 'rating', 'serving', 'created_at')
