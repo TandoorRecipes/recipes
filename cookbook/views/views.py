@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
 from cookbook.helper.permission_helper import group_required
-from cookbook.tables import RecipeTable, RecipeTableSmall
+from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLogTable
 
 
 def index(request):
@@ -85,7 +85,7 @@ def recipe_view(request, pk):
     bookmark_form = RecipeBookEntryForm()
 
     if request.user.is_authenticated:
-        if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(created_at__gt=(timezone.now()-timezone.timedelta(minutes=5))).exists():
+        if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(created_at__gt=(timezone.now() - timezone.timedelta(minutes=5))).exists():
             ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
     return render(request, 'recipe_view.html',
@@ -240,6 +240,12 @@ def settings(request):
         preference_form = UserPreferenceForm()
 
     return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form})
+
+
+def history(request):
+    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user).order_by('-created_at').all())
+    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
+    return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
 def markdown_info(request):
