@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
@@ -42,7 +43,12 @@ def search(request):
             table = RecipeTableSmall(f.qs)
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-        return render(request, 'index.html', {'recipes': table, 'filter': f})
+        if request.GET == {}:
+            last_viewed = RecipeTable(Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()[0:5])
+        else:
+            last_viewed = None
+
+        return render(request, 'index.html', {'recipes': table, 'filter': f, 'last_viewed': last_viewed})
     else:
         return render(request, 'index.html')
 
@@ -77,6 +83,10 @@ def recipe_view(request, pk):
 
     comment_form = CommentForm()
     bookmark_form = RecipeBookEntryForm()
+
+    if request.user.is_authenticated:
+        if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(created_at__gt=(timezone.now()-timezone.timedelta(minutes=5))).exists():
+            ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
     return render(request, 'recipe_view.html',
                   {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'comment_form': comment_form,
