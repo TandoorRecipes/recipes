@@ -77,6 +77,13 @@
     {% endif %}
     <br/>
 
+    {% if last_viewed %}
+        <h4>{% trans 'Last viewed' %}</h4>
+        {% render_table last_viewed %}
+        <h4>{% trans 'Recips' %}</h4>
+    {% endif %}
+
+
     {% if user.is_authenticated and recipes %}
         {% render_table recipes %}
     {% else %}

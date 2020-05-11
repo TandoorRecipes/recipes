@@ -248,3 +248,12 @@ class CookLog(models.Model):
 
     def __str__(self):
         return self.recipe.name
+
+
+class ViewLog(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.recipe.name
