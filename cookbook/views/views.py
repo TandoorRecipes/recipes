@@ -242,6 +242,7 @@ def settings(request):
     return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form})
 
 
+@group_required('guest')
 def history(request):
     view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user).order_by('-created_at').all())
     cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
