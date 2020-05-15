@@ -13,7 +13,7 @@ urlpatterns = [
     path('plan/', views.meal_plan, name='view_plan'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
-    path('settings/', views.settings, name='view_settings'),
+    path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
 
     path('import/', import_export.import_recipe, name='view_import'),
