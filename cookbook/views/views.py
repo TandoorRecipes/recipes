@@ -46,8 +46,6 @@ def search(request):
 
         if request.GET == {}:
             qs = Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()[0:5]
-            if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2':
-                qs = Recipe.objects.filter(viewlog__created_by=request.user).distinct('name').order_by('-viewlog__created_at').all()[0:5]
 
             last_viewed = RecipeTable(qs)
         else:
