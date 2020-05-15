@@ -7,10 +7,11 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
 from django.utils import timezone
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
+
+from django.conf import settings
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
@@ -44,7 +45,11 @@ def search(request):
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         if request.GET == {}:
-            last_viewed = RecipeTable(Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()[0:5])
+            qs = Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()[0:5]
+            if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2':
+                qs = Recipe.objects.filter(viewlog__created_by=request.user).distinct('name').order_by('-viewlog__created_at').all()[0:5]
+
+            last_viewed = RecipeTable(qs)
         else:
             last_viewed = None
 
@@ -201,7 +206,7 @@ def shopping_list(request):
 
 
 @group_required('guest')
-def settings(request):
+def user_settings(request):
     up = request.user.userpreference
 
     user_name_form = UserNameForm(instance=request.user)
