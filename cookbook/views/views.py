@@ -45,9 +45,16 @@ def search(request):
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         if request.GET == {}:
-            qs = Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()[0:5]
+            qs = Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()
 
-            last_viewed = RecipeTable(qs)
+            recent_list = []
+            for r in qs:
+                if r not in recent_list:
+                    recent_list.append(r)
+                if len(recent_list) >= 5:
+                    break
+
+            last_viewed = RecipeTable(recent_list)
         else:
             last_viewed = None
 
