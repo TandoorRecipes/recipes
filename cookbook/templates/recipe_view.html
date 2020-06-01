@@ -8,8 +8,7 @@
 {% block title %}{{ recipe.name }}{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"
-          integrity="sha384-ICB8i/maQ/5+tGLDUEcswB7Ch+OO9Oj8Z4Ov/Gs0gxqfTgLLkD3F43MhcEJ2x6/D" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
 
@@ -262,13 +261,9 @@
                     </div>
                 </div>
 
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf.min.js"
-                        integrity="sha256-J4Z8Fhj2MITUakMQatkqOVdtqodUlwHtQ/ey6fSsudE="
-                        crossorigin="anonymous"></script>
+                <script src="{% static 'js/pdf.min.js' %}"></script>
 
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.3.200/pdf_viewer.js"
-                        integrity="sha256-JW7ackRikw8/UM/hHV6vKaZBYc+t2ZQ77sd3LWR8vh8="
-                        crossorigin="anonymous"></script>
+                <script src="{% static 'js/pdf_viewer.js' %}"></script>
 
                 <script type="text/javascript">
                     var url = "{% url 'api_get_recipe_file' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
