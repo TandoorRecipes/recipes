@@ -5,12 +5,22 @@ from django_tables2.utils import A  # alias for Accessor
 
 from .models import *
 
+from django.utils.safestring import mark_safe
+from django.templatetags.static import static
 
-class ImageUrlColumn(tables.Column):
+class ImageUrlColumn(tables.LinkColumn):
     def render(self, value):
         if value.url:
-            return value.url
-        return None
+            src = value.url
+            _class = ''
+            style = 'object-fit: cover;'
+        
+        else:
+            src = static("recipe_no_image.svg")
+            _class = 'd-none d-lg-block'
+            style = 'object-fit: inherit;'
+            
+        return mark_safe(f'<img src="{src}" alt="{_("Recipe Image")}" class="card-img {_class}" style="{style} height:130px">')
 
 
 class RecipeTableSmall(tables.Table):
@@ -30,7 +40,7 @@ class RecipeTable(tables.Table):
     name = tables.LinkColumn('view_recipe', args=[A('id')])
     all_tags = tables.Column(
         attrs={'td': {'class': 'd-none d-lg-table-cell'}, 'th': {'class': 'd-none d-lg-table-cell'}})
-    image = ImageUrlColumn()
+    image = ImageUrlColumn('view_recipe', args=[A('id')])
 
     class Meta:
         model = Recipe
