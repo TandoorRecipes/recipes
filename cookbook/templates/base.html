@@ -20,23 +20,17 @@
 
     <!-- Bootstrap 4 -->
     <link id="id_main_css" href="{% theme_url request %}" rel="stylesheet">
-    <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static '/js/jquery-3.5.1.min.js' %}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-            crossorigin="anonymous"></script>
+    <script src="{% static '/js/popper.min.js' %}"></script>
+    <script src="{% static '/js/bootstrap.min.js' %}"></script>
 
     <!-- Select2 for use with django autocomplete light -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <link href="{% static 'css/select2.min.css' %}" rel="stylesheet"/> <!-- TODO this style sheet might not be necessary -->
+    <script src="{% static 'js/select2.min.js' %}"></script>
 
     <!-- Bootstrap theme for select2 -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.css"
-          integrity="sha256-zFnNbsU+u3l0K+MaY92RvJI6AdAVAxK3/QrBApHvlH8=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="{% static 'css/select2-bootstrap.css' %}"/>
 
     <link rel="stylesheet"
           href="{% static 'themes/select2-bootstrap-theme.css' %}"
@@ -135,7 +129,8 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'view_settings' %}"><i
                                 class="fas fa-user-cog fa-fw"></i> {% trans 'Settings' %}</a>
-                        <a class="dropdown-item" href="{% url 'view_history' %}"><i class="fas fa-history"></i> {% trans 'History' %}</a>
+                        <a class="dropdown-item" href="{% url 'view_history' %}"><i
+                                class="fas fa-history"></i> {% trans 'History' %}</a>
                         {% if user.is_superuser %}
                             <a class="dropdown-item" href="{% url 'admin:index' %}"><i
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
