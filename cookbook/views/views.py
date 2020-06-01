@@ -196,7 +196,7 @@ def shopping_list(request):
     ingredients = []
 
     for r in recipes:
-        for ri in RecipeIngredient.objects.filter(recipe=r).all():
+        for ri in RecipeIngredient.objects.filter(recipe=r).exclude(unit__name__contains='Special:').all():
             index = None
             for x, ig in enumerate(ingredients):
                 if ri.ingredient == ig.ingredient and ri.unit == ig.unit:
