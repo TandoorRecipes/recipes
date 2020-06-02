@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
 {% load static %}
 {% load i18n %}
 
@@ -11,6 +11,13 @@
 
 {% block content %}
 
+    <h1>{% trans 'Setup' %}</h1>
+    <p>{% blocktrans %}To start using this application you must first create a superuser.{% endblocktrans %}</p>
 
+    <form action="." method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create Superuser' %}</button>
+    </form>
 
 {% endblock %}
