@@ -4,6 +4,7 @@ django-tables2
 django-filter
 django-crispy-forms
 djangorestframework
+django-cors-headers
 django-autocomplete-light
 django-emoji-picker
 django-cleanup
