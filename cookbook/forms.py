@@ -263,7 +263,7 @@ class MealPlanForm(forms.ModelForm):
 
     class Meta:
         model = MealPlan
-        fields = ('recipe', 'title', 'meal', 'note', 'date', 'shared')
+        fields = ('recipe', 'title', 'meal_type', 'note', 'date', 'shared')
 
         help_texts = {
             'shared': _('You can list default users to share recipes with in the settings.'),
