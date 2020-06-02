@@ -6,11 +6,19 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+from rest_framework import viewsets, permissions
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Recipe, Sync, Storage, CookLog
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
+from cookbook.serializer import MealPlanSerializer
+
+
+class MealPlanViewSet(viewsets.ModelViewSet):
+    queryset = MealPlan.objects.all()
+    serializer_class = MealPlanSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 def get_recipe_provider(recipe):
