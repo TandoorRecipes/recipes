@@ -1,10 +1,14 @@
 from pydoc import locate
 
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 
 from .views import *
 from cookbook.views import api, import_export
 from cookbook.helper import dal
+
+router = routers.DefaultRouter()
+router.register(r'meal-plan', api.MealPlanViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -50,6 +54,9 @@ urlpatterns = [
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
+
+    path('api/', include((router.urls, 'api'))),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
 generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Ingredient)
