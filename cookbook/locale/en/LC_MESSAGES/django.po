@@ -2,23 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-# Translators:
-# va bene <vabene1234@googlemail.com>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-02 21:20+0200\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: va bene <vabene1234@googlemail.com>, 2020\n"
-"Language-Team: German (https://www.transifex.com/open-source-project-1/teams/110507/de/)\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\cookbook\filters.py:15 .\cookbook\templates\base.html:79
@@ -27,221 +24,208 @@ msgstr ""
 #: .\cookbook\templates\recipe_view.html:111
 #: .\cookbook\templates\stats.html:28 .\cookbook\views\lists.py:45
 msgid "Ingredients"
-msgstr "Zutaten"
+msgstr ""
 
 #: .\cookbook\forms.py:37
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
-"Farbe der oberen Navigationsleiste. Nicht alle Farben passen, daher einfach "
-"mal ausprobieren!"
 
 #: .\cookbook\forms.py:38
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr "Standard Einheit für neue Zutaten."
+msgstr ""
 
 #: .\cookbook\forms.py:39
 msgid "Default user to share newly created meal plan entries with."
-msgstr "Benutzer mit denen alle neue Plan Einträge geteilt werden sollen."
+msgstr ""
 
 #: .\cookbook\forms.py:40
 msgid "Show recently viewed recipes on search page."
-msgstr "Zeige zuletzt angeschaute über der Suche"
+msgstr ""
 
 #: .\cookbook\forms.py:56
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Beide Felder sind optional, wenn keins von beiden gegeben ist wird der "
-"Nutzername angezeigt"
 
 #: .\cookbook\forms.py:70 .\cookbook\forms.py:88 .\cookbook\forms.py:239
 msgid "Name"
-msgstr "Name"
+msgstr ""
 
 #: .\cookbook\forms.py:71 .\cookbook\forms.py:89 .\cookbook\forms.py:240
 #: .\cookbook\templates\stats.html:24
 msgid "Keywords"
-msgstr "Schlagwörter"
+msgstr ""
 
 #: .\cookbook\forms.py:72 .\cookbook\forms.py:91
 msgid "Preparation time in minutes"
-msgstr "Zubereitungszeit in Minuten"
+msgstr ""
 
 #: .\cookbook\forms.py:73 .\cookbook\forms.py:92
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr "Wartezeit (kochen/backen) in Minuten"
+msgstr ""
 
 #: .\cookbook\forms.py:74 .\cookbook\forms.py:241
 msgid "Path"
-msgstr "Pfad"
+msgstr ""
 
 #: .\cookbook\forms.py:75
 msgid "Storage UID"
-msgstr "Speicher ID"
+msgstr ""
 
 #: .\cookbook\forms.py:90
 msgid "Instructions"
-msgstr "Anleitung"
+msgstr ""
 
 #: .\cookbook\forms.py:96 .\cookbook\forms.py:270
 msgid ""
-"You can use markdown to format this field. See the <a "
-"href=\"/docs/markdown/\">docs here</a>"
+"You can use markdown to format this field. See the <a href=\"/docs/markdown/"
+"\">docs here</a>"
 msgstr ""
-"Markdown kann genutzt werden um dieses Feld zu formatieren. Siehe <a "
-"href=\"/docs/markdown/\">hier</a> für weitere Informationen."
 
 #: .\cookbook\forms.py:106
 msgid ""
 "Include <code>- [ ]</code> in list for easier usage in markdown based "
 "documents."
 msgstr ""
-"Füge <code>- [ ]</code> vor den Zutaten ein um sie besser in einem Markdown "
-"Dokument zu verwenden."
 
 #: .\cookbook\forms.py:118
 msgid "Export Base64 encoded image?"
-msgstr "Base64 kodiertes Bild exportieren ?"
+msgstr ""
 
 #: .\cookbook\forms.py:122
 msgid "Download export directly or show on page?"
-msgstr "Direkter Download oder anzeige auf Seite ?"
+msgstr ""
 
 #: .\cookbook\forms.py:128
 msgid "Simply paste a JSON export into this textarea and click import."
-msgstr "Einfach JSON in die Textbox einfügen und importieren klicken."
+msgstr ""
 
 #: .\cookbook\forms.py:137
 msgid "New Unit"
-msgstr "Neue Einheit"
+msgstr ""
 
 #: .\cookbook\forms.py:138
 msgid "New unit that other gets replaced by."
-msgstr "Neue Einheit die die alte ersetzt."
+msgstr ""
 
 #: .\cookbook\forms.py:143
 msgid "Old Unit"
-msgstr "Alte Einheit"
+msgstr ""
 
 #: .\cookbook\forms.py:144
 msgid "Unit that should be replaced."
-msgstr "Einheit die ersetzt werden soll."
+msgstr ""
 
 #: .\cookbook\forms.py:154
 msgid "New Ingredient"
-msgstr "Neue Zutat"
+msgstr ""
 
 #: .\cookbook\forms.py:155
 msgid "New ingredient that other gets replaced by."
-msgstr "Neue Zutat die die alte ersetzt."
+msgstr ""
 
 #: .\cookbook\forms.py:160
 msgid "Old Ingredient"
-msgstr "Alte Zutat"
+msgstr ""
 
 #: .\cookbook\forms.py:161
 msgid "Ingredient that should be replaced."
-msgstr "Zutat die ersetzt werden soll."
+msgstr ""
 
 #: .\cookbook\forms.py:173
 msgid "Add your comment: "
-msgstr "Schreibe einen Kommentar: "
+msgstr ""
 
 #: .\cookbook\forms.py:198
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr "Für Dropbox leer lassen, bei Nextcloud App-Passwort eingeben."
+msgstr ""
 
 #: .\cookbook\forms.py:201
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr "Bei Nextcloud leer lassen, bei Dropbox API Token eingeben."
+msgstr ""
 
 #: .\cookbook\forms.py:209
 msgid ""
-"Leave empty for dropbox and enter only base url for nextcloud "
-"(<code>/remote.php/webdav/</code> is added automatically)"
+"Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
+"php/webdav/</code> is added automatically)"
 msgstr ""
-"Bei Dropbox leer lassen, bei Nextcloud Server URL angeben "
-"(<code>/remote.php/webdav/</code> wird automatisch hinzugefügt)"
 
 #: .\cookbook\forms.py:228
 msgid "Search String"
-msgstr "Such Wort"
+msgstr ""
 
 #: .\cookbook\forms.py:242
 msgid "File ID"
-msgstr "Datei ID"
+msgstr ""
 
 #: .\cookbook\forms.py:260
 msgid "You must provide at least a recipe or a title."
-msgstr "Mindestens ein Rezept oder ein Titel müssen angegeben werden"
+msgstr ""
 
 #: .\cookbook\forms.py:269
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
-"Benutzer mit denen neue Rezepte standardmäßig geteilt werden sollen können "
-"in den Einstellungen angegeben werden."
 
 #: .\cookbook\helper\permission_helper.py:42
 #: .\cookbook\helper\permission_helper.py:60
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Du bist nicht angemeldet, daher kannst du diese Seite nicht sehen!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:51 .\cookbook\views\views.py:167
 msgid "You do not have the required permissions to view this page!"
-msgstr "Du hast nicht die notwendigen Rechte um diese Seite zu sehen!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:65 .\cookbook\views\delete.py:136
 msgid "You cannot interact with this object as its not owned by you!"
 msgstr ""
-"Du kannst mit diesem Objekt nicht interagieren da es dir nicht gehört!"
 
 #: .\cookbook\models.py:50
 msgid "Search"
-msgstr "Suche"
+msgstr ""
 
 #: .\cookbook\models.py:50 .\cookbook\templates\base.html:73
 #: .\cookbook\templates\meal_plan.html:4
 #: .\cookbook\templates\meal_plan.html:32 .\cookbook\views\delete.py:153
 #: .\cookbook\views\edit.py:279 .\cookbook\views\new.py:143
 msgid "Meal-Plan"
-msgstr "Plan"
+msgstr ""
 
 #: .\cookbook\models.py:50 .\cookbook\templates\base.html:70
 msgid "Books"
-msgstr "Bücher"
+msgstr ""
 
 #: .\cookbook\models.py:56
 msgid "Small"
-msgstr "Klein"
+msgstr ""
 
 #: .\cookbook\models.py:56
 msgid "Large"
-msgstr "Groß"
+msgstr ""
 
 #: .\cookbook\models.py:219
 msgid "Breakfast"
-msgstr "Frühstück"
+msgstr ""
 
 #: .\cookbook\models.py:219
 msgid "Lunch"
-msgstr "Mittagessen"
+msgstr ""
 
 #: .\cookbook\models.py:219
 msgid "Dinner"
-msgstr "Abendessen"
+msgstr ""
 
 #: .\cookbook\models.py:219
 msgid "Other"
-msgstr "Andere"
+msgstr ""
 
 #: .\cookbook\tables.py:29 .\cookbook\templates\books.html:36
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr ""
 
 #: .\cookbook\tables.py:103 .\cookbook\templates\books.html:38
 #: .\cookbook\templates\forms\edit_internal_recipe.html:52
@@ -250,209 +234,203 @@ msgstr "Bearbeiten"
 #: .\cookbook\templates\generic\delete_template.html:13
 #: .\cookbook\templates\generic\edit_template.html:25
 msgid "Delete"
-msgstr "Löschen"
+msgstr ""
 
 #: .\cookbook\templates\base.html:59
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7 .\cookbook\templates\shopping_list.html:7
 msgid "Cookbook"
-msgstr "Kochbuch"
+msgstr ""
 
 #: .\cookbook\templates\base.html:66
 msgid "Utensils"
-msgstr "Utensilien"
+msgstr ""
 
 #: .\cookbook\templates\base.html:76
 msgid "Shopping"
-msgstr "Einkaufsliste"
+msgstr ""
 
 #: .\cookbook\templates\base.html:86
 msgid "Tags"
-msgstr "Schlagwörter"
+msgstr ""
 
 #: .\cookbook\templates\base.html:90 .\cookbook\views\delete.py:77
 #: .\cookbook\views\edit.py:166 .\cookbook\views\lists.py:18
 #: .\cookbook\views\new.py:48
 msgid "Keyword"
-msgstr "Schlagwort"
+msgstr ""
 
 #: .\cookbook\templates\base.html:92
 msgid "Batch Edit"
-msgstr "Massenbearbeitung"
+msgstr ""
 
 #: .\cookbook\templates\base.html:97
 msgid "Storage Data"
-msgstr "Datenquellen"
+msgstr ""
 
 #: .\cookbook\templates\base.html:101
 msgid "Storage Backends"
-msgstr "Speicher Quellen"
+msgstr ""
 
 #: .\cookbook\templates\base.html:103
 msgid "Configure Sync"
-msgstr "Sync Einstellen"
+msgstr ""
 
 #: .\cookbook\templates\base.html:105
 msgid "Discovered Recipes"
-msgstr "Entdeckte Rezepte"
+msgstr ""
 
 #: .\cookbook\templates\base.html:107
 msgid "Discovery Log"
-msgstr "Entdeckungs Log"
+msgstr ""
 
 #: .\cookbook\templates\base.html:109 .\cookbook\templates\stats.html:10
 msgid "Statistics"
-msgstr "Statistiken"
+msgstr ""
 
 #: .\cookbook\templates\base.html:111
 msgid "Units & Ingredients"
-msgstr "Einheiten & Zutaten"
+msgstr ""
 
 #: .\cookbook\templates\base.html:113
 msgid "Import Recipe"
-msgstr "Importier Rezept"
+msgstr ""
 
 #: .\cookbook\templates\base.html:129 .\cookbook\templates\settings.html:6
 #: .\cookbook\templates\settings.html:16
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr ""
 
 #: .\cookbook\templates\base.html:131 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr "Geschichte"
+msgstr ""
 
 #: .\cookbook\templates\base.html:134
 msgid "Admin"
-msgstr "Admin"
+msgstr ""
 
 #: .\cookbook\templates\base.html:138
 msgid "Markdown Help"
-msgstr "Markdown Hilfe"
+msgstr ""
 
 #: .\cookbook\templates\base.html:140
 msgid "GitHub"
-msgstr "GitHub"
+msgstr ""
 
 #: .\cookbook\templates\base.html:143
 msgid "Logout"
-msgstr "Ausloggen"
+msgstr ""
 
 #: .\cookbook\templates\base.html:148
 #: .\cookbook\templates\registration\login.html:44
 msgid "Login"
-msgstr "Einloggen"
+msgstr ""
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr "Kategorie massenbearbeitung"
+msgstr ""
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr "Rezept massenbearbeitung"
+msgstr ""
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
-"Ausgewählte Schlagwörter zu allen Rezepten die das Suchwort enthalten "
-"hinzufügen"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:149
 msgid "Sync"
-msgstr "Synchronisieren"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr "Überwachte Ordner verwalten"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced"
 msgstr ""
-"Auf dieser Seite kannst du alle Ordner verwalten die überwacht und "
-"synchronisiert werden sollen"
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr "Der Pfad muss in folgendem Format sein"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:27
 msgid "Sync Now!"
-msgstr "Jetzt Synchronisieren!"
+msgstr ""
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr "Rezept werden importiert"
+msgstr ""
 
 #: .\cookbook\templates\batch\waiting.html:23
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
-"Abhängig von der Anzahl der Rezepte kann dieser Vorgang einige Minuten "
-"dauern, bitte warten."
 
 #: .\cookbook\templates\books.html:5 .\cookbook\templates\books.html:11
 msgid "Recipe Books"
-msgstr "Rezept Bücher"
+msgstr ""
 
 #: .\cookbook\templates\books.html:15
 msgid "New Book"
-msgstr "Neues Buch"
+msgstr ""
 
 #: .\cookbook\templates\books.html:27 .\cookbook\templates\recipe_view.html:73
 #: .\cookbook\templates\recipe_view.html:320
 msgid "by"
-msgstr "von"
+msgstr ""
 
 #: .\cookbook\templates\books.html:34
 msgid "Toggle Recipes"
-msgstr "Rezepte umschalten"
+msgstr ""
 
 #: .\cookbook\templates\books.html:54
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipe_view.html:96
 #: .\cookbook\templates\recipes_table.html:57
 msgid "Last cooked"
-msgstr "Zuletzt gekocht"
+msgstr ""
 
 #: .\cookbook\templates\books.html:71
 msgid "There are no recipes in this book yet."
-msgstr "In diesem Buch sind bisher keine Rezepte."
+msgstr ""
 
 #: .\cookbook\templates\export.html:6
 msgid "Export Recipes"
-msgstr "Exportier Rezepte"
+msgstr ""
 
 #: .\cookbook\templates\export.html:19
 msgid "Export"
-msgstr "Export"
+msgstr ""
 
 #: .\cookbook\templates\export.html:31
 msgid "Exported Recipe"
-msgstr "Exportierte Rezepte"
+msgstr ""
 
 #: .\cookbook\templates\export.html:42
 msgid "Copy to clipboard"
-msgstr "In Zwischenablage kopieren"
+msgstr ""
 
 #: .\cookbook\templates\export.html:54
 #: .\cookbook\templates\shopping_list.html:48
 msgid "Copied!"
-msgstr "Kopiert!"
+msgstr ""
 
 #: .\cookbook\templates\export.html:61
 #: .\cookbook\templates\shopping_list.html:37
 #: .\cookbook\templates\shopping_list.html:55
 msgid "Copy list to clipboard"
-msgstr "Kopiere Liste in Zwischenablage"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr "Rezept Importieren"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
 #: .\cookbook\templates\forms\edit_internal_recipe.html:50
@@ -463,303 +441,296 @@ msgstr "Rezept Importieren"
 #: .\cookbook\templates\settings.html:27 .\cookbook\templates\settings.html:33
 #: .\cookbook\templates\settings.html:55 .\cookbook\templates\settings.html:69
 msgid "Save"
-msgstr "Speichern"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:8
 #: .\cookbook\templates\forms\edit_internal_recipe.html:18
 msgid "Edit Recipe"
-msgstr "Rezept bearbeiten"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:36
 msgid "Insert a header between the ingredients."
-msgstr "Füge eine Überschrift zwischen den Zutaten ein."
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:40
 msgid ""
-"Use <b>Ctrl</b>+<b>Space</b> to insert new Ingredient!<br/>You can also save"
-" the recipe using <b>Ctrl</b>+<b>Shift</b>+<b>S</b>."
+"Use <b>Ctrl</b>+<b>Space</b> to insert new Ingredient!<br/>You can also save "
+"the recipe using <b>Ctrl</b>+<b>Shift</b>+<b>S</b>."
 msgstr ""
-"Benutze <b>Strg</b>+<b>Leertaste</b> um eine neue Zutat "
-"einzufügen!<br/>Rezepte können mit<b>Strg</b>+<b>Shift</b>+<b>S</b> "
-"gespeichert werden."
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:54
 #: .\cookbook\templates\generic\edit_template.html:27
 msgid "View"
-msgstr "Angucken"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:58
 #: .\cookbook\templates\generic\edit_template.html:30
 msgid "Delete original file"
-msgstr "Original löschen"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:145
 #: .\cookbook\templates\forms\edit_internal_recipe.html:192
 #: .\cookbook\views\delete.py:89 .\cookbook\views\edit.py:183
 msgid "Ingredient"
-msgstr "Zutat"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:150
 msgid "Amount"
-msgstr "Menge"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:152
 msgid "Unit"
-msgstr "Einheit"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:157
 msgid "Note"
-msgstr "Notiz"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:166
 msgid "Are you sure that you want to delete this ingredient?"
-msgstr "Bist du sicher das du diese Zutat löschen willst?"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:206
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr "Überschrift"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:209
 msgid "write header here"
-msgstr "Überschrift hier eintragen"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr "Zutaten Bearbeiten"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
 "\n"
-"        The following form can be used if, accidentally, two (or more) units or ingredients where created that should be\n"
+"        The following form can be used if, accidentally, two (or more) units "
+"or ingredients where created that should be\n"
 "        the same.\n"
-"        It merges two units or ingredients and updates all recipes using them.\n"
+"        It merges two units or ingredients and updates all recipes using "
+"them.\n"
 "    "
 msgstr ""
-"\n"
-"        Dieses Formular kann genutzt werden wenn versehentlich zwei (oder mehr) Einheitenoder Zutaten erstellt wurden die eigentlich identisch\n"
-"        sein sollen.\n"
-"        Es vereint zwei Zutaten oder Einheiten und aktualisiert alle entsprechenden Rezepte.\n"
-"    "
 
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\stats.html:26
 msgid "Units"
-msgstr "Einheiten"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units ?"
-msgstr "Bist du sicher diese beiden Einheiten zusammengeführt werden sollen ?"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr "Zusammenführen"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients ?"
-msgstr "Bist du sicher diese beiden Zutaten zusammengeführt werden sollen ?"
+msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:18
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "Bist du sicher das %(title)s: <b>%(object)s</b> gelöscht werden soll "
+msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:21
 msgid "Confirm"
-msgstr "Bestätigen"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:12
 msgid "List"
-msgstr "Liste"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:25
 msgid "Filter"
-msgstr "Filter"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:30
 msgid "Import all"
-msgstr "Alle importieren"
+msgstr ""
 
 #: .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr "Neu"
+msgstr ""
 
 #: .\cookbook\templates\generic\table_template.html:76
 #: .\cookbook\templates\recipes_table.html:86
 msgid "previous"
-msgstr "vorherige"
+msgstr ""
 
 #: .\cookbook\templates\generic\table_template.html:98
 #: .\cookbook\templates\recipes_table.html:108
 msgid "next"
-msgstr "nächste"
+msgstr ""
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr "Aufruf Log"
+msgstr ""
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr "Koch Log"
+msgstr ""
 
 #: .\cookbook\templates\import.html:6
 msgid "Import Recipes"
-msgstr "Importierte Rezepte"
+msgstr ""
 
 #: .\cookbook\templates\import.html:14 .\cookbook\views\delete.py:53
 #: .\cookbook\views\edit.py:251
 msgid "Import"
-msgstr "Rezept Importieren"
+msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:7
 msgid "Log Recipe Cooking"
-msgstr "Kochen Protokollieren"
+msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:13
 msgid "All fields are optional and can be left empty."
-msgstr "Alle Felder sind optional und können leer gelassen werden."
+msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:16
 msgid "Servings"
-msgstr "Portionen"
+msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:19
 msgid "Rating"
-msgstr "Bewertung"
+msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:27
 #: .\cookbook\templates\include\recipe_open_modal.html:39
 msgid "Close"
-msgstr "Schließen"
+msgstr ""
 
 #: .\cookbook\templates\include\recipe_open_modal.html:28
 #: .\cookbook\views\delete.py:24 .\cookbook\views\edit.py:312
 #: .\cookbook\views\new.py:35
 msgid "Recipe"
-msgstr "Rezept"
+msgstr ""
 
 #: .\cookbook\templates\include\recipe_open_modal.html:53
 msgid "Open Recipe"
-msgstr "Rezept öffnen"
+msgstr ""
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr "Sicherheitswarnung"
+msgstr ""
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
 "\n"
-"        The <b>Password and Token</b> field are stored as <b>plain text</b> inside the database.\n"
-"        This is necessary because they are needed to make API requests, but it also increases the risk of\n"
+"        The <b>Password and Token</b> field are stored as <b>plain text</b> "
+"inside the database.\n"
+"        This is necessary because they are needed to make API requests, but "
+"it also increases the risk of\n"
 "        someone stealing it. <br/>\n"
-"        To limit the possible damage tokens or accounts with limited access can be used.\n"
+"        To limit the possible damage tokens or accounts with limited access "
+"can be used.\n"
 "    "
 msgstr ""
-"\n"
-"        Das  <b>Password und Token</b> werden im <b>Klartext</b> in der Datenbank gespeichert.\n"
-"        Dies ist notwendig da Passwort oder Token benötigt werden um API anfragen zu machen, bringt jedoch auch ein Sicherheitsrisiko mit sich. <br/>\n"
-"        Um das Risiko zu minimieren sollten, wenn möglich, Tokens benutzt oder Accounts mit limitiertem Zugriff verwendet werden.\n"
-"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr "Suche Rezept ..."
+msgstr ""
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr "Neues Rezept"
+msgstr ""
 
 #: .\cookbook\templates\index.html:49
 msgid "Advanced Search"
-msgstr "Erweiterte Suche"
+msgstr ""
 
 #: .\cookbook\templates\index.html:53
 msgid "Reset Search"
-msgstr "Suche zurücksetzen"
+msgstr ""
 
 #: .\cookbook\templates\index.html:81
 msgid "Last viewed"
-msgstr "Zuletzt angesehen"
+msgstr ""
 
 #: .\cookbook\templates\index.html:83 .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr "Rezepte"
+msgstr ""
 
 #: .\cookbook\templates\index.html:90
 msgid "Log in to view Recipies"
-msgstr "Bitte einloggen um Rezepte zu sehen"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr "Markdown Info"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
 "\n"
-"        Markdown is lightweight markup language that can be used to format plain text easily.\n"
-"        This site uses the <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> library to\n"
-"        convert your text into nice looking html. Its full markdown documentation can be found\n"
-"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">here</a>.\n"
-"        An incomplete but most likely sufficient documentation can be found below.\n"
+"        Markdown is lightweight markup language that can be used to format "
+"plain text easily.\n"
+"        This site uses the <a href=\"https://python-markdown.github.io/\" "
+"target=\"_blank\">Python Markdown</a> library to\n"
+"        convert your text into nice looking html. Its full markdown "
+"documentation can be found\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">here</a>.\n"
+"        An incomplete but most likely sufficient documentation can be found "
+"below.\n"
 "    "
 msgstr ""
-"\n"
-"Markdown ist eine Schreibweise mit derer einfacher Text formatiert werden kann. Diese Seite benutzt <a href=\"https\\://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a>, eine Bibliothek die reinen Text in schönes HTML umwandelt. Die komplette Dokumentation befindet sich <a href=\"https\\://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">hier</a>. Die wichtigsten Formatierungszeichen befinden sich auch hier auf dieser Seite."
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr "Überschriften"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr "Formatierung"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
-msgstr "Zeilenumbrüchen entstehen durch zwei Leerzeichen am ende einer Zeile"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line inbetween."
-msgstr "oder durch eine leere Zeile dazwischen."
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr "Dieser Text ist dick dargestellt"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is in italics"
-msgstr "Dieser Text ist kursiv dargestellt"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr "Zitate sind auch möglich"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr "Listen"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
 "Lists can ordered or unorderd. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
-"Liste können sortiert oder unsortiert sein. Es ist <b>wichtig das eine leere"
-" Zeile vor der Liste frei gelassen wird!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr "Geordnete Liste"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -768,12 +739,12 @@ msgstr "Geordnete Liste"
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr "Ungeordneter Listeneintrag"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr "Ungeordnete Liste"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -782,371 +753,353 @@ msgstr "Ungeordnete Liste"
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr "Geordneter Listen Eintrag"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr "Bilder & Links"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This applicaiton also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
-"Links können mit Markdown formatiert werden aber es ist auch möglich Links "
-"vollständig ohne Formatierung einzufügen."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become and Image"
-msgstr "Dieser Text hier wird ein Bild werden"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr "Tabellen"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
-"Markdown tables are hard to create by hand. It is recommended to use a table"
-" editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
+"Markdown tables are hard to create by hand. It is recommended to use a table "
+"editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
 "target=\"_blank\">this</a> one."
 msgstr ""
-"Es ist schwierig Markdown Tabellen von Hand zu erstellen, daher bietet es "
-"sich an Werkzeuge wie <a "
-"href=\"https\\://www.tablesgenerator.com/markdown_tables\" "
-"target=\"_blank\">dieses hier</a> zu verwenden."
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr "Tabelle"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr "Zelle"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan.html:39
 msgid "Week"
-msgstr "Woche"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
-msgstr "Plan Ansicht"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:18
 msgid "Created by"
-msgstr "Erstellt von"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:20
 msgid "Shared with"
-msgstr "Geteilt mit"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr "Noch nie gekocht."
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
-msgstr "Andere Mahlzeiten an diesem Tag"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:44
 msgid "Add to Book"
-msgstr "Zu Buch hinzufügen"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:48
 msgid "Generate shopping list"
-msgstr "Einkaufszettel erstellen"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:52
 msgid "Add to Mealplan"
-msgstr "Zu Plan hinzufügen"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:55
 msgid "Log Cooking"
-msgstr "Kochen Protokollieren"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:58
 msgid "Print"
-msgstr "Drucken"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:62
 msgid "Export recipe"
-msgstr "Rezept Exportieren"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:68
 msgid "in"
-msgstr "in"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:86
 #: .\cookbook\templates\recipes_table.html:44
 msgid "Preparation time ca."
-msgstr "Zubereitungszeit ca."
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:92
 #: .\cookbook\templates\recipes_table.html:50
 msgid "Waiting time ca."
-msgstr "Wartezeit ca."
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:200
 #: .\cookbook\templates\recipes_table.html:19
 #: .\cookbook\templates\recipes_table.html:23
 msgid "Recipe Image"
-msgstr "Rezept Bild"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:223
 #: .\cookbook\templates\recipe_view.html:257
 msgid "View external recipe"
-msgstr "Externes Rezept ansehen"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:235
 msgid "Cloud not show a file preview. Maybe its not a PDF ?"
 msgstr ""
-"Datei konnte nicht angezeigt werden. Direkte anzeige funktioniert nur mit "
-"PDF Dateien."
 
 #: .\cookbook\templates\recipe_view.html:242
 msgid "External recipe"
-msgstr "Externes Rezept"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:244
 msgid ""
 "\n"
-"                                    This is an external recipe, which means you can only view it by opening the link\n"
+"                                    This is an external recipe, which means "
+"you can only view it by opening the link\n"
 "                                    above.\n"
-"                                    You can convert this recipe to a fancy recipe by pressing the convert button. The\n"
+"                                    You can convert this recipe to a fancy "
+"recipe by pressing the convert button. The\n"
 "                                    original\n"
 "                                    file\n"
 "                                    will still be accessible.\n"
 "                                "
 msgstr ""
-"\n"
-"                        Dies ist ein externes Rezept. Das bedeutet das es nur durch klicken auf den link geöffnet werden kann.\n"
-"                        Das Rezept kann durch drücken des Umwandeln Knopfes in ein schickes lokales Rezept verwandelt werden.  Die originale Datei bleibt weiterhin verfügbar.\n"
-"                    "
 
 #: .\cookbook\templates\recipe_view.html:255
 msgid "Convert now!"
-msgstr "Jetzt umwandeln!"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:315
 #: .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr "Kommentare"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:336 .\cookbook\views\delete.py:112
 #: .\cookbook\views\edit.py:233
 msgid "Comment"
-msgstr "Kommentar"
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:53
 msgid "External"
-msgstr "Extern"
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:61
 msgid "Log"
-msgstr "Log"
+msgstr ""
 
 #: .\cookbook\templates\registration\login.html:8
 msgid "Your username and password didn't match. Please try again."
-msgstr "Nutzername oder Passwort falsch. Bitte versuch es erneut."
+msgstr ""
 
 #: .\cookbook\templates\settings.html:22
 msgid "Account"
-msgstr "Account"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:39
 msgid "Language"
-msgstr "Sprache"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:64
 msgid "Style"
-msgstr "Stil"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:6
 msgid "Cookbook Setup"
-msgstr "Kochbuch Setup"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
-msgstr "Setup"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:15
 msgid "To start using this application you must first create a superuser."
 msgstr ""
-"Um diese Anwendung zu Benutzen muss zunächst ein Administrator erstellt "
-"werden."
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser"
-msgstr "Administrator Erstellen"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:15
 msgid "Shopping List"
-msgstr "Einkaufsliste"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:20
 msgid "Load"
-msgstr "Laden"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:4
 msgid "Stats"
-msgstr "Statistiken"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:19
 msgid "Number of objects"
-msgstr "Anzahl der Objekte"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:30
 msgid "Recipe Imports"
-msgstr "Rezept Importe"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:38
 msgid "Objects stats"
-msgstr "Objekt Statistiken"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:41
 msgid "Recipes without Keywords"
-msgstr "Rezepte ohne Schlagwort"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:43
 msgid "External Recipes"
-msgstr "Externe Rezepte"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:45
 msgid "Internal Recipes"
-msgstr "Interne Rezepte"
+msgstr ""
 
 #: .\cookbook\views\api.py:66
 msgid "Sync successful!"
-msgstr "Synchronisation erfolgreich!"
+msgstr ""
 
 #: .\cookbook\views\api.py:69
 msgid "Error synchronizing with Storage"
-msgstr "Fehler beim Synchronisieren"
+msgstr ""
 
 #: .\cookbook\views\data.py:72
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
 msgstr[0] ""
-"Massenbearbeitung erfolgreich. %(count)d Rezept wurde aktualisiert."
 msgstr[1] ""
-"Massenbearbeitung erfolgreich. %(count)d Rezepte wurden aktualisiert."
 
 #: .\cookbook\views\delete.py:65
 msgid "Monitor"
-msgstr "Monitor"
+msgstr ""
 
 #: .\cookbook\views\delete.py:101 .\cookbook\views\lists.py:53
 #: .\cookbook\views\new.py:67
 msgid "Storage Backend"
-msgstr "Speicher Quelle"
+msgstr ""
 
 #: .\cookbook\views\delete.py:123 .\cookbook\views\edit.py:265
 #: .\cookbook\views\new.py:117
 msgid "Recipe Book"
-msgstr "Rezeptbuch"
+msgstr ""
 
 #: .\cookbook\views\delete.py:142
 msgid "Bookmarks"
-msgstr "Lesezeichen"
+msgstr ""
 
 #: .\cookbook\views\edit.py:106
 msgid "There was an error converting your ingredients amount to a number: "
-msgstr "Es gab einen Fehler beim umwandeln der Menge in eine Zahl: "
+msgstr ""
 
 #: .\cookbook\views\edit.py:122
 msgid "Recipe saved!"
-msgstr "Rezept gespeichert!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:124
 msgid "There was an error saving this recipe!"
-msgstr "Es gab einen Fehler beim Speichern des Rezepts!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:192
 msgid "You cannot edit this storage!"
-msgstr "Du kannst diese Speicherquelle nicht bearbeiten!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:211
 msgid "Storage saved!"
-msgstr "Speicherquelle gespeichert!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:213
 msgid "There was an error updating this storage backend!"
-msgstr "Es gab einen Fehler beim aktualisierung dieser Speicher Quelle!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:220
 msgid "Storage"
-msgstr "Speicher"
+msgstr ""
 
 #: .\cookbook\views\edit.py:300
 msgid "Changes saved!"
-msgstr "Änderungen gespeichert!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:304
 msgid "Error saving changes!"
-msgstr "Fehler beim Speichern der Daten!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:334
 msgid "Units merged!"
-msgstr "Einheiten zusammengeführt!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:347
 msgid "Ingredients merged!"
-msgstr "Zutaten zusammengeführt!"
+msgstr ""
 
 #: .\cookbook\views\import_export.py:59
 msgid "Recipe imported successfully!"
-msgstr "Rezept erfolgreich importiert!"
+msgstr ""
 
 #: .\cookbook\views\import_export.py:106
 msgid ""
 "External recipes cannot be exported, please share the file directly or "
 "select an internal recipe."
 msgstr ""
-"Externe Rezepte können nicht exportiert werden, bitte Datei direkt teilen "
-"oder ein Internes Rezept auswählen."
 
 #: .\cookbook\views\lists.py:26
 msgid "Import Log"
-msgstr "Import Log"
+msgstr ""
 
 #: .\cookbook\views\lists.py:35
 msgid "Discovery"
-msgstr "Entdeckung"
+msgstr ""
 
 #: .\cookbook\views\new.py:90
 msgid "Imported new recipe!"
-msgstr "Importier neue Rezepte!"
+msgstr ""
 
 #: .\cookbook\views\new.py:93
 msgid "There was an error importing this recipe!"
-msgstr "Beim importieren des Rezeptes ist ein Fehler aufgetreten!"
+msgstr ""
 
 #: .\cookbook\views\views.py:84
 msgid "Comment saved!"
-msgstr "Kommentar gespeichert!"
+msgstr ""
 
 #: .\cookbook\views\views.py:94
 msgid "Bookmark saved!"
-msgstr "Lesezeichen gespeichert!"
+msgstr ""
 
 #: .\cookbook\views\views.py:267
 msgid ""
 "The setup page can only be used to create the first user! If you have "
-"forgotten your superuser credentials please consult the django documentation"
-" on how to reset passwords."
+"forgotten your superuser credentials please consult the django documentation "
+"on how to reset passwords."
 msgstr ""
-"Die Setup Seite kann nur für den ersten Nutzer verwendet werden. Zum "
-"zurücksetzen von Passwörtern bitte der Django Dokumentation folgen."
 
 #: .\cookbook\views\views.py:274
 msgid "Passwords dont match!"
-msgstr "Passwörter stimmen nicht überein!"
+msgstr ""
 
 #: .\cookbook\views\views.py:284
 msgid "User has been created, please login!"
-msgstr "Benutzer wurde erstellt, bitte einloggen!"
+msgstr ""
