@@ -60,7 +60,7 @@ Pull Requests and ideas are welcome, feel free to contribute in any way.
 For any questions on how to work with django please refer to their excellent [documentation](https://www.djangoproject.com/start/).
 
 ### Translating
-There is a [transifex](https://de.transifex.com/) project to enable community driven translations. If you want to contribute a new language or help maintain an already existing one feel free to open an issue saying which language you want to translate to and an email address where i can send the invite too. 
+There is a [transifex project](https://www.transifex.com/django-recipes/django-cookbook/) project to enable community driven translations. If you want to contribute a new language or help maintain an already existing one feel free to create a transifex account (using the link above) and request to join the project.
 
 It is also possible to provide the translations directly by creating a new language using `manage.py makemessages -l <language_code> -i venv`. Once finished simply open a PR with the changed files. 
 
