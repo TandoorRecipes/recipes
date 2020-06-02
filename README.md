@@ -59,5 +59,10 @@ You can find a basic kubernetes setup [here](docs/k8s/). Please see the README i
 Pull Requests and ideas are welcome, feel free to contribute in any way.
 For any questions on how to work with django please refer to their excellent [documentation](https://www.djangoproject.com/start/).
 
+### Translating
+There is a [transifex](https://de.transifex.com/) project to enable community driven translations. If you want to contribute a new language or help maintain an already existing one feel free to open an issue saying which language you want to translate to and an email address where i can send the invite too. 
+
+It is also possible to provide the translations directly by creating a new language using `manage.py makemessages -l <language_code> -i venv`. Once finished simply open a PR with the changed files. 
+
 ## License
 This project is licensed under the MIT license. Even though it is not required to publish derivatives, I highly encourage pushing changes upstream and letting people profit from any work done on this project.
