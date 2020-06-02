@@ -9,6 +9,12 @@
     <script src="{% static 'js/vue.min.js' %}"></script>
     <script src="{% static 'js/vue-resource.js' %}"></script>
     <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+
+    <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -37,24 +43,78 @@
     </h3>
 
     <div id="app">
+        <table class="table">
+            <thead>
+            <tr>
+                <td v-for="d in days">[[d]]</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="t in meal_types">
+                <td>[[t]]</td>
+            </tr>
+            </tbody>
+        </table>
         [[plan_entries]]
+
+
     </div>
 
+    <template>
+        <div class="row">
+            <div class="col-3">
+                <h3>Draggable 1</h3>
+                <draggable class="list-group" :list="list1" group="people" @change="log">
+                    <div
+                            class="list-group-item"
+                            v-for="(element, index) in list1"
+                            :key="element.name"
+                    >
+                        {{ element.name }} {{ index }}
+                    </div>
+                </draggable>
+            </div>
+
+            <div class="col-3">
+                <h3>Draggable 2</h3>
+                <draggable class="list-group" :list="list2" group="people" @change="log">
+                    <div
+                            class="list-group-item"
+                            v-for="(element, index) in list2"
+                            :key="element.name"
+                    >
+                        {{ element.name }} {{ index }}
+                    </div>
+                </draggable>
+            </div>
+
+            <rawDisplayer class="col-3" :value="list1" title="List 1"/>
+
+            <rawDisplayer class="col-3" :value="list2" title="List 2"/>
+        </div>
+    </template>
+
     <script type="application/javascript">
+        var week = moment().format('W')
+        moment.locale('{{request.LANGUAGE_CODE}}');
+
         var app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                message: 'Hello Vue!',
-                plan_entries: []
+                days: moment.weekdays(),
+                plan_entries: [],
+                meal_types: []
             },
             mounted: function () {
-                this.getArticles();
+                this.getPlanEntries();
+                this.getPlanTypes();
+
             },
             methods: {
-                getArticles: function () {
+                getPlanEntries: function () {
                     this.loading = true;
-                    this.$http.get("{% url 'api:mealplan-list' %}?week=" + moment().format('W')).then((response) => {
+                    this.$http.get("{% url 'api:mealplan-list' %}?week=" + week).then((response) => {
                         this.plan_entries = response.data;
                         this.loading = false;
                     })
@@ -63,8 +123,66 @@
                             console.log(err);
                         })
                 },
+                getPlanTypes: function () {
+                    this.loading = true;
+                    this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
+                        this.meal_types = response.data;
+                        this.loading = false;
+                        this.buildGrid();
+                    })
+                        .catch((err) => {
+                            this.loading = false;
+                            console.log(err);
+                        })
+                },
+                buildGrid: function () {
+
+                },
             }
         });
+
+        import draggable from 'vuedraggable';
+
+        export default {
+            name: "two-lists",
+            display: "Two Lists",
+            order: 1,
+            components: {
+                vuedraggable
+            },
+            data() {
+                return {
+                    list1: [
+                        {name: "John", id: 1},
+                        {name: "Joao", id: 2},
+                        {name: "Jean", id: 3},
+                        {name: "Gerard", id: 4}
+                    ],
+                    list2: [
+                        {name: "Juan", id: 5},
+                        {name: "Edgard", id: 6},
+                        {name: "Johnson", id: 7}
+                    ]
+                };
+            },
+            methods: {
+                add: function () {
+                    this.list.push({name: "Juan"});
+                },
+                replace: function () {
+                    this.list = [{name: "Edgard"}];
+                },
+                clone: function (el) {
+                    return {
+                        name: el.name + " cloned"
+                    };
+                },
+                log: function (evt) {
+                    window.console.log(evt);
+                }
+            }
+        };
+
 
     </script>
 {% endblock %}
