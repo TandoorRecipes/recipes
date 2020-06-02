@@ -32,7 +32,7 @@ The docker image (`vabene1111/recipes`) simply exposes the application on port `
 2. Choose one of the included configurations [here](docs/docker).
 2. Download the environment (config) file template and fill it out `wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env `
 3. Start the container `docker-compose up -d`
-4. Create a default user by running `docker-compose exec web_recipes createsuperuser`. 
+4. Open the page to create the first user. Alternatively use `docker-compose exec web_recipes createsuperuser` 
 
 ### Manual
 **Python >= 3.8** is required to run this! 
