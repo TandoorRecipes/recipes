@@ -61,6 +61,7 @@ class UserPreference(models.Model):
     default_unit = models.CharField(max_length=32, default='g')
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
     search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
+    show_recent = models.BooleanField(default=True)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
 
     def __str__(self):
