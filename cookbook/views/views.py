@@ -148,13 +148,13 @@ def meal_plan(request):
         days_dict[d] = []
 
     plan = {}
-    for t in MealPlan.MEAL_TYPES:
-        plan[t[0]] = {'type_name': t[1], 'days': copy.deepcopy(days_dict)}
+    for t in MealType.objects.all():
+        plan[t.name] = {'type_name': t.name, 'days': copy.deepcopy(days_dict)}
 
     for d in days:
         plan_day = MealPlan.objects.filter(date=d).filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
         for p in plan_day:
-            plan[p.meal]['days'][d].append(p)
+            plan[str(p.meal_type)]['days'][d].append(p)
 
     return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days, 'surrounding_weeks': surrounding_weeks})
 
@@ -167,7 +167,7 @@ def meal_plan_entry(request, pk):
         messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
         return HttpResponseRedirect(reverse_lazy('index'))
 
-    same_day_plan = MealPlan.objects.filter(date=plan.date).exclude(pk=plan.pk).filter(Q(created_by=request.user) | Q(shared=request.user)).order_by('meal').all()
+    same_day_plan = MealPlan.objects.filter(date=plan.date).exclude(pk=plan.pk).filter(Q(created_by=request.user) | Q(shared=request.user)).order_by('meal_type').all()
 
     return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
 

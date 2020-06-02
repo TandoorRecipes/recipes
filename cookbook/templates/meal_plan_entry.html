@@ -12,7 +12,7 @@
 {% block content %}
     <div class="row">
         <div class="col col-12">
-            <h3>{{ plan.get_meal_name }} {{ plan.date }} <a href="{% url 'edit_meal_plan' plan.pk %}"
+            <h3>{{ plan.meal_type }} {{ plan.date }} <a href="{% url 'edit_meal_plan' plan.pk %}"
                                                             class="d-print-none"><i class="fas fa-pencil-alt"></i></a>
             </h3>
             <small class="text-muted">{% trans 'Created by' %} {{ plan.created_by.get_user_name }}</small>
@@ -77,7 +77,7 @@
         <ul class="list-group list-group-flush">
             {% for x in same_day_plan %}
                 <li class="list-group-item"><a href="{% url 'view_plan_entry' x.pk %}">{{ x.get_label }}
-                    ({{ x.get_meal_name }})</a></li>
+                    ({{ x.meal_type }})</a></li>
             {% endfor %}
         </ul>
     {% endif %}

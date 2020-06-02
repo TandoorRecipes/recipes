@@ -211,18 +211,20 @@ class RecipeBookEntry(models.Model):
         return self.recipe.name
 
 
-class MealPlan(models.Model):
-    BREAKFAST = 'BREAKFAST'
-    LUNCH = 'LUNCH'
-    DINNER = 'DINNER'
-    OTHER = 'OTHER'
-    MEAL_TYPES = ((BREAKFAST, _('Breakfast')), (LUNCH, _('Lunch')), (DINNER, _('Dinner')), (OTHER, _('Other')),)
+class MealType(models.Model):
+    name = models.CharField(max_length=128)
+    order = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.name
+
+
+class MealPlan(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
-    meal = models.CharField(choices=MEAL_TYPES, max_length=128, default=BREAKFAST)
+    meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
     date = models.DateField()
 
@@ -232,8 +234,7 @@ class MealPlan(models.Model):
         return str(self.recipe)
 
     def get_meal_name(self):
-        meals = dict(self.MEAL_TYPES)
-        return meals.get(self.meal)
+        return self.meal_type.name
 
 
 class CookLog(models.Model):

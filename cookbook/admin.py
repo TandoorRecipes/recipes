@@ -94,7 +94,7 @@ admin.site.register(RecipeBookEntry, RecipeBookEntryAdmin)
 
 
 class MealPlanAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe', 'meal', 'date')
+    list_display = ('user', 'recipe', 'meal_type', 'date')
 
     @staticmethod
     def user(obj):
@@ -102,3 +102,10 @@ class MealPlanAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MealPlan, MealPlanAdmin)
+
+
+class MealTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'order')
+
+
+admin.site.register(MealType, MealTypeAdmin)
