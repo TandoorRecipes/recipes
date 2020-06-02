@@ -20,6 +20,13 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     serializer_class = MealPlanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        queryset = MealPlan.objects.all()
+        week = self.request.query_params.get('week', None)
+        if week is not None:
+            queryset = queryset.filter(date__week=week)
+        return queryset
+
 
 def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:

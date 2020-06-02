@@ -23,6 +23,8 @@ DEBUG = bool(int(os.getenv('DEBUG', True)))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'emoji_picker',
+    'corsheaders',
     'rest_framework',
     'django_cleanup.apps.CleanupConfig',
     'cookbook.apps.CookbookConfig',
@@ -61,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans 'Meal-Plan' %}{% endblock %}
 
 {% block extra_head %}
     {{ form.media }}
+    <script src="{% static 'js/vue.min.js' %}"></script>
+    <script src="{% static 'js/vue-resource.js' %}"></script>
+    <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -32,66 +36,35 @@
         {% trans 'Meal-Plan' %} <a href="{% url 'new_meal_plan' %}"><i class="fas fa-plus-circle"></i></a>
     </h3>
 
-    <div class="row">
-        <div class="col-md-12" style="text-align: center">
-            <form action="{% url 'view_plan' %}" method="post">
-                {% csrf_token %}
-                <label>{% trans 'Week' %}
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" id="btn_prev"
-                                    onclick="$('#id_week').val('{{ surrounding_weeks.prev }}'); document.forms[0].submit()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </div>
-                        <input name="week" id="id_week" class="form-control" type="week"
-                               onchange="document.forms[0].submit()" value="{{ js_week }}">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" id="btn_next"
-                                    onclick="$('#id_week').val('{{ surrounding_weeks.next }}'); document.forms[0].submit()">
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </label>
-            </form>
-        </div>
-    </div>
-    <br/>
-    <div class="row">
-        <div class="col-md-12 table-responsive">
-            <table class="table table-bordered">
-                <tr style="text-align: center">
-                    {% for d in days %}
-                        <th>{{ d | date:"l" }}<br/>{{ d }}</th>
-                    {% endfor %}
-                </tr>
-                {% for plan_key, plan_value in plan.items %}
-                    <tr>
-                        <td colspan="7" style="text-align: center"><h5>{{ plan_value.type_name }}</h5></td>
-                    </tr>
-                    <tr>
-                        {% for day_key, days_value in plan_value.days.items %}
-                            <td class="mealplan-cell">
-                                <a class="mealplan-add-button"
-                                   href="{% url 'new_meal_plan' %}?date={{ day_key|date:'Y-m-d' }}&meal={{ plan_key }}"><i
-                                        class="fas fa-plus"></i></a>
-                                {% for mp in days_value %}
-                                    <a href="{% url 'view_plan_entry' mp.pk %}">
-                                        {% if mp.recipe %}
-                                            {{ mp.recipe }}
-                                        {% else %}
-                                            {{ mp.title }}
-                                        {% endif %}
-                                    </a><br/>
-                                {% endfor %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-
-            </table>
-        </div>
+    <div id="app">
+        [[plan_entries]]
     </div>
 
+    <script type="application/javascript">
+        var app = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                plan_entries: []
+            },
+            mounted: function () {
+                this.getArticles();
+            },
+            methods: {
+                getArticles: function () {
+                    this.loading = true;
+                    this.$http.get("{% url 'api:mealplan-list' %}?week=" + moment().format('W')).then((response) => {
+                        this.plan_entries = response.data;
+                        this.loading = false;
+                    })
+                        .catch((err) => {
+                            this.loading = false;
+                            console.log(err);
+                        })
+                },
+            }
+        });
+
+    </script>
 {% endblock %}
