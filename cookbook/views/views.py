@@ -46,7 +46,7 @@ def search(request):
             table = RecipeTableSmall(f.qs)
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-        if request.GET == {}:
+        if request.GET == {} and request.user.userpreference.show_recent:
             qs = Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()
 
             recent_list = []
@@ -229,6 +229,7 @@ def user_settings(request):
                 up.nav_color = form.cleaned_data['nav_color']
                 up.default_unit = form.cleaned_data['default_unit']
                 up.default_page = form.cleaned_data['default_page']
+                up.show_recent = form.cleaned_data['show_recent']
                 up.search_style = form.cleaned_data['search_style']
                 up.plan_share.set(form.cleaned_data['plan_share'])
                 up.save()
