@@ -134,8 +134,10 @@
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'docs_markdown' %}"><i
+                                class="fab fa-markdown fa-fw"></i> {% trans 'Markdown Help' %}</a>
                         <a class="dropdown-item" href="https://github.com/vabene1111/recipes"><i
-                                class="fab fa-github"></i> {% trans 'GitHub' %}</a>
+                                class="fab fa-github fa-fw"></i> {% trans 'GitHub' %}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'logout' %}"><i
                                 class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Logout' %}</a>
