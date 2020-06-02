@@ -181,19 +181,22 @@ msgstr "Mindestens ein Rezept oder ein Titel müssen angegeben werden"
 #: .\cookbook\forms.py:269
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
+"Benutzer mit denen neue Rezepte standardmäßig geteilt werden sollen können "
+"in den Einstellungen angegeben werden."
 
 #: .\cookbook\helper\permission_helper.py:42
 #: .\cookbook\helper\permission_helper.py:60
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Du bist nicht angemeldet, daher kannst du diese Seite nicht sehen!"
 
 #: .\cookbook\helper\permission_helper.py:51 .\cookbook\views\views.py:167
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "Du hast nicht die notwendigen Rechte um diese Seite zu sehen!"
 
 #: .\cookbook\helper\permission_helper.py:65 .\cookbook\views\delete.py:136
 msgid "You cannot interact with this object as its not owned by you!"
 msgstr ""
+"Du kannst mit diesem Objekt nicht interagieren da es dir nicht gehört!"
 
 #: .\cookbook\models.py:50
 msgid "Search"
@@ -212,11 +215,11 @@ msgstr "Bücher"
 
 #: .\cookbook\models.py:56
 msgid "Small"
-msgstr ""
+msgstr "Klein"
 
 #: .\cookbook\models.py:56
 msgid "Large"
-msgstr ""
+msgstr "Groß"
 
 #: .\cookbook\models.py:219
 msgid "Breakfast"
@@ -317,7 +320,7 @@ msgstr "Einstellungen"
 #: .\cookbook\templates\base.html:131 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr ""
+msgstr "Geschichte"
 
 #: .\cookbook\templates\base.html:134
 msgid "Admin"
@@ -325,11 +328,11 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:138
 msgid "Markdown Help"
-msgstr ""
+msgstr "Markdown Hilfe"
 
 #: .\cookbook\templates\base.html:140
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:143
 msgid "Logout"
@@ -406,14 +409,14 @@ msgstr "von"
 
 #: .\cookbook\templates\books.html:34
 msgid "Toggle Recipes"
-msgstr ""
+msgstr "Rezepte umschalten"
 
 #: .\cookbook\templates\books.html:54
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipe_view.html:96
 #: .\cookbook\templates\recipes_table.html:57
 msgid "Last cooked"
-msgstr ""
+msgstr "Zuletzt gekocht"
 
 #: .\cookbook\templates\books.html:71
 msgid "There are no recipes in this book yet."
@@ -469,7 +472,7 @@ msgstr "Rezept bearbeiten"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:36
 msgid "Insert a header between the ingredients."
-msgstr ""
+msgstr "Füge eine Überschrift zwischen den Zutaten ein."
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:40
 msgid ""
@@ -516,11 +519,11 @@ msgstr "Bist du sicher das du diese Zutat löschen willst?"
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr ""
+msgstr "Überschrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:209
 msgid "write header here"
-msgstr ""
+msgstr "Überschrift hier eintragen"
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
@@ -597,11 +600,11 @@ msgstr "nächste"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Aufruf Log"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Koch Log"
 
 #: .\cookbook\templates\import.html:6
 msgid "Import Recipes"
@@ -614,19 +617,19 @@ msgstr "Rezept Importieren"
 
 #: .\cookbook\templates\include\log_cooking.html:7
 msgid "Log Recipe Cooking"
-msgstr ""
+msgstr "Kochen Protokollieren"
 
 #: .\cookbook\templates\include\log_cooking.html:13
 msgid "All fields are optional and can be left empty."
-msgstr ""
+msgstr "Alle Felder sind optional und können leer gelassen werden."
 
 #: .\cookbook\templates\include\log_cooking.html:16
 msgid "Servings"
-msgstr ""
+msgstr "Portionen"
 
 #: .\cookbook\templates\include\log_cooking.html:19
 msgid "Rating"
-msgstr ""
+msgstr "Bewertung"
 
 #: .\cookbook\templates\include\log_cooking.html:27
 #: .\cookbook\templates\include\recipe_open_modal.html:39
@@ -680,7 +683,7 @@ msgstr "Suche zurücksetzen"
 
 #: .\cookbook\templates\index.html:81
 msgid "Last viewed"
-msgstr ""
+msgstr "Zuletzt angesehen"
 
 #: .\cookbook\templates\index.html:83 .\cookbook\templates\stats.html:22
 msgid "Recipes"
@@ -693,7 +696,7 @@ msgstr "Bitte einloggen um Rezepte zu sehen"
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr ""
+msgstr "Markdown Info"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -705,54 +708,58 @@ msgid ""
 "        An incomplete but most likely sufficient documentation can be found below.\n"
 "    "
 msgstr ""
+"\n"
+"Markdown ist eine Schreibweise mit derer einfacher Text formatiert werden kann. Diese Seite benutzt <a href=\"https\\://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a>, eine Bibliothek die reinen Text in schönes HTML umwandelt. Die komplette Dokumentation befindet sich <a href=\"https\\://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">hier</a>. Die wichtigsten Formatierungszeichen befinden sich auch hier auf dieser Seite."
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr ""
+msgstr "Überschriften"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr ""
+msgstr "Formatierung"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
-msgstr ""
+msgstr "Zeilenumbrüchen entstehen durch zwei Leerzeichen am ende einer Zeile"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line inbetween."
-msgstr ""
+msgstr "oder durch eine leere Zeile dazwischen."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Dieser Text ist dick dargestellt"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is in italics"
-msgstr ""
+msgstr "Dieser Text ist kursiv dargestellt"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Zitate sind auch möglich"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Listen"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
 "Lists can ordered or unorderd. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
+"Liste können sortiert oder unsortiert sein. Es ist <b>wichtig das eine leere"
+" Zeile vor der Liste frei gelassen wird!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr ""
+msgstr "Geordnete Liste"
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -761,12 +768,12 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr ""
+msgstr "Ungeordneter Listeneintrag"
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr ""
+msgstr "Ungeordnete Liste"
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -775,26 +782,28 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr ""
+msgstr "Geordneter Listen Eintrag"
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr ""
+msgstr "Bilder & Links"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This applicaiton also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
+"Links können mit Markdown formatiert werden aber es ist auch möglich Links "
+"vollständig ohne Formatierung einzufügen."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become and Image"
-msgstr ""
+msgstr "Dieser Text hier wird ein Bild werden"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr ""
+msgstr "Tabellen"
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
@@ -802,18 +811,22 @@ msgid ""
 " editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
 "target=\"_blank\">this</a> one."
 msgstr ""
+"Es ist schwierig Markdown Tabellen von Hand zu erstellen, daher bietet es "
+"sich an Werkzeuge wie <a "
+"href=\"https\\://www.tablesgenerator.com/markdown_tables\" "
+"target=\"_blank\">dieses hier</a> zu verwenden."
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr ""
+msgstr "Tabelle"
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr ""
+msgstr "Zelle"
 
 #: .\cookbook\templates\meal_plan.html:39
 msgid "Week"
@@ -821,47 +834,47 @@ msgstr "Woche"
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
-msgstr ""
+msgstr "Plan Ansicht"
 
 #: .\cookbook\templates\meal_plan_entry.html:18
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt von"
 
 #: .\cookbook\templates\meal_plan_entry.html:20
 msgid "Shared with"
-msgstr ""
+msgstr "Geteilt mit"
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr ""
+msgstr "Noch nie gekocht."
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
-msgstr ""
+msgstr "Andere Mahlzeiten an diesem Tag"
 
 #: .\cookbook\templates\recipe_view.html:44
 msgid "Add to Book"
-msgstr ""
+msgstr "Zu Buch hinzufügen"
 
 #: .\cookbook\templates\recipe_view.html:48
 msgid "Generate shopping list"
-msgstr ""
+msgstr "Einkaufszettel erstellen"
 
 #: .\cookbook\templates\recipe_view.html:52
 msgid "Add to Mealplan"
-msgstr ""
+msgstr "Zu Plan hinzufügen"
 
 #: .\cookbook\templates\recipe_view.html:55
 msgid "Log Cooking"
-msgstr ""
+msgstr "Kochen Protokollieren"
 
 #: .\cookbook\templates\recipe_view.html:58
 msgid "Print"
-msgstr ""
+msgstr "Drucken"
 
 #: .\cookbook\templates\recipe_view.html:62
 msgid "Export recipe"
-msgstr ""
+msgstr "Rezept Exportieren"
 
 #: .\cookbook\templates\recipe_view.html:68
 msgid "in"
@@ -930,11 +943,11 @@ msgstr "Kommentar"
 
 #: .\cookbook\templates\recipes_table.html:53
 msgid "External"
-msgstr ""
+msgstr "Extern"
 
 #: .\cookbook\templates\recipes_table.html:61
 msgid "Log"
-msgstr ""
+msgstr "Log"
 
 #: .\cookbook\templates\registration\login.html:8
 msgid "Your username and password didn't match. Please try again."
@@ -954,19 +967,21 @@ msgstr "Stil"
 
 #: .\cookbook\templates\setup.html:6
 msgid "Cookbook Setup"
-msgstr ""
+msgstr "Kochbuch Setup"
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
-msgstr ""
+msgstr "Setup"
 
 #: .\cookbook\templates\setup.html:15
 msgid "To start using this application you must first create a superuser."
 msgstr ""
+"Um diese Anwendung zu Benutzen muss zunächst ein Administrator erstellt "
+"werden."
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser"
-msgstr ""
+msgstr "Administrator Erstellen"
 
 #: .\cookbook\templates\shopping_list.html:15
 msgid "Shopping List"
@@ -998,11 +1013,11 @@ msgstr "Rezepte ohne Schlagwort"
 
 #: .\cookbook\templates\stats.html:43
 msgid "External Recipes"
-msgstr ""
+msgstr "Externe Rezepte"
 
 #: .\cookbook\templates\stats.html:45
 msgid "Internal Recipes"
-msgstr ""
+msgstr "Interne Rezepte"
 
 #: .\cookbook\views\api.py:66
 msgid "Sync successful!"
@@ -1065,7 +1080,7 @@ msgstr "Es gab einen Fehler beim aktualisierung dieser Speicher Quelle!"
 
 #: .\cookbook\views\edit.py:220
 msgid "Storage"
-msgstr ""
+msgstr "Speicher"
 
 #: .\cookbook\views\edit.py:300
 msgid "Changes saved!"
@@ -1125,11 +1140,13 @@ msgid ""
 "forgotten your superuser credentials please consult the django documentation"
 " on how to reset passwords."
 msgstr ""
+"Die Setup Seite kann nur für den ersten Nutzer verwendet werden. Zum "
+"zurücksetzen von Passwörtern bitte der Django Dokumentation folgen."
 
 #: .\cookbook\views\views.py:274
 msgid "Passwords dont match!"
-msgstr ""
+msgstr "Passwörter stimmen nicht überein!"
 
 #: .\cookbook\views\views.py:284
 msgid "User has been created, please login!"
-msgstr ""
+msgstr "Benutzer wurde erstellt, bitte einloggen!"
