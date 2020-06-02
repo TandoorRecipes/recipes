@@ -2,8 +2,10 @@ import copy
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -257,6 +259,36 @@ def history(request):
     view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user).order_by('-created_at').all())
     cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
+
+
+def setup(request):
+    if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
+        messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
+        return HttpResponseRedirect(reverse('login'))
+
+    if request.method == 'POST':
+        form = SuperUserForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+                form.add_error('password', _('Passwords dont match!'))
+            else:
+                user = User(
+                    username=form.cleaned_data['name'],
+                    is_superuser=True
+                )
+                try:
+                    validate_password(form.cleaned_data['password'], user=user)
+                    user.set_password(form.cleaned_data['password'])
+                    user.save()
+                    messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+                    return HttpResponseRedirect(reverse('login'))
+                except ValidationError as e:
+                    for m in e:
+                        form.add_error('password', m)
+    else:
+        form = SuperUserForm()
+
+    return render(request, 'setup.html', {'form': form})
 
 
 def markdown_info(request):

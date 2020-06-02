@@ -270,3 +270,9 @@ class MealPlanForm(forms.ModelForm):
         }
 
         widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}
+
+
+class SuperUserForm(forms.Form):
+    name = forms.CharField()
+    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
+    password_confirm = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
