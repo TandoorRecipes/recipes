@@ -142,10 +142,6 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def all_tags(self):
-        return ' '.join([(str(x)) for x in self.keywords.all()])
-
 
 class Unit(models.Model):
     name = models.CharField(unique=True, max_length=128)
