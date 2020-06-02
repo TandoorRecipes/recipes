@@ -33,8 +33,10 @@
                                                 {% recipe_rating row.record request.user as rating %}
                                                 {{ rating|safe }}
                                             </h5>
-                                            <p class="card-text{% if not row.record.all_tags %} d-none d-lg-block{% endif %}">
-                                                {{ row.cells.all_tags }}
+                                            <p class="card-text{% if not row.record.keywords %} d-none d-lg-block{% endif %}">
+                                                {% for x in row.record.keywords.all %}
+                                                    <span class="badge badge-pill badge-light">{{ x }}</span>
+                                                {% endfor %}
                                             </p>
                                             <p class="card-text"><small class="text-muted">
                                                 {% if row.cells.working_time != 0 %}
