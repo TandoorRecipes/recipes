@@ -62,7 +62,7 @@
         <div class="row">
             <div class="col-3">
                 <h3>Draggable 1</h3>
-                <draggable class="list-group" :list="plan_entries" group="people" @change="log">
+                <draggable class="list-group" :list="plan_entries" group="plan_entries" @change="log" @end="test">
                     <div
                             class="list-group-item"
                             v-for="(element, index) in plan_entries"
@@ -75,7 +75,7 @@
 
             <div class="col-3">
                 <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="meal_types" group="people" @change="log">
+                <draggable class="list-group" :list="meal_types" group="plan_entries" @change="log">
                     <div
                             class="list-group-item"
                             v-for="(element, index) in meal_types"
@@ -88,10 +88,10 @@
 
             <div class="col-3">
                 <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="list3" group="people" @change="log">
+                <draggable class="list-group" :list="list.breakfast.d2" group="plan_entries" @change="log">
                     <div
                             class="list-group-item"
-                            v-for="(element, index) in list3"
+                            v-for="(element, index) in list.breakfast.d2"
                             :key="element.name"
                     >
                         [[element]]
@@ -101,7 +101,6 @@
 
 
         </div>
-
 
     </div>
 
@@ -118,7 +117,15 @@
                 plan_entries: [],
                 meal_types: [],
                 list3: [],
-                meal_plan: null,
+                meal_plan: [
+                    {
+                        name:"Breakfast",
+                        id:1,
+                        items: [
+
+                        ]
+                    }
+                ],
             },
             mounted: function () {
                 this.getPlanEntries();
@@ -154,6 +161,10 @@
                 },
                 log: function (evt) {
                     console.log(evt)
+                },
+                test: function (evt, originalEvent) {
+                    console.log(evt)
+                    console.log(originalEvent)
                 }
             }
         });
