@@ -57,42 +57,54 @@
         </table>
         [[plan_entries]]
 
+        <h1>drag n drop</h1>
 
-    </div>
-
-    <template>
         <div class="row">
             <div class="col-3">
                 <h3>Draggable 1</h3>
-                <draggable class="list-group" :list="list1" group="people" @change="log">
+                <draggable class="list-group" :list="plan_entries" group="people" @change="log">
                     <div
                             class="list-group-item"
-                            v-for="(element, index) in list1"
-                            :key="element.name"
+                            v-for="(element, index) in plan_entries"
+                            :key="element.title"
                     >
-                        {{ element.name }} {{ index }}
+                        [[element]]
                     </div>
                 </draggable>
             </div>
 
             <div class="col-3">
                 <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="list2" group="people" @change="log">
+                <draggable class="list-group" :list="meal_types" group="people" @change="log">
                     <div
                             class="list-group-item"
-                            v-for="(element, index) in list2"
+                            v-for="(element, index) in meal_types"
                             :key="element.name"
                     >
-                        {{ element.name }} {{ index }}
+                        [[element]]
                     </div>
                 </draggable>
             </div>
 
-            <rawDisplayer class="col-3" :value="list1" title="List 1"/>
+            <div class="col-3">
+                <h3>Draggable 2</h3>
+                <draggable class="list-group" :list="list3" group="people" @change="log">
+                    <div
+                            class="list-group-item"
+                            v-for="(element, index) in list3"
+                            :key="element.name"
+                    >
+                        [[element]]
+                    </div>
+                </draggable>
+            </div>
 
-            <rawDisplayer class="col-3" :value="list2" title="List 2"/>
+
         </div>
-    </template>
+
+
+    </div>
+
 
     <script type="application/javascript">
         var week = moment().format('W')
@@ -104,7 +116,9 @@
             data: {
                 days: moment.weekdays(),
                 plan_entries: [],
-                meal_types: []
+                meal_types: [],
+                list3: [],
+                meal_plan: null,
             },
             mounted: function () {
                 this.getPlanEntries();
@@ -138,51 +152,11 @@
                 buildGrid: function () {
 
                 },
-            }
-        });
-
-        import draggable from 'vuedraggable';
-
-        export default {
-            name: "two-lists",
-            display: "Two Lists",
-            order: 1,
-            components: {
-                vuedraggable
-            },
-            data() {
-                return {
-                    list1: [
-                        {name: "John", id: 1},
-                        {name: "Joao", id: 2},
-                        {name: "Jean", id: 3},
-                        {name: "Gerard", id: 4}
-                    ],
-                    list2: [
-                        {name: "Juan", id: 5},
-                        {name: "Edgard", id: 6},
-                        {name: "Johnson", id: 7}
-                    ]
-                };
-            },
-            methods: {
-                add: function () {
-                    this.list.push({name: "Juan"});
-                },
-                replace: function () {
-                    this.list = [{name: "Edgard"}];
-                },
-                clone: function (el) {
-                    return {
-                        name: el.name + " cloned"
-                    };
-                },
                 log: function (evt) {
-                    window.console.log(evt);
+                    console.log(evt)
                 }
             }
-        };
-
+        });
 
     </script>
 {% endblock %}
