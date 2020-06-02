@@ -32,7 +32,7 @@
     <!-- Bootstrap theme for select2 -->
     <link rel="stylesheet" href="{% static 'css/select2-bootstrap.css' %}"/>
 
-    <link rel="stylesheet"  href="{% static 'themes/select2-bootstrap-theme.css' %}" />
+    <link rel="stylesheet" href="{% static 'themes/select2-bootstrap-theme.css' %}"/>
 
     <script type="text/javascript">
         $.fn.select2.defaults.set("theme", "bootstrap");
@@ -133,6 +133,9 @@
                             <a class="dropdown-item" href="{% url 'admin:index' %}"><i
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="https://github.com/vabene1111/recipes"><i
+                                class="fab fa-github"></i> {% trans 'GitHub' %}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'logout' %}"><i
                                 class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Logout' %}</a>
