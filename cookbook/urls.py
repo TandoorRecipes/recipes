@@ -9,6 +9,7 @@ from cookbook.helper import dal
 
 router = routers.DefaultRouter()
 router.register(r'meal-plan', api.MealPlanViewSet)
+router.register(r'meal-type', api.MealTypeViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),

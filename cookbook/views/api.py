@@ -9,10 +9,10 @@ from django.utils.translation import gettext as _
 from rest_framework import viewsets, permissions
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
@@ -26,6 +26,12 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         if week is not None:
             queryset = queryset.filter(date__week=week)
         return queryset
+
+
+class MealTypeViewSet(viewsets.ModelViewSet):
+    queryset = MealType.objects.all()
+    serializer_class = MealTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 def get_recipe_provider(recipe):
