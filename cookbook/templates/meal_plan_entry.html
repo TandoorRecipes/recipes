@@ -52,7 +52,9 @@
                         {% if plan.recipe.keywords %}
                             <br/>
                             <br/>
-                            {{ plan.recipe.all_tags }}
+                            {% for x in plan.recipe.keywords.all %}
+                                <span class="badge badge-pill badge-light">{{ x }}</span>
+                            {% endfor %}
                         {% endif %}
                     </div>
                 </div>
