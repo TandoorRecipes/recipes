@@ -23,6 +23,8 @@ from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLog
 
 def index(request):
     if not request.user.is_authenticated:
+        if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
+            return HttpResponseRedirect(reverse_lazy('view_setup'))
         return HttpResponseRedirect(reverse_lazy('view_search'))
     try:
         page_map = {
