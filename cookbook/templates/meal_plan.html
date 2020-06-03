@@ -52,22 +52,31 @@
             <tbody>
             <tr v-for="mp in meal_plan">
                 <td v-for="d in mp.days">
-                    <draggable class="list-group" :list="d.items" group="plan" @change="log('l2', $event)">
-                    <div
-                            class="list-group-item"
-                            v-for="(element, index) in d.items"
-                            :key="element.id"
-                    >
-                        [[element.name]] - [[element.id]]
-                    </div>
-                </draggable>
+                    <draggable class="list-group" :list="d.items" group="plan" @change="log(d.date, $event)"
+                               :empty-insert-threshold="100">
+                        <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
+                            [[element.title]] - [[element.id]]
+                        </div>
+                    </draggable>
                 </td>
             </tr>
             </tbody>
         </table>
-        [[plan_entries]]
 
-        [[meal_types]]
+        [[meal_plan]]
+
+        <br/>
+        <br/>
+
+        entries
+        <ul>
+            <li v-for="e in plan_entries">[[e]]</li>
+        </ul>
+
+        types
+        <ul>
+            <li v-for="t in meal_types">[[t]]</li>
+        </ul>
 
 
     </div>
@@ -84,11 +93,11 @@
                 days: moment.weekdays(),
                 plan_entries: [],
                 meal_types: [],
-                meal_plan: [
+                meal_plan: {}
 
-                ],
             },
             mounted: function () {
+                console.log("MOUNTED")
                 this.getPlanEntries();
             },
             methods: {
@@ -98,10 +107,10 @@
                         this.plan_entries = response.data;
                         this.getPlanTypes();
                     })
-                    .catch((err) => {
-                        this.loading = false;
-                        console.log(err);
-                    })
+                        .catch((err) => {
+                            this.loading = false;
+                            console.log(err);
+                        })
                 },
                 getPlanTypes: function () {
                     this.loading = true;
@@ -110,27 +119,30 @@
                         this.loading = false;
                         this.buildGrid();
                     })
-                    .catch((err) => {
-                        this.loading = false;
-                        console.log(err);
-                    })
+                        .catch((err) => {
+                            this.loading = false;
+                            console.log(err);
+                        })
                 },
                 buildGrid: function () {
+                    console.log("BUILD GRID EXECUTED")
                     for (t of this.meal_types) {
-                        console.log(t.name)
-                        var type = {
+                        this.$set(this.meal_plan, t.id, {
                             name: t.name,
-                            days: []
-                        }
+                            meal_type: t.id,
+                            days: {}
+                        })
                         for (d of this.days) {
-                            type.days.push({
+                            date = moment().day(d).week(week).format('YYYY-MM-DD')
+                            this.$set(this.meal_plan[t.id].days, date, {
                                 name: d,
-                                items: [
-                                    {'id':Math.round(Math.random()*1000), "name": "Test"}
-                                ]
+                                date: date,
+                                items: []
                             })
                         }
-                        this.meal_plan.push(type)
+                    }
+                    for (e of this.plan_entries) {
+                        this.meal_plan[e.meal_type].days[e.date].items.push(e)
                     }
                 },
                 log: function (param, evt) {
