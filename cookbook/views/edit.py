@@ -1,4 +1,5 @@
 import os
+import uuid
 from io import BytesIO
 
 import simplejson
@@ -71,7 +72,7 @@ def internal_recipe_update(request, pk):
 
                 im_io = BytesIO()
                 img.save(im_io, 'PNG', quality=70)
-                recipe.image = File(im_io, name=(str(recipe.pk) + '.png'))
+                recipe.image = File(im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png')
             elif 'image' in form.changed_data and form.cleaned_data['image'] is False:
                 recipe.image = None
 
