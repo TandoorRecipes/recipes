@@ -8,7 +8,6 @@ RUN mkdir /opt/recipes
 WORKDIR /opt/recipes
 COPY . ./
 RUN chmod +x boot.sh setup.sh
-RUN chmod 755 /opt/recipes/mediafiles
 RUN ln -s /opt/recipes/setup.sh /usr/local/bin/createsuperuser
 
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev  && \
