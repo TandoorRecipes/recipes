@@ -1,9 +1,4 @@
-# Important Information
-Although this application allows running without any webserver in front of gunicorn it is heavily recommended by almost 
-everyone **not** to do this. It is hard to find exact explanations and appears not to be a security but only
-a performance risk but that is just my personal interpretation.
-
-**If you dont know what you are doing please choose the traefik-nginx config**
+This is the recommended setup to run django recipes with traefik.
 
 ----
 
