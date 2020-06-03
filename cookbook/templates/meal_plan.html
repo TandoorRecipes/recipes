@@ -50,58 +50,25 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="t in meal_types">
-                <td>[[t]]</td>
+            <tr v-for="mp in meal_plan">
+                <td v-for="d in mp.days">
+                    <draggable class="list-group" :list="d.items" group="plan" @change="log('l2', $event)">
+                    <div
+                            class="list-group-item"
+                            v-for="(element, index) in d.items"
+                            :key="element.id"
+                    >
+                        [[element.name]] - [[element.id]]
+                    </div>
+                </draggable>
+                </td>
             </tr>
             </tbody>
         </table>
         [[plan_entries]]
 
-        <h1>drag n drop</h1>
+        [[meal_types]]
 
-        <div class="row">
-            <div class="col-3">
-                <h3>Draggable 1</h3>
-                <draggable class="list-group" :list="plan_entries" group="plan_entries" @change="log( 'l1', $event)">
-                    <div
-                            class="list-group-item"
-                            v-for="(element, index) in plan_entries"
-                            :key="element.title"
-                    >
-                        [[element]]
-                    </div>
-                </draggable>
-            </div>
-
-            <div class="col-3">
-                <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="meal_types" group="plan_entries" @change="log('l2', $event)">
-                    <div
-                            class="list-group-item"
-                            v-for="(element, index) in meal_types"
-                            :key="element.name"
-                    >
-                        [[element]]
-                    </div>
-                </draggable>
-            </div>
-
-            <div class="col-3">
-                <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="meal_plan[0].items" group="plan_entries"
-                           @change="log('l3', $event)">
-                    <div
-                            class="list-group-item"
-                            v-for="(element, index) in meal_plan[0].items"
-                            :key="element.name"
-                    >
-                        [[element]]
-                    </div>
-                </draggable>
-            </div>
-
-
-        </div>
 
     </div>
 
@@ -117,31 +84,24 @@
                 days: moment.weekdays(),
                 plan_entries: [],
                 meal_types: [],
-                list3: [],
                 meal_plan: [
-                    {
-                        name: "Breakfast",
-                        id: 1,
-                        items: []
-                    }
+
                 ],
             },
             mounted: function () {
                 this.getPlanEntries();
-                this.getPlanTypes();
-
             },
             methods: {
                 getPlanEntries: function () {
                     this.loading = true;
                     this.$http.get("{% url 'api:mealplan-list' %}?week=" + week).then((response) => {
                         this.plan_entries = response.data;
-                        this.loading = false;
+                        this.getPlanTypes();
                     })
-                        .catch((err) => {
-                            this.loading = false;
-                            console.log(err);
-                        })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
                 },
                 getPlanTypes: function () {
                     this.loading = true;
@@ -150,27 +110,34 @@
                         this.loading = false;
                         this.buildGrid();
                     })
-                        .catch((err) => {
-                            this.loading = false;
-                            console.log(err);
-                        })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
                 },
                 buildGrid: function () {
-
+                    for (t of this.meal_types) {
+                        console.log(t.name)
+                        var type = {
+                            name: t.name,
+                            days: []
+                        }
+                        for (d of this.days) {
+                            type.days.push({
+                                name: d,
+                                items: [
+                                    {'id':Math.round(Math.random()*1000), "name": "Test"}
+                                ]
+                            })
+                        }
+                        this.meal_plan.push(type)
+                    }
                 },
                 log: function (param, evt) {
                     console.log("param")
                     console.log(param)
                     console.log("EVT")
                     console.log(evt)
-                },
-                test: function (evt, originalEvent) {
-                    console.log("THIS")
-                    console.log(this)
-                    console.log("EVT")
-                    console.log(evt)
-                    console.log("OEV")
-                    console.log(originalEvent)
                 }
             }
         });
