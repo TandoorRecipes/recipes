@@ -264,6 +264,12 @@ def history(request):
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
+@group_required('admin')
+def system(request):
+    postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
+    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres})
+
+
 def setup(request):
     if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
         messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
