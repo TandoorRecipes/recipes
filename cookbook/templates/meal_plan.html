@@ -62,7 +62,7 @@
         <div class="row">
             <div class="col-3">
                 <h3>Draggable 1</h3>
-                <draggable class="list-group" :list="plan_entries" group="plan_entries" @change="log" @end="test">
+                <draggable class="list-group" :list="plan_entries" group="plan_entries" @change="log( 'l1', $event)">
                     <div
                             class="list-group-item"
                             v-for="(element, index) in plan_entries"
@@ -75,7 +75,7 @@
 
             <div class="col-3">
                 <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="meal_types" group="plan_entries" @change="log">
+                <draggable class="list-group" :list="meal_types" group="plan_entries" @change="log('l2', $event)">
                     <div
                             class="list-group-item"
                             v-for="(element, index) in meal_types"
@@ -88,10 +88,11 @@
 
             <div class="col-3">
                 <h3>Draggable 2</h3>
-                <draggable class="list-group" :list="list.breakfast.d2" group="plan_entries" @change="log">
+                <draggable class="list-group" :list="meal_plan[0].items" group="plan_entries"
+                           @change="log('l3', $event)">
                     <div
                             class="list-group-item"
-                            v-for="(element, index) in list.breakfast.d2"
+                            v-for="(element, index) in meal_plan[0].items"
                             :key="element.name"
                     >
                         [[element]]
@@ -119,11 +120,9 @@
                 list3: [],
                 meal_plan: [
                     {
-                        name:"Breakfast",
-                        id:1,
-                        items: [
-
-                        ]
+                        name: "Breakfast",
+                        id: 1,
+                        items: []
                     }
                 ],
             },
@@ -159,11 +158,18 @@
                 buildGrid: function () {
 
                 },
-                log: function (evt) {
+                log: function (param, evt) {
+                    console.log("param")
+                    console.log(param)
+                    console.log("EVT")
                     console.log(evt)
                 },
                 test: function (evt, originalEvent) {
+                    console.log("THIS")
+                    console.log(this)
+                    console.log("EVT")
                     console.log(evt)
+                    console.log("OEV")
                     console.log(originalEvent)
                 }
             }
