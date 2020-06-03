@@ -21,6 +21,8 @@ SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else '728f4t5438
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 
+GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 LOGIN_REDIRECT_URL = "index"
