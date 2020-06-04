@@ -4,9 +4,12 @@ from cookbook.models import MealPlan, MealType
 
 
 class MealPlanSerializer(serializers.ModelSerializer):
+    recipe_name = serializers.ReadOnlyField(source='recipe.name')
+    meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
+
     class Meta:
         model = MealPlan
-        fields = '__all__'
+        fields = ('id', 'title', 'recipe', 'date', 'meal_type', 'recipe_name', 'meal_type_name')
 
 
 class MealTypeSerializer(serializers.ModelSerializer):
