@@ -139,6 +139,7 @@ USE_TZ = True
 LANGUAGES = [
     ('de', _('German')),
     ('en', _('English')),
+    ('nl', _('Dutch')),
 ]
 
 # Static files (CSS, JavaScript, Images)
