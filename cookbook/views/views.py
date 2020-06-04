@@ -23,6 +23,8 @@ from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLog
 
 def index(request):
     if not request.user.is_authenticated:
+        if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
+            return HttpResponseRedirect(reverse_lazy('view_setup'))
         return HttpResponseRedirect(reverse_lazy('view_search'))
     try:
         page_map = {
@@ -260,6 +262,12 @@ def history(request):
     view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user).order_by('-created_at').all())
     cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
+
+
+@group_required('admin')
+def system(request):
+    postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
+    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres})
 
 
 def setup(request):

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Cookbook Setup" %}{% endblock %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'System Information' %}</h1>
+
+    {% blocktrans %}
+        Django Recipes is an open source free software application. It can be found on <a href="https://github.com/vabene1111/recipes">GitHub</a>.
+        Changelogs can be found <a href="https://github.com/vabene1111/recipes/releases">here</a>.
+    {% endblocktrans %}
+
+    <br/>
+    <br/>
+    <br/>
+    <h4>{% trans 'Media Serving' %} <span class="badge badge-{% if gunicorn_media %}danger{% else %}success{% endif %}">{% if gunicorn_media %}
+        {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
+    {% if gunicorn_media %}
+        {% blocktrans %}Serving media files directly using gunicorn/python is <b>not recommend</b>!
+            Please follow the steps described
+            <a href="https://github.com/vabene1111/recipes/releases/tag/0.8.1">here</a> to update
+            your installation.
+        {% endblocktrans %}
+    {% else %}
+        {% trans 'Everything is fine!' %}
+    {% endif %}
+    <br/>
+    <br/>
+
+    <h4>{% trans 'Debug Mode' %} <span
+            class="badge badge-{% if debug %}danger{% else %}success{% endif %}">{% if debug %}
+        {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
+    {% if debug %}
+        {% blocktrans %}
+            This application is still running in debug mode. This is most likely not needed. Turn of debug mode by
+            setting
+            <code>DEBUG=0</code> int the <code>.env</code> configuration file.
+        {% endblocktrans %}
+    {% else %}
+        {% trans 'Everything is fine!' %}
+    {% endif %}
+    <br/>
+    <br/>
+
+    <h4>{% trans 'Database' %} <span
+            class="badge badge-{% if postgres %}warning{% else %}success{% endif %}">{% if postgres %}
+        {% trans 'Info' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
+    {% if postgres %}
+        {% blocktrans %}
+            This application is not running with a Postgres database backend. This is ok but not recommended as some
+            features only work with postgres databases.
+        {% endblocktrans %}
+    {% else %}
+        {% trans 'Everything is fine!' %}
+    {% endif %}
+    <br/>
+    <br/>
+
+{% endblock %}

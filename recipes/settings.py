@@ -21,6 +21,8 @@ SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else '728f4t5438
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 
+GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -139,8 +141,9 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = [
-    ('de', _('German')),
     ('en', _('English')),
+    ('de', _('German')),
+    ('nl', _('Dutch')),
 ]
 
 # Static files (CSS, JavaScript, Images)
