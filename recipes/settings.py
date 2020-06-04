@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'emoji_picker',
-    'corsheaders',
     'rest_framework',
     'django_cleanup.apps.CleanupConfig',
     'cookbook.apps.CookbookConfig',

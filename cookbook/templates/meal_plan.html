@@ -15,6 +15,9 @@
     <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"
+            integrity="sha256-P8jY+MCe6X2cjNSmF4rQvZIanL5VwUUT4MBnOMncjRU=" crossorigin="anonymous"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -43,19 +46,26 @@
     </h3>
 
     <div id="app">
-        <table class="table">
-            <thead>
+        <table class="table table-sm table-striped">
+            <thead class="thead-dark">
             <tr>
-                <td v-for="d in days">[[d]]</td>
+                <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]</th>
             </tr>
             </thead>
-            <tbody>
-            <tr v-for="mp in meal_plan">
+            <tbody v-for="mp in meal_plan">
+            <tr>
+                <td colspan="7" style="text-align: center">
+                    [[mp.name]]
+                </td>
+            </tr>
+            <tr >
                 <td v-for="d in mp.days">
-                    <draggable class="list-group" :list="d.items" group="plan" @change="log(d.date, $event)"
-                               :empty-insert-threshold="100">
+                    <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
+                               @change="log(d.date, mp.meal_type, $event)"
+                               :empty-insert-threshold="10">
                         <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
-                            [[element.title]] - [[element.id]]
+                            <a href="#" v-if="element.title !== ''" @click="plan_detail = element">[[element.title]]</a>
+                            <a href="#" v-if="element.title === ''" @click="plan_detail = element">[[element.recipe]]</a>
                         </div>
                     </draggable>
                 </td>
@@ -63,21 +73,10 @@
             </tbody>
         </table>
 
-        [[meal_plan]]
-
-        <br/>
-        <br/>
-
-        entries
-        <ul>
-            <li v-for="e in plan_entries">[[e]]</li>
-        </ul>
-
-        types
-        <ul>
-            <li v-for="t in meal_types">[[t]]</li>
-        </ul>
-
+        <div class="row" v-if="plan_detail !== undefined">
+            [[plan_detail.date]]
+            [[plan_detail.title]]
+        </div>
 
     </div>
 
@@ -86,6 +85,9 @@
         var week = moment().format('W')
         moment.locale('{{request.LANGUAGE_CODE}}');
 
+        var csrftoken = Cookies.get('csrftoken');
+        Vue.http.headers.common['X-CSRFToken'] = csrftoken;
+
         var app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#app',
@@ -93,7 +95,8 @@
                 days: moment.weekdays(),
                 plan_entries: [],
                 meal_types: [],
-                meal_plan: {}
+                meal_plan: {},
+                plan_detail: undefined,
 
             },
             mounted: function () {
@@ -145,11 +148,21 @@
                         this.meal_plan[e.meal_type].days[e.date].items.push(e)
                     }
                 },
-                log: function (param, evt) {
-                    console.log("param")
-                    console.log(param)
-                    console.log("EVT")
-                    console.log(evt)
+                log: function (date, meal_type, evt) {
+                    if (evt.added !== undefined) {
+                        var plan_entry = evt.added.element
+
+                        plan_entry.date = date
+                        plan_entry.meal_type = meal_type
+
+                        this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry)
+                            .then((response) => {
+                                console.log("Update success", response)
+                            })
+                            .catch((err) => {
+                                console.log("update error", err);
+                            })
+                    }
                 }
             }
         });
