@@ -118,7 +118,7 @@
 
         <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
-                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings,view_history' %}active{% endif %}">
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
                             class="fas fa-user-alt"></i> {{ user.get_user_name }}
@@ -130,6 +130,9 @@
                         <a class="dropdown-item" href="{% url 'view_history' %}"><i
                                 class="fas fa-history"></i> {% trans 'History' %}</a>
                         {% if user.is_superuser %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'view_system' %}"><i
+                                    class="fas fa-server fa-fw"></i> {% trans 'System' %}</a>
                             <a class="dropdown-item" href="{% url 'admin:index' %}"><i
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% endif %}
