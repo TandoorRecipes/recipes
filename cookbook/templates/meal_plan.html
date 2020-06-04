@@ -65,7 +65,7 @@
                                :empty-insert-threshold="10">
                         <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
                             <a href="#" v-if="element.title !== ''" @click="plan_detail = element">[[element.title]]</a>
-                            <a href="#" v-if="element.title === ''" @click="plan_detail = element">[[element.recipe]]</a>
+                            <a href="#" v-if="element.title === ''" @click="plan_detail = element">[[element.recipe_name]]</a>
                         </div>
                     </draggable>
                 </td>
@@ -74,9 +74,16 @@
         </table>
 
         <div class="row" v-if="plan_detail !== undefined">
-            [[plan_detail.date]]
-            [[plan_detail.title]]
+            <h2>[[plan_detail.meal_type_name]] - [[plan_detail.date]]</h2>
+            <br/>
+            [[plan_detail.note]]
         </div>
+
+
+        <br/>
+        <hr/>
+        <br/>
+        [[plan_entries]]
 
     </div>
 
