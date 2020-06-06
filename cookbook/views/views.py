@@ -283,7 +283,8 @@ def setup(request):
             else:
                 user = User(
                     username=form.cleaned_data['name'],
-                    is_superuser=True
+                    is_superuser=True,
+                    is_staff=True
                 )
                 try:
                     validate_password(form.cleaned_data['password'], user=user)
