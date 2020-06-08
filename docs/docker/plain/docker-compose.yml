@@ -16,14 +16,14 @@ services:
     volumes:
       - ./staticfiles:/opt/recipes/staticfiles
       - ./mediafiles:/opt/recipes/mediafiles
-    ports:
-      - 80:8080
     depends_on:
       - db_recipes
 
   nginx_recipes:
     image: nginx:mainline-alpine
     restart: always
+    ports:
+      - 80:80
     env_file:
       - ./.env
     volumes:
