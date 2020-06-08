@@ -7,8 +7,6 @@ services:
       - ./postgresql:/var/lib/postgresql/data
     env_file:
       - ./.env
-    networks:
-      - default
 
   web_recipes:
     image: vabene1111/recipes
@@ -22,8 +20,13 @@ services:
       - 80:8080
     depends_on:
       - db_recipes
-    networks:
-      - default
 
-networks:
-  default:
+  nginx_recipes:
+    image: nginx:mainline-alpine
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./staticfiles:/static
+      - ./mediafiles:/media
