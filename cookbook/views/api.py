@@ -9,10 +9,10 @@ from django.utils.translation import gettext as _
 from rest_framework import viewsets, permissions
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
@@ -21,6 +21,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        # TODO user filter
         queryset = MealPlan.objects.all()
         week = self.request.query_params.get('week', None)
         if week is not None:
@@ -32,6 +33,34 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     queryset = MealType.objects.all()
     serializer_class = MealTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Recipe.objects.all()
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        limit = self.request.query_params.get('limit', None)
+        if limit is not None:
+            queryset = queryset[:int(limit)]
+        return queryset
+
+
+class ViewLogViewSet(viewsets.ModelViewSet):
+    queryset = ViewLog.objects.all()
+    serializer_class = ViewLogSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # TODO user + unique filter
+        queryset = ViewLog.objects.all()[:5]
+        return queryset
 
 
 def get_recipe_provider(recipe):

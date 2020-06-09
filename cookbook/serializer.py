@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cookbook.models import MealPlan, MealType
+from cookbook.models import MealPlan, MealType, Recipe, ViewLog
 
 
 class MealPlanSerializer(serializers.ModelSerializer):
@@ -15,4 +15,16 @@ class MealPlanSerializer(serializers.ModelSerializer):
 class MealTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MealType
+        fields = '__all__'
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = '__all__'
+
+
+class ViewLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ViewLog
         fields = '__all__'
