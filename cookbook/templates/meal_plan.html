@@ -46,7 +46,7 @@
     </h3>
 
     <div id="app">
-        <table class="table table-sm table-striped">
+        <table class="table table-sm table-striped table-responsive">
             <thead class="thead-dark">
             <tr>
                 <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]</th>
@@ -61,14 +61,19 @@
             <tr>
                 <td v-for="d in mp.days">
                     <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
-                               @change="log(d.date, mp.meal_type, $event)"
+                               @change="dragChanged(d.date, mp.meal_type, $event)"
                                :empty-insert-threshold="10">
                         <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
-                            <a href="#" v-if="element.title !== ''" @click="plan_detail = element">[[element.title]]</a>
-                            <a href="#" v-if="element.recipe_name !== ''" @click="plan_detail = element">[[element.recipe_name]]</a>
-                            <a href="#" v-if="element.name !== ''" @click="plan_detail = element">[[element.name]]</a>
-
-                            <button class="btn btn-sm" @click="deleteEntry(element)">Delete</button>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a href="#" v-if="element.title !== ''"
+                                       @click="plan_detail = element" data-toggle="modal" data-target="#exampleModal">[[element.title]]</a>
+                                    <a href="#" v-if="element.recipe_name !== ''" @click="plan_detail = element"
+                                       data-toggle="modal" data-target="#exampleModal">[[element.recipe_name]]</a>
+                                    <a href="#" v-if="element.name !== ''"
+                                       @click="plan_detail = element" data-toggle="modal" data-target="#exampleModal">[[element.name]]</a>
+                                </div>
+                            </div>
                         </div>
                     </draggable>
                 </td>
@@ -101,8 +106,7 @@
                 </div>
 
             </div>
-            <div class="col-6">
-                <!-- new note type entry -->
+            <div class="col-md-6">
                 <div :key="-1">
                     <div class="card">
                         <div class="card-header">
@@ -116,7 +120,8 @@
 
                             <draggable :list="pseudo_note_list"
                                        :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneNote">
-                                <div class="list-group-item" v-for="(element, index) in pseudo_note_list" :key="element.id">
+                                <div class="list-group-item" v-for="(element, index) in pseudo_note_list"
+                                     :key="element.id">
                                     <button class="btn">{% trans 'Drag me' %}</button>
                                 </div>
                             </draggable>
@@ -130,6 +135,27 @@
         <hr/>
         <br/>
         [[meal_plan]]
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       [[ plan_detail.note ]]
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" @click="deleteEntry(plan_detail)">{% trans 'Delete' %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -149,7 +175,7 @@
                 plan_entries: [],
                 meal_types: [],
                 meal_plan: {},
-                plan_detail: undefined,
+                plan_detail: {},
                 recipes: [],
                 recipe_query: '',
                 pseudo_note_list: [
@@ -167,20 +193,18 @@
                     this.$http.get("{% url 'api:mealplan-list' %}?week=" + week).then((response) => {
                         this.plan_entries = response.data;
                         this.getPlanTypes();
+                    }).catch((err) => {
+                        this.loading = false;
+                        console.log(err);
                     })
-                        .catch((err) => {
-                            this.loading = false;
-                            console.log(err);
-                        })
                 },
                 getPlanTypes: function () {
                     this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
                         this.meal_types = response.data;
                         this.buildGrid();
+                    }).catch((err) => {
+                        console.log(err);
                     })
-                        .catch((err) => {
-                            console.log(err);
-                        })
                 },
                 buildGrid: function () {
                     console.log("BUILD GRID EXECUTED")
@@ -216,7 +240,7 @@
                         console.log(err);
                     })
                 },
-                log: function (date, meal_type, evt) {
+                dragChanged: function (date, meal_type, evt) {
                     console.log("log")
                     if (evt.added !== undefined) {
                         console.log("added")
@@ -231,10 +255,12 @@
                             plan_entry.created_by = {{ request.user.id }};
 
                             this.$http.post(`{% url 'api:mealplan-list' %}`, plan_entry).then((response) => {
-                                console.log("Update success", response)
-                                // TODO update meal plan array with id
+                                console.log("create success", response)
+                                let entry = response.data
+                                this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => item.id === undefined)
+                                this.meal_plan[entry.meal_type].days[entry.date].items.push(entry)
                             }).catch((err) => {
-                                console.log("update error", err);
+                                console.log("create error", err);
                             })
                         } else {
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
@@ -246,11 +272,14 @@
                     }
                 },
                 deleteEntry: function (entry) {
+                    console.log("delete click")
+                    $('#exampleModal').modal('hide')
+                    this.plan_detail = {}
                     this.$http.delete(`{% url 'api:mealplan-list' %}${entry.id}/`, entry).then((response) => {
                         console.log("delete success", response)
                         this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => item !== entry)
                     }).catch((err) => {
-                        console.log("update error", err);
+                        console.log("delete error", err);
                     })
                 },
                 cloneRecipe: function (recipe) {
@@ -274,7 +303,7 @@
                     if (new_entry.title === '') {
                         new_entry.title = '{% trans 'Title' %}'
                     }
-                    
+
                     this.new_note_title = ''
                     this.new_note_text = ''
                     return new_entry
