@@ -46,40 +46,48 @@
     </h3>
 
     <div id="app">
-        <table class="table table-sm table-striped table-responsive">
-            <thead class="thead-dark">
-            <tr>
-                <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]</th>
-            </tr>
-            </thead>
-            <tbody v-for="mp in meal_plan">
-            <tr>
-                <td colspan="7" style="text-align: center">
-                    [[mp.name]]
-                </td>
-            </tr>
-            <tr>
-                <td v-for="d in mp.days">
-                    <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
-                               @change="dragChanged(d.date, mp.meal_type, $event)"
-                               :empty-insert-threshold="10">
-                        <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="#" v-if="element.title !== ''"
-                                       @click="plan_detail = element" data-toggle="modal" data-target="#exampleModal">[[element.title]]</a>
-                                    <a href="#" v-if="element.recipe_name !== ''" @click="plan_detail = element"
-                                       data-toggle="modal" data-target="#exampleModal">[[element.recipe_name]]</a>
-                                    <a href="#" v-if="element.name !== ''"
-                                       @click="plan_detail = element" data-toggle="modal" data-target="#exampleModal">[[element.name]]</a>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-sm table-striped table-responsive-sm">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]</th>
+                    </tr>
+                    </thead>
+                    <tbody v-for="mp in meal_plan">
+                    <tr>
+                        <td colspan="7" style="text-align: center">
+                            [[mp.name]]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td v-for="d in mp.days">
+                            <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
+                                       @change="dragChanged(d.date, mp.meal_type, $event)"
+                                       :empty-insert-threshold="10">
+                                <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a href="#" v-if="element.title !== ''"
+                                               @click="plan_detail = element" data-toggle="modal"
+                                               data-target="#exampleModal">[[element.title]]</a>
+                                            <a href="#" v-if="element.recipe_name !== ''" @click="plan_detail = element"
+                                               data-toggle="modal"
+                                               data-target="#exampleModal">[[element.recipe_name]]</a>
+                                            <a href="#" v-if="element.name !== ''"
+                                               @click="plan_detail = element" data-toggle="modal"
+                                               data-target="#exampleModal">[[element.name]]</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </draggable>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                            </draggable>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <hr/>
         <div class="row">
             <div class="col-md-6">
@@ -141,17 +149,18 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" >[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]</h5>
+                        <h5 class="modal-title">[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                       [[ plan_detail.note ]]
+                        [[ plan_detail.note ]]
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" @click="deleteEntry(plan_detail)">{% trans 'Delete' %}</button>
+                        <button type="button" class="btn btn-danger"
+                                @click="deleteEntry(plan_detail)">{% trans 'Delete' %}</button>
                     </div>
                 </div>
             </div>
@@ -296,7 +305,7 @@
                     let new_entry = {
                         id: Math.round(Math.random() * 1000) + 10000,
                         title: this.new_note_title,
-                        text: this.new_note_text,
+                        note: this.new_note_text,
                         is_note: true,
                     }
 
