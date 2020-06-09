@@ -8,8 +8,10 @@ from cookbook.views import api, import_export
 from cookbook.helper import dal
 
 router = routers.DefaultRouter()
+router.register(r'recipe', api.RecipeViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
+router.register(r'view-log', api.ViewLogViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
