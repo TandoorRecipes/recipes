@@ -9,7 +9,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MealPlan
-        fields = ('id', 'title', 'recipe', 'date', 'meal_type', 'recipe_name', 'meal_type_name')
+        fields = ('id', 'title', 'recipe', 'date', 'meal_type', 'created_by', 'recipe_name', 'meal_type_name')
 
 
 class MealTypeSerializer(serializers.ModelSerializer):
