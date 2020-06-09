@@ -46,45 +46,6 @@
     </h3>
 
     <div id="app">
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" v-model="recipe_query" @keyup="getRecipes">
-                            <!-- TODO remove recipes by backdropping them -->
-                        </div>
-                    </div>
-
-
-                    <draggable class="row" :list="recipes" group="plan" @change="" :empty-insert-threshold="10">
-                        <div class="col-3" v-for="(element, index) in recipes" :key="element.id">
-                            <div class="card">
-                                <div class="card-body">
-                                    <a href="#">[[element.name]]</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- new note type entry -->
-                        <div :key="-1">
-                             <div class="card">
-                                <div class="card-body">
-                                    New Note
-                                    <input type="text" class="form-control" v-model="new_note_text">
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </draggable>
-
-                </div>
-            </div>
-        </div>
-
         <table class="table table-sm table-striped">
             <thead class="thead-dark">
             <tr>
@@ -103,27 +64,72 @@
                                @change="log(d.date, mp.meal_type, $event)"
                                :empty-insert-threshold="10">
                         <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
-                            <a href="#" v-if="element.title !== ''"
-                               @click="plan_detail = element">[[element.title]]</a>
-                            <a href="#" v-if="element.title === ''" @click="plan_detail = element">[[element.recipe_name]]</a>
+                            <a href="#" v-if="element.title !== ''" @click="plan_detail = element">[[element.title]]</a>
+                            <a href="#" v-if="element.recipe_name !== ''" @click="plan_detail = element">[[element.recipe_name]]</a>
+                            <a href="#" v-if="element.name !== ''" @click="plan_detail = element">[[element.name]]</a>
+
+                            <button class="btn btn-sm" @click="deleteEntry(element)">Delete</button>
                         </div>
                     </draggable>
                 </td>
             </tr>
             </tbody>
         </table>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        {% trans 'Recipes' %}
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" v-model="recipe_query" @keyup="getRecipes"
+                                       placeholder="{% trans 'Search Recipe' %}">
+                                <!-- TODO remove recipes by backdropping them -->
+                            </div>
+                        </div>
 
-        <div class="row" v-if="plan_detail !== undefined">
-            <h2>[[plan_detail.meal_type_name]] - [[plan_detail.date]]</h2>
-            <br/>
-            [[plan_detail.note]]
+                        <draggable class="list-group" :list="recipes"
+                                   :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneRecipe">
+                            <div class="list-group-item" v-for="(element, index) in recipes" :key="element.id">
+                                <a href="#">[[element.name]]</a>
+                            </div>
+                        </draggable>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <!-- new note type entry -->
+                <div :key="-1">
+                    <div class="card">
+                        <div class="card-header">
+                            {% trans 'New Note' %}
+                        </div>
+                        <div class="card-body">
+                            <input type="text" class="form-control" v-model="new_note_title"
+                                   placeholder="{% trans 'Title' %}">
+                            <textarea class="form-control" v-model="new_note_text"
+                                      placeholder="{% trans 'Note (optional)' %}"></textarea>
+
+                            <draggable :list="pseudo_note_list"
+                                       :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneNote">
+                                <div class="list-group-item" v-for="(element, index) in pseudo_note_list" :key="element.id">
+                                    <button class="btn">{% trans 'Drag me' %}</button>
+                                </div>
+                            </draggable>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
 
         <br/>
         <hr/>
         <br/>
-        [[plan_entries]]
+        [[meal_plan]]
 
     </div>
 
@@ -146,7 +152,11 @@
                 plan_detail: undefined,
                 recipes: [],
                 recipe_query: '',
-
+                pseudo_note_list: [
+                    {id: 0, title: '', text: ''}
+                ],
+                new_note_title: '',
+                new_note_text: '',
             },
             mounted: function () {
                 console.log("MOUNTED")
@@ -166,11 +176,9 @@
                 getPlanTypes: function () {
                     this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
                         this.meal_types = response.data;
-                        this.loading = false;
                         this.buildGrid();
                     })
                         .catch((err) => {
-                            this.loading = false;
                             console.log(err);
                         })
                 },
@@ -204,29 +212,74 @@
 
                     this.$http.get(url).then((response) => {
                         this.recipes = response.data;
+                    }).catch((err) => {
+                        console.log(err);
                     })
-                        .catch((err) => {
-                            console.log(err);
-                        })
                 },
                 log: function (date, meal_type, evt) {
+                    console.log("log")
                     if (evt.added !== undefined) {
-                        var plan_entry = evt.added.element
+                        console.log("added")
+
+                        let plan_entry = evt.added.element
 
                         plan_entry.date = date
                         plan_entry.meal_type = meal_type
 
-                        this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry)
-                            .then((response) => {
+                        if (plan_entry.is_recipe || plan_entry.is_note) { // its not a meal plan object
+                            console.log("undef")
+                            plan_entry.created_by = {{ request.user.id }};
+
+                            this.$http.post(`{% url 'api:mealplan-list' %}`, plan_entry).then((response) => {
                                 console.log("Update success", response)
-                            })
-                            .catch((err) => {
+                                // TODO update meal plan array with id
+                            }).catch((err) => {
                                 console.log("update error", err);
                             })
+                        } else {
+                            this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
+                                console.log("Update success", response)
+                            }).catch((err) => {
+                                console.log("update error", err);
+                            })
+                        }
                     }
+                },
+                deleteEntry: function (entry) {
+                    this.$http.delete(`{% url 'api:mealplan-list' %}${entry.id}/`, entry).then((response) => {
+                        console.log("delete success", response)
+                        this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => item !== entry)
+                    }).catch((err) => {
+                        console.log("update error", err);
+                    })
+                },
+                cloneRecipe: function (recipe) {
+                    console.log("clone recipe")
+                    return {
+                        id: Math.round(Math.random() * 1000) + 10000,
+                        recipe: recipe.id,
+                        recipe_name: recipe.name,
+                        is_recipe: true
+                    }
+                },
+                cloneNote: function () {
+                    console.log("clone note")
+                    let new_entry = {
+                        id: Math.round(Math.random() * 1000) + 10000,
+                        title: this.new_note_title,
+                        text: this.new_note_text,
+                        is_note: true,
+                    }
+
+                    if (new_entry.title === '') {
+                        new_entry.title = '{% trans 'Title' %}'
+                    }
+                    
+                    this.new_note_title = ''
+                    this.new_note_text = ''
+                    return new_entry
                 }
             }
         });
-
     </script>
 {% endblock %}
