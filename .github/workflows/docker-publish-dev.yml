@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - uses: DamianReeves/write-file-action
+        with:
+          path: version.py
+          contents: |
+            echo "VERSION_NUMBER = 'develop'"
+            echo "BUILD_REF = '$(git rev-parse --short "$GITHUB_SHA")'"
+          write-mode: overwrite
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@2.13
         with:
