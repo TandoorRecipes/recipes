@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: DamianReeves/write-file-action
         with:
-          path: version.py
+          path: $GITHUB_WORKSPACE/recipes/version.py
           contents: |
             echo "VERSION_NUMBER = 'develop'"
             echo "BUILD_REF = '$(git rev-parse --short "$GITHUB_SHA")'"
