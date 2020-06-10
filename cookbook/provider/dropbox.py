@@ -1,4 +1,5 @@
 import base64
+import io
 import os
 from datetime import datetime
 
@@ -90,14 +91,14 @@ class Dropbox(Provider):
         return response['url']
 
     @staticmethod
-    def get_base64_file(recipe):
+    def get_file(recipe):
         if not recipe.link:
             recipe.link = Dropbox.get_share_link(recipe)
             recipe.save()
 
         response = requests.get(recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.'))
 
-        return base64.b64encode(response.content)
+        return io.BytesIO(response.content)
 
     @staticmethod
     def rename_file(recipe, new_name):

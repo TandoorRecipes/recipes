@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
