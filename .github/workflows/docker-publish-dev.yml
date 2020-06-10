@@ -13,7 +13,7 @@ jobs:
       - name: Update version file
         uses: DamianReeves/write-file-action@v1.0
         with:
-          path: $GITHUB_WORKSPACE/recipes/version.py
+          path: recipes/version.py
           contents: |
             echo "VERSION_NUMBER = 'develop'"
             echo "BUILD_REF = '$(git rev-parse --short "$GITHUB_SHA")'"
