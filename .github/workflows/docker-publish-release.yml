@@ -27,7 +27,7 @@ jobs:
         uses: ilteoood/docker_buildx@master
         with:
           publish: true
-            imageName: vabene1111/recipes
-            tag: ${{ steps.get_version.outputs.VERSION }}
-            dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
-            dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+          imageName: vabene1111/recipes
+          tag: ${{ steps.get_version.outputs.VERSION }}
+          dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
+          dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
