@@ -20,14 +20,6 @@
             }
         }
 
-        /* prevent weired character stuff escaping the pdf box */
-        .textLayer > span {
-            color: transparent;
-            position: absolute;
-            white-space: pre;
-            cursor: text;
-            transform-origin: 0% 0%;
-        }
     </style>
 
 {% endblock %}
@@ -214,7 +206,6 @@
         {% endif %}
     </div>
 
-
     {% if recipe.storage %}
         <div class="row">
             {% if recipe.internal %}
@@ -224,19 +215,23 @@
                 </div>
             {% else %}
 
-                <div class="col col-12" style="margin-top: 2vh">
-                    <div class="loader" id="id_loader"></div>
+                {% if '.pdf' in recipe.file_path %}
+                    <div class="col col-12">
+                        <iframe src="{% static 'pdfjs/viewer.html' %}?file={% url 'api_get_recipe_file' recipe.id %}"
+                                width="100%"
+                                height="700px"
+                                style="border: none;"></iframe>
 
-                    <div id="viewerContainer" class="border">
-                        <div id="viewer" class="pdfViewer"></div>
                     </div>
-
-                    <div class="alert alert-warning" role="alert" id="id_warning_no_preview" style="display: none">
-                        {% trans 'Cloud not show a file preview. Maybe its not a PDF ?' %}
+                {% endif %}
+                {% if '.jpg' in recipe.file_path or '.png' in recipe.file_path or '.jpeg' in recipe.file_path %}
+                    <div class="col-md-12" style="text-align: center">
+                        <img class="img img-fluid" src="{% url 'api_get_recipe_file' recipe.id %}"
+                             alt="{% trans 'External recipe image' %}">
                     </div>
-                </div>
+                {% endif %}
 
-                <div class="col col-12" style="margin-top: 2vh">
+                <div class="col col-12" style="margin-top: 1vh">
                     <div class="card border-info">
                         <div class="card-body text-info">
                             <h5 class="card-title">{% trans 'External recipe' %}</h5>
@@ -261,50 +256,7 @@
                     </div>
                 </div>
 
-                <script src="{% static 'js/pdf.min.js' %}"></script>
 
-                <script src="{% static 'js/pdf_viewer.js' %}"></script>
-
-                <script type="text/javascript">
-                    var url = "{% url 'api_get_recipe_file' recipe_id=12345 %}".replace(/12345/, {{ recipe.id }});
-                    $('#viewerContainer').hide();
-
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState === 4 && this.status === 200) {
-                            var base64Pdf = atob(this.responseText);
-                            $('#id_loader').hide();
-                            $('#viewerContainer').show();
-
-                            var container = document.getElementById("viewerContainer");
-
-                            var pdfViewer = new pdfjsViewer.PDFViewer({
-                                container: container,
-                            });
-
-                            document.addEventListener("pagesinit", function () {
-                                // We can use pdfViewer now, e.g. let's change default scale.
-                                pdfViewer.currentScaleValue = "page-width";
-
-                            });
-
-                            var loadingTask = pdfjsLib.getDocument({
-                                data: base64Pdf
-                            });
-
-                            loadingTask.promise.then(function (pdfDocument) {
-                                // Document loaded, specifying document for the viewer and
-                                // the (optional) linkService.
-                                pdfViewer.setDocument(pdfDocument);
-
-                            });
-                        }
-
-                    };
-                    xhttp.open("GET", url, true);
-                    xhttp.send();
-
-                </script>
             {% endif %}
         </div>
     {% endif %}

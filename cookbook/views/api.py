@@ -1,9 +1,10 @@
+import os
 import re
 
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from rest_framework import viewsets, permissions
@@ -94,7 +95,7 @@ def get_recipe_file(request, recipe_id):
     if not recipe.cors_link:
         update_recipe_links(recipe)
 
-    return HttpResponse(get_recipe_provider(recipe).get_base64_file(recipe))
+    return FileResponse(get_recipe_provider(recipe).get_file(recipe))
 
 
 @group_required('user')

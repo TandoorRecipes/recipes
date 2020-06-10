@@ -1,4 +1,5 @@
 import base64
+import io
 import os
 import tempfile
 from datetime import datetime
@@ -85,18 +86,17 @@ class Nextcloud(Provider):
         return Nextcloud.create_share_link(recipe)
 
     @staticmethod
-    def get_base64_file(recipe):
+    def get_file(recipe):
         client = Nextcloud.get_client(recipe.storage)
 
         tmp_file_path = tempfile.gettempdir() + '/' + recipe.name + '.pdf'
 
         client.download_file(remote_path=recipe.file_path, local_path=tmp_file_path)
 
-        val = base64.b64encode(open(tmp_file_path, 'rb').read())
-
+        file = io.BytesIO(open(tmp_file_path, 'rb').read())
         os.remove(tmp_file_path)
 
-        return val
+        return file
 
     @staticmethod
     def rename_file(recipe, new_name):
