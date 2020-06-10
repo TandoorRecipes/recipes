@@ -210,28 +210,37 @@
             },
             mounted: function () {
                 console.log("MOUNTED")
-                this.getPlanEntries();
+                this.updatePlan();
+                this.getRecipes();
             },
             methods: { // TODO stop chain loading and do async
+                updatePlan: function () {
+                    let planEntryPromise = this.getPlanEntries();
+                    let planTypePromise = this.getPlanTypes();
+
+                    Promise.allSettled([planEntryPromise, planTypePromise]).then(() => {
+                        this.buildGrid()
+                    })
+                },
                 getPlanEntries: function () {
-                    this.$http.get("{% url 'api:mealplan-list' %}?html_week=" + this.week).then((response) => {
+                    console.log("GET PLAN EXECUTED")
+                    return this.$http.get("{% url 'api:mealplan-list' %}?html_week=" + this.week).then((response) => {
                         this.plan_entries = response.data;
-                        this.getPlanTypes();
                     }).catch((err) => {
                         this.loading = false;
                         console.log(err);
                     })
                 },
                 getPlanTypes: function () {
-                    this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
+                    console.log("GET TYPE EXECUTED")
+                    return this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
                         this.meal_types = response.data;
-                        this.buildGrid();
                     }).catch((err) => {
                         console.log(err);
                     })
                 },
                 buildGrid: function () {
-                    console.log("BUILD GRID EXECUTED")
+                    console.log("BUILD GRID EXECUTED", this.plan_entries)
                     this.meal_plan = {}
 
                     for (let t of this.meal_types) {
@@ -250,10 +259,8 @@
                         }
                     }
                     for (let e of this.plan_entries) {
-                        console.log(e.date)
                         this.meal_plan[e.meal_type].days[e.date].items.push(e)
                     }
-                    this.getRecipes();
                 },
                 getRecipes: function () {
                     let url = "{% url 'api:recipe-list' %}?limit=5"
@@ -348,7 +355,7 @@
                 },
                 changeWeek: function (change) {
                     this.week = moment(this.week).add(change, 'w').format('YYYY-[W]WW')
-                    this.getPlanEntries()
+                    this.updatePlan();
                 }
             }
         });
