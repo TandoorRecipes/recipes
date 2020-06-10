@@ -12,7 +12,7 @@ class Provider:
         raise Exception('Method not implemented in storage provider')
 
     @staticmethod
-    def get_base64_file(recipe):
+    def get_file(recipe):
         raise Exception('Method not implemented in storage provider')
 
     @staticmethod
