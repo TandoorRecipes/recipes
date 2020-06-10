@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -100,6 +101,13 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
         context = super(StorageDelete, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
         return context
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.delete(request, *args, **kwargs)
+        except ProtectedError:
+            messages.add_message(request, messages.WARNING, _('Could not delete this storage backend as it is used in at least one monitor.'))
+            return HttpResponseRedirect(reverse('list_storage'))
 
 
 class CommentDelete(OwnerRequiredMixin, DeleteView):
