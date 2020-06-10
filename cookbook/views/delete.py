@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
-from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin
+from cookbook.helper.permission_helper import group_required, GroupRequiredMixin, OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
     RecipeBookEntry, MealPlan, Ingredient
 from cookbook.provider.dropbox import Dropbox
@@ -25,8 +25,8 @@ class RecipeDelete(GroupRequiredMixin, DeleteView):
         return context
 
 
+@group_required('user')
 def delete_recipe_source(request, pk):
-    group_required = ['user']
     recipe = get_object_or_404(Recipe, pk=pk)
 
     if recipe.storage.method == Storage.DROPBOX:
