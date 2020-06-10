@@ -149,18 +149,28 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]</h5>
+                        <h5 class="modal-title">[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]<small
+                                class="text-muted"><br/>[[ plan_detail.meal_type_name ]] [[ formatLocalDate(plan_detail.date) ]]</small>
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        [[ plan_detail.note ]]
+                        <span v-if="plan_detail.recipe_name !== undefined">
+                            <small class="text-muted">{% trans 'Recipe' %}</small><br/>
+                            <a v-bind:href="planDetailRecipeUrl()" target="_blank">[[ plan_detail.recipe_name ]]</a>
+                        </span>
+                        <span v-if="plan_detail.note !== ''">
+                            <small class="text-muted">{% trans 'Note' %}</small><br/>
+                            [[ plan_detail.note ]]
+                        </span>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger"
                                 @click="deleteEntry(plan_detail)">{% trans 'Delete' %}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
                     </div>
                 </div>
             </div>
@@ -316,6 +326,13 @@
                     this.new_note_title = ''
                     this.new_note_text = ''
                     return new_entry
+                },
+                planDetailRecipeUrl: function () {
+                    let url = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
+                    return url
+                },
+                formatLocalDate: function (date) {
+                    return moment(date).format('LL')
                 }
             }
         });
