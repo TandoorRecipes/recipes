@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
-from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin
+from cookbook.helper.permission_helper import group_required, GroupRequiredMixin, OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
     RecipeBookEntry, MealPlan, Ingredient
 from cookbook.provider.dropbox import Dropbox
@@ -25,8 +26,8 @@ class RecipeDelete(GroupRequiredMixin, DeleteView):
         return context
 
 
+@group_required('user')
 def delete_recipe_source(request, pk):
-    group_required = ['user']
     recipe = get_object_or_404(Recipe, pk=pk)
 
     if recipe.storage.method == Storage.DROPBOX:
@@ -78,18 +79,6 @@ class KeywordDelete(GroupRequiredMixin, DeleteView):
         return context
 
 
-class IngredientDelete(GroupRequiredMixin, DeleteView):
-    groups_required = ['user']
-    template_name = "generic/delete_template.html"
-    model = Ingredient
-    success_url = reverse_lazy('list_ingredient')
-
-    def get_context_data(self, **kwargs):
-        context = super(IngredientDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Ingredient")
-        return context
-
-
 class StorageDelete(GroupRequiredMixin, DeleteView):
     groups_required = ['admin']
     template_name = "generic/delete_template.html"
@@ -100,6 +89,13 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
         context = super(StorageDelete, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
         return context
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.delete(request, *args, **kwargs)
+        except ProtectedError:
+            messages.add_message(request, messages.WARNING, _('Could not delete this storage backend as it is used in at least one monitor.'))
+            return HttpResponseRedirect(reverse('list_storage'))
 
 
 class CommentDelete(OwnerRequiredMixin, DeleteView):

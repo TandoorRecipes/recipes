@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
@@ -19,6 +20,8 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import *
 from cookbook.helper.permission_helper import group_required
 from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLogTable
+
+from recipes.version import *
 
 
 def index(request):
@@ -267,7 +270,8 @@ def history(request):
 @group_required('admin')
 def system(request):
     postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
-    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres})
+
+    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'version': VERSION_NUMBER, 'ref': BUILD_REF})
 
 
 def setup(request):
@@ -283,7 +287,8 @@ def setup(request):
             else:
                 user = User(
                     username=form.cleaned_data['name'],
-                    is_superuser=True
+                    is_superuser=True,
+                    is_staff=True
                 )
                 try:
                     validate_password(form.cleaned_data['password'], user=user)
