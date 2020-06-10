@@ -13,13 +13,16 @@
     <h1>{% trans 'System Information' %}</h1>
 
     {% blocktrans %}
-        Django Recipes is an open source free software application. It can be found on <a href="https://github.com/vabene1111/recipes">GitHub</a>.
+        Django Recipes is an open source free software application. It can be found on
+        <a href="https://github.com/vabene1111/recipes">GitHub</a>.
         Changelogs can be found <a href="https://github.com/vabene1111/recipes/releases">here</a>.
     {% endblocktrans %}
     <br/>
     <br/>
-    Current Version: {{ version }}<br/>
-    Ref: {{ ref }}
+    Current Version: {% if version and version != '' %}
+    <a href="https://github.com/vabene1111/recipes/releases/tag/{{ version }}">{{ version }}</a>{% else %}
+    {{ version }}{% endif %}<br/>
+    Ref: <a href="https://github.com/vabene1111/recipes/commit/{{ ref }}">{{ ref }}</a>
     <br/>
     <br/>
     <br/>
