@@ -206,7 +206,6 @@
         {% endif %}
     </div>
 
-
     {% if recipe.storage %}
         <div class="row">
             {% if recipe.internal %}
@@ -216,18 +215,22 @@
                 </div>
             {% else %}
 
-                <div class="col col-12" style="margin-top: 2vh">
-                    <iframe src="{% static 'pdfjs/viewer.html' %}?file={% url 'api_get_recipe_file' recipe.id %}"
-                        width="100%"
-                        height="600px"
-                        style="border: none;"></iframe>
+                {% if '.pdf' in recipe.file_path %}
+                    <div class="col col-12">
+                        <iframe src="{% static 'pdfjs/viewer.html' %}?file={% url 'api_get_recipe_file' recipe.id %}"
+                                width="100%"
+                                height="700px"
+                                style="border: none;"></iframe>
 
-                    <div class="alert alert-warning" role="alert" id="id_warning_no_preview" style="display: none">
-                        {% trans 'Cloud not show a file preview. Maybe its not a PDF ?' %}
                     </div>
-                </div>
+                {% endif %}
+                {% if '.jpg' in recipe.file_path or '.png' in recipe.file_path or '.jpeg' in recipe.file_path %}
+                    <div class="col-md-12" style="text-align: center">
+                        <img class="img img-fluid" src="{% url 'api_get_recipe_file' recipe.id %}">
+                    </div>
+                {% endif %}
 
-                <div class="col col-12" style="margin-top: 2vh">
+                <div class="col col-12" style="margin-top: 1vh">
                     <div class="card border-info">
                         <div class="card-body text-info">
                             <h5 class="card-title">{% trans 'External recipe' %}</h5>
