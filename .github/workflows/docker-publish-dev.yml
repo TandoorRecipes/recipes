@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: DamianReeves/write-file-action
+      - name: Update version file
+        uses: DamianReeves/write-file-action@v1.0
         with:
           path: $GITHUB_WORKSPACE/recipes/version.py
           contents: |
