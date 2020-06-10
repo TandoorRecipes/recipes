@@ -20,6 +20,8 @@ from cookbook.forms import *
 from cookbook.helper.permission_helper import group_required
 from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLogTable
 
+from recipes.version import *
+
 
 def index(request):
     if not request.user.is_authenticated:
@@ -267,7 +269,8 @@ def history(request):
 @group_required('admin')
 def system(request):
     postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
-    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres})
+
+    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'version': VERSION_NUMBER, 'ref': BUILD_REF})
 
 
 def setup(request):
