@@ -15,8 +15,8 @@ jobs:
         with:
           path: recipes/version.py
           contents: |
-            echo "VERSION_NUMBER = 'develop'"
-            echo "BUILD_REF = '$(git rev-parse --short "$GITHUB_SHA")'"
+            "VERSION_NUMBER = 'develop'"
+            "BUILD_REF = '{$(git rev-parse --short "$GITHUB_SHA")}'"
           write-mode: overwrite
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@2.13
