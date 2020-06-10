@@ -7,27 +7,27 @@ on:
 
 jobs:
   build:
-        runs-on: ubuntu-latest
-        name: Build image job
-        steps:
-            - name: Checkout master
-              uses: actions/checkout@master#
-            - name: Get version number
-              id: get_version
-              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-            - name: Update version file
-                uses: DamianReeves/write-file-action@v1.0
-                with:
-                  path: recipes/version.py
-                  contents: |
-                    VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
-                    BUILD_REF = '${{ github.sha }}'
-                  write-mode: overwrite
-            - name: Build and publish image
-              uses: ilteoood/docker_buildx@master
-              with:
-                publish: true
-                imageName: vabene1111/recipes
-                tag: ${{ steps.get_version.outputs.VERSION }}
-                dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
-                dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+    runs-on: ubuntu-latest
+    name: Build image job
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master#
+      - name: Get version number
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Update version file
+        uses: DamianReeves/write-file-action@v1.0
+        with:
+          path: recipes/version.py
+          contents: |
+            VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
+            BUILD_REF = '${{ github.sha }}'
+          write-mode: overwrite
+      - name: Build and publish image
+        uses: ilteoood/docker_buildx@master
+        with:
+          publish: true
+            imageName: vabene1111/recipes
+            tag: ${{ steps.get_version.outputs.VERSION }}
+            dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
+            dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}

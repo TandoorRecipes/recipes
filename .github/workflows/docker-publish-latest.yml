@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Get version number
-          id: get_version
-          run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Update version file
         uses: DamianReeves/write-file-action@v1.0
         with:
