@@ -226,7 +226,8 @@
                 {% endif %}
                 {% if '.jpg' in recipe.file_path or '.png' in recipe.file_path or '.jpeg' in recipe.file_path %}
                     <div class="col-md-12" style="text-align: center">
-                        <img class="img img-fluid" src="{% url 'api_get_recipe_file' recipe.id %}">
+                        <img class="img img-fluid" src="{% url 'api_get_recipe_file' recipe.id %}"
+                             alt="{% trans 'External recipe image' %}">
                     </div>
                 {% endif %}
 
