@@ -21,13 +21,17 @@
         {% csrf_token %}
         {{ form|crispy }}
         <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
-        <a href="{% delete_url form.instance|get_class form.instance.pk %}"
-           class="btn btn-danger"><i class="fas fa-trash-alt"></i> {% trans 'Delete' %}</a>
+        {% delete_url form.instance|get_class form.instance.pk as delete_view_url %}
+        {% if delete_view_url %}
+            <a href="{{ delete_view_url }}"
+               class="btn btn-danger"><i class="fas fa-trash-alt"></i> {% trans 'Delete' %}</a>
+        {% endif %}
         {% if view_url %}
             <a href="{{ view_url }}" class="btn btn-info"><i class="far fa-eye"></i> {% trans 'View' %}</a>
         {% endif %}
         {% if delete_external_url %}
-            <a href="{{ delete_external_url }}" class="btn btn-warning"><i class="fas fa-exclamation-triangle"></i> {% trans 'Delete original file' %}</a>
+            <a href="{{ delete_external_url }}" class="btn btn-warning"><i
+                    class="fas fa-exclamation-triangle"></i> {% trans 'Delete original file' %}</a>
         {% endif %}
     </form>
 
