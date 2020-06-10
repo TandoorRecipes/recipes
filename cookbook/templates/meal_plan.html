@@ -10,6 +10,7 @@
     <script src="{% static 'js/vue-resource.js' %}"></script>
     <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
 
+    <!-- TODO remove external loading -->
     <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
     <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
     <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
@@ -21,37 +22,38 @@
 {% endblock %}
 
 {% block content %}
-    <style>
-        .mealplan-cell .mealplan-add-button {
-            text-align: center;
-            display: block;
-        }
-
-        @media (hover: hover) {
-            .mealplan-cell .mealplan-add-button {
-                visibility: hidden;
-                float: right;
-                display: inline;
-            }
-
-            .mealplan-cell:hover .mealplan-add-button {
-                visibility: initial;
-            }
-        }
-
-    </style>
-
-    <h3>
-        {% trans 'Meal-Plan' %} <a href="{% url 'new_meal_plan' %}"><i class="fas fa-plus-circle"></i></a>
-    </h3>
-
     <div id="app">
+        <h3>
+            {% trans 'Meal-Plan' %}
+        </h3>
+
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" @click="changeWeek(-1)">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                    <input name="week" id="id_week" class="form-control" type="week" v-model="week"
+                           @change="getPlanEntries()">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" @click="changeWeek(1)">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-sm table-striped table-responsive-sm">
                     <thead class="thead-dark">
                     <tr>
-                        <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]</th>
+                        <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]<br/>[[formatDateDay(d)]].
+                        </th>
                     </tr>
                     </thead>
                     <tbody v-for="mp in meal_plan">
@@ -150,27 +152,30 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]<small
-                                class="text-muted"><br/>[[ plan_detail.meal_type_name ]] [[ formatLocalDate(plan_detail.date) ]]</small>
+                                class="text-muted"><br/>[[ plan_detail.meal_type_name ]] [[
+                            formatLocalDate(plan_detail.date) ]]</small>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <span v-if="plan_detail.recipe_name !== undefined">
+                        <template v-if="plan_detail.recipe_name !== undefined ">
                             <small class="text-muted">{% trans 'Recipe' %}</small><br/>
                             <a v-bind:href="planDetailRecipeUrl()" target="_blank">[[ plan_detail.recipe_name ]]</a>
-                        </span>
-                        <span v-if="plan_detail.note !== ''">
+                        </template>
+
+                        <template v-if="plan_detail.note !== ''">
                             <small class="text-muted">{% trans 'Note' %}</small><br/>
                             [[ plan_detail.note ]]
-                        </span>
-
+                        </template>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger"
                                 @click="deleteEntry(plan_detail)">{% trans 'Delete' %}</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
+                        <a class="btn btn-primary" v-bind:href="planDetailEditUrl()">{% trans 'Edit' %}</a>
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{% trans 'Close' %}</button>
                     </div>
                 </div>
             </div>
@@ -180,17 +185,17 @@
 
 
     <script type="application/javascript">
-        var week = moment().format('W')
         moment.locale('{{request.LANGUAGE_CODE}}');
 
-        var csrftoken = Cookies.get('csrftoken');
+        let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
-        var app = new Vue({
+        let app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                days: moment.weekdays(),
+                week: moment().format('YYYY-[W]WW'),
+                days: moment.weekdays(true),
                 plan_entries: [],
                 meal_types: [],
                 meal_plan: {},
@@ -209,7 +214,7 @@
             },
             methods: { // TODO stop chain loading and do async
                 getPlanEntries: function () {
-                    this.$http.get("{% url 'api:mealplan-list' %}?week=" + week).then((response) => {
+                    this.$http.get("{% url 'api:mealplan-list' %}?html_week=" + this.week).then((response) => {
                         this.plan_entries = response.data;
                         this.getPlanTypes();
                     }).catch((err) => {
@@ -227,14 +232,16 @@
                 },
                 buildGrid: function () {
                     console.log("BUILD GRID EXECUTED")
-                    for (t of this.meal_types) {
+                    this.meal_plan = {}
+
+                    for (let t of this.meal_types) {
                         this.$set(this.meal_plan, t.id, {
                             name: t.name,
                             meal_type: t.id,
                             days: {}
                         })
-                        for (d of this.days) {
-                            date = moment().day(d).week(week).format('YYYY-MM-DD')
+                        for (let d of this.days) {
+                            let date = moment(this.week).weekday(this.days.indexOf(d)).format('YYYY-MM-DD')
                             this.$set(this.meal_plan[t.id].days, date, {
                                 name: d,
                                 date: date,
@@ -242,7 +249,8 @@
                             })
                         }
                     }
-                    for (e of this.plan_entries) {
+                    for (let e of this.plan_entries) {
+                        console.log(e.date)
                         this.meal_plan[e.meal_type].days[e.date].items.push(e)
                     }
                     this.getRecipes();
@@ -269,14 +277,14 @@
                         plan_entry.date = date
                         plan_entry.meal_type = meal_type
 
-                        if (plan_entry.is_recipe || plan_entry.is_note) { // its not a meal plan object
+                        if (plan_entry.is_new) { // its not a meal plan object
                             console.log("undef")
                             plan_entry.created_by = {{ request.user.id }};
 
                             this.$http.post(`{% url 'api:mealplan-list' %}`, plan_entry).then((response) => {
                                 console.log("create success", response)
                                 let entry = response.data
-                                this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => item.id === undefined)
+                                this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => !item.is_new)
                                 this.meal_plan[entry.meal_type].days[entry.date].items.push(entry)
                             }).catch((err) => {
                                 console.log("create error", err);
@@ -293,7 +301,6 @@
                 deleteEntry: function (entry) {
                     console.log("delete click")
                     $('#exampleModal').modal('hide')
-                    this.plan_detail = {}
                     this.$http.delete(`{% url 'api:mealplan-list' %}${entry.id}/`, entry).then((response) => {
                         console.log("delete success", response)
                         this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => item !== entry)
@@ -307,7 +314,7 @@
                         id: Math.round(Math.random() * 1000) + 10000,
                         recipe: recipe.id,
                         recipe_name: recipe.name,
-                        is_recipe: true
+                        is_new: true
                     }
                 },
                 cloneNote: function () {
@@ -316,7 +323,7 @@
                         id: Math.round(Math.random() * 1000) + 10000,
                         title: this.new_note_title,
                         note: this.new_note_text,
-                        is_note: true,
+                        is_new: true,
                     }
 
                     if (new_entry.title === '') {
@@ -328,11 +335,20 @@
                     return new_entry
                 },
                 planDetailRecipeUrl: function () {
-                    let url = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
-                    return url
+                    return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
+                },
+                planDetailEditUrl: function () {
+                    return "{% url 'edit_meal_plan' 12345 %}".replace(/12345/, this.plan_detail.recipe);
                 },
                 formatLocalDate: function (date) {
                     return moment(date).format('LL')
+                },
+                formatDateDay: function (day) {
+                    return moment(this.week).weekday(this.days.indexOf(day)).format('D')
+                },
+                changeWeek: function (change) {
+                    this.week = moment(this.week).add(change, 'w').format('YYYY-[W]WW')
+                    this.getPlanEntries()
                 }
             }
         });
