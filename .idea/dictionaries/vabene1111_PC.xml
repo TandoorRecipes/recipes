@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="vabene1111-PC">
     <words>
+      <w>csrftoken</w>
       <w>gunicorn</w>
       <w>traefik</w>
     </words>

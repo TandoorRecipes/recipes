@@ -4,6 +4,7 @@ import re
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
@@ -22,11 +23,11 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # TODO user filter
-        queryset = MealPlan.objects.all()
-        week = self.request.query_params.get('week', None)
+        queryset = MealPlan.objects.filter(Q(created_by=self.request.user) or Q(shared=self.request.user)).all()
+        week = self.request.query_params.get('html_week', None)
         if week is not None:
-            queryset = queryset.filter(date__week=week)
+            y, w = week.replace('-W', ' ').split()
+            queryset = queryset.filter(date__week=w, date__year=y)
         return queryset
 
 
