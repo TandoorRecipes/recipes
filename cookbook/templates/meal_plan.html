@@ -36,7 +36,7 @@
                         </button>
                     </div>
                     <input name="week" id="id_week" class="form-control" type="week" v-model="week"
-                           @change="getPlanEntries()">
+                           @change="updatePlan()">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" @click="changeWeek(1)">
                             <i class="fas fa-arrow-right"></i>
@@ -240,7 +240,7 @@
                     })
                 },
                 buildGrid: function () {
-                    console.log("BUILD GRID EXECUTED", this.plan_entries)
+                    console.log("BUILD GRID EXECUTED")
                     this.meal_plan = {}
 
                     for (let t of this.meal_types) {
