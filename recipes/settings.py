@@ -23,6 +23,8 @@ DEBUG = bool(int(os.getenv('DEBUG', True)))
 
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
 
+REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 LOGIN_REDIRECT_URL = "index"
@@ -69,13 +71,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'recipes.middleware.CustomRemoteUser',
-    ]
+]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.RemoteUserBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+if REVERSE_PROXY_AUTH:
+    MIDDLEWARE.append('recipes.middleware.CustomRemoteUser')
+    AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
 ROOT_URLCONF = 'recipes.urls'
 
