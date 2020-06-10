@@ -3,7 +3,7 @@ import markdown as md
 from bleach_whitelist import markdown_tags, markdown_attrs
 from django import template
 from django.db.models import Avg
-from django.urls import reverse
+from django.urls import reverse, NoReverseMatch
 
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
@@ -24,7 +24,10 @@ def get_class(value):
 
 @register.simple_tag
 def delete_url(model, pk):
-    return reverse(f'delete_{get_model_name(model)}', args=[pk])
+    try:
+        return reverse(f'delete_{get_model_name(model)}', args=[pk])
+    except NoReverseMatch:
+        return None
 
 
 @register.filter()

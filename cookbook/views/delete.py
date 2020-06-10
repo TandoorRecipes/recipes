@@ -79,18 +79,6 @@ class KeywordDelete(GroupRequiredMixin, DeleteView):
         return context
 
 
-class IngredientDelete(GroupRequiredMixin, DeleteView):
-    groups_required = ['user']
-    template_name = "generic/delete_template.html"
-    model = Ingredient
-    success_url = reverse_lazy('list_ingredient')
-
-    def get_context_data(self, **kwargs):
-        context = super(IngredientDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Ingredient")
-        return context
-
-
 class StorageDelete(GroupRequiredMixin, DeleteView):
     groups_required = ['admin']
     template_name = "generic/delete_template.html"
