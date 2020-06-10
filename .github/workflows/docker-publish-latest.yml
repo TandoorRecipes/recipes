@@ -19,7 +19,7 @@ jobs:
           contents: |
             VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
             BUILD_REF = '${{ github.sha }}'
-           write-mode: overwrite
+          write-mode: overwrite
       - name: Build and publish image
         uses: ilteoood/docker_buildx@master
         with:
