@@ -62,14 +62,35 @@
                         <td v-for="d in mp.days">
                             <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
                                        @change="dragChanged(d.date, mp.meal_type, $event)"
-                                       :empty-insert-threshold="10">
-                                <div class="list-group-item" v-for="(element, index) in d.items" :key="element.id">
-                                    <div class="row">
+                                       :empty-insert-threshold="10" :options="{handle:'.handle'}">
+                                <div class="" v-for="(element, index) in d.items" :key="element.id">
+                                    <div class="d-block d-md-none">
+
+                                        <div class="col-">
+
+                                            <i class="fas fa-arrows-alt handle input-group-text" style="width: 100%"></i>
+                                        </div>
+                                        <div class="list-group-item">
+
+                                            <a href="#" v-if="element.title !== ''"
+                                               @click="plan_detail = element" data-toggle="modal"
+                                               data-target="#exampleModal">[[element.title]]</a>
+                                            <a href="#" v-else-if="element.recipe_name !== ''"
+                                               @click="plan_detail = element"
+                                               data-toggle="modal"
+                                               data-target="#exampleModal">[[element.recipe_name]]</a>
+                                            <a href="#" v-else-if="element.name !== ''"
+                                               @click="plan_detail = element" data-toggle="modal"
+                                               data-target="#exampleModal">[[element.name]]</a>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item handle d-md-block d-none">
                                         <div class="col-md-12">
                                             <a href="#" v-if="element.title !== ''"
                                                @click="plan_detail = element" data-toggle="modal"
                                                data-target="#exampleModal">[[element.title]]</a>
-                                            <a href="#" v-else-if="element.recipe_name !== ''" @click="plan_detail = element"
+                                            <a href="#" v-else-if="element.recipe_name !== ''"
+                                               @click="plan_detail = element"
                                                data-toggle="modal"
                                                data-target="#exampleModal">[[element.recipe_name]]</a>
                                             <a href="#" v-else-if="element.name !== ''"
