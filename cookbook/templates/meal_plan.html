@@ -68,34 +68,20 @@
 
                                         <div class="col-">
 
-                                            <i class="fas fa-arrows-alt handle input-group-text" style="width: 100%"></i>
+                                            <i class="fas fa-arrows-alt handle input-group-text"
+                                               style="width: 100%"></i>
                                         </div>
                                         <div class="list-group-item">
 
-                                            <a href="#" v-if="element.title !== ''"
-                                               @click="plan_detail = element" data-toggle="modal"
-                                               data-target="#exampleModal">[[element.title]]</a>
-                                            <a href="#" v-else-if="element.recipe_name !== ''"
-                                               @click="plan_detail = element"
-                                               data-toggle="modal"
-                                               data-target="#exampleModal">[[element.recipe_name]]</a>
-                                            <a href="#" v-else-if="element.name !== ''"
-                                               @click="plan_detail = element" data-toggle="modal"
-                                               data-target="#exampleModal">[[element.name]]</a>
+                                            <a href="#" @click="plan_detail = element" data-toggle="modal"
+                                               data-target="#exampleModal">[[ planElementName(element)]]</a>
+
                                         </div>
                                     </div>
                                     <div class="list-group-item handle d-md-block d-none">
                                         <div class="col-md-12">
-                                            <a href="#" v-if="element.title !== ''"
-                                               @click="plan_detail = element" data-toggle="modal"
-                                               data-target="#exampleModal">[[element.title]]</a>
-                                            <a href="#" v-else-if="element.recipe_name !== ''"
-                                               @click="plan_detail = element"
-                                               data-toggle="modal"
-                                               data-target="#exampleModal">[[element.recipe_name]]</a>
-                                            <a href="#" v-else-if="element.name !== ''"
-                                               @click="plan_detail = element" data-toggle="modal"
-                                               data-target="#exampleModal">[[element.name]]</a>
+                                            <a href="#" @click="plan_detail = element" data-toggle="modal"
+                                               data-target="#exampleModal">[[ planElementName(element)]]</a>
                                         </div>
                                     </div>
                                 </div>
@@ -409,6 +395,15 @@
                     this.new_note_title = ''
                     this.new_note_text = ''
                     return new_entry
+                },
+                planElementName: function (element) {
+                    if (element.title) {
+                        return element.title
+                    } else if (element.recipe_name) {
+                        return element.recipe_name
+                    } else {
+                        return element.name
+                    }
                 },
                 planDetailRecipeUrl: function () {
                     return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
