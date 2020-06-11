@@ -214,6 +214,7 @@ class RecipeBookEntry(models.Model):
 class MealType(models.Model):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
