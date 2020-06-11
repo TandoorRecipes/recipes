@@ -214,6 +214,7 @@ def user_settings(request):
                 up.show_recent = form.cleaned_data['show_recent']
                 up.search_style = form.cleaned_data['search_style']
                 up.plan_share.set(form.cleaned_data['plan_share'])
+                up.ingredient_decimals = form.cleaned_data['ingredient_decimals']
                 up.save()
 
         if 'user_name_form' in request.POST:

@@ -63,6 +63,7 @@ class UserPreference(models.Model):
     search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
     show_recent = models.BooleanField(default=True)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
+    ingredient_decimals = models.IntegerField(default=2)
 
     def __str__(self):
         return str(self.user)
@@ -163,7 +164,7 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
-    amount = models.DecimalField(default=0, decimal_places=2, max_digits=16)
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):

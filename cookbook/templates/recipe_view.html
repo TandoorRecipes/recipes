@@ -327,6 +327,8 @@
 
     <script type="text/javascript">
 
+        reloadIngredients()
+
         $(function () {
             $('[data-toggle="popover"]').popover()
         });
@@ -335,20 +337,25 @@
             trigger: 'focus'
         });
 
-        function roundToTwo(num) {
-            return +(Math.round(num + "e+2") + "e-2");
+        function roundDecimals(num) {
+            return +(Math.round(num + "e+{{ request.user.userpreference.ingredient_decimals }}") + "e-{{ request.user.userpreference.ingredient_decimals }}");
         }
 
         function reloadIngredients() {
-            factor = Number($('#in_factor').val());
-            ingredients = {
+            let factor = Number($('#in_factor').val());
+            let ingredients = {
             {% for i in ingredients %}
                 {{ i.pk }}: {{ i.amount|unlocalize }},
             {% endfor %}
         }
 
-            for (var key in ingredients) {
-                $('#ing_' + key).html(roundToTwo(ingredients[key] * factor))
+            for (let key in ingredients) {
+                let val = ''
+                if (Math.abs(ingredients[key] * factor - roundDecimals(ingredients[key] * factor)) > 0) {
+                    val += '~'
+                }
+
+                $('#ing_' + key).html(val + roundDecimals(ingredients[key] * factor))
             }
         }
 
