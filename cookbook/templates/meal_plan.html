@@ -466,10 +466,10 @@
                         plan_entry.date = date
                         plan_entry.meal_type = meal_type.id
                         plan_entry.meal_type_name = meal_type.name
-                        plan_entry.shared = this.default_shared_users
 
                         if (plan_entry.is_new) { // its not a meal plan object
                             plan_entry.created_by = {{ request.user.id }};
+                            plan_entry.shared = this.default_shared_users
 
                             this.$http.post(`{% url 'api:mealplan-list' %}`, plan_entry).then((response) => {
                                 let entry = response.data
