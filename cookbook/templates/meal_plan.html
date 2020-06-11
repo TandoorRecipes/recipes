@@ -28,14 +28,14 @@
             <div class="col-md-4 offset-md-4">
                 <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary" @click="changeWeek(-1)">
+                        <button class="btn btn-outline-secondary shadow-none" @click="changeWeek(-1)">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                     </div>
                     <input name="week" id="id_week" class="form-control" type="week" v-model="week"
                            @change="updatePlan()">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" @click="changeWeek(1)">
+                        <button class="btn btn-outline-secondary shadow-none" @click="changeWeek(1)">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -49,7 +49,7 @@
                     <thead class="thead-dark">
                     <tr>
                         <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]<br/>[[formatDateDay(d)]].
-                            <button class="btn btn-sm btn-outline-secondary" @click="addDayToShopping(d)"><i
+                            <button class="btn btn-sm btn-outline-secondary shadow-none" @click="addDayToShopping(d)"><i
                                     class="fas fa-cart-plus fa-sm"></i></button>
                         </th>
                     </tr>
@@ -160,7 +160,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="margin-top: 8px">
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-shopping-cart"></i> {% trans 'Plan' %}
@@ -174,6 +174,8 @@
             </div>
         </div>
 
+        <br/>
+        <br/>
 
         <div class="modal fade" id="id_plan_detail_modal" tabindex="-1" role="dialog"
              aria-hidden="true">
@@ -314,8 +316,9 @@
 
                 this.default_shared_users = [{% for u in request.user.userpreference.plan_share.all %}
                     {{ u.pk }},
-                {% endfor %} {{ request.user.pk }}]
-
+                {% endfor %}]
+            
+                this.$set(this.user_names,  {{ request.user.pk }}, '{{ request.user.get_user_name }}')
                 this.user_id_update = Array.from(this.default_shared_users)
 
                 this.updatePlan();
