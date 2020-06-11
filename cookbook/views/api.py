@@ -43,7 +43,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = MealPlan.objects.filter(Q(created_by=self.request.user) or Q(shared=self.request.user)).all()
+        queryset = MealPlan.objects.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).distinct().all()
         week = self.request.query_params.get('html_week', None)
         if week is not None:
             y, w = week.replace('-W', ' ').split()
