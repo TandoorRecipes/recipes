@@ -52,12 +52,12 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
 
 class MealTypeViewSet(viewsets.ModelViewSet):
-    queryset = MealType.objects.all()
+    queryset = MealType.objects.order_by('order').all()
     serializer_class = MealTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = MealType.objects.filter(created_by=self.request.user).all()
+        queryset = MealType.objects.order_by('order', 'id').filter(created_by=self.request.user).all()
         return queryset
 
 
