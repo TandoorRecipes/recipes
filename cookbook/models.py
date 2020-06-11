@@ -238,6 +238,9 @@ class MealPlan(models.Model):
     def get_meal_name(self):
         return self.meal_type.name
 
+    def __str__(self):
+        return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
+
 
 class CookLog(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
