@@ -3,6 +3,7 @@
     <words>
       <w>csrftoken</w>
       <w>gunicorn</w>
+      <w>ical</w>
       <w>traefik</w>
     </words>
   </dictionary>
