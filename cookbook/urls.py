@@ -53,6 +53,7 @@ urlpatterns = [
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
+    path('api/plan-ical/<slug:html_week>/', api.get_plan_ical, name='api_get_plan_ical'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),

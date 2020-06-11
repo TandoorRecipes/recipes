@@ -175,7 +175,8 @@
                         <a href="#" data-toggle="modal"
                            data-target="#id_plan_types_modal">{% trans 'Edit plan types' %}</a> <br/>
                         <a href="#" data-toggle="modal"
-                           data-target="#id_plan_help_modal">{% trans 'Show help' %}</a>
+                           data-target="#id_plan_help_modal">{% trans 'Show help' %}</a><br/>
+                        <a v-bind:href="getIcalUrl()" >{% trans 'Week iCal export' %}</a>
                     </div>
                 </div>
             </div>
@@ -621,6 +622,10 @@
                     }
                     return url
                 },
+                getIcalUrl: function () {
+                    return "{% url 'api_get_plan_ical' 12345 %}".replace(/12345/, this.week);
+                },
+
                 addDayToShopping: function (day) {
                     let date = moment(this.week).weekday(this.days.indexOf(day)).format('YYYY-MM-DD')
 

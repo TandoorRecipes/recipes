@@ -1,3 +1,4 @@
+import io
 import json
 import re
 
@@ -9,6 +10,7 @@ from django.db.models import Q
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+from icalendar import Calendar, Event
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import APIException
 
@@ -164,3 +166,27 @@ def log_cooking(request, recipe_id):
         return {'msg': 'updated successfully'}
 
     return {'error': 'recipe does not exist'}
+
+
+@group_required('user')
+def get_plan_ical(request, html_week):
+    queryset = MealPlan.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
+
+    y, w = html_week.replace('-W', ' ').split()
+    queryset = queryset.filter(date__week=w, date__year=y)
+
+    cal = Calendar()
+
+    for p in queryset:
+        event = Event()
+        event['uid'] = p.id
+        event.add('dtstart', p.date)
+        event.add('dtend', p.date)
+        event['summary'] = f'{p.meal_type.name}: {p.get_label()}'
+        event['description'] = p.note
+        cal.add_component(event)
+
+    response = FileResponse(io.BytesIO(cal.to_ical()))
+    response["Content-Disposition"] = f'attachment; filename=meal_plan_{html_week}.ics'
+
+    return response

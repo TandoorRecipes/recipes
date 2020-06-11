@@ -20,3 +20,4 @@ simplejson==3.17.0
 six==1.15.0
 webdavclient3==3.14.4
 whitenoise==5.1.0
+icalendar==4.0.6
