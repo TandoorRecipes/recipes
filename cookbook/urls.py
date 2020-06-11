@@ -12,6 +12,7 @@ router.register(r'recipe', api.RecipeViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
+router.register(r'user-name', api.UserNameViewSet, basename='username')
 
 urlpatterns = [
     path('', views.index, name='index'),
