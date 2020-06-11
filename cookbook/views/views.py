@@ -138,30 +138,7 @@ def get_days_from_week(start, end):
 
 @group_required('user')
 def meal_plan(request):
-    js_week = datetime.now().strftime("%Y-W%V")
-    if request.method == "POST":
-        js_week = request.POST['week']
-
-    year, week = js_week.split('-')
-    first_day, last_day = get_start_end_from_week(year, week.replace('W', ''))
-
-    surrounding_weeks = {'next': (last_day + timedelta(3)).strftime("%Y-W%V"), 'prev': (first_day - timedelta(3)).strftime("%Y-W%V")}
-
-    days = get_days_from_week(first_day, last_day)
-    days_dict = {}
-    for d in days:
-        days_dict[d] = []
-
-    plan = {}
-    for t in MealType.objects.all():
-        plan[t.name] = {'type_name': t.name, 'days': copy.deepcopy(days_dict)}
-
-    for d in days:
-        plan_day = MealPlan.objects.filter(date=d).filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
-        for p in plan_day:
-            plan[str(p.meal_type)]['days'][d].append(p)
-
-    return render(request, 'meal_plan.html', {'js_week': js_week, 'plan': plan, 'days': days, 'surrounding_weeks': surrounding_weeks})
+    return render(request, 'meal_plan.html', {'DEBUG': settings.DEBUG})
 
 
 @group_required('user')
