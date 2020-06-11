@@ -105,7 +105,7 @@ admin.site.register(MealPlan, MealPlanAdmin)
 
 
 class MealTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order')
+    list_display = ('name', 'created_by', 'order')
 
 
 admin.site.register(MealType, MealTypeAdmin)
