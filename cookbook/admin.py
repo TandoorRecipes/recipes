@@ -109,3 +109,17 @@ class MealTypeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MealType, MealTypeAdmin)
+
+
+class ViewLogAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'created_by', 'created_at')
+
+
+admin.site.register(ViewLog, ViewLogAdmin)
+
+
+class CookLogAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
+
+
+admin.site.register(CookLog, CookLogAdmin)
