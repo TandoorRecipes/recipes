@@ -1,20 +1,41 @@
+import json
 import os
 import re
 
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, serializers
+from rest_framework.exceptions import ValidationError, APIException
 
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer
+
+
+class UserNameViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserNameSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', ]
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        try:
+            filter_list = self.request.query_params.get('filter_list', None)
+            if filter_list is not None:
+                queryset = queryset.filter(pk__in=json.loads(filter_list))
+        except ValueError as e:
+            raise APIException(_('Parameter filter_list incorrectly formatted'))
+
+        return queryset
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):

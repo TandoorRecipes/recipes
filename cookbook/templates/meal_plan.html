@@ -22,6 +22,7 @@
 {% endblock %}
 
 {% block content %}
+
     <div id="app">
         <h3>
             {% trans 'Meal-Plan' %}
@@ -151,7 +152,10 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">[[ plan_detail.title ]] [[ plan_detail.recipe_name ]]<small
+                        <h5 class="modal-title">
+                            <template v-if="plan_detail.title !==''">[[ plan_detail.title ]]</template>
+                            <template v-else>[[ plan_detail.recipe_name ]]</template>
+                            <small
                                 class="text-muted"><br/>[[ plan_detail.meal_type_name ]] [[
                             formatLocalDate(plan_detail.date) ]]</small>
                         </h5>
@@ -163,11 +167,27 @@
                         <template v-if="plan_detail.recipe_name !== undefined ">
                             <small class="text-muted">{% trans 'Recipe' %}</small><br/>
                             <a v-bind:href="planDetailRecipeUrl()" target="_blank">[[ plan_detail.recipe_name ]]</a>
+                            <br/>
                         </template>
 
                         <template v-if="plan_detail.note !== ''">
                             <small class="text-muted">{% trans 'Note' %}</small><br/>
                             [[ plan_detail.note ]]
+                            <br/>
+                        </template>
+
+                        <br/>
+                        <br/>
+                        <template v-if="plan_detail.created_by !== undefined ">
+                            <small class="text-muted">{% trans 'Created by' %}</small><br/>
+                            [[ user_names[plan_detail.created_by] ]]
+                            <br/>
+                        </template>
+
+                        <template v-if="plan_detail.shared.length > 0">
+                            <small class="text-muted">{% trans 'Shared with' %}</small><br/>
+                            <span>[[ planDetailUserList() ]]</span>
+                            <br/>
                         </template>
                     </div>
                     <div class="modal-footer">
@@ -199,7 +219,7 @@
                 plan_entries: [],
                 meal_types: [],
                 meal_plan: {},
-                plan_detail: {},
+                plan_detail: {shared:[]},
                 recipes: [],
                 recipe_query: '',
                 pseudo_note_list: [
@@ -207,9 +227,19 @@
                 ],
                 new_note_title: '',
                 new_note_text: '',
+                default_shared_users: [],
+                user_id_update: [],
+                user_names: {},
             },
             mounted: function () {
                 console.log("MOUNTED")
+
+                this.default_shared_users = [{% for u in request.user.userpreference.plan_share.all %}
+                    {{ u.pk }},
+                {% endfor %}]
+
+                this.user_id_update = Array.from(this.default_shared_users)
+
                 this.updatePlan();
                 this.getRecipes();
             },
@@ -260,7 +290,15 @@
                     }
                     for (let e of this.plan_entries) {
                         this.meal_plan[e.meal_type].days[e.date].items.push(e)
+
+                        for (let u of e.shared) {
+                            if (! this.user_id_update.includes(parseInt(u))){
+                                this.user_id_update.push(parseInt(u))
+                            }
+                        }
                     }
+
+                    this.updateUserNames()
                 },
                 getRecipes: function () {
                     let url = "{% url 'api:recipe-list' %}?limit=5"
@@ -274,6 +312,21 @@
                         console.log(err);
                     })
                 },
+                updateUserNames: function(){
+                    console.log("UPDATE USER NAMES EXECUTED")
+                    return this.$http.get("{% url 'api:username-list' %}?filter_list=["+this.user_id_update+']').then((response) => {
+                        for (let u of response.data) {
+                            let name = u.username
+                            if (`${u.first_name} ${u.last_name}` !== ' ') {
+                                name = `${u.first_name} ${u.last_name}`
+                            }
+                            this.$set(this.user_names, u.id, name);
+                        }
+
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                },
                 dragChanged: function (date, meal_type, evt) {
                     console.log("log")
                     if (evt.added !== undefined) {
@@ -283,6 +336,7 @@
 
                         plan_entry.date = date
                         plan_entry.meal_type = meal_type
+                        plan_entry.shared = this.default_shared_users
 
                         if (plan_entry.is_new) { // its not a meal plan object
                             console.log("undef")
@@ -345,7 +399,14 @@
                     return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
                 },
                 planDetailEditUrl: function () {
-                    return "{% url 'edit_meal_plan' 12345 %}".replace(/12345/, this.plan_detail.recipe);
+                    return "{% url 'edit_meal_plan' 12345 %}".replace(/12345/, this.plan_detail.id);
+                },
+                planDetailUserList: function () {
+                    let users = []
+                    for (let u of this.plan_detail.shared) {
+                        users.push(this.user_names[u])
+                    }
+                    return users.join(', ')
                 },
                 formatLocalDate: function (date) {
                     return moment(date).format('LL')

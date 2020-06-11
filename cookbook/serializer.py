@@ -1,6 +1,13 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from cookbook.models import MealPlan, MealType, Recipe, ViewLog
+
+
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name')
 
 
 class MealPlanSerializer(serializers.ModelSerializer):
@@ -9,7 +16,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MealPlan
-        fields = ('id', 'title', 'recipe', 'note', 'date', 'meal_type', 'created_by', 'recipe_name', 'meal_type_name')
+        fields = ('id', 'title', 'recipe', 'note', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
 
 
 class MealTypeSerializer(serializers.ModelSerializer):
