@@ -388,7 +388,7 @@
                 getPlanTypes: function () {
                     return this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
                         this.meal_types = response.data;
-                        this.meal_types_edit = Array.from(this.meal_types)
+                        this.meal_types_edit = jQuery.extend(true, [], response.data);
                         for (let mte of this.meal_types_edit) {
                             this.$set(mte, 'delete', false)
                         }
