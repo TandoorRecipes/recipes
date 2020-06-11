@@ -359,8 +359,6 @@
                 shopping_list: [],
             },
             mounted: function () {
-                console.log("MOUNTED")
-
                 this.default_shared_users = [{% for u in request.user.userpreference.plan_share.all %}
                     {{ u.pk }},
                 {% endfor %}]
@@ -371,7 +369,7 @@
                 this.updatePlan();
                 this.getRecipes();
             },
-            methods: { // TODO stop chain loading and do async
+            methods: {
                 updatePlan: function () {
                     let planEntryPromise = this.getPlanEntries();
                     let planTypePromise = this.getPlanTypes();
@@ -381,16 +379,13 @@
                     })
                 },
                 getPlanEntries: function () {
-                    console.log("GET PLAN EXECUTED")
                     return this.$http.get("{% url 'api:mealplan-list' %}?html_week=" + this.week).then((response) => {
                         this.plan_entries = response.data;
                     }).catch((err) => {
-                        this.loading = false;
-                        console.log(err);
+                        console.log("getPlanEntries error: ", err);
                     })
                 },
                 getPlanTypes: function () {
-                    console.log("GET TYPE EXECUTED")
                     return this.$http.get("{% url 'api:mealtype-list' %}").then((response) => {
                         this.meal_types = response.data;
                         this.meal_types_edit = Array.from(this.meal_types)
@@ -398,11 +393,10 @@
                             this.$set(mte, 'delete', false)
                         }
                     }).catch((err) => {
-                        console.log(err);
+                        console.log("getPlanTypes error: ",err);
                     })
                 },
                 buildGrid: function () {
-                    console.log("BUILD GRID EXECUTED")
                     this.meal_plan = {}
 
                     for (let e of this.plan_entries) {
@@ -448,11 +442,10 @@
                     this.$http.get(url).then((response) => {
                         this.recipes = response.data;
                     }).catch((err) => {
-                        console.log(err);
+                        console.log("getRecipes error: ", err);
                     })
                 },
                 updateUserNames: function () {
-                    console.log("UPDATE USER NAMES EXECUTED")
                     return this.$http.get("{% url 'api:username-list' %}?filter_list=[" + this.user_id_update + ']').then((response) => {
                         for (let u of response.data) {
                             let name = u.username
@@ -463,14 +456,11 @@
                         }
 
                     }).catch((err) => {
-                        console.log(err);
+                        console.log("updateUserNames error: ", err);
                     })
                 },
                 dragChanged: function (date, meal_type, evt) {
-                    console.log("log")
                     if (evt.added !== undefined) {
-                        console.log("added")
-
                         let plan_entry = evt.added.element
 
                         plan_entry.date = date
@@ -479,64 +469,53 @@
                         plan_entry.shared = this.default_shared_users
 
                         if (plan_entry.is_new) { // its not a meal plan object
-                            console.log("undef")
                             plan_entry.created_by = {{ request.user.id }};
 
                             this.$http.post(`{% url 'api:mealplan-list' %}`, plan_entry).then((response) => {
-                                console.log("create success", response)
                                 let entry = response.data
                                 this.meal_plan[entry.meal_type_name].days[entry.date].items = this.meal_plan[entry.meal_type_name].days[entry.date].items.filter(item => !item.is_new)
                                 this.meal_plan[entry.meal_type_name].days[entry.date].items.push(entry)
                             }).catch((err) => {
-                                console.log("create error", err);
+                                console.log("dragChanged create error", err);
                             })
                         } else {
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
-                                console.log("Update success", response)
                             }).catch((err) => {
-                                console.log("update error", err);
+                                console.log("dragChanged update error", err);
                             })
                         }
                     }
                 },
                 deleteEntry: function (entry) {
-                    console.log("delete click")
                     $('#id_plan_detail_modal').modal('hide')
                     this.$http.delete(`{% url 'api:mealplan-list' %}${entry.id}/`, entry).then((response) => {
-                        console.log("delete success", response)
                         this.meal_plan[entry.meal_type_name].days[entry.date].items = this.meal_plan[entry.meal_type_name].days[entry.date].items.filter(item => item !== entry)
                     }).catch((err) => {
-                        console.log("delete error", err);
+                        console.log("deleteEntry error: ", err);
                     })
                 },
                 updatePlanTypes: function () {
-                    console.log("UPDATING TYPES")
                     let promise_list = []
                     let i = 0
                     for (let x of this.meal_types_edit) {
                         x.order = i
                         i++
                         if (x.id === undefined && !x.delete) {
-                            console.log("creating new ", x)
                             x.created_by = {{ request.user.id }}
                                 promise_list.push(this.$http.post("{% url 'api:mealtype-list' %}", x).then((response) => {
-                                    console.log("successfully created plan type");
                                 }).catch((err) => {
-                                    console.log(err);
+                                    console.log("updatePlanTypes create error: ",err);
                                 }))
                         } else if (x.delete) {
-                            console.log("deleting ", x)
                             promise_list.push(this.$http.delete(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
-                                console.log("successfully deleted plan type");
                             }).catch((err) => {
-                                console.log(err);
+                                console.log("updatePlanTypes delete error: ",err);
                             }))
                         } else {
-                            console.log("updating ", x)
                             promise_list.push(this.$http.put(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
-                                console.log("successfully updated plan type");
+
                             }).catch((err) => {
-                                console.log(err);
+                                console.log("updatePlanTypes update error: ",err);
                             }))
                         }
                     }
@@ -551,7 +530,6 @@
                     }
                 },
                 cloneRecipe: function (recipe) {
-                    console.log("clone recipe")
                     return {
                         id: Math.round(Math.random() * 1000) + 10000,
                         recipe: recipe.id,
@@ -562,7 +540,6 @@
                     }
                 },
                 cloneNote: function () {
-                    console.log("clone note")
                     let new_entry = {
                         id: Math.round(Math.random() * 1000) + 10000,
                         title: this.new_note_title,
@@ -626,15 +603,12 @@
                 getIcalUrl: function () {
                     return "{% url 'api_get_plan_ical' 12345 %}".replace(/12345/, this.week);
                 },
-
                 addDayToShopping: function (day) {
                     let date = moment(this.week).weekday(this.days.indexOf(day)).format('YYYY-MM-DD')
 
                     for (let t of this.meal_types) {
-                        console.log(t.id, date)
                         for (let i of this.meal_plan[t.name].days[date].items) {
                             if (!this.shopping_list.includes(i)) {
-                                console.log("adding ", i)
                                 this.shopping_list.push(i)
                             }
                         }
