@@ -1,5 +1,4 @@
 import json
-import os
 import re
 
 from annoying.decorators import ajax_request
@@ -10,8 +9,8 @@ from django.db.models import Q
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
-from rest_framework import viewsets, permissions, serializers
-from rest_framework.exceptions import ValidationError, APIException
+from rest_framework import viewsets, permissions
+from rest_framework.exceptions import APIException
 
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog
@@ -57,6 +56,10 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     serializer_class = MealTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        queryset = MealType.objects.filter(created_by=self.request.user).all()
+        return queryset
+
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
@@ -81,10 +84,11 @@ class ViewLogViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # TODO user + unique filter
-        queryset = ViewLog.objects.all()[:5]
+        queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
         return queryset
 
+
+# -------------- non django rest api views --------------------
 
 def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:

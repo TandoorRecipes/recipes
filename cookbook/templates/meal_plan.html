@@ -49,6 +49,8 @@
                     <thead class="thead-dark">
                     <tr>
                         <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]<br/>[[formatDateDay(d)]].
+                            <button class="btn btn-sm btn-outline-secondary" @click="addDayToShopping(d)"><i
+                                    class="fas fa-cart-plus fa-sm"></i></button>
                         </th>
                     </tr>
                     </thead>
@@ -62,7 +64,7 @@
                         <td v-for="d in mp.days">
                             <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
                                        @change="dragChanged(d.date, mp.meal_type, $event)"
-                                       :empty-insert-threshold="10" :options="{handle:'.handle'}">
+                                       :empty-insert-threshold="10" handle=".handle">
                                 <div class="" v-for="(element, index) in d.items" :key="element.id">
                                     <div class="d-block d-md-none">
 
@@ -93,7 +95,6 @@
             </div>
         </div>
 
-        <hr/>
         <div class="card">
             <div class="card-header">
                 <i class="fas fa-calendar-plus"></i> {% trans 'New Entry' %}
@@ -112,7 +113,7 @@
                         <draggable class="list-group" :list="recipes"
                                    :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneRecipe">
                             <div class="list-group-item" v-for="(element, index) in recipes" :key="element.id">
-                                <i class="fas fa-arrows-alt"></i> <a href="#">[[element.name]]</a>
+                                <i class="fas fa-arrows-alt"></i> [[element.name]]
                             </div>
                         </draggable>
                     </div>
@@ -135,6 +136,36 @@
                                 </div>
                             </draggable>
                         </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-shopping-cart"></i> {% trans 'Shopping List' %}
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <template v-if="shopping_list.length < 1">{% trans 'Shopping List currently empty' %}</template>
+                        <template v-else>
+                            <a v-bind:href="getShoppingUrl()" class="btn btn-success"
+                               target="_blank">{% trans 'Open Shopping List' %}</a>
+                            <br/>
+                            <br/>
+                           {% trans 'Recipes' %}
+                            <ul class="list-group" style="margin-top: 8px">
+                                <li class="list-group-item" v-for="item in shopping_list"> [[ item.recipe_name ]]</li>
+                            </ul>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card-body">
 
                     </div>
                 </div>
@@ -192,6 +223,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger"
                                 @click="deleteEntry(plan_detail)">{% trans 'Delete' %}</button>
+                        <button type="button" class="btn btn-success"
+                                v-if="!shopping_list.includes(plan_detail) && plan_detail.recipe_name !== undefined"
+                                @click="shopping_list.push(plan_detail)">{% trans 'Add to Shopping' %}</button>
                         <a class="btn btn-primary" v-bind:href="planDetailEditUrl()">{% trans 'Edit' %}</a>
                         <button type="button" class="btn btn-secondary"
                                 data-dismiss="modal">{% trans 'Close' %}</button>
@@ -229,6 +263,8 @@
                 default_shared_users: [],
                 user_id_update: [],
                 user_names: {},
+                shopping: false,
+                shopping_list: [],
             },
             mounted: function () {
                 console.log("MOUNTED")
@@ -427,6 +463,32 @@
                 changeWeek: function (change) {
                     this.week = moment(this.week).add(change, 'w').format('YYYY-[W]WW')
                     this.updatePlan();
+                },
+                getShoppingUrl: function () {
+                    let url = "{% url 'view_shopping' %}"
+                    let first = true
+                    for (let se of this.shopping_list) {
+                        if (first) {
+                            url += `?r=${se.recipe}`
+                            first = false
+                        } else {
+                            url += `&r=${se.recipe}`
+                        }
+                    }
+                    return url
+                },
+                addDayToShopping: function (day) {
+                    let date = moment(this.week).weekday(this.days.indexOf(day)).format('YYYY-MM-DD')
+
+                    for (let t of this.meal_types) {
+                        console.log(t.id, date)
+                        for (let i of this.meal_plan[t.id].days[date].items) {
+                            if (!this.shopping_list.includes(i)) {
+                                console.log("adding ", i)
+                                this.shopping_list.push(i)
+                            }
+                        }
+                    }
                 }
             }
         });
