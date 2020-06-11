@@ -267,7 +267,6 @@ class MealPlanForm(forms.ModelForm):
 
         help_texts = {
             'shared': _('You can list default users to share recipes with in the settings.'),
-            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
         }
 
         widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}

@@ -55,15 +55,19 @@
                     </tr>
                     </thead>
                     <tbody v-for="t in meal_types">
-                    <tr v-if="meal_plan[t.id] !== undefined">
+                    <tr v-if="meal_plan[t.name] !== undefined">
                         <td colspan="7" style="text-align: center">
-                            [[ meal_plan[t.id].name]]
+                            [[ meal_plan[t.name].name]]
+                            <template
+                                    v-if="t.created_by !== {{ request.user.pk }} && user_names[t.created_by] !== undefined">
+                                ([[ user_names[t.created_by] ]])
+                            </template>
                         </td>
                     </tr>
-                    <tr v-if="meal_plan[t.id] !== undefined">
-                        <td v-for="d in  meal_plan[t.id].days">
+                    <tr v-if="meal_plan[t.name] !== undefined">
+                        <td v-for="d in  meal_plan[t.name].days">
                             <draggable class="list-group" :list="d.items" group="plan" style="min-height: 40px"
-                                       @change="dragChanged(d.date,  meal_plan[t.id].meal_type, $event)"
+                                       @change="dragChanged(d.date, t, $event)"
                                        :empty-insert-threshold="10" handle=".handle">
                                 <div class="" v-for="(element, index) in d.items" :key="element.id">
                                     <div class="d-block d-md-none">
@@ -93,7 +97,9 @@
 
         <div class="card">
             <div class="card-header">
-                <i class="fas fa-calendar-plus"></i> {% trans 'New Entry' %}
+                <i class="fas fa-calendar-plus"></i> {% trans 'New Entry' %} <a href="#" data-toggle="modal"
+                                                                                data-target="#id_plan_help_modal"><i
+                    class="far fa-question-circle"></i></a>
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -115,7 +121,6 @@
                 </div>
                 <div class="col-md-6">
                     <div>
-
                         <div class="card-body">
                             <input type="text" class="form-control" v-model="new_note_title"
                                    placeholder="{% trans 'Title' %}" style="margin-bottom: 8px">
@@ -168,7 +173,9 @@
 
                     <div class="card-body">
                         <a href="#" data-toggle="modal"
-                           data-target="#id_plan_types_modal">{% trans 'Edit plan types' %}</a>
+                           data-target="#id_plan_types_modal">{% trans 'Edit plan types' %}</a> <br/>
+                        <a href="#" data-toggle="modal"
+                           data-target="#id_plan_help_modal">{% trans 'Show help' %}</a>
                     </div>
                 </div>
             </div>
@@ -278,8 +285,43 @@
             </div>
         </div>
 
-    </div>
+        <div class="modal fade" id="id_plan_help_modal" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{% trans 'Meal Plan Help' %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% blocktrans %}
+                            <p>The meal plan module allows planning of meals both with recipes or just notes.</p>
+                            <p>Simply select a recipe from the list of recently viewed recipes or search the one you
+                                want and drag it to the desired plan position. You can also add a note and a title and
+                                then drag the recipe to create a plan entry with a custom title and note. Creating only
+                                Notes is possible by dragging the create note box into the plan.</p>
+                            <p>Since a common use case is to plan meals together you can define
+                                users you want to share your plan with in the settings.
+                            </p>
+                            <p>You can also edit the types of meals you want to plan. If you share your plan with
+                                someone with
+                                different meals, their meal types will appear in your list as well. To prevent
+                                duplicates (e.g. Other and Misc.)
+                                name your meal types the same as the users you share your meals with and they will be
+                                merged.</p>
+                        {% endblocktrans %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{% trans 'Close' %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </div>
 
     <script type="application/javascript">
         moment.locale('{{request.LANGUAGE_CODE}}');
@@ -357,23 +399,23 @@
                 buildGrid: function () {
                     console.log("BUILD GRID EXECUTED")
                     this.meal_plan = {}
-                    
+
                     for (let e of this.plan_entries) {
-                        let new_type = {id: e.meal_type, name: e.meal_type_name,}
-                        if (this.meal_types.filter(el => el.id === new_type.id).length === 0){
+                        let new_type = {id: e.meal_type, name: e.meal_type_name, created_by: e.created_by}
+                        if (this.meal_types.filter(el => el.name === new_type.name).length === 0) {
                             this.meal_types.push(new_type)
                         }
                     }
 
                     for (let t of this.meal_types) {
-                        this.$set(this.meal_plan, t.id, {
+                        this.$set(this.meal_plan, t.name, {
                             name: t.name,
                             meal_type: t.id,
                             days: {}
                         })
                         for (let d of this.days) {
                             let date = moment(this.week).weekday(this.days.indexOf(d)).format('YYYY-MM-DD')
-                            this.$set(this.meal_plan[t.id].days, date, {
+                            this.$set(this.meal_plan[t.name].days, date, {
                                 name: d,
                                 date: date,
                                 items: []
@@ -381,7 +423,7 @@
                         }
                     }
                     for (let e of this.plan_entries) {
-                        this.meal_plan[e.meal_type].days[e.date].items.push(e)
+                        this.meal_plan[e.meal_type_name].days[e.date].items.push(e)
 
                         for (let u of e.shared) {
                             if (!this.user_id_update.includes(parseInt(u))) {
@@ -427,7 +469,8 @@
                         let plan_entry = evt.added.element
 
                         plan_entry.date = date
-                        plan_entry.meal_type = meal_type
+                        plan_entry.meal_type = meal_type.id
+                        plan_entry.meal_type_name = meal_type.name
                         plan_entry.shared = this.default_shared_users
 
                         if (plan_entry.is_new) { // its not a meal plan object
@@ -437,8 +480,8 @@
                             this.$http.post(`{% url 'api:mealplan-list' %}`, plan_entry).then((response) => {
                                 console.log("create success", response)
                                 let entry = response.data
-                                this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => !item.is_new)
-                                this.meal_plan[entry.meal_type].days[entry.date].items.push(entry)
+                                this.meal_plan[entry.meal_type_name].days[entry.date].items = this.meal_plan[entry.meal_type_name].days[entry.date].items.filter(item => !item.is_new)
+                                this.meal_plan[entry.meal_type_name].days[entry.date].items.push(entry)
                             }).catch((err) => {
                                 console.log("create error", err);
                             })
@@ -456,7 +499,7 @@
                     $('#id_plan_detail_modal').modal('hide')
                     this.$http.delete(`{% url 'api:mealplan-list' %}${entry.id}/`, entry).then((response) => {
                         console.log("delete success", response)
-                        this.meal_plan[entry.meal_type].days[entry.date].items = this.meal_plan[entry.meal_type].days[entry.date].items.filter(item => item !== entry)
+                        this.meal_plan[entry.meal_type_name].days[entry.date].items = this.meal_plan[entry.meal_type_name].days[entry.date].items.filter(item => item !== entry)
                     }).catch((err) => {
                         console.log("delete error", err);
                     })
@@ -580,7 +623,7 @@
 
                     for (let t of this.meal_types) {
                         console.log(t.id, date)
-                        for (let i of this.meal_plan[t.id].days[date].items) {
+                        for (let i of this.meal_plan[t.name].days[date].items) {
                             if (!this.shopping_list.includes(i)) {
                                 console.log("adding ", i)
                                 this.shopping_list.push(i)
