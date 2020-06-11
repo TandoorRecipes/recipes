@@ -317,8 +317,8 @@
                 this.default_shared_users = [{% for u in request.user.userpreference.plan_share.all %}
                     {{ u.pk }},
                 {% endfor %}]
-            
-                this.$set(this.user_names,  {{ request.user.pk }}, '{{ request.user.get_user_name }}')
+
+                this.$set(this.user_names, {{ request.user.pk }}, '{{ request.user.get_user_name }}')
                 this.user_id_update = Array.from(this.default_shared_users)
 
                 this.updatePlan();
@@ -357,12 +357,18 @@
                 buildGrid: function () {
                     console.log("BUILD GRID EXECUTED")
                     this.meal_plan = {}
+                    
+                    for (let e of this.plan_entries) {
+                        let new_type = {id: e.meal_type, name: e.meal_type_name,}
+                        if (this.meal_types.filter(el => el.id === new_type.id).length === 0){
+                            this.meal_types.push(new_type)
+                        }
+                    }
 
                     for (let t of this.meal_types) {
                         this.$set(this.meal_plan, t.id, {
                             name: t.name,
                             meal_type: t.id,
-                            type: t,
                             days: {}
                         })
                         for (let d of this.days) {
