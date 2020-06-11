@@ -5,19 +5,20 @@
 {% block title %}{% trans 'Meal-Plan' %}{% endblock %}
 
 {% block extra_head %}
-    {{ form.media }}
-    <script src="{% static 'js/vue.min.js' %}"></script>
+
+    {% if DEBUG %}
+        <script src="{% static 'js/vue.js' %}"></script>
+    {% else %}
+        <script src="{% static 'js/vue.min.js' %}"></script>
+    {% endif %}
+
     <script src="{% static 'js/vue-resource.js' %}"></script>
     <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
 
-    <!-- TODO remove external loading -->
-    <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
-    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
-    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+    <script src="{% static 'js/Sortable.min.js' %}"></script>
+    <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"
-            integrity="sha256-P8jY+MCe6X2cjNSmF4rQvZIanL5VwUUT4MBnOMncjRU=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/js.cookie.min.js' %}"></script>
 
 {% endblock %}
 
