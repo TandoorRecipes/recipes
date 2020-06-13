@@ -157,13 +157,12 @@
                                         </td>
                                         <td style="vertical-align: middle!important;">
                                             {% if i.note %}
-                                                <button class="btn btn-light btn-sm d-print-none" type="button"
-                                                        data-container="body"
+                                                <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
                                                         data-toggle="popover"
                                                         data-placement="right" data-html="true" data-trigger="focus"
                                                         data-content="{{ i.note }}">
                                                     <i class="fas fa-info"></i>
-                                                </button>
+                                                </a>
                                                 <div class="d-none d-print-block">
                                                     <i class="far fa-comment-alt"></i> {{ i.note }}
                                                 </div>
