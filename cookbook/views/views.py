@@ -16,6 +16,7 @@ from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
 
 from django.conf import settings
+from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
@@ -246,7 +247,10 @@ def user_settings(request):
     else:
         preference_form = UserPreferenceForm()
 
-    return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form})
+    if (api_token := Token.objects.filter(user=request.user).first()) is None:
+        api_token = Token.objects.create(user=request.user)
+
+    return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form, 'api_token': api_token})
 
 
 @group_required('guest')

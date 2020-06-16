@@ -24,13 +24,15 @@
     <form action="." method="post">
         {% csrf_token %}
         {{ user_name_form|crispy }}
-        <button class="btn btn-success" type="submit" name="user_name_form"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
+        <button class="btn btn-success" type="submit" name="user_name_form"><i
+                class="fas fa-save"></i> {% trans 'Save' %}</button>
     </form>
 
     <form action="." method="post">
         {% csrf_token %}
         {{ password_form|crispy }}
-        <button class="btn btn-success" type="submit" name="password_form"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
+        <button class="btn btn-success" type="submit" name="password_form"><i
+                class="fas fa-save"></i> {% trans 'Save' %}</button>
     </form>
 
     <br/>
@@ -66,10 +68,41 @@
     <form action="." method="post">
         {% csrf_token %}
         {{ preference_form|crispy }}
-        <button class="btn btn-success" type="submit" name="preference_form"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
+        <button class="btn btn-success" type="submit" name="preference_form"><i
+                class="fas fa-save"></i> {% trans 'Save' %}</button>
     </form>
 
+    <br/>
+    <br/>
+
+    <h4><i class="fas fa-terminal fa-fw"></i> {% trans 'API Token' %}</h4>
+    {% trans 'You can use both basic authentication and token based authentication to access the REST API.' %} <br/>
+    <br/>
 
 
+    <div class="input-group mb-3">
+        <input class="form-control" value="{{ api_token }}" id="id_token">
+        <div class="input-group-append">
+            <button class="input-group-btn btn btn-primary" onclick="copyToken()"><i
+                    class="far fa-copy"></i></button>
+        </div>
+    </div>
+    <br/>
+    {% trans 'Use the token as an Authorization header prefixed by the word token as shown in the following examples:' %}
+    <br/>
+    <code>Authorization: Token {{ api_token }}</code> {% trans 'or' %}<br/>
+    <code>curl -X GET http://your.domain.com/api/recipes/ -H 'Authorization: Token {{ api_token }}'</code>
 
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <script type="application/javascript">
+        function copyToken() {
+            let token = $('#id_token');
+            token.select();
+            document.execCommand("copy");
+        }
+    </script>
 {% endblock %}
