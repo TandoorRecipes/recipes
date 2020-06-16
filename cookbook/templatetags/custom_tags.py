@@ -40,6 +40,8 @@ def markdown(value):
 
 @register.simple_tag
 def recipe_rating(recipe, user):
+    if not user.is_authenticated:
+        return ''
     rating = recipe.cooklog_set.filter(created_by=user).aggregate(Avg('rating'))
     if rating['rating__avg']:
 
@@ -57,6 +59,8 @@ def recipe_rating(recipe, user):
 
 @register.simple_tag
 def recipe_last(recipe, user):
+    if not user.is_authenticated:
+        return ''
     last = recipe.cooklog_set.filter(created_by=user).last()
     if last:
         return last.created_at

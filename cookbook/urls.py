@@ -30,8 +30,10 @@ urlpatterns = [
     path('export/', import_export.export_recipe, name='view_export'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
+    path('view/recipe/<int:pk>/<slug:share>', views.recipe_view, name='view_recipe'),
 
-    path('new/recipe_import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
+    path('new/recipe-import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
+    path('new/share-link/<int:pk>/', new.share_link, name='new_share_link'),
 
     path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
     path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),  # for internal use only

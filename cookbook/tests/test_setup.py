@@ -11,6 +11,7 @@ class TestBase(TestCase):
     guest_client_1 = None
     guest_client_2 = None
     superuser_client = None
+    anonymous_client = None
 
     def create_login_user(self, name, group):
         client = Client()

@@ -53,6 +53,9 @@
                data-toggle="tooltip"
                data-placement="top" title="{% trans 'Export recipe' %}"><i
                     class="fas fa-file-export"></i></a>
+            <a class="btn btn-primary" href="{% url 'new_share_link' recipe.pk %}" target="_blank" rel="noopener noreferrer"
+               data-toggle="tooltip"
+               data-placement="top" title="{% trans 'Create share link' %}"><i class="fas fa-share-alt"></i></a>
         </div>
     </div>
 

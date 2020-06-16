@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
@@ -11,7 +11,7 @@ from django.views.generic import CreateView
 from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
     RecipeBookForm, MealPlanForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
-from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan
+from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan, ShareLink
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
@@ -34,6 +34,13 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
         context = super(RecipeCreate, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
         return context
+
+
+@group_required('user')
+def share_link(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    link = ShareLink.objects.create(recipe=recipe, created_by=request.user)
+    return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': pk, 'share': link.uuid}))
 
 
 class KeywordCreate(GroupRequiredMixin, CreateView):

@@ -1,5 +1,5 @@
 import re
-
+import uuid
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -240,6 +240,13 @@ class MealPlan(models.Model):
 
     def __str__(self):
         return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
+
+
+class ShareLink(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid.uuid4())
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class CookLog(models.Model):
