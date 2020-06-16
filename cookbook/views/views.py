@@ -1,4 +1,5 @@
 import copy
+import os
 from datetime import datetime, timedelta
 
 from django.contrib import messages
@@ -259,7 +260,9 @@ def history(request):
 def system(request):
     postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
 
-    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'version': VERSION_NUMBER, 'ref': BUILD_REF})
+    secret_key = False if os.getenv('SECRET_KEY') else True
+
+    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'version': VERSION_NUMBER, 'ref': BUILD_REF, 'secret_key': secret_key})
 
 
 def setup(request):
