@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import os
+import random
+import string
+
 from django.contrib import messages
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
@@ -17,7 +20,7 @@ from django.utils.translation import gettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
-SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else '728f4t5438rz0748fa89esf9e'
+SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 
@@ -61,6 +64,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'emoji_picker',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
     'cookbook.apps.CookbookConfig',
 ]
@@ -84,6 +88,14 @@ AUTHENTICATION_BACKENDS = [
 if REVERSE_PROXY_AUTH:
     MIDDLEWARE.append('recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    )
+}
 
 ROOT_URLCONF = 'recipes.urls'
 
