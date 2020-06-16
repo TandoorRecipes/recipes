@@ -123,3 +123,10 @@ class CookLogAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CookLog, CookLogAdmin)
+
+
+class ShareLinkAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'created_by', 'uuid', 'created_at',)
+
+
+admin.site.register(ShareLink, ShareLinkAdmin)
