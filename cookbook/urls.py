@@ -2,6 +2,7 @@ from pydoc import locate
 
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework.schemas import get_schema_view
 
 from .views import *
 from cookbook.views import api, import_export
@@ -62,9 +63,16 @@ urlpatterns = [
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
+    path('docs/api/', views.api_info, name='docs_api'),
+
+    path('openapi', get_schema_view(
+        title="Django Recipes",
+        version=VERSION_NUMBER
+    ), name='openapi-schema'),
 
     path('api/', include((router.urls, 'api'))),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 ]
 
 generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Ingredient)
