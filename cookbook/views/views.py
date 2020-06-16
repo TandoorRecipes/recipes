@@ -215,6 +215,7 @@ def user_settings(request):
             if form.is_valid():
                 if not up:
                     up = UserPreference(user=request.user)
+
                 up.theme = form.cleaned_data['theme']
                 up.nav_color = form.cleaned_data['nav_color']
                 up.default_unit = form.cleaned_data['default_unit']
@@ -223,6 +224,7 @@ def user_settings(request):
                 up.search_style = form.cleaned_data['search_style']
                 up.plan_share.set(form.cleaned_data['plan_share'])
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']
+                up.comments = form.cleaned_data['comments']
                 up.save()
 
         if 'user_name_form' in request.POST:
