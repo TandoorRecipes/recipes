@@ -210,6 +210,7 @@ def user_settings(request):
 
     user_name_form = UserNameForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
+    password_form.fields['old_password'].widget.attrs.pop("autofocus", None)
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
