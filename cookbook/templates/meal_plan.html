@@ -127,7 +127,8 @@
                                    placeholder="{% trans 'Title' %}" style="margin-bottom: 8px">
                             <textarea class="form-control" v-model="new_note_text"
                                       placeholder="{% trans 'Note (optional)' %}"></textarea>
-                            <small><span class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/" target="_blank" rel="noopener noreferrer">docs here</a>' %}</span></small>
+                            <small><span
+                                    class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/" target="_blank" rel="noopener noreferrer">docs here</a>' %}</span></small>
                             <br/>
                             <br/>
                             <draggable :list="pseudo_note_list"
@@ -278,7 +279,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary"
-                                @click="meal_types_edit.push({name:'{% trans 'New meal type' %}'})">{% trans 'New' %}</button>
+                                @click="meal_types_edit.push({name:'{% trans 'New meal type' %}', delete:false})">{% trans 'New' %}</button>
                         <button type="button" class="btn btn-success"
                                 @click="updatePlanTypes()">{% trans 'Save' %}</button>
                         <button type="button" class="btn btn-secondary"
@@ -520,10 +521,12 @@
                                     console.log("updatePlanTypes create error: ", err);
                                 }))
                         } else if (x.delete) {
-                            promise_list.push(this.$http.delete(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
-                            }).catch((err) => {
-                                console.log("updatePlanTypes delete error: ", err);
-                            }))
+                            if (x.id !== undefined) {
+                                promise_list.push(this.$http.delete(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
+                                }).catch((err) => {
+                                    console.log("updatePlanTypes delete error: ", err);
+                                }))
+                            }
                         } else {
                             promise_list.push(this.$http.put(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
 
