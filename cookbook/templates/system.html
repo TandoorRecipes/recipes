@@ -40,6 +40,21 @@
     <br/>
     <br/>
 
+    <h4>{% trans 'Secret Key' %} <span
+            class="badge badge-{% if secret_key %}danger{% else %}success{% endif %}">{% if secret_key %}
+        {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
+    {% if secret_key %}
+        {% blocktrans %}
+            You do not have a <code>SECRET_KEY</code> configured in your <code>.env</code> file. Django defaulted to the standard key
+            provided with the installation which is publicly know and insecure! Please set
+            <code>SECRET_KEY</code> int the <code>.env</code> configuration file.
+        {% endblocktrans %}
+    {% else %}
+        {% trans 'Everything is fine!' %}
+    {% endif %}
+    <br/>
+    <br/>
+
     <h4>{% trans 'Debug Mode' %} <span
             class="badge badge-{% if debug %}danger{% else %}success{% endif %}">{% if debug %}
         {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
