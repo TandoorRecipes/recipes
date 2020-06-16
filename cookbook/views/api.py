@@ -22,6 +22,11 @@ from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSe
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    optional parameters
+    - **filter_list**: array of user id's to get names for
+    """
     queryset = User.objects.all()
     serializer_class = UserNameSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -40,6 +45,11 @@ class UserNameViewSet(viewsets.ModelViewSet):
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    optional parameters
+    - **html_week**: filter for a calendar week (format 2020-W24 as html input type week)
+    """
     queryset = MealPlan.objects.all()
     serializer_class = MealPlanSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -54,6 +64,10 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
 
 class MealTypeViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    returns list of meal types created by the requesting user ordered by the order field
+    """
     queryset = MealType.objects.order_by('order').all()
     serializer_class = MealTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -64,6 +78,12 @@ class MealTypeViewSet(viewsets.ModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    optional parameters
+    - **query**: search a recipe for a string contained in the recipe name (case in-sensitive)
+    - **limit**: limits the amount of returned recipes
+    """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [permissions.IsAuthenticated]

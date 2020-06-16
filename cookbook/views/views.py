@@ -295,3 +295,8 @@ def setup(request):
 
 def markdown_info(request):
     return render(request, 'markdown_info.html', {})
+
+
+@group_required('user')
+def api_info(request):
+    return render(request, 'api_info.html', {})
