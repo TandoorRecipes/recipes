@@ -49,7 +49,7 @@
             <a class="btn btn-light" onclick="window.print()" data-toggle="tooltip"
                data-placement="top" title="{% trans 'Print' %}"><i
                     class="fas fa-print"></i></a>
-            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"
+            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank" rel="noopener noreferrer"
                data-toggle="tooltip"
                data-placement="top" title="{% trans 'Export recipe' %}"><i
                     class="fas fa-file-export"></i></a>
@@ -147,7 +147,7 @@
                                         <td style="vertical-align: middle!important;">
                                             {% if i.ingredient.recipe %}
                                                 <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}"
-                                                   target="_blank">
+                                                   target="_blank" rel="noopener noreferrer">
                                             {% endif %}
                                             {{ i.ingredient.name }}
                                             {% if i.ingredient.recipe %}
