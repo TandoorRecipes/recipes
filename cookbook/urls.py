@@ -9,6 +9,7 @@ from cookbook.views import api, import_export
 from cookbook.helper import dal
 
 router = routers.DefaultRouter()
+#router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'recipe', api.RecipeViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)

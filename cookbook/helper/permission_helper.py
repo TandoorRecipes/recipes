@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
+from rest_framework import permissions
 
 from cookbook.models import ShareLink
 
@@ -73,8 +74,27 @@ class OwnerRequiredMixin(object):
 
 
 def share_link_valid(recipe, share):
-    print(share, recipe)
+    """
+    Verifies if a share uuid is valid for a given recipe
+    """
     try:
         return True if ShareLink.objects.filter(recipe=recipe, uuid=share).exists() else False
     except ValidationError:
+        return False
+
+
+class DRFOwnerPermissions(permissions.BasePermission):
+    """
+    Custom permission class for django rest framework views
+    verifies user has ownership over object
+    (either user or created_by or user is request user)
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
+        if owner := getattr(obj, 'created_by', None):
+            return owner == request.user
+        if owner := getattr(obj, 'user', None):
+            return owner == request.user
         return False
