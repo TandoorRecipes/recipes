@@ -177,7 +177,7 @@
                            data-target="#id_plan_types_modal">{% trans 'Edit plan types' %}</a> <br/>
                         <a href="#" data-toggle="modal"
                            data-target="#id_plan_help_modal">{% trans 'Show help' %}</a><br/>
-                        <a v-bind:href="getIcalUrl()" >{% trans 'Week iCal export' %}</a>
+                        <a v-bind:href="getIcalUrl()">{% trans 'Week iCal export' %}</a>
                     </div>
                 </div>
             </div>
@@ -211,7 +211,7 @@
 
                         <template v-if="plan_detail.note !== ''">
                             <small class="text-muted">{% trans 'Note' %}</small><br/>
-                            [[ plan_detail.note ]]
+                            <span v-html="plan_detail.note_markdown"></span>
                             <br/>
                         </template>
 
@@ -393,7 +393,7 @@
                             this.$set(mte, 'delete', false)
                         }
                     }).catch((err) => {
-                        console.log("getPlanTypes error: ",err);
+                        console.log("getPlanTypes error: ", err);
                     })
                 },
                 buildGrid: function () {
@@ -434,6 +434,18 @@
                     this.updateUserNames()
                 },
                 getRecipes: function () {
+                    let url = "{% url 'api:recipe-list' %}?limit=5"
+                    if (this.recipe_query !== '') {
+                        url += '&query=' + this.recipe_query;
+                    }
+
+                    this.$http.get(url).then((response) => {
+                        this.recipes = response.data;
+                    }).catch((err) => {
+                        console.log("getRecipes error: ", err);
+                    })
+                },
+                getMdNote: function () {
                     let url = "{% url 'api:recipe-list' %}?limit=5"
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
@@ -504,18 +516,18 @@
                             x.created_by = {{ request.user.id }}
                                 promise_list.push(this.$http.post("{% url 'api:mealtype-list' %}", x).then((response) => {
                                 }).catch((err) => {
-                                    console.log("updatePlanTypes create error: ",err);
+                                    console.log("updatePlanTypes create error: ", err);
                                 }))
                         } else if (x.delete) {
                             promise_list.push(this.$http.delete(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
                             }).catch((err) => {
-                                console.log("updatePlanTypes delete error: ",err);
+                                console.log("updatePlanTypes delete error: ", err);
                             }))
                         } else {
                             promise_list.push(this.$http.put(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
 
                             }).catch((err) => {
-                                console.log("updatePlanTypes update error: ",err);
+                                console.log("updatePlanTypes update error: ", err);
                             }))
                         }
                     }
