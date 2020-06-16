@@ -127,7 +127,8 @@
                                    placeholder="{% trans 'Title' %}" style="margin-bottom: 8px">
                             <textarea class="form-control" v-model="new_note_text"
                                       placeholder="{% trans 'Note (optional)' %}"></textarea>
-
+                            <small><span class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/" target="_blank" rel="noopener noreferrer">docs here</a>' %}</span></small>
+                            <br/>
                             <br/>
                             <draggable :list="pseudo_note_list"
                                        :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneNote">
