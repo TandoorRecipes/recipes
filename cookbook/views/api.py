@@ -13,12 +13,13 @@ from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import APIException
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
 
-from cookbook.helper.permission_helper import group_required
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog
+from cookbook.helper.permission_helper import group_required, DRFOwnerPermissions
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
@@ -30,7 +31,7 @@ class UserNameViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserNameSerializer
     permission_classes = [permissions.IsAuthenticated]
-    http_method_names = ['get', ]
+    http_method_names = ['get']
 
     def get_queryset(self):
         queryset = User.objects.all()
@@ -42,6 +43,18 @@ class UserNameViewSet(viewsets.ModelViewSet):
             raise APIException(_('Parameter filter_list incorrectly formatted'))
 
         return queryset
+
+
+class UserPreferenceViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    Update user preference settings
+    """
+    queryset = UserPreference.objects.all()
+    serializer_class = UserPreferenceSerializer
+    permission_classes = [DRFOwnerPermissions, ]
+    # TODO disable create view
+    def get_queryset(self):
+        return UserPreference.objects.filter(user=self.request.user).all()
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
