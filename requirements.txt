@@ -22,3 +22,4 @@ webdavclient3==3.14.4
 whitenoise==5.1.0
 icalendar==4.0.6
 pyyaml==5.3.1
+uritemplate==3.0.1
