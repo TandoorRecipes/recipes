@@ -49,11 +49,13 @@
             <a class="btn btn-light" onclick="window.print()" data-toggle="tooltip"
                data-placement="top" title="{% trans 'Print' %}"><i
                     class="fas fa-print"></i></a>
-            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank" rel="noopener noreferrer"
+            <a class="btn btn-primary" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"
+               rel="noopener noreferrer"
                data-toggle="tooltip"
                data-placement="top" title="{% trans 'Export recipe' %}"><i
                     class="fas fa-file-export"></i></a>
-            <a class="btn btn-primary" href="{% url 'new_share_link' recipe.pk %}" target="_blank" rel="noopener noreferrer"
+            <a class="btn btn-primary" href="{% url 'new_share_link' recipe.pk %}" target="_blank"
+               rel="noopener noreferrer"
                data-toggle="tooltip"
                data-placement="top" title="{% trans 'Create share link' %}"><i class="fas fa-share-alt"></i></a>
         </div>
@@ -161,9 +163,9 @@
                                         <td style="vertical-align: middle!important;">
                                             {% if i.note %}
                                                 <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
-                                                        data-toggle="popover"
-                                                        data-placement="right" data-html="true" data-trigger="focus"
-                                                        data-content="{{ i.note }}">
+                                                   data-toggle="popover"
+                                                   data-placement="right" data-html="true" data-trigger="focus"
+                                                   data-content="{{ i.note }}">
                                                     <i class="fas fa-info"></i>
                                                 </a>
                                                 <div class="d-none d-print-block">
@@ -265,7 +267,7 @@
 
     <br/>
     <br/>
-
+    
     <h5 {% if not comments %}class="d-print-none" {% endif %}><i class="far fa-comments"></i> {% trans 'Comments' %}
     </h5>
     {% for c in comments %}
@@ -279,19 +281,21 @@
         <br/>
     {% endfor %}
 
-    <div class="d-print-none">
+    {% if request.user.is_authenticated %}
+        <div class="d-print-none">
 
-        <form method="POST" class="post-form">
-            {% csrf_token %}
-            <div class="input-group mb-3">
+            <form method="POST" class="post-form">
+                {% csrf_token %}
+                <div class="input-group mb-3">
             <textarea name="comment-text" cols="15" rows="2" class="textarea form-control" required
                       id="comment-id_text"></textarea>
-                <div class="input-group-append">
-                    <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+                    <div class="input-group-append">
+                        <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    {% endif %}
 
     {% if recipe.storage %}
         {% include 'include/recipe_open_modal.html' %}
@@ -340,7 +344,9 @@
         });
 
         function roundDecimals(num) {
-            return +(Math.round(num + "e+{{ request.user.userpreference.ingredient_decimals }}") + "e-{{ request.user.userpreference.ingredient_decimals }}");
+            let decimals = {% if request.user.userpreference.ingredient_decimals %}
+                {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
+            return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
         }
 
         function reloadIngredients() {
