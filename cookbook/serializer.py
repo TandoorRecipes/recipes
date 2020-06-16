@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from cookbook.models import MealPlan, MealType, Recipe, ViewLog
+from cookbook.templatetags.custom_tags import markdown
 
 
 class UserNameSerializer(serializers.ModelSerializer):
@@ -13,10 +14,14 @@ class UserNameSerializer(serializers.ModelSerializer):
 class MealPlanSerializer(serializers.ModelSerializer):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
+    note_markdown = serializers.SerializerMethodField('get_note_markdown')
+
+    def get_note_markdown(self, obj):
+        return markdown(obj.note)
 
     class Meta:
         model = MealPlan
-        fields = ('id', 'title', 'recipe', 'note', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
+        fields = ('id', 'title', 'recipe', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
 
 
 class MealTypeSerializer(serializers.ModelSerializer):
