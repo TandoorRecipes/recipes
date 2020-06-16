@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 from django.db import models
 
+from recipes.settings import COMMENT_PREF_DEFAULT
+
 
 def get_user_name(self):
     if not (name := f"{self.first_name} {self.last_name}") == " ":
@@ -64,6 +66,7 @@ class UserPreference(models.Model):
     show_recent = models.BooleanField(default=True)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
     ingredient_decimals = models.IntegerField(default=2)
+    comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
 
     def __str__(self):
         return str(self.user)

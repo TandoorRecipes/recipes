@@ -268,36 +268,39 @@
         </div>
     {% endif %}
 
-    <br/>
-    <br/>
-
-    <h5 {% if not comments %}class="d-print-none" {% endif %}><i class="far fa-comments"></i> {% trans 'Comments' %}
-    </h5>
-    {% for c in comments %}
-        <div class="card">
-            <div class="card-body">
-                <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
-                    href="{% url 'edit_comment' c.pk %}" class="d-print-none"><i class="fas fa-pencil-alt"></i></a><br/>
-                {{ c.text }}
-            </div>
-        </div>
+    {% if request.user.userpreference.comments %}
         <br/>
-    {% endfor %}
+        <br/>
 
-    {% if request.user.is_authenticated %}
-        <div class="d-print-none">
+        <h5 {% if not comments %}class="d-print-none" {% endif %}><i class="far fa-comments"></i> {% trans 'Comments' %}
+        </h5>
+        {% for c in comments %}
+            <div class="card">
+                <div class="card-body">
+                    <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
+                        href="{% url 'edit_comment' c.pk %}" class="d-print-none"><i
+                        class="fas fa-pencil-alt"></i></a><br/>
+                    {{ c.text }}
+                </div>
+            </div>
+            <br/>
+        {% endfor %}
 
-            <form method="POST" class="post-form">
-                {% csrf_token %}
-                <div class="input-group mb-3">
+        {% if request.user.is_authenticated %}
+            <div class="d-print-none">
+
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
             <textarea name="comment-text" cols="15" rows="2" class="textarea form-control" required
                       id="comment-id_text"></textarea>
-                    <div class="input-group-append">
-                        <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+                        <div class="input-group-append">
+                            <input type="submit" value="{% trans 'Comment' %}" class="btn btn-success">
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        {% endif %}
     {% endif %}
 
     {% if recipe.storage %}

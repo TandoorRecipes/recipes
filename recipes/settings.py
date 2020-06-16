@@ -25,6 +25,8 @@ GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
 
 REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
 
+COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
