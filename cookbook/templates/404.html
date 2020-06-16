@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "404 Error" %}{% endblock %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div style="text-align: center">
+
+        <h1 class="">Not Found</h1>
+        <br/>
+
+        <span>{% trans 'The page you are looking for could not be found.' %}</span>
+        <br/>
+        <br/>
+        <i class="fas fa-search fa-8x"></i>
+        <br/>
+        <br/>
+        
+        <div class="jumbotron">
+            <code>{{ request_path }}</code><br/>
+            <code>{{ exception }}</code>
+        </div>
+        <br/>
+        <br/>
+
+        <a class="btn btn-outline-success" href="{% url 'index' %}"><i
+                class="fas fa-home"></i> {% trans 'Take me Home' %}</a>
+        <a class="btn btn-outline-info" href="https://github.com/vabene1111/recipes/issues" target="_blank"
+           rel="noreferrer nofollow"><i class="fab fa-github"></i> {% trans 'Report a Bug' %}</a>
+    </div>
+
+{% endblock %}
