@@ -3,9 +3,13 @@ Source: https://djangosnippets.org/snippets/1703/
 """
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
+
+from cookbook.models import ShareLink
 
 
 def get_allowed_groups(groups_required):
@@ -66,3 +70,11 @@ class OwnerRequiredMixin(object):
                 return HttpResponseRedirect(reverse('index'))
 
         return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+def share_link_valid(recipe, share):
+    print(share, recipe)
+    try:
+        return True if ShareLink.objects.filter(recipe=recipe, uuid=share).exists() else False
+    except ValidationError:
+        return False

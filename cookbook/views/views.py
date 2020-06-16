@@ -18,7 +18,7 @@ from django.conf import settings
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
-from cookbook.helper.permission_helper import group_required
+from cookbook.helper.permission_helper import group_required, share_link_valid
 from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLogTable
 
 from recipes.version import *
@@ -70,9 +70,13 @@ def search(request):
         return render(request, 'index.html')
 
 
-@group_required('guest')
-def recipe_view(request, pk):
+def recipe_view(request, pk, share=None):
     recipe = get_object_or_404(Recipe, pk=pk)
+
+    if not request.user.is_authenticated and not share_link_valid(recipe, share):
+        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+        return HttpResponseRedirect(reverse('index'))
+
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)
     comments = Comment.objects.filter(recipe=recipe)
 
