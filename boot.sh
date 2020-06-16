@@ -8,4 +8,4 @@ echo "Done"
 
 chmod -R 755 /opt/recipes/mediafiles
 
-exec gunicorn -b :8080 --access-logfile - --error-logfile - --log-level DEBUG recipes.wsgi
+exec gunicorn -b :8080 --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
