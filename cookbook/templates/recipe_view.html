@@ -31,35 +31,37 @@
             <h3>{{ recipe.name }} {{ rating|safe }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i
                     class="fas fa-pencil-alt"></i></a></h3>
         </div>
-        <div class="col col-md-4 d-print-none" style="text-align: right">
-            <div class="dropdown">
-                <a class="btn shadow-none" href="#" role="button" id="dropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v"></i>
-                </a>
+        {% if request.user.is_authenticated %}
+            <div class="col col-md-4 d-print-none" style="text-align: right">
+                <div class="dropdown">
+                    <a class="btn shadow-none" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
-                        <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
-                    {% if ingredients %}
-                        <a class="dropdown-item" href="{% url 'view_shopping' %}?r={{ recipe.pk }}">
-                            <i class="fas fa-shopping-cart fa-fw"></i> {% trans 'Add to Shopping' %}</a>
-                    {% endif %}
-                    <a class="dropdown-item" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}"><i
-                            class="fas fa-calendar fa-fw"></i> {% trans 'Add to Plan' %}</a>
-                    <button class="dropdown-item" onclick="openCookLogModal({{ recipe.pk }})"><i
-                            class="fas fa-clipboard-list fa-fw"></i> {% trans 'Log Cooking' %}</button>
-                    <button class="dropdown-item" onclick="window.print()"><i
-                            class="fas fa-print fa-fw"></i> {% trans 'Print' %}</button>
-                    <a class="dropdown-item" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"
-                       rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {% trans 'Export' %}</a>
-                    <a class="dropdown-item" href="{% url 'new_share_link' recipe.pk %}" target="_blank"
-                       rel="noopener noreferrer"><i class="fas fa-share-alt fa-fw"></i> {% trans 'Share' %}</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
+                            <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
+                        {% if ingredients %}
+                            <a class="dropdown-item" href="{% url 'view_shopping' %}?r={{ recipe.pk }}">
+                                <i class="fas fa-shopping-cart fa-fw"></i> {% trans 'Add to Shopping' %}</a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}"><i
+                                class="fas fa-calendar fa-fw"></i> {% trans 'Add to Plan' %}</a>
+                        <button class="dropdown-item" onclick="openCookLogModal({{ recipe.pk }})"><i
+                                class="fas fa-clipboard-list fa-fw"></i> {% trans 'Log Cooking' %}</button>
+                        <button class="dropdown-item" onclick="window.print()"><i
+                                class="fas fa-print fa-fw"></i> {% trans 'Print' %}</button>
+                        <a class="dropdown-item" href="{% url 'view_export' %}?r={{ recipe.pk }}" target="_blank"
+                           rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {% trans 'Export' %}</a>
+                        {% if recipe.internal %}
+                            <a class="dropdown-item" href="{% url 'new_share_link' recipe.pk %}" target="_blank"
+                               rel="noopener noreferrer"><i class="fas fa-share-alt fa-fw"></i> {% trans 'Share' %}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-
-
-        </div>
+        {% endif %}
     </div>
 
     {% if recipe.storage %}
