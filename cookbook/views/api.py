@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import APIException
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 
 from cookbook.helper.permission_helper import group_required, DRFOwnerPermissions
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference
@@ -24,7 +24,7 @@ from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSe
 
 class UserNameViewSet(viewsets.ModelViewSet):
     """
-    list:  
+    list:
     optional parameters
 
     - **filter_list**: array of user id's to get names for
@@ -46,15 +46,17 @@ class UserNameViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class UserPreferenceViewSet(RetrieveModelMixin, UpdateModelMixin, viewsets.GenericViewSet):
+class UserPreferenceViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
     """
     Update user preference settings
     """
     queryset = UserPreference.objects.all()
     serializer_class = UserPreferenceSerializer
     permission_classes = [DRFOwnerPermissions, ]
-    # TODO disable create view
+
     def get_queryset(self):
+        if self.request.user.is_superuser:
+            return UserPreference.objects.all()
         return UserPreference.objects.filter(user=self.request.user).all()
 
 
