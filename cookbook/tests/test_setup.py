@@ -37,3 +37,9 @@ class TestBase(TestCase):
         user = self.create_login_user('superuser_client', 'admin')
         user.is_superuser = True
         user.save()
+
+    def batch_requests(self, clients, url, method='get', payload={}, content_type=''):
+        for c in clients:
+            if method == 'get':
+                r = c[0].get(url)
+                self.assertEqual(r.status_code, c[1], msg=f'GET request failed for user {auth.get_user(c[0])} when testing url {url}')
