@@ -1,13 +1,15 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.utils.translation import gettext as _
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
 
 from cookbook.forms import SyncForm, BatchEditForm
-from cookbook.helper.permission_helper import group_required
+from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.models import *
 from cookbook.tables import SyncTable
 
@@ -15,6 +17,9 @@ from cookbook.tables import SyncTable
 @group_required('user')
 def sync(request):
     if request.method == "POST":
+        if not has_group_permission(request.user, ['admin']):
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            return HttpResponseRedirect(reverse('data_sync'))
         form = SyncForm(request.POST)
         if form.is_valid():
             new_path = Sync()
