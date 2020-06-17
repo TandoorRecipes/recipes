@@ -26,7 +26,7 @@ def theme_url(request):
 def nav_color(request):
     if not request.user.is_authenticated:
         return 'primary'
-    return request.user.userpreference.nav_color
+    return request.user.userpreference.nav_color.lower()
 
 
 @register.simple_tag
