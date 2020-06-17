@@ -160,7 +160,7 @@ class CustomIsUser(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        has_group_permission(request.user, ['guest'])
+        has_group_permission(request.user, ['user'])
 
 
 class CustomIsAdmin(permissions.BasePermission):
@@ -171,4 +171,5 @@ class CustomIsAdmin(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        has_group_permission(request.user, ['guest'])
+        has_group_permission(request.user, ['admin'])
+
