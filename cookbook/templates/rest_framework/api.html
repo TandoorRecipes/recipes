@@ -8,7 +8,11 @@
 {% block userlinks %}
     <ul class="nav navbar-nav">
         <li>
-            <a class='navbar-link' rel="noreferrer nofollow" target="_blank" href='https://www.django-rest-framework.org/'>
+            <a class="navbar-link" href="{% url 'docs_api' %}">{% trans 'API Documentation' %}</a>
+        </li>
+        <li>
+            <a class='navbar-link' rel="noreferrer nofollow" target="_blank"
+               href='https://www.django-rest-framework.org/'>
                 Django REST framework
             </a>
         </li>

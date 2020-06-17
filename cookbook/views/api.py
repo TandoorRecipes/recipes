@@ -24,8 +24,9 @@ from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSe
 
 class UserNameViewSet(viewsets.ModelViewSet):
     """
-    list:
+    list:  
     optional parameters
+
     - **filter_list**: array of user id's to get names for
     """
     queryset = User.objects.all()
@@ -61,7 +62,9 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     list:
     optional parameters
+
     - **html_week**: filter for a calendar week (format 2020-W24 as html input type week)
+
     """
     queryset = MealPlan.objects.all()
     serializer_class = MealPlanSerializer
@@ -94,6 +97,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     list:
     optional parameters
+
     - **query**: search a recipe for a string contained in the recipe name (case in-sensitive)
     - **limit**: limits the amount of returned recipes
     """
