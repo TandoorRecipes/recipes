@@ -16,10 +16,10 @@ from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 
 from cookbook.helper.permission_helper import group_required, DRFOwnerPermissions
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
@@ -46,7 +46,7 @@ class UserNameViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class UserPreferenceViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
+class UserPreferenceViewSet(viewsets.ModelViewSet):
     """
     Update user preference settings
     """
@@ -54,10 +54,29 @@ class UserPreferenceViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin
     serializer_class = UserPreferenceSerializer
     permission_classes = [DRFOwnerPermissions, ]
 
+    def perform_create(self, serializer):
+        if UserPreference.objects.filter(user=self.request.user).exists():
+            raise APIException(_('Preference for given user already exists'))
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        # if self.request.user.is_superuser:
+        #   return UserPreference.objects.all()
+        return UserPreference.objects.filter(user=self.request.user).all()
+
+
+class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
+    """
+    Update user preference settings
+    """
+    queryset = RecipeBook.objects.all()
+    serializer_class = RecipeBookSerializer
+    permission_classes = [DRFOwnerPermissions, ]
+
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return UserPreference.objects.all()
-        return UserPreference.objects.filter(user=self.request.user).all()
+            return RecipeBook.objects.all()
+        return RecipeBook.objects.filter(created_by=self.request.user).all()
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):

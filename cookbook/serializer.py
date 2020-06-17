@@ -15,6 +15,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
         fields = '__all__'
+        read_only_fields = ['user']
 
 
 class StorageSerializer(serializers.ModelSerializer):
@@ -81,6 +82,7 @@ class RecipeBookSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeBook
         fields = '__all__'
+        read_only_fields = ['id', 'created_by']
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
