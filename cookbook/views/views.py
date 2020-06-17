@@ -305,6 +305,6 @@ def markdown_info(request):
     return render(request, 'markdown_info.html', {})
 
 
-@group_required('user')
+@group_required('guest')
 def api_info(request):
     return render(request, 'api_info.html', {})
