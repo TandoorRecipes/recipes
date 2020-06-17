@@ -15,7 +15,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 
-from cookbook.helper.permission_helper import group_required, DRFOwnerPermissions
+from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
@@ -47,12 +47,9 @@ class UserNameViewSet(viewsets.ModelViewSet):
 
 
 class UserPreferenceViewSet(viewsets.ModelViewSet):
-    """
-    Update user preference settings
-    """
     queryset = UserPreference.objects.all()
     serializer_class = UserPreferenceSerializer
-    permission_classes = [DRFOwnerPermissions, ]
+    permission_classes = [CustomIsOwner, ]
 
     def perform_create(self, serializer):
         if UserPreference.objects.filter(user=self.request.user).exists():
@@ -60,23 +57,20 @@ class UserPreferenceViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        # if self.request.user.is_superuser:
-        #   return UserPreference.objects.all()
-        return UserPreference.objects.filter(user=self.request.user).all()
+        if self.request.user.is_superuser:
+            return self.queryset
+        return self.queryset.filter(user=self.request.user)
 
 
 class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
-    """
-    Update user preference settings
-    """
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
-    permission_classes = [DRFOwnerPermissions, ]
+    permission_classes = [CustomIsOwner, CustomIsAdmin]
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return RecipeBook.objects.all()
-        return RecipeBook.objects.filter(created_by=self.request.user).all()
+            return self.queryset
+        return self.queryset.filter(created_by=self.request.user)
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
