@@ -93,6 +93,8 @@ class DRFOwnerPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if not request.user.is_authenticated:
             return False
+        #if request.user.is_superuser:
+        #    return True
         if owner := getattr(obj, 'created_by', None):
             return owner == request.user
         if owner := getattr(obj, 'user', None):
