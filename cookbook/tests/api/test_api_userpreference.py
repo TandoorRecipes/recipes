@@ -12,7 +12,7 @@ class TestApiUserPreference(TestViews):
     def setUp(self):
         super(TestApiUserPreference, self).setUp()
 
-    def test_create_preference(self):
+    def test_preference(self):
         # can create own preference with default values
         r = self.user_client_1.post(reverse('api:userpreference-list'), {})
         self.assertEqual(r.status_code, 201)
@@ -20,25 +20,9 @@ class TestApiUserPreference(TestViews):
         self.assertEqual(response['user'], auth.get_user(self.user_client_1).id)
         self.assertEqual(response['theme'], UserPreference._meta.get_field('theme').get_default())
 
-        # user can access own preference
-        r = self.user_client_1.get(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {})
-        self.assertEqual(r.status_code, 200)
-
-        # cant access another users preference
-        r = self.anonymous_client.get(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {})
-        self.assertEqual(r.status_code, 403)
-
-        r = self.guest_client_1.get(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {})
-        self.assertEqual(r.status_code, 404)
-
-        r = self.user_client_2.get(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {})
-        self.assertEqual(r.status_code, 404)
-
-        r = self.admin_client_1.get(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {})
-        self.assertEqual(r.status_code, 404)
-
-        r = self.superuser_client.get(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {})
-        self.assertEqual(r.status_code, 200)
+        # multi user test get user pref detail
+        self.batch_requests([(self.guest_client_1, 404), (self.user_client_1, 200), (self.user_client_2, 404), (self.anonymous_client, 403), (self.admin_client_1, 404), (self.superuser_client, 200)],
+                            reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}))
 
         # can update users preference
         r = self.user_client_1.put(reverse('api:userpreference-detail', args={auth.get_user(self.user_client_1).id}), {'theme': UserPreference.DARKLY}, content_type='application/json')
