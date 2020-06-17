@@ -137,6 +137,9 @@ class CustomIsOwner(permissions.BasePermission):
     """
     message = _('You cannot interact with this object as its not owned by you!')
 
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
         return is_object_owner(request.user, obj)
 
