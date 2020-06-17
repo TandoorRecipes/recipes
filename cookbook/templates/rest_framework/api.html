@@ -1,0 +1,19 @@
+{% extends "rest_framework/base.html" %}
+{% load i18n %}
+
+{% block branding %}
+    <a class="navbar-brand" href="{% url 'index' %}">{% trans 'Recipe Home' %}</a>
+{% endblock %}
+
+{% block userlinks %}
+    <ul class="nav navbar-nav">
+        <li>
+            <a class='navbar-link' rel="noreferrer nofollow" target="_blank" href='https://www.django-rest-framework.org/'>
+                Django REST framework
+            </a>
+        </li>
+    </ul>
+
+    {{ block.super }}
+
+{% endblock %}

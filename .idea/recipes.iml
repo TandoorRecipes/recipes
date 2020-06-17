@@ -27,8 +27,8 @@
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/templates" />
         <option value="$MODULE_DIR$/cookbook/templates" />
+        <option value="$MODULE_DIR$/recipes/templates" />
       </list>
     </option>
   </component>
