@@ -308,3 +308,10 @@ def markdown_info(request):
 @group_required('guest')
 def api_info(request):
     return render(request, 'api_info.html', {})
+
+
+def test(request):
+    if not settings.DEBUG:
+        return HttpResponseRedirect(reverse('index'))
+
+    return render(request, 'test.html', {'test': None})
