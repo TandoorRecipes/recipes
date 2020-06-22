@@ -1,6 +1,7 @@
 import io
 import json
 import re
+from json import JSONDecodeError
 
 import microdata
 import requests
@@ -272,19 +273,22 @@ def recipe_from_url(request, url):
 
     # first try finding ld+json as its most common
     for ld in soup.find_all('script', type='application/ld+json'):
-        ld_json = json.loads(ld.string)
-        if type(ld_json) != list:
-            ld_json = [ld_json]
+        try:
+            ld_json = json.loads(ld.string)
+            if type(ld_json) != list:
+                ld_json = [ld_json]
 
-        for ld_json_item in ld_json:
-            # recipes type might be wrapped in @graph type
-            if '@graph' in ld_json_item:
-                for x in ld_json_item['@graph']:
-                    if '@type' in x and x['@type'] == 'Recipe':
-                        ld_json_item = x
+            for ld_json_item in ld_json:
+                # recipes type might be wrapped in @graph type
+                if '@graph' in ld_json_item:
+                    for x in ld_json_item['@graph']:
+                        if '@type' in x and x['@type'] == 'Recipe':
+                            ld_json_item = x
 
-            if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
-                return find_recipe_json(ld_json_item)
+                if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
+                    return find_recipe_json(ld_json_item)
+        except JSONDecodeError:
+            JsonResponse({'error': _('The requested site does not provided malformed data and cannot be read.')})
 
     # now try to find microdata
     items = microdata.get_items(response.text)
