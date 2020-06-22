@@ -88,6 +88,11 @@ def batch_edit(request):
     return render(request, 'batch/edit.html', {'form': form})
 
 
+@group_required('user')
+def import_url(request):
+    return render(request, 'url_import.html', {})
+
+
 class Object(object):
     pass
 
