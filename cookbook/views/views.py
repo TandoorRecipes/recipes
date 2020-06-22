@@ -148,7 +148,7 @@ def get_days_from_week(start, end):
 
 @group_required('user')
 def meal_plan(request):
-    return render(request, 'meal_plan.html', {'DEBUG': settings.DEBUG})
+    return render(request, 'meal_plan.html', {})
 
 
 @group_required('user')

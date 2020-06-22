@@ -1,0 +1,13 @@
+{% load static %}
+{% load custom_tags %}
+
+{% is_debug as DEBUG %}
+{% if DEBUG %}
+    <script src="{% static 'js/vue.js' %}"></script>
+{% else %}
+    <script src="{% static 'js/vue.min.js' %}"></script>
+{% endif %}
+
+<script src="{% static 'js/vue-resource.js' %}"></script>
+
+<script src="{% static 'js/js.cookie.min.js' %}"></script>
