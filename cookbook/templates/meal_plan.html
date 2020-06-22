@@ -6,13 +6,8 @@
 
 {% block extra_head %}
 
-    {% if DEBUG %}
-        <script src="{% static 'js/vue.js' %}"></script>
-    {% else %}
-        <script src="{% static 'js/vue.min.js' %}"></script>
-    {% endif %}
+    {% include 'include/vue_base.html' %}
 
-    <script src="{% static 'js/vue-resource.js' %}"></script>
     <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
 
     <script src="{% static 'js/Sortable.min.js' %}"></script>
