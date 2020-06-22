@@ -53,12 +53,14 @@ urlpatterns = [
     path('data/batch/import', data.batch_import, name='data_batch_import'),
     path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
     path('data/statistics', data.statistics, name='data_stats'),
+    path('data/import/url', data.import_url, name='data_import_url'),
 
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
     path('api/plan-ical/<slug:html_week>/', api.get_plan_ical, name='api_get_plan_ical'),
+    path('api/recipe-from-url/<path:url>/', api.recipe_from_url, name='api_recipe_from_url'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),

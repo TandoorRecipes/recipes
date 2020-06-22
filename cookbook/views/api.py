@@ -2,12 +2,14 @@ import io
 import json
 import re
 
+import requests
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
+from bs4 import BeautifulSoup
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
@@ -16,7 +18,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Keyword
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer
@@ -242,3 +244,72 @@ def get_plan_ical(request, html_week):
     response["Content-Disposition"] = f'attachment; filename=meal_plan_{html_week}.ics'
 
     return response
+
+
+@group_required('user')
+def recipe_from_url(request, url):
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 403:
+        return JsonResponse({'error': _('The requested page refused to provide any information (Status Code 403).')})
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    for ld in soup.find_all('script', type='application/ld+json'):
+        ld_json = json.loads(ld.string)
+
+        # recipes type might be wrapped in @graph type
+        if '@graph' in ld_json:
+            for x in ld_json['@graph']:
+                if '@type' in x and x['@type'] == 'Recipe':
+                    ld_json = x
+
+        if '@type' in ld_json and ld_json['@type'] == 'Recipe':
+
+            if 'recipeIngredient' in ld_json:
+                ingredients = []
+
+                for x in ld_json['recipeIngredient']:
+                    ingredient_split = x.split()
+                    if len(ingredient_split) > 2:
+                        ingredients.append({'amount': ingredient_split[0], 'unit': ingredient_split[1], 'ingredient': " ".join(ingredient_split[2:])})
+                    if len(ingredient_split) == 2:
+                        ingredients.append({'amount': ingredient_split[0], 'unit': '', 'ingredient': " ".join(ingredient_split[1:])})
+                    if len(ingredient_split) == 1:
+                        ingredients.append({'amount': 0, 'unit': '', 'ingredient': " ".join(ingredient_split)})
+
+                ld_json['recipeIngredient'] = ingredients
+
+            if 'keywords' in ld_json:
+                keywords = []
+                if type(ld_json['keywords']) == str:
+                    ld_json['keywords'] = ld_json['keywords'].split(',')
+
+                for kw in ld_json['keywords']:
+                    if k := Keyword.objects.filter(name=kw).first():
+                        keywords.append({'id': str(k.id), 'text': str(k).strip()})
+                    else:
+                        keywords.append({'id': "null", 'text': kw.strip()})
+
+                ld_json['keywords'] = keywords
+
+            if 'recipeInstructions' in ld_json:
+                instructions = ''
+                if type(ld_json['recipeInstructions']) == list:
+                    for i in ld_json['recipeInstructions']:
+                        if type(i) == str:
+                            instructions += i
+                        else:
+                            instructions += i['text'] + '\n\n'
+                    ld_json['recipeInstructions'] = instructions
+
+            if 'image' in ld_json:
+                if (type(ld_json['image'])) == list:
+                    if type(ld_json['image'][0]) == str:
+                        ld_json['image'] = ld_json['image'][0]
+                    elif 'url' in ld_json['image'][0]:
+                        ld_json['image'] = ld_json['image'][0]['url']
+
+            return JsonResponse(ld_json)
+
+    return JsonResponse({'error': _('The requested site does not provide any recognized data format to import the recipe from.')})

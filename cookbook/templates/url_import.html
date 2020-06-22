@@ -1,10 +1,177 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'URL Import' %}{% endblock %}
+
+{% block extra_head %}
+
+    {% include 'include/vue_base.html' %}
+
+
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+{% endblock %}
+
+{% block content %}
+
+    <div id="app">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group mb-3">
+                    <input class="form-control" v-model="remote_url">
+                    <div class="input-group-append">
+                        <button @click="loadRecipe()" class="btn btn-outline-secondary" type="button"
+                                id="button-addon2">Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <br/>
+        <template v-if="recipe_data !== undefined">
+
+            <form>
+                <div class="form-group">
+                    <label for="id_name">{% trans 'Recipe Name' %}</label>
+                    <input id="id_name" class="form-control" v-model="recipe_data.name">
+                </div>
+
+
+                <div class="row">
+                    <div class="col col-md-6">
+                        <img v-bind:src="recipe_data.image" alt="{% trans 'Recipe Image' %}"
+                             class="img-fluid img-responsive img-rounded">
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="id_prep_time">{% trans 'Preparation time ca.' %}</label>
+                            <input id="id_prep_time" class="form-control" v-model="recipe_data.prepTime">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_waiting_time">{% trans 'Waiting time ca.' %}</label>
+                            <input id="id_waiting_time" class="form-control" v-model="recipe_data.cookTime">
+                        </div>
+                    </div>
+
+                </div>
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-responsive-sm table-sm">
+                            <thead>
+                            <tr>
+                                <th>{% trans 'Amount' %}</th>
+                                <th>{% trans 'Unit' %}</th>
+                                <th>{% trans 'Ingredient' %}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr v-for="i in recipe_data.recipeIngredient">
+                                <td><input class="form-control" v-model="i.amount"></td>
+                                <td><input class="form-control" v-model="i.unit"></td>
+                                <td><input class="form-control" v-model="i.ingredient"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_instructions">{% trans 'Instructions' %}</label>
+                    <textarea id="id_instructions" class="form-control" v-model="recipe_data.recipeInstructions"
+                              rows="8"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_keywords">{% trans 'Keywords' %}</label>
+
+                    <multiselect
+                            v-model="recipe_data.keywords"
+                            :options="keywords"
+                            :close-on-select="false"
+                            :clear-on-select="true"
+                            :hide-selected="true"
+                            :preserve-search="true"
+                            placeholder="Pick some"
+                            label="text"
+                            track-by="id"
+                            id="id_keywords"
+                            :multiple="true">
+                    </multiselect>
+                </div>
+
+
+            </form>
+        </template>
+    [[recipe_data]]
+    </div>
+
+
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <script type="application/javascript">
+        let csrftoken = Cookies.get('csrftoken');
+        Vue.http.headers.common['X-CSRFToken'] = csrftoken;
+
+        Vue.component('vue-multiselect', window.VueMultiselect.default)
+
+        // micro data examples
+        // https://www.inspirationforall.de/pudding-selber-machen-vanillepudding-schokopudding-rezept/
+        // https://www.ichkoche.at/schokopudding-rezept-218012
+        // https://www.gutekueche.de/mamis-feiner-schokopudding-rezept-4274
+        // https://www.maizena.at/rezepte/schokopudding/13534
+        // https://kochkino.de/schokoladen-pudding/2159
+        // https://www.oetker.de/rezepte/r/schokopudding-mit-vanille-herzen
+
+        let app = new Vue({
+            components: {
+                Multiselect: window.VueMultiselect.default
+            },
+            delimiters: ['[[', ']]'],
+            el: '#app',
+            data: {
+                remote_url: 'https://www.chefkoch.de/rezepte/1716851280413039/Einfacher-Zwiebelkuchen.html',
+                keywords: [],
+                recipe_data: undefined,
+            },
+            mounted: function () {
+                this.loadRecipe();
+                this.getKeywords();
+            },
+            methods: {
+                loadRecipe: function () {
+                    this.$http.get("{% url 'api_recipe_from_url' 12345 %}".replace(/12345/, this.remote_url)).then((response) => {
+                        this.recipe_data = response.data;
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                getKeywords: function () {
+                    this.$http.get("{% url 'dal_keyword' %}").then((response) => {
+                        this.keywords = response.data.results;
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                }
+            }
+        });
+    </script>
+
+{% endblock %}
