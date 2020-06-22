@@ -11,6 +11,8 @@ from cookbook.helper import dal
 router = routers.DefaultRouter()
 router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'recipe', api.RecipeViewSet)
+router.register(r'ingredient', api.IngredientViewSet)
+router.register(r'recipe-ingredient', api.RecipeIngredientSerializer)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)

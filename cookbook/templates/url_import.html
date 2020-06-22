@@ -113,7 +113,12 @@
 
                 <div class="form-group">
                     <label for="id_all_keywords">{% trans 'All Keywords' %}</label><br/>
-                    <input id="id_all_keywords" type="checkbox" v-model="all_keywords"> {% trans 'Import all Keywords not only the ones already existing.' %}
+                    <input id="id_all_keywords" type="checkbox"
+                           v-model="all_keywords"> {% trans 'Import all Keywords not only the ones already existing.' %}
+                </div>
+
+                <div class="form-group">
+                    <button type="button" @click="importRecipe()">{% trans 'Import' %}</button>
                 </div>
 
                 <br/>
@@ -158,13 +163,42 @@
                         console.log(err)
                     })
                 },
+                importRecipe: function () {
+
+                    let recipe_keywords = []
+                    for (k of this.recipe_data.keywords) {
+                        if (k.id !== "null") {
+                            recipe_keywords.push(Number.parseInt(k.id))
+                        }
+                        //TODO create non existent if checked
+                    }
+
+                    let recipe = {
+                        name: this.recipe_data.name,
+                        instructions: this.recipe_data.recipeInstructions,
+                        keywords: recipe_keywords,
+                        created_by: {{ request.user.pk }},
+                    }
+
+                    this.$http.post(`{% url 'api:recipe-list' %}`, recipe).then((response) => {
+                        let entry = response.data
+                        console.log(entry)
+
+                        //TODO create some kind of endpoint for ingredients, units and recipe ingredients creation
+
+                        location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, entry.id)
+                    }).catch((err) => {
+                        console.log("dragChanged create error", err);
+                    })
+
+                },
                 getKeywords: function () {
                     this.$http.get("{% url 'dal_keyword' %}").then((response) => {
                         this.keywords = response.data.results;
                     }).catch((err) => {
                         console.log(err)
                     })
-                }
+                },
             }
         });
     </script>
