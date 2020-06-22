@@ -17,28 +17,26 @@
 
     <div id="app">
 
-        https://www.inspirationforall.de/pudding-selber-machen-vanillepudding-schokopudding-rezept/<br/>
-        https://www.ichkoche.at/schokopudding-rezept-218012<br/>
-        https://www.gutekueche.de/mamis-feiner-schokopudding-rezept-4274<br/>
-        https://www.maizena.at/rezepte/schokopudding/13534<br/>
-        https://kochkino.de/schokoladen-pudding/2159<br/>
-        https://www.oetker.de/rezepte/r/schokopudding-mit-vanille-herzen<br/>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="input-group mb-3">
                     <input class="form-control" v-model="remote_url">
                     <div class="input-group-append">
-                        <button @click="loadRecipe()" class="btn btn-outline-secondary" type="button"
-                                id="button-addon2">Search
+                        <button @click="loadRecipe()" class="btn btn-primary" type="button"
+                                id="id_btn_search"><i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
-
         <br/>
+
+        <div v-if="loading" class="text-center">
+            <br/>
+            <i class="fas fa-spinner fa-spin fa-8x"></i>
+        </div>
+
         <template v-if="recipe_data !== undefined">
 
             <form>
@@ -46,7 +44,6 @@
                     <label for="id_name">{% trans 'Recipe Name' %}</label>
                     <input id="id_name" class="form-control" v-model="recipe_data.name">
                 </div>
-
 
                 <div class="row">
                     <div class="col col-md-6" v-if="recipe_data.image !== ''">
@@ -114,25 +111,18 @@
                     </multiselect>
                 </div>
 
+                <div class="form-group">
+                    <label for="id_all_keywords">{% trans 'All Keywords' %}</label><br/>
+                    <input id="id_all_keywords" type="checkbox" v-model="all_keywords"> {% trans 'Import all Keywords not only the ones already existing.' %}
+                </div>
 
+                <br/>
+                <br/>
+                <br/>
             </form>
-
-            [[recipe_data]]
         </template>
 
     </div>
-
-
-
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
 
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
@@ -150,6 +140,8 @@
                 remote_url: 'https://www.chefkoch.de/rezepte/1716851280413039/Einfacher-Zwiebelkuchen.html',
                 keywords: [],
                 recipe_data: undefined,
+                loading: false,
+                all_keywords: false,
             },
             mounted: function () {
                 this.loadRecipe();
@@ -157,9 +149,11 @@
             },
             methods: {
                 loadRecipe: function () {
+                    this.recipe_data = undefined
+                    this.loading = true
                     this.$http.get("{% url 'api_recipe_from_url' 12345 %}".replace(/12345/, this.remote_url)).then((response) => {
                         this.recipe_data = response.data;
-
+                        this.loading = false
                     }).catch((err) => {
                         console.log(err)
                     })
