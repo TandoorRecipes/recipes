@@ -27,6 +27,7 @@ urlpatterns = [
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
+    path('test/', views.test, name='view_test'),
 
     path('import/', import_export.import_recipe, name='view_import'),
     path('export/', import_export.export_recipe, name='view_export'),
