@@ -17,6 +17,13 @@
 
     <div id="app">
 
+        https://www.inspirationforall.de/pudding-selber-machen-vanillepudding-schokopudding-rezept/<br/>
+        https://www.ichkoche.at/schokopudding-rezept-218012<br/>
+        https://www.gutekueche.de/mamis-feiner-schokopudding-rezept-4274<br/>
+        https://www.maizena.at/rezepte/schokopudding/13534<br/>
+        https://kochkino.de/schokoladen-pudding/2159<br/>
+        https://www.oetker.de/rezepte/r/schokopudding-mit-vanille-herzen<br/>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="input-group mb-3">
@@ -42,11 +49,11 @@
 
 
                 <div class="row">
-                    <div class="col col-md-6">
+                    <div class="col col-md-6" v-if="recipe_data.image !== ''">
                         <img v-bind:src="recipe_data.image" alt="{% trans 'Recipe Image' %}"
                              class="img-fluid img-responsive img-rounded">
                     </div>
-                    <div>
+                    <div class="col col-md-6">
                         <div class="form-group">
                             <label for="id_prep_time">{% trans 'Preparation time ca.' %}</label>
                             <input id="id_prep_time" class="form-control" v-model="recipe_data.prepTime">
@@ -109,8 +116,10 @@
 
 
             </form>
+
+            [[recipe_data]]
         </template>
-    [[recipe_data]]
+
     </div>
 
 
@@ -130,14 +139,6 @@
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
         Vue.component('vue-multiselect', window.VueMultiselect.default)
-
-        // micro data examples
-        // https://www.inspirationforall.de/pudding-selber-machen-vanillepudding-schokopudding-rezept/
-        // https://www.ichkoche.at/schokopudding-rezept-218012
-        // https://www.gutekueche.de/mamis-feiner-schokopudding-rezept-4274
-        // https://www.maizena.at/rezepte/schokopudding/13534
-        // https://kochkino.de/schokoladen-pudding/2159
-        // https://www.oetker.de/rezepte/r/schokopudding-mit-vanille-herzen
 
         let app = new Vue({
             components: {

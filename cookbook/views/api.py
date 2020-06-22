@@ -19,7 +19,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin
-from cookbook.helper.recipe_url_import import find_ld_json
+from cookbook.helper.recipe_url_import import find_recipe_json
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Keyword
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
@@ -260,13 +260,25 @@ def recipe_from_url(request, url):
 
     # first try finding ld+json as its most common
     for ld in soup.find_all('script', type='application/ld+json'):
-        if (r := find_ld_json(json.loads(ld.string))) is not None:
-            return r
+        ld_json = json.loads(ld.string)
+        if type(ld_json) != list:
+            ld_json = [ld_json]
+
+        for ld_json_item in ld_json:
+            # recipes type might be wrapped in @graph type
+            if '@graph' in ld_json_item:
+                for x in ld_json_item['@graph']:
+                    if '@type' in x and x['@type'] == 'Recipe':
+                        ld_json_item = x
+
+            if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
+                return find_recipe_json(ld_json_item)
 
     # now try to find microdata
-    items = microdata.get_items(response)
+    items = microdata.get_items(response.text)
     for i in items:
-        js = i.json()
-        print('hi')
+        md_json = json.loads(i.json())
+        if 'schema.org/Recipe' in str(md_json['type']):
+            return find_recipe_json(md_json['properties'])
 
     return JsonResponse({'error': _('The requested site does not provide any recognized data format to import the recipe from.')})
