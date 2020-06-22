@@ -18,12 +18,12 @@ from rest_framework import viewsets, permissions
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 
-from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin
+from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import find_recipe_json
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Keyword
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Keyword, RecipeIngredient, Ingredient
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, RecipeIngredientSerializer, IngredientSerializer
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
@@ -122,7 +122,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # TODO split read and write permission for meal plan guest
 
     def get_queryset(self):
         queryset = Recipe.objects.all()
@@ -134,6 +134,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if limit is not None:
             queryset = queryset[:int(limit)]
         return queryset
+
+
+class RecipeIngredientViewSet(viewsets.ModelViewSet):
+    queryset = RecipeIngredient.objects.all()
+    serializer_class = RecipeIngredientSerializer
+    permission_classes = [CustomIsUser]
+
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = [CustomIsUser]
 
 
 class ViewLogViewSet(viewsets.ModelViewSet):
