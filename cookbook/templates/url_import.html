@@ -22,7 +22,7 @@
                 <div class="input-group mb-3">
                     <input class="form-control" v-model="remote_url">
                     <div class="input-group-append">
-                        <button @click="loadRecipe()" class="btn btn-primary" type="button"
+                        <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
                                 id="id_btn_search"><i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -127,6 +127,43 @@
             </form>
         </template>
 
+        <template v-if="error !== undefined">
+            <div>
+
+                <div style="text-align: center">
+                    <i class="fas fa-robot fa-8x"></i><br/><br/>
+                    [[error.msg]]
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card border-info mb-6">
+                        <div class="card-body text-info">
+                            <h5 class="card-title">{% trans 'Information' %}</h5>
+                            <p class="card-text">
+                                {% blocktrans %} Only websites containing ld+json or microdata information can currently
+                                    be imported. Most big recipe pages support this. If you site cannot be imported but
+                                    you think
+                                    it probably has some kind of structured data feel free to post an example in the
+                                    github issues.{% endblocktrans %}
+                            </p>
+                            <a href="https://developers.google.com/search/docs/data-types/recipe" target="_blank"
+                               rel="noreferrer nofollow"
+                               class="card-link">{% trans 'Google ld+json Info' %}</a>
+                            <a href="https://github.com/vabene1111/recipes/issues" target="_blank"
+                               rel="noreferrer nofollow"
+                               class="card-link">{% trans 'GitHub Issues' %}</a>
+                            <a href="https://schema.org/Recipe" target="_blank" rel="noreferrer nofollow"
+                               class="card-link">{% trans 'Recipe Markup Specification' %}</a>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
     </div>
 
     <script type="application/javascript">
@@ -142,9 +179,10 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                remote_url: 'https://www.chefkoch.de/rezepte/1716851280413039/Einfacher-Zwiebelkuchen.html',
+                remote_url: 'https://www.rezeptschachtel.de/schwarzwaelder_kirschtorte_rezept.html',
                 keywords: [],
                 recipe_data: undefined,
+                error: undefined,
                 loading: false,
                 all_keywords: false,
             },
@@ -155,42 +193,24 @@
             methods: {
                 loadRecipe: function () {
                     this.recipe_data = undefined
+                    this.error = undefined
                     this.loading = true
                     this.$http.get("{% url 'api_recipe_from_url' 12345 %}".replace(/12345/, this.remote_url)).then((response) => {
                         this.recipe_data = response.data;
                         this.loading = false
                     }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
                         console.log(err)
                     })
                 },
                 importRecipe: function () {
-
-                    let recipe_keywords = []
-                    for (k of this.recipe_data.keywords) {
-                        if (k.id !== "null") {
-                            recipe_keywords.push(Number.parseInt(k.id))
-                        }
-                        //TODO create non existent if checked
-                    }
-
-                    let recipe = {
-                        name: this.recipe_data.name,
-                        instructions: this.recipe_data.recipeInstructions,
-                        keywords: recipe_keywords,
-                        created_by: {{ request.user.pk }},
-                    }
-
-                    this.$http.post(`{% url 'api:recipe-list' %}`, recipe).then((response) => {
-                        let entry = response.data
-                        console.log(entry)
-
-                        //TODO create some kind of endpoint for ingredients, units and recipe ingredients creation
-
-                        location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, entry.id)
+                    this.$set(this.recipe_data, 'all_keywords', this.all_keywords)
+                    this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
+                        location.href = response.data
                     }).catch((err) => {
                         console.log("dragChanged create error", err);
                     })
-
                 },
                 getKeywords: function () {
                     this.$http.get("{% url 'dal_keyword' %}").then((response) => {

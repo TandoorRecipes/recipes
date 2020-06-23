@@ -1,8 +1,13 @@
+import json
 from datetime import datetime
+from io import BytesIO
 
+import requests
+from PIL import Image
 from django.contrib import messages
+from django.core.files import File
 from django.utils.translation import gettext as _
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import ngettext
@@ -90,6 +95,53 @@ def batch_edit(request):
 
 @group_required('user')
 def import_url(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        recipe = Recipe.objects.create(
+            name=data['name'],
+            instructions=data['recipeInstructions'],
+            internal=True,
+            created_by=request.user,
+        )
+
+        for kw in data['keywords']:
+            if kw['id'] != "null" and (k := Keyword.objects.filter(id=kw['id']).first()):
+                recipe.keywords.add(k)
+            elif data['all_keywords']:
+                k = Keyword.objects.create(name=kw['text'])
+                recipe.keywords.add(k)
+
+        for ing in data['recipeIngredient']:
+            i, i_created = Ingredient.objects.get_or_create(name=ing['ingredient'])
+            u, u_created = Unit.objects.get_or_create(name=ing['unit'])
+
+            if isinstance(ing['amount'], str):
+                try:
+                    ing['amount'] = float(ing['amount'].replace(',', '.'))
+                except ValueError:
+                    # TODO return proper error
+                    pass
+
+            RecipeIngredient.objects.create(recipe=recipe, ingredient=i, unit=u, amount=ing['amount'])
+
+        if data['image'] != '':
+            response = requests.get(data['image'])
+            img = Image.open(BytesIO(response.content))
+
+            # todo move image processing to dedicated function
+            basewidth = 720
+            wpercent = (basewidth / float(img.size[0]))
+            hsize = int((float(img.size[1]) * float(wpercent)))
+            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+            im_io = BytesIO()
+            img.save(im_io, 'PNG', quality=70)
+            recipe.image = File(im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png')
+            recipe.save()
+
+        return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
+
     return render(request, 'url_import.html', {})
 
 
