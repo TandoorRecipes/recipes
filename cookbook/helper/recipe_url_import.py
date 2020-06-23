@@ -35,18 +35,30 @@ def find_recipe_json(ld_json, url):
 
         for x in ld_json['recipeIngredient']:
             ingredient_split = x.split()
+            ingredient = None
+            amount = 0
+            unit = ''
             if len(ingredient_split) > 2:
+                ingredient = " ".join(ingredient_split[2:])
+                unit = ingredient_split[1]
                 try:
-                    ingredients.append({'amount': float(ingredient_split[0].replace(',', '.')), 'unit': ingredient_split[1], 'ingredient': " ".join(ingredient_split[2:])})
+                    amount = float(ingredient_split[0].replace(',', '.'))
                 except ValueError:
-                    ingredients.append({'amount': 0, 'unit': '', 'ingredient': " ".join(ingredient_split)})
+                    amount = 0
+                    ingredient = " ".join(ingredient_split)
             if len(ingredient_split) == 2:
+                ingredient = " ".join(ingredient_split[1:])
+                unit = ''
                 try:
-                    ingredients.append({'amount': float(ingredient_split[0].replace(',', '.')), 'unit': '', 'ingredient': " ".join(ingredient_split[1:])})
+                    amount = float(ingredient_split[0].replace(',', '.'))
                 except ValueError:
-                    ingredients.append({'amount': 0, 'unit': '', 'ingredient': " ".join(ingredient_split)})
+                    amount = 0
+                    ingredient = " ".join(ingredient_split)
             if len(ingredient_split) == 1:
-                ingredients.append({'amount': 0, 'unit': '', 'ingredient': " ".join(ingredient_split)})
+                ingredient = " ".join(ingredient_split)
+
+            if ingredient:
+                ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': 'null'}, 'ingredient': {'text': ingredient, 'id': 'null'}, 'original': x})
 
         ld_json['recipeIngredient'] = ingredients
     else:

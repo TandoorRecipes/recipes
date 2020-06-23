@@ -67,7 +67,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-responsive-sm table-sm">
+                        <table class="table">
                             <thead>
                             <tr>
                                 <th>{% trans 'Amount' %}</th>
@@ -77,21 +77,60 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <template v-for="(i, index) in recipe_data.recipeIngredient">
 
-                            <tr v-for="i in recipe_data.recipeIngredient">
-                                <td><input class="form-control" v-model="i.amount"></td>
-                                <td><input class="form-control" v-model="i.unit"></td>
-                                <td><input class="form-control" v-model="i.ingredient"></td>
-                                <td style="vertical-align: middle;text-align: center">
-                                    <button class="btn btn-outline-danger" type="button" @click="deleteIngredient(i)"><i
-                                            class="fas fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td><input class="form-control" v-model="i.amount"></td>
+                                    <td>
+                                        <multiselect
+                                                v-model="i.unit"
+                                                :options="units"
+                                                :close-on-select="true"
+                                                :clear-on-select="true"
+                                                :hide-selected="true"
+                                                :preserve-search="true"
+                                                placeholder="{% trans 'Select one' %}"
+                                                tag-placeholder="{% trans 'Create new' %}"
+                                                label="text"
+                                                :taggable="true"
+                                                track-by="id"
+                                                :multiple="false">
+                                        </multiselect>
+
+                                    </td>
+                                    <td>
+                                        <multiselect
+                                                v-model="i.ingredient"
+                                                :options="ingredients"
+                                                :taggable="true"
+                                                @tag="addIngredientType"
+                                                placeholder="{% trans 'Select one' %}"
+                                                tag-placeholder="{% trans 'Create new' %}"
+                                                :close-on-select="true"
+                                                :clear-on-select="true"
+                                                :hide-selected="true"
+                                                :preserve-search="true"
+                                                label="text"
+                                                :id="index"
+                                                track-by="id"
+                                                :multiple="false">
+                                        </multiselect>
+
+                                    </td>
+                                    <td style="vertical-align: middle;text-align: center">
+                                        <button class="btn btn-outline-danger" type="button"
+                                                @click="deleteIngredient(i)"><i
+                                                class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </template>
+
                             </tbody>
                         </table>
                         <div style="text-align: center">
-                           <button class="btn btn-success" type="button" @click="addIngredient()"><i class="fas fa-plus"></i></button>
-                        <br/><br/>
+                            <button class="btn btn-success" type="button" @click="addIngredient()"><i
+                                    class="fas fa-plus"></i></button>
+                            <br/><br/>
                         </div>
 
                     </div>
@@ -113,7 +152,7 @@
                             :clear-on-select="true"
                             :hide-selected="true"
                             :preserve-search="true"
-                            placeholder="Pick some"
+                            placeholder="{% trans 'Select one' %}"
                             label="text"
                             track-by="id"
                             id="id_keywords"
@@ -189,15 +228,28 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                remote_url: '',
+                value: [
+                    {name: 'Javascript', code: 'js'}
+                ],
+                options: [
+                    {name: 'Vue.js', code: 'vu'},
+                    {name: 'Javascript', code: 'js'},
+                    {name: 'Open Source', code: 'os'}
+                ],
+                remote_url: 'https://www.rezeptschachtel.de/schwarzwaelder_kirschtorte_rezept.html',
                 keywords: [],
+                units: [],
+                ingredients: [],
                 recipe_data: undefined,
                 error: undefined,
                 loading: false,
                 all_keywords: false,
             },
             mounted: function () {
+                this.loadRecipe();
                 this.getKeywords();
+                this.getUnits();
+                this.getIngredients();
             },
             methods: {
                 loadRecipe: function () {
@@ -213,6 +265,14 @@
                         console.log(err)
                     })
                 },
+                addTag(newTag) {
+                    const tag = {
+                        name: newTag,
+                        code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                    }
+                    this.options.push(tag)
+                    this.value.push(tag)
+                },
                 importRecipe: function () {
                     this.$set(this.recipe_data, 'all_keywords', this.all_keywords)
                     this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
@@ -226,14 +286,35 @@
                 },
                 addIngredient: function (i) {
                     this.recipe_data.recipeIngredient.push({
-                        unit: '{{ request.user.userpreference.default_unit }}',
+                        unit: {id: 'null', text: '{{ request.user.userpreference.default_unit }}'},
                         amount: 0,
-                        ingredient: ''
+                        ingredient: {id: 'null', text: ''}
                     })
                 },
+                addIngredientType: function (tag, index) {
+                    let new_ingredient = this.recipe_data.recipeIngredient[index]
+                    new_ingredient.ingredient = {'id': 'null', 'text': tag}
+                    this.ingredients.push(new_ingredient.ingredient)
+                    this.recipe_data.recipeIngredient[index] = new_ingredient
+                },
+                //TODO only load when needed
                 getKeywords: function () {
                     this.$http.get("{% url 'dal_keyword' %}").then((response) => {
                         this.keywords = response.data.results;
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                getUnits: function () {
+                    this.$http.get("{% url 'dal_unit' %}").then((response) => {
+                        this.units = response.data.results;
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                getIngredients: function () {
+                    this.$http.get("{% url 'dal_ingredient' %}").then((response) => {
+                        this.ingredients = response.data.results;
                     }).catch((err) => {
                         console.log(err)
                     })
