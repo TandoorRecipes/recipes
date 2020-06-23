@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="input-group mb-3">
-                    <input class="form-control" v-model="remote_url">
+                    <input class="form-control" v-model="remote_url" placeholder="{% trans 'Enter website URL' %}">
                     <div class="input-group-append">
                         <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
                                 id="id_btn_search"><i class="fas fa-search"></i>
@@ -67,67 +67,68 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>{% trans 'Amount' %}</th>
-                                <th>{% trans 'Unit' %}</th>
-                                <th>{% trans 'Ingredient' %}</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <template v-for="(i, index) in recipe_data.recipeIngredient">
+                        <template v-for="(i, index) in recipe_data.recipeIngredient">
 
-                                <tr>
-                                    <td><input class="form-control" v-model="i.amount"></td>
-                                    <td>
-                                        <multiselect
-                                                v-model="i.unit"
-                                                :options="units"
-                                                :close-on-select="true"
-                                                :clear-on-select="true"
-                                                :hide-selected="true"
-                                                :preserve-search="true"
-                                                placeholder="{% trans 'Select one' %}"
-                                                tag-placeholder="{% trans 'Create new' %}"
-                                                label="text"
-                                                :taggable="true"
-                                                track-by="id"
-                                                :multiple="false">
-                                        </multiselect>
+                            <div class="card" style="margin-top: 4px">
+                                <div class="card-body">
+                                    <div class="row" v-if="i.original">
+                                        <div class="col-md-12" style="margin-bottom: 4px">
+                                            <span class="text-muted"><i class="fas fa-globe"></i> [[i.original]]</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <input class="form-control" v-model="i.amount">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <multiselect
+                                                    v-model="i.unit"
+                                                    :options="units"
+                                                    :close-on-select="true"
+                                                    :clear-on-select="true"
+                                                    :hide-selected="true"
+                                                    :preserve-search="true"
+                                                    placeholder="{% trans 'Select one' %}"
+                                                    tag-placeholder="{% trans 'Create new' %}"
+                                                    label="text"
+                                                    :taggable="true"
+                                                    track-by="id"
+                                                    :multiple="false">
+                                            </multiselect>
 
-                                    </td>
-                                    <td>
-                                        <multiselect
-                                                v-model="i.ingredient"
-                                                :options="ingredients"
-                                                :taggable="true"
-                                                @tag="addIngredientType"
-                                                placeholder="{% trans 'Select one' %}"
-                                                tag-placeholder="{% trans 'Create new' %}"
-                                                :close-on-select="true"
-                                                :clear-on-select="true"
-                                                :hide-selected="true"
-                                                :preserve-search="true"
-                                                label="text"
-                                                :id="index"
-                                                track-by="id"
-                                                :multiple="false">
-                                        </multiselect>
+                                        </div>
+                                        <div class="col-md-5">
 
-                                    </td>
-                                    <td style="vertical-align: middle;text-align: center">
-                                        <button class="btn btn-outline-danger" type="button"
-                                                @click="deleteIngredient(i)"><i
-                                                class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                            </template>
+                                            <multiselect
+                                                    v-model="i.ingredient"
+                                                    :options="ingredients"
+                                                    :taggable="true"
+                                                    @tag="addIngredientType"
+                                                    placeholder="{% trans 'Select one' %}"
+                                                    tag-placeholder="{% trans 'Create new' %}"
+                                                    :close-on-select="true"
+                                                    :clear-on-select="true"
+                                                    :hide-selected="true"
+                                                    :preserve-search="true"
+                                                    label="text"
+                                                    :id="index"
+                                                    track-by="id"
+                                                    :multiple="false">
+                                            </multiselect>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button class="btn btn-outline-danger btn-lg" type="button"
+                                                    @click="deleteIngredient(i)"><i
+                                                    class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
-                        <div style="text-align: center">
+
+                        </template>
+
+                        <div style="text-align: center; margin-top: 16px">
                             <button class="btn btn-success" type="button" @click="addIngredient()"><i
                                     class="fas fa-plus"></i></button>
                             <br/><br/>
@@ -167,7 +168,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="button" @click="importRecipe()">{% trans 'Import' %}</button>
+                    <button type="button" class="btn btn-success" @click="importRecipe()">{% trans 'Import' %}</button>
                 </div>
 
                 <br/>
@@ -205,8 +206,6 @@
                                class="card-link">{% trans 'GitHub Issues' %}</a>
                             <a href="https://schema.org/Recipe" target="_blank" rel="noreferrer nofollow"
                                class="card-link">{% trans 'Recipe Markup Specification' %}</a>
-
-
                         </div>
                     </div>
                 </div>
@@ -236,7 +235,7 @@
                     {name: 'Javascript', code: 'js'},
                     {name: 'Open Source', code: 'os'}
                 ],
-                remote_url: 'https://www.rezeptschachtel.de/schwarzwaelder_kirschtorte_rezept.html',
+                remote_url: '',
                 keywords: [],
                 units: [],
                 ingredients: [],
@@ -246,7 +245,6 @@
                 all_keywords: false,
             },
             mounted: function () {
-                this.loadRecipe();
                 this.getKeywords();
                 this.getUnits();
                 this.getIngredients();
