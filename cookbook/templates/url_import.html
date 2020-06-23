@@ -82,12 +82,14 @@
                                         </div>
                                         <div class="col-md-5">
 
-                                            <table style="width: 100%">
+                                            <table class="table-layout:fixed">
+                                                <col width="95%"/>
+                                                <col width="5%"/>
                                                 <tr>
                                                     <td>
                                                         <multiselect v-tabindex
                                                                      ref="unit"
-                                                                     style="width: 100%;"
+                                                                     style="width: 100%!important;"
                                                                      v-model="i.unit"
                                                                      :options="units"
                                                                      :close-on-select="true"
@@ -120,24 +122,24 @@
                                         <div class="col-md-5">
 
                                             <multiselect v-tabindex
-                                                    ref="ingredient"
-                                                    v-model="i.ingredient"
-                                                    :options="ingredients"
-                                                    :taggable="true"
-                                                    @tag="addIngredientType"
-                                                    placeholder="{% trans 'Select one' %}"
-                                                    tag-placeholder="{% trans 'Select' %}"
-                                                    :close-on-select="true"
-                                                    :clear-on-select="true"
-                                                    :allow-empty="false"
-                                                    :preserve-search="true"
-                                                    label="text"
-                                                    :id="'ingredient_' + index"
-                                                    track-by="id"
-                                                    :multiple="false"
-                                                    :loading="ingredients_loading"
-                                                    @search-change="searchIngredients"
-                                                    @open="openIngredientSelect">
+                                                         ref="ingredient"
+                                                         v-model="i.ingredient"
+                                                         :options="ingredients"
+                                                         :taggable="true"
+                                                         @tag="addIngredientType"
+                                                         placeholder="{% trans 'Select one' %}"
+                                                         tag-placeholder="{% trans 'Select' %}"
+                                                         :close-on-select="true"
+                                                         :clear-on-select="true"
+                                                         :allow-empty="false"
+                                                         :preserve-search="true"
+                                                         label="text"
+                                                         :id="'ingredient_' + index"
+                                                         track-by="id"
+                                                         :multiple="false"
+                                                         :loading="ingredients_loading"
+                                                         @search-change="searchIngredients"
+                                                         @open="openIngredientSelect">
 
                                             </multiselect>
                                         </div>
@@ -293,14 +295,6 @@
                         console.log(err)
                     })
                 },
-                addTag(newTag) {
-                    const tag = {
-                        name: newTag,
-                        code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-                    }
-                    this.options.push(tag)
-                    this.value.push(tag)
-                },
                 importRecipe: function () {
                     this.$set(this.recipe_data, 'all_keywords', this.all_keywords)
                     this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
@@ -314,22 +308,22 @@
                 },
                 addIngredient: function (i) {
                     this.recipe_data.recipeIngredient.push({
-                        unit: {id: Math.random() * 100, text: '{{ request.user.userpreference.default_unit }}'},
+                        unit: {id: Math.random() * 1000, text: '{{ request.user.userpreference.default_unit }}'},
                         amount: 0,
-                        ingredient: {id: Math.random() * 100, text: ''}
+                        ingredient: {id: Math.random() * 1000, text: ''}
                     })
                 },
                 addIngredientType: function (tag, index) {
                     index = index.replace('ingredient_', '')
                     let new_ingredient = this.recipe_data.recipeIngredient[index]
-                    new_ingredient.ingredient = {'id': Math.random() * 100, 'text': tag}
+                    new_ingredient.ingredient = {'id': Math.random() * 1000, 'text': tag}
                     this.ingredients.push(new_ingredient.ingredient)
                     this.recipe_data.recipeIngredient[index] = new_ingredient
                 },
                 addUnitType: function (tag, index) {
                     index = index.replace('unit_', '')
                     let new_unit = this.recipe_data.recipeIngredient[index]
-                    new_unit.unit = {'id': Math.random() * 100, 'text': tag}
+                    new_unit.unit = {'id': Math.random() * 1000, 'text': tag}
                     this.units.push(new_unit.unit)
                     this.recipe_data.recipeIngredient[index] = new_unit
                 },
@@ -356,7 +350,8 @@
                         this.units = response.data.results;
                         if (this.recipe_data !== undefined) {
                             for (let x of Array.from(this.recipe_data.recipeIngredient)) {
-                                if (x.ingredient.text !== '') {
+                                if (x.unit.text !== '') {
+                                    this.units = this.units.filter(item => item.text !== x.unit.text)
                                     this.units.push(x.unit)
                                 }
                             }
@@ -369,7 +364,16 @@
                 searchIngredients: function (query) {
                     this.ingredients_loading = true
                     this.$http.get("{% url 'dal_ingredient' %}" + '?q=' + query).then((response) => {
-                        this.ingredients = this.ingredients.concat(response.data.results);
+                        this.ingredients = response.data.results
+                        if (this.recipe_data !== undefined) {
+                            for (let x of Array.from(this.recipe_data.recipeIngredient)) {
+                                if (x.ingredient.text !== '') {
+                                    this.ingredients = this.ingredients.filter(item => item.text !== x.ingredient.text)
+                                    this.ingredients.push(x.ingredient)
+                                }
+                            }
+                        }
+
                         this.ingredients_loading = false
                     }).catch((err) => {
                         console.log(err)
