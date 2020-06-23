@@ -93,7 +93,9 @@
                                                     label="text"
                                                     :taggable="true"
                                                     track-by="id"
-                                                    :multiple="false">
+                                                    :multiple="false"
+                                                    :loading="units_loading"
+                                                    @search-change="searchUnits">>
                                             </multiselect>
 
                                         </div>
@@ -113,7 +115,9 @@
                                                     label="text"
                                                     :id="index"
                                                     track-by="id"
-                                                    :multiple="false">
+                                                    :multiple="false"
+                                                    :loading="ingredients_loading"
+                                                    @search-change="searchIngredients">>
                                             </multiselect>
                                         </div>
                                         <div class="col-md-1">
@@ -157,7 +161,9 @@
                             label="text"
                             track-by="id"
                             id="id_keywords"
-                            :multiple="true">
+                            :multiple="true"
+                            :loading="keywords_loading"
+                            @search-change="searchKeywords">
                     </multiselect>
                 </div>
 
@@ -227,27 +233,20 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                value: [
-                    {name: 'Javascript', code: 'js'}
-                ],
-                options: [
-                    {name: 'Vue.js', code: 'vu'},
-                    {name: 'Javascript', code: 'js'},
-                    {name: 'Open Source', code: 'os'}
-                ],
                 remote_url: '',
                 keywords: [],
+                keywords_loading: false,
                 units: [],
+                units_loading: false,
                 ingredients: [],
+                ingredients_loading: false,
                 recipe_data: undefined,
                 error: undefined,
                 loading: false,
                 all_keywords: false,
             },
             mounted: function () {
-                this.getKeywords();
-                this.getUnits();
-                this.getIngredients();
+
             },
             methods: {
                 loadRecipe: function () {
@@ -295,23 +294,28 @@
                     this.ingredients.push(new_ingredient.ingredient)
                     this.recipe_data.recipeIngredient[index] = new_ingredient
                 },
-                //TODO only load when needed
-                getKeywords: function () {
-                    this.$http.get("{% url 'dal_keyword' %}").then((response) => {
+                searchKeywords: function (query) {
+                    this.keywords_loading = true
+                    this.$http.get("{% url 'dal_keyword' %}" + '?q=' + query).then((response) => {
+                        this.keywords_loading = false
                         this.keywords = response.data.results;
                     }).catch((err) => {
                         console.log(err)
                     })
                 },
-                getUnits: function () {
-                    this.$http.get("{% url 'dal_unit' %}").then((response) => {
+                searchUnits: function (query) {
+                    this.units_loading = true
+                    this.$http.get("{% url 'dal_unit' %}" + '?q=' + query).then((response) => {
+                        this.units_loading = false
                         this.units = response.data.results;
                     }).catch((err) => {
                         console.log(err)
                     })
                 },
-                getIngredients: function () {
-                    this.$http.get("{% url 'dal_ingredient' %}").then((response) => {
+                searchIngredients: function (query) {
+                    this.ingredients_loading = true
+                    this.$http.get("{% url 'dal_ingredient' %}" + '?q=' + query).then((response) => {
+                        this.ingredients_loading = false
                         this.ingredients = response.data.results;
                     }).catch((err) => {
                         console.log(err)
