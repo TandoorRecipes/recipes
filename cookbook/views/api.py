@@ -18,6 +18,7 @@ from icalendar import Calendar, Event
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
+from urllib3.exceptions import NewConnectionError
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import find_recipe_json
@@ -264,10 +265,14 @@ def get_plan_ical(request, html_week):
 @group_required('user')
 def recipe_from_url(request, url):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'}
-    response = requests.get(url, headers=headers)
+
+    try:
+        response = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        return JsonResponse({'error': True, 'msg': _('The requested page could not be found.')}, status=400)
 
     if response.status_code == 403:
-        return JsonResponse({'error': _('The requested page refused to provide any information (Status Code 403).')})
+        return JsonResponse({'error': True, 'msg': _('The requested page refused to provide any information (Status Code 403).')}, status=400)
 
     soup = BeautifulSoup(response.text, "html.parser")
 
@@ -288,7 +293,7 @@ def recipe_from_url(request, url):
                 if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
                     return find_recipe_json(ld_json_item)
         except JSONDecodeError:
-            JsonResponse({'error': _('The requested site does not provided malformed data and cannot be read.')})
+            JsonResponse({'error': True, 'msg': _('The requested site does not provided malformed data and cannot be read.')}, status=400)
 
     # now try to find microdata
     items = microdata.get_items(response.text)
@@ -297,4 +302,4 @@ def recipe_from_url(request, url):
         if 'schema.org/Recipe' in str(md_json['type']):
             return find_recipe_json(md_json['properties'])
 
-    return JsonResponse({'error': _('The requested site does not provide any recognized data format to import the recipe from.')})
+    return JsonResponse({'error': True, 'msg': _('The requested site does not provide any recognized data format to import the recipe from.')}, status=400)
