@@ -28,8 +28,7 @@
     <div class="row">
         <div class="col col-md-8">
             {% recipe_rating recipe request.user as rating %}
-            <h3>{{ recipe.name }} {{ rating|safe }} <a href="{% url 'edit_recipe' recipe.pk %}" class="d-print-none"><i
-                    class="fas fa-pencil-alt"></i></a></h3>
+            <h3>{{ recipe.name }} {{ rating|safe }}</h3>
         </div>
         {% if request.user.is_authenticated %}
             <div class="col col-md-4 d-print-none" style="text-align: right">
@@ -40,6 +39,8 @@
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'edit_recipe' recipe.pk %}"><i
+                                class="fas fa-pencil-alt"></i> {% trans 'Bearbeiten' %}</a>
                         <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
                             <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
                         {% if ingredients %}
