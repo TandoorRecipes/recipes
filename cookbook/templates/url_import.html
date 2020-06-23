@@ -81,48 +81,69 @@
                                             <input class="form-control" v-model="i.amount">
                                         </div>
                                         <div class="col-md-5">
-                                            <multiselect
-                                                    v-model="i.unit"
-                                                    :options="units"
-                                                    :close-on-select="true"
-                                                    :clear-on-select="true"
 
-                                                    :preserve-search="true"
-                                                    placeholder="{% trans 'Select one' %}"
-                                                    tag-placeholder="{% trans 'Create new' %}"
-                                                    label="text"
-                                                    :taggable="true"
-                                                    track-by="id"
-                                                    :multiple="false"
-                                                    :loading="units_loading"
-                                                    @search-change="searchUnits">>
-                                            </multiselect>
+                                            <table style="width: 100%">
+                                                <tr>
+                                                    <td>
+                                                        <multiselect v-tabindex
+                                                                     ref="unit"
+                                                                     style="width: 100%;"
+                                                                     v-model="i.unit"
+                                                                     :options="units"
+                                                                     :close-on-select="true"
+                                                                     :clear-on-select="true"
+                                                                     :allow-empty="true"
+                                                                     :preserve-search="true"
+                                                                     placeholder="{% trans 'Select one' %}"
+                                                                     tag-placeholder="{% trans 'Select' %}"
+                                                                     label="text"
+                                                                     :taggable="true"
+                                                                     @tag="addUnitType"
+                                                                     @open="openUnitSelect"
+                                                                     :id="'unit_' + index"
+                                                                     track-by="id"
+                                                                     :multiple="false"
+                                                                     :loading="units_loading"
+                                                                     @search-change="searchUnits">
+                                                        </multiselect>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-outline-success btn-lg" type="button"
+                                                                @click="i.unit = ''" tabindex="-1">
+                                                            <i class="fas fa-eraser"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
 
                                         </div>
                                         <div class="col-md-5">
 
-                                            <multiselect
+                                            <multiselect v-tabindex
+                                                    ref="ingredient"
                                                     v-model="i.ingredient"
                                                     :options="ingredients"
                                                     :taggable="true"
                                                     @tag="addIngredientType"
                                                     placeholder="{% trans 'Select one' %}"
-                                                    tag-placeholder="{% trans 'Create new' %}"
+                                                    tag-placeholder="{% trans 'Select' %}"
                                                     :close-on-select="true"
                                                     :clear-on-select="true"
-
+                                                    :allow-empty="false"
                                                     :preserve-search="true"
                                                     label="text"
-                                                    :id="index"
+                                                    :id="'ingredient_' + index"
                                                     track-by="id"
                                                     :multiple="false"
                                                     :loading="ingredients_loading"
-                                                    @search-change="searchIngredients">>
+                                                    @search-change="searchIngredients"
+                                                    @open="openIngredientSelect">
+
                                             </multiselect>
                                         </div>
                                         <div class="col-md-1">
                                             <button class="btn btn-outline-danger btn-lg" type="button"
-                                                    @click="deleteIngredient(i)"><i
+                                                    @click="deleteIngredient(i)" tabindex="-1"><i
                                                     class="fas fa-trash-alt"></i></button>
                                         </div>
                                     </div>
@@ -233,7 +254,7 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                remote_url: '',
+                remote_url: 'https://www.chefkoch.de/rezepte/639111164874609/Ziegenkaese-im-Speckmantel-auf-buntem-Linsensalat.html',
                 keywords: [],
                 keywords_loading: false,
                 units: [],
@@ -245,8 +266,18 @@
                 loading: false,
                 all_keywords: false,
             },
+            directives: {
+                tabindex: {
+                    inserted(el) {
+                        el.setAttribute('tabindex', 0);
+                    }
+                }
+            },
             mounted: function () {
-
+                this.loadRecipe()
+                this.searchKeywords('')
+                this.searchUnits('')
+                this.searchIngredients('')
             },
             methods: {
                 loadRecipe: function () {
@@ -283,22 +314,38 @@
                 },
                 addIngredient: function (i) {
                     this.recipe_data.recipeIngredient.push({
-                        unit: {id: 'null', text: '{{ request.user.userpreference.default_unit }}'},
+                        unit: {id: Math.random() * 100, text: '{{ request.user.userpreference.default_unit }}'},
                         amount: 0,
-                        ingredient: {id: 'null', text: ''}
+                        ingredient: {id: Math.random() * 100, text: ''}
                     })
                 },
                 addIngredientType: function (tag, index) {
+                    index = index.replace('ingredient_', '')
                     let new_ingredient = this.recipe_data.recipeIngredient[index]
-                    new_ingredient.ingredient = {'id': 'null', 'text': tag}
+                    new_ingredient.ingredient = {'id': Math.random() * 100, 'text': tag}
                     this.ingredients.push(new_ingredient.ingredient)
                     this.recipe_data.recipeIngredient[index] = new_ingredient
+                },
+                addUnitType: function (tag, index) {
+                    index = index.replace('unit_', '')
+                    let new_unit = this.recipe_data.recipeIngredient[index]
+                    new_unit.unit = {'id': Math.random() * 100, 'text': tag}
+                    this.units.push(new_unit.unit)
+                    this.recipe_data.recipeIngredient[index] = new_unit
+                },
+                openUnitSelect: function (id) {
+                    let index = id.replace('unit_', '')
+                    this.$set(app.$refs.unit[index].$data, 'search', this.recipe_data.recipeIngredient[index].unit.text)
+                },
+                openIngredientSelect: function (id) {
+                    let index = id.replace('ingredient_', '')
+                    this.$set(this.$refs.ingredient[index].$data, 'search', this.recipe_data.recipeIngredient[index].ingredient.text)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
                     this.$http.get("{% url 'dal_keyword' %}" + '?q=' + query).then((response) => {
-                        this.keywords_loading = false
                         this.keywords = response.data.results;
+                        this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
                     })
@@ -306,8 +353,15 @@
                 searchUnits: function (query) {
                     this.units_loading = true
                     this.$http.get("{% url 'dal_unit' %}" + '?q=' + query).then((response) => {
-                        this.units_loading = false
                         this.units = response.data.results;
+                        if (this.recipe_data !== undefined) {
+                            for (let x of Array.from(this.recipe_data.recipeIngredient)) {
+                                if (x.ingredient.text !== '') {
+                                    this.units.push(x.unit)
+                                }
+                            }
+                        }
+                        this.units_loading = false
                     }).catch((err) => {
                         console.log(err)
                     })
@@ -315,8 +369,8 @@
                 searchIngredients: function (query) {
                     this.ingredients_loading = true
                     this.$http.get("{% url 'dal_ingredient' %}" + '?q=' + query).then((response) => {
+                        this.ingredients = this.ingredients.concat(response.data.results);
                         this.ingredients_loading = false
-                        this.ingredients = response.data.results;
                     }).catch((err) => {
                         console.log(err)
                     })
