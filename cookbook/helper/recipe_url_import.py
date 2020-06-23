@@ -1,4 +1,5 @@
 import re
+from random import random
 
 from django.http import JsonResponse
 from django.utils.dateparse import parse_duration
@@ -58,7 +59,7 @@ def find_recipe_json(ld_json, url):
                 ingredient = " ".join(ingredient_split)
 
             if ingredient:
-                ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': 'null'}, 'ingredient': {'text': ingredient, 'id': 'null'}, 'original': x})
+                ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': round(random() * 1000)}, 'ingredient': {'text': ingredient, 'id': round(random() * 1000)}, 'original': x})
 
         ld_json['recipeIngredient'] = ingredients
     else:
