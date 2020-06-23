@@ -115,8 +115,8 @@ def import_url(request):
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
-            i, i_created = Ingredient.objects.get_or_create(name=ing['ingredient'])
-            u, u_created = Unit.objects.get_or_create(name=ing['unit'])
+            i, i_created = Ingredient.objects.get_or_create(name=ing['ingredient']['text'])
+            u, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
 
             if isinstance(ing['amount'], str):
                 try:
