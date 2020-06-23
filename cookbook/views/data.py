@@ -116,7 +116,10 @@ def import_url(request):
 
         for ing in data['recipeIngredient']:
             i, i_created = Ingredient.objects.get_or_create(name=ing['ingredient']['text'])
-            u, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
+            if ing['unit']:
+                u, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
+            else:
+                u = Unit.objects.get(name=request.user.userpreference.default_unit)
 
             if isinstance(ing['amount'], str):
                 try:
