@@ -11,6 +11,7 @@ Recipes is a Django application to manage, tag and search recipes using either b
 - :mag: Powerful **search** with Djangos [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
 - :label: Create and search for **tags**, assign them in batch to all files matching certain filters
 - :page_facing_up: **Create recipes** locally within a nice, standardized web interface 
+- :arrow_down: **Import recipes** from thousands of websites supporting [ld+json or microdata](https://schema.org/Recipe)
 - :iphone: Optimized for use on **mobile** devices like phones and tablets
 - :shopping_cart: Generate **shopping** lists from recipes
 - :calendar: Create a **Plan** on what to eat when
