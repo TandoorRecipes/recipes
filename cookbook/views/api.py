@@ -291,7 +291,7 @@ def recipe_from_url(request, url):
                             ld_json_item = x
 
                 if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
-                    return find_recipe_json(ld_json_item)
+                    return find_recipe_json(ld_json_item, url)
         except JSONDecodeError:
             JsonResponse({'error': True, 'msg': _('The requested site does not provided malformed data and cannot be read.')}, status=400)
 
@@ -300,6 +300,6 @@ def recipe_from_url(request, url):
     for i in items:
         md_json = json.loads(i.json())
         if 'schema.org/Recipe' in str(md_json['type']):
-            return find_recipe_json(md_json['properties'])
+            return find_recipe_json(md_json['properties'], url)
 
     return JsonResponse({'error': True, 'msg': _('The requested site does not provide any recognized data format to import the recipe from.')}, status=400)
