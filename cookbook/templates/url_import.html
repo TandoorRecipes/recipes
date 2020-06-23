@@ -8,9 +8,9 @@
 
     {% include 'include/vue_base.html' %}
 
+    <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/vue-multiselect.min.css' %}">
 
-    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
 {% endblock %}
 
 {% block content %}
@@ -256,7 +256,7 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                remote_url: 'https://www.chefkoch.de/rezepte/639111164874609/Ziegenkaese-im-Speckmantel-auf-buntem-Linsensalat.html',
+                remote_url: '',
                 keywords: [],
                 keywords_loading: false,
                 units: [],
@@ -276,7 +276,6 @@
                 }
             },
             mounted: function () {
-                this.loadRecipe()
                 this.searchKeywords('')
                 this.searchUnits('')
                 this.searchIngredients('')
