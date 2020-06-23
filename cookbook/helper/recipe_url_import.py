@@ -1,12 +1,13 @@
 import re
 
 from django.http import JsonResponse
-from django.utils.dateparse import parse_datetime, parse_duration
+from django.utils.dateparse import parse_duration
+from django.utils.translation import gettext as _
 
 from cookbook.models import Keyword
 
 
-def find_recipe_json(ld_json):
+def find_recipe_json(ld_json, url):
     ld_json['org'] = str(ld_json)
 
     if type(ld_json['name']) == list:
@@ -23,6 +24,12 @@ def find_recipe_json(ld_json):
         # some pages have comma separated ingredients in a single array entry
         if len(ld_json['recipeIngredient']) == 1 and len(ld_json['recipeIngredient'][0]) > 30:
             ld_json['recipeIngredient'] = ld_json['recipeIngredient'][0].split(',')
+
+        for x in ld_json['recipeIngredient']:
+            if '\n' in x:
+                ld_json['recipeIngredient'].remove(x)
+                for i in x.split('\n'):
+                    ld_json['recipeIngredient'].insert(0, i)
 
         ingredients = []
 
@@ -86,6 +93,8 @@ def find_recipe_json(ld_json):
     else:
         ld_json['recipeInstructions'] = ''
 
+    ld_json['recipeInstructions'] += _('Imported from ') + url
+
     if 'image' in ld_json:
         # check if list of images is returned, take first if so
         if (type(ld_json['image'])) == list:
@@ -101,11 +110,15 @@ def find_recipe_json(ld_json):
     if 'cookTime' in ld_json:
         if type(ld_json['cookTime']) == list and len(ld_json['cookTime']) > 0:
             ld_json['cookTime'] = ld_json['cookTime'][0]
-        ld_json['cookTime'] = round(parse_duration(ld_json['cookTime']).seconds/60)
+        ld_json['cookTime'] = round(parse_duration(ld_json['cookTime']).seconds / 60)
+    else:
+        ld_json['cookTime'] = 0
 
     if 'prepTime' in ld_json:
         if type(ld_json['prepTime']) == list and len(ld_json['prepTime']) > 0:
             ld_json['prepTime'] = ld_json['prepTime'][0]
-        ld_json['prepTime'] = round(parse_duration(ld_json['prepTime']).seconds/60)
+        ld_json['prepTime'] = round(parse_duration(ld_json['prepTime']).seconds / 60)
+    else:
+        ld_json['prepTime'] = 0
 
     return JsonResponse(ld_json)

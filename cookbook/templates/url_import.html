@@ -73,6 +73,7 @@
                                 <th>{% trans 'Amount' %}</th>
                                 <th>{% trans 'Unit' %}</th>
                                 <th>{% trans 'Ingredient' %}</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,9 +82,18 @@
                                 <td><input class="form-control" v-model="i.amount"></td>
                                 <td><input class="form-control" v-model="i.unit"></td>
                                 <td><input class="form-control" v-model="i.ingredient"></td>
+                                <td style="vertical-align: middle;text-align: center">
+                                    <button class="btn btn-outline-danger" type="button" @click="deleteIngredient(i)"><i
+                                            class="fas fa-trash-alt"></i></button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
+                        <div style="text-align: center">
+                           <button class="btn btn-success" type="button" @click="addIngredient()"><i class="fas fa-plus"></i></button>
+                        <br/><br/>
+                        </div>
+
                     </div>
                 </div>
 
@@ -179,7 +189,7 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                remote_url: 'https://www.rezeptschachtel.de/schwarzwaelder_kirschtorte_rezept.html',
+                remote_url: '',
                 keywords: [],
                 recipe_data: undefined,
                 error: undefined,
@@ -187,7 +197,6 @@
                 all_keywords: false,
             },
             mounted: function () {
-                this.loadRecipe();
                 this.getKeywords();
             },
             methods: {
@@ -210,6 +219,16 @@
                         location.href = response.data
                     }).catch((err) => {
                         console.log("dragChanged create error", err);
+                    })
+                },
+                deleteIngredient: function (i) {
+                    this.recipe_data.recipeIngredient = this.recipe_data.recipeIngredient.filter(item => item !== i)
+                },
+                addIngredient: function (i) {
+                    this.recipe_data.recipeIngredient.push({
+                        unit: '{{ request.user.userpreference.default_unit }}',
+                        amount: 0,
+                        ingredient: ''
                     })
                 },
                 getKeywords: function () {

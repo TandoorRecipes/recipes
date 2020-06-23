@@ -101,6 +101,8 @@ def import_url(request):
         recipe = Recipe.objects.create(
             name=data['name'],
             instructions=data['recipeInstructions'],
+            waiting_time=data['cookTime'],
+            working_time=data['prepTime'],
             internal=True,
             created_by=request.user,
         )
