@@ -96,7 +96,16 @@ def find_recipe_json(ld_json, url):
                 if type(i) == str:
                     instructions += i
                 else:
-                    instructions += i['text'] + '\n\n'
+                    if 'text' in i:
+                        instructions += i['text'] + '\n\n'
+                    elif 'itemListElement' in i:
+                        for ile in i['itemListElement']:
+                            if type(ile) == str:
+                                instructions += ile + '\n\n'
+                            elif 'text' in ile:
+                                instructions += ile['text'] + '\n\n'
+                    else:
+                        instructions += str(i)
             ld_json['recipeInstructions'] = instructions
 
         ld_json['recipeInstructions'] = re.sub(r'\n\s*\n', '\n\n', ld_json['recipeInstructions'])
