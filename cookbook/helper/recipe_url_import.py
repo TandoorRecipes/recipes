@@ -1,6 +1,10 @@
+import json
+import random
 import re
-from random import random
+from json import JSONDecodeError
 
+import microdata
+from bs4 import BeautifulSoup
 from django.http import JsonResponse
 from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
@@ -8,9 +12,39 @@ from django.utils.translation import gettext as _
 from cookbook.models import Keyword
 
 
-def find_recipe_json(ld_json, url):
-    ld_json['org'] = str(ld_json)
+def get_from_html(html_text, url):
+    soup = BeautifulSoup(html_text, "html.parser")
 
+    # first try finding ld+json as its most common
+    for ld in soup.find_all('script', type='application/ld+json'):
+        try:
+            ld_json = json.loads(ld.string)
+            if type(ld_json) != list:
+                ld_json = [ld_json]
+
+            for ld_json_item in ld_json:
+                # recipes type might be wrapped in @graph type
+                if '@graph' in ld_json_item:
+                    for x in ld_json_item['@graph']:
+                        if '@type' in x and x['@type'] == 'Recipe':
+                            ld_json_item = x
+
+                if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
+                    return find_recipe_json(ld_json_item, url)
+        except JSONDecodeError:
+            JsonResponse({'error': True, 'msg': _('The requested site does not provided malformed data and cannot be read.')}, status=400)
+
+    # now try to find microdata
+    items = microdata.get_items(html_text)
+    for i in items:
+        md_json = json.loads(i.json())
+        if 'schema.org/Recipe' in str(md_json['type']):
+            return find_recipe_json(md_json['properties'], url)
+
+    return JsonResponse({'error': True, 'msg': _('The requested site does not provide any recognized data format to import the recipe from.')}, status=400)
+
+
+def find_recipe_json(ld_json, url):
     if type(ld_json['name']) == list:
         try:
             ld_json['name'] = ld_json['name'][0]
@@ -59,7 +93,7 @@ def find_recipe_json(ld_json, url):
                 ingredient = " ".join(ingredient_split)
 
             if ingredient:
-                ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': round(random() * 1000)}, 'ingredient': {'text': ingredient, 'id': round(random() * 1000)}, 'original': x})
+                ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': ingredient, 'id': random.randrange(10000, 99999)}, 'original': x})
 
         ld_json['recipeIngredient'] = ingredients
     else:
@@ -142,5 +176,9 @@ def find_recipe_json(ld_json, url):
         ld_json['prepTime'] = round(parse_duration(ld_json['prepTime']).seconds / 60)
     else:
         ld_json['prepTime'] = 0
+
+    for key in list(ld_json):
+        if key not in ['prepTime', 'cookTime', 'image', 'recipeInstructions', 'keywords', 'name', 'recipeIngredient']:
+            ld_json.pop(key, None)
 
     return JsonResponse(ld_json)
