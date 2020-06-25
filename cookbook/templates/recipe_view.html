@@ -154,12 +154,12 @@
 
                                         </td>
                                         <td style="vertical-align: middle!important;">
-                                            {% if i.ingredient.recipe %}
-                                                <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}"
+                                            {% if i.food.recipe %}
+                                                <a href="{% url 'view_recipe' i.food.recipe.pk %}"
                                                    target="_blank" rel="noopener noreferrer">
                                             {% endif %}
-                                            {{ i.ingredient.name }}
-                                            {% if i.ingredient.recipe %}
+                                            {{ i.food.name }}
+                                            {% if i.food.recipe %}
                                                 </a>
                                             {% endif %}
 

@@ -18,10 +18,10 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, RecipeIngredient, Food
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, RecipeIngredientSerializer, IngredientSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
@@ -134,15 +134,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class RecipeIngredientViewSet(viewsets.ModelViewSet):
-    queryset = RecipeIngredient.objects.all()
-    serializer_class = RecipeIngredientSerializer
+class IngredientViewSet(viewsets.ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser]
 
 
-class IngredientViewSet(viewsets.ModelViewSet):
+class FoodViewSet(viewsets.ModelViewSet):
     queryset = Food.objects.all()
-    serializer_class = IngredientSerializer
+    serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
 
 

@@ -50,11 +50,11 @@ admin.site.register(Unit)
 admin.site.register(Food)
 
 
-class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'amount', 'unit')
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'food', 'amount', 'unit')
 
 
-admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):

@@ -19,7 +19,7 @@ from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncFor
 from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
 
 from cookbook.helper.permission_helper import OwnerRequiredMixin
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, Ingredient, RecipeBook, \
     MealPlan, Unit, Food
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
@@ -83,10 +83,10 @@ def internal_recipe_update(request, pk):
             except simplejson.errors.JSONDecodeError:
                 form_ingredients = []
 
-            RecipeIngredient.objects.filter(recipe=recipe_instance).delete()
+            Ingredient.objects.filter(recipe=recipe_instance).delete()
 
             for i in form_ingredients:
-                recipe_ingredient = RecipeIngredient()
+                recipe_ingredient = Ingredient()
                 recipe_ingredient.recipe = recipe_instance
 
                 if 'note' in i:
@@ -95,10 +95,10 @@ def internal_recipe_update(request, pk):
                 if Food.objects.filter(name=i['ingredient__name']).exists():
                     recipe_ingredient.ingredient = Food.objects.get(name=i['ingredient__name'])
                 else:
-                    ingredient = Food()
-                    ingredient.name = i['ingredient__name']
-                    ingredient.save()
-                    recipe_ingredient.ingredient = ingredient
+                    food = Food()
+                    food.name = i['food__name']
+                    food.save()
+                    recipe_ingredient.ingredient = food
 
                 if isinstance(i['amount'], str):
                     try:
@@ -127,7 +127,7 @@ def internal_recipe_update(request, pk):
     else:
         form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount', 'note').order_by('id')
+    ingredients = Ingredient.objects.select_related('unit__name', 'food__name').filter(recipe=recipe_instance).values('food__name', 'unit__name', 'amount', 'note').order_by('id')
 
     return render(request, 'forms/edit_internal_recipe.html',
                   {'form': form, 'ingredients': json.dumps(list(ingredients)),
@@ -181,7 +181,7 @@ class FoodUpdate(GroupRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(FoodUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Ingredient")
+        context['title'] = _("Food")
         return context
 
 
@@ -325,7 +325,7 @@ def edit_ingredients(request):
         if units_form.is_valid():
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
-            recipe_ingredients = RecipeIngredient.objects.filter(unit=old_unit).all()
+            recipe_ingredients = Ingredient.objects.filter(unit=old_unit).all()
             for i in recipe_ingredients:
                 i.unit = new_unit
                 i.save()
@@ -338,7 +338,7 @@ def edit_ingredients(request):
         if ingredients_form.is_valid():
             new_ingredient = ingredients_form.cleaned_data['new_food']
             old_ingredient = ingredients_form.cleaned_data['old_food']
-            recipe_ingredients = RecipeIngredient.objects.filter(ingredient=old_ingredient).all()
+            recipe_ingredients = Ingredient.objects.filter(food=old_ingredient).all()
             for i in recipe_ingredients:
                 i.ingredient = new_ingredient
                 i.save()

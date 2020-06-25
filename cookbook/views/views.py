@@ -79,7 +79,7 @@ def recipe_view(request, pk, share=None):
         messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
         return HttpResponseRedirect(reverse('index'))
 
-    ingredients = RecipeIngredient.objects.filter(recipe=recipe).all()
+    ingredients = Ingredient.objects.filter(recipe=recipe).all()
     comments = Comment.objects.filter(recipe=recipe)
 
     if request.method == "POST":

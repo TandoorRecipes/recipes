@@ -27,7 +27,7 @@ class RecipeFilter(django_filters.FilterSet):
         if not name == 'ingredients':
             return queryset
         for x in value:
-            queryset = queryset.filter(recipeingredient__ingredient=x).distinct()
+            queryset = queryset.filter(ingredient__food=x).distinct()
         return queryset
 
     @staticmethod

@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from cookbook.forms import ExportForm, ImportForm
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import RecipeIngredient, Recipe, Unit, Food, Keyword, Food
+from cookbook.models import Ingredient, Recipe, Unit, Food, Keyword, Food
 
 
 @group_required('user')
@@ -47,8 +47,8 @@ def import_recipe(request):
                     pass
 
             for ri in data['recipe_ingredients']:
-                RecipeIngredient.objects.create(recipe=recipe, ingredient=Food.objects.get(name=ri['ingredient']),
-                                                unit=Unit.objects.get(name=ri['unit']), amount=ri['amount'], note=ri['note'])
+                Ingredient.objects.create(recipe=recipe, ingredient=Food.objects.get(name=ri['food']),
+                                          unit=Unit.objects.get(name=ri['unit']), amount=ri['amount'], note=ri['note'])
 
             if data['image']:
                 fmt, img = data['image'].split(';base64,')
@@ -84,13 +84,13 @@ def export_recipe(request):
                 for k in recipe.keywords.all():
                     export['keywords'].append({'name': k.name, 'icon': k.icon, 'description': k.description})
 
-                for ri in RecipeIngredient.objects.filter(recipe=recipe).all():
+                for ri in Ingredient.objects.filter(recipe=recipe).all():
                     if ri.unit not in export['units']:
                         export['units'].append({'name': ri.unit.name, 'description': ri.unit.description})
                     if ri.ingredient not in export['ingredients']:
                         export['ingredients'].append({'name': ri.ingredient.name})
 
-                    export['recipe_ingredients'].append({'ingredient': ri.ingredient.name, 'unit': ri.unit.name, 'amount': float(ri.amount), 'note': ri.note})
+                    export['recipe_ingredients'].append({'food': ri.ingredient.name, 'unit': ri.unit.name, 'amount': float(ri.amount), 'note': ri.note})
 
                 if recipe.image and form.cleaned_data['image']:
                     with open(recipe.image.path, 'rb') as img_f:
