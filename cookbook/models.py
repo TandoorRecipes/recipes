@@ -125,25 +125,6 @@ class Keyword(models.Model):
         else:
             return f"{self.name}"
 
-
-class Recipe(models.Model):
-    name = models.CharField(max_length=128)
-    instructions = models.TextField(blank=True)
-    image = models.ImageField(upload_to='recipes/', blank=True, null=True)
-    storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
-    file_uid = models.CharField(max_length=256, default="")
-    file_path = models.CharField(max_length=512, default="")
-    link = models.CharField(max_length=512, null=True, blank=True)
-    cors_link = models.CharField(max_length=1024, null=True, blank=True)
-    keywords = models.ManyToManyField(Keyword, blank=True)
-    ingredients = models.ManyToManyField('Ingredient', blank=True, related_name='tmp_ingredients')
-    working_time = models.IntegerField(default=0)
-    waiting_time = models.IntegerField(default=0)
-    internal = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return self.name
 
@@ -158,7 +139,7 @@ class Unit(models.Model):
 
 class Food(models.Model):
     name = models.CharField(unique=True, max_length=128)
-    recipe = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
+    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
@@ -172,6 +153,32 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
+
+
+class Step(models.Model):
+    TEXT = 'TEXT'
+
+    kind = models.CharField(choices=((TEXT, _('Text')),), default=TEXT, max_length=16)
+    instruction = models.TextField(blank=True)
+    ingredients = models.ManyToManyField(Ingredient, blank=True)
+
+
+class Recipe(models.Model):
+    name = models.CharField(max_length=128)
+    image = models.ImageField(upload_to='recipes/', blank=True, null=True)
+    storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
+    file_uid = models.CharField(max_length=256, default="")
+    file_path = models.CharField(max_length=512, default="")
+    link = models.CharField(max_length=512, null=True, blank=True)
+    cors_link = models.CharField(max_length=1024, null=True, blank=True)
+    keywords = models.ManyToManyField(Keyword, blank=True)
+    steps = models.ManyToManyField(Step, blank=True)
+    working_time = models.IntegerField(default=0)
+    waiting_time = models.IntegerField(default=0)
+    internal = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Comment(models.Model):

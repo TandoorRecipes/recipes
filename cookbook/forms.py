@@ -84,19 +84,15 @@ class InternalRecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('name', 'instructions', 'image', 'working_time', 'waiting_time', 'keywords')
+        fields = ('name', 'image', 'working_time', 'waiting_time', 'keywords')
 
         labels = {
             'name': _('Name'),
             'keywords': _('Keywords'),
-            'instructions': _('Instructions'),
             'working_time': _('Preparation time in minutes'),
             'waiting_time': _('Waiting time (cooking/baking) in minutes'),
         }
         widgets = {'keywords': MultiSelectWidget}
-        help_texts = {
-            'instructions': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
-        }
 
 
 class ShoppingForm(forms.Form):

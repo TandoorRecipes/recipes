@@ -103,7 +103,7 @@
     {% endif %}
 
     <div class="row">
-        {% if recipe.ingredients %}
+        {% if recipe.steps %}
             <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
                 <div class="card">
                     <div class="card-body">
@@ -124,61 +124,63 @@
                         </div>
                         <br/>
                         <table class="table table-sm">
-                            {% for i in recipe.ingredients.all %}
-                                {% if i.unit.name == 'Special:Header' %}
-                                    <tr>
-                                        <td style="padding-top: 8px!important; ">
-                                            <b>{{ i.note }}</b>
-                                        </td>
-                                        <td>
+                            {% for s in recipe.steps.all %}
+                                {% for i in s.ingredients.all %}
+                                    {% if i.unit.name == 'Special:Header' %}
+                                        <tr>
+                                            <td style="padding-top: 8px!important; ">
+                                                <b>{{ i.note }}</b>
+                                            </td>
+                                            <td>
 
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td style="vertical-align: middle!important;">
-                                            <div class="pretty p-default p-curve">
-                                                <input type="checkbox"/>
-                                                <div class="state p-success">
-                                                    <label>
-                                                        {% if i.amount != 0 %}
-                                                            <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
-                                                            {{ i.unit }}
-                                                        {% else %}
-                                                            <span>&#x2063;</span>
-                                                        {% endif %}
-                                                    </label>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td style="vertical-align: middle!important;">
+                                                <div class="pretty p-default p-curve">
+                                                    <input type="checkbox"/>
+                                                    <div class="state p-success">
+                                                        <label>
+                                                            {% if i.amount != 0 %}
+                                                                <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
+                                                                {{ i.unit }}
+                                                            {% else %}
+                                                                <span>&#x2063;</span>
+                                                            {% endif %}
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                        </td>
-                                        <td style="vertical-align: middle!important;">
-                                            {% if i.food.recipe %}
-                                                <a href="{% url 'view_recipe' i.food.recipe.pk %}"
-                                                   target="_blank" rel="noopener noreferrer">
-                                            {% endif %}
-                                            {{ i.food.name }}
-                                            {% if i.food.recipe %}
-                                                </a>
-                                            {% endif %}
+                                            </td>
+                                            <td style="vertical-align: middle!important;">
+                                                {% if i.food.recipe %}
+                                                    <a href="{% url 'view_recipe' i.food.recipe.pk %}"
+                                                       target="_blank" rel="noopener noreferrer">
+                                                {% endif %}
+                                                {{ i.food.name }}
+                                                {% if i.food.recipe %}
+                                                    </a>
+                                                {% endif %}
 
-                                        </td>
-                                        <td style="vertical-align: middle!important;">
-                                            {% if i.note %}
-                                                <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
-                                                   data-toggle="popover"
-                                                   data-placement="right" data-html="true" data-trigger="focus"
-                                                   data-content="{{ i.note }}">
-                                                    <i class="fas fa-info"></i>
-                                                </a>
-                                                <div class="d-none d-print-block">
-                                                    <i class="far fa-comment-alt"></i> {{ i.note }}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endif %}
+                                            </td>
+                                            <td style="vertical-align: middle!important;">
+                                                {% if i.note %}
+                                                    <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
+                                                       data-toggle="popover"
+                                                       data-placement="right" data-html="true" data-trigger="focus"
+                                                       data-content="{{ i.note }}">
+                                                        <i class="fas fa-info"></i>
+                                                    </a>
+                                                    <div class="d-none d-print-block">
+                                                        <i class="far fa-comment-alt"></i> {{ i.note }}
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                             <!-- Bottom border -->
                             <tr>
@@ -209,9 +211,11 @@
     {% endif %}
 
     <div style="font-size: large">
-        {% if recipe.instructions %}
-            {{ recipe.instructions | markdown | safe }}
-        {% endif %}
+        {% for s in recipe.steps.all %}
+            {% if s.instruction %}
+                {{ s.instruction | markdown | safe }}
+            {% endif %}
+        {% endfor %}
     </div>
 
     {% if recipe.storage %}
