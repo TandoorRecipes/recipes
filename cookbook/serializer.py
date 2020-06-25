@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, RecipeIngredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food
+from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -54,15 +54,15 @@ class UnitSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class IngredientSerializer(serializers.ModelSerializer):
+class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
         fields = '__all__'
 
 
-class RecipeIngredientSerializer(serializers.ModelSerializer):
+class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RecipeIngredient
+        model = Ingredient
         fields = '__all__'
 
 

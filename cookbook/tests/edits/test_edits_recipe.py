@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.urls import reverse
 
-from cookbook.models import Recipe, RecipeIngredient, Unit, Storage, Food
+from cookbook.models import Recipe, Ingredient, Unit, Storage, Food
 from cookbook.tests.views.test_views import TestViews
 
 
@@ -83,7 +83,7 @@ class TestEditsRecipe(TestViews):
                              {'name': 'Changed', 'working_time': 15, 'waiting_time': 15,
                               'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":"2,5","delete":false}]'})
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(2, RecipeIngredient.objects.filter(recipe=recipe).count())
+        self.assertEqual(2, Ingredient.objects.filter(recipe=recipe).count())
 
         r = self.user_client_1.post(url,
                              {'name': "Test", 'working_time': "Test", 'waiting_time': 15,

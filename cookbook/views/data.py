@@ -128,7 +128,7 @@ def import_url(request):
                     # TODO return proper error
                     pass
 
-            RecipeIngredient.objects.create(recipe=recipe, ingredient=i, unit=u, amount=ing['amount'])
+            Ingredient.objects.create(recipe=recipe, ingredient=i, unit=u, amount=ing['amount'])
 
         if data['image'] != '':
             response = requests.get(data['image'])
