@@ -247,7 +247,7 @@ class MealPlan(models.Model):
 
 class ShareLink(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    uuid = models.UUIDField(default=uuid.uuid4())
+    uuid = models.UUIDField(default=uuid.uuid4)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
