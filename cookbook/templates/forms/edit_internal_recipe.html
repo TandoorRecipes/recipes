@@ -74,7 +74,7 @@
         };
 
         let select2IngredientEditor = function (cell, onRendered, success, cancel, editorParams) {
-            return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_ingredient' %}')
+            return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_food' %}')
         };
 
         let select2Editor = function (cell, onRendered, success, cancel, editorParams, url) {

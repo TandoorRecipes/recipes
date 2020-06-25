@@ -7,7 +7,7 @@ from django.urls import reverse, NoReverseMatch
 
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
-from cookbook.models import get_model_name, CookLog
+from cookbook.models import get_model_name
 from recipes import settings
 
 register = template.Library()

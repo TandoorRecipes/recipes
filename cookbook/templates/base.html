@@ -60,7 +60,7 @@
                         class="sr-only">(current)</span></a>
             </li>
 
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_ingredient,view_plan_entry' %}active{% endif %}">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_food,view_plan_entry' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-mortar-pestle"></i> {% trans 'Utensils' %}
@@ -75,7 +75,7 @@
                     <a class="dropdown-item" href="{% url 'view_shopping' %}"><i
                             class="fas fa-shopping-cart fa-fw"></i> {% trans 'Shopping' %}
                     </a>
-                    <a class="dropdown-item" href="{% url 'list_ingredient' %}"><i
+                    <a class="dropdown-item" href="{% url 'list_food' %}"><i
                             class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
                     </a>
                 </div>
@@ -92,7 +92,7 @@
                             class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
                 </div>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_ingredient' %}active{% endif %}">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_food' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
                 </a>
@@ -107,7 +107,7 @@
                             class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
                     <a class="dropdown-item" href="{% url 'data_stats' %}"><i
                             class="fas fa-chart-line fa-fw"></i> {% trans 'Statistics' %}</a>
-                    <a class="dropdown-item" href="{% url 'edit_ingredient' %}"><i
+                    <a class="dropdown-item" href="{% url 'edit_food' %}"><i
                             class="fas fa-balance-scale fa-fw"></i> {% trans 'Units & Ingredients' %}</a>
                     <a class="dropdown-item" href="{% url 'view_import' %}"><i
                             class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>

@@ -136,6 +136,7 @@ class Recipe(models.Model):
     link = models.CharField(max_length=512, null=True, blank=True)
     cors_link = models.CharField(max_length=1024, null=True, blank=True)
     keywords = models.ManyToManyField(Keyword, blank=True)
+    ingredients = models.ManyToManyField('RecipeIngredient', blank=True, related_name='tmp_ingredients')
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
@@ -155,7 +156,7 @@ class Unit(models.Model):
         return self.name
 
 
-class Ingredient(models.Model):
+class Food(models.Model):
     name = models.CharField(unique=True, max_length=128)
     recipe = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -165,7 +166,7 @@ class Ingredient(models.Model):
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
+    ingredient = models.ForeignKey(Food, on_delete=models.PROTECT)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=64, null=True, blank=True)

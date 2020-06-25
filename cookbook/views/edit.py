@@ -15,12 +15,12 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm, RecipeBookForm
+    MealPlanForm, UnitMergeForm, IngredientMergeForm, RecipeBookForm, FoodForm
 from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
 
 from cookbook.helper.permission_helper import OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
-    MealPlan, Unit, Ingredient
+    MealPlan, Unit, Food
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -92,10 +92,10 @@ def internal_recipe_update(request, pk):
                 if 'note' in i:
                     recipe_ingredient.note = i['note']
 
-                if Ingredient.objects.filter(name=i['ingredient__name']).exists():
-                    recipe_ingredient.ingredient = Ingredient.objects.get(name=i['ingredient__name'])
+                if Food.objects.filter(name=i['ingredient__name']).exists():
+                    recipe_ingredient.ingredient = Food.objects.get(name=i['ingredient__name'])
                 else:
-                    ingredient = Ingredient()
+                    ingredient = Food()
                     ingredient.name = i['ingredient__name']
                     ingredient.save()
                     recipe_ingredient.ingredient = ingredient
@@ -168,19 +168,19 @@ class KeywordUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class IngredientUpdate(GroupRequiredMixin, UpdateView):
+class FoodUpdate(GroupRequiredMixin, UpdateView):
     groups_required = ['user']
     template_name = "generic/edit_template.html"
-    model = Ingredient
-    form_class = IngredientForm
+    model = Food
+    form_class = FoodForm
 
     # TODO add msg box
 
     def get_success_url(self):
-        return reverse('edit_ingredient', kwargs={'pk': self.object.pk})
+        return reverse('edit_food', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        context = super(IngredientUpdate, self).get_context_data(**kwargs)
+        context = super(FoodUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Ingredient")
         return context
 
@@ -336,8 +336,8 @@ def edit_ingredients(request):
 
         ingredients_form = IngredientMergeForm(request.POST, prefix=IngredientMergeForm.prefix)
         if ingredients_form.is_valid():
-            new_ingredient = ingredients_form.cleaned_data['new_ingredient']
-            old_ingredient = ingredients_form.cleaned_data['old_ingredient']
+            new_ingredient = ingredients_form.cleaned_data['new_food']
+            old_ingredient = ingredients_form.cleaned_data['old_food']
             recipe_ingredients = RecipeIngredient.objects.filter(ingredient=old_ingredient).all()
             for i in recipe_ingredients:
                 i.ingredient = new_ingredient

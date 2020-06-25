@@ -18,7 +18,7 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, RecipeIngredient, Ingredient
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, RecipeIngredient, Food
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, RecipeIngredientSerializer, IngredientSerializer
@@ -141,7 +141,7 @@ class RecipeIngredientViewSet(viewsets.ModelViewSet):
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-    queryset = Ingredient.objects.all()
+    queryset = Food.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser]
 
