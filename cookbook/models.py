@@ -165,7 +165,6 @@ class Food(models.Model):
 
 
 class Ingredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     food = models.ForeignKey(Food, on_delete=models.PROTECT)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)

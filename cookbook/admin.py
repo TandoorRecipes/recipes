@@ -51,7 +51,7 @@ admin.site.register(Food)
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'food', 'amount', 'unit')
+    list_display = ('food', 'amount', 'unit')
 
 
 admin.site.register(Ingredient, IngredientAdmin)

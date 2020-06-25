@@ -103,7 +103,7 @@
     {% endif %}
 
     <div class="row">
-        {% if ingredients %}
+        {% if recipe.ingredients %}
             <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
                 <div class="card">
                     <div class="card-body">
@@ -124,7 +124,7 @@
                         </div>
                         <br/>
                         <table class="table table-sm">
-                            {% for i in ingredients %}
+                            {% for i in recipe.ingredients.all %}
                                 {% if i.unit.name == 'Special:Header' %}
                                     <tr>
                                         <td style="padding-top: 8px!important; ">

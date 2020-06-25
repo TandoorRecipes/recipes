@@ -79,7 +79,6 @@ def recipe_view(request, pk, share=None):
         messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
         return HttpResponseRedirect(reverse('index'))
 
-    ingredients = Ingredient.objects.filter(recipe=recipe).all()
     comments = Comment.objects.filter(recipe=recipe)
 
     if request.method == "POST":
@@ -116,7 +115,7 @@ def recipe_view(request, pk, share=None):
             ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
     return render(request, 'recipe_view.html',
-                  {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'comment_form': comment_form,
+                  {'recipe': recipe, 'comments': comments, 'comment_form': comment_form,
                    'bookmark_form': bookmark_form})
 
 
