@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food
+from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -42,12 +42,6 @@ class KeywordSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Recipe
-        fields = '__all__'
-
-
 class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Unit
@@ -61,20 +55,40 @@ class FoodSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    food = FoodSerializer(read_only=True)
+    unit = UnitSerializer(read_only=True)
+
     class Meta:
         model = Ingredient
         fields = '__all__'
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class StepSerializer(serializers.ModelSerializer):
+    ingredients = IngredientSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Comment
+        model = Step
+        fields = '__all__'
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    steps = StepSerializer(many=True, read_only=True)
+    keywords = KeywordSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Recipe
         fields = '__all__'
 
 
 class RecipeImportSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeImport
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = '__all__'
 
 

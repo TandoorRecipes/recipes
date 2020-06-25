@@ -124,14 +124,8 @@ def internal_recipe_update(request, pk):
         else:
             messages.add_message(request, messages.ERROR, _('There was an error saving this recipe!'))
             status = 403
-    else:
-        form = InternalRecipeForm(instance=recipe_instance)
 
-    ingredients = Ingredient.objects.select_related('unit__name', 'food__name').filter(recipe=recipe_instance).values('food__name', 'unit__name', 'amount', 'note').order_by('id')
-
-    return render(request, 'forms/edit_internal_recipe.html',
-                  {'form': form, 'ingredients': json.dumps(list(ingredients)),
-                   'view_url': reverse('view_recipe', args=[pk])}, status=status)
+    return render(request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance})
 
 
 class SyncUpdate(GroupRequiredMixin, UpdateView):
