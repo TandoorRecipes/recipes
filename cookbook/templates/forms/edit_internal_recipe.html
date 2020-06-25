@@ -61,6 +61,7 @@
                 </div>
             </div>
 
+            <button type="button" @click="updateRecipe()">Save</button>
         </template>
     </div>
 
@@ -93,12 +94,19 @@
             },
             methods: {
                 loadRecipe: function () {
-                    this.$http.get("{% url 'api:recipe-list' %}{{ recipe.pk }}").then((response) => {
+                    this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
                         this.recipe = response.data;
                         this.loading = false
                     }).catch((err) => {
                         this.error = err.data
                         this.loading = false
+                        console.log(err)
+                    })
+                },
+                updateRecipe: function () {
+                    this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe).then((response) => {
+                        console.log(response)
+                    }).catch((err) => {
                         console.log(err)
                     })
                 },
