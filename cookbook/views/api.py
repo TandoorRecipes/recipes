@@ -18,10 +18,11 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
+    KeywordSerializer
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
@@ -110,13 +111,37 @@ class MealTypeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class UnitViewSet(viewsets.ModelViewSet):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [CustomIsUser]
+
+
+class FoodViewSet(viewsets.ModelViewSet):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [CustomIsUser]
+
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = [CustomIsUser]
+
+
+class StepViewSet(viewsets.ModelViewSet):
+    queryset = Step.objects.all()
+    serializer_class = StepSerializer
+    permission_classes = [CustomIsUser]
+
+
 class RecipeViewSet(viewsets.ModelViewSet):
     """
     list:
     optional parameters
 
-    - **query**: search a recipe for a string contained in the recipe name (case in-sensitive)
-    - **limit**: limits the amount of returned recipes
+    - **query**: search recipes for a string contained in the recipe name (case in-sensitive)
+    - **limit**: limits the amount of returned results
     """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
@@ -134,16 +159,28 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class IngredientViewSet(viewsets.ModelViewSet):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer
+class KeywordViewSet(viewsets.ModelViewSet):
+    """
+       list:
+       optional parameters
+
+       - **query**: search keywords for a string contained in the keyword name (case in-sensitive)
+       - **limit**: limits the amount of returned results
+       """
+    queryset = Keyword.objects.all()
+    serializer_class = KeywordSerializer
     permission_classes = [CustomIsUser]
 
+    def get_queryset(self):
+        queryset = Keyword.objects.all()
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
 
-class FoodViewSet(viewsets.ModelViewSet):
-    queryset = Food.objects.all()
-    serializer_class = FoodSerializer
-    permission_classes = [CustomIsUser]
+        limit = self.request.query_params.get('limit', None)
+        if limit is not None:
+            queryset = queryset[:int(limit)]
+        return queryset
 
 
 class ViewLogViewSet(viewsets.ModelViewSet):

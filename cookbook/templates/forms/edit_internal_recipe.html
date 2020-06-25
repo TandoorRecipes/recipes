@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 {% load i18n %}
 {% load custom_tags %}
 {% load theming_tags %}
@@ -8,8 +7,11 @@
 {% block title %}{% trans 'Edit Recipe' %}{% endblock %}
 
 {% block extra_head %}
-    <script src="{% static 'tabulator/tabulator.min.js' %}"></script>
-    <link rel="stylesheet" href="{% tabulator_theme_url request %}"/>
+
+    {% include 'include/vue_base.html' %}
+
+    <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/vue-multiselect.min.css' %}">
 
 {% endblock %}
 
@@ -17,219 +19,101 @@
 
     <h3>{% trans 'Edit Recipe' %}</h3>
 
-    <form action="." method="post" enctype="multipart/form-data" id="id_form">
-        {% csrf_token %}
+    <div id="app">
+        <template v-if="recipe">
 
-        {% for field in form %}
-            <div class="fieldWrapper">
-                {{ field|as_crispy_field }}
-            </div>
-            {% if field.name == 'name' %}
-                <label>{% trans 'Ingredients' %}</label>
-                {{ form.ingredients.errors }}
-                <div id="ingredients-table"></div>
-                <br>
-                <div class="table-controls" style="text-align: center">
-                    <button class="btn btn-success" id="new_empty" type="button" style="min-width: 20vw"><i
-                            class="fas fa-plus-circle"></i></button>
-                    <button class="btn btn-warning" id="new_header" type="button" data-toggle="tooltip"
-                    data-placement="top" title="{% trans 'Insert a header between the ingredients.' %}"><i class="fas fa-heading"></i></button>
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="id_name"> {% trans 'Name' %}</label>
+                    <input class="form-control" id="id_name" v-model="recipe.name">
 
-                    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover"
-                            data-placement="right" data-html="true" data-trigger="focus"
-                            data-content="{% trans 'Use <b>Ctrl</b>+<b>Space</b> to insert new Ingredient!<br/>You can also save the recipe using <b>Ctrl</b>+<b>Shift</b>+<b>S</b>.' %}">
-                        <i class="fas fa-question"></i>
-                    </button>
-                    <br/>
-                    <br/>
                 </div>
-            {% endif %}
-        {% endfor %}
+            </div>
+            <br/>
 
-        <hr>
-        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
-        <a href="{% delete_url form.instance|get_class form.instance.pk %}"
-           class="btn btn-danger"><i class="fas fa-trash-alt"></i> {% trans 'Delete' %}</a>
-        {% if view_url %}
-            <a href="{{ view_url }}" class="btn btn-info"><i class="far fa-eye"></i> {% trans 'View' %}</a>
-        {% endif %}
-        {% if form.instance.storage %}
-            <a href="{% url 'delete_recipe_source' form.instance.pk %}" class="btn btn-warning"><i
-                    class="fas fa-exclamation-triangle"></i> {% trans 'Delete original file' %}</a>
-        {% endif %}
-    </form>
+            <div class="row">
+                <div class="col-md-6">
+                    Image Edit Placeholder
+                </div>
+                <div class="col-md-6">
+                    <label for="id_name"> {% trans 'Preperation Time' %}</label>
+                    <input class="form-control" id="id_prep_time" v-model="recipe.working_time">
+
+                    <label for="id_name"> {% trans 'Waiting Time' %}</label>
+                    <input class="form-control" id="id_wait_time" v-model="recipe.waiting_time">
+
+                    <label for="id_name"> {% trans 'Keywords' %}</label>
+                    <multiselect
+                            v-model="recipe.keywords"
+                            :options="keywords"
+                            :close-on-select="false"
+                            :clear-on-select="true"
+                            :hide-selected="true"
+                            :preserve-search="true"
+                            placeholder="{% trans 'Select one' %}"
+                            label="name"
+                            track-by="id"
+                            id="id_keywords"
+                            :multiple="true"
+                            :loading="keywords_loading"
+                            @search-change="searchKeywords">
+                    </multiselect>
+                </div>
+            </div>
+
+        </template>
+    </div>
 
     <script type="application/javascript">
+        let csrftoken = Cookies.get('csrftoken');
+        Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        });
+        Vue.component('vue-multiselect', window.VueMultiselect.default)
 
-        $('.popover-dismiss').popover({
-            trigger: 'focus'
-        });
-
-        let select2UnitEditor = function (cell, onRendered, success, cancel, editorParams) {
-            return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_unit' %}')
-        };
-
-        let select2IngredientEditor = function (cell, onRendered, success, cancel, editorParams) {
-            return select2Editor(cell, onRendered, success, cancel, editorParams, '{% url 'dal_food' %}')
-        };
-
-        let select2Editor = function (cell, onRendered, success, cancel, editorParams, url) {
-
-            let editor = document.createElement("select");
-            editor.setAttribute("class", "form-control");
-            editor.setAttribute("style", "height: 100%; color: #00ff00");
-
-            onRendered(function () {
-                let select_2 = $(editor);
-
-                select_2.select2({
-                    tags: true,
-                    ajax: {
-                        url: url,
-                        dataType: 'json'
+        let app = new Vue({
+            components: {
+                Multiselect: window.VueMultiselect.default
+            },
+            delimiters: ['[[', ']]'],
+            el: '#app',
+            data: {
+                recipe: undefined,
+                keywords: [],
+                keywords_loading: false,
+            },
+            directives: {
+                tabindex: {
+                    inserted(el) {
+                        el.setAttribute('tabindex', 0);
                     }
-                });
-
-                select_2.select2('open');
-
-                select_2.on('select2:select', function (e) {
-                    success(e.params.data.text);
-                });
-
-                select_2.on('select2:close', function (e) {
-                    if (e.target.textContent === "") {
-                        cancel();
-                    }
-                });
-            });
-
-            //add editor to cell
-            return editor;
-        };
-
-        //converts multiselct in recipe edit to searchable multiselect
-        //shitty solution that needs to be redone at some point
-        $(document).ready(function () {
-            $('#id_keywords').select2();
-
-            let ingredients = {{ ingredients|safe }}
-
-                ingredients.forEach(function (cur, i) {
-                    cur.delete = false
-                });
-
-            let data = ingredients;
-
-            let table = new Tabulator("#ingredients-table", {
-                index: "id",
-                layout: "fitColumns",
-                reactiveData: true,
-                data: data,
-                movableRows: true,
-                headerSort: false,
-                columns: [
-                    {
-                        title: "<i class='fas fa-sort'></i>",
-                        rowHandle: true,
-                        formatter: "handle",
-                        headerSort: false,
-                        frozen: true,
-                        width: 36,
-                        minWidth: 36
-                    },
-                    {
-                        title: "{% trans 'Ingredient' %}",
-                        field: "ingredient__name",
-                        validator: "required",
-                        editor: select2IngredientEditor
-                    },
-                    {title: "{% trans 'Amount' %}", field: "amount", validator: "required", editor: "number"},
-                    {
-                        title: "{% trans 'Unit' %}",
-                        field: "unit__name",
-                        validator: "required",
-                        editor: select2UnitEditor
-                    },
-                    {title: "{% trans 'Note' %}", field: "note", editor: "input"},
-                    {
-                        formatter: function (cell, formatterParams) {
-                            return "<span style='color:red'><i class=\"fas fa-trash-alt\"></i></span>"
-                        },
-                        align: "center",
-                        title: "{% trans 'Delete' %}",
-                        headerSort: false,
-                        cellClick: function (e, cell) {
-                            if (confirm('{% trans 'Are you sure that you want to delete this ingredient?' %}'))
-                                cell.getRow().delete();
-                        }
-                    },
-                    {title: "id", field: "id", visible: false}
-                ],
-                cellClick: function (e, cell) {
-                    if (cell._cell.column.definition.editor === "input") {
-                        input = cell.getElement().childNodes[0];
-                        input.focus();
-                        input.select();
-                    }
-                },
-            });
-
-            // save ingredient data before submitting form
-            $('#id_form').submit(function () {
-                $('#id_ingredients').val(JSON.stringify(table.getData()));
-                return true;
-            });
-
-            // load initial value
-            $('#id_ingredients').val(JSON.stringify(data));
-
-            function addIngredientRow() {
-                data.push({
-                    ingredient__name: "{% trans 'Ingredient' %}",
-                    amount: "100",
-                    unit__name: "{{ request.user.userpreference.default_unit }}",
-                    note: "",
-                    id: Math.floor(Math.random() * 10000000),
-                    delete: false,
-                });
-                input = table.rowManager.rows[((table.rowManager.rows).length) - 1].cells[1].getElement()
-                input.focus();
-                input.select();
-            }
-
-            function addHeaderRow(type) {
-                data.push({
-                    ingredient__name: '{% trans 'Header' %}',
-                    amount: "0",
-                    unit__name: "Special:Header",
-                    note: "{% trans 'write header here' %}",
-                    id: Math.floor(Math.random() * 10000000),
-                    delete: false,
-                });
-                input = table.rowManager.rows[((table.rowManager.rows).length) - 1].cells[4].getElement()
-                input.focus();
-                input.select();
-            }
-
-            document.onkeyup = function (e) {
-                if (e.shiftKey && e.ctrlKey && (e.which === 83 || e.keyCode === 83)) {
-                    $('#id_form').submit()
-                } else if (e.ctrlKey && (e.which === 83 || e.keyCode === 32)) {
-                    addIngredientRow();
                 }
-            };
-
-            document.getElementById("new_empty").addEventListener("click", addIngredientRow);
-            document.getElementById("new_header").addEventListener("click", addHeaderRow);
+            },
+            mounted: function () {
+                this.loadRecipe()
+            },
+            methods: {
+                loadRecipe: function () {
+                    this.$http.get("{% url 'api:recipe-list' %}{{ recipe.pk }}").then((response) => {
+                        this.recipe = response.data;
+                        this.loading = false
+                    }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
+                        console.log(err)
+                    })
+                },
+                searchKeywords: function (query) {
+                    this.keywords_loading = true
+                    this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query).then((response) => {
+                        this.keywords = response.data;
+                        this.keywords_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+            }
         });
-
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-
     </script>
+
+
 {% endblock %}
