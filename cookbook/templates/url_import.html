@@ -362,7 +362,7 @@
                 },
                 searchIngredients: function (query) {
                     this.ingredients_loading = true
-                    this.$http.get("{% url 'dal_ingredient' %}" + '?q=' + query).then((response) => {
+                    this.$http.get("{% url 'dal_food' %}" + '?q=' + query).then((response) => {
                         this.ingredients = response.data.results
                         if (this.recipe_data !== undefined) {
                             for (let x of Array.from(this.recipe_data.recipeIngredient)) {

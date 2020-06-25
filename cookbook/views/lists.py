@@ -6,7 +6,7 @@ from django_tables2 import RequestConfig
 
 from cookbook.filters import IngredientFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Ingredient
+from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Food
 from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable
 
 
@@ -36,8 +36,8 @@ def recipe_import(request):
 
 
 @group_required('user')
-def ingredient(request):
-    f = IngredientFilter(request.GET, queryset=Ingredient.objects.all().order_by('pk'))
+def food(request):
+    f = IngredientFilter(request.GET, queryset=Food.objects.all().order_by('pk'))
 
     table = IngredientTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)

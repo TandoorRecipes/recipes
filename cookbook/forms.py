@@ -151,13 +151,13 @@ class IngredientMergeForm(forms.Form):
     prefix = 'ingredient'
 
     new_ingredient = forms.ModelChoiceField(
-        queryset=Ingredient.objects.all(),
+        queryset=Food.objects.all(),
         widget=SelectWidget,
         label=_('New Ingredient'),
         help_text=_('New ingredient that other gets replaced by.'),
     )
     old_ingredient = forms.ModelChoiceField(
-        queryset=Ingredient.objects.all(),
+        queryset=Food.objects.all(),
         widget=SelectWidget,
         label=_('Old Ingredient'),
         help_text=_('Ingredient that should be replaced.'),
@@ -186,9 +186,9 @@ class KeywordForm(forms.ModelForm):
         widgets = {'icon': EmojiPickerTextInput}
 
 
-class IngredientForm(forms.ModelForm):
+class FoodForm(forms.ModelForm):
     class Meta:
-        model = Ingredient
+        model = Food
         fields = ('name', 'recipe')
         widgets = {'recipe': SelectWidget}
 

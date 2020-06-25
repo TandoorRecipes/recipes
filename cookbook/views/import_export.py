@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from cookbook.forms import ExportForm, ImportForm
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import RecipeIngredient, Recipe, Unit, Ingredient, Keyword
+from cookbook.models import RecipeIngredient, Recipe, Unit, Food, Keyword, Food
 
 
 @group_required('user')
@@ -42,12 +42,12 @@ def import_recipe(request):
 
             for i in data['ingredients']:
                 try:
-                    Ingredient.objects.create(name=i['name']).save()
+                    Food.objects.create(name=i['name']).save()
                 except IntegrityError:
                     pass
 
             for ri in data['recipe_ingredients']:
-                RecipeIngredient.objects.create(recipe=recipe, ingredient=Ingredient.objects.get(name=ri['ingredient']),
+                RecipeIngredient.objects.create(recipe=recipe, ingredient=Food.objects.get(name=ri['ingredient']),
                                                 unit=Unit.objects.get(name=ri['unit']), amount=ri['amount'], note=ri['note'])
 
             if data['image']:

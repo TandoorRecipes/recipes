@@ -22,7 +22,7 @@
     <br/>
 
     <h4>{% trans 'Units' %}</h4>
-    <form action="{% url 'edit_ingredient' %}" method="post"
+    <form action="{% url 'edit_food' %}" method="post"
           onsubmit="return confirm('{% trans 'Are you sure that you want to merge these two units ?' %}')">
         {% csrf_token %}
         {{ units_form|crispy }}
@@ -32,7 +32,7 @@
     </form>
 
     <h4>{% trans 'Ingredients' %}</h4>
-    <form action="{% url 'edit_ingredient' %}" method="post"
+    <form action="{% url 'edit_food' %}" method="post"
           onsubmit="return confirm('{% trans 'Are you sure that you want to merge these two ingredients ?' %}')">
         {% csrf_token %}
         {{ ingredients_form|crispy }}

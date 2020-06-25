@@ -115,7 +115,7 @@ def import_url(request):
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
-            i, i_created = Ingredient.objects.get_or_create(name=ing['ingredient']['text'])
+            i, i_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
             if ing['unit']:
                 u, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
             else:
@@ -161,7 +161,7 @@ def statistics(request):
     counts.keywords = Keyword.objects.count()
     counts.recipe_import = RecipeImport.objects.count()
     counts.units = Unit.objects.count()
-    counts.ingredients = Ingredient.objects.count()
+    counts.ingredients = Food.objects.count()
     counts.comments = Comment.objects.count()
 
     counts.recipes_internal = Recipe.objects.filter(internal=True).count()

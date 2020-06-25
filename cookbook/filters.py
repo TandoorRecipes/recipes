@@ -2,7 +2,7 @@ import django_filters
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Q
 from cookbook.forms import MultiSelectWidget
-from cookbook.models import Recipe, Keyword, Ingredient
+from cookbook.models import Recipe, Keyword, Food
 from django.conf import settings
 from django.utils.translation import gettext as _
 
@@ -11,7 +11,7 @@ class RecipeFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(method='filter_name')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
-    ingredients = django_filters.ModelMultipleChoiceFilter(queryset=Ingredient.objects.all(), widget=MultiSelectWidget,
+    ingredients = django_filters.ModelMultipleChoiceFilter(queryset=Food.objects.all(), widget=MultiSelectWidget,
                                                            method='filter_ingredients', label=_('Ingredients'))
 
     @staticmethod
@@ -50,5 +50,5 @@ class IngredientFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
-        model = Ingredient
+        model = Food
         fields = ['name']

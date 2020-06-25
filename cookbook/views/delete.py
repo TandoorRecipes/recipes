@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import group_required, GroupRequiredMixin, OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
-    RecipeBookEntry, MealPlan, Ingredient
+    RecipeBookEntry, MealPlan, Food
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
