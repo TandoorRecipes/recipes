@@ -162,6 +162,7 @@ class Ingredient(models.Model):
 class Step(models.Model):
     TEXT = 'TEXT'
 
+    name = models.CharField(max_length=128, default='', blank=True)
     kind = models.CharField(choices=((TEXT, _('Text')),), default=TEXT, max_length=16)
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)

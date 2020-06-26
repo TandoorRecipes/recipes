@@ -72,6 +72,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <label :for="'id_step_' + step.id + 'name'">{% trans 'Step Name' %}</label>
+                        <input class="form-control" v-model="step.name" :id="'id_step_' + step.id + 'name'">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
                         <draggable :list="step.ingredients" group="ingredients"
                                    :empty-insert-threshold="10" handle=".handle" @sort="sortStep(step)">
                             <div class="card" v-for="ingredient, index in step.ingredients" :key="ingredient.id">
@@ -129,6 +136,8 @@
                                 </div>
                             </div>
                         </draggable>
+
+                        <button class="btn btn-success" @click="addIngredient(step)"><i class="fa fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="row">
@@ -208,6 +217,15 @@
                     step.ingredients.forEach(function (element, index) {
                         element.order = index
                     });
+                },
+                addIngredient: function (step) { //TODO see if default can be generated from options request
+                    step.ingredients.push({
+                        'food': undefined,
+                        'unit': undefined,
+                        'amount': 0,
+                        'note': '',
+                    })
+                    this.sortStep(step)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
