@@ -18,7 +18,7 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
@@ -112,15 +112,37 @@ class MealTypeViewSet(viewsets.ModelViewSet):
 
 
 class UnitViewSet(viewsets.ModelViewSet):
-    queryset = Food.objects.all()
+    queryset = Unit.objects.all()
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
+
+    def get_queryset(self):  # TODO create standard filter/limit mixin
+        queryset = self.queryset
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        limit = self.request.query_params.get('limit', None)
+        if limit is not None:
+            queryset = queryset[:int(limit)]
+        return queryset
 
 
 class FoodViewSet(viewsets.ModelViewSet):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
+
+    def get_queryset(self):  # TODO create standard filter/limit mixin
+        queryset = self.queryset
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        limit = self.request.query_params.get('limit', None)
+        if limit is not None:
+            queryset = queryset[:int(limit)]
+        return queryset
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
@@ -147,7 +169,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     permission_classes = [permissions.IsAuthenticated]  # TODO split read and write permission for meal plan guest
 
-    def get_queryset(self):
+    def get_queryset(self):  # TODO create standard filter/limit mixin
         queryset = Recipe.objects.all()
         query = self.request.query_params.get('query', None)
         if query is not None:
@@ -171,7 +193,7 @@ class KeywordViewSet(viewsets.ModelViewSet):
     serializer_class = KeywordSerializer
     permission_classes = [CustomIsUser]
 
-    def get_queryset(self):
+    def get_queryset(self):  # TODO create standard filter/limit mixin
         queryset = Keyword.objects.all()
         query = self.request.query_params.get('query', None)
         if query is not None:
