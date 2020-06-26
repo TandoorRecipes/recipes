@@ -23,7 +23,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
-        fields = '__all__'
+        fields = ('name', 'method', 'username', 'created_by')
 
 
 class SyncSerializer(serializers.ModelSerializer):
@@ -42,6 +42,15 @@ class KeywordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Keyword
         fields = '__all__'
+        validators = []
+        extra_kwargs = {
+            "name": {
+                "validators": [],
+            },
+        }
+
+    def validate(self, attrs):
+        return attrs
 
 
 class UnitSerializer(serializers.ModelSerializer):
@@ -75,11 +84,24 @@ class StepSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     steps = StepSerializer(many=True, read_only=True)
-    keywords = KeywordSerializer(many=True, read_only=True)
+    keywords = KeywordSerializer(many=True, read_only=False, validators=[])
 
     class Meta:
         model = Recipe
         fields = '__all__'
+        validators = []
+
+    def update(self, instance, validated_data):
+        for k in validated_data['keyword']:
+            pass
+        return instance
+
+    def create(self, validated_data):
+        print('test')
+        pass
+
+    def validate(self, attrs):
+        return attrs
 
 
 class RecipeImportSerializer(serializers.ModelSerializer):
