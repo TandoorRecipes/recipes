@@ -61,7 +61,82 @@
                 </div>
             </div>
 
-            <button type="button" @click="updateRecipe()">Save</button>
+            <template v-for="step, index in recipe.steps">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Step [[index + 1]]</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <template v-for="ingredient, index in step.ingredients">
+                            <div class="card">
+                                <div class="card-body" style="padding: 12px">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input class="form-control" v-model="ingredient.amount">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <multiselect v-tabindex
+                                                         ref="unit"
+                                                         v-model="ingredient.unit"
+                                                         :options="units"
+                                                         :close-on-select="true"
+                                                         :clear-on-select="true"
+                                                         :allow-empty="true"
+                                                         :preserve-search="true"
+                                                         placeholder="{% trans 'Select one' %}"
+                                                         tag-placeholder="{% trans 'Select' %}"
+                                                         label="name"
+                                                         :id="'unit_' + index"
+                                                         track-by="id"
+                                                         :multiple="false"
+                                                         :loading="units_loading"
+                                                         @search-change="searchUnits">
+                                            </multiselect>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <multiselect v-tabindex
+                                                         ref="food"
+                                                         v-model="ingredient.food"
+                                                         :options="foods"
+                                                         :close-on-select="true"
+                                                         :clear-on-select="true"
+                                                         :allow-empty="true"
+                                                         :preserve-search="true"
+                                                         placeholder="{% trans 'Select one' %}"
+                                                         tag-placeholder="{% trans 'Select' %}"
+                                                         label="name"
+                                                         :id="'food_' + index"
+                                                         track-by="id"
+                                                         :multiple="false"
+                                                         :loading="foods_loading"
+                                                         @search-change="searchFoods">
+                                            </multiselect>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-control" v-model="ingredient.note">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea class="form-control" rows="8" v-model="step.instruction"
+                                  :id="'id_instruction_' + step.id"></textarea>
+                    </div>
+                </div>
+                <br/>
+            </template>
+
+            <button type="button" @click="updateRecipe()" class="btn">Save</button>
+            <button type="button" @click="addStep()" class="btn">Add Step</button>
         </template>
     </div>
 
@@ -81,6 +156,10 @@
                 recipe: undefined,
                 keywords: [],
                 keywords_loading: false,
+                foods: [],
+                foods_loading: false,
+                units: [],
+                units_loading: false,
             },
             directives: {
                 tabindex: {
@@ -91,6 +170,9 @@
             },
             mounted: function () {
                 this.loadRecipe()
+                this.searchUnits('')
+                this.searchFoods('')
+                this.searchKeywords('')
             },
             methods: {
                 loadRecipe: function () {
@@ -110,11 +192,37 @@
                         console.log(err)
                     })
                 },
+                addStep: function () { //TODO see if default can be generated from options request
+                    this.recipe.steps.push(
+                        {'instruction': '', ingredients: []}
+                    )
+                },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
-                    this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query).then((response) => {
+                    this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.keywords = response.data;
                         this.keywords_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                searchUnits: function (query) {
+                    this.units_loading = true
+                    this.$http.get("{% url 'api:unit-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.units = response.data;
+                        //TODO add back code to include custom created ingredients
+                        this.units_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                searchFoods: function (query) {
+                    this.foods_loading = true
+                    this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.foods = response.data
+                        //TODO add back code to include custom created ingredients
+
+                        this.foods_loading = false
                     }).catch((err) => {
                         console.log(err)
                     })

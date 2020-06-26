@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 from rest_framework.fields import CurrentUserDefault
@@ -38,70 +39,49 @@ class SyncLogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class KeywordSerializer(serializers.ModelSerializer):
+class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Keyword
         fields = '__all__'
-        validators = []
-        extra_kwargs = {
-            "name": {
-                "validators": [],
-            },
-        }
-
-    def validate(self, attrs):
-        return attrs
 
 
-class UnitSerializer(serializers.ModelSerializer):
+class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Unit
         fields = '__all__'
 
 
-class FoodSerializer(serializers.ModelSerializer):
+class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Food
         fields = '__all__'
 
 
-class IngredientSerializer(serializers.ModelSerializer):
-    food = FoodSerializer(read_only=True)
-    unit = UnitSerializer(read_only=True)
+class IngredientSerializer(WritableNestedModelSerializer):
+    food = FoodSerializer()
+    unit = UnitSerializer()
 
     class Meta:
         model = Ingredient
         fields = '__all__'
 
 
-class StepSerializer(serializers.ModelSerializer):
-    ingredients = IngredientSerializer(many=True, read_only=True)
+class StepSerializer(WritableNestedModelSerializer):
+    ingredients = IngredientSerializer(many=True)
 
     class Meta:
         model = Step
         fields = '__all__'
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    steps = StepSerializer(many=True, read_only=True)
-    keywords = KeywordSerializer(many=True, read_only=False, validators=[])
+class RecipeSerializer(WritableNestedModelSerializer):
+    steps = StepSerializer(many=True)
+    keywords = KeywordSerializer(many=True)
 
     class Meta:
         model = Recipe
         fields = '__all__'
         validators = []
-
-    def update(self, instance, validated_data):
-        for k in validated_data['keyword']:
-            pass
-        return instance
-
-    def create(self, validated_data):
-        print('test')
-        pass
-
-    def validate(self, attrs):
-        return attrs
 
 
 class RecipeImportSerializer(serializers.ModelSerializer):
