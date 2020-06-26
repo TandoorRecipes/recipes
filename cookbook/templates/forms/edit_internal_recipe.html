@@ -13,6 +13,9 @@
     <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/vue-multiselect.min.css' %}">
 
+    <script src="{% static 'js/Sortable.min.js' %}"></script>
+    <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -20,7 +23,7 @@
     <h3>{% trans 'Edit Recipe' %}</h3>
 
     <div id="app">
-        <template v-if="recipe">
+        <div v-if="recipe">
 
             <div class="row">
                 <div class="col-md-12">
@@ -61,69 +64,71 @@
                 </div>
             </div>
 
-            <template v-for="step, index in recipe.steps">
+            <div v-for="step in recipe.steps">
                 <div class="row">
                     <div class="col-md-12">
-                        <h3>Step [[index + 1]]</h3>
+                        <h3>Step</h3>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <template v-for="ingredient, index in step.ingredients">
-                            <div class="card">
+                        <draggable :list="step.ingredients" group="ingredients"
+                                   :empty-insert-threshold="10" handle=".handle" @sort="sortStep(step)">
+                            <div class="card" v-for="ingredient, index in step.ingredients" :key="ingredient.id">
                                 <div class="card-body" style="padding: 12px">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-1">
+                                            <i class="fas fa-arrows-alt-v handle"></i>
+                                        </div>
+                                        <div class="col-md-2">
                                             <input class="form-control" v-model="ingredient.amount">
                                         </div>
                                         <div class="col-md-3">
-                                            <multiselect v-tabindex
-                                                         ref="unit"
-                                                         v-model="ingredient.unit"
-                                                         :options="units"
-                                                         :close-on-select="true"
-                                                         :clear-on-select="true"
-                                                         :allow-empty="true"
-                                                         :preserve-search="true"
-                                                         placeholder="{% trans 'Select one' %}"
-                                                         tag-placeholder="{% trans 'Select' %}"
-                                                         label="name"
-                                                         :id="'unit_' + index"
-                                                         track-by="id"
-                                                         :multiple="false"
-                                                         :loading="units_loading"
-                                                         @search-change="searchUnits">
+                                            <multiselect
+                                                    v-tabindex
+                                                    ref="unit"
+                                                    v-model="ingredient.unit"
+                                                    :options="units"
+                                                    :close-on-select="true"
+                                                    :clear-on-select="true"
+                                                    :allow-empty="true"
+                                                    :preserve-search="true"
+                                                    placeholder="{% trans 'Select one' %}"
+                                                    tag-placeholder="{% trans 'Select' %}"
+                                                    label="name"
+                                                    track-by="id"
+                                                    :multiple="false"
+                                                    :loading="units_loading"
+                                                    @search-change="searchUnits">
                                             </multiselect>
 
                                         </div>
                                         <div class="col-md-3">
-                                            <multiselect v-tabindex
-                                                         ref="food"
-                                                         v-model="ingredient.food"
-                                                         :options="foods"
-                                                         :close-on-select="true"
-                                                         :clear-on-select="true"
-                                                         :allow-empty="true"
-                                                         :preserve-search="true"
-                                                         placeholder="{% trans 'Select one' %}"
-                                                         tag-placeholder="{% trans 'Select' %}"
-                                                         label="name"
-                                                         :id="'food_' + index"
-                                                         track-by="id"
-                                                         :multiple="false"
-                                                         :loading="foods_loading"
-                                                         @search-change="searchFoods">
+                                            <multiselect
+                                                    v-tabindex
+                                                    ref="food"
+                                                    v-model="ingredient.food"
+                                                    :options="foods"
+                                                    :close-on-select="true"
+                                                    :clear-on-select="true"
+                                                    :allow-empty="true"
+                                                    :preserve-search="true"
+                                                    placeholder="{% trans 'Select one' %}"
+                                                    tag-placeholder="{% trans 'Select' %}"
+                                                    label="name"
+                                                    track-by="id"
+                                                    :multiple="false"
+                                                    :loading="foods_loading"
+                                                    @search-change="searchFoods">
                                             </multiselect>
                                         </div>
                                         <div class="col-md-3">
                                             <input class="form-control" v-model="ingredient.note">
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
-                        </template>
+                        </draggable>
                     </div>
                 </div>
                 <div class="row">
@@ -133,11 +138,11 @@
                     </div>
                 </div>
                 <br/>
-            </template>
+            </div>
 
             <button type="button" @click="updateRecipe()" class="btn">Save</button>
             <button type="button" @click="addStep()" class="btn">Add Step</button>
-        </template>
+        </div>
     </div>
 
     <script type="application/javascript">
@@ -196,6 +201,13 @@
                     this.recipe.steps.push(
                         {'instruction': '', ingredients: []}
                     )
+                },
+                sortStep: function (step) {
+                    console.log(step)
+
+                    step.ingredients.forEach(function (element, index) {
+                        element.order = index
+                    });
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true

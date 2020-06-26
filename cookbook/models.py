@@ -150,9 +150,13 @@ class Ingredient(models.Model):
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=64, null=True, blank=True)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
+
+    class Meta:
+        ordering = ['order', 'pk']
 
 
 class Step(models.Model):
@@ -161,6 +165,10 @@ class Step(models.Model):
     kind = models.CharField(choices=((TEXT, _('Text')),), default=TEXT, max_length=16)
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'pk']
 
 
 class Recipe(models.Model):
