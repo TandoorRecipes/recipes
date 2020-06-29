@@ -1,11 +1,29 @@
 from django.contrib.auth.models import User
 from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 from rest_framework import serializers
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.fields import CurrentUserDefault
 
 from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step
 from cookbook.templatetags.custom_tags import markdown
+
+
+class CustomDecimalField(serializers.Field):
+    """
+        Custom decimal field to normalize useless decimal places and allow commas as decimal separators
+    """
+
+    def to_representation(self, value):
+        return value.normalize()
+
+    def to_internal_value(self, data):
+        if type(data) == int or type(data) == float:
+            return data
+        elif type(data) == str:
+            try:
+                return float(data.replace(',', ''))
+            except ValueError:
+                raise ValidationError('A valid number is required')
 
 
 class UserNameSerializer(serializers.ModelSerializer):
@@ -60,10 +78,11 @@ class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class IngredientSerializer(WritableNestedModelSerializer):
     food = FoodSerializer()
     unit = UnitSerializer()
+    amount = CustomDecimalField()
 
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ('id', 'food', 'unit', 'amount', 'note', 'order')
 
 
 class StepSerializer(WritableNestedModelSerializer):

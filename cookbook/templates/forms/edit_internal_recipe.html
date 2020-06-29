@@ -88,7 +88,7 @@
 
                 <div class="row">
                     <div class="col-md-12" style="margin-top: 12px">
-                        <div class="row" style="text-align: center">
+                        <!--<div class="row" style="text-align: center">
                             <div class="col-md-1 no-gutters">
                                 <b><i class="fas fa-arrows-alt-v"></i></b>
                             </div>
@@ -107,22 +107,21 @@
                             <div class="col-md-1">
                                 <i class="fa fa-trash"></i>
                             </div>
-                        </div>
+                        </div>-->
+
                         <draggable :list="step.ingredients" group="ingredients"
                                    :empty-insert-threshold="10" handle=".handle" @sort="sortStep(step)">
-                            <div class="card" v-for="ingredient, index in step.ingredients" :key="ingredient.id"
+                            <div class="col-md-12" v-for="ingredient, index in step.ingredients" :key="ingredient.id"
                                  style="margin-top: 8px">
-                                <div class="card-body" style="padding: 8px">
-                                    <div class="row d-flex">
-                                        <div class="col-md-1 small-padding"
-                                             style="vertical-align: middle!important; width: 50%!important;text-align: center">
+                                    <div class="d-flex align-items-center ">
+                                        <div class="flex-grow-0">
                                             <button type="button" class="btn btn-lg shadow-none"><i
                                                     class="fas fa-arrows-alt-v handle"></i></button>
                                         </div>
-                                        <div class="col-md-2 small-padding">
-                                            <input class="form-control" v-model="ingredient.amount">
+                                        <div class="flex-grow-2">
+                                            <input class="form-control" v-model="ingredient.amount" type="number">
                                         </div>
-                                        <div class="col-md-3 small-padding">
+                                        <div class="col-3 small-padding">
                                             <multiselect
                                                     v-tabindex
                                                     ref="unit"
@@ -142,7 +141,7 @@
                                             </multiselect>
 
                                         </div>
-                                        <div class="col-md-3 small-padding">
+                                        <div class="col-3 small-padding">
                                             <multiselect
                                                     v-tabindex
                                                     ref="food"
@@ -161,15 +160,15 @@
                                                     @search-change="searchFoods">
                                             </multiselect>
                                         </div>
-                                        <div class="col-md-2 small-padding">
+                                        <div class="flex-fill">
                                             <input class="form-control" v-model="ingredient.note">
                                         </div>
-                                        <div class="col-md-1 small-padding d-flex align-items-middle justify-content-center" >
-                                            <button type="button" class="btn btn-danger"
+                                        <div class="flex-grow-0 small-padding">
+                                            <button type="button" class="btn btn-outline-danger btn-lg"
                                                     @click="removeIngredient(step, ingredient)"><i
                                                     class="fa fa-trash"></i></button>
                                         </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </draggable>
