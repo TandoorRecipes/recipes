@@ -29,37 +29,63 @@
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ row.cells.name }}
-                                                {% recipe_rating row.record request.user as rating %}
-                                                {{ rating|safe }}
-                                            </h5>
-                                            <p class="card-text{% if not row.record.keywords %} d-none d-lg-block{% endif %}">
-                                                {% for x in row.record.keywords.all %}
-                                                    <span class="badge badge-pill badge-light">{{ x }}</span>
-                                                {% endfor %}
-                                            </p>
-                                            <p class="card-text"><small class="text-muted">
-                                                {% if row.cells.working_time != 0 %}
-                                                    <span class="badge badge-secondary"><i
-                                                            class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ row.cells.working_time }} min </span>
-                                                {% endif %}
+                                            <div class="d-flex">
+                                                <div class="flex-fill">
+                                                    <h5 class="card-title">{{ row.cells.name }}
+                                                        {% recipe_rating row.record request.user as rating %}
+                                                        {{ rating|safe }}
+                                                    </h5>
+                                                    <p class="card-text{% if not row.record.keywords %} d-none d-lg-block{% endif %}">
+                                                        {% for x in row.record.keywords.all %}
+                                                            <span class="badge badge-pill badge-light">{{ x }}</span>
+                                                        {% endfor %}
+                                                    </p>
+                                                    <p class="card-text"><small class="text-muted">
+                                                        {% if row.cells.working_time != 0 %}
+                                                            <span class="badge badge-secondary"><i
+                                                                    class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ row.cells.working_time }} min </span>
+                                                        {% endif %}
 
-                                                {% if row.cells.waiting_time != 0 %}
-                                                    <span
-                                                            class="badge badge-secondary"><i
-                                                            class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ row.cells.waiting_time }} min </span>
-                                                {% endif %}
-                                                {% if not row.record.internal %}
-                                                    <span class="badge badge-info">{% trans 'External' %} </span>
-                                                {% endif %}
-                                                {% recipe_last row.record request.user as last_cooked %}
-                                                {% if last_cooked %}
-                                                    <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
-                                                {% endif %}
-                                                <span class="badge badge-light">{{ row.cells.edit }}</span>
-                                                <span class="badge badge-warning"><a href="#" style="color: inherit"
-                                                                                     onclick="openCookLogModal({{ row.record.pk }})">{% trans 'Log' %}</a></span>
-                                            </small></p>
+                                                        {% if row.cells.waiting_time != 0 %}
+                                                            <span
+                                                                    class="badge badge-secondary"><i
+                                                                    class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ row.cells.waiting_time }} min </span>
+                                                        {% endif %}
+                                                        {% if not row.record.internal %}
+                                                            <span class="badge badge-info">{% trans 'External' %} </span>
+                                                        {% endif %}
+                                                        {% recipe_last row.record request.user as last_cooked %}
+                                                        {% if last_cooked %}
+                                                            <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
+                                                        {% endif %}
+                                                    </small></p>
+                                                </div>
+                                                <div>
+                                                    <div class="dropdown">
+                                                        <a class="btn shadow-none" href="#" role="button"
+                                                           id="dropdownMenuLink"
+                                                           data-toggle="dropdown" aria-haspopup="true"
+                                                           aria-expanded="false">
+                                                            <i class="fas fa-ellipsis-v text-muted"></i>
+                                                        </a>
+
+                                                        <div class="dropdown-menu dropdown-menu-right"
+                                                             aria-labelledby="dropdownMenuLink">
+
+                                                            <a class="dropdown-item"
+                                                               href="{% url 'edit_recipe' row.record.pk %}"><i
+                                                                    class="fas fa-pencil-alt fa-fw"></i> {% trans 'Edit' %}
+                                                            </a>
+                                                            <button class="dropdown-item"
+                                                                    onclick="openCookLogModal({{ row.record.pk }})"><i
+                                                                    class="fas fa-clipboard-list fa-fw"></i> {% trans 'Log Cooking' %}
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
 
                                         </div>
                                     </div>
