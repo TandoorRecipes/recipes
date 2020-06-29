@@ -22,6 +22,11 @@
             padding-right: 2px;
         }
 
+        .break-column {
+            flex-basis: 100%;
+            width: 0;
+        }
+
     </style>
 
 {% endblock %}
@@ -113,62 +118,65 @@
                                    :empty-insert-threshold="10" handle=".handle" @sort="sortStep(step)">
                             <div class="col-md-12" v-for="ingredient, index in step.ingredients" :key="ingredient.id"
                                  style="margin-top: 8px">
-                                    <div class="d-flex align-items-center ">
-                                        <div class="flex-grow-0">
-                                            <button type="button" class="btn btn-lg shadow-none"><i
-                                                    class="fas fa-arrows-alt-v handle"></i></button>
-                                        </div>
-                                        <div class="flex-grow-2">
-                                            <input class="form-control" v-model="ingredient.amount" type="number">
-                                        </div>
-                                        <div class="col-3 small-padding">
-                                            <multiselect
-                                                    v-tabindex
-                                                    ref="unit"
-                                                    v-model="ingredient.unit"
-                                                    :options="units"
-                                                    :close-on-select="true"
-                                                    :clear-on-select="true"
-                                                    :allow-empty="true"
-                                                    :preserve-search="true"
-                                                    placeholder="{% trans 'Select one' %}"
-                                                    tag-placeholder="{% trans 'Select' %}"
-                                                    label="name"
-                                                    track-by="id"
-                                                    :multiple="false"
-                                                    :loading="units_loading"
-                                                    @search-change="searchUnits">
-                                            </multiselect>
 
-                                        </div>
-                                        <div class="col-3 small-padding">
-                                            <multiselect
-                                                    v-tabindex
-                                                    ref="food"
-                                                    v-model="ingredient.food"
-                                                    :options="foods"
-                                                    :close-on-select="true"
-                                                    :clear-on-select="true"
-                                                    :allow-empty="true"
-                                                    :preserve-search="true"
-                                                    placeholder="{% trans 'Select one' %}"
-                                                    tag-placeholder="{% trans 'Select' %}"
-                                                    label="name"
-                                                    track-by="id"
-                                                    :multiple="false"
-                                                    :loading="foods_loading"
-                                                    @search-change="searchFoods">
-                                            </multiselect>
-                                        </div>
-                                        <div class="flex-fill">
-                                            <input class="form-control" v-model="ingredient.note">
-                                        </div>
-                                        <div class="flex-grow-0 small-padding">
-                                            <button type="button" class="btn btn-outline-danger btn-lg"
-                                                    @click="removeIngredient(step, ingredient)"><i
-                                                    class="fa fa-trash"></i></button>
-                                        </div>
+                                <hr class="d-md-none"/>
+                                <div class="row d-flex align-items-center justify-content-md-between flex-wrap">
+                                    <div class="flex-grow-0 handle align-self-start order-0">
+                                        <button type="button" class="btn btn-lg shadow-none"><i
+                                                class="fas fa-arrows-alt-v "></i></button>
+                                    </div>
+                                    <div class="flex-md-grow-2 flex-fill order-1">
+                                        <input class="form-control" v-model="ingredient.amount" type="number">
+                                    </div>
 
+                                    <div class="col-md-3 small-padding flex-grow-1 order-3">
+                                        <multiselect
+                                                v-tabindex
+                                                ref="unit"
+                                                v-model="ingredient.unit"
+                                                :options="units"
+                                                :close-on-select="true"
+                                                :clear-on-select="true"
+                                                :allow-empty="true"
+                                                :preserve-search="true"
+                                                placeholder="{% trans 'Select Unit' %}"
+                                                tag-placeholder="{% trans 'Select' %}"
+                                                label="name"
+                                                track-by="id"
+                                                :multiple="false"
+                                                :loading="units_loading"
+                                                @search-change="searchUnits">
+                                        </multiselect>
+
+                                    </div>
+                                    <div class="col-md-3 small-padding order-4">
+                                        <multiselect
+                                                v-tabindex
+                                                ref="food"
+                                                v-model="ingredient.food"
+                                                :options="foods"
+                                                :close-on-select="true"
+                                                :clear-on-select="true"
+                                                :allow-empty="true"
+                                                :preserve-search="true"
+                                                placeholder="{% trans 'Select Food' %}"
+                                                tag-placeholder="{% trans 'Select' %}"
+                                                label="name"
+                                                track-by="id"
+                                                :multiple="false"
+                                                :loading="foods_loading"
+                                                @search-change="searchFoods">
+                                        </multiselect>
+                                    </div>
+                                    <div class="flex-fill order-5">
+                                        <input class="form-control" v-model="ingredient.note"
+                                               :placeholder="{% trans 'Note' %}">
+                                    </div>
+                                    <div class="flex-grow-0 small-padding order-2 order-md-6">
+                                        <button type="button" class="btn btn-outline-danger btn-lg"
+                                                @click="removeIngredient(step, ingredient)"><i
+                                                class="fa fa-trash"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </draggable>
@@ -193,6 +201,8 @@
             <button type="button" @click="updateRecipe(true)" class="btn btn-success">{% trans 'Save & View' %}</button>
             <button type="button" @click="updateRecipe(false)" class="btn btn-info">{% trans 'Save' %}</button>
             <button type="button" @click="addStep()" class="btn btn-primary">{% trans 'Add Step' %}</button>
+            <br/>
+            <br/>
         </div>
     </div>
 
@@ -272,7 +282,10 @@
                     this.sortStep(step)
                 },
                 removeIngredient: function (step, ingredient) {
-                    step.ingredients = step.ingredients.filter(item => item !== ingredient)
+                    if (confirm('{% trans 'Do you really want to remove this ingredient ?' %}')) {
+                        step.ingredients = step.ingredients.filter(item => item !== ingredient)
+                    }
+
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
