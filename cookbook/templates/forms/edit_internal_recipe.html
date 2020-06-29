@@ -314,7 +314,9 @@
                 addIngredient: function (step) { //TODO see if default can be generated from options request
                     step.ingredients.push({
                         'food': undefined,
-                        'unit': undefined,
+                        'unit': {
+                            'name': '{{request.user.userpreference.default_unit}}'
+                        },
                         'amount': 0,
                         'note': '',
                         'order': 0,
@@ -355,10 +357,13 @@
                     this.units_loading = true
                     this.$http.get("{% url 'api:unit-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.units = response.data;
-                        for (let s of this.recipe.steps){
-                            for (let i of s.ingredients) {
-                                if (i.unit.id === undefined) {
-                                    this.units.push(i.unit)
+
+                        if (this.recipe !== undefined) {
+                            for (let s of this.recipe.steps) {
+                                for (let i of s.ingredients) {
+                                    if (i.unit.id === undefined) {
+                                        this.units.push(i.unit)
+                                    }
                                 }
                             }
                         }
@@ -372,10 +377,12 @@
                     this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.foods = response.data
 
-                        for (let s of this.recipe.steps){
-                            for (let i of s.ingredients) {
-                                if (i.food.id === undefined) {
-                                    this.foods.push(i.food)
+                        if (this.recipe !== undefined) {
+                            for (let s of this.recipe.steps) {
+                                for (let i of s.ingredients) {
+                                    if (i.food.id === undefined) {
+                                        this.foods.push(i.food)
+                                    }
                                 }
                             }
                         }

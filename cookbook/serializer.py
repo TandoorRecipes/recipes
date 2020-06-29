@@ -42,7 +42,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
-        fields = ('name', 'method', 'username', 'created_by')
+        fields = ('id', 'name', 'method', 'username', 'created_by')
 
 
 class SyncSerializer(serializers.ModelSerializer):
@@ -58,9 +58,16 @@ class SyncLogSerializer(serializers.ModelSerializer):
 
 
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    def create(self, validated_data):
+        # since multi select tags dont have id's duplicate names might be routed to create
+        obj, created = Keyword.objects.get_or_create(**validated_data)
+        return obj
+
     class Meta:
         model = Keyword
-        fields = '__all__'
+        fields = ('id', 'name', 'icon', 'description', 'created_by', 'created_at', 'updated_at')
+
+        read_only_fields = ('id',)
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
