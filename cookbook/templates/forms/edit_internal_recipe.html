@@ -93,7 +93,6 @@
                         </div>
                     </div>
 
-
                     <div class="row">
                         <div class="col-md-12" style="margin-top: 12px">
                             <draggable :list="step.ingredients" group="ingredients"
@@ -109,12 +108,12 @@
                                                     class="fas fa-arrows-alt-v "></i></button>
                                         </div>
 
-                                        <div class="flex-fill row" style="margin-left: 8px; margin-right: 8px">
-                                            <div class="col-lg-2 col-md-6 small-padding">
-                                                <input class="form-control" v-model="ingredient.amount" type="number">
+                                        <div class="flex-fill row" style="margin-left: 4px; margin-right: 4px">
+                                            <div class="col-lg-2 col-md-6 small-padding" v-if="!ingredient.is_header">
+                                                <input class="form-control" v-model="ingredient.amount" type="number" v-if="!ingredient.no_amount">
                                             </div>
 
-                                            <div class="col-lg-2 col-md-6 small-padding">
+                                            <div class="col-lg-2 col-md-6 small-padding" v-if="!ingredient.is_header">
                                                 <multiselect
                                                         v-tabindex
                                                         ref="unit"
@@ -136,7 +135,7 @@
                                                         @search-change="searchUnits">
                                                 </multiselect>
                                             </div>
-                                            <div class="col-lg-4 col-md-6 small-padding">
+                                            <div class="col-lg-4 col-md-6 small-padding" v-if="!ingredient.is_header">
                                                 <multiselect
                                                         v-tabindex
                                                         ref="food"
@@ -158,16 +157,50 @@
                                                         @search-change="searchFoods">
                                                 </multiselect>
                                             </div>
-                                            <div class="col-lg-4 col-md-6 small-padding">
+                                            <div class="small-padding" v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
                                                 <input class="form-control" v-model="ingredient.note"
                                                        placeholder="{% trans 'Note' %}">
                                             </div>
                                         </div>
 
                                         <div class="flex-grow-0 small-padding">
-                                            <button type="button" class="btn btn-outline-warning btn-lg"
-                                                    @click="removeIngredient(step, ingredient)"><i
-                                                    class="fa fa-trash"></i></button>
+                                            <a class="btn shadow-none btn-lg" href="#" role="button"
+                                               id="dropdownMenuLink"
+                                               data-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v text-muted"></i>
+                                            </a>
+
+                                            <div class="dropdown-menu dropdown-menu-right"
+                                                 aria-labelledby="dropdownMenuLink">
+                                                <button type="button" class="dropdown-item"
+                                                        @click="removeIngredient(step, ingredient)"><i
+                                                        class="fa fa-trash fa-fw"></i> {% trans 'Delete Ingredient' %}
+                                                </button>
+
+                                                <button type="button" class="dropdown-item"
+                                                        v-if="!ingredient.is_header "
+                                                        @click="ingredient.is_header = true"><i
+                                                        class="fas fa-heading fa-fw"></i> {% trans 'Make Header' %}
+                                                </button>
+
+                                                <button type="button" class="dropdown-item"
+                                                        v-if="ingredient.is_header "
+                                                        @click="ingredient.is_header = false"><i
+                                                        class="fas fa-leaf fa-fw"></i> {% trans 'Make Ingredient' %}
+                                                </button>
+
+                                                <button type="button" class="dropdown-item"
+                                                        v-if="!ingredient.no_amount "
+                                                        @click="ingredient.no_amount = true"><i class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Disable Amount' %}
+                                                </button>
+
+                                                <button type="button" class="dropdown-item"
+                                                        v-if="ingredient.no_amount "
+                                                        @click="ingredient.no_amount = false"><i class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Enable Amount' %}
+                                                </button>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

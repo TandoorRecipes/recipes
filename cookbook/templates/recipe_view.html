@@ -126,7 +126,7 @@
                         <table class="table table-sm">
                             {% for s in recipe.steps.all %}
                                 {% for i in s.ingredients.all %}
-                                    {% if i.unit.name == 'Special:Header' %}
+                                    {% if i.is_header %}
                                         <tr>
                                             <td style="padding-top: 8px!important; ">
                                                 <b>{{ i.note }}</b>
@@ -143,11 +143,11 @@
                                                     <input type="checkbox"/>
                                                     <div class="state p-success">
                                                         <label>
-                                                            {% if i.amount != 0 %}
+                                                            {% if i.no_amount %}
+                                                                <span>&#x2063;</span>
+                                                            {% else %}
                                                                 <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
                                                                 {{ i.unit }}
-                                                            {% else %}
-                                                                <span>&#x2063;</span>
                                                             {% endif %}
                                                         </label>
                                                     </div>

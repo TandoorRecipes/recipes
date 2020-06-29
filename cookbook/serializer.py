@@ -97,13 +97,13 @@ class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
 
 class IngredientSerializer(WritableNestedModelSerializer):
-    food = FoodSerializer()
-    unit = UnitSerializer()
+    food = FoodSerializer(allow_null=True)
+    unit = UnitSerializer(allow_null=True)
     amount = CustomDecimalField()
 
     class Meta:
         model = Ingredient
-        fields = ('id', 'food', 'unit', 'amount', 'note', 'order')
+        fields = ('id', 'food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
 
 
 class StepSerializer(WritableNestedModelSerializer):

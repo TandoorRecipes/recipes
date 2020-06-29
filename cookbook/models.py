@@ -146,10 +146,12 @@ class Food(models.Model):
 
 
 class Ingredient(models.Model):
-    food = models.ForeignKey(Food, on_delete=models.PROTECT)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
+    food = models.ForeignKey(Food, on_delete=models.PROTECT, null=True, blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
+    is_header = models.BooleanField(default=False)
+    no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
 
     def __str__(self):
