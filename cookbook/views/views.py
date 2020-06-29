@@ -189,16 +189,17 @@ def shopping_list(request):
     ingredients = []
 
     for r in recipes:
-        for ri in RecipeIngredient.objects.filter(recipe=r).exclude(unit__name__contains='Special:').all():
-            index = None
-            for x, ig in enumerate(ingredients):
-                if ri.ingredient == ig.ingredient and ri.unit == ig.unit:
-                    index = x
+        for s in r.steps.all():
+            for ri in s.ingredients.exclude(unit__name__contains='Special:').all():
+                index = None
+                for x, ig in enumerate(ingredients):
+                    if ri.food == ig.food and ri.unit == ig.unit:
+                        index = x
 
-            if index:
-                ingredients[index].amount = ingredients[index].amount + ri.amount
-            else:
-                ingredients.append(ri)
+                if index:
+                    ingredients[index].amount = ingredients[index].amount + ri.amount
+                else:
+                    ingredients.append(ri)
 
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
 
