@@ -23,11 +23,6 @@
             margin-top: 2px;
         }
 
-        .break-column {
-            flex-basis: 100%;
-            width: 0;
-        }
-
     </style>
 
 {% endblock %}
@@ -50,7 +45,8 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{{ recipe.image.url }}" id="id_image" class="img img-fluid img-responsive"
+                    <img src="{% if recipe.image %}{{ recipe.image.url }}{% endif %}" id="id_image"
+                         class="img img-fluid img-responsive"
                          style="max-height: 20vh">
                     <input type="file" @change="imageChanged">
                 </div>
@@ -184,16 +180,39 @@
                 <br/>
             </div>
 
-            <button type="button" @click="updateRecipe(true)" class="btn btn-success">{% trans 'Save & View' %}</button>
-            <button type="button" @click="updateRecipe(false)" class="btn btn-info">{% trans 'Save' %}</button>
-            <button type="button" @click="addStep()" class="btn btn-primary">{% trans 'Add Step' %}</button>
+            <button type="button" @click="updateRecipe(true)" class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
+            <button type="button" @click="updateRecipe(false)" class="btn btn-info shadow-none">{% trans 'Save' %}</button>
+            <button type="button" @click="addStep()" class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
             <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
-               class="btn btn-secondary">{% trans 'View Recipe' %}</a>
+               class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
             <br/>
             <br/>
         </div>
     </div>
 
+{% endblock %}
+
+{% block content_xl_right %}
+    <div class="sticky-top" style="top: 2vh">
+        <div class="row">
+            <div class="col-md-8">
+                <button type="button" @click="updateRecipe(true)"
+                        class="btn btn-success btn-block shadow-none">{% trans 'Save & View' %}</button>
+
+                <button type="button" @click="updateRecipe(false)"
+                        class="btn btn-info btn-block shadow-none">{% trans 'Save' %}</button>
+
+                <button type="button" @click="addStep()"
+                        class="btn btn-primary btn-block shadow-none">{% trans 'Add Step' %}</button>
+
+                <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
+                   class="btn btn-secondary btn-block shadow-none">{% trans 'View Recipe' %}</a> <br/>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
@@ -205,7 +224,7 @@
                 Multiselect: window.VueMultiselect.default
             },
             delimiters: ['[[', ']]'],
-            el: '#app',
+            el: '#id_base_container',
             data: {
                 recipe: undefined,
                 keywords: [],
@@ -330,6 +349,4 @@
             }
         });
     </script>
-
-
 {% endblock %}
