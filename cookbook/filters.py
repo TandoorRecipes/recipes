@@ -11,8 +11,8 @@ class RecipeFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(method='filter_name')
     keywords = django_filters.ModelMultipleChoiceFilter(queryset=Keyword.objects.all(), widget=MultiSelectWidget,
                                                         method='filter_keywords')
-    ingredients = django_filters.ModelMultipleChoiceFilter(queryset=Food.objects.all(), widget=MultiSelectWidget,
-                                                           method='filter_ingredients', label=_('Ingredients'))
+    foods = django_filters.ModelMultipleChoiceFilter(queryset=Food.objects.all(), widget=MultiSelectWidget,
+                                                     method='filter_foods', label=_('Ingredients'))
 
     @staticmethod
     def filter_keywords(queryset, name, value):
@@ -23,11 +23,11 @@ class RecipeFilter(django_filters.FilterSet):
         return queryset
 
     @staticmethod
-    def filter_ingredients(queryset, name, value):
-        if not name == 'ingredients':
+    def filter_foods(queryset, name, value):
+        if not name == 'foods':
             return queryset
         for x in value:
-            queryset = queryset.filter(ingredient__food=x).distinct()
+            queryset = queryset.filter(steps__ingredients__food__name=x).distinct()
         return queryset
 
     @staticmethod
@@ -43,7 +43,7 @@ class RecipeFilter(django_filters.FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ['name', 'keywords', 'ingredients', 'internal']
+        fields = ['name', 'keywords', 'foods', 'internal']
 
 
 class IngredientFilter(django_filters.FilterSet):
