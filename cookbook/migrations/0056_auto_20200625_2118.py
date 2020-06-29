@@ -5,6 +5,7 @@ import uuid
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
         ('cookbook', '0055_auto_20200616_1236'),
