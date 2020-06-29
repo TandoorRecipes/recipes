@@ -76,117 +76,121 @@
                 </div>
             </div>
 
-            <div v-for="step, step_index in recipe.steps" style="margin-top: 1vh">
+            <draggable :list="recipe.steps" group="steps"
+                       :empty-insert-threshold="10" handle=".handle" @sort="sortSteps()">
+                <div v-for="step, step_index in recipe.steps" style="margin-top: 1vh">
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>{% trans 'Step' %} [[step_index+1]]</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3><i class="fas fa-arrows-alt-v handle"></i> {% trans 'Step' %} [[step_index+1]]</h3>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <label :for="'id_step_' + step.id + 'name'">{% trans 'Step Name' %}</label>
-                        <input class="form-control" v-model="step.name" :id="'id_step_' + step.id + 'name'">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label :for="'id_step_' + step.id + 'name'">{% trans 'Step Name' %}</label>
+                            <input class="form-control" v-model="step.name" :id="'id_step_' + step.id + 'name'">
+                        </div>
                     </div>
-                </div>
 
 
-                <div class="row">
-                    <div class="col-md-12" style="margin-top: 12px">
-                        <draggable :list="step.ingredients" group="ingredients"
-                                   :empty-insert-threshold="10" handle=".handle" @sort="sortStep(step)">
-                            <div class="col-md-12" v-for="ingredient, index in step.ingredients" :key="ingredient.id"
-                                 style="margin-top: 8px">
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 12px">
+                            <draggable :list="step.ingredients" group="ingredients"
+                                       :empty-insert-threshold="10" handle=".handle" @sort="sortIngredients(step)">
+                                <div class="col-md-12" v-for="ingredient, index in step.ingredients"
+                                     :key="ingredient.id"
+                                     style="margin-top: 8px">
 
-                                <hr class="d-md-none"/>
-                                <div class="d-flex">
-                                    <div class="flex-grow-0 handle align-self-start">
-                                        <button type="button" class="btn btn-lg shadow-none"><i
-                                                class="fas fa-arrows-alt-v "></i></button>
-                                    </div>
-
-                                    <div class="flex-fill row" style="margin-left: 8px; margin-right: 8px">
-                                        <div class="col-lg-2 col-md-6 small-padding">
-                                            <input class="form-control" v-model="ingredient.amount" type="number">
+                                    <hr class="d-md-none"/>
+                                    <div class="d-flex">
+                                        <div class="flex-grow-0 handle align-self-start">
+                                            <button type="button" class="btn btn-lg shadow-none"><i
+                                                    class="fas fa-arrows-alt-v "></i></button>
                                         </div>
 
-                                        <div class="col-lg-2 col-md-6 small-padding">
-                                            <multiselect
-                                                    v-tabindex
-                                                    ref="unit"
-                                                    v-model="ingredient.unit"
-                                                    :options="units"
-                                                    :close-on-select="true"
-                                                    :clear-on-select="true"
-                                                    :allow-empty="true"
-                                                    :preserve-search="true"
-                                                    placeholder="{% trans 'Select Unit' %}"
-                                                    tag-placeholder="{% trans 'Select' %}"
-                                                    :taggable="true"
-                                                    @tag="addUnitType"
-                                                    :id="`unit_${step_index}_${index}`"
-                                                    label="name"
-                                                    track-by="name"
-                                                    :multiple="false"
-                                                    :loading="units_loading"
-                                                    @search-change="searchUnits">
-                                            </multiselect>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6 small-padding">
-                                            <multiselect
-                                                    v-tabindex
-                                                    ref="food"
-                                                    v-model="ingredient.food"
-                                                    :options="foods"
-                                                    :close-on-select="true"
-                                                    :clear-on-select="true"
-                                                    :allow-empty="true"
-                                                    :preserve-search="true"
-                                                    placeholder="{% trans 'Select Food' %}"
-                                                    tag-placeholder="{% trans 'Select' %}"
-                                                    :taggable="true"
-                                                    @tag="addFoodType"
-                                                    :id="`ingredient_${step_index}_${index}`"
-                                                    label="name"
-                                                    track-by="name"
-                                                    :multiple="false"
-                                                    :loading="foods_loading"
-                                                    @search-change="searchFoods">
-                                            </multiselect>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6 small-padding">
-                                            <input class="form-control" v-model="ingredient.note"
-                                                   placeholder="{% trans 'Note' %}">
-                                        </div>
-                                    </div>
+                                        <div class="flex-fill row" style="margin-left: 8px; margin-right: 8px">
+                                            <div class="col-lg-2 col-md-6 small-padding">
+                                                <input class="form-control" v-model="ingredient.amount" type="number">
+                                            </div>
 
-                                    <div class="flex-grow-0 small-padding">
-                                        <button type="button" class="btn btn-outline-warning btn-lg"
-                                                @click="removeIngredient(step, ingredient)"><i
-                                                class="fa fa-trash"></i></button>
+                                            <div class="col-lg-2 col-md-6 small-padding">
+                                                <multiselect
+                                                        v-tabindex
+                                                        ref="unit"
+                                                        v-model="ingredient.unit"
+                                                        :options="units"
+                                                        :close-on-select="true"
+                                                        :clear-on-select="true"
+                                                        :allow-empty="true"
+                                                        :preserve-search="true"
+                                                        placeholder="{% trans 'Select Unit' %}"
+                                                        tag-placeholder="{% trans 'Select' %}"
+                                                        :taggable="true"
+                                                        @tag="addUnitType"
+                                                        :id="`unit_${step_index}_${index}`"
+                                                        label="name"
+                                                        track-by="name"
+                                                        :multiple="false"
+                                                        :loading="units_loading"
+                                                        @search-change="searchUnits">
+                                                </multiselect>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6 small-padding">
+                                                <multiselect
+                                                        v-tabindex
+                                                        ref="food"
+                                                        v-model="ingredient.food"
+                                                        :options="foods"
+                                                        :close-on-select="true"
+                                                        :clear-on-select="true"
+                                                        :allow-empty="true"
+                                                        :preserve-search="true"
+                                                        placeholder="{% trans 'Select Food' %}"
+                                                        tag-placeholder="{% trans 'Select' %}"
+                                                        :taggable="true"
+                                                        @tag="addFoodType"
+                                                        :id="`ingredient_${step_index}_${index}`"
+                                                        label="name"
+                                                        track-by="name"
+                                                        :multiple="false"
+                                                        :loading="foods_loading"
+                                                        @search-change="searchFoods">
+                                                </multiselect>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6 small-padding">
+                                                <input class="form-control" v-model="ingredient.note"
+                                                       placeholder="{% trans 'Note' %}">
+                                            </div>
+                                        </div>
+
+                                        <div class="flex-grow-0 small-padding">
+                                            <button type="button" class="btn btn-outline-warning btn-lg"
+                                                    @click="removeIngredient(step, ingredient)"><i
+                                                    class="fa fa-trash"></i></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </draggable>
+                            </draggable>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12" style="text-align: center; margin-top: 8px; margin-bottom: 8px">
-                        <button class="btn btn-success" @click="addIngredient(step)"><i class="fa fa-plus"></i></button>
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: center; margin-top: 8px; margin-bottom: 8px">
+                            <button class="btn btn-success" @click="addIngredient(step)"><i class="fa fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
                         <textarea class="form-control" rows="8" v-model="step.instruction"
                                   :id="'id_instruction_' + step.id"></textarea>
+                        </div>
                     </div>
+                    <br/>
                 </div>
-                <br/>
-            </div>
-
+            </draggable>
             <button type="button" @click="updateRecipe(true)"
                     class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
             <button type="button" @click="updateRecipe(false)"
@@ -306,7 +310,12 @@
                         {'instruction': '', ingredients: []}
                     )
                 },
-                sortStep: function (step) {
+                sortSteps: function () {
+                    this.recipe.steps.forEach(function (element, index) {
+                        element.order = index
+                    });
+                },
+                sortIngredients: function (step) {
                     step.ingredients.forEach(function (element, index) {
                         element.order = index
                     });
@@ -321,7 +330,7 @@
                         'note': '',
                         'order': 0,
                     })
-                    this.sortStep(step)
+                    this.sortIngredients(step)
                 },
                 removeIngredient: function (step, ingredient) {
                     if (confirm('{% trans 'Are you sure that you want to delete this ingredient?' %}')) {
