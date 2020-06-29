@@ -409,7 +409,7 @@
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {
                                 for (let i of s.ingredients) {
-                                    if (i.unit !== undefined &&i.unit.id === undefined) {
+                                    if (i.unit !== null && i.unit.id === undefined) {
                                         this.units.push(i.unit)
                                     }
                                 }
@@ -428,7 +428,7 @@
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {
                                 for (let i of s.ingredients) {
-                                    if (i.food !== undefined &&i.food.id === undefined) {
+                                    if (i.food !== null && i.food.id === undefined) {
                                         this.foods.push(i.food)
                                     }
                                 }
