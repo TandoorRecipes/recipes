@@ -1,20 +1,25 @@
 import io
 import json
 import re
+import uuid
 
 import requests
+from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.files import File
 from django.db.models import Q
 from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, decorators
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
+from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
+from rest_framework.response import Response
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
 from cookbook.helper.recipe_url_import import get_from_html
@@ -22,7 +27,7 @@ from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, 
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer
+    KeywordSerializer, RecipeImageSerializer
 
 
 class UserNameViewSet(viewsets.ModelViewSet):
@@ -179,6 +184,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if limit is not None:
             queryset = queryset[:int(limit)]
         return queryset
+
+    @decorators.action(
+        detail=True,
+        methods=['PUT'],
+        serializer_class=RecipeImageSerializer,
+        parser_classes=[MultiPartParser],
+    )
+    def image(self, request, pk):
+        obj = self.get_object()
+        serializer = self.serializer_class(obj, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            img = Image.open(obj.image)
+
+            basewidth = 720
+            wpercent = (basewidth / float(img.size[0]))
+            hsize = int((float(img.size[1]) * float(wpercent)))
+            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+            im_io = io.BytesIO()
+            img.save(im_io, 'PNG', quality=70)
+            obj.image = File(im_io, name=f'{uuid.uuid4()}_{obj.pk}.png')
+            obj.save()
+
+            return Response(serializer.data)
+        return Response(serializer.errors, 400)
 
 
 class KeywordViewSet(viewsets.ModelViewSet):

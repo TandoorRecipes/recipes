@@ -99,8 +99,14 @@ class RecipeSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = '__all__'
-        validators = []
+        fields = ['name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal']
+        read_only_fields = ['image', 'created_by', 'created_at']
+
+
+class RecipeImageSerializer(WritableNestedModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ['image', ]
 
 
 class RecipeImportSerializer(serializers.ModelSerializer):
