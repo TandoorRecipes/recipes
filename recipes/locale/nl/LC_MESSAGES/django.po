@@ -17,14 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
 #: .\recipes\settings.py:169
 msgid "English"
-msgstr "Englisch"
+msgstr ""
 
 #: .\recipes\settings.py:170
 msgid "German"
-msgstr "Deutsch"
+msgstr ""
 
 #: .\recipes\settings.py:171
 msgid "Dutch"
