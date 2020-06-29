@@ -11,10 +11,18 @@
     {% include 'include/vue_base.html' %}
 
     <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/vue-multiselect.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vue-multiselect-bs4.min.css' %}">
 
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
+
+    <style>
+        .small-padding {
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+    </style>
 
 {% endblock %}
 
@@ -77,20 +85,44 @@
                     </div>
                 </div>
 
+
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-top: 12px">
+                        <div class="row" style="text-align: center">
+                            <div class="col-md-1 no-gutters">
+                                <b><i class="fas fa-arrows-alt-v"></i></b>
+                            </div>
+                            <div class="col-md-2">
+                                <b>{% trans 'Amount' %}</b>
+                            </div>
+                            <div class="col-md-3">
+                                <b>{% trans 'Unit' %}</b>
+                            </div>
+                            <div class="col-md-3">
+                                <b>{% trans 'Food' %}</b>
+                            </div>
+                            <div class="col-md-2">
+                                <b>{% trans 'Note' %}</b>
+                            </div>
+                            <div class="col-md-1">
+                                <i class="fa fa-trash"></i>
+                            </div>
+                        </div>
                         <draggable :list="step.ingredients" group="ingredients"
                                    :empty-insert-threshold="10" handle=".handle" @sort="sortStep(step)">
-                            <div class="card" v-for="ingredient, index in step.ingredients" :key="ingredient.id">
-                                <div class="card-body" style="padding: 12px">
-                                    <div class="row">
-                                        <div class="col-md-1">
-                                            <i class="fas fa-arrows-alt-v handle"></i>
+                            <div class="card" v-for="ingredient, index in step.ingredients" :key="ingredient.id"
+                                 style="margin-top: 8px">
+                                <div class="card-body" style="padding: 8px">
+                                    <div class="row d-flex">
+                                        <div class="col-md-1 small-padding"
+                                             style="vertical-align: middle!important; width: 50%!important;text-align: center">
+                                            <button type="button" class="btn btn-lg shadow-none"><i
+                                                    class="fas fa-arrows-alt-v handle"></i></button>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 small-padding">
                                             <input class="form-control" v-model="ingredient.amount">
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 small-padding">
                                             <multiselect
                                                     v-tabindex
                                                     ref="unit"
@@ -110,7 +142,7 @@
                                             </multiselect>
 
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 small-padding">
                                             <multiselect
                                                     v-tabindex
                                                     ref="food"
@@ -129,17 +161,27 @@
                                                     @search-change="searchFoods">
                                             </multiselect>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2 small-padding">
                                             <input class="form-control" v-model="ingredient.note">
+                                        </div>
+                                        <div class="col-md-1 small-padding d-flex align-items-middle justify-content-center" >
+                                            <button type="button" class="btn btn-danger"
+                                                    @click="removeIngredient(step, ingredient)"><i
+                                                    class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </draggable>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-12" style="text-align: center; margin-top: 8px; margin-bottom: 8px">
                         <button class="btn btn-success" @click="addIngredient(step)"><i class="fa fa-plus"></i></button>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12">
                         <textarea class="form-control" rows="8" v-model="step.instruction"
@@ -149,8 +191,9 @@
                 <br/>
             </div>
 
-            <button type="button" @click="updateRecipe()" class="btn">Save</button>
-            <button type="button" @click="addStep()" class="btn">Add Step</button>
+            <button type="button" @click="updateRecipe(true)" class="btn btn-success">{% trans 'Save & View' %}</button>
+            <button type="button" @click="updateRecipe(false)" class="btn btn-info">{% trans 'Save' %}</button>
+            <button type="button" @click="addStep()" class="btn btn-primary">{% trans 'Add Step' %}</button>
         </div>
     </div>
 
@@ -199,9 +242,13 @@
                         console.log(err)
                     })
                 },
-                updateRecipe: function () {
+                updateRecipe: function (view_after) {
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe).then((response) => {
+                        console.log(view_after)
                         console.log(response)
+                        if (view_after) {
+                            location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.recipe.id);
+                        }
                     }).catch((err) => {
                         console.log(err)
                     })
@@ -212,8 +259,6 @@
                     )
                 },
                 sortStep: function (step) {
-                    console.log(step)
-
                     step.ingredients.forEach(function (element, index) {
                         element.order = index
                     });
@@ -226,6 +271,9 @@
                         'note': '',
                     })
                     this.sortStep(step)
+                },
+                removeIngredient: function (step, ingredient) {
+                    step.ingredients = step.ingredients.filter(item => item !== ingredient)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
