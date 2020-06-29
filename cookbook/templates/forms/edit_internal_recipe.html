@@ -66,7 +66,7 @@
                             :hide-selected="true"
                             :preserve-search="true"
                             placeholder="{% trans 'Select Keywords' %}"
-                            label="name"
+                            label="label"
                             track-by="id"
                             id="id_keywords"
                             :multiple="true"
@@ -409,7 +409,7 @@
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {
                                 for (let i of s.ingredients) {
-                                    if (i.unit.id === undefined) {
+                                    if (i.unit !== undefined &&i.unit.id === undefined) {
                                         this.units.push(i.unit)
                                     }
                                 }
@@ -428,7 +428,7 @@
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {
                                 for (let i of s.ingredients) {
-                                    if (i.food.id === undefined) {
+                                    if (i.food !== undefined &&i.food.id === undefined) {
                                         this.foods.push(i.food)
                                     }
                                 }

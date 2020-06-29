@@ -125,9 +125,6 @@ class Keyword(models.Model):
         else:
             return f"{self.name}"
 
-    def __str__(self):
-        return self.name
-
 
 class Unit(models.Model):
     name = models.CharField(unique=True, max_length=128)
