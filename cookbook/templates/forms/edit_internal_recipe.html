@@ -76,12 +76,14 @@
                 </div>
             </div>
 
-            <div v-for="step in recipe.steps">
+            <div v-for="step, step_index in recipe.steps" style="margin-top: 1vh">
+
                 <div class="row">
                     <div class="col-md-12">
-                        <h3>Step</h3>
+                        <h3>{% trans 'Step' %} [[step_index+1]]</h3>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12">
                         <label :for="'id_step_' + step.id + 'name'">{% trans 'Step Name' %}</label>
@@ -121,13 +123,15 @@
                                                     :preserve-search="true"
                                                     placeholder="{% trans 'Select Unit' %}"
                                                     tag-placeholder="{% trans 'Select' %}"
+                                                    :taggable="true"
+                                                    @tag="addUnitType"
+                                                    :id="`unit_${step_index}_${index}`"
                                                     label="name"
-                                                    track-by="id"
+                                                    track-by="name"
                                                     :multiple="false"
                                                     :loading="units_loading"
                                                     @search-change="searchUnits">
                                             </multiselect>
-
                                         </div>
                                         <div class="col-lg-4 col-md-6 small-padding">
                                             <multiselect
@@ -141,8 +145,11 @@
                                                     :preserve-search="true"
                                                     placeholder="{% trans 'Select Food' %}"
                                                     tag-placeholder="{% trans 'Select' %}"
+                                                    :taggable="true"
+                                                    @tag="addFoodType"
+                                                    :id="`ingredient_${step_index}_${index}`"
                                                     label="name"
-                                                    track-by="id"
+                                                    track-by="name"
                                                     :multiple="false"
                                                     :loading="foods_loading"
                                                     @search-change="searchFoods">
@@ -180,8 +187,10 @@
                 <br/>
             </div>
 
-            <button type="button" @click="updateRecipe(true)" class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
-            <button type="button" @click="updateRecipe(false)" class="btn btn-info shadow-none">{% trans 'Save' %}</button>
+            <button type="button" @click="updateRecipe(true)"
+                    class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
+            <button type="button" @click="updateRecipe(false)"
+                    class="btn btn-info shadow-none">{% trans 'Save' %}</button>
             <button type="button" @click="addStep()" class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
             <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
                class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
@@ -308,6 +317,7 @@
                         'unit': undefined,
                         'amount': 0,
                         'note': '',
+                        'order': 0,
                     })
                     this.sortStep(step)
                 },
@@ -315,6 +325,22 @@
                     if (confirm('{% trans 'Are you sure that you want to delete this ingredient?' %}')) {
                         step.ingredients = step.ingredients.filter(item => item !== ingredient)
                     }
+                },
+                addFoodType: function (tag, index) {
+                    let [tmp, step, id] = index.split('_')
+
+                    let new_food = this.recipe.steps[step].ingredients[id]
+                    new_food.food = {'name': tag}
+                    this.foods.push(new_food.food)
+                    this.recipe.steps[step].ingredients[id] = new_food
+                },
+                addUnitType: function (tag, index) {
+                    let [tmp, step, id] = index.split('_')
+
+                    let new_unit = this.recipe.steps[step].ingredients[id]
+                    new_unit.unit = {'name': tag}
+                    this.foods.push(new_unit.unit)
+                    this.recipe.steps[step].ingredients[id] = new_unit
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
@@ -329,7 +355,13 @@
                     this.units_loading = true
                     this.$http.get("{% url 'api:unit-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.units = response.data;
-                        //TODO add back code to include custom created ingredients
+                        for (let s of this.recipe.steps){
+                            for (let i of s.ingredients) {
+                                if (i.unit.id === undefined) {
+                                    this.units.push(i.unit)
+                                }
+                            }
+                        }
                         this.units_loading = false
                     }).catch((err) => {
                         console.log(err)
@@ -339,7 +371,14 @@
                     this.foods_loading = true
                     this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.foods = response.data
-                        //TODO add back code to include custom created ingredients
+
+                        for (let s of this.recipe.steps){
+                            for (let i of s.ingredients) {
+                                if (i.food.id === undefined) {
+                                    this.foods.push(i.food)
+                                }
+                            }
+                        }
 
                         this.foods_loading = false
                     }).catch((err) => {

@@ -64,15 +64,29 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        # since multi select tags dont have id's duplicate names might be routed to create
+        obj, created = Unit.objects.get_or_create(**validated_data)
+        return obj
+
     class Meta:
         model = Unit
-        fields = '__all__'
+        fields = ('id', 'name', 'description')
+        read_only_fields = ('id',)
 
 
 class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        # since multi select tags dont have id's duplicate names might be routed to create
+        obj, created = Food.objects.get_or_create(**validated_data)
+        return obj
+
     class Meta:
         model = Food
-        fields = '__all__'
+        fields = ('id', 'name', 'recipe')
+        read_only_fields = ('id',)
 
 
 class IngredientSerializer(WritableNestedModelSerializer):
