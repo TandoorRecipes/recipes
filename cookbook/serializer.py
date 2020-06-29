@@ -58,6 +58,11 @@ class SyncLogSerializer(serializers.ModelSerializer):
 
 
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    label = serializers.SerializerMethodField('get_label')
+
+    def get_label(self, obj):
+        return str(obj)
+
     def create(self, validated_data):
         # since multi select tags dont have id's duplicate names might be routed to create
         obj, created = Keyword.objects.get_or_create(**validated_data)
@@ -65,7 +70,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Keyword
-        fields = ('id', 'name', 'icon', 'description', 'created_by', 'created_at', 'updated_at')
+        fields = ('id', 'name', 'icon', 'label', 'description', 'created_by', 'created_at', 'updated_at')
 
         read_only_fields = ('id',)
 
