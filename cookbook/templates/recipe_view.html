@@ -40,7 +40,7 @@
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'edit_recipe' recipe.pk %}"><i
-                                class="fas fa-pencil-alt"></i> {% trans 'Edit' %}</a>
+                                class="fas fa-pencil-alt fa-fw"></i> {% trans 'Edit' %}</a>
                         <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
                             <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
                         {% if ingredients %}
