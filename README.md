@@ -66,4 +66,16 @@ There is a [transifex project](https://www.transifex.com/django-recipes/django-c
 It is also possible to provide the translations directly by creating a new language using `manage.py makemessages -l <language_code> -i venv`. Once finished simply open a PR with the changed files. 
 
 ## License
-This project is licensed under the MIT license. Even though it is not required to publish derivatives, I highly encourage pushing changes upstream and letting people profit from any work done on this project.
+Beginning with version 0.10.0 the code in this repository is licensed under the [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3.0.de.html) license with an
+[common clause](https://commonsclause.com/) selling exception. See [LICENSE.md](https://github.com/vabene1111/recipes/blob/develop/LICENSE.md) for details.
+
+**Reasoning**
+
+#### This software and **all** its features are and will always be free for everyone to use and enjoy. 
+
+The reason for the selling exception is that a significant amount of time was spend over multiple years to develop this software. 
+A payed hosted version which will be identical in features and code base to the software offered in this repository will
+likely be released in the future (including all features needed to sell a hosted version as they might also be useful for personal use).
+This will not only benefit me personally but also everyone who self-hosts this software as any profits made trough selling the hosted option 
+allow me to spend more time developing and improving the software for everyone. Selling exceptions are [approved by Richard Stallman](http://www.gnu.org/philosophy/selling-exceptions.en.html) and the
+common clause license is very permissive (see the [FAQ](https://commonsclause.com/)).
