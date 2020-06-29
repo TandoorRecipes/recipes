@@ -212,9 +212,22 @@
 
     <div style="font-size: large">
         {% for s in recipe.steps.all %}
-            {% if s.instruction %}
-                {{ s.instruction | markdown | safe }}
+            {% if recipe.steps.all|length > 1 %}
+                <div class="row">
+                    <div class="col-md-12 text-muted">
+                        <small>{% trans 'Step' %} {{ forloop.counter }}{% if s.name %} - {{ s.name }}{% endif %}</small>
+                    </div>
+                </div>
             {% endif %}
+
+            <div class="row" style="margin-top: 8px">
+                <div class="col-md-12">
+                    {% if s.instruction %}
+                        {{ s.instruction | markdown | safe }}
+                    {% endif %}
+                </div>
+            </div>
+
         {% endfor %}
     </div>
 
