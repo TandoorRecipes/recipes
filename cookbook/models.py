@@ -149,7 +149,7 @@ class Ingredient(models.Model):
     food = models.ForeignKey(Food, on_delete=models.PROTECT)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    note = models.CharField(max_length=64, null=True, blank=True)
+    note = models.CharField(max_length=256, null=True, blank=True)
     order = models.IntegerField(default=0)
 
     def __str__(self):
