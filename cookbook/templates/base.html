@@ -161,27 +161,41 @@
 <br/>
 <br/>
 
-<div class="container">
-    {% for message in messages %}
-        <div class="row">
-            <div class="col col-md-12">
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-
-    {% block content %}
-    {% endblock %}
-</div>
-
 <div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-2 d-none d-xl-block">
+            {% block content_xl_left %}
+
+            {% endblock %}
+        </div>
+        <div class="col-xl-8 col-12">
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col col-md-12">
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% block content %}
+
+            {% endblock %}
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            {% block content_xl_right %}
+
+            {% endblock %}
+        </div>
+    </div>
+
     {% block content_fluid %}
     {% endblock %}
+
 </div>
 
 {% block script %}
