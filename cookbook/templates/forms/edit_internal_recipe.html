@@ -110,7 +110,8 @@
 
                                         <div class="flex-fill row" style="margin-left: 4px; margin-right: 4px">
                                             <div class="col-lg-2 col-md-6 small-padding" v-if="!ingredient.is_header">
-                                                <input class="form-control" v-model="ingredient.amount" type="number" v-if="!ingredient.no_amount">
+                                                <input class="form-control" v-model="ingredient.amount" type="number"
+                                                       v-if="!ingredient.no_amount">
                                             </div>
 
                                             <div class="col-lg-2 col-md-6 small-padding" v-if="!ingredient.is_header">
@@ -157,7 +158,8 @@
                                                         @search-change="searchFoods">
                                                 </multiselect>
                                             </div>
-                                            <div class="small-padding" v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
+                                            <div class="small-padding"
+                                                 v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
                                                 <input class="form-control" v-model="ingredient.note"
                                                        placeholder="{% trans 'Note' %}">
                                             </div>
@@ -192,12 +194,14 @@
 
                                                 <button type="button" class="dropdown-item"
                                                         v-if="!ingredient.no_amount "
-                                                        @click="ingredient.no_amount = true"><i class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Disable Amount' %}
+                                                        @click="ingredient.no_amount = true"><i
+                                                        class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Disable Amount' %}
                                                 </button>
 
                                                 <button type="button" class="dropdown-item"
                                                         v-if="ingredient.no_amount "
-                                                        @click="ingredient.no_amount = false"><i class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Enable Amount' %}
+                                                        @click="ingredient.no_amount = false"><i
+                                                        class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Enable Amount' %}
                                                 </button>
                                             </div>
 
@@ -355,13 +359,15 @@
                 },
                 addIngredient: function (step) { //TODO see if default can be generated from options request
                     step.ingredients.push({
-                        'food': undefined,
+                        'food': null,
                         'unit': {
                             'name': '{{request.user.userpreference.default_unit}}'
                         },
                         'amount': 0,
                         'note': '',
                         'order': 0,
+                        'is_header': false,
+                        'no_amount': false
                     })
                     this.sortIngredients(step)
                 },
