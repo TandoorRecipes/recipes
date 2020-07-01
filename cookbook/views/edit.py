@@ -20,7 +20,7 @@ from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
 
 from cookbook.helper.permission_helper import OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, Ingredient, RecipeBook, \
-    MealPlan, Unit, Food
+    MealPlan, Unit, Food, MealType
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -191,6 +191,11 @@ class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('view_plan_entry', kwargs={'pk': self.object.pk})
+
+    def get_form(self, form_class=None):
+        form = self.form_class(**self.get_form_kwargs())
+        form.fields['meal_type'].queryset = MealType.objects.filter(created_by=self.request.user).all()
+        return form
 
     def get_context_data(self, **kwargs):
         context = super(MealPlanUpdate, self).get_context_data(**kwargs)
