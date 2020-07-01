@@ -160,11 +160,13 @@ class Ingredient(models.Model):
 
 class Step(models.Model):
     TEXT = 'TEXT'
+    TIME = 'TIME'
 
     name = models.CharField(max_length=128, default='', blank=True)
-    kind = models.CharField(choices=((TEXT, _('Text')),), default=TEXT, max_length=16)
+    kind = models.CharField(choices=((TEXT, _('Text')), (TIME, _('Time')),), default=TEXT, max_length=16)
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)
+    time = models.IntegerField(default=0, blank=True)
     order = models.IntegerField(default=0)
 
     class Meta:
