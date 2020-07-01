@@ -84,7 +84,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-11">
-                                <h4><i class="fas fa-arrows-alt-v handle"></i>
+                                <h4 class="handle">
+                                    <i class="fas fa-paragraph" v-if="step.type == 'TEXT'"></i>
+                                    <i class="fas fa-clock" v-if="step.type == 'TIME'"></i>
                                     <template v-if="step.name !== ''">[[step.name]]</template>
                                     <template v-else>{% trans 'Step' %} [[step_index+1]]</template>
 
@@ -140,6 +142,14 @@
                                     <label :for="'id_step_' + step.id + '_time'">{% trans 'Waiting time in Minutes' %}</label>
                                     <input class="form-control" v-model="step.time"
                                            :id="'id_step_' + step.id + '_time'">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 1vh">
+                                <div class="col-md-12">
+                                    <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
+                                    <textarea class="form-control" rows="2" v-model="step.instruction"
+                                              :id="'id_instruction_' + step.id"></textarea>
+                                    <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
                                 </div>
                             </div>
                         </template>
@@ -292,7 +302,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
@@ -322,7 +331,6 @@
 
         </div>
     </div>
-
 {% endblock %}
 
 {% block content_xl_right %}
@@ -345,20 +353,22 @@
         <br/>
         <div class="row" v-if="recipe !== undefined">
             <div class="col-md-11">
-                <i class="fas fa-sort-amount-down-alt"></i> {% trans 'Steps' %}
+                <h5><i class="fas fa-sort-amount-down-alt"></i> {% trans 'Steps' %}</h5>
                 <draggable :list="recipe.steps" group="steps_sorter"
-                           :empty-insert-threshold="10" handle=".handle" @sort="sortSteps()" class="list-group">
+                           :empty-insert-threshold="10" handle=".handle" @sort="sortSteps()" class="list-group" style="margin-top: 1vh">
                     <div v-for="step, step_index in recipe.steps" class="list-group-item">
                         <div class="d-flex justify-content-center align-items-center">
-                            <div class="handle flex-grow-0">
-                                <i class="fas fa-sort "></i>
+                            <div class="flex-grow-0 text-muted">
+                                <i class="fas fa-paragraph fa-fw" v-if="step.type == 'TEXT'"></i>
+                                <i class="fas fa-clock fa-fw" v-if="step.type == 'TIME'"></i>
                             </div>
                             <div class="flex-fill" style="padding-left: 4px">
                                 [[step.name]]
                             </div>
+                            <div class="handle flex-grow-0  align-content-end">
+                                <i class="fas fa-sort "></i>
+                            </div>
                         </div>
-
-
                     </div>
                 </draggable>
             </div>
@@ -452,7 +462,7 @@
                 },
                 addStep: function () { //TODO see if default can be generated from options request
                     this.recipe.steps.push(
-                        {'instruction': '', ingredients: [], kind: 'TEXT'}
+                        {'instruction': '', ingredients: [], type: 'TEXT'}
                     )
                 },
                 sortSteps: function () {
