@@ -110,7 +110,8 @@
                                     </button>
 
                                     <button class="dropdown-item"
-                                            @click="moveStep(step, (step_index + 1))" v-if="step_index != (recipe.steps.length - 1)">
+                                            @click="moveStep(step, (step_index + 1))"
+                                            v-if="step_index != (recipe.steps.length - 1)">
                                         <i class="fa fa-arrow-down fa-fw"></i> {% trans 'Move Down' %}
                                     </button>
                                 </div>
@@ -327,7 +328,7 @@
 {% block content_xl_right %}
     <div class="sticky-top" style="top: 2vh">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-11">
                 <button type="button" @click="updateRecipe(true)"
                         class="btn btn-success btn-block shadow-none">{% trans 'Save & View' %}</button>
 
@@ -339,6 +340,27 @@
 
                 <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
                    class="btn btn-secondary btn-block shadow-none">{% trans 'View Recipe' %}</a> <br/>
+            </div>
+        </div>
+        <br/>
+        <div class="row" v-if="recipe !== undefined">
+            <div class="col-md-11">
+                <i class="fas fa-sort-amount-down-alt"></i> {% trans 'Steps' %}
+                <draggable :list="recipe.steps" group="steps_sorter"
+                           :empty-insert-threshold="10" handle=".handle" @sort="sortSteps()" class="list-group">
+                    <div v-for="step, step_index in recipe.steps" class="list-group-item">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="handle flex-grow-0">
+                                <i class="fas fa-sort "></i>
+                            </div>
+                            <div class="flex-fill" style="padding-left: 4px">
+                                [[step.name]]
+                            </div>
+                        </div>
+
+
+                    </div>
+                </draggable>
             </div>
         </div>
     </div>
