@@ -30,12 +30,11 @@
 {% block content %}
     <h3>{% trans 'Edit Recipe' %}</h3>
 
-        <div v-if="recipe">
-
     <div v-if="!recipe" class="text-center">
         <br/>
         <i class="fas fa-spinner fa-spin fa-8x"></i>
     </div>
+
     <div v-if="recipe">
 
         <div class="row">
