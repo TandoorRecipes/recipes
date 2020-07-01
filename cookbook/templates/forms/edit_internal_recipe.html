@@ -91,8 +91,30 @@
                                 </h4>
                             </div>
                             <div class="col-1" style="text-align: right">
-                                <button class="btn btn-outline-dark shadow-none" @click="removeStep(step)"><i
-                                        class="fa fa-trash fa-fw"></i></button>
+                                <a class="btn shadow-none btn-lg" href="#" role="button"
+                                   id="dropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v text-muted"></i>
+                                </a>
+
+
+                                <div class="dropdown-menu dropdown-menu-right"
+                                     aria-labelledby="dropdownMenuLink">
+                                    <button class="dropdown-item" @click="removeStep(step)"><i
+                                            class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
+
+                                    <button class="dropdown-item" @click="moveStep(step, (step_index - 1))"
+                                            v-if="step_index > 0">
+                                        <i class="fa fa-arrow-up fa-fw"></i> {% trans 'Move Up' %}
+                                    </button>
+
+                                    <button class="dropdown-item"
+                                            @click="moveStep(step, (step_index + 1))" v-if="step_index != (recipe.steps.length - 1)">
+                                        <i class="fa fa-arrow-down fa-fw"></i> {% trans 'Move Down' %}
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
 
@@ -283,16 +305,20 @@
                 </div>
             </draggable>
 
+            <div class="row" style="margin-top: 1vh; margin-bottom: 2vh">
+                <div class="col-12">
+                    <button type="button" @click="updateRecipe(true)"
+                            class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
+                    <button type="button" @click="updateRecipe(false)"
+                            class="btn btn-info shadow-none">{% trans 'Save' %}</button>
+                    <button type="button" @click="addStep()"
+                            class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
+                    <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
+                       class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
+                </div>
 
-            <button type="button" @click="updateRecipe(true)"
-                    class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
-            <button type="button" @click="updateRecipe(false)"
-                    class="btn btn-info shadow-none">{% trans 'Save' %}</button>
-            <button type="button" @click="addStep()" class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
-            <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
-               class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
-            <br/>
-            <br/>
+            </div>
+
         </div>
     </div>
 
@@ -440,6 +466,11 @@
                     if (confirm('{% trans 'Are you sure that you want to delete this step?' %}')) {
                         this.recipe.steps = this.recipe.steps.filter(item => item !== step)
                     }
+                },
+                moveStep: function (step, new_index) {
+                    this.recipe.steps.splice(this.recipe.steps.indexOf(step), 1);
+                    this.recipe.steps.splice((new_index < 0 ? 0 : new_index), 0, step);
+                    this.sortSteps()
                 },
                 addFoodType: function (tag, index) {
                     let [tmp, step, id] = index.split('_')
