@@ -109,11 +109,22 @@
                                 <button class="dropdown-item" @click="removeStep(step)"><i
                                         class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
 
+                                <button type="button" class="dropdown-item"
+                                        v-if="!step.show_as_header"
+                                        @click="step.show_as_header = true"><i
+                                        class="fas fa-eye fa-fw"></i> {% trans 'Show as header' %}
+                                </button>
+
+                                <button type="button" class="dropdown-item"
+                                        v-if="step.show_as_header"
+                                        @click="step.show_as_header = false"><i
+                                        class="fas fa-eye-slash fa-fw"></i> {% trans 'Hide as header' %}
+                                </button>
+
                                 <button class="dropdown-item" @click="moveStep(step, (step_index - 1))"
                                         v-if="step_index > 0">
                                     <i class="fa fa-arrow-up fa-fw"></i> {% trans 'Move Up' %}
                                 </button>
-
                                 <button class="dropdown-item"
                                         @click="moveStep(step, (step_index + 1))"
                                         v-if="step_index != (recipe.steps.length - 1)">
@@ -350,7 +361,7 @@
                 <button type="button" @click="addStep()"
                         class="btn btn-primary btn-block shadow-none">{% trans 'Add Step' %}</button>
 
-                <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
+                <a href="{% url 'view_recipe' recipe.pk %}"
                    class="btn btn-secondary btn-block shadow-none">{% trans 'View Recipe' %}</a> <br/>
             </div>
         </div>
