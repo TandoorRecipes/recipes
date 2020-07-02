@@ -152,7 +152,7 @@
                                             <tr>
                                                 <td style="vertical-align: middle!important;">
                                                     <div class="pretty p-default p-curve">
-                                                        <input type="checkbox"/>
+                                                        <input type="checkbox" v-model="i.checked"/>
                                                         <div class="state p-success">
                                                             <label>
                                                                 <template v-if="i.no_amount">
@@ -263,7 +263,7 @@
                                             <tr>
                                                 <td style="vertical-align: middle!important;">
                                                     <div class="pretty p-default p-curve">
-                                                        <input type="checkbox"/>
+                                                        <input type="checkbox" v-model="i.checked"/>
                                                         <div class="state p-success">
                                                             <label>
                                                                 <template v-if="i.no_amount">
@@ -479,7 +479,9 @@
                         for (let step of this.recipe.steps) {
                             if (step.ingredients.length > 0) {
                                 this.has_ingredients = true
-                                return
+                            }
+                            for (let i of step.ingredients) {
+                                this.$set(i, 'checked', false)
                             }
                         }
 
