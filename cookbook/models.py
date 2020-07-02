@@ -168,6 +168,7 @@ class Step(models.Model):
     ingredients = models.ManyToManyField(Ingredient, blank=True)
     time = models.IntegerField(default=0, blank=True)
     order = models.IntegerField(default=0)
+    show_as_header = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['order', 'pk']
