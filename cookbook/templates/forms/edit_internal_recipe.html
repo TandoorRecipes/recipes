@@ -150,23 +150,13 @@
                     </div>
 
 
-                    <template v-if="step.type == 'TIME'">
-                        <div class="row" style="margin-top: 12px">
-                            <div class="col-md-12">
-                                <label :for="'id_step_' + step.id + '_time'">{% trans 'Waiting time in Minutes' %}</label>
-                                <input class="form-control" v-model="step.time"
-                                       :id="'id_step_' + step.id + '_time'">
-                            </div>
+                    <div class="row" style="margin-top: 12px">
+                        <div class="col-md-12">
+                            <label :for="'id_step_' + step.id + '_time'">{% trans 'Step time in Minutes' %}</label>
+                            <input class="form-control" v-model="step.time"
+                                   :id="'id_step_' + step.id + '_time'">
                         </div>
-                        <div class="row" style="margin-top: 1vh">
-                            <div class="col-md-12">
-                                <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
-                                <textarea class="form-control" rows="2" v-model="step.instruction"
-                                          :id="'id_instruction_' + step.id"></textarea>
-                                <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
-                            </div>
-                        </div>
-                    </template>
+                    </div>
 
                     <template v-if="step.type == 'TEXT'">
                         <div class="row" style="margin-top: 12px">
@@ -316,15 +306,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
-                                <textarea class="form-control" rows="8" v-model="step.instruction"
-                                          :id="'id_instruction_' + step.id"></textarea>
-                                <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
-                            </div>
-                        </div>
                     </template>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
+                            <textarea class="form-control" rows="8" v-model="step.instruction"
+                                      :id="'id_instruction_' + step.id"></textarea>
+                            <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </draggable>
