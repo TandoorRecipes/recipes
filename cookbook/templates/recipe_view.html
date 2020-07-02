@@ -507,7 +507,7 @@
                 updateTimes: function (step) {
                     let time_diff_first = 0
                     for (let s of this.recipe.steps) {
-                        if (s !== step) {
+                        if (this.recipe.steps.indexOf(s) < this.recipe.steps.indexOf(step)) {
                             time_diff_first += s.time
                         }
                     }
