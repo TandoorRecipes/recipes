@@ -216,7 +216,7 @@
         {% endif %}
     </div>
 
-    <div style="font-size: large;">
+    <div style="font-size: large;" v-if="recipe">
         {% for s in recipe.steps.all %}
             <div style="margin-top: 1vh" class="card">
                 <div class="card-body">
@@ -224,25 +224,32 @@
                         <div class="card-title">
 
                             <div class="row">
-                                <div class="col-md-12 text-muted">
+                                <div class="col-md-12 text-muted d-flex">
+                                    <div class="flex-fill">
+                                        {% if s.type == 'TEXT' %}
+                                            <i class="fas fa-paragraph fa-fw"></i>
+                                        {% elif s.type == 'TIME' %}
+                                            <i class="fas fa-clock fa-fw"></i>
+                                        {% endif %}
+                                        {% if s.name %}{{ s.name }}{% else %}{% trans 'Step' %}
+                                            {{ forloop.counter }}{% endif %}
+                                        {% if s.type == 'TIME' %}
+                                            - {{ s.time }} {% trans 'Minutes' %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-0 justify-content-end">
+                                        <input type="datetime-local" class="form-control"
+                                               @change="updateTimes(recipe.steps[{{ forloop.counter0 }}])"
+                                               v-model="recipe.steps[{{ forloop.counter0 }}].time_finished">
+                                    </div>
 
-                                    {% if s.type == 'TEXT' %}
-                                        <i class="fas fa-paragraph fa-fw"></i>
-                                    {% elif s.type == 'TIME' %}
-                                        <i class="fas fa-clock fa-fw"></i>
-                                    {% endif %}
-                                    {% if s.name %}{{ s.name }}{% else %}{% trans 'Step' %}
-                                        {{ forloop.counter }}{% endif %}
-                                    {% if s.type == 'TIME' %}
-                                        - {{ s.time }} {% trans 'Minutes' %}
-                                    {% endif %}
 
                                 </div>
                             </div>
 
                         </div>
 
-                        <div class="row" v-if="recipe && recipe.steps[{{ forloop.counter0 }}].ingredients.length > 0"
+                        <div class="row" v-if="recipe.steps[{{ forloop.counter0 }}].ingredients.length > 0"
                              style="margin-top: 1vh">
                             <div class="col-md-6">
                                 <table class="table table-sm">
@@ -480,6 +487,7 @@
                             if (step.ingredients.length > 0) {
                                 this.has_ingredients = true
                             }
+                            this.$set(step, 'time_finished', undefined)
                             for (let i of step.ingredients) {
                                 this.$set(i, 'checked', false)
                             }
@@ -496,6 +504,23 @@
                         {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
                     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
                 },
+                updateTimes: function (step) {
+                    let time_diff_first = 0
+                    for (let s of this.recipe.steps) {
+                        if (s !== step) {
+                            time_diff_first += s.time
+                        }
+                    }
+
+                    this.recipe.steps[0].time_finished = moment(step.time_finished).subtract(time_diff_first, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
+
+                    let time_diff = 0
+                    for (let s of this.recipe.steps) {
+                        s.time_finished = moment(this.recipe.steps[0].time_finished).add(time_diff, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
+                        time_diff += s.time
+                    }
+
+                }
             }
         });
 
