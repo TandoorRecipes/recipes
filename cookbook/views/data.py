@@ -100,12 +100,17 @@ def import_url(request):
 
         recipe = Recipe.objects.create(
             name=data['name'],
-            instructions=data['recipeInstructions'],
             waiting_time=data['cookTime'],
             working_time=data['prepTime'],
             internal=True,
             created_by=request.user,
         )
+
+        step = Step.objects.create(
+            instruction=data['recipeInstructions'],
+        )
+
+        recipe.steps.add(step)
 
         for kw in data['keywords']:
             if kw['id'] != "null" and (k := Keyword.objects.filter(id=kw['id']).first()):
@@ -115,7 +120,7 @@ def import_url(request):
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
-            i, i_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
+            f, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
             if ing['unit']:
                 u, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
             else:
@@ -128,7 +133,7 @@ def import_url(request):
                     # TODO return proper error
                     pass
 
-            Ingredient.objects.create(recipe=recipe, ingredient=i, unit=u, amount=ing['amount'])
+            step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=ing['amount']))
 
         if data['image'] != '':
             response = requests.get(data['image'])
