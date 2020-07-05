@@ -16,6 +16,8 @@
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
 
+    <script src="{% static 'js/vue-scrollto.js' %}"></script>
+
     <style>
         .small-padding {
             padding-left: 2px;
@@ -87,7 +89,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-11">
-                            <h4 class="handle">
+                            <h4 class="handle" :id="'id_step_' + step_index">
                                 <i class="fas fa-paragraph" v-if="step.type == 'TEXT'"></i>
                                 <i class="fas fa-clock" v-if="step.type == 'TIME'"></i>
                                 <template v-if="step.name !== ''">[[step.name]]</template>
@@ -330,6 +332,8 @@
                         class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
                 <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
                    class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
+                <a href="{% url 'delete_recipe' recipe.pk %}"
+                   class="btn btn-danger shadow-none">{% trans 'Delete Recipe' %}</a>
             </div>
 
         </div>
@@ -353,7 +357,9 @@
                         class="btn btn-primary btn-block shadow-none">{% trans 'Add Step' %}</button>
 
                 <a href="{% url 'view_recipe' recipe.pk %}"
-                   class="btn btn-secondary btn-block shadow-none">{% trans 'View Recipe' %}</a> <br/>
+                   class="btn btn-secondary btn-block shadow-none">{% trans 'View Recipe' %}</a>
+                <a href="{% url 'delete_recipe' recipe.pk %}"
+                   class="btn btn-danger btn-block shadow-none">{% trans 'Delete Recipe' %}</a>
             </div>
         </div>
         <br/>
@@ -370,7 +376,7 @@
                                 <i class="fas fa-clock fa-fw" v-if="step.type == 'TIME'"></i>
                             </div>
                             <div class="flex-fill" style="padding-left: 4px">
-                                [[step.name]]
+                                <a href="#" v-scroll-to="'#id_step_' + step_index">[[step.name]]</a>
                             </div>
                             <div class="handle flex-grow-0  align-content-end">
                                 <i class="fas fa-sort "></i>
@@ -390,6 +396,10 @@
 
         Vue.component('vue-multiselect', window.VueMultiselect.default)
 
+        VueScrollTo.setDefaults({
+            offset: -40,
+        })
+
         let app = new Vue({
             components: {
                 Multiselect: window.VueMultiselect.default
@@ -398,6 +408,7 @@
             el: '#id_base_container',
             data: {
                 recipe: undefined,
+                recipe_changed: false,
                 keywords: [],
                 keywords_loading: false,
                 foods: [],
@@ -413,6 +424,21 @@
                     }
                 }
             },
+            watch: {
+                recipe: {
+                    deep: true,
+                    handler() {
+                        if (!this.loading) {
+
+                            console.log('CHANGED')
+                            this.recipe_changed = true
+                        }
+                    }
+                }
+            },
+            created() {
+                window.addEventListener('beforeunload', this.warnPageLeave)
+            },
             mounted: function () {
                 this.loadRecipe()
                 this.searchUnits('')
@@ -420,12 +446,18 @@
                 this.searchKeywords('')
             },
             methods: {
+                warnPageLeave: function (event) {
+                    if (this.recipe_changed) {
+                        event.returnValue = ''
+                        return ''
+                    }
+                },
                 loadRecipe: function () {
                     this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
                         this.recipe = response.data;
                         this.loading = false
+                        this.recipe_changed = false
                     }).catch((err) => {
-                        this.error = err.data
                         this.loading = false
                         console.log(err)
                     })
@@ -439,6 +471,7 @@
                         {}).then((response) => {
                         console.log(view_after)
                         console.log(response)
+                        this.recipe_changed = false
                         if (view_after) {
                             location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.recipe.id);
                         }
@@ -474,6 +507,7 @@
                     )
                 },
                 sortSteps: function () {
+                    console.log('sort')
                     this.recipe.steps.forEach(function (element, index) {
                         element.order = index
                     });
@@ -575,6 +609,10 @@
                     }).catch((err) => {
                         console.log(err)
                     })
+                },
+                scrollToStep: function (step_index) {
+                    console.log(step_index)
+                    document.getElementById('id_step_' + step_index).scrollIntoView({behavior: 'smooth'});
                 },
             }
         });
