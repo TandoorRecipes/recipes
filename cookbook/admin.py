@@ -36,6 +36,13 @@ admin.site.register(SyncLog, SyncLogAdmin)
 admin.site.register(Keyword)
 
 
+class StepAdmin(admin.ModelAdmin):
+    list_display = ('name', 'type', 'order')
+
+
+admin.site.register(Step, StepAdmin)
+
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage')
 
