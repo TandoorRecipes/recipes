@@ -408,7 +408,7 @@
             el: '#id_base_container',
             data: {
                 recipe: undefined,
-                recipe_changed: false,
+                recipe_changed: undefined,
                 keywords: [],
                 keywords_loading: false,
                 foods: [],
@@ -428,9 +428,9 @@
                 recipe: {
                     deep: true,
                     handler() {
-                        if (!this.loading) {
-
-                            console.log('CHANGED')
+                        if (this.recipe_changed === undefined) {
+                            this.recipe_changed = false
+                        } else {
                             this.recipe_changed = true
                         }
                     }
@@ -456,7 +456,6 @@
                     this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
                         this.recipe = response.data;
                         this.loading = false
-                        this.recipe_changed = false
                     }).catch((err) => {
                         this.loading = false
                         console.log(err)
