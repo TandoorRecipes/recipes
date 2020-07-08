@@ -59,13 +59,13 @@ class StorageSerializer(serializers.ModelSerializer):
 class SyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sync
-        fields = ('storage', 'path', 'active', 'last_checked', 'created_at', 'updated_at')
+        fields = ('id', 'storage', 'path', 'active', 'last_checked', 'created_at', 'updated_at')
 
 
 class SyncLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = SyncLog
-        fields = '__all__'
+        fields = ('id', 'sync', 'status', 'msg', 'created_at')
 
 
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):

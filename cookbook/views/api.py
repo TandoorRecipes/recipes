@@ -23,11 +23,11 @@ from rest_framework.response import Response
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -80,6 +80,12 @@ class StorageViewSet(viewsets.ModelViewSet):
 class SyncViewSet(viewsets.ModelViewSet):
     queryset = Sync.objects.all()
     serializer_class = SyncSerializer
+    permission_classes = [CustomIsAdmin, ]
+
+
+class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = SyncLog.objects.all()
+    serializer_class = SyncLogSerializer
     permission_classes = [CustomIsAdmin, ]
 
 
