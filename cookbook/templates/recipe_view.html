@@ -458,72 +458,75 @@
 {% endblock %}
 
 {% block script %}
-    <script type="text/javascript">
-        let csrftoken = Cookies.get('csrftoken');
-        Vue.http.headers.common['X-CSRFToken'] = csrftoken;
+    <script type="application/javascript">
+        {% if recipe.internal %}
+            let csrftoken = Cookies.get('csrftoken');
+            Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
-        let app = new Vue({
-            delimiters: ['[[', ']]'],
-            el: '#id_base_container',
-            data: {
-                recipe: undefined,
-                has_ingredients: false,
-                has_times: false,
-                ingredient_factor: 1,
-            },
+            let app = new Vue({
+                delimiters: ['[[', ']]'],
+                el: '#id_base_container',
+                data: {
+                    recipe: undefined,
+                    has_ingredients: false,
+                    has_times: false,
+                    ingredient_factor: 1,
+                },
 
-            mounted: function () {
-                this.loadRecipe()
-            },
-            methods: {
-                loadRecipe: function () {
-                    this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
-                        this.recipe = response.data;
-                        this.loading = false
+                mounted: function () {
+                    this.loadRecipe()
+                },
+                methods: {
+                    loadRecipe: function () {
+                        this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
+                            this.recipe = response.data;
+                            this.loading = false
 
-                        for (let step of this.recipe.steps) {
-                            if (step.ingredients.length > 0) {
-                                this.has_ingredients = true
+                            for (let step of this.recipe.steps) {
+                                if (step.ingredients.length > 0) {
+                                    this.has_ingredients = true
+                                }
+                                if (step.time !== 0) {
+                                    this.has_times = true
+                                }
+                                this.$set(step, 'time_finished', undefined)
+                                for (let i of step.ingredients) {
+                                    this.$set(i, 'checked', false)
+                                }
                             }
-                            if (step.time !== 0) {
-                                this.has_times = true
-                            }
-                            this.$set(step, 'time_finished', undefined)
-                            for (let i of step.ingredients) {
-                                this.$set(i, 'checked', false)
+
+                        }).catch((err) => {
+                            this.error = err.data
+                            this.loading = false
+                            console.log(err)
+                        })
+                    },
+                    roundDecimals: function (num) {
+                        let decimals = {% if request.user.userpreference.ingredient_decimals %}
+                            {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
+                        return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
+                    },
+                    updateTimes: function (step) {
+                        let time_diff_first = 0
+                        for (let s of this.recipe.steps) {
+                            if (this.recipe.steps.indexOf(s) < this.recipe.steps.indexOf(step)) {
+                                time_diff_first += s.time
                             }
                         }
 
-                    }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
-                        console.log(err)
-                    })
-                },
-                roundDecimals: function (num) {
-                    let decimals = {% if request.user.userpreference.ingredient_decimals %}
-                        {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
-                    return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
-                },
-                updateTimes: function (step) {
-                    let time_diff_first = 0
-                    for (let s of this.recipe.steps) {
-                        if (this.recipe.steps.indexOf(s) < this.recipe.steps.indexOf(step)) {
-                            time_diff_first += s.time
+                        this.recipe.steps[0].time_finished = moment(step.time_finished).subtract(time_diff_first, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
+
+                        let time_diff = 0
+                        for (let s of this.recipe.steps) {
+                            s.time_finished = moment(this.recipe.steps[0].time_finished).add(time_diff, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
+                            time_diff += s.time
                         }
+
                     }
-
-                    this.recipe.steps[0].time_finished = moment(step.time_finished).subtract(time_diff_first, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
-
-                    let time_diff = 0
-                    for (let s of this.recipe.steps) {
-                        s.time_finished = moment(this.recipe.steps[0].time_finished).add(time_diff, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
-                        time_diff += s.time
-                    }
-
                 }
-            }
-        });
+            });
+
+        {% endif %}
 
         // Bootstrap component functions
         $(function () {
