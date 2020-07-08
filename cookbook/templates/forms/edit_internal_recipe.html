@@ -10,13 +10,17 @@
 
     {% include 'include/vue_base.html' %}
 
-    <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-vue.min.css' %}">
+    <script src="{% static 'js/bootstrap-vue.min.js' %}"></script>
+
     <link rel="stylesheet" href="{% static 'css/vue-multiselect-bs4.min.css' %}">
+    <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
 
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
 
     <script src="{% static 'js/vue-scrollto.js' %}"></script>
+    <script src="{% static 'js/portal-vue.umd.min.js' %}"></script>
 
     <style>
         .small-padding {
@@ -207,7 +211,8 @@
                                                                         :allow-empty="true"
                                                                         :preserve-search="true"
                                                                         placeholder="{% trans 'Select Unit' %}"
-                                                                        tag-placeholder="{% trans 'Select' %}"
+                                                                        tag-placeholder="{% trans 'Create' %}"
+                                                                        select-label="{% trans 'Select' %}"
                                                                         :taggable="true"
                                                                         @tag="addUnitType"
                                                                         :id="`unit_${step_index}_${index}`"
@@ -230,7 +235,8 @@
                                                                         :allow-empty="true"
                                                                         :preserve-search="true"
                                                                         placeholder="{% trans 'Select Food' %}"
-                                                                        tag-placeholder="{% trans 'Select' %}"
+                                                                        tag-placeholder="{% trans 'Create' %}"
+                                                                        select-label="{% trans 'Select' %}"
                                                                         :taggable="true"
                                                                         @tag="addFoodType"
                                                                         :id="`ingredient_${step_index}_${index}`"
@@ -387,6 +393,7 @@
             </div>
         </div>
     </div>
+
 {% endblock %}
 
 {% block script %}
@@ -428,11 +435,7 @@
                 recipe: {
                     deep: true,
                     handler() {
-                        if (this.recipe_changed === undefined) {
-                            this.recipe_changed = false
-                        } else {
-                            this.recipe_changed = true
-                        }
+                        this.recipe_changed = this.recipe_changed !== undefined;
                     }
                 }
             },
@@ -446,6 +449,14 @@
                 this.searchKeywords('')
             },
             methods: {
+                makeToast: function(title, message, variant=null) {
+                    this.$bvToast.toast(message, {
+                        title: title,
+                        variant: variant,
+                        toaster: 'b-toaster-top-center',
+                        solid: true
+                    })
+                },
                 warnPageLeave: function (event) {
                     if (this.recipe_changed) {
                         event.returnValue = ''
@@ -459,6 +470,7 @@
                     }).catch((err) => {
                         this.loading = false
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading the recipe!' %}' + err.bodyText, 'danger')
                     })
                 },
                 updateRecipe: function (view_after) {
@@ -468,14 +480,15 @@
                     }
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe,
                         {}).then((response) => {
-                        console.log(view_after)
                         console.log(response)
+                        this.makeToast('{% trans 'Updated' %}','{% trans 'Changes saved successfully!' %}', 'success')
                         this.recipe_changed = false
                         if (view_after) {
                             location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.recipe.id);
                         }
                     }).catch((err) => {
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error updating the recipe!' %}' + err.bodyText, 'danger')
                     })
                 },
                 imageChanged: function (event) {
@@ -485,11 +498,12 @@
                         this.$http.put("{% url 'api:recipe-detail' recipe.pk %}" + 'image/', fd,
                             {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
                             console.log(response)
+                            this.makeToast('{% trans 'Updated' %}','{% trans 'Changes saved successfully!' %}', 'success')
 
                         }).catch((err) => {
                             console.log(err)
+                            this.makeToast('{% trans 'Error' %}','{% trans 'There was an error updating the recipe!' %}' + err.body.image, 'danger')
                         })
-
 
                         let reader = new FileReader();
                         reader.onload = function (e) {
@@ -506,7 +520,6 @@
                     )
                 },
                 sortSteps: function () {
-                    console.log('sort')
                     this.recipe.steps.forEach(function (element, index) {
                         element.order = index
                     });
@@ -568,6 +581,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -586,7 +600,7 @@
                         }
                         this.units_loading = false
                     }).catch((err) => {
-                        console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchFoods: function (query) {
@@ -606,11 +620,10 @@
 
                         this.foods_loading = false
                     }).catch((err) => {
-                        console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 scrollToStep: function (step_index) {
-                    console.log(step_index)
                     document.getElementById('id_step_' + step_index).scrollIntoView({behavior: 'smooth'});
                 },
             }
