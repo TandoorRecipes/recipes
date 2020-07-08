@@ -46,7 +46,7 @@ class TestApiSync(TestViews):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(response['path'], 'new')
 
-    def test_storage_delete(self):
+    def test_sync_delete(self):
         # can delete sync as admin
         r = self.admin_client_1.delete(reverse('api:sync-detail', args={self.sync.id}))
         self.assertEqual(r.status_code, 204)
