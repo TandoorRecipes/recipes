@@ -11,7 +11,7 @@ from django.views.generic import CreateView
 from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
     RecipeBookForm, MealPlanForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
-from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan, ShareLink, MealType
+from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan, ShareLink, MealType, Step
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
@@ -25,6 +25,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
         obj.created_by = self.request.user
         obj.internal = True
         obj.save()
+        obj.steps.add(Step.objects.create())
         return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
 
     def get_success_url(self):
