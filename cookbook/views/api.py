@@ -21,16 +21,16 @@ from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListMode
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 
-from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser
+from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest
 from cookbook.helper.recipe_url_import import get_from_html
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer
 
 
-class UserNameViewSet(viewsets.ModelViewSet):
+class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     """
     list:
     optional parameters
@@ -39,11 +39,11 @@ class UserNameViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserNameSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomIsGuest]
     http_method_names = ['get']
 
     def get_queryset(self):
-        queryset = User.objects.all()
+        queryset = self.queryset
         try:
             filter_list = self.request.query_params.get('filter_list', None)
             if filter_list is not None:
@@ -68,6 +68,13 @@ class UserPreferenceViewSet(viewsets.ModelViewSet):
         if self.request.user.is_superuser:
             return self.queryset
         return self.queryset.filter(user=self.request.user)
+
+
+class StorageViewSet(viewsets.ModelViewSet):
+    # TODO handle delete protect error and adjust test
+    queryset = Storage.objects.all()
+    serializer_class = StorageSerializer
+    permission_classes = [CustomIsAdmin, ]
 
 
 class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):

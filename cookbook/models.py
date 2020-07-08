@@ -93,7 +93,7 @@ class Sync(models.Model):
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
     path = models.CharField(max_length=512, default="")
     active = models.BooleanField(default=True)
-    last_checked = models.DateTimeField()
+    last_checked = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
