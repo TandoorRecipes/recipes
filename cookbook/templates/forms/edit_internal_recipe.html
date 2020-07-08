@@ -379,7 +379,10 @@
                                 <i class="fas fa-clock fa-fw" v-if="step.type == 'TIME'"></i>
                             </div>
                             <div class="flex-fill" style="padding-left: 4px">
-                                <a href="#" v-scroll-to="'#id_step_' + step_index">[[step.name]]</a>
+                                <a href="#" v-scroll-to="'#id_step_' + step_index">
+                                    <template v-if="step.name">[[step.name]]</template>
+                                    <template v-else>{% trans 'Step' %} [[step_index + 1]]</template>
+                                </a>
                             </div>
                             <div class="handle flex-grow-0  align-content-end">
                                 <i class="fas fa-sort "></i>
@@ -446,7 +449,7 @@
                 this.searchKeywords('')
             },
             methods: {
-                makeToast: function(title, message, variant=null) {
+                makeToast: function (title, message, variant = null) {
                     //TODO remove duplicate function in favor of central one
                     this.$bvToast.toast(message, {
                         title: title,
@@ -468,7 +471,7 @@
                     }).catch((err) => {
                         this.loading = false
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading the recipe!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading the recipe!' %}' + err.bodyText, 'danger')
                     })
                 },
                 updateRecipe: function (view_after) {
@@ -479,14 +482,14 @@
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe,
                         {}).then((response) => {
                         console.log(response)
-                        this.makeToast('{% trans 'Updated' %}','{% trans 'Changes saved successfully!' %}', 'success')
+                        this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
                         this.recipe_changed = false
                         if (view_after) {
                             location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.recipe.id);
                         }
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error updating the recipe!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating the recipe!' %}' + err.bodyText, 'danger')
                     })
                 },
                 imageChanged: function (event) {
@@ -496,11 +499,11 @@
                         this.$http.put("{% url 'api:recipe-detail' recipe.pk %}" + 'image/', fd,
                             {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
                             console.log(response)
-                            this.makeToast('{% trans 'Updated' %}','{% trans 'Changes saved successfully!' %}', 'success')
+                            this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
 
                         }).catch((err) => {
                             console.log(err)
-                            this.makeToast('{% trans 'Error' %}','{% trans 'There was an error updating the recipe!' %}' + err.body.image, 'danger')
+                            this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating the recipe!' %}' + err.body.image, 'danger')
                         })
 
                         let reader = new FileReader();
@@ -579,7 +582,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -598,7 +601,7 @@
                         }
                         this.units_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchFoods: function (query) {
@@ -618,7 +621,7 @@
 
                         this.foods_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 scrollToStep: function (step_index) {
