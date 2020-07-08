@@ -175,7 +175,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]  # TODO split read and write permission for meal plan guest
 
     def get_queryset(self):  # TODO create standard filter/limit mixin
-        queryset = Recipe.objects.all()
+        queryset = self.queryset
+
         query = self.request.query_params.get('query', None)
         if query is not None:
             queryset = queryset.filter(name__icontains=query)
