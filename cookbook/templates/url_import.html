@@ -281,6 +281,15 @@
                 this.searchIngredients('')
             },
             methods: {
+                makeToast: function (title, message, variant = null) {
+                    //TODO remove duplicate function in favor of central one
+                    this.$bvToast.toast(message, {
+                        title: title,
+                        variant: variant,
+                        toaster: 'b-toaster-top-center',
+                        solid: true
+                    })
+                },
                 loadRecipe: function () {
                     this.recipe_data = undefined
                     this.error = undefined
@@ -292,6 +301,7 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 importRecipe: function () {
@@ -299,7 +309,8 @@
                     this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
                         location.href = response.data
                     }).catch((err) => {
-                        console.log("dragChanged create error", err);
+                        console.log(err);
+                        this.makeToast('{% trans 'Error' %}','{% trans 'An error occurred while trying to import this recipe!' %}' + err.bodyText, 'danger')
                     })
                 },
                 deleteIngredient: function (i) {
@@ -341,6 +352,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -358,6 +370,7 @@
                         this.units_loading = false
                     }).catch((err) => {
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchIngredients: function (query) {
@@ -376,6 +389,7 @@
                         this.ingredients_loading = false
                     }).catch((err) => {
                         console.log(err)
+                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
             }
