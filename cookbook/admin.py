@@ -36,6 +36,13 @@ admin.site.register(SyncLog, SyncLogAdmin)
 admin.site.register(Keyword)
 
 
+class StepAdmin(admin.ModelAdmin):
+    list_display = ('name', 'type', 'order')
+
+
+admin.site.register(Step, StepAdmin)
+
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage')
 
@@ -47,14 +54,14 @@ class RecipeAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 
 admin.site.register(Unit)
-admin.site.register(Ingredient)
+admin.site.register(Food)
 
 
-class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'amount', 'unit')
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('food', 'amount', 'unit')
 
 
-admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):

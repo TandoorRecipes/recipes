@@ -79,7 +79,6 @@ def recipe_view(request, pk, share=None):
         messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
         return HttpResponseRedirect(reverse('index'))
 
-    ingredients = RecipeIngredient.objects.filter(recipe=recipe).all()
     comments = Comment.objects.filter(recipe=recipe)
 
     if request.method == "POST":
@@ -116,7 +115,7 @@ def recipe_view(request, pk, share=None):
             ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
     return render(request, 'recipe_view.html',
-                  {'recipe': recipe, 'ingredients': ingredients, 'comments': comments, 'comment_form': comment_form,
+                  {'recipe': recipe, 'comments': comments, 'comment_form': comment_form,
                    'bookmark_form': bookmark_form})
 
 
@@ -190,16 +189,17 @@ def shopping_list(request):
     ingredients = []
 
     for r in recipes:
-        for ri in RecipeIngredient.objects.filter(recipe=r).exclude(unit__name__contains='Special:').all():
-            index = None
-            for x, ig in enumerate(ingredients):
-                if ri.ingredient == ig.ingredient and ri.unit == ig.unit:
-                    index = x
+        for s in r.steps.all():
+            for ri in s.ingredients.exclude(unit__name__contains='Special:').all():
+                index = None
+                for x, ig in enumerate(ingredients):
+                    if ri.food == ig.food and ri.unit == ig.unit:
+                        index = x
 
-            if index:
-                ingredients[index].amount = ingredients[index].amount + ri.amount
-            else:
-                ingredients.append(ri)
+                if index:
+                    ingredients[index].amount = ingredients[index].amount + ri.amount
+                else:
+                    ingredients.append(ri)
 
     return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
 

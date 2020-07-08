@@ -8,8 +8,11 @@
 {% block title %}{{ recipe.name }}{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
 
+    {% include 'include/vue_base.html' %}
+    <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
     <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
 
     <style>
@@ -40,7 +43,7 @@
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'edit_recipe' recipe.pk %}"><i
-                                class="fas fa-pencil-alt"></i> {% trans 'Bearbeiten' %}</a>
+                                class="fas fa-pencil-alt fa-fw"></i> {% trans 'Edit' %}</a>
                         <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
                             <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
                         {% if ingredients %}
@@ -102,98 +105,107 @@
         <br/>
     {% endif %}
 
-    <div class="row">
-        {% if ingredients %}
-            <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col col-md-9">
-                                <h4 class="card-title">{% trans 'Ingredients' %}</h4>
-                            </div>
-                            <div class="col col-md-3">
+    <div class="row" v-if="recipe && has_ingredients">
+        <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col col-md-9">
+                            <h4 class="card-title">{% trans 'Ingredients' %}</h4>
+                        </div>
+                        <div class="col col-md-3">
 
-                                <div class="input-group d-print-none">
-                                    <input type="number" value="1" maxlength="3" class="form-control" id="in_factor"
-                                           onchange="reloadIngredients()"/>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fas fa-calculator"></i></span>
-                                    </div>
+                            <div class="input-group d-print-none">
+                                <input type="number" value="1" maxlength="3" class="form-control"
+                                       v-model="ingredient_factor"/>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calculator"></i></span>
                                 </div>
                             </div>
                         </div>
-                        <br/>
-                        <table class="table table-sm">
-                            {% for i in ingredients %}
-                                {% if i.unit.name == 'Special:Header' %}
-                                    <tr>
-                                        <td style="padding-top: 8px!important; ">
-                                            <b>{{ i.note }}</b>
-                                        </td>
-                                        <td>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-sm">
+                                <template v-for="s in recipe.steps">
+                                    <template v-if="s.name != '' && s.show_as_header && s.ingredients.length > 0">
+                                        <tr>
+                                            <td style="padding-top: 8px!important; ">
+                                                <b>[[s.name]]</b>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </template>
+                                    <template v-for="i in s.ingredients">
+                                        <template v-if="i.is_header">
+                                            <tr>
+                                                <td style="padding-top: 8px!important; ">
+                                                    <b>[[i.note]]</b>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </template>
+                                        <template v-else>
+                                            <tr>
+                                                <td style="vertical-align: middle!important;">
+                                                    <div class="pretty p-default p-curve">
+                                                        <input type="checkbox" v-model="i.checked"/>
+                                                        <div class="state p-success">
+                                                            <label>
+                                                                <template v-if="i.no_amount">
+                                                                    <span>&#x2063;</span>
+                                                                </template>
+                                                                <template v-if="!i.no_amount && i.unit">
+                                                                    <span>[[roundDecimals(i.amount * ingredient_factor)]]</span>
+                                                                    [[i.unit.name]]
+                                                                </template>
+                                                            </label>
+                                                        </div>
+                                                    </div>
 
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td style="vertical-align: middle!important;">
-                                            <div class="pretty p-default p-curve">
-                                                <input type="checkbox"/>
-                                                <div class="state p-success">
-                                                    <label>
-                                                        {% if i.amount != 0 %}
-                                                            <span id="ing_{{ i.pk }}">{{ i.amount.normalize }}</span>
-                                                            {{ i.unit }}
-                                                        {% else %}
-                                                            <span>&#x2063;</span>
-                                                        {% endif %}
-                                                    </label>
-                                                </div>
-                                            </div>
+                                                </td>
+                                                <td style="vertical-align: middle!important;">
+                                                    <template v-if="i.food && i.food.recipe">
+                                                        <a v-bind:href='"{% url 'view_recipe' 12345 %}".replace(/12345/, i.food.recipe)'
+                                                           target="_blank" rel="noopener noreferrer">[[i.food.name]]</a>
+                                                    </template>
+                                                    <template v-else-if="i.food">
+                                                        [[i.food.name]]
+                                                    </template>
+                                                </td>
+                                                <td style="vertical-align: middle!important;">
+                                                    <template v-if="i.note">
+                                                        <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
+                                                           data-toggle="popover"
+                                                           data-placement="right" data-html="true" data-trigger="focus"
+                                                           v-bind:data-content="i.note">
+                                                            <i class="fas fa-info"></i>
+                                                        </a>
+                                                        <div class="d-none d-print-block">
+                                                            <i class="far fa-comment-alt"></i> [[i.note]]
+                                                        </div>
+                                                    </template>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                </template>
 
-                                        </td>
-                                        <td style="vertical-align: middle!important;">
-                                            {% if i.ingredient.recipe %}
-                                                <a href="{% url 'view_recipe' i.ingredient.recipe.pk %}"
-                                                   target="_blank" rel="noopener noreferrer">
-                                            {% endif %}
-                                            {{ i.ingredient.name }}
-                                            {% if i.ingredient.recipe %}
-                                                </a>
-                                            {% endif %}
-
-                                        </td>
-                                        <td style="vertical-align: middle!important;">
-                                            {% if i.note %}
-                                                <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
-                                                   data-toggle="popover"
-                                                   data-placement="right" data-html="true" data-trigger="focus"
-                                                   data-content="{{ i.note }}">
-                                                    <i class="fas fa-info"></i>
-                                                </a>
-                                                <div class="d-none d-print-block">
-                                                    <i class="far fa-comment-alt"></i> {{ i.note }}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                            <!-- Bottom border -->
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </table>
-
-
+                                <!-- Bottom border -->
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-
-        {% endif %}
+        </div>
         {% if recipe.image %}
             <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2" style="text-align: center">
                 <img class="img img-fluid rounded" src="{{ recipe.image.url }}" style="max-height: 30vh;"
@@ -203,15 +215,121 @@
             </div>
         {% endif %}
     </div>
-    {% if ingredients or recipe.image %}
-        <br/>
-        <br/>
-    {% endif %}
 
-    <div style="font-size: large">
-        {% if recipe.instructions %}
-            {{ recipe.instructions | markdown | safe }}
-        {% endif %}
+    <div style="font-size: large;" v-if="recipe">
+        {% for s in recipe.steps.all %}
+            <div style="margin-top: 1vh" class="card">
+                <div class="card-body">
+                    {% if recipe.steps.all|length > 1 %}
+                        <div class="card-title">
+
+                            <div class="row">
+                                <div class="col-md-12 text-muted d-flex">
+                                    <div class="flex-fill">
+                                        {% if s.type == 'TEXT' %}
+                                            <i class="fas fa-paragraph fa-fw"></i>
+                                        {% elif s.type == 'TIME' %}
+                                            <i class="fas fa-clock fa-fw"></i>
+                                        {% endif %}
+                                        {% if s.name %}{{ s.name }}{% else %}{% trans 'Step' %}
+                                            {{ forloop.counter }}{% endif %}
+                                        {% if s.time != 0 %}
+                                            - {{ s.time }} {% trans 'Minutes' %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-0 justify-content-end">
+                                        <input type="datetime-local" class="form-control"
+                                               @change="updateTimes(recipe.steps[{{ forloop.counter0 }}])"
+                                               v-model="recipe.steps[{{ forloop.counter0 }}].time_finished">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" v-if="recipe.steps[{{ forloop.counter0 }}].ingredients.length > 0"
+                             style="margin-top: 1vh">
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    <template v-for="i in recipe.steps[{{ forloop.counter0 }}].ingredients">
+
+                                        <template v-if="i.is_header">
+                                            <tr>
+                                                <td style="padding-top: 8px!important; ">
+                                                    <b>[[i.note]]</b>
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </template>
+                                        <template v-else>
+                                            <tr>
+                                                <td style="vertical-align: middle!important;">
+                                                    <div class="pretty p-default p-curve">
+                                                        <input type="checkbox" v-model="i.checked"/>
+                                                        <div class="state p-success">
+                                                            <label>
+                                                                <template v-if="i.no_amount">
+                                                                    <span>&#x2063;</span>
+                                                                </template>
+                                                                <template v-if="!i.no_amount && i.unit">
+                                                                    <span>[[roundDecimals(i.amount * ingredient_factor)]]</span>
+                                                                    [[i.unit.name]]
+                                                                </template>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+                                                <td style="vertical-align: middle!important;">
+                                                    <template v-if="i.food && i.food.recipe">
+                                                        <a v-bind:href='"{% url 'view_recipe' 12345 %}".replace(/12345/, i.food.recipe)'
+                                                           target="_blank" rel="noopener noreferrer">[[i.food.name]]</a>
+                                                    </template>
+                                                    <template v-else-if="i.food">
+                                                        [[i.food.name]]
+                                                    </template>
+                                                </td>
+                                                <td style="vertical-align: middle!important;">
+                                                    <template v-if="i.note">
+                                                        <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
+                                                           data-toggle="popover"
+                                                           data-placement="right" data-html="true" data-trigger="focus"
+                                                           v-bind:data-content="i.note">
+                                                            <i class="fas fa-info"></i>
+                                                        </a>
+                                                        <div class="d-none d-print-block">
+                                                            <i class="far fa-comment-alt"></i> [[i.note]]
+                                                        </div>
+                                                    </template>
+                                                </td>
+                                            </tr>
+                                        </template>
+
+                                    </template>
+                                    <!-- Bottom border -->
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                    <div class="row" style="margin-top: 8px">
+                        <div class="col-md-12">
+                            {% if s.instruction %}
+                                {{ s.instruction | markdown | safe }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
     {% if recipe.storage %}
@@ -229,7 +347,6 @@
                                 width="100%"
                                 height="700px"
                                 style="border: none;"></iframe>
-
                     </div>
                 {% endif %}
                 {% if '.jpg' in recipe.file_path or '.png' in recipe.file_path or '.jpeg' in recipe.file_path %}
@@ -338,10 +455,77 @@
 
     {% include 'include/log_cooking.html' %}
 
+{% endblock %}
+
+{% block script %}
     <script type="text/javascript">
+        let csrftoken = Cookies.get('csrftoken');
+        Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
-        reloadIngredients()
+        let app = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#id_base_container',
+            data: {
+                recipe: undefined,
+                has_ingredients: false,
+                has_times: false,
+                ingredient_factor: 1,
+            },
 
+            mounted: function () {
+                this.loadRecipe()
+            },
+            methods: {
+                loadRecipe: function () {
+                    this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
+                        this.recipe = response.data;
+                        this.loading = false
+
+                        for (let step of this.recipe.steps) {
+                            if (step.ingredients.length > 0) {
+                                this.has_ingredients = true
+                            }
+                            if (step.time !== 0) {
+                                this.has_times = true
+                            }
+                            this.$set(step, 'time_finished', undefined)
+                            for (let i of step.ingredients) {
+                                this.$set(i, 'checked', false)
+                            }
+                        }
+
+                    }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
+                        console.log(err)
+                    })
+                },
+                roundDecimals: function (num) {
+                    let decimals = {% if request.user.userpreference.ingredient_decimals %}
+                        {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
+                    return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
+                },
+                updateTimes: function (step) {
+                    let time_diff_first = 0
+                    for (let s of this.recipe.steps) {
+                        if (this.recipe.steps.indexOf(s) < this.recipe.steps.indexOf(step)) {
+                            time_diff_first += s.time
+                        }
+                    }
+
+                    this.recipe.steps[0].time_finished = moment(step.time_finished).subtract(time_diff_first, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
+
+                    let time_diff = 0
+                    for (let s of this.recipe.steps) {
+                        s.time_finished = moment(this.recipe.steps[0].time_finished).add(time_diff, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
+                        time_diff += s.time
+                    }
+
+                }
+            }
+        });
+
+        // Bootstrap component functions
         $(function () {
             $('[data-toggle="popover"]').popover()
         });
@@ -350,33 +534,8 @@
             trigger: 'focus'
         });
 
-        function roundDecimals(num) {
-            let decimals = {% if request.user.userpreference.ingredient_decimals %}
-                {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
-            return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
-        }
-
-        function reloadIngredients() {
-            let factor = Number($('#in_factor').val());
-            let ingredients = {
-            {% for i in ingredients %}
-                {{ i.pk }}: {{ i.amount|unlocalize }},
-            {% endfor %}
-        }
-
-            for (let key in ingredients) {
-                let val = ''
-                if (Math.abs(ingredients[key] * factor - roundDecimals(ingredients[key] * factor)) > 0) {
-                    val += '~'
-                }
-
-                $('#ing_' + key).html(val + roundDecimals(ingredients[key] * factor))
-            }
-        }
-
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
-
     </script>
 {% endblock %}

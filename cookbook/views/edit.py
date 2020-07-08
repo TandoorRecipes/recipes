@@ -15,12 +15,12 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
 from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, IngredientMergeForm, IngredientForm, RecipeBookForm
+    MealPlanForm, UnitMergeForm, IngredientMergeForm, RecipeBookForm, FoodForm
 from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
 
 from cookbook.helper.permission_helper import OwnerRequiredMixin
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeIngredient, RecipeBook, \
-    MealPlan, Unit, Ingredient
+from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, Ingredient, RecipeBook, \
+    MealPlan, Unit, Food, MealType
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -47,91 +47,8 @@ def convert_recipe(request, pk):
 @group_required('user')
 def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
-    status = 200
 
-    if request.method == "POST":
-        form = InternalRecipeForm(request.POST, request.FILES)
-        form.instance = recipe_instance
-
-        if form.is_valid():
-            recipe = recipe_instance
-            recipe.name = form.cleaned_data['name']
-            recipe.instructions = form.cleaned_data['instructions']
-            recipe.working_time = form.cleaned_data['working_time']
-            recipe.waiting_time = form.cleaned_data['waiting_time']
-
-            if form.cleaned_data['image']:
-                recipe.image = form.cleaned_data['image']
-
-                img = Image.open(recipe.image)
-
-                basewidth = 720
-                wpercent = (basewidth / float(img.size[0]))
-                hsize = int((float(img.size[1]) * float(wpercent)))
-                img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-                im_io = BytesIO()
-                img.save(im_io, 'PNG', quality=70)
-                recipe.image = File(im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png')
-            elif 'image' in form.changed_data and form.cleaned_data['image'] is False:
-                recipe.image = None
-
-            recipe.save()
-
-            try:
-                form_ingredients = json.loads(form.cleaned_data['ingredients'])
-            except simplejson.errors.JSONDecodeError:
-                form_ingredients = []
-
-            RecipeIngredient.objects.filter(recipe=recipe_instance).delete()
-
-            for i in form_ingredients:
-                recipe_ingredient = RecipeIngredient()
-                recipe_ingredient.recipe = recipe_instance
-
-                if 'note' in i:
-                    recipe_ingredient.note = i['note']
-
-                if Ingredient.objects.filter(name=i['ingredient__name']).exists():
-                    recipe_ingredient.ingredient = Ingredient.objects.get(name=i['ingredient__name'])
-                else:
-                    ingredient = Ingredient()
-                    ingredient.name = i['ingredient__name']
-                    ingredient.save()
-                    recipe_ingredient.ingredient = ingredient
-
-                if isinstance(i['amount'], str):
-                    try:
-                        recipe_ingredient.amount = float(i['amount'].replace(',', '.'))
-                    except ValueError:
-                        form.add_error("ingredients", _('There was an error converting your ingredients amount to a number: ') + i['unit__name'])
-                else:
-                    recipe_ingredient.amount = i['amount']
-
-                if Unit.objects.filter(name=i['unit__name']).exists():
-                    recipe_ingredient.unit = Unit.objects.get(name=i['unit__name'])
-                else:
-                    unit = Unit()
-                    unit.name = i['unit__name']
-                    unit.save()
-                    recipe_ingredient.unit = unit
-
-                recipe_ingredient.save()
-
-            recipe.keywords.set(form.cleaned_data['keywords'])
-
-            messages.add_message(request, messages.SUCCESS, _('Recipe saved!'))
-        else:
-            messages.add_message(request, messages.ERROR, _('There was an error saving this recipe!'))
-            status = 403
-    else:
-        form = InternalRecipeForm(instance=recipe_instance)
-
-    ingredients = RecipeIngredient.objects.select_related('unit__name', 'ingredient__name').filter(recipe=recipe_instance).values('ingredient__name', 'unit__name', 'amount', 'note').order_by('id')
-
-    return render(request, 'forms/edit_internal_recipe.html',
-                  {'form': form, 'ingredients': json.dumps(list(ingredients)),
-                   'view_url': reverse('view_recipe', args=[pk])}, status=status)
+    return render(request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance})
 
 
 class SyncUpdate(GroupRequiredMixin, UpdateView):
@@ -168,20 +85,20 @@ class KeywordUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class IngredientUpdate(GroupRequiredMixin, UpdateView):
+class FoodUpdate(GroupRequiredMixin, UpdateView):
     groups_required = ['user']
     template_name = "generic/edit_template.html"
-    model = Ingredient
-    form_class = IngredientForm
+    model = Food
+    form_class = FoodForm
 
     # TODO add msg box
 
     def get_success_url(self):
-        return reverse('edit_ingredient', kwargs={'pk': self.object.pk})
+        return reverse('edit_food', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        context = super(IngredientUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Ingredient")
+        context = super(FoodUpdate, self).get_context_data(**kwargs)
+        context['title'] = _("Food")
         return context
 
 
@@ -275,6 +192,11 @@ class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('view_plan_entry', kwargs={'pk': self.object.pk})
 
+    def get_form(self, form_class=None):
+        form = self.form_class(**self.get_form_kwargs())
+        form.fields['meal_type'].queryset = MealType.objects.filter(created_by=self.request.user).all()
+        return form
+
     def get_context_data(self, **kwargs):
         context = super(MealPlanUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Meal-Plan")
@@ -325,7 +247,7 @@ def edit_ingredients(request):
         if units_form.is_valid():
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
-            recipe_ingredients = RecipeIngredient.objects.filter(unit=old_unit).all()
+            recipe_ingredients = Ingredient.objects.filter(unit=old_unit).all()
             for i in recipe_ingredients:
                 i.unit = new_unit
                 i.save()
@@ -336,9 +258,9 @@ def edit_ingredients(request):
 
         ingredients_form = IngredientMergeForm(request.POST, prefix=IngredientMergeForm.prefix)
         if ingredients_form.is_valid():
-            new_ingredient = ingredients_form.cleaned_data['new_ingredient']
-            old_ingredient = ingredients_form.cleaned_data['old_ingredient']
-            recipe_ingredients = RecipeIngredient.objects.filter(ingredient=old_ingredient).all()
+            new_ingredient = ingredients_form.cleaned_data['new_food']
+            old_ingredient = ingredients_form.cleaned_data['old_food']
+            recipe_ingredients = Ingredient.objects.filter(food=old_ingredient).all()
             for i in recipe_ingredients:
                 i.ingredient = new_ingredient
                 i.save()

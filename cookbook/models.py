@@ -126,16 +126,64 @@ class Keyword(models.Model):
             return f"{self.name}"
 
 
+class Unit(models.Model):
+    name = models.CharField(unique=True, max_length=128)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Food(models.Model):
+    name = models.CharField(unique=True, max_length=128)
+    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.name
+
+
+class Ingredient(models.Model):
+    food = models.ForeignKey(Food, on_delete=models.PROTECT, null=True, blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    note = models.CharField(max_length=256, null=True, blank=True)
+    is_header = models.BooleanField(default=False)
+    no_amount = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
+
+    class Meta:
+        ordering = ['order', 'pk']
+
+
+class Step(models.Model):
+    TEXT = 'TEXT'
+    TIME = 'TIME'
+
+    name = models.CharField(max_length=128, default='', blank=True)
+    type = models.CharField(choices=((TEXT, _('Text')), (TIME, _('Time')),), default=TEXT, max_length=16)
+    instruction = models.TextField(blank=True)
+    ingredients = models.ManyToManyField(Ingredient, blank=True)
+    time = models.IntegerField(default=0, blank=True)
+    order = models.IntegerField(default=0)
+    show_as_header = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order', 'pk']
+
+
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
-    instructions = models.TextField(blank=True)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
-    file_uid = models.CharField(max_length=256, default="")
-    file_path = models.CharField(max_length=512, default="")
+    file_uid = models.CharField(max_length=256, default="", blank=True)
+    file_path = models.CharField(max_length=512, default="", blank=True)
     link = models.CharField(max_length=512, null=True, blank=True)
     cors_link = models.CharField(max_length=1024, null=True, blank=True)
     keywords = models.ManyToManyField(Keyword, blank=True)
+    steps = models.ManyToManyField(Step, blank=True)
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
@@ -145,33 +193,6 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Unit(models.Model):
-    name = models.CharField(unique=True, max_length=128)
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Ingredient(models.Model):
-    name = models.CharField(unique=True, max_length=128)
-    recipe = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return self.name
-
-
-class RecipeIngredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
-    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    note = models.CharField(max_length=64, null=True, blank=True)
-
-    def __str__(self):
-        return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.ingredient)
 
 
 class Comment(models.Model):

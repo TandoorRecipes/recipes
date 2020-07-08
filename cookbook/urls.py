@@ -10,9 +10,12 @@ from cookbook.helper import dal
 
 router = routers.DefaultRouter()
 router.register(r'user-preference', api.UserPreferenceViewSet)
+router.register(r'unit', api.UnitViewSet)
+router.register(r'food', api.FoodViewSet)
+router.register(r'step', api.StepViewSet)
 router.register(r'recipe', api.RecipeViewSet)
+router.register(r'keyword', api.KeywordViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
-router.register(r'recipe-ingredient', api.RecipeIngredientViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
@@ -46,7 +49,7 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),  # for internal use only
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('edit/ingredient/', edit.edit_ingredients, name='edit_ingredient'),
+    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),
 
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
@@ -65,7 +68,7 @@ urlpatterns = [
     path('api/recipe-from-url/<path:url>/', api.recipe_from_url, name='api_recipe_from_url'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
-    path('dal/ingredient/', dal.IngredientsAutocomplete.as_view(), name='dal_ingredient'),
+    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
@@ -81,7 +84,7 @@ urlpatterns = [
 
 ]
 
-generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Ingredient)
+generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Food)
 
 for m in generic_models:
     py_name = get_model_name(m)

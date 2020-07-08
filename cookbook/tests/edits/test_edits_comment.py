@@ -12,7 +12,6 @@ class TestEditsComment(TestViews):
 
         self.recipe = Recipe.objects.create(
             internal=True,
-            instructions='Do something',
             working_time=1,
             waiting_time=1,
             created_by=auth.get_user(self.user_client_1)
