@@ -32,16 +32,17 @@
 </div>
 
 <script type="application/javascript">
-    let modal = $('#id_modal_cook_log')
-    let rating = $('#id_log_rating')
 
     function openCookLogModal(id) {
+        let modal = $('#id_modal_cook_log')
         modal.data('recipe_id', id)
         modal.modal('show')
     }
 
     //TODO there is definitely a nicer way to do this than this ugly shit
     function logCook() {
+        let modal = $('#id_modal_cook_log')
+        let rating = $('#id_log_rating')
         let id = modal.data('recipe_id');
 
         let url = "{% url 'api_log_cooking' recipe_id=12345 %}".replace(/12345/, id);
@@ -53,11 +54,11 @@
 
         let val_rating = rating.val()
         if (val_rating !== '' && val_rating !== 0) {
-             if (val_servings !== '' && val_servings !== 0) {
-                  url += '&'
-             }else {
-                 url += '?'
-             }
+            if (val_servings !== '' && val_servings !== 0) {
+                url += '&'
+            } else {
+                url += '?'
+            }
             url += 'r=' + val_rating
         }
 
@@ -71,7 +72,7 @@
         modal.modal('hide')
     }
 
-    rating.on("input", () => {
+    $('#id_log_rating').on("input", () => {
         $('#id_rating_show').html(rating.val() + '/5')
     });
 

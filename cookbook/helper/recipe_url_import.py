@@ -164,16 +164,22 @@ def find_recipe_json(ld_json, url):
             ld_json['image'] = ''
 
     if 'cookTime' in ld_json:
-        if type(ld_json['cookTime']) == list and len(ld_json['cookTime']) > 0:
-            ld_json['cookTime'] = ld_json['cookTime'][0]
-        ld_json['cookTime'] = round(parse_duration(ld_json['cookTime']).seconds / 60)
+        try:
+            if type(ld_json['cookTime']) == list and len(ld_json['cookTime']) > 0:
+                ld_json['cookTime'] = ld_json['cookTime'][0]
+            ld_json['cookTime'] = round(parse_duration(ld_json['cookTime']).seconds / 60)
+        except TypeError:
+            ld_json['cookTime'] = 0
     else:
         ld_json['cookTime'] = 0
 
     if 'prepTime' in ld_json:
-        if type(ld_json['prepTime']) == list and len(ld_json['prepTime']) > 0:
-            ld_json['prepTime'] = ld_json['prepTime'][0]
-        ld_json['prepTime'] = round(parse_duration(ld_json['prepTime']).seconds / 60)
+        try:
+            if type(ld_json['prepTime']) == list and len(ld_json['prepTime']) > 0:
+                ld_json['prepTime'] = ld_json['prepTime'][0]
+            ld_json['prepTime'] = round(parse_duration(ld_json['prepTime']).seconds / 60)
+        except TypeError:
+            ld_json['prepTime'] = 0
     else:
         ld_json['prepTime'] = 0
 

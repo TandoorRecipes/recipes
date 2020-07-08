@@ -48,7 +48,7 @@ class KeywordTable(tables.Table):
 
 
 class IngredientTable(tables.Table):
-    id = tables.LinkColumn('edit_ingredient', args=[A('id')])
+    id = tables.LinkColumn('edit_food', args=[A('id')])
 
     class Meta:
         model = Keyword

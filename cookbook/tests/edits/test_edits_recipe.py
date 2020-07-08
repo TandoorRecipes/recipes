@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.urls import reverse
 
-from cookbook.models import Recipe, RecipeIngredient, Ingredient, Unit, Storage
+from cookbook.models import Recipe, Ingredient, Unit, Storage, Food
 from cookbook.tests.views.test_views import TestViews
 
 
@@ -62,41 +62,36 @@ class TestEditsRecipe(TestViews):
             created_by=auth.get_user(self.user_client_1)
         )
 
-        url = reverse('edit_internal_recipe', args=[recipe.pk])
+        url = reverse('api:recipe-detail', args=[recipe.pk])
 
         r = self.user_client_1.get(url)
         self.assertEqual(r.status_code, 200)
 
         r = self.anonymous_client.get(url)
-        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r.status_code, 403)
 
-        r = self.user_client_1.post(url, {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'ingredients': '[]'})
+        r = self.user_client_1.put(url, {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'keywords': [], 'steps': []}, content_type='application/json')
         self.assertEqual(r.status_code, 200)
 
         recipe = Recipe.objects.get(pk=recipe.pk)
         self.assertEqual('Changed', recipe.name)
 
-        Ingredient.objects.create(name='Egg')
+        Food.objects.create(name='Egg')
         Unit.objects.create(name='g')
 
-        r = self.user_client_1.post(url,
-                             {'name': 'Changed', 'working_time': 15, 'waiting_time': 15,
-                              'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":"2,5","delete":false}]'})
+        r = self.user_client_1.put(url, {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'keywords': [],
+                                         'steps': [{'ingredients': [
+                                             {"food": {"name": "test food"}, "unit": {"name": "test unit"}, 'amount': 12, 'note': "test note"},
+                                             {"food": {"name": "test food 2"}, "unit": {"name": "test unit 2"}, 'amount': 42, 'note': "test note 2"}
+                                         ]}]}, content_type='application/json')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(2, RecipeIngredient.objects.filter(recipe=recipe).count())
-
-        r = self.user_client_1.post(url,
-                             {'name': "Test", 'working_time': "Test", 'waiting_time': 15,
-                              'ingredients': '[{"ingredient__name":"Tomato","unit__name":"g","amount":100,"delete":false},{"ingredient__name":"Egg","unit__name":"Piece","amount":"2,5","delete":false}]'})
-        self.assertEqual(r.status_code, 403)
+        self.assertEqual(2, recipe.steps.first().ingredients.count())
 
         with open('cookbook/tests/resources/image.jpg', 'rb') as file:
-            r = self.user_client_1.post(url, {'name': "Changed", 'working_time': 15, 'waiting_time': 15, 'image': file})
-            self.assertEqual(r.status_code, 200)
+            pass  # TODO new image tests
 
         with open('cookbook/tests/resources/image.png', 'rb') as file:
-            r = self.user_client_1.post(url, {'name': "Changed", 'working_time': 15, 'waiting_time': 15, 'image': file})
-            self.assertEqual(r.status_code, 200)
+            pass  # TODO new image tests
 
     def test_external_recipe_update(self):
         storage = Storage.objects.create(

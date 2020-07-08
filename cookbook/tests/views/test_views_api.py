@@ -11,7 +11,6 @@ class TestViewsApi(TestViews):
         recipe = Recipe.objects.create(
             internal=False,
             link='test',
-            instructions='Do something',
             working_time=1,
             waiting_time=1,
             created_by=auth.get_user(self.user_client_1)

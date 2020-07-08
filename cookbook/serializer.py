@@ -1,8 +1,29 @@
 from django.contrib.auth.models import User
+from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 from rest_framework import serializers
+from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.fields import CurrentUserDefault
 
-from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Ingredient, Unit, RecipeIngredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog
+from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step
 from cookbook.templatetags.custom_tags import markdown
+
+
+class CustomDecimalField(serializers.Field):
+    """
+        Custom decimal field to normalize useless decimal places and allow commas as decimal separators
+    """
+
+    def to_representation(self, value):
+        return value.normalize()
+
+    def to_internal_value(self, data):
+        if type(data) == int or type(data) == float:
+            return data
+        elif type(data) == str:
+            try:
+                return float(data.replace(',', ''))
+            except ValueError:
+                raise ValidationError('A valid number is required')
 
 
 class UserNameSerializer(serializers.ModelSerializer):
@@ -21,7 +42,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
-        fields = '__all__'
+        fields = ('id', 'name', 'method', 'username', 'created_by')
 
 
 class SyncSerializer(serializers.ModelSerializer):
@@ -36,45 +57,93 @@ class SyncLogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class KeywordSerializer(serializers.ModelSerializer):
+class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    label = serializers.SerializerMethodField('get_label')
+
+    def get_label(self, obj):
+        return str(obj)
+
+    def create(self, validated_data):
+        # since multi select tags dont have id's duplicate names might be routed to create
+        obj, created = Keyword.objects.get_or_create(**validated_data)
+        return obj
+
     class Meta:
         model = Keyword
-        fields = '__all__'
+        fields = ('id', 'name', 'icon', 'label', 'description', 'created_by', 'created_at', 'updated_at')
+
+        read_only_fields = ('id',)
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Recipe
-        fields = '__all__'
+class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
+    def create(self, validated_data):
+        # since multi select tags dont have id's duplicate names might be routed to create
+        obj, created = Unit.objects.get_or_create(**validated_data)
+        return obj
 
-class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Unit
-        fields = '__all__'
+        fields = ('id', 'name', 'description')
+        read_only_fields = ('id',)
 
 
-class IngredientSerializer(serializers.ModelSerializer):
+class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        # since multi select tags dont have id's duplicate names might be routed to create
+        obj, created = Food.objects.get_or_create(**validated_data)
+        return obj
+
+    class Meta:
+        model = Food
+        fields = ('id', 'name', 'recipe')
+        read_only_fields = ('id',)
+
+
+class IngredientSerializer(WritableNestedModelSerializer):
+    food = FoodSerializer(allow_null=True)
+    unit = UnitSerializer(allow_null=True)
+    amount = CustomDecimalField()
+
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ('id', 'food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
 
 
-class RecipeIngredientSerializer(serializers.ModelSerializer):
+class StepSerializer(WritableNestedModelSerializer):
+    ingredients = IngredientSerializer(many=True)
+
     class Meta:
-        model = RecipeIngredient
+        model = Step
+        fields = ('id', 'name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
+
+
+class RecipeSerializer(WritableNestedModelSerializer):
+    steps = StepSerializer(many=True)
+    keywords = KeywordSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal']
+        read_only_fields = ['image', 'created_by', 'created_at']
+
+
+class RecipeImageSerializer(WritableNestedModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ['image', ]
+
+
+class RecipeImportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeImport
         fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
-
-
-class RecipeImportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RecipeImport
         fields = '__all__'
 
 
