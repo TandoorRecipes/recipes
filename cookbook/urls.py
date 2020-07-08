@@ -9,7 +9,10 @@ from cookbook.views import api, import_export
 from cookbook.helper import dal
 
 router = routers.DefaultRouter()
+router.register(r'user-name', api.UserNameViewSet, basename='username')
 router.register(r'user-preference', api.UserPreferenceViewSet)
+router.register(r'storage', api.StorageViewSet)
+
 router.register(r'unit', api.UnitViewSet)
 router.register(r'food', api.FoodViewSet)
 router.register(r'step', api.StepViewSet)
@@ -19,7 +22,7 @@ router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
-router.register(r'user-name', api.UserNameViewSet, basename='username')
+
 
 urlpatterns = [
     path('', views.index, name='index'),

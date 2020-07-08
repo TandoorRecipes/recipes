@@ -470,11 +470,7 @@
                 updateUserNames: function () {
                     return this.$http.get("{% url 'api:username-list' %}?filter_list=[" + this.user_id_update + ']').then((response) => {
                         for (let u of response.data) {
-                            let name = u.username
-                            if (`${u.first_name} ${u.last_name}` !== ' ') {
-                                name = `${u.first_name} ${u.last_name}`
-                            }
-                            this.$set(this.user_names, u.id, name);
+                            this.$set(this.user_names, u.id,  u.username);
                         }
 
                     }).catch((err) => {

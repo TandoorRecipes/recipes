@@ -27,9 +27,14 @@ class CustomDecimalField(serializers.Field):
 
 
 class UserNameSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField('get_user_label')
+
+    def get_user_label(self, obj):
+        return obj.get_user_name()
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name')
+        fields = ('id', 'username')
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
@@ -42,7 +47,12 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
-        fields = ('id', 'name', 'method', 'username', 'created_by')
+        fields = ('id', 'name', 'method', 'username', 'password', 'token', 'created_by')
+
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'token': {'write_only': True},
+        }
 
 
 class SyncSerializer(serializers.ModelSerializer):
