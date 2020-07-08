@@ -43,9 +43,9 @@ class TestApiSyncLog(TestViews):
     def test_sync_log_update(self):
         # read only view
         r = self.admin_client_1.patch(reverse('api:synclog-detail', args={self.sync.id}), {'path': 'new'}, content_type='application/json')
-        self.assertEqual(r.status_code, 403)
+        self.assertEqual(r.status_code, 405)
 
     def test_sync_log_delete(self):
         # read only view
         r = self.admin_client_1.delete(reverse('api:synclog-detail', args={self.sync.id}))
-        self.assertEqual(r.status_code, 403)
+        self.assertEqual(r.status_code, 405)
