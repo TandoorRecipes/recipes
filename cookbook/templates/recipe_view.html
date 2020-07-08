@@ -233,7 +233,7 @@
                                         {% endif %}
                                         {% if s.name %}{{ s.name }}{% else %}{% trans 'Step' %}
                                             {{ forloop.counter }}{% endif %}
-                                        {% if s.type == 'TIME' %}
+                                        {% if s.time != 0 %}
                                             - {{ s.time }} {% trans 'Minutes' %}
                                         {% endif %}
                                     </div>
@@ -242,11 +242,8 @@
                                                @change="updateTimes(recipe.steps[{{ forloop.counter0 }}])"
                                                v-model="recipe.steps[{{ forloop.counter0 }}].time_finished">
                                     </div>
-
-
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row" v-if="recipe.steps[{{ forloop.counter0 }}].ingredients.length > 0"
@@ -471,6 +468,7 @@
             data: {
                 recipe: undefined,
                 has_ingredients: false,
+                has_times: false,
                 ingredient_factor: 1,
             },
 
@@ -486,6 +484,9 @@
                         for (let step of this.recipe.steps) {
                             if (step.ingredients.length > 0) {
                                 this.has_ingredients = true
+                            }
+                            if (step.time !== 0) {
+                                this.has_times = true
                             }
                             this.$set(step, 'time_finished', undefined)
                             for (let i of step.ingredients) {
