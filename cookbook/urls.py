@@ -12,6 +12,7 @@ router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
 router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'storage', api.StorageViewSet)
+router.register(r'sync', api.SyncViewSet)
 
 router.register(r'unit', api.UnitViewSet)
 router.register(r'food', api.FoodViewSet)

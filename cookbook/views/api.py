@@ -27,7 +27,7 @@ from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, 
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -74,6 +74,12 @@ class StorageViewSet(viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects.all()
     serializer_class = StorageSerializer
+    permission_classes = [CustomIsAdmin, ]
+
+
+class SyncViewSet(viewsets.ModelViewSet):
+    queryset = Sync.objects.all()
+    serializer_class = SyncSerializer
     permission_classes = [CustomIsAdmin, ]
 
 

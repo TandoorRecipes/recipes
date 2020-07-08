@@ -40,7 +40,8 @@ class UserNameSerializer(serializers.ModelSerializer):
 class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
-        fields = '__all__'
+        fields = ('user', 'theme', 'nav_color', 'default_unit', 'default_page', 'search_style', 'show_recent',
+                  'plan_share', 'ingredient_decimals', 'comments')
         read_only_fields = ['user']
 
 
@@ -58,7 +59,7 @@ class StorageSerializer(serializers.ModelSerializer):
 class SyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sync
-        fields = '__all__'
+        fields = ('storage', 'path', 'active', 'last_checked', 'created_at', 'updated_at')
 
 
 class SyncLogSerializer(serializers.ModelSerializer):
