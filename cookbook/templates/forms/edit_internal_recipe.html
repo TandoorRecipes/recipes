@@ -10,9 +10,6 @@
 
     {% include 'include/vue_base.html' %}
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap-vue.min.css' %}">
-    <script src="{% static 'js/bootstrap-vue.min.js' %}"></script>
-
     <link rel="stylesheet" href="{% static 'css/vue-multiselect-bs4.min.css' %}">
     <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
 
@@ -450,6 +447,7 @@
             },
             methods: {
                 makeToast: function(title, message, variant=null) {
+                    //TODO remove duplicate function in favor of central one
                     this.$bvToast.toast(message, {
                         title: title,
                         variant: variant,
