@@ -15,8 +15,8 @@ router.register(r'storage', api.StorageViewSet)
 router.register(r'sync', api.SyncViewSet)
 router.register(r'sync-log', api.SyncLogViewSet)
 router.register(r'keyword', api.KeywordViewSet)
-
 router.register(r'unit', api.UnitViewSet)
+
 router.register(r'food', api.FoodViewSet)
 router.register(r'step', api.StepViewSet)
 router.register(r'recipe', api.RecipeViewSet)
