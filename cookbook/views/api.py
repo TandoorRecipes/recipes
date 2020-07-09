@@ -14,12 +14,14 @@ from django.db.models import Q
 from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+from django.views.generic.base import View
 from icalendar import Calendar, Event
 from rest_framework import viewsets, permissions, decorators
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSetMixin
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest
 from cookbook.helper.recipe_url_import import get_from_html
@@ -89,7 +91,21 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
 
-class KeywordViewSet(viewsets.ModelViewSet):
+class StandardFilterMixin(ViewSetMixin):
+
+    def get_queryset(self):
+        queryset = self.queryset
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        limit = self.request.query_params.get('limit', None)
+        if limit is not None:
+            queryset = queryset[:int(limit)]
+        return queryset
+
+
+class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     """
        list:
        optional parameters
@@ -101,16 +117,11 @@ class KeywordViewSet(viewsets.ModelViewSet):
     serializer_class = KeywordSerializer
     permission_classes = [CustomIsUser]
 
-    def get_queryset(self):  # TODO create standard filter/limit mixin
-        queryset = Keyword.objects.all()
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
 
-        limit = self.request.query_params.get('limit', None)
-        if limit is not None:
-            queryset = queryset[:int(limit)]
-        return queryset
+class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = Unit.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [CustomIsUser]
 
 
 class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
@@ -159,38 +170,10 @@ class MealTypeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class UnitViewSet(viewsets.ModelViewSet):
-    queryset = Unit.objects.all()
-    serializer_class = FoodSerializer
-    permission_classes = [CustomIsUser]
-
-    def get_queryset(self):  # TODO create standard filter/limit mixin
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
-
-        limit = self.request.query_params.get('limit', None)
-        if limit is not None:
-            queryset = queryset[:int(limit)]
-        return queryset
-
-
-class FoodViewSet(viewsets.ModelViewSet):
+class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
-
-    def get_queryset(self):  # TODO create standard filter/limit mixin
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
-
-        limit = self.request.query_params.get('limit', None)
-        if limit is not None:
-            queryset = queryset[:int(limit)]
-        return queryset
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
@@ -205,7 +188,7 @@ class StepViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsUser]
 
 
-class RecipeViewSet(viewsets.ModelViewSet):
+class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     """
     list:
     optional parameters
@@ -216,18 +199,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [permissions.IsAuthenticated]  # TODO split read and write permission for meal plan guest
-
-    def get_queryset(self):  # TODO create standard filter/limit mixin
-        queryset = self.queryset
-
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
-
-        limit = self.request.query_params.get('limit', None)
-        if limit is not None:
-            queryset = queryset[:int(limit)]
-        return queryset
 
     @decorators.action(
         detail=True,
