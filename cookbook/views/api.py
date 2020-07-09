@@ -29,7 +29,7 @@ from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, 
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -120,7 +120,7 @@ class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
 class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Unit.objects.all()
-    serializer_class = FoodSerializer
+    serializer_class = UnitSerializer
     permission_classes = [CustomIsUser]
 
 
