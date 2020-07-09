@@ -89,6 +89,30 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
 
+class KeywordViewSet(viewsets.ModelViewSet):
+    """
+       list:
+       optional parameters
+
+       - **query**: search keywords for a string contained in the keyword name (case in-sensitive)
+       - **limit**: limits the amount of returned results
+       """
+    queryset = Keyword.objects.all()
+    serializer_class = KeywordSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):  # TODO create standard filter/limit mixin
+        queryset = Keyword.objects.all()
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        limit = self.request.query_params.get('limit', None)
+        if limit is not None:
+            queryset = queryset[:int(limit)]
+        return queryset
+
+
 class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
@@ -231,30 +255,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
             return Response(serializer.data)
         return Response(serializer.errors, 400)
-
-
-class KeywordViewSet(viewsets.ModelViewSet):
-    """
-       list:
-       optional parameters
-
-       - **query**: search keywords for a string contained in the keyword name (case in-sensitive)
-       - **limit**: limits the amount of returned results
-       """
-    queryset = Keyword.objects.all()
-    serializer_class = KeywordSerializer
-    permission_classes = [CustomIsUser]
-
-    def get_queryset(self):  # TODO create standard filter/limit mixin
-        queryset = Keyword.objects.all()
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
-
-        limit = self.request.query_params.get('limit', None)
-        if limit is not None:
-            queryset = queryset[:int(limit)]
-        return queryset
 
 
 class ViewLogViewSet(viewsets.ModelViewSet):
