@@ -124,6 +124,12 @@ class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
 
+class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [CustomIsUser]
+
+
 class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
@@ -168,12 +174,6 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = MealType.objects.order_by('order', 'id').filter(created_by=self.request.user).all()
         return queryset
-
-
-class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = Food.objects.all()
-    serializer_class = FoodSerializer
-    permission_classes = [CustomIsUser]
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
