@@ -107,7 +107,7 @@
 
     <div class="row" v-if="recipe && has_ingredients">
         <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
-            <div class="card">
+            <div class="card border-primary">
                 <div class="card-body">
                     <div class="row">
                         <div class="col col-md-9">
@@ -215,6 +215,10 @@
             </div>
         {% endif %}
     </div>
+
+    <hr>
+    <h3>{% trans 'Instructions' %}</h3>
+    <hr>
 
     <div style="font-size: large;" v-if="recipe">
         {% for s in recipe.steps.all %}
