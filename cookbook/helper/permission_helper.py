@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from rest_framework import permissions
+from rest_framework.permissions import SAFE_METHODS
 
 from cookbook.models import ShareLink
 
@@ -154,6 +155,9 @@ class CustomIsGuest(permissions.BasePermission):
     def has_permission(self, request, view):
         return has_group_permission(request.user, ['guest'])
 
+    def has_object_permission(self, request, view, obj):
+        return has_group_permission(request.user, ['guest'])
+
 
 class CustomIsUser(permissions.BasePermission):
     """
@@ -175,3 +179,20 @@ class CustomIsAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return has_group_permission(request.user, ['admin'])
+
+
+class CustomIsShare(permissions.BasePermission):
+    """
+    Custom permission class for django rest framework views
+    verifies the requesting user provided a valid share link
+    """
+    message = _('You do not have the required permissions to view this page!')
+
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS and 'pk' in view.kwargs
+
+    def has_object_permission(self, request, view, obj):
+        share = request.query_params.get('share', None)
+        if share:
+            return share_link_valid(obj, share)
+        return False
