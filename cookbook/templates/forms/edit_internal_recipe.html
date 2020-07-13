@@ -87,7 +87,7 @@
 
             <div v-for="step, step_index in recipe.steps" style="margin-top: 1vh" class="card">
 
-                <div class="card-body">
+                <div class="card-body" :id="`id_card_step_${step_index}`">
                     <div class="row">
                         <div class="col-11">
                             <h4 class="handle" :id="'id_step_' + step_index">
@@ -193,12 +193,14 @@
                                                                 <input class="form-control"
                                                                        v-model="ingredient.amount"
                                                                        type="number" step="any"
-                                                                       v-if="!ingredient.no_amount">
+                                                                       v-if="!ingredient.no_amount"
+                                                                       :id="`amount_${step_index}_${index}`">
                                                             </div>
 
                                                             <div class="col-lg-2 col-md-6 small-padding"
                                                                  v-if="!ingredient.is_header">
                                                                 <multiselect
+                                                                        v-if="!ingredient.no_amount"
                                                                         v-tabindex
                                                                         ref="unit"
                                                                         v-model="ingredient.unit"
@@ -316,8 +318,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
-                            <textarea class="form-control" rows="8" v-model="step.instruction"
-                                      :id="'id_instruction_' + step.id"></textarea>
+                            <b-form-textarea class="form-control" rows="2" max-rows="8" v-model="step.instruction"
+                                      :id="'id_instruction_' + step.id"></b-form-textarea>
                             <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
                         </div>
                     </div>
@@ -447,6 +449,24 @@
                 this.searchUnits('')
                 this.searchFoods('')
                 this.searchKeywords('')
+
+                this._keyListener = function (e) {
+                    if (e.code === "Space" && e.ctrlKey) {
+                        e.preventDefault(); // present "Save Page" from getting triggered.
+
+                        for (el of e.path) {
+                            if(el.id !== undefined && el.id.includes('id_card_step_')) {
+                                let step = this.recipe.steps[el.id.replace('id_card_step_','')]
+                                this.addIngredient(step)
+                            }
+                        }
+                    }
+                };
+
+                document.addEventListener('keydown', this._keyListener.bind(this));
+            },
+            beforeDestroy() {
+                document.removeEventListener('keydown', this._keyListener);
             },
             methods: {
                 makeToast: function (title, message, variant = null) {
@@ -543,6 +563,8 @@
                         'no_amount': false
                     })
                     this.sortIngredients(step)
+                    this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).focus())
+
                 },
                 removeIngredient: function (step, ingredient) {
                     if (confirm('{% trans 'Are you sure that you want to delete this ingredient?' %}')) {
