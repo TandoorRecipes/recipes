@@ -105,6 +105,8 @@
         <br/>
     {% endif %}
 
+
+
     <div class="row" v-if="recipe && has_ingredients">
         <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
             <div class="card border-primary">
@@ -482,7 +484,8 @@
             },
             methods: {
                 loadRecipe: function () {
-                    this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
+                    this.$http.get("{% url 'api:recipe-detail' recipe.pk %}" {% if share %}
+                        + "?share={{ share }}"{% endif %}).then((response) => {
                         this.recipe = response.data;
                         this.loading = false
 

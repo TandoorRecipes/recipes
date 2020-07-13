@@ -23,7 +23,7 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 
-from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest
+from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare
 from cookbook.helper.recipe_url_import import get_from_html
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog
 from cookbook.provider.dropbox import Dropbox
@@ -198,7 +198,7 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = [permissions.IsAuthenticated]  # TODO split read and write permission for meal plan guest
+    permission_classes = [CustomIsShare | CustomIsGuest]  # TODO split read and write permission for meal plan guest
 
     @decorators.action(
         detail=True,

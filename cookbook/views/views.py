@@ -116,7 +116,7 @@ def recipe_view(request, pk, share=None):
 
     return render(request, 'recipe_view.html',
                   {'recipe': recipe, 'comments': comments, 'comment_form': comment_form,
-                   'bookmark_form': bookmark_form})
+                   'bookmark_form': bookmark_form, 'share': share})
 
 
 @group_required('user')
