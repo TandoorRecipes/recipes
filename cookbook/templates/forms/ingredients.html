@@ -35,7 +35,7 @@
     <form action="{% url 'edit_food' %}" method="post"
           onsubmit="return confirm('{% trans 'Are you sure that you want to merge these two ingredients ?' %}')">
         {% csrf_token %}
-        {{ ingredients_form|crispy }}
+        {{ food_form|crispy }}
         <button class="btn btn-danger" type="submit">
             <i class="fas fa-sync-alt"></i> {% trans 'Merge' %}</button>
     </form>

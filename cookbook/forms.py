@@ -143,20 +143,20 @@ class UnitMergeForm(forms.Form):
     )
 
 
-class IngredientMergeForm(forms.Form):
-    prefix = 'ingredient'
+class FoodMergeForm(forms.Form):
+    prefix = 'food'
 
-    new_ingredient = forms.ModelChoiceField(
+    new_food = forms.ModelChoiceField(
         queryset=Food.objects.all(),
         widget=SelectWidget,
-        label=_('New Ingredient'),
-        help_text=_('New ingredient that other gets replaced by.'),
+        label=_('New Food'),
+        help_text=_('New food that other gets replaced by.'),
     )
-    old_ingredient = forms.ModelChoiceField(
+    old_food = forms.ModelChoiceField(
         queryset=Food.objects.all(),
         widget=SelectWidget,
-        label=_('Old Ingredient'),
-        help_text=_('Ingredient that should be replaced.'),
+        label=_('Old Food'),
+        help_text=_('Food that should be replaced.'),
     )
 
 

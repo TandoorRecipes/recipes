@@ -31,10 +31,13 @@ def import_recipe(request):
                     recipe = sr.save()
 
                     if data['image']:
-                        fmt, img = data['image'].split(';base64,')
-                        ext = fmt.split('/')[-1]
-                        recipe.image = ContentFile(base64.b64decode(img), name=f'{recipe.pk}.{ext}')  # TODO possible security risk, maybe some checks needed
-                        recipe.save()
+                        try:
+                            fmt, img = data['image'].split(';base64,')
+                            ext = fmt.split('/')[-1]
+                            recipe.image = ContentFile(base64.b64decode(img), name=f'{recipe.pk}.{ext}')  # TODO possible security risk, maybe some checks needed
+                            recipe.save()
+                        except ValueError:
+                            pass
 
                     messages.add_message(request, messages.SUCCESS, _('Recipe imported successfully!'))
                     return HttpResponseRedirect(reverse_lazy('view_recipe', args=[recipe.pk]))

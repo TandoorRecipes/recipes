@@ -1,26 +1,18 @@
 import os
-import uuid
-from io import BytesIO
 
-import simplejson
-import simplejson as json
-from PIL import Image
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, InternalRecipeForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, IngredientMergeForm, RecipeBookForm, FoodForm
-from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
-
+from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, CommentForm, \
+    MealPlanForm, UnitMergeForm, RecipeBookForm, FoodForm, FoodMergeForm
 from cookbook.helper.permission_helper import OwnerRequiredMixin
+from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, Ingredient, RecipeBook, \
-    MealPlan, Unit, Food, MealType
+    MealPlan, Food, MealType
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -256,24 +248,24 @@ def edit_ingredients(request):
             success = True
             messages.add_message(request, messages.SUCCESS, _('Units merged!'))
 
-        ingredients_form = IngredientMergeForm(request.POST, prefix=IngredientMergeForm.prefix)
-        if ingredients_form.is_valid():
-            new_ingredient = ingredients_form.cleaned_data['new_food']
-            old_ingredient = ingredients_form.cleaned_data['old_food']
-            recipe_ingredients = Ingredient.objects.filter(food=old_ingredient).all()
-            for i in recipe_ingredients:
-                i.ingredient = new_ingredient
+        food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix)
+        if food_form.is_valid():
+            new_food = food_form.cleaned_data['new_food']
+            old_food = food_form.cleaned_data['old_food']
+            ingredients = Ingredient.objects.filter(food=old_food).all()
+            for i in ingredients:
+                i.food = new_food
                 i.save()
 
-            old_ingredient.delete()
+            old_food.delete()
             success = True
-            messages.add_message(request, messages.SUCCESS, _('Ingredients merged!'))
+            messages.add_message(request, messages.SUCCESS, _('Foods merged!'))
 
         if success:
             units_form = UnitMergeForm()
-            ingredients_form = IngredientMergeForm()
+            food_form = FoodMergeForm()
     else:
         units_form = UnitMergeForm()
-        ingredients_form = IngredientMergeForm()
+        food_form = FoodMergeForm()
 
-    return render(request, 'forms/ingredients.html', {'units_form': units_form, 'ingredients_form': ingredients_form})
+    return render(request, 'forms/ingredients.html', {'units_form': units_form, 'food_form': food_form})
