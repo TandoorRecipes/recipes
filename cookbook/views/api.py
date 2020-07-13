@@ -199,6 +199,7 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [CustomIsShare | CustomIsGuest]  # TODO split read and write permission for meal plan guest
+    # TODO write extensive tests for permissions 
 
     @decorators.action(
         detail=True,
