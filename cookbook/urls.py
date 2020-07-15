@@ -18,14 +18,12 @@ router.register(r'keyword', api.KeywordViewSet)
 router.register(r'unit', api.UnitViewSet)
 router.register(r'food', api.FoodViewSet)
 
-
 router.register(r'step', api.StepViewSet)
 router.register(r'recipe', api.RecipeViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
-
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -72,6 +70,7 @@ urlpatterns = [
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
     path('api/plan-ical/<slug:html_week>/', api.get_plan_ical, name='api_get_plan_ical'),
     path('api/recipe-from-url/<path:url>/', api.recipe_from_url, name='api_recipe_from_url'),
+    path('api/backup/', api.get_backup, name='api_backup'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
