@@ -32,7 +32,7 @@ def get_from_html(html_text, url):
                 if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
                     return find_recipe_json(ld_json_item, url)
         except JSONDecodeError:
-            JsonResponse({'error': True, 'msg': _('The requested site does not provided malformed data and cannot be read.')}, status=400)
+            JsonResponse({'error': True, 'msg': _('The requested site provided malformed data and cannot be read.')}, status=400)
 
     # now try to find microdata
     items = microdata.get_items(html_text)
