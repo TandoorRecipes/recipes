@@ -197,7 +197,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="button" class="btn btn-success" @click="importRecipe()">{% trans 'Import' %}</button>
+                    <button type="button" class="btn btn-success" @click="importRecipe()" :disabled="importing_recipe">{% trans 'Import' %}</button>
                 </div>
 
                 <br/>
@@ -267,6 +267,7 @@
                 error: undefined,
                 loading: false,
                 all_keywords: false,
+                importing_recipe: false,
             },
             directives: {
                 tabindex: {
@@ -301,16 +302,21 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 importRecipe: function () {
+                    if (this.importing_recipe) {
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'Already importing the selected recipe, please wait!' %}', 'danger')
+                        return;
+                    }
+                    this.importing_recipe = true
                     this.$set(this.recipe_data, 'all_keywords', this.all_keywords)
                     this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
-                        location.href = response.data
+                        window.location.href = response.data
                     }).catch((err) => {
                         console.log(err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'An error occurred while trying to import this recipe!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'An error occurred while trying to import this recipe!' %}' + err.bodyText, 'danger')
                     })
                 },
                 deleteIngredient: function (i) {
@@ -352,7 +358,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -370,7 +376,7 @@
                         this.units_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 searchIngredients: function (query) {
@@ -389,7 +395,7 @@
                         this.ingredients_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
             }
