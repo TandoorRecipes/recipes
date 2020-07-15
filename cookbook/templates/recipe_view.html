@@ -218,9 +218,11 @@
         {% endif %}
     </div>
 
-    <hr>
-    <h3>{% trans 'Instructions' %}</h3>
-    <hr>
+    <div v-if="recipe !== undefined && recipe.steps.length > 0">
+        <hr>
+        <h3>{% trans 'Instructions' %}</h3>
+        <hr>
+    </div>
 
     <div style="font-size: large;" v-if="recipe">
         {% for s in recipe.steps.all %}
@@ -229,25 +231,23 @@
                     {% if recipe.steps.all|length > 1 %}
                         <div class="card-title">
 
-                            <div class="row">
-                                <div class="col-md-12 text-muted d-flex">
-                                    <div class="flex-fill">
-                                        {% if s.type == 'TEXT' %}
-                                            <i class="fas fa-paragraph fa-fw"></i>
-                                        {% elif s.type == 'TIME' %}
-                                            <i class="fas fa-clock fa-fw"></i>
-                                        {% endif %}
-                                        {% if s.name %}{{ s.name }}{% else %}{% trans 'Step' %}
-                                            {{ forloop.counter }}{% endif %}
-                                        {% if s.time != 0 %}
-                                            - {{ s.time }} {% trans 'Minutes' %}
-                                        {% endif %}
-                                    </div>
-                                    <div class="flex-grow-0 justify-content-end">
-                                        <input type="datetime-local" class="form-control"
-                                               @change="updateTimes(recipe.steps[{{ forloop.counter0 }}])"
-                                               v-model="recipe.steps[{{ forloop.counter0 }}].time_finished">
-                                    </div>
+                            <div class="row d-flex">
+                                <div class="col-md-8 text-muted ">
+                                    {% if s.type == 'TEXT' %}
+                                        <i class="fas fa-paragraph fa-fw"></i>
+                                    {% elif s.type == 'TIME' %}
+                                        <i class="fas fa-clock fa-fw"></i>
+                                    {% endif %}
+                                    {% if s.name %}{{ s.name }}{% else %}{% trans 'Step' %}
+                                        {{ forloop.counter }}{% endif %}
+                                    {% if s.time != 0 %}
+                                        - {{ s.time }} {% trans 'Minutes' %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 col-12 justify-content-end" v-if="has_times">
+                                    <input type="datetime-local" class="form-control"
+                                           @change="updateTimes(recipe.steps[{{ forloop.counter0 }}])"
+                                           v-model="recipe.steps[{{ forloop.counter0 }}].time_finished">
                                 </div>
                             </div>
                         </div>
