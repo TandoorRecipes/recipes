@@ -9,10 +9,13 @@ from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core import management
 from django.core.files import File
 from django.db.models import Q
 from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import redirect
+from django.utils import timezone, dateformat
+from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django.views.generic.base import View
 from icalendar import Calendar, Event
@@ -199,7 +202,8 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [CustomIsShare | CustomIsGuest]  # TODO split read and write permission for meal plan guest
-    # TODO write extensive tests for permissions 
+
+    # TODO write extensive tests for permissions
 
     @decorators.action(
         detail=True,
@@ -352,3 +356,16 @@ def recipe_from_url(request, url):
     if response.status_code == 403:
         return JsonResponse({'error': True, 'msg': _('The requested page refused to provide any information (Status Code 403).')}, status=400)
     return get_from_html(response.text, url)
+
+
+def get_backup(request):
+    if not request.user.is_superuser:
+        return HttpResponse('', status=403)
+
+    buf = io.StringIO()
+    management.call_command('dumpdata', exclude=['contenttypes', 'auth'], stdout=buf)
+
+    response = FileResponse(buf.getvalue())
+    response["Content-Disposition"] = f'attachment; filename=backup{date_format(timezone.now(), format="SHORT_DATETIME_FORMAT", use_l10n=True)}.json'
+
+    return response

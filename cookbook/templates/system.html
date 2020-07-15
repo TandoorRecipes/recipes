@@ -10,7 +10,21 @@
 
 {% block content %}
 
-    <h1>{% trans 'System Information' %}</h1>
+    <h1>{% trans 'System' %}</h1>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <h3>{% trans 'Backup & Restore' %}</h3>
+    <a href="{% url 'api_backup' %}" class="btn btn-success">{% trans 'Download Backup' %}</a>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <h3>{% trans 'System Information' %}</h3>
 
     {% blocktrans %}
         Django Recipes is an open source free software application. It can be found on
