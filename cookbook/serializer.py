@@ -106,6 +106,9 @@ class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 
+    def update(self, instance, validated_data):
+        return super(FoodSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = Food
         fields = ('id', 'name', 'recipe')

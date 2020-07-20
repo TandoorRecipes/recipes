@@ -23,7 +23,7 @@ def import_recipe(request):
         form = ImportForm(request.POST)
         if form.is_valid():
             try:
-                data = json.loads(form.cleaned_data['recipe'])
+                data = json.loads(re.sub(r'"id":([0-9])+,', '', form.cleaned_data['recipe']))
 
                 sr = RecipeSerializer(data=data)
                 if sr.is_valid():
