@@ -69,7 +69,7 @@ urlpatterns = [
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
     path('api/plan-ical/<slug:html_week>/', api.get_plan_ical, name='api_get_plan_ical'),
-    path('api/recipe-from-url/<path:url>/', api.recipe_from_url, name='api_recipe_from_url'),
+    path('api/recipe-from-url/', api.recipe_from_url, name='api_recipe_from_url'),
     path('api/backup/', api.get_backup, name='api_backup'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),

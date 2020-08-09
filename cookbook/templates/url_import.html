@@ -295,7 +295,7 @@
                     this.recipe_data = undefined
                     this.error = undefined
                     this.loading = true
-                    this.$http.get("{% url 'api_recipe_from_url' 12345 %}".replace(/12345/, this.remote_url)).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_url' %}", {'url' : this.remote_url}, {emulateJSON: true}).then((response) => {
                         this.recipe_data = response.data;
                         this.loading = false
                     }).catch((err) => {
