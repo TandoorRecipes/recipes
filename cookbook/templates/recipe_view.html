@@ -15,16 +15,6 @@
     <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
     <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
 
-    <style>
-        /* fixes print layout being disturbed by print button tooltip */
-        @media print {
-            .tooltip {
-                display: none;
-            }
-        }
-
-    </style>
-
 {% endblock %}
 
 {% block content %}
@@ -180,12 +170,8 @@
                                                 </td>
                                                 <td style="vertical-align: middle!important;">
                                                     <template v-if="i.note">
-                                                        <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
-                                                           data-toggle="popover"
-                                                           data-placement="right" data-html="true" data-trigger="focus"
-                                                           v-bind:data-content="i.note">
-                                                            <i class="fas fa-info"></i>
-                                                        </a>
+                                                         <b-button v-b-popover.hover="i.note" class="btn  btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
+
                                                         <div class="d-none d-print-block">
                                                             <i class="far fa-comment-alt"></i> [[i.note]]
                                                         </div>
@@ -299,12 +285,7 @@
                                                 </td>
                                                 <td style="vertical-align: middle!important;">
                                                     <template v-if="i.note">
-                                                        <a class="btn btn-light btn-sm d-print-none" tabindex="-1"
-                                                           data-toggle="popover"
-                                                           data-placement="right" data-html="true" data-trigger="focus"
-                                                           v-bind:data-content="i.note">
-                                                            <i class="fas fa-info"></i>
-                                                        </a>
+                                                        <b-button v-b-popover.hover="i.note" class="btn btn-light btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
                                                         <div class="d-none d-print-block">
                                                             <i class="far fa-comment-alt"></i> [[i.note]]
                                                         </div>
@@ -532,18 +513,5 @@
                 }
             }
         });
-
-        // Bootstrap component functions
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        });
-
-        $('.popover-dismiss').popover({
-            trigger: 'focus'
-        });
-
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
     </script>
 {% endblock %}
