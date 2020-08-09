@@ -95,9 +95,7 @@
         <br/>
     {% endif %}
 
-
-
-    <div class="row" v-if="recipe && has_ingredients">
+    <div class="row" v-if="recipe && has_ingredients"> <!-- TODO duplicate code remove -->
         <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
             <div class="card border-primary">
                 <div class="card-body">
@@ -170,7 +168,7 @@
                                                 </td>
                                                 <td style="vertical-align: middle!important;">
                                                     <template v-if="i.note">
-                                                         <b-button v-b-popover.hover="i.note" class="btn  btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
+                                                         <b-button v-b-popover.hover="i.note" class="btn btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
 
                                                         <div class="d-none d-print-block">
                                                             <i class="far fa-comment-alt"></i> [[i.note]]
@@ -242,7 +240,7 @@
                              style="margin-top: 1vh">
                             <div class="col-md-6">
                                 <table class="table table-sm">
-                                    <template v-for="i in recipe.steps[{{ forloop.counter0 }}].ingredients">
+                                    <template v-for="i in recipe.steps[{{ forloop.counter0 }}].ingredients"> <!-- TODO duplicate code remove -->
 
                                         <template v-if="i.is_header">
                                             <tr>
@@ -285,7 +283,7 @@
                                                 </td>
                                                 <td style="vertical-align: middle!important;">
                                                     <template v-if="i.note">
-                                                        <b-button v-b-popover.hover="i.note" class="btn btn-light btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
+                                                        <b-button v-b-popover.hover="i.note" class="btn btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
                                                         <div class="d-none d-print-block">
                                                             <i class="far fa-comment-alt"></i> [[i.note]]
                                                         </div>
