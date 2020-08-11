@@ -265,6 +265,29 @@ class MealPlan(models.Model):
         return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
 
 
+class ShoppingListRecipe(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
+    multiplier = models.IntegerField(default=1)
+
+
+class ShoppingListEntry(models.Model):
+    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.IntegerField(default=1)
+    order = models.IntegerField(default=0)
+    checked = models.BooleanField(default=False)
+
+
+class ShoppingList(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
+    note = models.TextField(blank=True, null=True)
+    recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
+    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 class ShareLink(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4)
