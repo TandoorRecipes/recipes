@@ -23,6 +23,7 @@ router.register(r'recipe', api.RecipeViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
+router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 
 urlpatterns = [
@@ -34,6 +35,7 @@ urlpatterns = [
     path('plan/', views.meal_plan, name='view_plan'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
+    path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('test/', views.test, name='view_test'),

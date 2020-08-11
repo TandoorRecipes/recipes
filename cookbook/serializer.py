@@ -4,7 +4,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.fields import CurrentUserDefault
 
-from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step
+from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step, ShoppingList, \
+    ShoppingListEntry, ShoppingListRecipe
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -191,6 +192,34 @@ class MealPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = MealPlan
         fields = ('id', 'title', 'recipe', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
+
+
+class ShoppingListRecipeSerializer(serializers.ModelSerializer):
+    recipe = RecipeSerializer(read_only=True)
+
+    def create(self, validated_data):
+        return ShoppingListRecipe.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        return super(ShoppingListRecipeSerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = ShoppingListRecipe
+        fields = ('recipe', 'multiplier')
+
+
+class ShoppingListEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingListEntry
+        fields = ('list_recipe', 'food', 'unit', 'amount', 'order', 'checked')
+
+
+class ShoppingListSerializer(serializers.ModelSerializer):
+    recipes = ShoppingListRecipeSerializer(many=True, allow_null=True, read_only=True)
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'uuid', 'note', 'recipes', 'shared', 'created_by', 'created_at',)
 
 
 class ShareLinkSerializer(serializers.ModelSerializer):

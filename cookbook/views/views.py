@@ -164,44 +164,8 @@ def meal_plan_entry(request, pk):
 
 
 @group_required('user')
-def shopping_list(request):
-    markdown_format = True
-
-    if request.method == "POST":
-        form = ShoppingForm(request.POST)
-        if form.is_valid():
-            recipes = form.cleaned_data['recipe']
-            markdown_format = form.cleaned_data['markdown_format']
-        else:
-            recipes = []
-    else:
-        raw_list = request.GET.getlist('r')
-
-        recipes = []
-        for r in raw_list:
-            if re.match(r'^([1-9])+$', r):
-                if Recipe.objects.filter(pk=int(r)).exists():
-                    recipes.append(int(r))
-
-        markdown_format = False
-        form = ShoppingForm(initial={'recipe': recipes, 'markdown_format': False})
-
-    ingredients = []
-
-    for r in recipes:
-        for s in r.steps.all():
-            for ri in s.ingredients.exclude(unit__name__contains='Special:').all():
-                index = None
-                for x, ig in enumerate(ingredients):
-                    if ri.food == ig.food and ri.unit == ig.unit:
-                        index = x
-
-                if index:
-                    ingredients[index].amount = ingredients[index].amount + ri.amount
-                else:
-                    ingredients.append(ri)
-
-    return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
+def shopping_list(request, pk=None):
+    return render(request, 'shopping_list.html', {})
 
 
 @group_required('guest')

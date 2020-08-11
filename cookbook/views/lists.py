@@ -50,7 +50,7 @@ def shopping_list(request):
     table = ShoppingListTable(ShoppingList.objects.filter(created_by=request.user).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(request, 'generic/list_template.html', {'title': _("Shopping Lists"), 'table': table, 'create_url': 'new_storage'})
+    return render(request, 'generic/list_template.html', {'title': _("Shopping Lists"), 'table': table, 'create_url': 'view_shopping'})
 
 
 @group_required('admin')
