@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Julien Teruel, 2020
+# vabene1111 <vabene1234@googlemail.com>, 2020
 # nerdinator <florian.dupret@gmail.com>, 2020
 # 
 #, fuzzy
@@ -15,11 +15,11 @@ msgstr ""
 "POT-Creation-Date: 2020-06-02 21:20+0200\n"
 "PO-Revision-Date: 2020-06-02 19:28+0000\n"
 "Last-Translator: nerdinator <florian.dupret@gmail.com>, 2020\n"
-"Language-Team: French (France) (https://www.transifex.com/django-recipes/teams/110507/fr_FR/)\n"
+"Language-Team: French (https://www.transifex.com/django-recipes/teams/110507/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: .\cookbook\filters.py:15 .\cookbook\templates\base.html:79
@@ -714,7 +714,7 @@ msgid ""
 msgstr ""
 "\n"
 "Markdown est un langage de balisage léger utilisé pour formatter du texte facilement.\n"
-"Ce site utilise la bibliothèque <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> pour convertir votre texte en un joli format HTML. Sa documentation complète est consultable <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">ici.\n"
+"Ce site utilise la bibliothèque <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> pour convertir votre texte en un joli format HTML. Sa documentation complète est consultable <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">ici</a>.\n"
 "Une documentation incomplète mais probablement suffisante se trouve plus bas."
 
 #: .\cookbook\templates\markdown_info.html:25
@@ -912,6 +912,7 @@ msgstr "Voir la recette externe"
 #: .\cookbook\templates\recipe_view.html:235
 msgid "Cloud not show a file preview. Maybe its not a PDF ?"
 msgstr ""
+"Impossible de prévisualiser le fichier. Il s'agit peut-être d'un PDF ?"
 
 #: .\cookbook\templates\recipe_view.html:242
 msgid "External recipe"
