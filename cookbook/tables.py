@@ -108,6 +108,15 @@ class RecipeImportTable(tables.Table):
         fields = ('id', 'name', 'file_path')
 
 
+class ShoppingListTable(tables.Table):
+    id = tables.LinkColumn('edit_storage', args=[A('id')])
+
+    class Meta:
+        model = ShoppingList
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'created_by', 'created_at')
+
+
 class ViewLogTable(tables.Table):
     recipe = tables.LinkColumn('view_recipe', args=[A('recipe_id')])
 

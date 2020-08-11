@@ -4,61 +4,14 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "Cookbook" %}{% endblock %}
+{% block title %}{% trans "Shopping List" %}{% endblock %}
 
 {% block extra_head %}
-    {{ form.media }}
+
 {% endblock %}
 
 {% block content %}
 
-    <h2><i class="fas fa-shopping-cart"></i> {% trans 'Shopping List' %}</h2>
 
-    <form action="{% url 'view_shopping' %}" method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-success" type="submit"><i class="fas fa-sync-alt"></i> {% trans 'Load' %}</button>
-    </form>
-
-    <br/>
-    <br/>
-
-    <div class="row">
-        <div class="col col-md-12">
-            <!--// @formatter:off-->
-            <textarea id="id_list" class="form-control" rows="{{ ingredients|length|add:1 }}">{% for i in ingredients %}{% if markdown_format %}- [ ] {% endif %}{{ i.amount.normalize }} {{ i.unit }} {{ i.food.name }}&#13;&#10;{% endfor %}</textarea>
-            <!--// @formatter:on-->
-        </div>
-    </div>
-    <br/>
-    <div class="row">
-        <div class="col col-md-12 text-center">
-            <button class="btn btn-success" onclick="copy()" style="width: 15vw" data-toggle="tooltip"
-                    data-placement="right" title="{% trans 'Copy list to clipboard' %}" id="id_btn_copy" onmouseout="resetTooltip()"><i
-                    class="far fa-copy"></i></button>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        function copy() {
-            let list = $('#id_list');
-
-            list.select();
-
-            $('#id_btn_copy').attr('data-original-title','{% trans 'Copied!' %}').tooltip('show');
-
-            document.execCommand("copy");
-        }
-
-        function resetTooltip() {
-            setTimeout(function () {
-                $('#id_btn_copy').attr('data-original-title','{% trans 'Copy list to clipboard' %}');
-            }, 300);
-        }
-
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
 
 {% endblock %}
