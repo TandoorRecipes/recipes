@@ -131,6 +131,10 @@ server {
     location /static {
         alias /media/data/recipes/staticfiles;
     }
+    
+    location /media {
+        alias /media/data/recipes/mediafiles;
+    }
 
     location / {
         proxy_pass http://unix:/media/data/recipes/recipes.sock;
