@@ -41,11 +41,7 @@ The docker image (`vabene1111/recipes`) simply exposes the application on port `
 
 **Python >= 3.8** is required to run this!
 
-Copy `.env.template` to `.env` and fill in the missing values accordingly.  
-Make sure all variables are available to whatever serves your application.
-
-Otherwise simply follow the instructions for any django based deployment
-(for example [this one](http://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html)).
+Refer to [manual install](docs/manual_install) for detailled instructions.
 
 ## Updating
 
