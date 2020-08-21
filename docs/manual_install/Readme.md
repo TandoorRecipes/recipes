@@ -8,7 +8,7 @@ These intructions are inspired from a standard django/gunicorn/postgresql instru
 
 *Optional*: create a virtual env and activate it
 
-Download the latest release from <https://github.com/vabene1111/recipes/releases>
+Get the last version from the repository: `git clone https://github.com/vabene1111/recipes.git -b master`
 
 Install postgresql requirements: `sudo apt install libpq-dev postgresql`
 Install project requirements: `pip3.8 install -r requirements.txt`
