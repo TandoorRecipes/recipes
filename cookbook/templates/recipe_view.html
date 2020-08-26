@@ -148,9 +148,12 @@
                                                                 <template v-if="i.no_amount">
                                                                     <span>&#x2063;</span>
                                                                 </template>
-                                                                <template v-if="!i.no_amount && i.unit">
+                                                                <template v-if="!i.no_amount">
                                                                     <span>[[roundDecimals(i.amount * ingredient_factor)]]</span>
-                                                                    [[i.unit.name]]
+                                                                    {# Allow for amounts without units, such as "2 eggs" #}
+                                                                    <template v-if="i.unit">
+                                                                        [[i.unit.name]]
+                                                                    </template>
                                                                 </template>
                                                             </label>
                                                         </div>
@@ -263,9 +266,12 @@
                                                                 <template v-if="i.no_amount">
                                                                     <span>&#x2063;</span>
                                                                 </template>
-                                                                <template v-if="!i.no_amount && i.unit">
+                                                                <template v-if="!i.no_amount">
                                                                     <span>[[roundDecimals(i.amount * ingredient_factor)]]</span>
-                                                                    [[i.unit.name]]
+                                                                    {# Allow for amounts without units, such as "2 eggs" #}
+                                                                    <template v-if="i.unit">
+                                                                        [[i.unit.name]]
+                                                                    </template>
                                                                 </template>
                                                             </label>
                                                         </div>
