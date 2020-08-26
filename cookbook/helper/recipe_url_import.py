@@ -18,7 +18,7 @@ def get_from_html(html_text, url):
     # first try finding ld+json as its most common
     for ld in soup.find_all('script', type='application/ld+json'):
         try:
-            ld_json = json.loads(ld.string)
+            ld_json = json.loads(ld.string.replace('\n', ''))
             if type(ld_json) != list:
                 ld_json = [ld_json]
 
@@ -31,8 +31,8 @@ def get_from_html(html_text, url):
 
                 if '@type' in ld_json_item and ld_json_item['@type'] == 'Recipe':
                     return find_recipe_json(ld_json_item, url)
-        except JSONDecodeError:
-            JsonResponse({'error': True, 'msg': _('The requested site provided malformed data and cannot be read.')}, status=400)
+        except JSONDecodeError as e:
+            return JsonResponse({'error': True, 'msg': _('The requested site provided malformed data and cannot be read.')}, status=400)
 
     # now try to find microdata
     items = microdata.get_items(html_text)
