@@ -12,7 +12,7 @@ class TestEditsRecipe(TestBase):
             {'file': 'cookbook/tests/resources/websites/ld_json_2.html', 'result_length': 1450},
             {'file': 'cookbook/tests/resources/websites/ld_json_3.html', 'result_length': 1545},
             {'file': 'cookbook/tests/resources/websites/ld_json_4.html', 'result_length': 1657},
-            {'file': 'cookbook/tests/resources/websites/ld_json_invalid.html', 'result_length': 115},
+            {'file': 'cookbook/tests/resources/websites/ld_json_invalid.html', 'result_length': 88},
             {'file': 'cookbook/tests/resources/websites/ld_json_itemList.html', 'result_length': 3131},
             {'file': 'cookbook/tests/resources/websites/ld_json_multiple.html', 'result_length': 1546},
             {'file': 'cookbook/tests/resources/websites/micro_data_1.html', 'result_length': 1022},
