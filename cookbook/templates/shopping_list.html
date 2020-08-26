@@ -30,15 +30,32 @@
 
     <div v-if="edit_mode">
         <div class="row">
-            <div class="col col-6">
+            <div class="col col-md-6">
                 <input type="text" class="form-control" v-model="recipe_query" @keyup="getRecipes"
                        placeholder="{% trans 'Search Recipe' %}">
-
                 <ul class="list-group" style="margin-top: 8px">
-                    <li class="list-group-item" v-for="x in recipes">[[x.name]]</li>
+                    <li class="list-group-item" v-for="x in recipes">[[x.name]]
+                        <button @click="addRecipeToList(x)"><i class="fa fa-plus"></i></button>
+                    </li>
                 </ul>
             </div>
 
+            <div class="col col-md-6">
+                <ul class="list-group" style="margin-top: 8px" v-if="shopping_list !== undefined">
+                    <li class="list-group-item" v-for="x in shopping_list.recipes">[[x.recipe.name]] <input
+                            type="number" v-model="x.multiplier">
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-12">
+                <table>
+                    <tr v-for="x in shopping_list.entries">
+                        <td>[[x]]</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div v-else>
@@ -65,6 +82,7 @@
                 edit_mode: true,
                 recipe_query: '',
                 recipes: [],
+                shopping_list: undefined,
             },
             directives: {
                 tabindex: {
@@ -89,6 +107,13 @@
            */
             mounted: function () {
 
+                //TODO default share users
+                this.shopping_list = {
+                    "recipes": [],
+                    "entries": [],
+                    "shared": [],
+                    "created_by": 1
+                }
             },
             methods: {
                 /*
@@ -111,6 +136,25 @@
                         console.log("getRecipes error: ", err);
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
+                },
+                addRecipeToList: function (recipe) {
+                    console.log(this.shopping_list)
+                    this.shopping_list.recipes.push({
+                        "recipe": recipe,
+                        "multiplier": 1
+                    })
+
+                    for (let s of recipe.steps) {
+                        for (let i of s.ingredients) {
+                            this.shopping_list.entries.push({
+                                'list_recipe': recipe.id,
+                                'food': i.food,
+                                'unit': i.unit,
+                                'amount': i.amount,
+                                'order': 0
+                            })
+                        }
+                    }
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true

@@ -283,6 +283,7 @@ class ShoppingList(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     note = models.TextField(blank=True, null=True)
     recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
+    entries = models.ManyToManyField(ShoppingListEntry, blank=True)
     shared = models.ManyToManyField(User, blank=True, related_name='list_share')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
