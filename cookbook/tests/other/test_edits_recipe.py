@@ -12,7 +12,6 @@ class TestEditsRecipe(TestBase):
             {'file': 'cookbook/tests/resources/websites/ld_json_2.html', 'result_length': 1450},
             {'file': 'cookbook/tests/resources/websites/ld_json_3.html', 'result_length': 1545},
             {'file': 'cookbook/tests/resources/websites/ld_json_4.html', 'result_length': 1657},
-            {'file': 'cookbook/tests/resources/websites/ld_json_invalid.html', 'result_length': 88},
             {'file': 'cookbook/tests/resources/websites/ld_json_itemList.html', 'result_length': 3131},
             {'file': 'cookbook/tests/resources/websites/ld_json_multiple.html', 'result_length': 1546},
             {'file': 'cookbook/tests/resources/websites/micro_data_1.html', 'result_length': 1022},
@@ -23,6 +22,7 @@ class TestEditsRecipe(TestBase):
 
         for test in test_list:
             with open(test['file'], 'rb') as file:
+                print(f'Testing {test["file"]} expecting length {test["result_length"]}')
                 parsed_content = json.loads(get_from_html(file.read(), 'test_url').content)
                 self.assertEqual(len(str(parsed_content)), test['result_length'])
                 file.close()
