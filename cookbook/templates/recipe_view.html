@@ -107,7 +107,7 @@
 
                             <div class="input-group d-print-none">
                                 <input type="number" value="1" maxlength="3" class="form-control"
-                                       v-model="ingredient_factor"/>
+                                       v-model="servings"/>
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calculator"></i></span>
                                 </div>
@@ -448,6 +448,8 @@
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
+        const recipe_servings = {{ recipe.servings }}
+
         let app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#id_base_container',
@@ -455,9 +457,13 @@
                 recipe: undefined,
                 has_ingredients: false,
                 has_times: false,
-                ingredient_factor: 1,
+                servings: recipe_servings,
             },
-
+            computed: {
+                ingredient_factor: function () {
+                    return this.servings / recipe_servings
+                }
+            },
             mounted: function () {
                 this.loadRecipe()
             },

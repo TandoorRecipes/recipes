@@ -62,6 +62,9 @@
                 <label for="id_name"> {% trans 'Waiting Time' %}</label>
                 <input class="form-control" id="id_wait_time" v-model="recipe.waiting_time">
                 <br/>
+                <label for="id_name"> {% trans 'Servings' %}</label>
+                <input class="form-control" id="id_servings" v-model="recipe.servings">
+                <br/>
                 <label for="id_name"> {% trans 'Keywords' %}</label>
                 <multiselect
                         v-model="recipe.keywords"
