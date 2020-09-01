@@ -117,6 +117,13 @@ class ShoppingListTable(tables.Table):
         fields = ('id', 'created_by', 'created_at')
 
 
+class InviteLinkTable(tables.Table):
+    class Meta:
+        model = InviteLink
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'username', 'group', 'valid_until', 'created_by', 'created_at', 'used_by')
+
+
 class ViewLogTable(tables.Table):
     recipe = tables.LinkColumn('view_recipe', args=[A('recipe_id')])
 

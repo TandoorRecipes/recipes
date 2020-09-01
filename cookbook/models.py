@@ -1,8 +1,10 @@
 import re
 import uuid
+from datetime import date, timedelta
+
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.utils.translation import gettext as _
 from django.db import models
 
@@ -292,6 +294,16 @@ class ShoppingList(models.Model):
 class ShareLink(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class InviteLink(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
+    username = models.CharField(blank=True, max_length=64)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    valid_until = models.DateField(default=date.today()+timedelta(days=14))
+    used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

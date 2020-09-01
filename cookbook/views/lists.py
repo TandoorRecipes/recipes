@@ -6,8 +6,8 @@ from django_tables2 import RequestConfig
 
 from cookbook.filters import IngredientFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Food, ShoppingList
-from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable, ShoppingListTable
+from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Food, ShoppingList, InviteLink
+from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable, ShoppingListTable, InviteLinkTable
 
 
 @group_required('user')
@@ -59,3 +59,11 @@ def storage(request):
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {'title': _("Storage Backend"), 'table': table, 'create_url': 'new_storage'})
+
+
+@group_required('admin')
+def invite_link(request):
+    table = InviteLinkTable(InviteLink.objects.all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(request, 'generic/list_template.html', {'title': _("Invite Links"), 'table': table, 'create_url': 'new_invite_link'})

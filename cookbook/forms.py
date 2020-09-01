@@ -271,6 +271,15 @@ class MealPlanForm(forms.ModelForm):
         widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}
 
 
+class InviteLinkForm(forms.ModelForm):
+    class Meta:
+        model = InviteLink
+        fields = ('username', 'group', 'valid_until')
+        help_texts = {
+            'username': _('A username is not required, if left blank the new user can choose one.')
+        }
+
+
 class SuperUserForm(forms.Form):
     name = forms.CharField()
     password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
