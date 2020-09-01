@@ -91,7 +91,7 @@ urlpatterns = [
 
 ]
 
-generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Food, ShoppingList)
+generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Food, ShoppingList, InviteLink)
 
 for m in generic_models:
     py_name = get_model_name(m)
