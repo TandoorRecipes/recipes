@@ -1,7 +1,7 @@
 import copy
 import os
 from datetime import datetime, timedelta
-
+from uuid import UUID
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
@@ -240,7 +240,7 @@ def setup(request):
         return HttpResponseRedirect(reverse('login'))
 
     if request.method == 'POST':
-        form = SuperUserForm(request.POST)
+        form = UserCreateForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
                 form.add_error('password', _('Passwords dont match!'))
@@ -260,9 +260,57 @@ def setup(request):
                     for m in e:
                         form.add_error('password', m)
     else:
-        form = SuperUserForm()
+        form = UserCreateForm()
 
     return render(request, 'setup.html', {'form': form})
+
+
+def signup(request, token):
+    try:
+        token = UUID(token, version=4)
+    except ValueError:
+        messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
+        if request.method == 'POST':
+
+            form = UserCreateForm(request.POST)
+            if link.username != '':
+                data = dict(form.data)
+                data['name'] = link.username
+                form.data = data
+
+            if form.is_valid():
+                if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+                    form.add_error('password', _('Passwords dont match!'))
+                else:
+                    user = User(
+                        username=form.cleaned_data['name'],
+                    )
+                    try:
+                        validate_password(form.cleaned_data['password'], user=user)
+                        user.set_password(form.cleaned_data['password'])
+                        user.save()
+                        messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+
+                        link.used_by = user
+                        link.save()
+                        user.groups.add(link.group)
+                        return HttpResponseRedirect(reverse('login'))
+                    except ValidationError as e:
+                        for m in e:
+                            form.add_error('password', m)
+        else:
+            form = UserCreateForm()
+
+        if link.username != '':
+            form.fields['name'].initial = link.username
+            form.fields['name'].disabled = True
+        return render(request, 'registration/signup.html', {'form': form, 'link': link})
+
+    messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def markdown_info(request):

@@ -118,10 +118,13 @@ class ShoppingListTable(tables.Table):
 
 
 class InviteLinkTable(tables.Table):
+    link = tables.TemplateColumn("<a href='{% url 'view_signup' record.uuid %}' >" + _('Link') + "</a>")
+    delete = tables.TemplateColumn("<a href='{% url 'delete_invite_link' record.id %}' >" + _('Delete') + "</a>")
+
     class Meta:
         model = InviteLink
         template_name = 'generic/table_template.html'
-        fields = ('id', 'username', 'group', 'valid_until', 'created_by', 'created_at', 'used_by')
+        fields = ('username', 'group', 'valid_until', 'created_by', 'created_at')
 
 
 class ViewLogTable(tables.Table):

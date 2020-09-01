@@ -125,6 +125,13 @@ class ViewLogAdmin(admin.ModelAdmin):
 admin.site.register(ViewLog, ViewLogAdmin)
 
 
+class InviteLinkAdmin(admin.ModelAdmin):
+    list_display = ('username', 'group', 'valid_until', 'created_by', 'created_at', 'used_by')
+
+
+admin.site.register(InviteLink, InviteLinkAdmin)
+
+
 class CookLogAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
 
