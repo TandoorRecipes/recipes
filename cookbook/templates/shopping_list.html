@@ -116,6 +116,7 @@
                 this.shopping_list = {
                     "recipes": [],
                     "entries": [],
+                    "entries_display": [],
                     "shared": [],
                     "created_by": 1
                 }
@@ -167,10 +168,10 @@
                         }
                     }
                 },
-                updateMultiplier: function(slr_id) {
+                updateMultiplier: function (slr_id) {
                     console.log('searching', slr_id)
                     let slr = undefined
-                    for (let r of this.shopping_list.recipes){
+                    for (let r of this.shopping_list.recipes) {
                         console.log(r, r.id)
                         if (r.id === slr_id) {
                             console.log('FOUND')
@@ -178,8 +179,21 @@
                         }
                     }
 
-                    for (let e of this.shopping_list.entries){
+                    for (let e of this.shopping_list.entries) {
                         e.amount = (e.amount * slr.multiplier)
+                    }
+                },
+                updateDisplay: function () {
+                    //TODO merge multiple ingredients of same unit
+                    this.shopping_list.entries_display = []
+
+                    for (let e of this.shopping_list.entries) {
+                        let de = e
+                        de.amount = (e.amount * slr.multiplier)
+
+                        this.shopping_list.entries_display.push({
+
+                        })
                     }
                 },
                 searchKeywords: function (query) {
