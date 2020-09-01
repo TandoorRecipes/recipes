@@ -126,6 +126,7 @@ def import_url(request):
             else:
                 u = Unit.objects.get(name=request.user.userpreference.default_unit)
 
+            # TODO properly handl no_amount recipes
             if isinstance(ing['amount'], str):
                 try:
                     ing['amount'] = float(ing['amount'].replace(',', '.'))
@@ -133,7 +134,9 @@ def import_url(request):
                     # TODO return proper error
                     pass
 
-            step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=ing['amount']))
+            note = ing['note'] if 'note' in ing else ''
+
+            step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=ing['amount'], note=note))
 
         if data['image'] != '':
             response = requests.get(data['image'])
