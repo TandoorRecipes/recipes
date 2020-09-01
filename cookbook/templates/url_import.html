@@ -80,7 +80,7 @@
                                         <div class="col-md-1">
                                             <input class="form-control" v-model="i.amount">
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
 
                                             <table class="table-layout:fixed">
                                                 <col width="95%"/>
@@ -119,7 +119,7 @@
 
 
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
 
                                             <multiselect v-tabindex
                                                          ref="ingredient"
@@ -142,6 +142,9 @@
                                                          @open="openIngredientSelect">
 
                                             </multiselect>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="text" placeholder="{% trans 'Note' %}" class="form-control" v-model="i.note">
                                         </div>
                                         <div class="col-md-1">
                                             <button class="btn btn-outline-danger btn-lg" type="button"
