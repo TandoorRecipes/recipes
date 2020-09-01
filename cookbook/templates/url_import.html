@@ -348,7 +348,9 @@
                 },
                 openUnitSelect: function (id) {
                     let index = id.replace('unit_', '')
-                    this.$set(app.$refs.unit[index].$data, 'search', this.recipe_data.recipeIngredient[index].unit.text)
+                    if (this.recipe_data.recipeIngredient[index].unit !== null) {
+                        this.$set(app.$refs.unit[index].$data, 'search', this.recipe_data.recipeIngredient[index].unit.text)
+                    }
                 },
                 openIngredientSelect: function (id) {
                     let index = id.replace('ingredient_', '')
@@ -370,7 +372,7 @@
                         this.units = response.data.results;
                         if (this.recipe_data !== undefined) {
                             for (let x of Array.from(this.recipe_data.recipeIngredient)) {
-                                if (x.unit.text !== '') {
+                                if (x.unit !== null && x.unit.text !== '') {
                                     this.units = this.units.filter(item => item.text !== x.unit.text)
                                     this.units.push(x.unit)
                                 }
