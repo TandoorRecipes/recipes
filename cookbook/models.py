@@ -271,6 +271,9 @@ class ShoppingListRecipe(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
     multiplier = models.IntegerField(default=1)
 
+    def __str__(self):
+        return f'Shopping list recipe {self.id} - {self.recipe}'
+
 
 class ShoppingListEntry(models.Model):
     list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)
@@ -279,6 +282,9 @@ class ShoppingListEntry(models.Model):
     amount = models.IntegerField(default=1)
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Shopping list entry {self.id}'
 
 
 class ShoppingList(models.Model):
@@ -290,6 +296,9 @@ class ShoppingList(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'Shopping list {self.id}'
+
 
 class ShareLink(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -297,12 +306,15 @@ class ShareLink(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.recipe} - {self.uuid}'
+
 
 class InviteLink(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     username = models.CharField(blank=True, max_length=64)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    valid_until = models.DateField(default=date.today()+timedelta(days=14))
+    valid_until = models.DateField(default=date.today() + timedelta(days=14))
     used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
