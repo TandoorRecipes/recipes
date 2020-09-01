@@ -307,6 +307,9 @@ class InviteLink(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.uuid}'
+
 
 class CookLog(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

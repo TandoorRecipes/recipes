@@ -29,6 +29,7 @@ router.register(r'view-log', api.ViewLogViewSet)
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
+    path('signup/<slug:token>', views.signup, name='view_signup'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
     path('books/', views.books, name='view_books'),

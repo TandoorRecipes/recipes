@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Lower
 from django.shortcuts import render
@@ -63,7 +65,7 @@ def storage(request):
 
 @group_required('admin')
 def invite_link(request):
-    table = InviteLinkTable(InviteLink.objects.all())
+    table = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {'title': _("Invite Links"), 'table': table, 'create_url': 'new_invite_link'})
