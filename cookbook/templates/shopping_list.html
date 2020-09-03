@@ -45,7 +45,7 @@
                 <div class="col col-md-6">
                     <ul class="list-group" style="margin-top: 8px">
                         <li class="list-group-item" v-for="x in shopping_list.recipes">[[x.recipe.name]] <input
-                                type="number" v-model="x.multiplier" @change="updateMultiplier(x.id)">
+                                type="number" v-model="x.multiplier" @change="updateDisplay()">
                         </li>
                     </ul>
                 </div>
@@ -54,7 +54,7 @@
             <div class="row" style="margin-top: 8px">
                 <div class="col col-12">
                     <table class="table table-sm table-striped">
-                        <tr v-for="x in shopping_list.entries">
+                        <tr v-for="x in shopping_list.entries_display">
                             <td>[[x.amount]]</td>
                             <td>[[x.unit.name]]</td>
                             <td>[[x.food.name]]</td>
@@ -88,6 +88,7 @@
                 recipe_query: '',
                 recipes: [],
                 shopping_list: undefined,
+                multiplier_cache: {},
             },
             directives: {
                 tabindex: {
@@ -120,6 +121,9 @@
                     "shared": [],
                     "created_by": 1
                 }
+
+
+                this.updateDisplay()
             },
             methods: {
                 /*
@@ -167,34 +171,26 @@
                             }
                         }
                     }
+                    this.updateDisplay()
                 },
-                updateMultiplier: function (slr_id) {
-                    console.log('searching', slr_id)
-                    let slr = undefined
+                updateMultiplierCache: function () {
+                    this.multiplier_cache = {}
                     for (let r of this.shopping_list.recipes) {
-                        console.log(r, r.id)
-                        if (r.id === slr_id) {
-                            console.log('FOUND')
-                            slr = r
-                        }
-                    }
-
-                    for (let e of this.shopping_list.entries) {
-                        e.amount = (e.amount * slr.multiplier)
+                        this.multiplier_cache[r.id] = r.multiplier
                     }
                 },
                 updateDisplay: function () {
+                    this.updateMultiplierCache()
+
                     //TODO merge multiple ingredients of same unit
                     this.shopping_list.entries_display = []
 
-                    for (let e of this.shopping_list.entries) {
-                        let de = e
-                        de.amount = (e.amount * slr.multiplier)
-
-                        this.shopping_list.entries_display.push({
-
-                        })
-                    }
+                    this.shopping_list.entries.forEach(function (element) {
+                        let item = {}
+                        Object.assign(item, element);
+                        item.amount = item.amount * app.multiplier_cache[item.list_recipe]
+                        app.shopping_list.entries_display.push(item)
+                    });
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
