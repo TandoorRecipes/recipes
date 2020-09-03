@@ -109,7 +109,7 @@ class RecipeImportTable(tables.Table):
 
 
 class ShoppingListTable(tables.Table):
-    id = tables.LinkColumn('edit_storage', args=[A('id')])
+    id = tables.LinkColumn('view_shopping', args=[A('id')])
 
     class Meta:
         model = ShoppingList
