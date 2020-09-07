@@ -51,6 +51,56 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col col-md-12">
+                    <input class="form-control form-control-sm" type="number" placeholder="{% trans 'Amount' %}"
+                           v-model="new_entry.amount" ref="new_entry_amount">
+                    <multiselect
+                            v-tabindex
+                            ref="unit"
+                            v-model="new_entry.unit"
+                            :options="units"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :allow-empty="true"
+                            :preserve-search="true"
+                            placeholder="{% trans 'Select Unit' %}"
+                            tag-placeholder="{% trans 'Create' %}"
+                            select-label="{% trans 'Select' %}"
+                            :taggable="true"
+                            @tag="addUnitType"
+                            label="name"
+                            track-by="name"
+                            :multiple="false"
+                            :loading="units_loading"
+                            @search-change="searchUnits">
+                    </multiselect>
+
+                    <multiselect
+                            v-tabindex
+                            ref="food"
+                            v-model="new_entry.food"
+                            :options="foods"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :allow-empty="true"
+                            :preserve-search="true"
+                            placeholder="{% trans 'Select Food' %}"
+                            tag-placeholder="{% trans 'Create' %}"
+                            select-label="{% trans 'Select' %}"
+                            :taggable="true"
+                            @tag="addFoodType"
+                            label="name"
+                            track-by="name"
+                            :multiple="false"
+                            :loading="foods_loading"
+                            @search-change="searchFoods">
+                    </multiselect>
+                    <button class="btn btn-success btn-sm" @click="addEntry()"><i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="row" style="margin-top: 8px">
                 <div class="col col-12">
                     <table class="table table-sm table-striped">
@@ -66,6 +116,8 @@
         <div v-else>
             Non Edit
         </div>
+
+        <button @click="updateShoppingList()">Save</button>
     </template>
 
 
@@ -89,6 +141,15 @@
                 recipes: [],
                 shopping_list: undefined,
                 multiplier_cache: {},
+                new_entry: {
+                    unit: undefined,
+                    amount: undefined,
+                    food: undefined,
+                },
+                foods: [],
+                foods_loading: false,
+                units: [],
+                units_loading: false,
             },
             directives: {
                 tabindex: {
@@ -134,6 +195,57 @@
                     }
                 },
                  */
+                makeToast: function (title, message, variant = null) {
+                    //TODO remove duplicate function in favor of central one
+                    this.$bvToast.toast(message, {
+                        title: title,
+                        variant: variant,
+                        toaster: 'b-toaster-top-center',
+                        solid: true
+                    })
+                },
+                updateShoppingList: function () {
+                    for (let r of this.shopping_list.recipes.filter(item => item.created === true)) {
+                        let old_id = r.id
+                        console.log('updating recipe', r)
+                        this.$http.post("{% url 'api:shoppinglistrecipe-list' %}", r, {}).then((response) => {
+                            r = response
+                            for (let e of this.shopping_list.entries.filter(item => item.list_recipe === old_id)) {
+                                e.list_recipe = r.id
+                            }
+                        }).catch((err) => {
+                            console.log(err)
+                            this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                        })
+                    }
+
+                    this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                        console.log(response)
+                        this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+
+                    }).catch((err) => {
+                        console.log(err)
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                    })
+                },
+                addEntry: function () {
+                    this.shopping_list.entries.push({
+                        'list_recipe': null,
+                        'food': this.new_entry.food,
+                        'unit': ((this.new_entry.unit !== undefined) ? this.new_entry.unit : {'name': ''}),
+                        'amount': parseFloat(this.new_entry.amount),
+                        'order': 0
+                    })
+
+                    this.new_entry = {
+                        unit: undefined,
+                        amount: undefined,
+                        food: undefined,
+                    }
+
+                    this.$refs.new_entry_amount.focus();
+                    this.updateDisplay()
+                },
                 getRecipes: function () {
                     let url = "{% url 'api:recipe-list' %}?limit=5"
                     if (this.recipe_query !== '') {
@@ -151,6 +263,7 @@
                     console.log(this.shopping_list)
 
                     let slr = {
+                        "created": true,
                         "id": Math.random() * 1000,
                         "recipe": recipe,
                         "multiplier": 1
@@ -188,7 +301,9 @@
                     this.shopping_list.entries.forEach(function (element) {
                         let item = {}
                         Object.assign(item, element);
-                        item.amount = item.amount * app.multiplier_cache[item.list_recipe]
+                        if (item.list_recipe !== null) {
+                            item.amount = item.amount * app.multiplier_cache[item.list_recipe]
+                        }
                         app.shopping_list.entries_display.push(item)
                     });
                 },
@@ -201,6 +316,35 @@
                         console.log(err)
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
+                },
+
+                searchUnits: function (query) { //TODO move to central component
+                    this.units_loading = true
+                    this.$http.get("{% url 'api:unit-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.units = response.data;
+                        this.units_loading = false
+                    }).catch((err) => {
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                    })
+                },
+                searchFoods: function (query) { //TODO move to central component
+                    this.foods_loading = true
+                    this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.foods = response.data
+                        this.foods_loading = false
+                    }).catch((err) => {
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                    })
+                },
+                addFoodType: function (tag, index) { //TODO move to central component
+                    let new_food = {'name': tag}
+                    this.foods.push(new_food)
+                    this.new_entry.food = new_food
+                },
+                addUnitType: function (tag, index) { //TODO move to central component
+                    let new_unit = {'name': tag}
+                    this.units.push(new_unit)
+                    this.new_entry.unit = new_unit
                 },
 
             }

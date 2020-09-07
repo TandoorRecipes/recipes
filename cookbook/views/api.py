@@ -32,7 +32,7 @@ from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, 
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer, ShoppingListRecipeSerializer
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -231,6 +231,14 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
             return Response(serializer.data)
         return Response(serializer.errors, 400)
+
+
+class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
+    queryset = ShoppingListRecipe.objects.all()
+    serializer_class = ShoppingListRecipeSerializer
+    permission_classes = [CustomIsUser]  # TODO add custom validation
+
+    # TODO custom get qs
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):

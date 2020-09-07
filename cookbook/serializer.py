@@ -205,7 +205,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('recipe', 'multiplier')
+        fields = ('id', 'recipe', 'multiplier')
+        read_only_fields = ('id',)
 
 
 class ShoppingListEntrySerializer(serializers.ModelSerializer):
