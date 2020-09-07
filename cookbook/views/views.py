@@ -165,7 +165,7 @@ def meal_plan_entry(request, pk):
 
 @group_required('user')
 def shopping_list(request, pk=None):
-    return render(request, 'shopping_list.html', {})
+    return render(request, 'shopping_list.html', {'shopping_list_id': pk})
 
 
 @group_required('guest')

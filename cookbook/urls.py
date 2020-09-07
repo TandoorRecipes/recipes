@@ -24,6 +24,7 @@ router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
+router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 
 urlpatterns = [
