@@ -594,7 +594,7 @@
 
                     let new_unit = this.recipe.steps[step].ingredients[id]
                     new_unit.unit = {'name': tag}
-                    this.foods.push(new_unit.unit)
+                    this.units.push(new_unit.unit)
                     this.recipe.steps[step].ingredients[id] = new_unit
                 },
                 searchKeywords: function (query) {
