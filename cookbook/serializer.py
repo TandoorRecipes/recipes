@@ -195,13 +195,6 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
-    recipe = RecipeSerializer(read_only=True)
-
-    def create(self, validated_data):
-        return ShoppingListRecipe.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        return super(ShoppingListRecipeSerializer, self).update(instance, validated_data)
 
     class Meta:
         model = ShoppingListRecipe
@@ -209,26 +202,24 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class ShoppingListEntrySerializer(serializers.ModelSerializer):
-
-    def create(self, validated_data):
-        return ShoppingListEntry.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        return super(ShoppingListEntrySerializer, self).update(instance, validated_data)
+class ShoppingListEntrySerializer(WritableNestedModelSerializer):
+    food = FoodSerializer(allow_null=True)
+    unit = UnitSerializer(allow_null=True)
 
     class Meta:
         model = ShoppingListEntry
-        fields = ('list_recipe', 'food', 'unit', 'amount', 'order', 'checked')
+        fields = ('id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked')
+        read_only_fields = ('id',)
 
 
 class ShoppingListSerializer(WritableNestedModelSerializer):
-    recipes = ShoppingListRecipeSerializer(many=True, allow_null=True, read_only=True)
+    recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
 
     class Meta:
         model = ShoppingList
         fields = ('id', 'uuid', 'note', 'recipes', 'entries', 'shared', 'created_by', 'created_at',)
+        read_only_fields = ('id',)
 
 
 class ShareLinkSerializer(serializers.ModelSerializer):

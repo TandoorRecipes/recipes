@@ -139,6 +139,27 @@ class CookLogAdmin(admin.ModelAdmin):
 admin.site.register(CookLog, CookLogAdmin)
 
 
+class ShoppingListRecipeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'recipe', 'multiplier')
+
+
+admin.site.register(ShoppingListRecipe, ShoppingListRecipeAdmin)
+
+
+class ShoppingListEntryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'food', 'unit', 'list_recipe', 'checked')
+
+
+admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)
+
+
+class ShoppingListAdmin(admin.ModelAdmin):
+    list_display = ('id', 'created_by', 'created_at')
+
+
+admin.site.register(ShoppingList, ShoppingListAdmin)
+
+
 class ShareLinkAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'uuid', 'created_at',)
 
