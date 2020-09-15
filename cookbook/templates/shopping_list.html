@@ -136,6 +136,7 @@
             delimiters: ['[[', ']]'],
             el: '#id_base_container',
             data: {
+                shopping_list_id: {{ shopping_list_id }},
                 edit_mode: true,
                 recipe_query: '',
                 recipes: [],
@@ -174,17 +175,22 @@
            */
             mounted: function () {
 
-                //TODO default share users
-                this.shopping_list = {
-                    "recipes": [],
-                    "entries": [],
-                    "entries_display": [],
-                    "shared": [],
-                    "created_by": 1
+
+                if (this.shopping_list_id) {
+                    this.loadShoppingList()
+                } else {
+                    //TODO default share users
+                    this.shopping_list = {
+                        "recipes": [],
+                        "entries": [],
+                        "entries_display": [],
+                        "shared": [],
+                        "created_by": 1
+                    }
+
+                    this.updateDisplay()
                 }
 
-
-                this.updateDisplay()
             },
             methods: {
                 /*
@@ -204,28 +210,48 @@
                         solid: true
                     })
                 },
+                loadShoppingList: function () {
+
+                    this.$http.get("{% url 'api:shoppinglist-detail' shopping_list_id %}").then((response) => {
+                        this.shopping_list = response.body
+                        this.updateDisplay()
+                    }).catch((err) => {
+                        console.log(err)
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                    })
+                },
                 updateShoppingList: function () {
-                    for (let r of this.shopping_list.recipes.filter(item => item.created === true)) {
-                        let old_id = r.id
-                        console.log('updating recipe', r)
-                        this.$http.post("{% url 'api:shoppinglistrecipe-list' %}", r, {}).then((response) => {
-                            r = response
-                            for (let e of this.shopping_list.entries.filter(item => item.list_recipe === old_id)) {
-                                e.list_recipe = r.id
-                            }
+                    let recipe_promises = []
+
+                    for (let i in this.shopping_list.recipes) {
+                        if (this.shopping_list.recipes[i].created) {
+                            console.log('updating recipe', this.shopping_list.recipes[i])
+                            recipe_promises.push(this.$http.post("{% url 'api:shoppinglistrecipe-list' %}", this.shopping_list.recipes[i], {}).then((response) => {
+                                let old_id = this.shopping_list.recipes[i].id
+                                console.log("list recipe create respose ", response.body)
+                                this.shopping_list.recipes[i] = response.body
+                                for (let e of this.shopping_list.entries.filter(item => item.list_recipe === old_id)) {
+                                    console.log("found recipe updating ID")
+                                    e.list_recipe = this.shopping_list.recipes[i].id
+                                }
+                            }).catch((err) => {
+                                console.log(err)
+                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                            }))
+                        }
+                    }
+
+                    Promise.allSettled(recipe_promises).then(() => {
+                        console.log("proceeding to update shopping list", this.shopping_list)
+
+                        this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                            console.log(response)
+                            this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+
                         }).catch((err) => {
                             console.log(err)
                             this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
                         })
-                    }
-
-                    this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
-                        console.log(response)
-                        this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
-
-                    }).catch((err) => {
-                        console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 addEntry: function () {
@@ -265,7 +291,7 @@
                     let slr = {
                         "created": true,
                         "id": Math.random() * 1000,
-                        "recipe": recipe,
+                        "recipe": recipe.id,
                         "multiplier": 1
                     }
                     this.shopping_list.recipes.push(slr)
