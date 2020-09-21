@@ -395,23 +395,26 @@
 
                 },
                 addEntry: function () {
-                    this.shopping_list.entries.push({
-                        'list_recipe': null,
-                        'food': this.new_entry.food,
-                        'unit': ((this.new_entry.unit !== undefined) ? this.new_entry.unit : {'name': ''}),
-                        'amount': parseFloat(this.new_entry.amount),
-                        'order': 0,
-                        'checked': false
-                    })
+                    if (this.new_entry.food !== undefined) {
+                        this.shopping_list.entries.push({
+                            'list_recipe': null,
+                            'food': this.new_entry.food,
+                            'unit': ((this.new_entry.unit !== undefined) ? this.new_entry.unit : {'name': ''}),
+                            'amount': parseFloat(this.new_entry.amount),
+                            'order': 0,
+                            'checked': false
+                        })
 
-                    this.new_entry = {
-                        unit: undefined,
-                        amount: undefined,
-                        food: undefined,
+                        this.new_entry = {
+                            unit: undefined,
+                            amount: undefined,
+                            food: undefined,
+                        }
+
+                        this.$refs.new_entry_amount.focus();
+                    } else {
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'Please enter a valid food' %}', 'danger')
                     }
-
-                    this.$refs.new_entry_amount.focus();
-
                 },
                 getRecipes: function () {
                     let url = "{% url 'api:recipe-list' %}?limit=5&internal=true"
