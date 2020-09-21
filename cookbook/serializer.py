@@ -195,10 +195,11 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
+    recipe_name = serializers.ReadOnlyField(source='recipe.name')
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'recipe', 'multiplier')
+        fields = ('id', 'recipe', 'recipe_name', 'multiplier')
         read_only_fields = ('id',)
 
 
