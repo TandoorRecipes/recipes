@@ -22,32 +22,78 @@
         <div class="col col-9">
             <h2>{% trans 'Shopping List' %}</h2>
         </div>
-        <div class="col col-3">
+        <!--TODO proper alignment -->
+        <div class="col col-3 text-right">
             <b-form-checkbox switch size="lg" v-model="edit_mode">{% trans 'Edit' %}</b-form-checkbox>
         </div>
     </div>
 
     <template v-if="shopping_list !== undefined">
 
-
-        <div v-if="edit_mode">
+        <div class="text-center" v-if="loading">
+            <i class="fas fa-spinner fa-spin fa-8x"></i>
+        </div>
+        <div v-else-if="edit_mode">
             <div class="row">
                 <div class="col col-md-6">
-                    <input type="text" class="form-control" v-model="recipe_query" @keyup="getRecipes"
-                           placeholder="{% trans 'Search Recipe' %}">
-                    <ul class="list-group" style="margin-top: 8px">
-                        <li class="list-group-item" v-for="x in recipes">[[x.name]]
-                            <button @click="addRecipeToList(x)"><i class="fa fa-plus"></i></button>
-                        </li>
-                    </ul>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa fa-search"></i> {% trans 'Search' %}
+                        </div>
+                        <div class="card-body">
+                            <input type="text" class="form-control" v-model="recipe_query" @keyup="getRecipes"
+                                   placeholder="{% trans 'Search Recipe' %}">
+                            <ul class="list-group" style="margin-top: 8px">
+                                <li class="list-group-item" v-for="x in recipes">
+                                    <div class="flex-row">
+                                        <div class="flex-column">[[x.name]]</div>
+
+                                        <div class="flex-column align-self-end">
+                                            <button class="btn btn-outline-primary shadow-none" @click="addRecipeToList(x)"><i
+                                                    class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col col-md-6">
-                    <ul class="list-group" style="margin-top: 8px">
-                        <li class="list-group-item" v-for="x in shopping_list.recipes">[[x.recipe_name]]
-                            <input type="number" v-model="x.multiplier">
-                        </li>
-                    </ul>
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa fa-shopping-cart"></i> {% trans 'Shopping Recipes' %}
+                        </div>
+                        <div class="card-body" style="padding-left: 2vw; padding-right: 2vw">
+                            <template v-if="shopping_list.recipes.length < 1">
+                                {% trans 'No recipes selected' %}
+                            </template>
+                            <template v-else>
+                                <div class="row flex-row my-auto" v-for="x in shopping_list.recipes"
+                                     style="margin-top: 0.5vh!important;">
+                                    <div class="flex-grow-1 flex-column my-auto">[[x.recipe_name]]</div>
+                                    <div class="flex-column align-self-end ">
+                                        <div class="input-group input-group-sm my-auto">
+                                            <div class="input-group-prepend">
+                                                <button class="text-muted btn btn-outline-primary shadow-none"
+                                                        @click="((x.multiplier - 1) > 0) ? x.multiplier -= 1 : 1">-
+                                                </button>
+                                            </div>
+                                            <input class="form-control" type="number" v-model="x.multiplier">
+                                            <div class="input-group-append">
+                                                <button class="text-muted btn btn-outline-primary shadow-none"
+                                                        @click="x.multiplier += 1">
+                                                    +
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -112,12 +158,22 @@
                     </table>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col col-12 text-right">
+
+                    <button class="btn btn-success" @click="updateShoppingList()"><i
+                            class="fas fa-save"></i> {% trans 'Save' %}
+
+                    </button>
+                </div>
+            </div>
         </div>
-        <div v-else>
+        <div v-else="">
             Non Edit
         </div>
 
-        <button @click="updateShoppingList()">Save</button>
+
     </template>
 
 
@@ -136,12 +192,12 @@
             delimiters: ['[[', ']]'],
             el: '#id_base_container',
             data: {
-                shopping_list_id: {{ shopping_list_id }},
+                shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
+                loading: true,
                 edit_mode: true,
                 recipe_query: '',
                 recipes: [],
                 shopping_list: undefined,
-                //multiplier_cache: {},
                 new_entry: {
                     unit: undefined,
                     amount: undefined,
@@ -199,8 +255,6 @@
            },
            */
             mounted: function () {
-
-
                 if (this.shopping_list_id) {
                     this.loadShoppingList()
                 } else {
@@ -212,9 +266,8 @@
                         "shared": [],
                         "created_by": 1
                     }
-
+                    this.loading = false
                 }
-
             },
 
             methods: {
@@ -239,12 +292,14 @@
 
                     this.$http.get("{% url 'api:shoppinglist-detail' shopping_list_id %}").then((response) => {
                         this.shopping_list = response.body
+                        this.loading = false
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 updateShoppingList: function () {
+                    this.loading = true
                     let recipe_promises = []
 
                     for (let i in this.shopping_list.recipes) {
@@ -268,14 +323,30 @@
                     Promise.allSettled(recipe_promises).then(() => {
                         console.log("proceeding to update shopping list", this.shopping_list)
 
-                        this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
-                            console.log(response)
-                            this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+                        if (this.shopping_list_id === null) {
+                            this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
+                                console.log(response)
+                                this.makeToast('{% trans 'Updated' %}', '{% trans 'Object created successfully!' %}', 'success')
+                                this.loading = false
+                                this.shopping_list = response.body
+                            }).catch((err) => {
+                                console.log(err)
+                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error creating a resource!' %}' + err.bodyText, 'danger')
+                                this.loading = false
+                            })
+                        } else {
+                            this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                                console.log(response)
+                                this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+                                this.loading = false
+                            }).catch((err) => {
+                                console.log(err)
+                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                                this.loading = false
+                            })
+                        }
 
-                        }).catch((err) => {
-                            console.log(err)
-                            this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
-                        })
+
                     })
                 },
                 addEntry: function () {
