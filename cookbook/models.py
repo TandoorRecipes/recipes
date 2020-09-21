@@ -69,6 +69,7 @@ class UserPreference(models.Model):
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
+    shopping_auto_sync = models.IntegerField(default=5)
 
     def __str__(self):
         return str(self.user)

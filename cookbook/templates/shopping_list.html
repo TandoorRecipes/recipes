@@ -293,8 +293,13 @@
                     }
                     this.loading = false
                 }
-            },
 
+                {% if request.user.userpreference.shopping_auto_sync > 0 %}
+                    setInterval(() => {
+                        this.loadShoppingList()
+                    }, {{ request.user.userpreference.shopping_auto_sync }} * 1000 )
+                {% endif %}
+            },
             methods: {
                 /*
                 warnPageLeave: function (event) {
