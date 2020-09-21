@@ -14,16 +14,17 @@
 
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
 {% endblock %}
 
 {% block content %}
 
     <div class="row">
-        <div class="col col-9">
+        <div class="col col-md-9">
             <h2>{% trans 'Shopping List' %}</h2>
         </div>
-        <!--TODO proper alignment -->
-        <div class="col col-3 text-right">
+        <div class="col col-mdd-3 text-right">
             <b-form-checkbox switch size="lg" v-model="edit_mode">{% trans 'Edit' %}</b-form-checkbox>
         </div>
     </div>
@@ -47,7 +48,10 @@
                             <ul class="list-group" style="margin-top: 8px">
                                 <li class="list-group-item" v-for="x in recipes">
                                     <div class="row flex-row" style="padding-left: 0.5vw; padding-right: 0.5vw">
-                                        <div class="flex-column flex-fill my-auto">[[x.name]]</div>
+                                        <div class="flex-column flex-fill my-auto"><a v-bind:href="getRecipeUrl(x.id)"
+                                                                                      target="_blank"
+                                                                                      rel="nofollow norefferer">[[x.name]]</a>
+                                        </div>
                                         <div class="flex-column align-self-end">
                                             <button class="btn btn-outline-primary shadow-none"
                                                     @click="addRecipeToList(x)"><i
@@ -72,7 +76,10 @@
                             <template v-else>
                                 <div class="row flex-row my-auto" v-for="x in shopping_list.recipes"
                                      style="margin-top: 0.5vh!important;">
-                                    <div class="flex-grow-1 flex-column my-auto">[[x.recipe_name]]</div>
+                                    <div class="flex-grow-1 flex-column my-auto"><a v-bind:href="getRecipeUrl(x.recipe)"
+                                                                                    target="_blank"
+                                                                                    rel="nofollow norefferer">[[x.recipe_name]]</a>
+                                    </div>
                                     <div class="flex-column align-self-end ">
                                         <div class="input-group input-group-sm my-auto">
                                             <div class="input-group-prepend">
@@ -159,23 +166,36 @@
                             @search-change="searchFoods">
                     </multiselect>
                 </div>
+
                 <div class="col col-md-1 my-auto text-right">
                     <button class="btn btn-success btn-lg" @click="addEntry()"><i class="fa fa-plus"></i>
                     </button>
                 </div>
             </div>
-        </div>
 
-        <div class="row" style="margin-top: 4vh">
-            <div class="col col-12 text-right">
-                <button class="btn btn-success" @click="updateShoppingList()"><i
-                        class="fas fa-save"></i> {% trans 'Save' %}
-                </button>
+            <div class="row" style="margin-top: 4vh">
+                <div class="col col-12 text-right">
+                    <button class="btn btn-success" @click="updateShoppingList()"><i
+                            class="fas fa-save"></i> {% trans 'Save' %}
+                    </button>
+                </div>
             </div>
         </div>
-        </div>
-        <div v-else="">
-            Non Edit
+        <div v-else>
+
+            <div class="row" style="margin-top: 8px">
+                <div class="col col-md-12">
+                    <table class="table table table-striped">
+                        <tr v-for="x in display_entries">
+                            <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked" @change="entryChecked(x)">
+                            </td>
+                            <td>[[x.amount]]</td>
+                            <td>[[x.unit.name]]</td>
+                            <td>[[x.food.name]]</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
 
 
@@ -199,7 +219,7 @@
             data: {
                 shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
                 loading: true,
-                edit_mode: true,
+                edit_mode: false,
                 recipe_query: '',
                 recipes: [],
                 shopping_list: undefined,
@@ -354,13 +374,34 @@
 
                     })
                 },
+                entryChecked: function (entry) {
+
+
+                    this.shopping_list.entries.forEach((item) => {
+                        if (item.id === entry.id) { //TODO unwrap once same entries are merged
+                            item.checked = entry.checked
+                            console.log('updating ', item)
+                            this.$http.put("{% url 'api:shoppinglistentry-detail' 123456 %}".replace('123456', item.id), item, {}).then((response) => {
+                                console.log("YEHAA", response)
+                            }).catch((err) => {
+                                console.log(err)
+                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                                this.loading = false
+                            })
+
+                        }
+                    })
+
+
+                },
                 addEntry: function () {
                     this.shopping_list.entries.push({
                         'list_recipe': null,
                         'food': this.new_entry.food,
                         'unit': ((this.new_entry.unit !== undefined) ? this.new_entry.unit : {'name': ''}),
                         'amount': parseFloat(this.new_entry.amount),
-                        'order': 0
+                        'order': 0,
+                        'checked': false
                     })
 
                     this.new_entry = {
@@ -373,9 +414,12 @@
 
                 },
                 getRecipes: function () {
-                    let url = "{% url 'api:recipe-list' %}?limit=5"
+                    let url = "{% url 'api:recipe-list' %}?limit=5&internal=true"
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
+                    } else {
+                        this.recipes = []
+                        return
                     }
 
                     this.$http.get(url).then((response) => {
@@ -384,6 +428,9 @@
                         console.log("getRecipes error: ", err);
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
+                },
+                getRecipeUrl: function (id) { //TODO generic function that can be reused else were
+                    return '{% url 'view_recipe' 123456 %}'.replace('123456', id)
                 },
                 addRecipeToList: function (recipe) {
                     console.log(this.shopping_list)
