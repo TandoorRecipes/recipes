@@ -196,6 +196,31 @@
                     </table>
                 </div>
             </div>
+
+            <b-button class="btn btn-success" v-b-modal.id_modal_export>{% trans 'Export' %}</b-button>
+
+            <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
+                <div class="row">
+                    <div class="col col-12">
+                        <label>
+                            {% trans 'List Prefix' %}
+                            <input class="form-control" v-model="export_text_prefix">
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col col-12">
+                        <b-form-textarea class="form-control" max-rows="8" v-model="export_text">
+
+                        </b-form-textarea>
+                    </div>
+                </div>
+
+
+            </b-modal>
+
         </div>
 
 
@@ -220,6 +245,7 @@
                 shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
                 loading: true,
                 edit_mode: false,
+                export_text_prefix: '', //TODO add userpreference
                 recipe_query: '',
                 recipes: [],
                 shopping_list: undefined,
@@ -263,6 +289,13 @@
                     });
 
                     return entries
+                },
+                export_text() {
+                    let text = ''
+                    for (let e of this.display_entries) {
+                        text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
+                    }
+                    return text
                 },
             },
             /*
