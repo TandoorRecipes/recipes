@@ -32,7 +32,8 @@ from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, 
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer, ShoppingListRecipeSerializer, ShoppingListEntrySerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer, ShoppingListRecipeSerializer, ShoppingListEntrySerializer, ShoppingListEntryCheckedSerializer, \
+    ShoppingListAutoSyncSerializer
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -264,6 +265,12 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset.filter(created_by=self.request.user).all()
         return queryset
+
+    def get_serializer_class(self):
+        autosync = self.request.query_params.get('autosync', None)
+        if autosync:
+            return ShoppingListAutoSyncSerializer
+        return self.serializer_class
 
 
 class ViewLogViewSet(viewsets.ModelViewSet):

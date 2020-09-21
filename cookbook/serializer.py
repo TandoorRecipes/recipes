@@ -213,6 +213,12 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         read_only_fields = ('id',)
 
 
+class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingListEntry
+        fields = ('id', 'checked')
+
+
 class ShoppingListSerializer(WritableNestedModelSerializer):
     recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
@@ -220,6 +226,15 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
     class Meta:
         model = ShoppingList
         fields = ('id', 'uuid', 'note', 'recipes', 'entries', 'shared', 'created_by', 'created_at',)
+        read_only_fields = ('id',)
+
+
+class ShoppingListAutoSyncSerializer(WritableNestedModelSerializer):
+    entries = ShoppingListEntryCheckedSerializer(many=True, allow_null=True)
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'entries',)
         read_only_fields = ('id',)
 
 

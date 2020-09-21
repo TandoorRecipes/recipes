@@ -296,7 +296,7 @@
 
                 {% if request.user.userpreference.shopping_auto_sync > 0 %}
                     setInterval(() => {
-                        this.loadShoppingList()
+                        this.loadShoppingList(true)
                     }, {{ request.user.userpreference.shopping_auto_sync }} * 1000 )
                 {% endif %}
             },
@@ -318,11 +318,22 @@
                         solid: true
                     })
                 },
-                loadShoppingList: function () {
+                loadShoppingList: function (autosync = false) {
+                    this.$http.get("{% url 'api:shoppinglist-detail' shopping_list_id %}" + ((autosync) ? '?autosync=true' : '')).then((response) => {
+                        if (!autosync) {
+                            this.shopping_list = response.body
+                            this.loading = false
+                        } else {
+                            let check_map = {}
+                            for (let e of response.body.entries) {
+                                check_map[e.id] = {checked: e.checked}
+                            }
 
-                    this.$http.get("{% url 'api:shoppinglist-detail' shopping_list_id %}").then((response) => {
-                        this.shopping_list = response.body
-                        this.loading = false
+                            for (let se of this.shopping_list.entries) {
+                                se.checked = check_map[se.id].checked
+                            }
+                        }
+
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
