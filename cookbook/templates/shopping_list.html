@@ -46,11 +46,11 @@
                                    placeholder="{% trans 'Search Recipe' %}">
                             <ul class="list-group" style="margin-top: 8px">
                                 <li class="list-group-item" v-for="x in recipes">
-                                    <div class="flex-row">
-                                        <div class="flex-column">[[x.name]]</div>
-
+                                    <div class="row flex-row" style="padding-left: 0.5vw; padding-right: 0.5vw">
+                                        <div class="flex-column flex-fill my-auto">[[x.name]]</div>
                                         <div class="flex-column align-self-end">
-                                            <button class="btn btn-outline-primary shadow-none" @click="addRecipeToList(x)"><i
+                                            <button class="btn btn-outline-primary shadow-none"
+                                                    @click="addRecipeToList(x)"><i
                                                     class="fa fa-plus"></i></button>
                                         </div>
                                     </div>
@@ -97,10 +97,25 @@
                 </div>
             </div>
 
+
+            <div class="row" style="margin-top: 8px">
+                <div class="col col-12">
+                    <table class="table table-sm table-striped">
+                        <tr v-for="x in display_entries">
+                            <td>[[x.amount]]</td>
+                            <td>[[x.unit.name]]</td>
+                            <td>[[x.food.name]]</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
             <div class="row">
-                <div class="col col-md-12">
-                    <input class="form-control form-control-sm" type="number" placeholder="{% trans 'Amount' %}"
+                <div class="col col-md-3">
+                    <input class="form-control" type="number" placeholder="{% trans 'Amount' %}"
                            v-model="new_entry.amount" ref="new_entry_amount">
+                </div>
+                <div class="col col-md-4">
                     <multiselect
                             v-tabindex
                             ref="unit"
@@ -121,7 +136,8 @@
                             :loading="units_loading"
                             @search-change="searchUnits">
                     </multiselect>
-
+                </div>
+                <div class="col col-md-4">
                     <multiselect
                             v-tabindex
                             ref="food"
@@ -142,32 +158,21 @@
                             :loading="foods_loading"
                             @search-change="searchFoods">
                     </multiselect>
-                    <button class="btn btn-success btn-sm" @click="addEntry()"><i class="fa fa-plus"></i>
+                </div>
+                <div class="col col-md-1 my-auto text-right">
+                    <button class="btn btn-success btn-lg" @click="addEntry()"><i class="fa fa-plus"></i>
                     </button>
                 </div>
             </div>
+        </div>
 
-            <div class="row" style="margin-top: 8px">
-                <div class="col col-12">
-                    <table class="table table-sm table-striped">
-                        <tr v-for="x in display_entries">
-                            <td>[[x.amount]]</td>
-                            <td>[[x.unit.name]]</td>
-                            <td>[[x.food.name]]</td>
-                        </tr>
-                    </table>
-                </div>
+        <div class="row" style="margin-top: 4vh">
+            <div class="col col-12 text-right">
+                <button class="btn btn-success" @click="updateShoppingList()"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}
+                </button>
             </div>
-
-            <div class="row">
-                <div class="col col-12 text-right">
-
-                    <button class="btn btn-success" @click="updateShoppingList()"><i
-                            class="fas fa-save"></i> {% trans 'Save' %}
-
-                    </button>
-                </div>
-            </div>
+        </div>
         </div>
         <div v-else="">
             Non Edit
