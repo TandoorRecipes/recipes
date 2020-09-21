@@ -44,8 +44,8 @@
 
                 <div class="col col-md-6">
                     <ul class="list-group" style="margin-top: 8px">
-                        <li class="list-group-item" v-for="x in shopping_list.recipes">[[x.recipe.name]] <input
-                                type="number" v-model="x.multiplier" @change="updateDisplay()">
+                        <li class="list-group-item" v-for="x in shopping_list.recipes">[[x.recipe_name]]
+                            <input type="number" v-model="x.multiplier">
                         </li>
                     </ul>
                 </div>
@@ -104,7 +104,7 @@
             <div class="row" style="margin-top: 8px">
                 <div class="col col-12">
                     <table class="table table-sm table-striped">
-                        <tr v-for="x in shopping_list.entries_display">
+                        <tr v-for="x in display_entries">
                             <td>[[x.amount]]</td>
                             <td>[[x.unit.name]]</td>
                             <td>[[x.food.name]]</td>
@@ -141,7 +141,7 @@
                 recipe_query: '',
                 recipes: [],
                 shopping_list: undefined,
-                multiplier_cache: {},
+                //multiplier_cache: {},
                 new_entry: {
                     unit: undefined,
                     amount: undefined,
@@ -158,6 +158,31 @@
                         el.setAttribute('tabindex', 0);
                     }
                 }
+            },
+            computed: {
+                multiplier_cache() {
+                    let cache = {}
+                    this.shopping_list.recipes.forEach((r) => {
+                        cache[r.id] = !(Number.isNaN(r.multiplier)) ? parseFloat(r.multiplier) : 1
+                    })
+                    return cache
+                },
+                display_entries() {
+                    let entries = []
+
+                    //TODO merge multiple ingredients of same unit
+
+                    this.shopping_list.entries.forEach(element => {
+                        let item = {}
+                        Object.assign(item, element);
+                        if (item.list_recipe !== null) {
+                            item.amount = item.amount * this.multiplier_cache[item.list_recipe]
+                        }
+                        entries.push(item)
+                    });
+
+                    return entries
+                },
             },
             /*
            watch: {
@@ -188,10 +213,10 @@
                         "created_by": 1
                     }
 
-                    this.updateDisplay()
                 }
 
             },
+
             methods: {
                 /*
                 warnPageLeave: function (event) {
@@ -214,7 +239,6 @@
 
                     this.$http.get("{% url 'api:shoppinglist-detail' shopping_list_id %}").then((response) => {
                         this.shopping_list = response.body
-                        this.updateDisplay()
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
@@ -270,7 +294,7 @@
                     }
 
                     this.$refs.new_entry_amount.focus();
-                    this.updateDisplay()
+
                 },
                 getRecipes: function () {
                     let url = "{% url 'api:recipe-list' %}?limit=5"
@@ -292,6 +316,7 @@
                         "created": true,
                         "id": Math.random() * 1000,
                         "recipe": recipe.id,
+                        "recipe_name": recipe.name,
                         "multiplier": 1
                     }
                     this.shopping_list.recipes.push(slr)
@@ -310,28 +335,7 @@
                             }
                         }
                     }
-                    this.updateDisplay()
-                },
-                updateMultiplierCache: function () {
-                    this.multiplier_cache = {}
-                    for (let r of this.shopping_list.recipes) {
-                        this.multiplier_cache[r.id] = r.multiplier
-                    }
-                },
-                updateDisplay: function () {
-                    this.updateMultiplierCache()
 
-                    //TODO merge multiple ingredients of same unit
-                    this.shopping_list.entries_display = []
-
-                    this.shopping_list.entries.forEach(function (element) {
-                        let item = {}
-                        Object.assign(item, element);
-                        if (item.list_recipe !== null) {
-                            item.amount = item.amount * app.multiplier_cache[item.list_recipe]
-                        }
-                        app.shopping_list.entries_display.push(item)
-                    });
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
