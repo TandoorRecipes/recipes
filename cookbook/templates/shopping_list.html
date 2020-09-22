@@ -313,23 +313,13 @@
            },
            */
             mounted: function () {
-                if (this.shopping_list_id) {
-                    this.loadShoppingList()
-                } else {
-                    //TODO default share users
-                    this.shopping_list = {
-                        "recipes": [],
-                        "entries": [],
-                        "entries_display": [],
-                        "shared": [],
-                        "created_by": 1
-                    }
-                    this.loading = false
-                }
+                this.loadShoppingList()
 
                 {% if request.user.userpreference.shopping_auto_sync > 0 %}
                     setInterval(() => {
-                        this.loadShoppingList(true)
+                        if ((this.shopping_list_id !== null) && !this.edit_mode) {
+                            this.loadShoppingList(true)
+                        }
                     }, {{ request.user.userpreference.shopping_auto_sync }} * 1000 )
                 {% endif %}
             },
@@ -352,25 +342,39 @@
                     })
                 },
                 loadShoppingList: function (autosync = false) {
-                    this.$http.get("{% url 'api:shoppinglist-detail' shopping_list_id %}" + ((autosync) ? '?autosync=true' : '')).then((response) => {
-                        if (!autosync) {
-                            this.shopping_list = response.body
-                            this.loading = false
-                        } else {
-                            let check_map = {}
-                            for (let e of response.body.entries) {
-                                check_map[e.id] = {checked: e.checked}
+
+                    if (this.shopping_list_id) {
+                        this.$http.get("{% url 'api:shoppinglist-detail' 123456 %}".replace('123456', this.shopping_list_id) + ((autosync) ? '?autosync=true' : '')).then((response) => {
+                            if (!autosync) {
+                                this.shopping_list = response.body
+                                this.loading = false
+                            } else {
+                                let check_map = {}
+                                for (let e of response.body.entries) {
+                                    check_map[e.id] = {checked: e.checked}
+                                }
+
+                                for (let se of this.shopping_list.entries) {
+                                    if (check_map[se.id] !== undefined) {
+                                        se.checked = check_map[se.id].checked
+                                    }
+                                }
                             }
 
-                            for (let se of this.shopping_list.entries) {
-                                se.checked = check_map[se.id].checked
-                            }
+                        }).catch((err) => {
+                            console.log(err)
+                            this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        })
+                    } else {
+                        this.shopping_list = {
+                            "recipes": [],
+                            "entries": [],
+                            "entries_display": [],
+                            "shared": [],
+                            "created_by": 1
                         }
-
-                    }).catch((err) => {
-                        console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
-                    })
+                        this.loading = false
+                    }
                 },
                 updateShoppingList: function () {
                     this.loading = true
@@ -382,7 +386,7 @@
                             recipe_promises.push(this.$http.post("{% url 'api:shoppinglistrecipe-list' %}", this.shopping_list.recipes[i], {}).then((response) => {
                                 let old_id = this.shopping_list.recipes[i].id
                                 console.log("list recipe create respose ", response.body)
-                                this.shopping_list.recipes[i] = response.body
+                                this.$set(this.shopping_list.recipes, i, response.body)
                                 for (let e of this.shopping_list.entries.filter(item => item.list_recipe === old_id)) {
                                     console.log("found recipe updating ID")
                                     e.list_recipe = this.shopping_list.recipes[i].id
@@ -403,6 +407,7 @@
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Object created successfully!' %}', 'success')
                                 this.loading = false
                                 this.shopping_list = response.body
+                                this.shopping_list_id = this.shopping_list.id
                             }).catch((err) => {
                                 console.log(err)
                                 this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error creating a resource!' %}' + err.bodyText, 'danger')
@@ -485,7 +490,7 @@
                     return '{% url 'view_recipe' 123456 %}'.replace('123456', id)
                 },
                 addRecipeToList: function (recipe) {
-                    console.log(this.shopping_list)
+
 
                     let slr = {
                         "created": true,
@@ -494,12 +499,12 @@
                         "recipe_name": recipe.name,
                         "multiplier": 1
                     }
+
                     this.shopping_list.recipes.push(slr)
 
                     for (let s of recipe.steps) {
                         for (let i of s.ingredients) {
-
-                            if (!i.is_header) {
+                            if (!i.is_header && i.food !== null) {
                                 this.shopping_list.entries.push({
                                     'list_recipe': slr.id,
                                     'food': i.food,
@@ -510,7 +515,6 @@
                             }
                         }
                     }
-
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true

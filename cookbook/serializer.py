@@ -208,6 +208,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True)
+    amount = CustomDecimalField()
 
     class Meta:
         model = ShoppingListEntry

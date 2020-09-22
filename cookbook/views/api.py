@@ -252,7 +252,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects.all()
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [CustomIsUser]  # TODO add custom validation
+    permission_classes = [CustomIsOwner]  # TODO add custom validation
 
     # TODO custom get qs
 
