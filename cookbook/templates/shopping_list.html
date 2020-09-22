@@ -76,6 +76,10 @@
                             <template v-else>
                                 <div class="row flex-row my-auto" v-for="x in shopping_list.recipes"
                                      style="margin-top: 0.5vh!important;">
+                                    <div class="flex-column align-self-start " style="margin-right: 0.4vw">
+                                        <button class="btn btn-outline-danger" @click="removeRecipeFromList(x)"><i
+                                                class="fa fa-trash"></i></button>
+                                    </div>
                                     <div class="flex-grow-1 flex-column my-auto"><a v-bind:href="getRecipeUrl(x.recipe)"
                                                                                     target="_blank"
                                                                                     rel="nofollow norefferer">[[x.recipe_name]]</a>
@@ -94,9 +98,9 @@
                                                     +
                                                 </button>
                                             </div>
-
                                         </div>
                                     </div>
+
                                 </div>
                             </template>
                         </div>
@@ -112,6 +116,11 @@
                             <td>[[x.amount]]</td>
                             <td>[[x.unit.name]]</td>
                             <td>[[x.food.name]]</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger" v-if="x.list_recipe === null"
+                                        @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== x.id)">
+                                    <i class="fa fa-trash"></i></button>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -429,8 +438,6 @@
                     })
                 },
                 entryChecked: function (entry) {
-
-
                     this.shopping_list.entries.forEach((item) => {
                         if (item.id === entry.id) { //TODO unwrap once same entries are merged
                             item.checked = entry.checked
@@ -445,8 +452,6 @@
 
                         }
                     })
-
-
                 },
                 addEntry: function () {
                     if (this.new_entry.food !== undefined) {
@@ -490,8 +495,6 @@
                     return '{% url 'view_recipe' 123456 %}'.replace('123456', id)
                 },
                 addRecipeToList: function (recipe) {
-
-
                     let slr = {
                         "created": true,
                         "id": Math.random() * 1000,
@@ -515,6 +518,10 @@
                             }
                         }
                     }
+                },
+                removeRecipeFromList: function (slr) {
+                    this.shopping_list.entries = this.shopping_list.entries.filter(item => item.list_recipe !== slr.id)
+                    this.shopping_list.recipes = this.shopping_list.recipes.filter(item => item !== slr)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
