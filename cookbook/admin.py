@@ -2,6 +2,13 @@ from django.contrib import admin
 from .models import *
 
 
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'message')
+
+
+admin.site.register(Space, SpaceAdmin)
+
+
 class UserPreferenceAdmin(admin.ModelAdmin):
     list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style', 'comments')
 

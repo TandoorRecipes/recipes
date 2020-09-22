@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load theming_tags %}
+{% load custom_tags %}
 
 <html>
 <head>
@@ -158,6 +159,14 @@
         </ul>
     </div>
 </nav>
+
+{% message_of_the_day as message_of_the_day %}
+{% if message_of_the_day %}
+    <div class="bg-warning" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
+        {{ message_of_the_day }}
+    </div>
+{% endif %}
+
 <br/>
 <br/>
 
