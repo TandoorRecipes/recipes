@@ -21,6 +21,8 @@ class CustomDecimalField(serializers.Field):
         if type(data) == int or type(data) == float:
             return data
         elif type(data) == str:
+            if data == '':
+                return 0
             try:
                 return float(data.replace(',', ''))
             except ValueError:
