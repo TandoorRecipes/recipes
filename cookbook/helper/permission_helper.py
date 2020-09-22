@@ -61,14 +61,14 @@ def is_object_owner(user, obj):
     # TODO this could be improved/cleaned up by adding get_owner methods to all models that allow owner checks
     if not user.is_authenticated:
         return False
+    if user.is_superuser:
+        return True
     if owner := getattr(obj, 'created_by', None):
         return owner == user
     if owner := getattr(obj, 'user', None):
         return owner == user
     if getattr(obj, 'get_owner', None):
         return obj.get_owner() == user
-    if user.is_superuser:
-        return True
     return False
 
 
