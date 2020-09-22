@@ -25,6 +25,11 @@ def get_model_name(model):
     return ('_'.join(re.findall('[A-Z][^A-Z]*', model.__name__))).lower()
 
 
+class Space(models.Model):
+    name = models.CharField(max_length=128, default='Default')
+    message = models.CharField(max_length=512, default='', blank=True)
+
+
 class UserPreference(models.Model):
     # Themes
     BOOTSTRAP = 'BOOTSTRAP'
