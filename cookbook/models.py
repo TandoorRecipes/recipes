@@ -275,17 +275,29 @@ class ShoppingListRecipe(models.Model):
     def __str__(self):
         return f'Shopping list recipe {self.id} - {self.recipe}'
 
+    def get_owner(self):
+        try:
+            return self.shoppinglist_set.first().created_by
+        except AttributeError:
+            return None
+
 
 class ShoppingListEntry(models.Model):
     list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
-    amount = models.IntegerField(default=1)
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Shopping list entry {self.id}'
+
+    def get_owner(self):
+        try:
+            return self.shoppinglist_set.first().created_by
+        except AttributeError:
+            return None
 
 
 class ShoppingList(models.Model):
