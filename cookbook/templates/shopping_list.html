@@ -25,7 +25,8 @@
             <h2>{% trans 'Shopping List' %}</h2>
         </div>
         <div class="col col-mdd-3 text-right">
-            <b-form-checkbox switch size="lg" v-model="edit_mode">{% trans 'Edit' %}</b-form-checkbox>
+            <b-form-checkbox switch size="lg" v-model="edit_mode"
+                             @change="$forceUpdate()">{% trans 'Edit' %}</b-form-checkbox>
         </div>
     </div>
 
@@ -112,7 +113,7 @@
             <div class="row" style="margin-top: 8px">
                 <div class="col col-12">
                     <table class="table table-sm table-striped">
-                        <tr v-for="x in display_entries">
+                        <tr v-for="x in display_entries" :key="x.id">
                             <td>[[x.amount]]</td>
                             <td>[[x.unit.name]]</td>
                             <td>[[x.food.name]]</td>
@@ -194,13 +195,27 @@
 
             <div class="row" style="margin-top: 8px">
                 <div class="col col-md-12">
-                    <table class="table table table-striped">
+                    <table class="table">
                         <tr v-for="x in display_entries">
-                            <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked" @change="entryChecked(x)">
-                            </td>
-                            <td>[[x.amount]]</td>
-                            <td>[[x.unit.name]]</td>
-                            <td>[[x.food.name]]</td>
+                            <template v-if="!x.checked">
+                                <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
+                                           @change="entryChecked(x)">
+                                </td>
+                                <td>[[x.amount]]</td>
+                                <td>[[x.unit.name]]</td>
+                                <td>[[x.food.name]]</td>
+                            </template>
+                        </tr>
+
+                        <tr v-for="x in display_entries" class="text-muted">
+                            <template v-if="x.checked">
+                                <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
+                                           @change="entryChecked(x)">
+                                </td>
+                                <td>[[x.amount]]</td>
+                                <td>[[x.unit.name]]</td>
+                                <td>[[x.food.name]]</td>
+                            </template>
                         </tr>
                     </table>
                 </div>
@@ -415,6 +430,7 @@
                                 console.log(response)
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Object created successfully!' %}', 'success')
                                 this.loading = false
+
                                 this.shopping_list = response.body
                                 this.shopping_list_id = this.shopping_list.id
                             }).catch((err) => {
@@ -425,6 +441,7 @@
                         } else {
                             this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
+                                this.shopping_list = response.body
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
                                 this.loading = false
                             }).catch((err) => {
@@ -438,12 +455,12 @@
                     })
                 },
                 entryChecked: function (entry) {
+                    console.log("checked entry: ", entry)
                     this.shopping_list.entries.forEach((item) => {
                         if (item.id === entry.id) { //TODO unwrap once same entries are merged
                             item.checked = entry.checked
-                            console.log('updating ', item)
                             this.$http.put("{% url 'api:shoppinglistentry-detail' 123456 %}".replace('123456', item.id), item, {}).then((response) => {
-                                console.log("YEHAA", response)
+
                             }).catch((err) => {
                                 console.log(err)
                                 this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
