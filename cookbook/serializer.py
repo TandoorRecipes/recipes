@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth.models import User
 from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 from rest_framework import serializers
@@ -15,7 +17,10 @@ class CustomDecimalField(serializers.Field):
     """
 
     def to_representation(self, value):
-        return value.normalize()
+        if isinstance(value, Decimal):
+            return value.normalize()
+        else:
+            return Decimal(value).normalize()
 
     def to_internal_value(self, data):
         if type(data) == int or type(data) == float:
