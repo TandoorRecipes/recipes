@@ -109,23 +109,36 @@
                 </div>
             </div>
 
+            <table class="table table-sm table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th></th>
+                </tr>
 
-            <div class="row" style="margin-top: 8px">
-                <div class="col col-12">
-                    <table class="table table-sm table-striped">
-                        <tr v-for="x in display_entries" :key="x.id">
-                            <td>[[x.amount]]</td>
-                            <td>[[x.unit.name]]</td>
-                            <td>[[x.food.name]]</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-danger" v-if="x.list_recipe === null"
-                                        @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== x.id)">
-                                    <i class="fa fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+                </thead>
+
+                <tbody is="draggable" group="people" :list="display_entries" tag="tbody" :empty-insert-threshold="10"
+                       handle=".handle" @sort="sortEntries()">
+
+                <tr v-for="(element, index) in display_entries" :key="element.id">
+                    <td class="handle"><i class="fas fa-sort"></i></td>
+                    <td>[[element.amount]]</td>
+                    <td>[[element.unit.name]]</td>
+                    <td>[[element.food.name]]</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" v-if="element.list_recipe === null"
+                                @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== element.id)">
+                            <i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
 
             <div class="row">
                 <div class="col col-md-3">
@@ -187,8 +200,10 @@
                 <div class="col" style="text-align: right; margin-top: 1vh">
 
                     <div class="form-group form-check form-group-lg">
-                        <input class="form-check-input" style="zoom:1.3;" type="checkbox" v-model="shopping_list.finished" id="id_finished">
-                        <label class="form-check-label" style="zoom:1.3;" for="id_finished"> {% trans 'Finished' %}</label>
+                        <input class="form-check-input" style="zoom:1.3;" type="checkbox"
+                               v-model="shopping_list.finished" id="id_finished">
+                        <label class="form-check-label" style="zoom:1.3;"
+                               for="id_finished"> {% trans 'Finished' %}</label>
                     </div>
 
                 </div>
@@ -282,7 +297,7 @@
             data: {
                 shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
                 loading: true,
-                edit_mode: false,
+                edit_mode: true,
                 export_text_prefix: '', //TODO add userpreference
                 recipe_query: '',
                 recipes: [],
@@ -296,6 +311,12 @@
                 foods_loading: false,
                 units: [],
                 units_loading: false,
+                list: [
+                    {id: 1, name: "Abby", sport: "basket"},
+                    {id: 2, name: "Brooke", sport: "foot"},
+                    {id: 3, name: "Courtenay", sport: "volley"},
+                    {id: 4, name: "David", sport: "rugby"}
+                ],
             },
             directives: {
                 tabindex: {
@@ -490,6 +511,12 @@
 
 
                     })
+                },
+                sortEntries: function () {
+                    this.display_entries.forEach( (item, index) => {
+                        
+                    })
+                    console.log("IMPLEMENT ME", this.display_entries)
                 },
                 entryChecked: function (entry) {
                     console.log("checked entry: ", entry)
