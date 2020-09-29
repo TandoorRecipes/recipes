@@ -3,8 +3,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 from rest_framework import serializers
-from rest_framework.exceptions import APIException, ValidationError
-from rest_framework.fields import CurrentUserDefault
+from rest_framework.exceptions import ValidationError
 
 from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step, ShoppingList, \
     ShoppingListEntry, ShoppingListRecipe
