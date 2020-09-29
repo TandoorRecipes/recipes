@@ -114,7 +114,7 @@ class ShoppingListTable(tables.Table):
     class Meta:
         model = ShoppingList
         template_name = 'generic/table_template.html'
-        fields = ('id', 'created_by', 'created_at')
+        fields = ('id', 'finished', 'created_by', 'created_at')
 
 
 class InviteLinkTable(tables.Table):

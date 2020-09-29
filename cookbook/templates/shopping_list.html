@@ -183,6 +183,17 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col" style="text-align: right; margin-top: 1vh">
+
+                    <div class="form-group form-check form-group-lg">
+                        <input class="form-check-input" style="zoom:1.3;" type="checkbox" v-model="shopping_list.finished" id="id_finished">
+                        <label class="form-check-label" style="zoom:1.3;" for="id_finished"> {% trans 'Finished' %}</label>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
         <div v-else>
 
@@ -450,7 +461,7 @@
                         console.log("proceeding to update shopping list", this.shopping_list)
 
                         if (this.shopping_list_id === null) {
-                            this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
+                            return this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Object created successfully!' %}', 'success')
                                 this.loading = false
@@ -465,7 +476,7 @@
                                 this.loading = false
                             })
                         } else {
-                            this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                            return this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.shopping_list = response.body
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')

@@ -2,7 +2,7 @@ import django_filters
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Q
 from cookbook.forms import MultiSelectWidget
-from cookbook.models import Recipe, Keyword, Food
+from cookbook.models import Recipe, Keyword, Food, ShoppingList
 from django.conf import settings
 from django.utils.translation import gettext as _
 
@@ -52,3 +52,9 @@ class IngredientFilter(django_filters.FilterSet):
     class Meta:
         model = Food
         fields = ['name']
+
+
+class ShoppingListFilter(django_filters.FilterSet):
+    class Meta:
+        model = ShoppingList
+        fields = ['finished']

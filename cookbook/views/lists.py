@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
-from cookbook.filters import IngredientFilter
+from cookbook.filters import IngredientFilter, ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Food, ShoppingList, InviteLink
 from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable, ShoppingListTable, InviteLinkTable
@@ -49,10 +49,12 @@ def food(request):
 
 @group_required('user')
 def shopping_list(request):
-    table = ShoppingListTable(ShoppingList.objects.filter(created_by=request.user).all())
+    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(created_by=request.user).all().order_by('finished', 'created_at'))
+
+    table = ShoppingListTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(request, 'generic/list_template.html', {'title': _("Shopping Lists"), 'table': table, 'create_url': 'view_shopping'})
+    return render(request, 'generic/list_template.html', {'title': _("Shopping Lists"), 'table': table, 'filter': f, 'create_url': 'view_shopping'})
 
 
 @group_required('admin')
