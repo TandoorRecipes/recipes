@@ -192,17 +192,19 @@ class MealPlanSerializer(serializers.ModelSerializer):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
+    recipe_multiplier = CustomDecimalField()
 
     def get_note_markdown(self, obj):
         return markdown(obj.note)
 
     class Meta:
         model = MealPlan
-        fields = ('id', 'title', 'recipe', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
+        fields = ('id', 'title', 'recipe', 'recipe_multiplier', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
+    multiplier = CustomDecimalField()
 
     class Meta:
         model = ShoppingListRecipe
