@@ -70,13 +70,13 @@
                         <div class="card-header">
                             <i class="fa fa-shopping-cart"></i> {% trans 'Shopping Recipes' %}
                         </div>
-                        <div class="card-body" style="padding-left: 2vw; padding-right: 2vw">
+                        <div class="card-body">
                             <template v-if="shopping_list.recipes.length < 1">
                                 {% trans 'No recipes selected' %}
                             </template>
                             <template v-else>
                                 <div class="row flex-row my-auto" v-for="x in shopping_list.recipes"
-                                     style="margin-top: 0.5vh!important;">
+                                     style="margin-top: 1vh!important;">
                                     <div class="flex-column align-self-start " style="margin-right: 0.4vw">
                                         <button class="btn btn-outline-danger" @click="removeRecipeFromList(x)"><i
                                                 class="fa fa-trash"></i></button>
