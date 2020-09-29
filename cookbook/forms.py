@@ -264,11 +264,12 @@ class MealPlanForm(forms.ModelForm):
 
     class Meta:
         model = MealPlan
-        fields = ('recipe', 'title', 'meal_type', 'note', 'date', 'shared')
+        fields = ('recipe', 'title', 'meal_type', 'note', 'recipe_multiplier', 'date', 'shared')
 
         help_texts = {
             'shared': _('You can list default users to share recipes with in the settings.'),
-            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
+            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>'),
+            'recipe_multiplier': _('Scaling factor for recipe.')
         }
 
         widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}

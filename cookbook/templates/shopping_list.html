@@ -183,13 +183,6 @@
                 </div>
             </div>
 
-            <div class="row" style="margin-top: 4vh">
-                <div class="col col-12 text-right">
-                    <button class="btn btn-success" @click="updateShoppingList()"><i
-                            class="fas fa-save"></i> {% trans 'Save' %}
-                    </button>
-                </div>
-            </div>
         </div>
         <div v-else>
 
@@ -221,31 +214,41 @@
                 </div>
             </div>
 
-            <b-button class="btn btn-success" v-b-modal.id_modal_export>{% trans 'Export' %}</b-button>
-
-            <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
-                <div class="row">
-                    <div class="col col-12">
-                        <label>
-                            {% trans 'List Prefix' %}
-                            <input class="form-control" v-model="export_text_prefix">
-                        </label>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col col-12">
-                        <b-form-textarea class="form-control" max-rows="8" v-model="export_text">
-
-                        </b-form-textarea>
-                    </div>
-                </div>
-
-
-            </b-modal>
 
         </div>
+
+        <div class="row" style="margin-top: 2vh">
+            <div class="col" style="text-align: right">
+                <b-button class="btn btn-info" v-b-modal.id_modal_export><i
+                        class="fas fa-file-export"></i> {% trans 'Export' %}</b-button>
+                <button class="btn btn-success" @click="updateShoppingList()" v-if="edit_mode"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}
+                </button>
+            </div>
+        </div>
+
+
+        <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
+            <div class="row">
+                <div class="col col-12">
+                    <label>
+                        {% trans 'List Prefix' %}
+                        <input class="form-control" v-model="export_text_prefix">
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col col-12">
+                    <b-form-textarea class="form-control" max-rows="8" v-model="export_text">
+
+                    </b-form-textarea>
+                </div>
+            </div>
+
+
+        </b-modal>
 
 
     </template>
@@ -339,12 +342,25 @@
             mounted: function () {
                 this.loadShoppingList()
 
+                {% if recipes %}
+                    this.loading = true
+                    this.edit_mode = true
+                    let loadingRecipes = []
+                    {% for r in recipes %}
+                        loadingRecipes.push(this.loadInitialRecipe({{ r.recipe }}, {{ r.multiplier }}))
+                    {% endfor %}
+
+                    Promise.allSettled(loadingRecipes).then(() => {
+                        this.loading = false
+                    })
+                {% endif %}
+
                 {% if request.user.userpreference.shopping_auto_sync > 0 %}
                     setInterval(() => {
                         if ((this.shopping_list_id !== null) && !this.edit_mode) {
                             this.loadShoppingList(true)
                         }
-                    }, {{ request.user.userpreference.shopping_auto_sync }} * 1000 )
+                    }, {% widthratio request.user.userpreference.shopping_auto_sync 1 1000 %})
                 {% endif %}
             },
             methods: {
@@ -363,6 +379,14 @@
                         variant: variant,
                         toaster: 'b-toaster-top-center',
                         solid: true
+                    })
+                },
+                loadInitialRecipe: function (recipe, multiplier) {
+                    return this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe)).then((response) => {
+                        this.addRecipeToList(response.data, multiplier)
+                    }).catch((err) => {
+                        console.log("getRecipes error: ", err);
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 loadShoppingList: function (autosync = false) {
@@ -433,6 +457,8 @@
 
                                 this.shopping_list = response.body
                                 this.shopping_list_id = this.shopping_list.id
+
+                                window.history.pushState('shopping_list', '{% trans 'Shopping List' %}', "{% url 'view_shopping' 123456 %}".replace('123456', this.shopping_list_id));
                             }).catch((err) => {
                                 console.log(err)
                                 this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error creating a resource!' %}' + err.bodyText, 'danger')
@@ -511,13 +537,13 @@
                 getRecipeUrl: function (id) { //TODO generic function that can be reused else were
                     return '{% url 'view_recipe' 123456 %}'.replace('123456', id)
                 },
-                addRecipeToList: function (recipe) {
+                addRecipeToList: function (recipe, multiplier = 1) {
                     let slr = {
                         "created": true,
                         "id": Math.random() * 1000,
                         "recipe": recipe.id,
                         "recipe_name": recipe.name,
-                        "multiplier": 1
+                        "multiplier": multiplier
                     }
 
                     this.shopping_list.recipes.push(slr)
