@@ -234,7 +234,7 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = ShoppingList
-        fields = ('id', 'uuid', 'note', 'recipes', 'entries', 'shared', 'created_by', 'created_at',)
+        fields = ('id', 'uuid', 'note', 'recipes', 'entries', 'shared', 'finished', 'created_by', 'created_at',)
         read_only_fields = ('id',)
 
 
