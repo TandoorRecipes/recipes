@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='mealplan',
             name='recipe_multiplier',
-            field=models.DecimalField(decimal_places=4, default=1, max_digits=4),
+            field=models.DecimalField(decimal_places=4, default=1, max_digits=8),
         ),
         migrations.AlterField(
             model_name='shoppinglistrecipe',
             name='multiplier',
-            field=models.DecimalField(decimal_places=4, default=1, max_digits=4),
+            field=models.DecimalField(decimal_places=4, default=1, max_digits=8),
         ),
     ]
