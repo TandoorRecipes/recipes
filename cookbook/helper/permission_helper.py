@@ -164,7 +164,7 @@ class CustomIsOwner(permissions.BasePermission):
         return is_object_owner(request.user, obj)
 
 
-class CustomIsShared(permissions.BasePermission): # TODO function duplicate name
+class CustomIsShared(permissions.BasePermission):  # TODO function duplicate/too similar name
     """
     Custom permission class for django rest framework views
     verifies user is shared for the object he is trying to access
@@ -175,7 +175,6 @@ class CustomIsShared(permissions.BasePermission): # TODO function duplicate name
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        print("called is shared")
         return is_object_shared(request.user, obj)
 
 

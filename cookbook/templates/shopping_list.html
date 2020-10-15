@@ -199,6 +199,29 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col" style="margin-top: 1vh">
+                    <multiselect
+                            v-tabindex
+
+                            v-model="shopping_list.shared"
+                            :options="users"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :allow-empty="true"
+                            :preserve-search="true"
+                            placeholder="{% trans 'Select User' %}"
+                            select-label="{% trans 'Select' %}"
+                            label="username"
+                            track-by="id"
+                            :multiple="true"
+                            :loading="users_loading"
+                            @search-change="searchUsers">
+                    </multiselect>
+
+                </div>
+            </div>
+
         </div>
         <div v-else>
 
@@ -287,7 +310,7 @@
             data: {
                 shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
                 loading: true,
-                edit_mode: true,
+                edit_mode: false,
                 export_text_prefix: '', //TODO add userpreference
                 recipe_query: '',
                 recipes: [],
@@ -301,12 +324,8 @@
                 foods_loading: false,
                 units: [],
                 units_loading: false,
-                list: [
-                    {id: 1, name: "Abby", sport: "basket"},
-                    {id: 2, name: "Brooke", sport: "foot"},
-                    {id: 3, name: "Courtenay", sport: "volley"},
-                    {id: 4, name: "David", sport: "rugby"}
-                ],
+                users: [],
+                users_loading: false,
             },
             directives: {
                 tabindex: {
@@ -385,6 +404,8 @@
                         }
                     }, {% widthratio request.user.userpreference.shopping_auto_sync 1 1000 %})
                 {% endif %}
+
+                this.searchUsers('')
             },
             methods: {
                 /*
@@ -441,7 +462,9 @@
                             "recipes": [],
                             "entries": [],
                             "entries_display": [],
-                            "shared": [],
+                            "shared": [{% for u in request.user.userpreference.plan_share.all %}
+                                {{ u.pk }},
+                            {% endfor %}],
                             "created_by": 1
                         }
                         this.loading = false
@@ -504,7 +527,7 @@
                     })
                 },
                 sortEntries: function () {
-                    this.display_entries.forEach( (item, index) => {
+                    this.display_entries.forEach((item, index) => {
 
                     })
                     console.log("IMPLEMENT ME", this.display_entries)
@@ -633,6 +656,15 @@
                     let new_unit = {'name': tag}
                     this.units.push(new_unit)
                     this.new_entry.unit = new_unit
+                },
+                searchUsers: function (query) { //TODO move to central component
+                    this.users_loading = true
+                    this.$http.get("{% url 'api:username-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.users = response.data
+                        this.users_loading = false
+                    }).catch((err) => {
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                    })
                 },
 
             }
