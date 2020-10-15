@@ -592,7 +592,7 @@
                                 this.shopping_list.entries.push({
                                     'list_recipe': slr.id,
                                     'food': i.food,
-                                    'unit': ((i.unit !== undefined) ? i.unit : {'name': ''}),
+                                    'unit': ((i.unit !== undefined && i.unit !== null) ? i.unit : {'name': ''}),
                                     'amount': i.amount,
                                     'order': 0
                                 })
