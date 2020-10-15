@@ -463,7 +463,7 @@
                             "entries": [],
                             "entries_display": [],
                             "shared": [{% for u in request.user.userpreference.plan_share.all %}
-                                {{ u.pk }},
+                                { 'id': {{ u.pk }}, 'username': '{{ u.get_user_name }}' },
                             {% endfor %}],
                             "created_by": 1
                         }
