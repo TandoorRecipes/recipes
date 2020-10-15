@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -49,7 +50,7 @@ def food(request):
 
 @group_required('user')
 def shopping_list(request):
-    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(created_by=request.user).all().order_by('finished', 'created_at'))
+    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).all().order_by('finished', 'created_at'))
 
     table = ShoppingListTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)

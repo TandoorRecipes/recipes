@@ -26,7 +26,7 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 
-from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare
+from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare, CustomIsShared
 from cookbook.helper.recipe_url_import import get_from_html
 from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog, ShoppingListRecipe, ShoppingList, ShoppingListEntry
 from cookbook.provider.dropbox import Dropbox
@@ -155,7 +155,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects.all()
     serializer_class = MealPlanSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # TODO fix permissions
 
     def get_queryset(self):
         queryset = MealPlan.objects.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).distinct().all()
@@ -244,7 +244,7 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects.all()
     serializer_class = ShoppingListRecipeSerializer
-    permission_classes = [CustomIsUser]  # TODO add custom validation
+    permission_classes = [CustomIsUser, ]  # TODO add custom validation
 
     # TODO custom get qs
 
@@ -252,7 +252,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects.all()
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [CustomIsOwner]  # TODO add custom validation
+    permission_classes = [CustomIsOwner, ]  # TODO add custom validation
 
     # TODO custom get qs
 
@@ -260,11 +260,12 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
 class ShoppingListViewSet(viewsets.ModelViewSet):
     queryset = ShoppingList.objects.all()
     serializer_class = ShoppingListSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        queryset = self.queryset.filter(created_by=self.request.user).all()
-        return queryset
+        if self.request.user.is_superuser:
+            return self.queryset
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).all()
 
     def get_serializer_class(self):
         autosync = self.request.query_params.get('autosync', None)
