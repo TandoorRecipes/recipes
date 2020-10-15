@@ -172,3 +172,31 @@ class ShareLinkAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ShareLink, ShareLinkAdmin)
+
+
+class NutritionInformationAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'created_by', 'created_at',)
+
+
+admin.site.register(NutritionInformation, NutritionInformationAdmin)
+
+
+class NutritionUnitAdmin(admin.ModelAdmin):
+    list_display = ('name', 'short', 'created_by', 'created_at',)
+
+
+admin.site.register(NutritionUnit, NutritionUnitAdmin)
+
+
+class NutritionTypeAdmin(admin.ModelAdmin):
+    list_display = ('type', 'unit', 'created_by', 'created_at',)
+
+
+admin.site.register(NutritionType, NutritionTypeAdmin)
+
+
+class NutritionValueAdmin(admin.ModelAdmin):
+    list_display = ('information', 'value', 'type', 'created_by', 'created_at',)
+
+
+admin.site.register(NutritionValue, NutritionValueAdmin)
