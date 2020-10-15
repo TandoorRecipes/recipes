@@ -33,7 +33,7 @@ class CustomDecimalField(serializers.Field):
                 raise ValidationError('A valid number is required')
 
 
-class UserNameSerializer(serializers.ModelSerializer):
+class UserNameSerializer(WritableNestedModelSerializer):
     username = serializers.SerializerMethodField('get_user_label')
 
     def get_user_label(self, obj):
@@ -231,6 +231,7 @@ class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
 class ShoppingListSerializer(WritableNestedModelSerializer):
     recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
+    shared = UserNameSerializer(many=True)
 
     class Meta:
         model = ShoppingList
