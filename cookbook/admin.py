@@ -175,7 +175,7 @@ admin.site.register(ShareLink, ShareLinkAdmin)
 
 
 class NutritionInformationAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'created_by', 'created_at',)
+    list_display = ('created_by', 'created_at',)
 
 
 admin.site.register(NutritionInformation, NutritionInformationAdmin)
@@ -196,7 +196,7 @@ admin.site.register(NutritionType, NutritionTypeAdmin)
 
 
 class NutritionValueAdmin(admin.ModelAdmin):
-    list_display = ('information', 'value', 'type', 'created_by', 'created_at',)
+    list_display = ('value', 'type', 'created_by', 'created_at',)
 
 
 admin.site.register(NutritionValue, NutritionValueAdmin)
