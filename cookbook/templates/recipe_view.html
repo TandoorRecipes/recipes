@@ -210,7 +210,7 @@
         <hr>
         <h3>{%  trans 'Nutrition' %}</h3>
          {% for n in recipe.nutrition.nutritions.all %}
-             {{ n.type.type }}: {{ n.value|floatformat:2 }} {{ n.type.unit.short }}
+             <div>{{ n.type.type }}: {{ n.value|floatformat:2 }} {{ n.type.unit.short }}</div>
          {%  endfor %}
        </div>
     {%  endif %}
@@ -483,7 +483,6 @@
                     this.$http.get("{% url 'api:recipe-detail' recipe.pk %}" {% if share %}
                         + "?share={{ share }}"{% endif %}).then((response) => {
                         this.recipe = response.data;
-                        console.log(this.recipe);
                         this.loading = false;
 
                         for (let step of this.recipe.steps) {
