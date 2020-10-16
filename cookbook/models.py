@@ -181,6 +181,45 @@ class Step(models.Model):
         ordering = ['order', 'pk']
 
 
+class NutritionUnit(models.Model):
+    name = models.CharField(max_length=128)
+    short = models.CharField(max_length=16)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.name} ({self.short})'
+
+
+class NutritionType(models.Model):
+    type = models.CharField(max_length=128)
+    unit = models.ForeignKey(NutritionUnit, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.type}'
+
+
+class NutritionValue(models.Model):
+    type = models.ForeignKey(NutritionType, on_delete=models.CASCADE)
+    value = models.DecimalField(max_digits=32, decimal_places=16)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.value} {self.type}'
+
+
+class NutritionInformation(models.Model):
+    nutritions = models.ManyToManyField(NutritionValue)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Nutrition'
+
+
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
@@ -194,6 +233,7 @@ class Recipe(models.Model):
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
+    nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.PROTECT)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -361,43 +401,3 @@ class ViewLog(models.Model):
 
     def __str__(self):
         return self.recipe.name
-
-
-class NutritionInformation(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'Nutrition {self.recipe}'
-
-
-class NutritionUnit(models.Model):
-    name = models.CharField(max_length=128)
-    short = models.CharField(max_length=16)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.name} ({self.short})'
-
-
-class NutritionType(models.Model):
-    type = models.CharField(max_length=128)
-    unit = models.ForeignKey(NutritionUnit, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.type}'
-
-
-class NutritionValue(models.Model):
-    information = models.ForeignKey(NutritionInformation, on_delete=models.CASCADE)
-    type = models.ForeignKey(NutritionType, on_delete=models.CASCADE)
-    value = models.DecimalField(max_digits=32, decimal_places=16)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.value} {self.type}'

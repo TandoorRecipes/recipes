@@ -205,6 +205,17 @@
         {% endif %}
     </div>
 
+    {% if recipe.nutrition %}
+    <div>
+        <hr>
+        <h3>{%  trans 'Nutrition' %}</h3>
+         {% for n in recipe.nutrition.nutritions.all %}
+             {{ n.type.type }}: {{ n.value|floatformat:2 }} {{ n.type.unit.short }}
+         {%  endfor %}
+       </div>
+    {%  endif %}
+
+
     <div v-if="recipe !== undefined && recipe.steps.length > 0">
         <hr>
         <h3>{% trans 'Instructions' %}</h3>
@@ -472,7 +483,8 @@
                     this.$http.get("{% url 'api:recipe-detail' recipe.pk %}" {% if share %}
                         + "?share={{ share }}"{% endif %}).then((response) => {
                         this.recipe = response.data;
-                        this.loading = false
+                        console.log(this.recipe);
+                        this.loading = false;
 
                         for (let step of this.recipe.steps) {
                             if (step.ingredients.length > 0) {
