@@ -96,7 +96,8 @@
     {% endif %}
 
     <div class="row">
-        <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2"  v-if="recipe && has_ingredients">  <!-- TODO duplicate code remove -->
+        <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && has_ingredients">
+            <!-- TODO duplicate code remove -->
             <div class="card border-primary">
                 <div class="card-body">
                     <div class="row">
@@ -171,7 +172,9 @@
                                                 </td>
                                                 <td style="vertical-align: middle!important;">
                                                     <template v-if="i.note">
-                                                         <b-button v-b-popover.hover="i.note" class="btn btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
+                                                        <b-button v-b-popover.hover="i.note"
+                                                                  class="btn btn-sm d-print-none"><i
+                                                                class="fas fa-info"></i></b-button>
 
                                                         <div class="d-none d-print-block">
                                                             <i class="far fa-comment-alt"></i> [[i.note]]
@@ -206,14 +209,32 @@
     </div>
 
     {% if recipe.nutrition %}
-    <div>
-        <hr>
-        <h3>{%  trans 'Nutrition' %}</h3>
-         {% for n in recipe.nutrition.nutritions.all %}
-             <div>{{ n.type.type }}: {{ n.value|floatformat:2 }} {{ n.type.unit.short }}</div>
-         {%  endfor %}
-       </div>
-    {%  endif %}
+        <div class="row mt-5">
+            <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2">
+                <div class="card border-primary">
+                    <div class="card-body">
+                        <h4 class="card-title">{% trans 'Nutrition' %}</h4>
+                        <table class="table table-sm">
+                            {% for n in recipe.nutrition.nutritions.all %}
+                                <tr>
+                                    <td style="padding-top: 8px!important; ">
+                                        <b>{{ n.type.type }}</b>
+                                    </td>
+                                    <td style="text-align: right">{{ n.value|floatformat:2 }}</td>
+                                    <td>{{ n.type.unit.short }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
 
     <div v-if="recipe !== undefined && recipe.steps.length > 0">
@@ -254,7 +275,8 @@
                              style="margin-top: 1vh">
                             <div class="col-md-6">
                                 <table class="table table-sm">
-                                    <template v-for="i in recipe.steps[{{ forloop.counter0 }}].ingredients"> <!-- TODO duplicate code remove -->
+                                    <template v-for="i in recipe.steps[{{ forloop.counter0 }}].ingredients">
+                                        <!-- TODO duplicate code remove -->
 
                                         <template v-if="i.is_header">
                                             <tr>
@@ -300,7 +322,9 @@
                                                 </td>
                                                 <td style="vertical-align: middle!important;">
                                                     <template v-if="i.note">
-                                                        <b-button v-b-popover.hover="i.note" class="btn btn-sm d-print-none"><i class="fas fa-info"></i></b-button>
+                                                        <b-button v-b-popover.hover="i.note"
+                                                                  class="btn btn-sm d-print-none"><i
+                                                                class="fas fa-info"></i></b-button>
                                                         <div class="d-none d-print-block">
                                                             <i class="far fa-comment-alt"></i> [[i.note]]
                                                         </div>
@@ -492,25 +516,25 @@
                             if (step.time !== 0) {
                                 this.has_times = true
                             }
-                            this.$set(step, 'time_finished', undefined)
+                            this.$set(step, 'time_finished', undefined);
                             for (let i of step.ingredients) {
                                 this.$set(i, 'checked', false)
                             }
                         }
 
                     }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
+                        this.error = err.data;
+                        this.loading = false;
                         console.log(err)
                     })
                 },
                 roundDecimals: function (num) {
                     let decimals = {% if request.user.userpreference.ingredient_decimals %}
-                        {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %}
+                        {{ request.user.userpreference.ingredient_decimals }} {% else %} 2; {% endif %}
                     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
                 },
                 updateTimes: function (step) {
-                    let time_diff_first = 0
+                    let time_diff_first = 0;
                     for (let s of this.recipe.steps) {
                         if (this.recipe.steps.indexOf(s) < this.recipe.steps.indexOf(step)) {
                             time_diff_first += s.time
@@ -519,7 +543,7 @@
 
                     this.recipe.steps[0].time_finished = moment(step.time_finished).subtract(time_diff_first, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
 
-                    let time_diff = 0
+                    let time_diff = 0;
                     for (let s of this.recipe.steps) {
                         s.time_finished = moment(this.recipe.steps[0].time_finished).add(time_diff, 'minutes').format(moment.HTML5_FMT.DATETIME_LOCAL);
                         time_diff += s.time
