@@ -55,6 +55,13 @@ class IngredientFilter(django_filters.FilterSet):
 
 
 class ShoppingListFilter(django_filters.FilterSet):
+
+    def __init__(self, data=None, *args, **kwargs):
+        if data is not None:
+            data = data.copy()
+            data.setdefault("finished", False)
+        super(ShoppingListFilter, self).__init__(data, *args, **kwargs)
+
     class Meta:
         model = ShoppingList
         fields = ['finished']

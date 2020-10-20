@@ -452,7 +452,9 @@
                                     }
                                 }
                             }
-
+                            if (this.shopping_list.entries.length === 0) {
+                                this.edit_mode = true
+                            }
                         }).catch((err) => {
                             console.log(err)
                             this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
@@ -463,11 +465,15 @@
                             "entries": [],
                             "entries_display": [],
                             "shared": [{% for u in request.user.userpreference.plan_share.all %}
-                                { 'id': {{ u.pk }}, 'username': '{{ u.get_user_name }}' },
+                                {'id': {{ u.pk }}, 'username': '{{ u.get_user_name }}'},
                             {% endfor %}],
                             "created_by": 1
                         }
                         this.loading = false
+
+                        if (this.shopping_list.entries.length === 0) {
+                            this.edit_mode = true
+                        }
                     }
                 },
                 updateShoppingList: function () {
