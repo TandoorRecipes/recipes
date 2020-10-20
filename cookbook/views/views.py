@@ -170,7 +170,7 @@ def shopping_list(request, pk=None):
     recipes = []
     for r in raw_list:
         r = r.replace('[', '').replace(']', '')
-        if re.match(r'^([1-9])+,([1-9])+[.]*([1-9])*$', r):
+        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
             rid, multiplier = r.split(',')
             if recipe := Recipe.objects.filter(pk=int(rid)).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
