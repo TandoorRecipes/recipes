@@ -225,6 +225,16 @@
         </div>
         <div v-else>
 
+            {% if request.user.userpreference.shopping_auto_sync > 0 %}
+                <div class="row" v-if="!onLine">
+                    <div class="col col-md-12">
+                        <div class="alert alert-warning" role="alert">
+                            {% trans 'You are offline, shopping list might not sync.' %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="row" style="margin-top: 8px">
                 <div class="col col-md-12">
                     <table class="table">
@@ -326,6 +336,7 @@
                 units_loading: false,
                 users: [],
                 users_loading: false,
+                onLine: navigator.onLine,
             },
             directives: {
                 tabindex: {
@@ -365,7 +376,7 @@
                         text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
                     }
                     return text
-                },
+                }
             },
             /*
            watch: {
@@ -399,15 +410,24 @@
 
                 {% if request.user.userpreference.shopping_auto_sync > 0 %}
                     setInterval(() => {
-                        if ((this.shopping_list_id !== null) && !this.edit_mode) {
+                        if ((this.shopping_list_id !== null) && !this.edit_mode && window.navigator.onLine) {
                             this.loadShoppingList(true)
                         }
                     }, {% widthratio request.user.userpreference.shopping_auto_sync 1 1000 %})
+
+                    window.addEventListener('online', this.updateOnlineStatus);
+                    window.addEventListener('offline', this.updateOnlineStatus);
                 {% endif %}
 
                 this.searchUsers('')
             },
             methods: {
+                updateOnlineStatus(e) {
+                    const {
+                        type
+                    } = e;
+                    this.onLine = type === 'online';
+                },
                 /*
                 warnPageLeave: function (event) {
                     if (this.recipe_changed) {
@@ -672,7 +692,10 @@
                         this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
-
+            },
+            beforeDestroy() {
+                window.removeEventListener('online', this.updateOnlineStatus);
+                window.removeEventListener('offline', this.updateOnlineStatus);
             }
         });
     </script>
