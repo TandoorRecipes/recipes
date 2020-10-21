@@ -372,7 +372,7 @@
                 },
                 export_text() {
                     let text = ''
-                    for (let e of this.display_entries) {
+                    for (let e of this.display_entries.filter(item => item.checked === false)) {
                         text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
                     }
                     return text
