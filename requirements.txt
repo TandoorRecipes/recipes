@@ -15,7 +15,7 @@ lxml==4.5.1
 Markdown==3.2.2
 Pillow==7.1.2
 psycopg2-binary==2.8.5
-python-dotenv==0.13.0
+python-dotenv==0.15.0
 requests==2.23.0
 simplejson==3.17.0
 six==1.15.0
