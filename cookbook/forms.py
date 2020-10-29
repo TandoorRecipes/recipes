@@ -285,6 +285,6 @@ class InviteLinkForm(forms.ModelForm):
 
 
 class UserCreateForm(forms.Form):
-    name = forms.CharField()
+    name = forms.CharField(label='Username')
     password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
     password_confirm = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
