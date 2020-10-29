@@ -165,7 +165,17 @@ def meal_plan_entry(request, pk):
 
 @group_required('user')
 def shopping_list(request, pk=None):
-    return render(request, 'shopping_list.html', {'shopping_list_id': pk})
+    raw_list = request.GET.getlist('r')
+
+    recipes = []
+    for r in raw_list:
+        r = r.replace('[', '').replace(']', '')
+        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
+            rid, multiplier = r.split(',')
+            if recipe := Recipe.objects.filter(pk=int(rid)).first():
+                recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
+
+    return render(request, 'shopping_list.html', {'shopping_list_id': pk, 'recipes': recipes})
 
 
 @group_required('guest')

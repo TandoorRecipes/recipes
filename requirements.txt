@@ -1,15 +1,15 @@
 bleach==3.1.5
-bleach-whitelist==0.0.10
-Django==3.0.7
+bleach-whitelist==0.0.11
+Django==3.1.1
 django-annoying==0.10.6
 django-autocomplete-light==3.5.1
 django-cleanup==4.0.0
 django-crispy-forms==1.9.1
 django-emoji-picker==0.0.6
-django-filter==2.2.0
+django-filter==2.4.0
 django-tables2==2.3.1
 djangorestframework==3.11.0
-drf-writable-nested==0.6.0
+drf-writable-nested==0.6.1
 gunicorn==20.0.4
 lxml==4.5.1
 Markdown==3.2.2
@@ -24,5 +24,5 @@ whitenoise==5.1.0
 icalendar==4.0.6
 pyyaml==5.3.1
 uritemplate==3.0.1
-beautifulsoup4==4.9.1
+beautifulsoup4==4.9.2
 microdata==0.7.1
