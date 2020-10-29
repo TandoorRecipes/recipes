@@ -126,6 +126,9 @@
                                     class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/" target="_blank" rel="noopener noreferrer">docs here</a>' %}</span></small>
                             <br/>
                             <br/>
+                            <input type="number" class="form-control" v-model="new_note_multiplier"
+                                   placeholder="{% trans 'Recipe Multiplier' %}" style="margin-bottom: 8px">
+                            <br/>
                             <draggable :list="pseudo_note_list"
                                        :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneNote">
                                 <div class="list-group-item" v-for="(element, index) in pseudo_note_list"
@@ -349,6 +352,7 @@
                 ],
                 new_note_title: '',
                 new_note_text: '',
+                new_note_multiplier: '',
                 default_shared_users: [],
                 user_id_update: [],
                 user_names: {},
@@ -367,7 +371,7 @@
                 this.getRecipes();
             },
             methods: {
-                makeToast: function(title, message, variant=null) {
+                makeToast: function (title, message, variant = null) {
                     //TODO remove duplicate function in favor of central one
                     this.$bvToast.toast(message, {
                         title: title,
@@ -389,7 +393,7 @@
                         this.plan_entries = response.data;
                     }).catch((err) => {
                         console.log("getPlanEntries error: ", err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 getPlanTypes: function () {
@@ -401,7 +405,7 @@
                         }
                     }).catch((err) => {
                         console.log("getPlanTypes error: ", err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 buildGrid: function () {
@@ -451,7 +455,7 @@
                         this.recipes = response.data;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 getMdNote: function () {
@@ -464,18 +468,18 @@
                         this.recipes = response.data;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 updateUserNames: function () {
                     return this.$http.get("{% url 'api:username-list' %}?filter_list=[" + this.user_id_update + ']').then((response) => {
                         for (let u of response.data) {
-                            this.$set(this.user_names, u.id,  u.username);
+                            this.$set(this.user_names, u.id, u.username);
                         }
 
                     }).catch((err) => {
                         console.log("updateUserNames error: ", err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 dragChanged: function (date, meal_type, evt) {
@@ -501,7 +505,7 @@
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
-                                this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                             })
                         }
                     }
@@ -512,7 +516,7 @@
                         this.meal_plan[entry.meal_type_name].days[entry.date].items = this.meal_plan[entry.meal_type_name].days[entry.date].items.filter(item => item !== entry)
                     }).catch((err) => {
                         console.log("deleteEntry error: ", err);
-                        this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 updatePlanTypes: function () {
@@ -526,14 +530,14 @@
                                 promise_list.push(this.$http.post("{% url 'api:mealtype-list' %}", x).then((response) => {
                                 }).catch((err) => {
                                     console.log("updatePlanTypes create error: ", err);
-                                    this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                    this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                                 }))
                         } else if (x.delete) {
                             if (x.id !== undefined) {
                                 promise_list.push(this.$http.delete(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
                                 }).catch((err) => {
                                     console.log("updatePlanTypes delete error: ", err);
-                                    this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                    this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                                 }))
                             }
                         } else {
@@ -541,7 +545,7 @@
 
                             }).catch((err) => {
                                 console.log("updatePlanTypes update error: ", err);
-                                this.makeToast('{% trans 'Error' %}','{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                             }))
                         }
                     }
@@ -556,14 +560,21 @@
                     }
                 },
                 cloneRecipe: function (recipe) {
-                    return {
+                    let r = {
                         id: Math.round(Math.random() * 1000) + 10000,
                         recipe: recipe.id,
                         recipe_name: recipe.name,
+                        recipe_multiplier: (this.new_note_multiplier > 1) ? this.new_note_multiplier : 1,
                         title: this.new_note_title,
                         note: this.new_note_text,
                         is_new: true
                     }
+
+                    this.new_note_title = ''
+                    this.new_note_text = ''
+                    this.new_note_multiplier = ''
+
+                    return r
                 },
                 cloneNote: function () {
                     let new_entry = {
@@ -579,6 +590,7 @@
 
                     this.new_note_title = ''
                     this.new_note_text = ''
+                    this.new_note_multiplier = ''
                     return new_entry
                 },
                 planElementName: function (element) {
@@ -618,10 +630,10 @@
                     let first = true
                     for (let se of this.shopping_list) {
                         if (first) {
-                            url += `?r=${se.recipe}`
+                            url += `?r=[${se.recipe},${se.recipe_multiplier}]`
                             first = false
                         } else {
-                            url += `&r=${se.recipe}`
+                            url += `&r=[${se.recipe},${se.recipe_multiplier}]`
                         }
                     }
                     return url

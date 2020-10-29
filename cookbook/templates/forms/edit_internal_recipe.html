@@ -318,7 +318,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
-                            <b-form-textarea class="form-control" rows="2" max-rows="8" v-model="step.instruction"
+                            <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
                                       :id="'id_instruction_' + step.id"></b-form-textarea>
                             <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
                         </div>

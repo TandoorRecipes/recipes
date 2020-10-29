@@ -254,6 +254,7 @@ class MealType(models.Model):
 
 class MealPlan(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
+    recipe_multiplier = models.DecimalField(default=1, max_digits=8, decimal_places=4)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
@@ -275,7 +276,7 @@ class MealPlan(models.Model):
 
 class ShoppingListRecipe(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
-    multiplier = models.IntegerField(default=1)
+    multiplier = models.DecimalField(default=1, max_digits=8, decimal_places=4)
 
     def __str__(self):
         return f'Shopping list recipe {self.id} - {self.recipe}'
@@ -311,6 +312,7 @@ class ShoppingList(models.Model):
     recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
     entries = models.ManyToManyField(ShoppingListEntry, blank=True)
     shared = models.ManyToManyField(User, blank=True, related_name='list_share')
+    finished = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

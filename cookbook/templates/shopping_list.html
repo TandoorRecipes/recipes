@@ -25,7 +25,8 @@
             <h2>{% trans 'Shopping List' %}</h2>
         </div>
         <div class="col col-mdd-3 text-right">
-            <b-form-checkbox switch size="lg" v-model="edit_mode">{% trans 'Edit' %}</b-form-checkbox>
+            <b-form-checkbox switch size="lg" v-model="edit_mode"
+                             @change="$forceUpdate()">{% trans 'Edit' %}</b-form-checkbox>
         </div>
     </div>
 
@@ -69,13 +70,13 @@
                         <div class="card-header">
                             <i class="fa fa-shopping-cart"></i> {% trans 'Shopping Recipes' %}
                         </div>
-                        <div class="card-body" style="padding-left: 2vw; padding-right: 2vw">
+                        <div class="card-body">
                             <template v-if="shopping_list.recipes.length < 1">
                                 {% trans 'No recipes selected' %}
                             </template>
                             <template v-else>
                                 <div class="row flex-row my-auto" v-for="x in shopping_list.recipes"
-                                     style="margin-top: 0.5vh!important;">
+                                     style="margin-top: 1vh!important;">
                                     <div class="flex-column align-self-start " style="margin-right: 0.4vw">
                                         <button class="btn btn-outline-danger" @click="removeRecipeFromList(x)"><i
                                                 class="fa fa-trash"></i></button>
@@ -108,23 +109,26 @@
                 </div>
             </div>
 
+            <table class="table table-sm table-striped" style="margin-top: 1vh">
 
-            <div class="row" style="margin-top: 8px">
-                <div class="col col-12">
-                    <table class="table table-sm table-striped">
-                        <tr v-for="x in display_entries">
-                            <td>[[x.amount]]</td>
-                            <td>[[x.unit.name]]</td>
-                            <td>[[x.food.name]]</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-danger" v-if="x.list_recipe === null"
-                                        @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== x.id)">
-                                    <i class="fa fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+                <tbody is="draggable" group="people" :list="display_entries" tag="tbody" :empty-insert-threshold="10"
+                       handle=".handle" @sort="sortEntries()">
+
+                <tr v-for="(element, index) in display_entries" :key="element.id">
+                    <!--<td class="handle"><i class="fas fa-sort"></i></td>-->
+                    <td>[[element.amount]]</td>
+                    <td>[[element.unit.name]]</td>
+                    <td>[[element.food.name]]</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" v-if="element.list_recipe === null"
+                                @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== element.id)">
+                            <i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
 
             <div class="row">
                 <div class="col col-md-3">
@@ -182,55 +186,118 @@
                 </div>
             </div>
 
-            <div class="row" style="margin-top: 4vh">
-                <div class="col col-12 text-right">
-                    <button class="btn btn-success" @click="updateShoppingList()"><i
-                            class="fas fa-save"></i> {% trans 'Save' %}
-                    </button>
+            <div class="row">
+                <div class="col" style="text-align: right; margin-top: 1vh">
+
+                    <div class="form-group form-check form-group-lg">
+                        <input class="form-check-input" style="zoom:1.3;" type="checkbox"
+                               v-model="shopping_list.finished" id="id_finished">
+                        <label class="form-check-label" style="zoom:1.3;"
+                               for="id_finished"> {% trans 'Finished' %}</label>
+                    </div>
+
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col" style="margin-top: 1vh">
+                    <multiselect
+                            v-tabindex
+
+                            v-model="shopping_list.shared"
+                            :options="users"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :allow-empty="true"
+                            :preserve-search="true"
+                            placeholder="{% trans 'Select User' %}"
+                            select-label="{% trans 'Select' %}"
+                            label="username"
+                            track-by="id"
+                            :multiple="true"
+                            :loading="users_loading"
+                            @search-change="searchUsers">
+                    </multiselect>
+
+                </div>
+            </div>
+
         </div>
         <div v-else>
 
+            {% if request.user.userpreference.shopping_auto_sync > 0 %}
+                <div class="row" v-if="!onLine">
+                    <div class="col col-md-12">
+                        <div class="alert alert-warning" role="alert">
+                            {% trans 'You are offline, shopping list might not sync.' %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="row" style="margin-top: 8px">
                 <div class="col col-md-12">
-                    <table class="table table table-striped">
+                    <table class="table">
                         <tr v-for="x in display_entries">
-                            <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked" @change="entryChecked(x)">
-                            </td>
-                            <td>[[x.amount]]</td>
-                            <td>[[x.unit.name]]</td>
-                            <td>[[x.food.name]]</td>
+                            <template v-if="!x.checked">
+                                <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
+                                           @change="entryChecked(x)">
+                                </td>
+                                <td>[[x.amount]]</td>
+                                <td>[[x.unit.name]]</td>
+                                <td>[[x.food.name]]</td>
+                            </template>
+                        </tr>
+
+                        <tr v-for="x in display_entries" class="text-muted">
+                            <template v-if="x.checked">
+                                <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
+                                           @change="entryChecked(x)">
+                                </td>
+                                <td>[[x.amount]]</td>
+                                <td>[[x.unit.name]]</td>
+                                <td>[[x.food.name]]</td>
+                            </template>
                         </tr>
                     </table>
                 </div>
             </div>
 
-            <b-button class="btn btn-success" v-b-modal.id_modal_export>{% trans 'Export' %}</b-button>
-
-            <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
-                <div class="row">
-                    <div class="col col-12">
-                        <label>
-                            {% trans 'List Prefix' %}
-                            <input class="form-control" v-model="export_text_prefix">
-                        </label>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col col-12">
-                        <b-form-textarea class="form-control" max-rows="8" v-model="export_text">
-
-                        </b-form-textarea>
-                    </div>
-                </div>
-
-
-            </b-modal>
 
         </div>
+
+        <div class="row" style="margin-top: 2vh">
+            <div class="col" style="text-align: right">
+                <b-button class="btn btn-info" v-b-modal.id_modal_export><i
+                        class="fas fa-file-export"></i> {% trans 'Export' %}</b-button>
+                <button class="btn btn-success" @click="updateShoppingList()" v-if="edit_mode"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}
+                </button>
+            </div>
+        </div>
+
+
+        <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
+            <div class="row">
+                <div class="col col-12">
+                    <label>
+                        {% trans 'List Prefix' %}
+                        <input class="form-control" v-model="export_text_prefix">
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col col-12">
+                    <b-form-textarea class="form-control" max-rows="8" v-model="export_text">
+
+                    </b-form-textarea>
+                </div>
+            </div>
+
+
+        </b-modal>
 
 
     </template>
@@ -267,6 +334,9 @@
                 foods_loading: false,
                 units: [],
                 units_loading: false,
+                users: [],
+                users_loading: false,
+                onLine: navigator.onLine,
             },
             directives: {
                 tabindex: {
@@ -294,6 +364,7 @@
                         if (item.list_recipe !== null) {
                             item.amount = item.amount * this.multiplier_cache[item.list_recipe]
                         }
+                        item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
                         entries.push(item)
                     });
 
@@ -301,11 +372,11 @@
                 },
                 export_text() {
                     let text = ''
-                    for (let e of this.display_entries) {
+                    for (let e of this.display_entries.filter(item => item.checked === false)) {
                         text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
                     }
                     return text
-                },
+                }
             },
             /*
            watch: {
@@ -324,15 +395,39 @@
             mounted: function () {
                 this.loadShoppingList()
 
+                {% if recipes %}
+                    this.loading = true
+                    this.edit_mode = true
+                    let loadingRecipes = []
+                    {% for r in recipes %}
+                        loadingRecipes.push(this.loadInitialRecipe({{ r.recipe }}, {{ r.multiplier }}))
+                    {% endfor %}
+
+                    Promise.allSettled(loadingRecipes).then(() => {
+                        this.loading = false
+                    })
+                {% endif %}
+
                 {% if request.user.userpreference.shopping_auto_sync > 0 %}
                     setInterval(() => {
-                        if ((this.shopping_list_id !== null) && !this.edit_mode) {
+                        if ((this.shopping_list_id !== null) && !this.edit_mode && window.navigator.onLine) {
                             this.loadShoppingList(true)
                         }
-                    }, {{ request.user.userpreference.shopping_auto_sync }} * 1000 )
+                    }, {% widthratio request.user.userpreference.shopping_auto_sync 1 1000 %})
+
+                    window.addEventListener('online', this.updateOnlineStatus);
+                    window.addEventListener('offline', this.updateOnlineStatus);
                 {% endif %}
+
+                this.searchUsers('')
             },
             methods: {
+                updateOnlineStatus(e) {
+                    const {
+                        type
+                    } = e;
+                    this.onLine = type === 'online';
+                },
                 /*
                 warnPageLeave: function (event) {
                     if (this.recipe_changed) {
@@ -348,6 +443,14 @@
                         variant: variant,
                         toaster: 'b-toaster-top-center',
                         solid: true
+                    })
+                },
+                loadInitialRecipe: function (recipe, multiplier) {
+                    return this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe)).then((response) => {
+                        this.addRecipeToList(response.data, multiplier)
+                    }).catch((err) => {
+                        console.log("getRecipes error: ", err);
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
                     })
                 },
                 loadShoppingList: function (autosync = false) {
@@ -369,7 +472,9 @@
                                     }
                                 }
                             }
-
+                            if (this.shopping_list.entries.length === 0) {
+                                this.edit_mode = true
+                            }
                         }).catch((err) => {
                             console.log(err)
                             this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
@@ -379,10 +484,16 @@
                             "recipes": [],
                             "entries": [],
                             "entries_display": [],
-                            "shared": [],
+                            "shared": [{% for u in request.user.userpreference.plan_share.all %}
+                                {'id': {{ u.pk }}, 'username': '{{ u.get_user_name }}'},
+                            {% endfor %}],
                             "created_by": 1
                         }
                         this.loading = false
+
+                        if (this.shopping_list.entries.length === 0) {
+                            this.edit_mode = true
+                        }
                     }
                 },
                 updateShoppingList: function () {
@@ -411,20 +522,24 @@
                         console.log("proceeding to update shopping list", this.shopping_list)
 
                         if (this.shopping_list_id === null) {
-                            this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
+                            return this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Object created successfully!' %}', 'success')
                                 this.loading = false
+
                                 this.shopping_list = response.body
                                 this.shopping_list_id = this.shopping_list.id
+
+                                window.history.pushState('shopping_list', '{% trans 'Shopping List' %}', "{% url 'view_shopping' 123456 %}".replace('123456', this.shopping_list_id));
                             }).catch((err) => {
                                 console.log(err)
                                 this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error creating a resource!' %}' + err.bodyText, 'danger')
                                 this.loading = false
                             })
                         } else {
-                            this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                            return this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
+                                this.shopping_list = response.body
                                 this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
                                 this.loading = false
                             }).catch((err) => {
@@ -437,13 +552,19 @@
 
                     })
                 },
+                sortEntries: function () {
+                    this.display_entries.forEach((item, index) => {
+
+                    })
+                    console.log("IMPLEMENT ME", this.display_entries)
+                },
                 entryChecked: function (entry) {
+                    console.log("checked entry: ", entry)
                     this.shopping_list.entries.forEach((item) => {
                         if (item.id === entry.id) { //TODO unwrap once same entries are merged
                             item.checked = entry.checked
-                            console.log('updating ', item)
                             this.$http.put("{% url 'api:shoppinglistentry-detail' 123456 %}".replace('123456', item.id), item, {}).then((response) => {
-                                console.log("YEHAA", response)
+
                             }).catch((err) => {
                                 console.log(err)
                                 this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
@@ -458,7 +579,7 @@
                         this.shopping_list.entries.push({
                             'list_recipe': null,
                             'food': this.new_entry.food,
-                            'unit': ((this.new_entry.unit !== undefined) ? this.new_entry.unit : {'name': ''}),
+                            'unit': this.new_entry.unit,
                             'amount': parseFloat(this.new_entry.amount),
                             'order': 0,
                             'checked': false
@@ -494,13 +615,13 @@
                 getRecipeUrl: function (id) { //TODO generic function that can be reused else were
                     return '{% url 'view_recipe' 123456 %}'.replace('123456', id)
                 },
-                addRecipeToList: function (recipe) {
+                addRecipeToList: function (recipe, multiplier = 1) {
                     let slr = {
                         "created": true,
                         "id": Math.random() * 1000,
                         "recipe": recipe.id,
                         "recipe_name": recipe.name,
-                        "multiplier": 1
+                        "multiplier": multiplier
                     }
 
                     this.shopping_list.recipes.push(slr)
@@ -511,7 +632,7 @@
                                 this.shopping_list.entries.push({
                                     'list_recipe': slr.id,
                                     'food': i.food,
-                                    'unit': ((i.unit !== undefined) ? i.unit : {'name': ''}),
+                                    'unit': i.unit,
                                     'amount': i.amount,
                                     'order': 0
                                 })
@@ -562,7 +683,19 @@
                     this.units.push(new_unit)
                     this.new_entry.unit = new_unit
                 },
-
+                searchUsers: function (query) { //TODO move to central component
+                    this.users_loading = true
+                    this.$http.get("{% url 'api:username-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.users = response.data
+                        this.users_loading = false
+                    }).catch((err) => {
+                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                    })
+                },
+            },
+            beforeDestroy() {
+                window.removeEventListener('online', this.updateOnlineStatus);
+                window.removeEventListener('offline', this.updateOnlineStatus);
             }
         });
     </script>
