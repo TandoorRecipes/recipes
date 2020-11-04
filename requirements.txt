@@ -17,7 +17,7 @@ Pillow==7.1.2
 psycopg2-binary==2.8.5
 python-dotenv==0.15.0
 requests==2.23.0
-simplejson==3.17.0
+simplejson==3.17.2
 six==1.15.0
 webdavclient3==3.14.4
 whitenoise==5.2.0
