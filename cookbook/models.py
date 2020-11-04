@@ -7,6 +7,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User, Group
 from django.utils.translation import gettext as _
 from django.db import models
+from django_random_queryset import RandomManager
 
 from recipes.settings import COMMENT_PREF_DEFAULT
 
@@ -197,6 +198,8 @@ class Recipe(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = RandomManager()
 
     def __str__(self):
         return self.name
