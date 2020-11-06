@@ -181,38 +181,13 @@ class Step(models.Model):
         ordering = ['order', 'pk']
 
 
-class NutritionUnit(models.Model):
-    name = models.CharField(max_length=128)
-    short = models.CharField(max_length=16)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.name} ({self.short})'
-
-
-class NutritionType(models.Model):
-    type = models.CharField(max_length=128)
-    unit = models.ForeignKey(NutritionUnit, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.type}'
-
-
-class NutritionValue(models.Model):
-    type = models.ForeignKey(NutritionType, on_delete=models.CASCADE)
-    value = models.DecimalField(max_digits=32, decimal_places=16)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.value} {self.type}'
-
-
 class NutritionInformation(models.Model):
-    nutritions = models.ManyToManyField(NutritionValue)
+    fats = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    carbohydrates = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    source = models.CharField(max_length=512, default="", null=True, blank=True)
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
