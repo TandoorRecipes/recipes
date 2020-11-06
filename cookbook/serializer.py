@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step, ShoppingList, \
-    ShoppingListEntry, ShoppingListRecipe
+    ShoppingListEntry, ShoppingListRecipe, NutritionInformation
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -262,4 +262,9 @@ class CookLogSerializer(serializers.ModelSerializer):
 class ViewLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ViewLog
+        fields = '__all__'
+
+class NutritionInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NutritionInformation
         fields = '__all__'

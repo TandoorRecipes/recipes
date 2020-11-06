@@ -215,21 +215,46 @@
                     <div class="card-body">
                         <h4 class="card-title">{% trans 'Nutrition' %}</h4>
                         <table class="table table-sm">
-                            {% for n in recipe.nutrition.nutritions.all %}
+                            <tr>
+                                <td style="padding-top: 8px!important; ">
+                                    <b>{% trans Calories %}</b>
+                                </td>
+                                <td style="text-align: right">{{ recipe.nutrition.calories|floatformat:2 }}</td>
+                                <td>kcal</td>
+                                </tr>
+                            <tr>
+                            <tr>
+                                <td style="padding-top: 8px!important; ">
+                                    <b>{% trans Carbohydrates %}</b>
+                                </td>
+                                <td style="text-align: right">{{ recipe.nutrition.carbohydrates|floatformat:2 }}</td>
+                                <td>g</td>
+                                </tr>
+                            <tr>
+                            <tr>
+                                <td style="padding-top: 8px!important; ">
+                                    <b>{% trans Fats %}</b>
+                                </td>
+                                <td style="text-align: right">{{ recipe.nutrition.fats|floatformat:2 }}</td>
+                                <td>g</td>
+                                </tr>
+                            <tr>
                                 <tr>
                                     <td style="padding-top: 8px!important; ">
-                                        <b>{{ n.type.type }}</b>
+                                        <b>{% trans Proteins %}</b>
                                     </td>
-                                    <td style="text-align: right">{{ n.value|floatformat:2 }}</td>
-                                    <td>{{ n.type.unit.short }}</td>
-                                </tr>
-                            {% endfor %}
-                            <tr>
+                                    <td style="text-align: right">{{ recipe.nutrition.proteins|floatformat:2 }}</td>
+                                    <td>g</td>
+                                    </tr>
+                                <tr>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                         </table>
+                        {% if recipe.nutrition.source %}
+                        Source: {{ recipe.nutrition.source }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
