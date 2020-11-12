@@ -541,7 +541,7 @@ msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:59
 msgid "Preperation Time"
-msgstr ""
+msgstr "Preparation Time"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:62
 msgid "Waiting Time"
