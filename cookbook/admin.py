@@ -175,7 +175,7 @@ admin.site.register(ShareLink, ShareLinkAdmin)
 
 
 class NutritionInformationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_by', 'created_at')
+    list_display = ('id',)
 
 
 admin.site.register(NutritionInformation, NutritionInformationAdmin)
