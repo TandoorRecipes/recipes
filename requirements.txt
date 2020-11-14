@@ -9,7 +9,7 @@ django-emoji-picker==0.0.6
 django-filter==2.4.0
 django-tables2==2.3.3
 djangorestframework==3.11.0
-drf-writable-nested==0.6.1
+drf-writable-nested==0.6.2
 gunicorn==20.0.4
 lxml==4.5.1
 Markdown==3.2.2
