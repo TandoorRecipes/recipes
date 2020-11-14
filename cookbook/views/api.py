@@ -205,16 +205,15 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsShare | CustomIsGuest]  # TODO split read and write permission for meal plan guest
 
     def get_queryset(self):
-        queryset = super().get_queryset()
 
         internal = self.request.query_params.get('internal', None)
         if internal:
-            queryset = queryset.filter(internal=True)
+            self.queryset = self.queryset.filter(internal=True)
         random = self.request.query_params.get('random', False)
         if random:
-            queryset = queryset.random(5)
+            self.queryset = self.queryset.random(5)
 
-        return queryset
+        return super().get_queryset()
 
     # TODO write extensive tests for permissions
 
