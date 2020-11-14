@@ -250,7 +250,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:152
 msgid "Imported from "
-msgstr "Importiert von"
+msgstr "Importiert von "
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:12
 msgid "Breakfast"
