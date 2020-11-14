@@ -188,9 +188,6 @@ class NutritionInformation(models.Model):
     calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     source = models.CharField(max_length=512, default="", null=True, blank=True)
 
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return f'Nutrition'
 
@@ -208,7 +205,7 @@ class Recipe(models.Model):
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
-    nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.PROTECT)
+    nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -140,13 +140,20 @@ class StepSerializer(WritableNestedModelSerializer):
         fields = ('id', 'name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
 
 
+class NutritionInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NutritionInformation
+        fields = ('carbohydrates', 'fats', 'proteins', 'calories', 'source')
+
+
 class RecipeSerializer(WritableNestedModelSerializer):
+    nutrition = NutritionInformationSerializer(allow_null=True)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
 
     class Meta:
         model = Recipe
-        fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal']
+        fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal', 'nutrition']
         read_only_fields = ['image', 'created_by', 'created_at']
 
 
@@ -262,9 +269,4 @@ class CookLogSerializer(serializers.ModelSerializer):
 class ViewLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ViewLog
-        fields = '__all__'
-
-class NutritionInformationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NutritionInformation
         fields = '__all__'

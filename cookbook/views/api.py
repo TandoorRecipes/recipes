@@ -28,10 +28,10 @@ from rest_framework.viewsets import ViewSetMixin
 
 from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog, ShoppingListRecipe, ShoppingList, ShoppingListEntry, NutritionInformation
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog, ShoppingListRecipe, ShoppingList, ShoppingListEntry
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import NutritionInformationSerializer, MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
+from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
     KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer, ShoppingListRecipeSerializer, ShoppingListEntrySerializer, ShoppingListEntryCheckedSerializer, \
     ShoppingListAutoSyncSerializer
 
@@ -281,10 +281,6 @@ class ViewLogViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
         return queryset
-
-class NutritionInformationViewSet(viewsets.ModelViewSet):
-    queryset = NutritionInformation.objects.all()
-    serializer_class = NutritionInformationSerializer
 
 
 # -------------- non django rest api views --------------------
