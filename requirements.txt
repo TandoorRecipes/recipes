@@ -19,7 +19,7 @@ python-dotenv==0.15.0
 requests==2.25.0
 simplejson==3.17.2
 six==1.15.0
-webdavclient3==3.14.4
+webdavclient3==3.14.5
 whitenoise==5.2.0
 icalendar==4.0.6
 pyyaml==5.3.1
