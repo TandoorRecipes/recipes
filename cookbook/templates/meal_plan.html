@@ -577,7 +577,7 @@
                         id: Math.round(Math.random() * 1000) + 10000,
                         recipe: recipe.id,
                         recipe_name: recipe.name,
-                        recipe_multiplier: (this.new_note_multiplier > 1) ? this.new_note_multiplier : 1,
+                        recipe_multiplier: (this.new_note_multiplier > 1) ? this.new_note_multiplier : recipe.servings,
                         title: this.new_note_title,
                         note: this.new_note_text,
                         is_new: true

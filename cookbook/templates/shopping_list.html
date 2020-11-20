@@ -349,7 +349,12 @@
                 multiplier_cache() {
                     let cache = {}
                     this.shopping_list.recipes.forEach((r) => {
-                        cache[r.id] = !(Number.isNaN(r.multiplier)) ? parseFloat(r.multiplier) : 1
+                        let multiplier = r.servings;
+                        if(!Number.isNaN(r.multiplier)){
+                            multiplier = parseFloat(r.multiplier)
+                        }
+                        cache[r.id] = multiplier / r.servings;
+
                     })
                     return cache
                 },
@@ -621,7 +626,8 @@
                         "id": Math.random() * 1000,
                         "recipe": recipe.id,
                         "recipe_name": recipe.name,
-                        "multiplier": multiplier
+                        "multiplier": multiplier,
+                        "servings": recipe.servings,
                     }
 
                     this.shopping_list.recipes.push(slr)
