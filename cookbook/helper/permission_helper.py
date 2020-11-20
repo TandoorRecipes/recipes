@@ -67,7 +67,26 @@ def is_object_owner(user, obj):
         return owner == user
     if owner := getattr(obj, 'user', None):
         return owner == user
+    if getattr(obj, 'get_owner', None):
+        return obj.get_owner() == user
     return False
+
+
+def is_object_shared(user, obj):
+    """
+    Tests if a given user is shared for a given object
+    test performed by checking user against the objects shared table
+    superusers bypass all checks, unauthenticated users cannot own anything
+    :param user django auth user object
+    :param obj any object that should be tested
+    :return: true if user is shared for object, false otherwise
+    """
+    # TODO this could be improved/cleaned up by adding share checks for relevant objects
+    if not user.is_authenticated:
+        return False
+    if user.is_superuser:
+        return True
+    return user in obj.shared.all()
 
 
 def share_link_valid(recipe, share):
@@ -143,6 +162,20 @@ class CustomIsOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return is_object_owner(request.user, obj)
+
+
+class CustomIsShared(permissions.BasePermission):  # TODO function duplicate/too similar name
+    """
+    Custom permission class for django rest framework views
+    verifies user is shared for the object he is trying to access
+    """
+    message = _('You cannot interact with this object as its not owned by you!')
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return is_object_shared(request.user, obj)
 
 
 class CustomIsGuest(permissions.BasePermission):

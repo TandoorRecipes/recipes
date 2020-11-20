@@ -1,10 +1,12 @@
+from decimal import Decimal
+
 from django.contrib.auth.models import User
 from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 from rest_framework import serializers
-from rest_framework.exceptions import APIException, ValidationError
-from rest_framework.fields import CurrentUserDefault
+from rest_framework.exceptions import ValidationError
 
-from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step
+from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step, ShoppingList, \
+    ShoppingListEntry, ShoppingListRecipe
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -14,19 +16,24 @@ class CustomDecimalField(serializers.Field):
     """
 
     def to_representation(self, value):
-        return value.normalize()
+        if isinstance(value, Decimal):
+            return value.normalize()
+        else:
+            return Decimal(value).normalize()
 
     def to_internal_value(self, data):
         if type(data) == int or type(data) == float:
             return data
         elif type(data) == str:
+            if data == '':
+                return 0
             try:
                 return float(data.replace(',', ''))
             except ValueError:
                 raise ValidationError('A valid number is required')
 
 
-class UserNameSerializer(serializers.ModelSerializer):
+class UserNameSerializer(WritableNestedModelSerializer):
     username = serializers.SerializerMethodField('get_user_label')
 
     def get_user_label(self, obj):
@@ -184,13 +191,61 @@ class MealPlanSerializer(serializers.ModelSerializer):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
+    recipe_multiplier = CustomDecimalField()
 
     def get_note_markdown(self, obj):
         return markdown(obj.note)
 
     class Meta:
         model = MealPlan
-        fields = ('id', 'title', 'recipe', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
+        fields = ('id', 'title', 'recipe', 'recipe_multiplier', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
+
+
+class ShoppingListRecipeSerializer(serializers.ModelSerializer):
+    recipe_name = serializers.ReadOnlyField(source='recipe.name')
+    multiplier = CustomDecimalField()
+
+    class Meta:
+        model = ShoppingListRecipe
+        fields = ('id', 'recipe', 'recipe_name', 'multiplier')
+        read_only_fields = ('id',)
+
+
+class ShoppingListEntrySerializer(WritableNestedModelSerializer):
+    food = FoodSerializer(allow_null=True)
+    unit = UnitSerializer(allow_null=True)
+    amount = CustomDecimalField()
+
+    class Meta:
+        model = ShoppingListEntry
+        fields = ('id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked')
+        read_only_fields = ('id',)
+
+
+class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingListEntry
+        fields = ('id', 'checked')
+
+
+class ShoppingListSerializer(WritableNestedModelSerializer):
+    recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
+    entries = ShoppingListEntrySerializer(many=True, allow_null=True)
+    shared = UserNameSerializer(many=True)
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'uuid', 'note', 'recipes', 'entries', 'shared', 'finished', 'created_by', 'created_at',)
+        read_only_fields = ('id',)
+
+
+class ShoppingListAutoSyncSerializer(WritableNestedModelSerializer):
+    entries = ShoppingListEntryCheckedSerializer(many=True, allow_null=True)
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'entries',)
+        read_only_fields = ('id',)
 
 
 class ShareLinkSerializer(serializers.ModelSerializer):

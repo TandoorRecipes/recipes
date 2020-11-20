@@ -1,7 +1,7 @@
 import copy
 import os
 from datetime import datetime, timedelta
-
+from uuid import UUID
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
@@ -164,44 +164,18 @@ def meal_plan_entry(request, pk):
 
 
 @group_required('user')
-def shopping_list(request):
-    markdown_format = True
+def shopping_list(request, pk=None):
+    raw_list = request.GET.getlist('r')
 
-    if request.method == "POST":
-        form = ShoppingForm(request.POST)
-        if form.is_valid():
-            recipes = form.cleaned_data['recipe']
-            markdown_format = form.cleaned_data['markdown_format']
-        else:
-            recipes = []
-    else:
-        raw_list = request.GET.getlist('r')
+    recipes = []
+    for r in raw_list:
+        r = r.replace('[', '').replace(']', '')
+        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
+            rid, multiplier = r.split(',')
+            if recipe := Recipe.objects.filter(pk=int(rid)).first():
+                recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
 
-        recipes = []
-        for r in raw_list:
-            if re.match(r'^([1-9])+$', r):
-                if Recipe.objects.filter(pk=int(r)).exists():
-                    recipes.append(int(r))
-
-        markdown_format = False
-        form = ShoppingForm(initial={'recipe': recipes, 'markdown_format': False})
-
-    ingredients = []
-
-    for r in recipes:
-        for s in r.steps.all():
-            for ri in s.ingredients.exclude(unit__name__contains='Special:').all():
-                index = None
-                for x, ig in enumerate(ingredients):
-                    if ri.food == ig.food and ri.unit == ig.unit:
-                        index = x
-
-                if index:
-                    ingredients[index].amount = ingredients[index].amount + ri.amount
-                else:
-                    ingredients.append(ri)
-
-    return render(request, 'shopping_list.html', {'ingredients': ingredients, 'recipes': recipes, 'form': form, 'markdown_format': markdown_format})
+    return render(request, 'shopping_list.html', {'shopping_list_id': pk, 'recipes': recipes})
 
 
 @group_required('guest')
@@ -228,6 +202,11 @@ def user_settings(request):
                 up.plan_share.set(form.cleaned_data['plan_share'])
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']
                 up.comments = form.cleaned_data['comments']
+
+                up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
+                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
+                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
+
                 up.save()
 
         if 'user_name_form' in request.POST:
@@ -276,7 +255,7 @@ def setup(request):
         return HttpResponseRedirect(reverse('login'))
 
     if request.method == 'POST':
-        form = SuperUserForm(request.POST)
+        form = UserCreateForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
                 form.add_error('password', _('Passwords dont match!'))
@@ -296,9 +275,57 @@ def setup(request):
                     for m in e:
                         form.add_error('password', m)
     else:
-        form = SuperUserForm()
+        form = UserCreateForm()
 
     return render(request, 'setup.html', {'form': form})
+
+
+def signup(request, token):
+    try:
+        token = UUID(token, version=4)
+    except ValueError:
+        messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
+        if request.method == 'POST':
+
+            form = UserCreateForm(request.POST)
+            if link.username != '':
+                data = dict(form.data)
+                data['name'] = link.username
+                form.data = data
+
+            if form.is_valid():
+                if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+                    form.add_error('password', _('Passwords dont match!'))
+                else:
+                    user = User(
+                        username=form.cleaned_data['name'],
+                    )
+                    try:
+                        validate_password(form.cleaned_data['password'], user=user)
+                        user.set_password(form.cleaned_data['password'])
+                        user.save()
+                        messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+
+                        link.used_by = user
+                        link.save()
+                        user.groups.add(link.group)
+                        return HttpResponseRedirect(reverse('login'))
+                    except ValidationError as e:
+                        for m in e:
+                            form.add_error('password', m)
+        else:
+            form = UserCreateForm()
+
+        if link.username != '':
+            form.fields['name'].initial = link.username
+            form.fields['name'].disabled = True
+        return render(request, 'registration/signup.html', {'form': form, 'link': link})
+
+    messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def markdown_info(request):

@@ -11,7 +11,7 @@ jobs:
     name: Build image job
     steps:
       - name: Checkout master
-        uses: actions/checkout@master#
+        uses: actions/checkout@master
       - name: Get version number
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}

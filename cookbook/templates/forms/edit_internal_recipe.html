@@ -321,7 +321,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
-                            <b-form-textarea class="form-control" rows="2" max-rows="8" v-model="step.instruction"
+                            <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
                                       :id="'id_instruction_' + step.id"></b-form-textarea>
                             <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
                         </div>
@@ -330,7 +330,7 @@
             </div>
         </draggable>
 
-        <div class="row" style="margin-top: 1vh; margin-bottom: 2vh">
+        <div class="row" style="margin-top: 1vh; margin-bottom: 8vh">
             <div class="col-12">
                 <button type="button" @click="updateRecipe(true)"
                         class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
@@ -597,7 +597,7 @@
 
                     let new_unit = this.recipe.steps[step].ingredients[id]
                     new_unit.unit = {'name': tag}
-                    this.foods.push(new_unit.unit)
+                    this.units.push(new_unit.unit)
                     this.recipe.steps[step].ingredients[id] = new_unit
                 },
                 searchKeywords: function (query) {

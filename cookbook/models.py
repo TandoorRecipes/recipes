@@ -1,10 +1,13 @@
 import re
 import uuid
+from datetime import date, timedelta
+
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.utils.translation import gettext as _
 from django.db import models
+from django_random_queryset import RandomManager
 
 from recipes.settings import COMMENT_PREF_DEFAULT
 
@@ -21,6 +24,11 @@ auth.models.User.add_to_class('get_user_name', get_user_name)
 
 def get_model_name(model):
     return ('_'.join(re.findall('[A-Z][^A-Z]*', model.__name__))).lower()
+
+
+class Space(models.Model):
+    name = models.CharField(max_length=128, default='Default')
+    message = models.CharField(max_length=512, default='', blank=True)
 
 
 class UserPreference(models.Model):
@@ -67,6 +75,7 @@ class UserPreference(models.Model):
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
+    shopping_auto_sync = models.IntegerField(default=5)
 
     def __str__(self):
         return str(self.user)
@@ -191,6 +200,8 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = RandomManager()
+
     def __str__(self):
         return self.name
 
@@ -247,6 +258,7 @@ class MealType(models.Model):
 
 class MealPlan(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
+    recipe_multiplier = models.DecimalField(default=1, max_digits=8, decimal_places=4)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
@@ -266,11 +278,73 @@ class MealPlan(models.Model):
         return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
 
 
+class ShoppingListRecipe(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
+    multiplier = models.DecimalField(default=1, max_digits=8, decimal_places=4)
+
+    def __str__(self):
+        return f'Shopping list recipe {self.id} - {self.recipe}'
+
+    def get_owner(self):
+        try:
+            return self.shoppinglist_set.first().created_by
+        except AttributeError:
+            return None
+
+
+class ShoppingListEntry(models.Model):
+    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    order = models.IntegerField(default=0)
+    checked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Shopping list entry {self.id}'
+
+    def get_owner(self):
+        try:
+            return self.shoppinglist_set.first().created_by
+        except AttributeError:
+            return None
+
+
+class ShoppingList(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
+    note = models.TextField(blank=True, null=True)
+    recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
+    entries = models.ManyToManyField(ShoppingListEntry, blank=True)
+    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
+    finished = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Shopping list {self.id}'
+
+
 class ShareLink(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.recipe} - {self.uuid}'
+
+
+class InviteLink(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
+    username = models.CharField(blank=True, max_length=64)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    valid_until = models.DateField(default=date.today() + timedelta(days=14))
+    used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.uuid}'
 
 
 class CookLog(models.Model):

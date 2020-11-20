@@ -31,7 +31,7 @@ class UserPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = UserPreference
-        fields = ('default_unit', 'theme', 'nav_color', 'default_page', 'show_recent', 'search_style', 'plan_share', 'ingredient_decimals', 'comments')
+        fields = ('default_unit', 'theme', 'nav_color', 'default_page', 'show_recent', 'search_style', 'plan_share', 'ingredient_decimals', 'shopping_auto_sync', 'comments')
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
@@ -39,7 +39,10 @@ class UserPreferenceForm(forms.ModelForm):
             'plan_share': _('Default user to share newly created meal plan entries with.'),
             'show_recent': _('Show recently viewed recipes on search page.'),
             'ingredient_decimals': _('Number of decimals to round ingredients.'),
-            'comments': _('If you want to be able to create and see comments underneath recipes.')
+            'comments': _('If you want to be able to create and see comments underneath recipes.'),
+            'shopping_auto_sync': _(
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
+                'of mobile data. If lower than instance limit it is reset when saving.')
         }
 
         widgets = {
@@ -262,17 +265,27 @@ class MealPlanForm(forms.ModelForm):
 
     class Meta:
         model = MealPlan
-        fields = ('recipe', 'title', 'meal_type', 'note', 'date', 'shared')
+        fields = ('recipe', 'title', 'meal_type', 'note', 'recipe_multiplier', 'date', 'shared')
 
         help_texts = {
             'shared': _('You can list default users to share recipes with in the settings.'),
-            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
+            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>'),
+            'recipe_multiplier': _('Scaling factor for recipe.')
         }
 
         widgets = {'recipe': SelectWidget, 'date': DateWidget, 'shared': MultiSelectWidget}
 
 
-class SuperUserForm(forms.Form):
-    name = forms.CharField()
+class InviteLinkForm(forms.ModelForm):
+    class Meta:
+        model = InviteLink
+        fields = ('username', 'group', 'valid_until')
+        help_texts = {
+            'username': _('A username is not required, if left blank the new user can choose one.')
+        }
+
+
+class UserCreateForm(forms.Form):
+    name = forms.CharField(label='Username')
     password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
     password_confirm = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))

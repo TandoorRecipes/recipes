@@ -7,7 +7,7 @@ from django.urls import reverse, NoReverseMatch
 
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
-from cookbook.models import get_model_name
+from cookbook.models import get_model_name, Space
 from recipes import settings
 
 register = template.Library()
@@ -67,6 +67,11 @@ def recipe_last(recipe, user):
         return last.created_at
     else:
         return ''
+
+
+@register.simple_tag
+def message_of_the_day():
+    return Space.objects.first().message
 
 
 @register.simple_tag

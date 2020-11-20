@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load theming_tags %}
+{% load custom_tags %}
 
 <html>
 <head>
@@ -72,7 +73,7 @@
                     <a class="dropdown-item" href="{% url 'view_plan' %}"><i
                             class="fas fa-calendar fa-fw"></i> {% trans 'Meal-Plan' %}
                     </a>
-                    <a class="dropdown-item" href="{% url 'view_shopping' %}"><i
+                    <a class="dropdown-item" href="{% url 'list_shopping_list' %}"><i
                             class="fas fa-shopping-cart fa-fw"></i> {% trans 'Shopping' %}
                     </a>
                     <a class="dropdown-item" href="{% url 'list_food' %}"><i
@@ -158,6 +159,14 @@
         </ul>
     </div>
 </nav>
+
+{% message_of_the_day as message_of_the_day %}
+{% if message_of_the_day %}
+    <div class="bg-warning" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
+        {{ message_of_the_day }}
+    </div>
+{% endif %}
+
 <br/>
 <br/>
 

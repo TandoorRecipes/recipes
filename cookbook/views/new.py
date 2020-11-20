@@ -9,9 +9,9 @@ from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
 from cookbook.forms import ImportRecipeForm, RecipeImport, KeywordForm, Storage, StorageForm, InternalRecipeForm, \
-    RecipeBookForm, MealPlanForm
+    RecipeBookForm, MealPlanForm, InviteLinkForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
-from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan, ShareLink, MealType, Step
+from cookbook.models import Keyword, Recipe, RecipeBook, MealPlan, ShareLink, MealType, Step, InviteLink
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
@@ -161,4 +161,22 @@ class MealPlanCreate(GroupRequiredMixin, CreateView):
                 if Recipe.objects.filter(pk=int(recipe)).exists():
                     context['default_recipe'] = Recipe.objects.get(pk=int(recipe))
 
+        return context
+
+
+class InviteLinkCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['admin']
+    template_name = "generic/new_template.html"
+    model = InviteLink
+    form_class = InviteLinkForm
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.created_by = self.request.user
+        obj.save()
+        return HttpResponseRedirect(reverse('list_invite_link'))
+
+    def get_context_data(self, **kwargs):
+        context = super(InviteLinkCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Invite Link")
         return context
