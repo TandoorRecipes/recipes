@@ -26,13 +26,14 @@ from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 
-from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare
+from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare, CustomIsShared
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog
+from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog, ShoppingListRecipe, ShoppingList, ShoppingListEntry
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer
+    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer, ShoppingListRecipeSerializer, ShoppingListEntrySerializer, ShoppingListEntryCheckedSerializer, \
+    ShoppingListAutoSyncSerializer
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -154,7 +155,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects.all()
     serializer_class = MealPlanSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # TODO fix permissions
 
     def get_queryset(self):
         queryset = MealPlan.objects.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).distinct().all()
@@ -203,6 +204,18 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     serializer_class = RecipeSerializer
     permission_classes = [CustomIsShare | CustomIsGuest]  # TODO split read and write permission for meal plan guest
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        internal = self.request.query_params.get('internal', None)
+        if internal:
+            queryset = queryset.filter(internal=True)
+        random = self.request.query_params.get('random', False)
+        if random:
+            queryset = queryset.random(5)
+
+        return queryset
+
     # TODO write extensive tests for permissions
 
     @decorators.action(
@@ -231,6 +244,39 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
             return Response(serializer.data)
         return Response(serializer.errors, 400)
+
+
+class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
+    queryset = ShoppingListRecipe.objects.all()
+    serializer_class = ShoppingListRecipeSerializer
+    permission_classes = [CustomIsUser, ]  # TODO add custom validation
+
+    # TODO custom get qs
+
+
+class ShoppingListEntryViewSet(viewsets.ModelViewSet):
+    queryset = ShoppingListEntry.objects.all()
+    serializer_class = ShoppingListEntrySerializer
+    permission_classes = [CustomIsOwner, ]  # TODO add custom validation
+
+    # TODO custom get qs
+
+
+class ShoppingListViewSet(viewsets.ModelViewSet):
+    queryset = ShoppingList.objects.all()
+    serializer_class = ShoppingListSerializer
+    permission_classes = [CustomIsOwner | CustomIsShared]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.queryset
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).all()
+
+    def get_serializer_class(self):
+        autosync = self.request.query_params.get('autosync', None)
+        if autosync:
+            return ShoppingListAutoSyncSerializer
+        return self.serializer_class
 
 
 class ViewLogViewSet(viewsets.ModelViewSet):

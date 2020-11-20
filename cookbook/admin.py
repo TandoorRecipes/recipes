@@ -2,6 +2,13 @@ from django.contrib import admin
 from .models import *
 
 
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'message')
+
+
+admin.site.register(Space, SpaceAdmin)
+
+
 class UserPreferenceAdmin(admin.ModelAdmin):
     list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style', 'comments')
 
@@ -125,11 +132,39 @@ class ViewLogAdmin(admin.ModelAdmin):
 admin.site.register(ViewLog, ViewLogAdmin)
 
 
+class InviteLinkAdmin(admin.ModelAdmin):
+    list_display = ('username', 'group', 'valid_until', 'created_by', 'created_at', 'used_by')
+
+
+admin.site.register(InviteLink, InviteLinkAdmin)
+
+
 class CookLogAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
 
 
 admin.site.register(CookLog, CookLogAdmin)
+
+
+class ShoppingListRecipeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'recipe', 'multiplier')
+
+
+admin.site.register(ShoppingListRecipe, ShoppingListRecipeAdmin)
+
+
+class ShoppingListEntryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'food', 'unit', 'list_recipe', 'checked')
+
+
+admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)
+
+
+class ShoppingListAdmin(admin.ModelAdmin):
+    list_display = ('id', 'created_by', 'created_at')
+
+
+admin.site.register(ShoppingList, ShoppingListAdmin)
 
 
 class ShareLinkAdmin(admin.ModelAdmin):

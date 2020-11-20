@@ -6,6 +6,7 @@ import requests
 from PIL import Image
 from django.contrib import messages
 from django.core.files import File
+from django.db.transaction import atomic
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
@@ -94,6 +95,7 @@ def batch_edit(request):
 
 
 @group_required('user')
+@atomic
 def import_url(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -120,20 +122,26 @@ def import_url(request):
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
-            f, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
-            if ing['unit']:
-                u, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
-            else:
-                u = Unit.objects.get(name=request.user.userpreference.default_unit)
+            ingredient = Ingredient()
 
+            ingredient.food, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
+            if ing['unit']:
+                ingredient.unit, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
+
+            # TODO properly handle no_amount recipes
             if isinstance(ing['amount'], str):
                 try:
-                    ing['amount'] = float(ing['amount'].replace(',', '.'))
+                    ingredient.amount = float(ing['amount'].replace(',', '.'))
                 except ValueError:
-                    # TODO return proper error
+                    ingredient.no_amount = True
                     pass
+            elif isinstance(ing['amount'], float) or isinstance(ing['amount'], int):
+                ingredient.amount = ing['amount']
+            ingredient.note = ing['note'] if 'note' in ing else ''
 
-            step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=ing['amount']))
+            ingredient.save()
+            step.ingredients.add(ingredient)
+            print(ingredient)
 
         if data['image'] != '':
             response = requests.get(data['image'])

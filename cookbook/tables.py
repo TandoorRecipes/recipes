@@ -108,6 +108,25 @@ class RecipeImportTable(tables.Table):
         fields = ('id', 'name', 'file_path')
 
 
+class ShoppingListTable(tables.Table):
+    id = tables.LinkColumn('view_shopping', args=[A('id')])
+
+    class Meta:
+        model = ShoppingList
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'finished', 'created_by', 'created_at')
+
+
+class InviteLinkTable(tables.Table):
+    link = tables.TemplateColumn("<a href='{% url 'view_signup' record.uuid %}' >" + _('Link') + "</a>")
+    delete = tables.TemplateColumn("<a href='{% url 'delete_invite_link' record.id %}' >" + _('Delete') + "</a>")
+
+    class Meta:
+        model = InviteLink
+        template_name = 'generic/table_template.html'
+        fields = ('username', 'group', 'valid_until', 'created_by', 'created_at')
+
+
 class ViewLogTable(tables.Table):
     recipe = tables.LinkColumn('view_recipe', args=[A('recipe_id')])
 

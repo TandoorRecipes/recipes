@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import group_required, GroupRequiredMixin, OwnerRequiredMixin
 from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
-    RecipeBookEntry, MealPlan, Food
+    RecipeBookEntry, MealPlan, Food, InviteLink
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -147,4 +147,15 @@ class MealPlanDelete(OwnerRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(MealPlanDelete, self).get_context_data(**kwargs)
         context['title'] = _("Meal-Plan")
+        return context
+
+
+class InviteLinkDelete(OwnerRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = InviteLink
+    success_url = reverse_lazy('list_invite_link')
+
+    def get_context_data(self, **kwargs):
+        context = super(InviteLinkDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Invite Link")
         return context

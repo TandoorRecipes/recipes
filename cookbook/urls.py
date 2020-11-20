@@ -23,17 +23,22 @@ router.register(r'recipe', api.RecipeViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
+router.register(r'shopping-list', api.ShoppingListViewSet)
+router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
+router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
+    path('signup/<slug:token>', views.signup, name='view_signup'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
+    path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('test/', views.test, name='view_test'),
@@ -89,7 +94,7 @@ urlpatterns = [
 
 ]
 
-generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Food)
+generic_models = (Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync, Comment, RecipeBookEntry, Keyword, Food, ShoppingList, InviteLink)
 
 for m in generic_models:
     py_name = get_model_name(m)
