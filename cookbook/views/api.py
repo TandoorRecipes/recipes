@@ -154,7 +154,8 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     list:
     optional parameters
 
-    - **html_week**: filter for a calendar week (format 2020-W24 as html input type week)
+    - **from_date**: filter from (inclusive) a certain date onward
+    - **to_date**: filter upward to (inclusive) certain date
 
     """
     queryset = MealPlan.objects.all()
@@ -163,10 +164,14 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = MealPlan.objects.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).distinct().all()
-        week = self.request.query_params.get('html_week', None)
-        if week is not None:
-            y, w = week.replace('-W', ' ').split()
-            queryset = queryset.filter(date__week=w, date__year=y)
+
+        from_date = self.request.query_params.get('from_date', None)
+        if from_date is not None:
+            queryset = queryset.filter(date__gte=from_date)
+
+        to_date = self.request.query_params.get('to_date', None)
+        if to_date is not None:
+            queryset = queryset.filter(date__lte=to_date)
         return queryset
 
 
@@ -368,11 +373,14 @@ def log_cooking(request, recipe_id):
 
 
 @group_required('user')
-def get_plan_ical(request, html_week):
+def get_plan_ical(request, from_date, to_date):
     queryset = MealPlan.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
 
-    y, w = html_week.replace('-W', ' ').split()
-    queryset = queryset.filter(date__week=w, date__year=y)
+    if from_date is not None:
+        queryset = queryset.filter(date__gte=from_date)
+
+    if to_date is not None:
+        queryset = queryset.filter(date__lte=to_date)
 
     cal = Calendar()
 
@@ -386,7 +394,7 @@ def get_plan_ical(request, html_week):
         cal.add_component(event)
 
     response = FileResponse(io.BytesIO(cal.to_ical()))
-    response["Content-Disposition"] = f'attachment; filename=meal_plan_{html_week}.ics'
+    response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'
 
     return response
 
