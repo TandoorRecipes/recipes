@@ -12,6 +12,7 @@
 
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
+    <script src="{% static 'js/vue-cookies.js' %}"></script>
 
     <script src="{% static 'js/js.cookie.min.js' %}"></script>
 
@@ -24,14 +25,15 @@
             <div class="col-md-4 offset-md-4">
                 <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary shadow-none" @click="changeStartDate(-7)">
+                        <button class="btn btn-outline-secondary shadow-none"
+                                @click="changeStartDate(number_of_days * -1)">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                     </div>
                     <input name="date" id="id_date" class="form-control" type="date" v-model="start_date"
                            @change="updatePlan()">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary shadow-none" @click="changeStartDate(7)">
+                        <button class="btn btn-outline-secondary shadow-none" @click="changeStartDate(number_of_days)">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -41,7 +43,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-sm table-striped table-responsive-sm">
+                <table class="table table-sm table-striped table-responsive-sm" style=" table-layout:fixed;">
                     <thead class="thead-dark">
                     <tr>
                         <th v-for="d in dates" style="width: 14.2%; text-align: center">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
@@ -52,7 +54,7 @@
                     </thead>
                     <tbody v-for="t in meal_types">
                     <tr v-if="meal_plan[t.name] !== undefined">
-                        <td colspan="7" style="text-align: center">
+                        <td :colspan="number_of_days" style="text-align: center">
                             [[ meal_plan[t.name].name]]
                             <template
                                     v-if="t.created_by !== {{ request.user.pk }} && user_names[t.created_by] !== undefined">
@@ -66,18 +68,21 @@
                                        @change="dragChanged(d.date, t, $event)"
                                        :empty-insert-threshold="10" handle=".handle">
                                 <div class="" v-for="(element, index) in d.items" :key="element.id">
+                                    <!-- small layout with handle -->
                                     <div class="d-block d-md-none">
                                         <div class="col-">
                                             <i class="fas fa-arrows-alt handle input-group-text"
                                                style="width: 100%"></i>
                                         </div>
-                                        <div class="list-group-item">
+                                        <div class="list-group-item" style="word-wrap: break-word;">
                                             <a href="#" @click="plan_detail = element" data-toggle="modal"
                                                data-target="#id_plan_detail_modal">[[ planElementName(element)]]</a>
                                         </div>
                                     </div>
-                                    <div class="list-group-item handle d-md-block d-none">
-                                        <div class="col-md-12">
+                                    <!-- big layout -->
+                                    <div class="list-group-item handle d-md-block d-none"
+                                         style="word-wrap: break-word; padding: 2;margin-bottom: 4">
+                                        <div class="col-md-12" style="padding: 0">
                                             <a href="#" @click="plan_detail = element" data-toggle="modal"
                                                data-target="#id_plan_detail_modal">[[ planElementName(element)]]</a>
                                         </div>
@@ -181,6 +186,29 @@
                     </div>
 
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <label>
+                                    {% trans 'Number of Days' %}
+                                    <input class="form-control" type="number" v-model="number_of_days"
+                                           @change="updatePlan(); $cookies.set('number_of_days',number_of_days)">
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>
+                                    {% trans 'Weekday offset' %}
+                                    <input class="form-control" type="number" v-model="start_offset"
+                                           @change="updatePlan(); $cookies.set('start_offset',start_offset)">
+                                    <small class="text-muted">{% trans 'Number of days starting from the first day of the week to offset the default view.' %}</small>
+                                </label>
+                            </div>
+
+                        </div>
+
+
                         <a href="#" data-toggle="modal"
                            data-target="#id_plan_types_modal">{% trans 'Edit plan types' %}</a> <br/>
                         <a href="#" data-toggle="modal"
@@ -347,7 +375,9 @@
             el: '#app',
             data: {
                 start_date: undefined,
+                start_offset: 0,
                 dates: [],
+                number_of_days: $cookies.isKey('number_of_days') ? $cookies.get('number_of_days') : 7,
                 plan_entries: [],
                 meal_types: [],
                 meal_types_edit: [],
@@ -375,7 +405,8 @@
                 this.$set(this.user_names, {{ request.user.pk }}, '{{ request.user.get_user_name }}')
                 this.user_id_update = Array.from(this.default_shared_users)
 
-                this.start_date = moment().weekday(0).format('YYYY-MM-DD')
+                this.start_offset = $cookies.isKey('start_offset') ? $cookies.get('start_offset') : 0;
+                this.start_date = moment().weekday(0).add(this.start_offset, 'days').format('YYYY-MM-DD')
 
                 this.updatePlan();
                 this.getRecipes();
@@ -392,7 +423,7 @@
                 },
                 updatePlan: function () {
                     this.dates = [];
-                    for (var i = 0; i <= 6; i++) {
+                    for (var i = 0; i <= (this.number_of_days - 1); i++) {
                         this.dates.push(moment(this.start_date).add(i, 'days'));
                     }
 
