@@ -243,7 +243,7 @@ def history(request):
 
 @group_required('admin')
 def system(request):
-    postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
+    postgres = False if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql') else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
