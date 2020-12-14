@@ -1,6 +1,7 @@
 import json
 import random
 import re
+import unicodedata
 from json import JSONDecodeError
 
 import microdata
@@ -74,13 +75,19 @@ def find_recipe_json(ld_json, url):
             amount = 0
             unit = ''
             if len(ingredient_split) > 2:
+
                 ingredient = " ".join(ingredient_split[2:])
                 unit = ingredient_split[1]
-                try:
-                    amount = float(ingredient_split[0].replace(',', '.'))
-                except ValueError:
-                    amount = 0
-                    ingredient = " ".join(ingredient_split)
+
+                if 'fraction' in unicodedata.decomposition(ingredient_split[0]):
+                    frac_split = unicodedata.decomposition(ingredient_split[0]).split()
+                    amount = round(float((frac_split[1]).replace('003', '')) / float((frac_split[3]).replace('003', '')), 3)
+                else:
+                    try:
+                        amount = float(ingredient_split[0].replace(',', '.'))
+                    except ValueError:
+                        amount = 0
+                        ingredient = " ".join(ingredient_split)
             if len(ingredient_split) == 2:
                 ingredient = " ".join(ingredient_split[1:])
                 unit = ''
