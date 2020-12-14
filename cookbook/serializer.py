@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step, ShoppingList, \
-    ShoppingListEntry, ShoppingListRecipe
+    ShoppingListEntry, ShoppingListRecipe, NutritionInformation
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -140,13 +140,20 @@ class StepSerializer(WritableNestedModelSerializer):
         fields = ('id', 'name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
 
 
+class NutritionInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NutritionInformation
+        fields = ('carbohydrates', 'fats', 'proteins', 'calories', 'source')
+
+
 class RecipeSerializer(WritableNestedModelSerializer):
+    nutrition = NutritionInformationSerializer(allow_null=True)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
 
     class Meta:
         model = Recipe
-        fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal']
+        fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal', 'nutrition']
         read_only_fields = ['image', 'created_by', 'created_at']
 
 
