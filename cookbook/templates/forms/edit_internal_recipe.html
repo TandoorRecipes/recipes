@@ -87,10 +87,10 @@
                     <div class="card-body">
                         <h4 class="card-title">{% trans 'Nutrition' %}</h4>
                         <div class="dropdown-menu dropdown-menu-right"
-                        aria-labelledby="dropdownMenuLink">
+                             aria-labelledby="dropdownMenuLink">
                             <button class="dropdown-item" @click="removeStep(step)"><i
                                     class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
-                      
+
                         </div>
 
                         <label for="id_name"> {% trans 'Calories' %}</label>
@@ -104,7 +104,7 @@
                         <label for="id_name"> {% trans 'Proteins' %}</label>
                         <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins">
                         <br/>
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -347,7 +347,7 @@
                         <div class="col-md-12">
                             <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
                             <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
-                                      :id="'id_instruction_' + step.id"></b-form-textarea>
+                                             :id="'id_instruction_' + step.id"></b-form-textarea>
                             <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
                         </div>
                     </div>
@@ -364,7 +364,10 @@
                 <button type="button" @click="addStep()"
                         class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
                 <button type="button" @click="addNutrition()"
-                        class="btn btn-primary shadow-none">{% trans 'Add Nutrition' %}</button>
+                        class="btn btn-primary shadow-none"
+                        v-if="recipe.nutrition === null">{% trans 'Add Nutrition' %}</button>
+                <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
+                        class="btn btn-warning shadow-none">{% trans 'Remove Nutrition' %}</button>
                 <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
                    class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
                 <a href="{% url 'delete_recipe' recipe.pk %}"
@@ -392,7 +395,10 @@
                         class="btn btn-primary btn-block shadow-none">{% trans 'Add Step' %}</button>
 
                 <button type="button" @click="addNutrition()"
-                        class="btn btn-primary btn-block shadow-none">{% trans 'Add Nutrition' %}</button>
+                        class="btn btn-primary btn-block shadow-none"
+                        v-if="recipe.nutrition === null">{% trans 'Add Nutrition' %}</button>
+                <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
+                        class="btn btn-warning btn-block shadow-none">{% trans 'Remove Nutrition' %}</button>
 
                 <a href="{% url 'view_recipe' recipe.pk %}"
                    class="btn btn-secondary btn-block shadow-none">{% trans 'View Recipe' %}</a>
@@ -488,8 +494,8 @@
                         e.preventDefault(); // present "Save Page" from getting triggered.
 
                         for (el of e.path) {
-                            if(el.id !== undefined && el.id.includes('id_card_step_')) {
-                                let step = this.recipe.steps[el.id.replace('id_card_step_','')]
+                            if (el.id !== undefined && el.id.includes('id_card_step_')) {
+                                let step = this.recipe.steps[el.id.replace('id_card_step_', '')]
                                 this.addIngredient(step)
                             }
                         }
@@ -685,8 +691,8 @@
                 addNutrition: function () {
                     this.recipe.nutrition = {}
                 },
-                removeNutrition: function() {
-                    this.recipe.nutrition = undefined
+                removeNutrition: function () {
+                    this.recipe.nutrition = null
                 }
             }
         });
