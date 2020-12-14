@@ -147,7 +147,7 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(WritableNestedModelSerializer):
-    nutrition = NutritionInformationSerializer(allow_null=True)
+    nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
 
