@@ -12,6 +12,8 @@
     {% include 'include/vue_base.html' %}
     <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
 
+    <script src="{% static 'js/frac.js' %}"></script>
+
     <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
     <link rel="stylesheet" href="{% static 'custom/css/markdown_blockquote.css' %}">
 
@@ -150,7 +152,7 @@
                                                                     <span>&#x2063;</span>
                                                                 </template>
                                                                 <template v-if="!i.no_amount">
-                                                                    <span>[[roundDecimals(i.amount * ingredient_factor)]]</span>
+                                                                    <span v-html="calculateAmount(i.amount)"></span>
                                                                     {# Allow for amounts without units, such as "2 eggs" #}
                                                                     <template v-if="i.unit">
                                                                         [[i.unit.name]]
@@ -221,7 +223,7 @@
                                 </td>
                                 <td style="text-align: right">{{ recipe.nutrition.calories|floatformat:2 }}</td>
                                 <td>kcal</td>
-                                </tr>
+                            </tr>
                             <tr>
                             <tr>
                                 <td style="padding-top: 8px!important; ">
@@ -229,7 +231,7 @@
                                 </td>
                                 <td style="text-align: right">{{ recipe.nutrition.carbohydrates|floatformat:2 }}</td>
                                 <td>g</td>
-                                </tr>
+                            </tr>
                             <tr>
                             <tr>
                                 <td style="padding-top: 8px!important; ">
@@ -237,23 +239,23 @@
                                 </td>
                                 <td style="text-align: right">{{ recipe.nutrition.fats|floatformat:2 }}</td>
                                 <td>g</td>
-                                </tr>
+                            </tr>
                             <tr>
-                                <tr>
-                                    <td style="padding-top: 8px!important; ">
-                                        <b>{% trans 'Proteins' %}</b>
-                                    </td>
-                                    <td style="text-align: right">{{ recipe.nutrition.proteins|floatformat:2 }}</td>
-                                    <td>g</td>
-                                    </tr>
-                                <tr>
+                            <tr>
+                                <td style="padding-top: 8px!important; ">
+                                    <b>{% trans 'Proteins' %}</b>
+                                </td>
+                                <td style="text-align: right">{{ recipe.nutrition.proteins|floatformat:2 }}</td>
+                                <td>g</td>
+                            </tr>
+                            <tr>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                         </table>
                         {% if recipe.nutrition.source %}
-                        Source: {{ recipe.nutrition.source }}
+                            Source: {{ recipe.nutrition.source }}
                         {% endif %}
                     </div>
                 </div>
@@ -325,7 +327,7 @@
                                                                     <span>&#x2063;</span>
                                                                 </template>
                                                                 <template v-if="!i.no_amount">
-                                                                    <span>[[roundDecimals(i.amount * ingredient_factor)]]</span>
+                                                                    <span v-html="calculateAmount(i.amount)"></span>
                                                                     {# Allow for amounts without units, such as "2 eggs" #}
                                                                     <template v-if="i.unit">
                                                                         [[i.unit.name]]
@@ -577,8 +579,28 @@
                 },
                 getShoppingUrl: function () {
                     return `{% url 'view_shopping' %}?r=[${this.recipe.id},${this.ingredient_factor}]`
-                }
+                },
+                calculateAmount: function (amount) {
+                    {% if request.user.userpreference.use_fractions %}
+                        let return_string = ''
+                        let fraction = frac.cont(amount, 9, true)
+
+                        if (fraction[0] > 0) {
+                            return_string += fraction[0]
+                        }
+
+                        if (fraction[1] > 0) {
+                            return_string += ` <sup>${(fraction[1])}</sup>&frasl;<sub>${(fraction[2])}</sub>`
+                        }
+
+                        return return_string
+                    {% else %}
+                         return this.roundDecimals(amount * this.ingredient_factor)
+                    {% endif %}
+                },
             }
         });
+
+
     </script>
 {% endblock %}

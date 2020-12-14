@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django_random_queryset import RandomManager
 
-from recipes.settings import COMMENT_PREF_DEFAULT
+from recipes.settings import COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT
 
 
 def get_user_name(self):
@@ -69,6 +69,7 @@ class UserPreference(models.Model):
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
+    use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
     search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
     show_recent = models.BooleanField(default=True)
