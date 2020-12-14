@@ -80,34 +80,35 @@
                 </multiselect>
             </div>
         </div>
+        <template v-if="recipe !== undefined">
+            <div class="row" v-if="recipe.nutrition" style="margin-top: 1vh">
+                <div class="col-md-12">
+                    <div class="card border-grey">
+                        <div class="card-body">
+                            <h4 class="card-title">{% trans 'Nutrition' %}</h4>
+                            <div class="dropdown-menu dropdown-menu-right"
+                                 aria-labelledby="dropdownMenuLink">
+                                <button class="dropdown-item" @click="removeStep(step)"><i
+                                        class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
 
-        <div class="row" v-if="recipe.nutrition" style="margin-top: 1vh">
-            <div class="col-md-12">
-                <div class="card border-grey">
-                    <div class="card-body">
-                        <h4 class="card-title">{% trans 'Nutrition' %}</h4>
-                        <div class="dropdown-menu dropdown-menu-right"
-                             aria-labelledby="dropdownMenuLink">
-                            <button class="dropdown-item" @click="removeStep(step)"><i
-                                    class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
+                            </div>
 
+                            <label for="id_name"> {% trans 'Calories' %}</label>
+                            <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
+
+                            <label for="id_name"> {% trans 'Carbohydrates' %}</label>
+                            <input class="form-control" id="id_carbohydrates" v-model="recipe.nutrition.carbohydrates">
+
+                            <label for="id_name"> {% trans 'Fats' %}</label>
+                            <input class="form-control" id="id_fats" v-model="recipe.nutrition.fats">
+                            <label for="id_name"> {% trans 'Proteins' %}</label>
+                            <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins">
+                            <br/>
                         </div>
-
-                        <label for="id_name"> {% trans 'Calories' %}</label>
-                        <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
-
-                        <label for="id_name"> {% trans 'Carbohydrates' %}</label>
-                        <input class="form-control" id="id_carbohydrates" v-model="recipe.nutrition.carbohydrates">
-
-                        <label for="id_name"> {% trans 'Fats' %}</label>
-                        <input class="form-control" id="id_fats" v-model="recipe.nutrition.fats">
-                        <label for="id_name"> {% trans 'Proteins' %}</label>
-                        <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins">
-                        <br/>
                     </div>
                 </div>
             </div>
-        </div>
+        </template>
 
 
         <draggable :list="recipe.steps" group="steps"
@@ -355,7 +356,7 @@
             </div>
         </draggable>
 
-        <div class="row" style="margin-top: 1vh; margin-bottom: 8vh">
+        <div class="row" style="margin-top: 1vh; margin-bottom: 8vh" v-if="recipe !== undefined">
             <div class="col-12">
                 <button type="button" @click="updateRecipe(true)"
                         class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
@@ -382,7 +383,7 @@
 {% endblock %}
 
 {% block content_xl_right %}
-    <div class="sticky-top" style="top: 2vh; z-index: 100;">
+    <div class="sticky-top" style="top: 2vh; z-index: 100;" v-if="recipe !== undefined">
         <div class="row">
             <div class="col-md-11">
                 <button type="button" @click="updateRecipe(true)"
