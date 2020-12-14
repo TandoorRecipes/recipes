@@ -79,13 +79,13 @@
 
     {% if recipe.working_time and recipe.working_time != 0 %}
         <span class="badge badge-secondary"><i
-                class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ recipe.working_time }} min </span>
+                class="fas fa-user-clock"></i> {% trans 'Preparation time ~' %} {{ recipe.working_time }} min </span>
     {% endif %}
 
     {% if recipe.waiting_time and recipe.waiting_time != 0 %}
         <span
                 class="badge badge-secondary"><i
-                class="far fa-clock"></i> {% trans 'Waiting time ca.' %} {{ recipe.waiting_time }} min </span>
+                class="far fa-clock"></i> {% trans 'Waiting time ~' %} {{ recipe.waiting_time }} min </span>
     {% endif %}
     {% recipe_last recipe request.user as last_cooked %}
     {% if last_cooked %}
