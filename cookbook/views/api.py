@@ -104,8 +104,12 @@ class StandardFilterMixin(ViewSetMixin):
             queryset = queryset.filter(name__icontains=query)
 
         limit = self.request.query_params.get('limit', None)
+        random = self.request.query_params.get('random', False)
         if limit is not None:
-            queryset = queryset[:int(limit)]
+            if random:
+                queryset = queryset.random(int(limit))
+            else:
+                queryset = queryset[:int(limit)]
         return queryset
 
 
@@ -209,9 +213,6 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         internal = self.request.query_params.get('internal', None)
         if internal:
             self.queryset = self.queryset.filter(internal=True)
-        random = self.request.query_params.get('random', False)
-        if random:
-            self.queryset = self.queryset.random(5)
 
         return super().get_queryset()
 
