@@ -176,6 +176,7 @@ LANGUAGES = [
     ('de', _('German')),
     ('nl', _('Dutch')),
     ('fr', _('French')),
+    ('ca', _('Catalan')),
 ]
 
 # Static files (CSS, JavaScript, Images)
