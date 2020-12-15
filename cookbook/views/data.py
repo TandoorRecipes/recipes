@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 
 import requests
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from django.contrib import messages
 from django.core.files import File
 from django.db.transaction import atomic
@@ -144,19 +144,22 @@ def import_url(request):
             print(ingredient)
 
         if data['image'] != '':
-            response = requests.get(data['image'])
-            img = Image.open(BytesIO(response.content))
+            try:
+                response = requests.get(data['image'])
+                img = Image.open(BytesIO(response.content))
 
-            # todo move image processing to dedicated function
-            basewidth = 720
-            wpercent = (basewidth / float(img.size[0]))
-            hsize = int((float(img.size[1]) * float(wpercent)))
-            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+                # todo move image processing to dedicated function
+                basewidth = 720
+                wpercent = (basewidth / float(img.size[0]))
+                hsize = int((float(img.size[1]) * float(wpercent)))
+                img = img.resize((basewidth, hsize), Image.ANTIALIAS)
 
-            im_io = BytesIO()
-            img.save(im_io, 'PNG', quality=70)
-            recipe.image = File(im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png')
-            recipe.save()
+                im_io = BytesIO()
+                img.save(im_io, 'PNG', quality=70)
+                recipe.image = File(im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png')
+                recipe.save()
+            except UnidentifiedImageError:
+                pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
 
