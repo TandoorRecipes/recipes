@@ -583,7 +583,7 @@
                 calculateAmount: function (amount) {
                     {% if request.user.userpreference.use_fractions %}
                         let return_string = ''
-                        let fraction = frac.cont(amount, 9, true)
+                        let fraction = frac.cont((amount * this.ingredient_factor), 9, true)
 
                         if (fraction[0] > 0) {
                             return_string += fraction[0]
