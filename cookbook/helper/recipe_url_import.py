@@ -75,7 +75,6 @@ def find_recipe_json(ld_json, url):
             amount = 0
             unit = ''
             if len(ingredient_split) > 2:
-
                 ingredient = " ".join(ingredient_split[2:])
                 unit = ingredient_split[1]
 
@@ -83,6 +82,8 @@ def find_recipe_json(ld_json, url):
                     if 'fraction' in unicodedata.decomposition(ingredient_split[0]):
                         frac_split = unicodedata.decomposition(ingredient_split[0]).split()
                         amount = round(float((frac_split[1]).replace('003', '')) / float((frac_split[3]).replace('003', '')), 3)
+                    else:
+                        raise TypeError
                 except TypeError:  # raised by unicodedata.decomposition if there was no unicode character in parsed data
                     try:
                         amount = float(ingredient_split[0].replace(',', '.'))
