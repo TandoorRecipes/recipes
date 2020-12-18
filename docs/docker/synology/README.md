@@ -24,7 +24,8 @@ Basic guide to setup vabenee1111/recipes docker container on Synology NAS
 - Open https://github.com/vabene1111/recipes/tree/develop/docs/docker/plain/nginx/conf.d
 - Download Recipes.conf to your conf.d folder 
 - Open https://github.com/vabene1111/recipes/blob/develop/.env.template
-- Copy the text and save it as 'env' to your recipes folder (no filename extension!)
+- Copy the text and save it as '.env' to your recipes folder (no filename extension!)
+- Add a POSTGRES_PASSWORD
 - Once done, it should look like this:
 
 ![grafik](https://user-images.githubusercontent.com/66269214/84471828-75319400-ac86-11ea-97e1-42bcb166720e.png)
@@ -50,3 +51,24 @@ Creating recipes_web_recipes_1   ... done
 ```
 - Browse to 192.168.1.1:2000 or whatever your IP and port are
 - While the containers are starting and doing whatever they need to do, you might still get HTTP errors e.g. 500 or 502. Just be patient and try again in a moment
+
+5. Additional SSL Setup
+- create foler `ssl` inside `nginx` folder
+	- download your ssl certificate from `security` tab in dsm `control panel`
+	- or create a task in `task manager` because Synology will update the certificate every few months
+		- set task to repeat every day
+		- in the script write:
+		```
+		SRC="/usr/syno/etc/certificate/system/default"
+		DEST="/volume1/docker/recipes/nginx/ssl/"
+		if [ ! -f "$DEST/fullchain.pem" ] || [ "$SRC/fullchain.pem" -nt "$DEST/fullchain.pem" ]; then
+ 		cp "$SRC/fullchain.pem" "$DEST/"
+  		cp "$SRC/privkey.pem" "$DEST/"
+  		chown root:root "$DEST/fullchain.pem" "$DEST/privkey.pem"
+  		chmod 600 "$DEST/fullchain.pem" "$DEST/privkey.pem"
+  		/usr/syno/bin/synowebapi --exec api=SYNO.Docker.Container version=1 method=restart name=recipes_nginx_recipes_1
+		fi
+		```
+- change `docker-compose.yml`
+  add `- ./nginx/ssl:/etc/nginx/certs` to the `volumes` of `nginx_recipes`
+	
