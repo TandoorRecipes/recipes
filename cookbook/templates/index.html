@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="collapse col-md-12" id="collapse_adv_search">
+                        <div class="collapse col-md-12{% if filter.data.keywords or filter.data.foods or filter.data.internal and not filter.data.internal == "unknown" %} show{% endif %}" id="collapse_adv_search">
                             <div style="margin-top: 1vh">
                                 {{ filter.form.keywords | as_crispy_field }}
                             </div>
