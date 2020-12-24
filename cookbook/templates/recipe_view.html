@@ -39,7 +39,7 @@
                         <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
                             <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
 
-                        <a class="dropdown-item" v-bind:href="getShoppingUrl()" v-if="has_ingredients">
+                        <a class="dropdown-item" v-bind:href="shopping_url" v-if="has_ingredients">
                             <i class="fas fa-shopping-cart fa-fw"></i> {% trans 'Add to Shopping' %}</a>
 
                         <a class="dropdown-item" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}"><i
@@ -530,7 +530,10 @@
             computed: {
                 ingredient_factor: function () {
                     return this.servings / recipe_servings
-                }
+                },
+                shopping_url: function () {
+                    return `{% url 'view_shopping' %}?r=[${this.recipe.id},${this.servings}]`
+                },
             },
             mounted: function () {
                 this.loadRecipe()
@@ -582,9 +585,6 @@
                         time_diff += s.time
                     }
 
-                },
-                getShoppingUrl: function () {
-                    return `{% url 'view_shopping' %}?r=[${this.recipe.id},${this.ingredient_factor}]`
                 },
                 calculateAmount: function (amount) {
                     {% if request.user.userpreference.use_fractions %}
