@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django_random_queryset import RandomManager
 
-from recipes.settings import COMMENT_PREF_DEFAULT
+from recipes.settings import COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT
 
 
 def get_user_name(self):
@@ -69,6 +69,7 @@ class UserPreference(models.Model):
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
+    use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
     search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
     show_recent = models.BooleanField(default=True)
@@ -182,6 +183,17 @@ class Step(models.Model):
         ordering = ['order', 'pk']
 
 
+class NutritionInformation(models.Model):
+    fats = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    carbohydrates = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    source = models.CharField(max_length=512, default="", null=True, blank=True)
+
+    def __str__(self):
+        return f'Nutrition'
+
+
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
     servings = models.IntegerField(default=1)
@@ -196,6 +208,7 @@ class Recipe(models.Model):
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
+    nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

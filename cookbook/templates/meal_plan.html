@@ -12,6 +12,7 @@
 
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
+    <script src="{% static 'js/vue-cookies.js' %}"></script>
 
     <script src="{% static 'js/js.cookie.min.js' %}"></script>
 
@@ -24,14 +25,15 @@
             <div class="col-md-4 offset-md-4">
                 <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-secondary shadow-none" @click="changeWeek(-1)">
+                        <button class="btn btn-outline-secondary shadow-none"
+                                @click="changeStartDate(number_of_days * -1)">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                     </div>
-                    <input name="week" id="id_week" class="form-control" type="week" v-model="week"
+                    <input name="date" id="id_date" class="form-control" type="date" v-model="start_date"
                            @change="updatePlan()">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary shadow-none" @click="changeWeek(1)">
+                        <button class="btn btn-outline-secondary shadow-none" @click="changeStartDate(number_of_days)">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -41,10 +43,10 @@
 
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-sm table-striped table-responsive-sm">
+                <table class="table table-sm table-striped table-responsive-sm" style=" table-layout:fixed;">
                     <thead class="thead-dark">
                     <tr>
-                        <th v-for="d in days" style="width: 14.2%; text-align: center">[[d]]<br/>[[formatDateDay(d)]].
+                        <th v-for="d in dates" style="width: 14.2%; text-align: center">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
                             <button class="btn btn-sm btn-outline-secondary shadow-none" @click="addDayToShopping(d)"><i
                                     class="fas fa-cart-plus fa-sm"></i></button>
                         </th>
@@ -52,7 +54,7 @@
                     </thead>
                     <tbody v-for="t in meal_types">
                     <tr v-if="meal_plan[t.name] !== undefined">
-                        <td colspan="7" style="text-align: center">
+                        <td :colspan="number_of_days" style="text-align: center">
                             [[ meal_plan[t.name].name]]
                             <template
                                     v-if="t.created_by !== {{ request.user.pk }} && user_names[t.created_by] !== undefined">
@@ -66,18 +68,21 @@
                                        @change="dragChanged(d.date, t, $event)"
                                        :empty-insert-threshold="10" handle=".handle">
                                 <div class="" v-for="(element, index) in d.items" :key="element.id">
+                                    <!-- small layout with handle -->
                                     <div class="d-block d-md-none">
                                         <div class="col-">
                                             <i class="fas fa-arrows-alt handle input-group-text"
                                                style="width: 100%"></i>
                                         </div>
-                                        <div class="list-group-item">
+                                        <div class="list-group-item" style="word-wrap: break-word;">
                                             <a href="#" @click="plan_detail = element" data-toggle="modal"
                                                data-target="#id_plan_detail_modal">[[ planElementName(element)]]</a>
                                         </div>
                                     </div>
-                                    <div class="list-group-item handle d-md-block d-none">
-                                        <div class="col-md-12">
+                                    <!-- big layout -->
+                                    <div class="list-group-item handle d-md-block d-none"
+                                         style="word-wrap: break-word; padding: 2;margin-bottom: 4">
+                                        <div class="col-md-12" style="padding: 0">
                                             <a href="#" @click="plan_detail = element" data-toggle="modal"
                                                data-target="#id_plan_detail_modal">[[ planElementName(element)]]</a>
                                         </div>
@@ -107,7 +112,8 @@
                                     <input type="text" class="form-control" v-model="recipe_query" @keyup="getRecipes"
                                            placeholder="{% trans 'Search Recipe' %}">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" @click="getRandomRecipes">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                                @click="getRandomRecipes">
                                             <i class="fas fa-dice"></i>
                                         </button>
                                     </div>
@@ -180,6 +186,29 @@
                     </div>
 
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <label>
+                                    {% trans 'Number of Days' %}
+                                    <input class="form-control" type="number" v-model="number_of_days"
+                                           @change="updatePlan(); $cookies.set('number_of_days',number_of_days)">
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>
+                                    {% trans 'Weekday offset' %}
+                                    <input class="form-control" type="number" v-model="start_offset"
+                                           @change="updatePlan(); $cookies.set('start_offset',start_offset)">
+                                    <small class="text-muted">{% trans 'Number of days starting from the first day of the week to offset the default view.' %}</small>
+                                </label>
+                            </div>
+
+                        </div>
+
+
                         <a href="#" data-toggle="modal"
                            data-target="#id_plan_types_modal">{% trans 'Edit plan types' %}</a> <br/>
                         <a href="#" data-toggle="modal"
@@ -345,8 +374,10 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                week: moment().format('YYYY-[W]WW'),
-                days: moment.weekdays(true),
+                start_date: undefined,
+                start_offset: 0,
+                dates: [],
+                number_of_days: $cookies.isKey('number_of_days') ? $cookies.get('number_of_days') : 7,
                 plan_entries: [],
                 meal_types: [],
                 meal_types_edit: [],
@@ -374,6 +405,9 @@
                 this.$set(this.user_names, {{ request.user.pk }}, '{{ request.user.get_user_name }}')
                 this.user_id_update = Array.from(this.default_shared_users)
 
+                this.start_offset = $cookies.isKey('start_offset') ? $cookies.get('start_offset') : 0;
+                this.start_date = moment().weekday(0).add(this.start_offset, 'days').format('YYYY-MM-DD')
+
                 this.updatePlan();
                 this.getRecipes();
             },
@@ -388,6 +422,11 @@
                     })
                 },
                 updatePlan: function () {
+                    this.dates = [];
+                    for (var i = 0; i <= (this.number_of_days - 1); i++) {
+                        this.dates.push(moment(this.start_date).add(i, 'days'));
+                    }
+
                     let planEntryPromise = this.getPlanEntries();
                     let planTypePromise = this.getPlanTypes();
 
@@ -396,7 +435,7 @@
                     })
                 },
                 getPlanEntries: function () {
-                    return this.$http.get("{% url 'api:mealplan-list' %}?html_week=" + this.week).then((response) => {
+                    return this.$http.get("{% url 'api:mealplan-list' %}?from_date=" + this.dates[0].format('YYYY-MM-DD') + "&to_date=" + this.dates[this.dates.length - 1].format('YYYY-MM-DD')).then((response) => {
                         this.plan_entries = response.data;
                     }).catch((err) => {
                         console.log("getPlanEntries error: ", err);
@@ -431,11 +470,10 @@
                             meal_type: t.id,
                             days: {}
                         })
-                        for (let d of this.days) {
-                            let date = moment(this.week).weekday(this.days.indexOf(d)).format('YYYY-MM-DD')
-                            this.$set(this.meal_plan[t.name].days, date, {
-                                name: d,
-                                date: date,
+                        for (let d of this.dates) {
+                            this.$set(this.meal_plan[t.name].days, d.format('YYYY-MM-DD'), {
+                                name: this.formatDateDayname(d),
+                                date: d.format('YYYY-MM-DD'),
                                 items: []
                             })
                         }
@@ -632,11 +670,14 @@
                 formatLocalDate: function (date) {
                     return moment(date).format('LL')
                 },
-                formatDateDay: function (day) {
-                    return moment(this.week).weekday(this.days.indexOf(day)).format('D')
+                formatDateDay: function (date) {
+                    return moment(date).format('D')
                 },
-                changeWeek: function (change) {
-                    this.week = moment(this.week).add(change, 'w').format('YYYY-[W]WW')
+                formatDateDayname: function (date) {
+                    return moment(date).format('dddd')
+                },
+                changeStartDate: function (change) {
+                    this.start_date = moment(this.start_date).add(change, 'days').format('YYYY-MM-DD')
                     this.updatePlan();
                 },
                 getShoppingUrl: function () {
@@ -653,13 +694,14 @@
                     return url
                 },
                 getIcalUrl: function () {
-                    return "{% url 'api_get_plan_ical' 12345 %}".replace(/12345/, this.week);
+                    if (this.dates.length === 0) {
+                        return ""
+                    }
+                    return "{% url 'api_get_plan_ical' 12345 6789 %}".replace(/12345/, this.dates[0].format('YYYY-MM-DD')).replace(/6789/, this.dates[this.dates.length - 1].format('YYYY-MM-DD'));
                 },
-                addDayToShopping: function (day) {
-                    let date = moment(this.week).weekday(this.days.indexOf(day)).format('YYYY-MM-DD')
-
+                addDayToShopping: function (date) {
                     for (let t of this.meal_types) {
-                        for (let i of this.meal_plan[t.name].days[date].items) {
+                        for (let i of this.meal_plan[t.name].days[date.format('YYYY-MM-DD')].items) {
                             if (!this.shopping_list.includes(i)) {
                                 this.shopping_list.push(i)
                             }
