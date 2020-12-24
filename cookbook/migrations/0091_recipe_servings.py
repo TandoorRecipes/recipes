@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0074_remove_keyword_created_by'),
+        ('cookbook', '0090_auto_20201214_1359'),
     ]
 
     operations = [

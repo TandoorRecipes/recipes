@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 19:44+0200\n"
+"POT-Creation-Date: 2020-12-15 21:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,18 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\recipes\settings.py:174
+#: .\recipes\settings.py:175
 msgid "English"
 msgstr ""
 
-#: .\recipes\settings.py:175
+#: .\recipes\settings.py:176
 msgid "German"
 msgstr ""
 
-#: .\recipes\settings.py:176
+#: .\recipes\settings.py:177
 msgid "Dutch"
 msgstr ""
 
-#: .\recipes\settings.py:177
+#: .\recipes\settings.py:178
 msgid "French"
 msgstr ""
