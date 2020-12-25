@@ -1,0 +1,1988 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# alfa5 <alfa2514@gmail.com>, 2020
+# Alberto <albertocp@correo.ugr.es>, 2020
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-15 21:39+0100\n"
+"PO-Revision-Date: 2020-06-02 19:28+0000\n"
+"Last-Translator: Alberto <albertocp@correo.ugr.es>, 2020\n"
+"Language-Team: Spanish (https://www.transifex.com/django-recipes/teams/110507/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\cookbook\filters.py:15 .\cookbook\templates\base.html:80
+#: .\cookbook\templates\forms\edit_internal_recipe.html:199
+#: .\cookbook\templates\forms\ingredients.html:34
+#: .\cookbook\templates\recipe_view.html:107
+#: .\cookbook\templates\stats.html:28 .\cookbook\views\lists.py:48
+msgid "Ingredients"
+msgstr "Ingredientes"
+
+#: .\cookbook\forms.py:37
+msgid ""
+"Color of the top navigation bar. Not all colors work with all themes, just "
+"try them out!"
+msgstr ""
+"Color de la barra de navegación superior. No todos los colores funcionan con"
+" todos los temas, ¡pruébalos!"
+
+#: .\cookbook\forms.py:38
+msgid "Default Unit to be used when inserting a new ingredient into a recipe."
+msgstr ""
+"Unidad predeterminada que se utilizará al insertar un nuevo ingrediente en "
+"una receta."
+
+#: .\cookbook\forms.py:39
+msgid ""
+"Enables support for fractions in ingredient amounts (e.g. convert decimals "
+"to fractions automatically)"
+msgstr ""
+"Permite utilizar fracciones en cantidades de ingredientes (e.g. convierte "
+"los decimales en fracciones automáticamente)"
+
+#: .\cookbook\forms.py:40
+msgid "Default user to share newly created meal plan entries with."
+msgstr ""
+"Usuario predeterminado para compartir las entradas del plan de comidas "
+"recién creadas."
+
+#: .\cookbook\forms.py:41
+msgid "Show recently viewed recipes on search page."
+msgstr "Muestra recetas vistas recientemente en la página de búsqueda."
+
+#: .\cookbook\forms.py:42
+msgid "Number of decimals to round ingredients."
+msgstr "Número de decimales para redondear los ingredientes."
+
+#: .\cookbook\forms.py:43
+msgid "If you want to be able to create and see comments underneath recipes."
+msgstr "Si desea poder crear y ver comentarios debajo de las recetas."
+
+#: .\cookbook\forms.py:45
+msgid ""
+"Setting to 0 will disable auto sync. When viewing a shopping list the list "
+"is updated every set seconds to sync changes someone else might have made. "
+"Useful when shopping with multiple people but might use a little bit of "
+"mobile data. If lower than instance limit it is reset when saving."
+msgstr ""
+"Ponerlo a 0 deshabilitará la sincronización automática. Al ver una lista de "
+"la compra, la lista se actualiza cada periodo establecido en segundos para "
+"sincronizar los cambios que otra persona pueda haber hecho. Es útil cuando "
+"se compra con varias personas, pero puede consumir datos móviles. Si el "
+"valor establecido es inferior al límite de la instancia, este se "
+"restablecerá al guardar."
+
+#: .\cookbook\forms.py:62
+msgid ""
+"Both fields are optional. If none are given the username will be displayed "
+"instead"
+msgstr ""
+"Ambos campos son opcionales. Si no se proporciona ninguno, se mostrará el nombre de usuario en su lugar\n"
+" \n"
+" \n"
+" \n"
+" "
+
+#: .\cookbook\forms.py:76 .\cookbook\forms.py:94 .\cookbook\forms.py:241
+#: .\cookbook\templates\forms\edit_internal_recipe.html:45
+msgid "Name"
+msgstr "Nombre"
+
+#: .\cookbook\forms.py:77 .\cookbook\forms.py:95 .\cookbook\forms.py:242
+#: .\cookbook\templates\forms\edit_internal_recipe.html:65
+#: .\cookbook\templates\stats.html:24 .\cookbook\templates\url_import.html:177
+msgid "Keywords"
+msgstr "Palabras clave"
+
+#: .\cookbook\forms.py:78 .\cookbook\forms.py:96
+msgid "Preparation time in minutes"
+msgstr "Tiempo de preparación en minutos"
+
+#: .\cookbook\forms.py:79 .\cookbook\forms.py:97
+msgid "Waiting time (cooking/baking) in minutes"
+msgstr "Tiempo de espera (cocinar/hornear) en minutos"
+
+#: .\cookbook\forms.py:80 .\cookbook\forms.py:243
+msgid "Path"
+msgstr "Ruta"
+
+#: .\cookbook\forms.py:81
+msgid "Storage UID"
+msgstr "UID de almacenamiento"
+
+#: .\cookbook\forms.py:108
+msgid ""
+"Include <code>- [ ]</code> in list for easier usage in markdown based "
+"documents."
+msgstr ""
+"Incluir <code>- [ ]</code> en la lista para facilitar el uso en los "
+"documentos basados en Markdown."
+
+#: .\cookbook\forms.py:120
+msgid "Export Base64 encoded image?"
+msgstr "¿Exportar imagen codificada en Base64?"
+
+#: .\cookbook\forms.py:124
+msgid "Download export directly or show on page?"
+msgstr "¿Descargar exportar directamente o mostrar en la página?"
+
+#: .\cookbook\forms.py:130
+msgid "Simply paste a JSON export into this textarea and click import."
+msgstr ""
+"Simplemente pegue una exportación JSON en este área de texto y haga clic en "
+"importar."
+
+#: .\cookbook\forms.py:139
+msgid "New Unit"
+msgstr "Nueva Unidad"
+
+#: .\cookbook\forms.py:140
+msgid "New unit that other gets replaced by."
+msgstr "Nueva unidad por la que otras son reemplazadas."
+
+#: .\cookbook\forms.py:145
+msgid "Old Unit"
+msgstr "Unidad antigua"
+
+#: .\cookbook\forms.py:146
+msgid "Unit that should be replaced."
+msgstr "Unidad que debe reemplazarse."
+
+#: .\cookbook\forms.py:156
+msgid "New Food"
+msgstr "Nuevo Alimento"
+
+#: .\cookbook\forms.py:157
+msgid "New food that other gets replaced by."
+msgstr "Nuevo alimento que remplaza al anterior."
+
+#: .\cookbook\forms.py:162
+msgid "Old Food"
+msgstr "Alimento anterior"
+
+#: .\cookbook\forms.py:163
+msgid "Food that should be replaced."
+msgstr "Alimento que se va a reemplazar."
+
+#: .\cookbook\forms.py:175
+msgid "Add your comment: "
+msgstr "Añada su comentario:"
+
+#: .\cookbook\forms.py:200
+msgid "Leave empty for dropbox and enter app password for nextcloud."
+msgstr ""
+"Déjelo vacío para Dropbox e ingrese la contraseña de la aplicación para "
+"nextcloud."
+
+#: .\cookbook\forms.py:203
+msgid "Leave empty for nextcloud and enter api token for dropbox."
+msgstr ""
+"Déjelo en blanco para nextcloud e ingrese el token de api para dropbox."
+
+#: .\cookbook\forms.py:211
+msgid ""
+"Leave empty for dropbox and enter only base url for nextcloud "
+"(<code>/remote.php/webdav/</code> is added automatically)"
+msgstr ""
+"Dejar vació para Dropbox e introducir sólo la URL base para Nextcloud "
+"(<code>/remote.php/webdav/</code> se añade automáticamente)"
+
+#: .\cookbook\forms.py:230
+msgid "Search String"
+msgstr "Cadena de búsqueda"
+
+#: .\cookbook\forms.py:244
+msgid "File ID"
+msgstr "ID de Fichero"
+
+#: .\cookbook\forms.py:262
+msgid "You must provide at least a recipe or a title."
+msgstr "Debe proporcionar al menos una receta o un título."
+
+#: .\cookbook\forms.py:271
+msgid "You can list default users to share recipes with in the settings."
+msgstr ""
+"Puede enumerar los usuarios predeterminados con los que compartir recetas en"
+" la configuración."
+
+#: .\cookbook\forms.py:272
+#: .\cookbook\templates\forms\edit_internal_recipe.html:352
+msgid ""
+"You can use markdown to format this field. See the <a "
+"href=\"/docs/markdown/\">docs here</a>"
+msgstr ""
+"Puede utilizar Markdown para formatear este campo. Vea la <a "
+"href=\"/docs/markdown/\">documentación aqui</a>"
+
+#: .\cookbook\forms.py:273
+msgid "Scaling factor for recipe."
+msgstr "Factor de escala para receta."
+
+#: .\cookbook\forms.py:284
+msgid "A username is not required, if left blank the new user can choose one."
+msgstr ""
+"No se requiere un nombre de usuario, si se deja en blanco, el nuevo usuario "
+"puede elegir uno."
+
+#: .\cookbook\helper\permission_helper.py:130
+#: .\cookbook\helper\permission_helper.py:186
+#: .\cookbook\helper\permission_helper.py:200
+#: .\cookbook\helper\permission_helper.py:211
+#: .\cookbook\helper\permission_helper.py:222 .\cookbook\views\data.py:27
+#: .\cookbook\views\views.py:79 .\cookbook\views\views.py:158
+msgid "You do not have the required permissions to view this page!"
+msgstr "¡No tienes los permisos necesarios para ver esta página!"
+
+#: .\cookbook\helper\permission_helper.py:140
+msgid "You are not logged in and therefore cannot view this page!"
+msgstr "¡No ha iniciado sesión y por lo tanto no puede ver esta página!"
+
+#: .\cookbook\helper\permission_helper.py:144
+#: .\cookbook\helper\permission_helper.py:158
+#: .\cookbook\helper\permission_helper.py:172 .\cookbook\views\delete.py:132
+msgid "You cannot interact with this object as its not owned by you!"
+msgstr "¡No puede interactuar con este objeto ya que no es de su propiedad!"
+
+#: .\cookbook\helper\recipe_url_import.py:36
+msgid "The requested site provided malformed data and cannot be read."
+msgstr ""
+"El sitio solicitado proporcionó datos con formato incorrecto y no se puede "
+"leer."
+
+#: .\cookbook\helper\recipe_url_import.py:45
+msgid ""
+"The requested site does not provide any recognized data format to import the"
+" recipe from."
+msgstr ""
+"El sitio solicitado no proporciona ningún formato de datos reconocido para "
+"importar la receta."
+
+#: .\cookbook\helper\recipe_url_import.py:159
+msgid "Imported from "
+msgstr "Importado desde"
+
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:12
+msgid "Breakfast"
+msgstr "Desayuno"
+
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:17
+msgid "Lunch"
+msgstr "Almuerzo"
+
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:22
+msgid "Dinner"
+msgstr "Cena"
+
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:27
+msgid "Other"
+msgstr "Otro"
+
+#: .\cookbook\models.py:60 .\cookbook\templates\shopping_list.html:44
+msgid "Search"
+msgstr "Buscar"
+
+#: .\cookbook\models.py:60 .\cookbook\templates\base.html:74
+#: .\cookbook\templates\meal_plan.html:5 .\cookbook\views\delete.py:149
+#: .\cookbook\views\edit.py:194 .\cookbook\views\new.py:156
+msgid "Meal-Plan"
+msgstr "Régimen de comidas"
+
+#: .\cookbook\models.py:60 .\cookbook\templates\base.html:71
+msgid "Books"
+msgstr "Libros"
+
+#: .\cookbook\models.py:66
+msgid "Small"
+msgstr "Pequeño"
+
+#: .\cookbook\models.py:66
+msgid "Large"
+msgstr "Grande"
+
+#: .\cookbook\models.py:175
+#: .\cookbook\templates\forms\edit_internal_recipe.html:178
+msgid "Text"
+msgstr "Texto"
+
+#: .\cookbook\models.py:175
+#: .\cookbook\templates\forms\edit_internal_recipe.html:179
+msgid "Time"
+msgstr "Tiempo"
+
+#: .\cookbook\tables.py:29 .\cookbook\templates\books.html:36
+#: .\cookbook\templates\generic\edit_template.html:6
+#: .\cookbook\templates\generic\edit_template.html:14
+#: .\cookbook\templates\meal_plan.html:274
+#: .\cookbook\templates\recipe_view.html:38
+#: .\cookbook\templates\recipes_table.html:77
+#: .\cookbook\templates\shopping_list.html:29
+msgid "Edit"
+msgstr "Editar"
+
+#: .\cookbook\tables.py:103 .\cookbook\tables.py:122
+#: .\cookbook\templates\books.html:38
+#: .\cookbook\templates\generic\delete_template.html:5
+#: .\cookbook\templates\generic\delete_template.html:13
+#: .\cookbook\templates\generic\edit_template.html:27
+#: .\cookbook\templates\meal_plan.html:270
+msgid "Delete"
+msgstr "Eliminar"
+
+#: .\cookbook\tables.py:121
+msgid "Link"
+msgstr "Enlace"
+
+#: .\cookbook\templates\404.html:5
+msgid "404 Error"
+msgstr "Error 404"
+
+#: .\cookbook\templates\404.html:18
+msgid "The page you are looking for could not be found."
+msgstr "No se pudo encontrar la página que busca."
+
+#: .\cookbook\templates\404.html:33
+msgid "Take me Home"
+msgstr "Llévame a Inicio"
+
+#: .\cookbook\templates\404.html:35
+msgid "Report a Bug"
+msgstr "Reportar un error"
+
+#: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:146
+#: .\cookbook\templates\rest_framework\api.html:11
+msgid "API Documentation"
+msgstr "Documentación de API"
+
+#: .\cookbook\templates\base.html:60
+#: .\cookbook\templates\forms\ingredients.html:7
+#: .\cookbook\templates\index.html:7
+msgid "Cookbook"
+msgstr "Libro de cocina"
+
+#: .\cookbook\templates\base.html:67
+msgid "Utensils"
+msgstr "Utensilios"
+
+#: .\cookbook\templates\base.html:77
+msgid "Shopping"
+msgstr "Compras"
+
+#: .\cookbook\templates\base.html:87
+msgid "Tags"
+msgstr "Etiquetas"
+
+#: .\cookbook\templates\base.html:91 .\cookbook\views\delete.py:78
+#: .\cookbook\views\edit.py:76 .\cookbook\views\lists.py:21
+#: .\cookbook\views\new.py:56
+msgid "Keyword"
+msgstr "Palabra clave"
+
+#: .\cookbook\templates\base.html:93
+msgid "Batch Edit"
+msgstr "Edición Masiva"
+
+#: .\cookbook\templates\base.html:98
+msgid "Storage Data"
+msgstr "Almacenamiento de Datos"
+
+#: .\cookbook\templates\base.html:102
+msgid "Storage Backends"
+msgstr "Backends de Almacenamiento"
+
+#: .\cookbook\templates\base.html:104
+msgid "Configure Sync"
+msgstr "Configurar Sincronización"
+
+#: .\cookbook\templates\base.html:106
+msgid "Discovered Recipes"
+msgstr "Recetas Descubiertas"
+
+#: .\cookbook\templates\base.html:108
+msgid "Discovery Log"
+msgstr "Registro de descubrimiento"
+
+#: .\cookbook\templates\base.html:110 .\cookbook\templates\stats.html:10
+msgid "Statistics"
+msgstr "Estadísticas"
+
+#: .\cookbook\templates\base.html:112
+msgid "Units & Ingredients"
+msgstr "Unidades e ingredientes"
+
+#: .\cookbook\templates\base.html:114
+msgid "Import Recipe"
+msgstr "Importar receta"
+
+#: .\cookbook\templates\base.html:130 .\cookbook\templates\settings.html:6
+#: .\cookbook\templates\settings.html:16
+msgid "Settings"
+msgstr "Opciones"
+
+#: .\cookbook\templates\base.html:132 .\cookbook\templates\history.html:6
+#: .\cookbook\templates\history.html:14
+msgid "History"
+msgstr "Historial"
+
+#: .\cookbook\templates\base.html:136 .\cookbook\templates\system.html:13
+msgid "System"
+msgstr "Sistema"
+
+#: .\cookbook\templates\base.html:138
+msgid "Admin"
+msgstr "Administrador"
+
+#: .\cookbook\templates\base.html:142
+msgid "Markdown Help"
+msgstr "Ayuda de Markdown"
+
+#: .\cookbook\templates\base.html:144
+msgid "GitHub"
+msgstr "GitHub"
+
+#: .\cookbook\templates\base.html:148
+msgid "API Browser"
+msgstr "Explorador de API"
+
+#: .\cookbook\templates\base.html:151
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: .\cookbook\templates\base.html:156
+#: .\cookbook\templates\registration\login.html:4
+#: .\cookbook\templates\registration\login.html:46
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: .\cookbook\templates\batch\edit.html:6
+msgid "Batch edit Category"
+msgstr "Edición masiva de Categorías"
+
+#: .\cookbook\templates\batch\edit.html:15
+msgid "Batch edit Recipes"
+msgstr "Edición masiva de Recetas"
+
+#: .\cookbook\templates\batch\edit.html:20
+msgid "Add the specified keywords to all recipes containing a word"
+msgstr ""
+"Agregue las palabras clave especificadas a todas las recetas que contengan "
+"una palabra"
+
+#: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:59
+msgid "Sync"
+msgstr "Sincronizar"
+
+#: .\cookbook\templates\batch\monitor.html:10
+msgid "Manage watched Folders"
+msgstr "Administrar carpetas observadas"
+
+#: .\cookbook\templates\batch\monitor.html:14
+msgid ""
+"On this Page you can manage all storage folder locations that should be "
+"monitored and synced"
+msgstr ""
+"En esta página puede administrar todas las ubicaciones de las carpetas de "
+"almacenamiento que deben monitorearse y sincronizarse"
+
+#: .\cookbook\templates\batch\monitor.html:16
+msgid "The path must be in the following format"
+msgstr "La ruta debe tener el siguiente formato"
+
+#: .\cookbook\templates\batch\monitor.html:27
+msgid "Sync Now!"
+msgstr "¡Sincronizar ahora!"
+
+#: .\cookbook\templates\batch\waiting.html:4
+#: .\cookbook\templates\batch\waiting.html:10
+msgid "Importing Recipes"
+msgstr "Importando Recetas"
+
+#: .\cookbook\templates\batch\waiting.html:23
+msgid ""
+"This can take a few minutes, depending on the number of recipes in sync, "
+"please wait."
+msgstr ""
+"Esto puede tardar unos minutos, dependiendo de la cantidad de recetas "
+"sincronizadas, espere."
+
+#: .\cookbook\templates\books.html:5 .\cookbook\templates\books.html:11
+msgid "Recipe Books"
+msgstr "Libros de recetas"
+
+#: .\cookbook\templates\books.html:15
+msgid "New Book"
+msgstr "Nuevo Libro"
+
+#: .\cookbook\templates\books.html:27 .\cookbook\templates\recipe_view.html:69
+#: .\cookbook\templates\recipe_view.html:451
+msgid "by"
+msgstr "por"
+
+#: .\cookbook\templates\books.html:34
+msgid "Toggle Recipes"
+msgstr "Alternar recetas"
+
+#: .\cookbook\templates\books.html:54
+#: .\cookbook\templates\meal_plan_entry.html:48
+#: .\cookbook\templates\recipe_view.html:92
+#: .\cookbook\templates\recipes_table.html:59
+msgid "Last cooked"
+msgstr "Cocinado por última vez"
+
+#: .\cookbook\templates\books.html:71
+msgid "There are no recipes in this book yet."
+msgstr "Todavía no hay recetas en este libro."
+
+#: .\cookbook\templates\export.html:6
+msgid "Export Recipes"
+msgstr "Exportar recetas"
+
+#: .\cookbook\templates\export.html:19
+#: .\cookbook\templates\recipe_view.html:52
+#: .\cookbook\templates\shopping_list.html:272
+msgid "Export"
+msgstr "Exportar"
+
+#: .\cookbook\templates\export.html:31
+msgid "Exported Recipe"
+msgstr "Receta exportada"
+
+#: .\cookbook\templates\export.html:42
+msgid "Copy to clipboard"
+msgstr "Copiar al portapapeles"
+
+#: .\cookbook\templates\export.html:54
+msgid "Copied!"
+msgstr "¡Copiado!"
+
+#: .\cookbook\templates\export.html:61
+msgid "Copy list to clipboard"
+msgstr "Copiar lista al portapapeles"
+
+#: .\cookbook\templates\forms\edit_import_recipe.html:5
+#: .\cookbook\templates\forms\edit_import_recipe.html:9
+msgid "Import new Recipe"
+msgstr "Importar nueva receta"
+
+#: .\cookbook\templates\forms\edit_import_recipe.html:14
+#: .\cookbook\templates\forms\edit_internal_recipe.html:364
+#: .\cookbook\templates\forms\edit_internal_recipe.html:393
+#: .\cookbook\templates\generic\edit_template.html:23
+#: .\cookbook\templates\generic\new_template.html:23
+#: .\cookbook\templates\include\log_cooking.html:28
+#: .\cookbook\templates\meal_plan.html:318
+#: .\cookbook\templates\recipe_view.html:502
+#: .\cookbook\templates\settings.html:28 .\cookbook\templates\settings.html:35
+#: .\cookbook\templates\settings.html:57 .\cookbook\templates\settings.html:72
+#: .\cookbook\templates\shopping_list.html:274
+msgid "Save"
+msgstr "Guardar"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:7
+#: .\cookbook\templates\forms\edit_internal_recipe.html:34
+msgid "Edit Recipe"
+msgstr "Editar receta"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:59
+msgid "Preparation Time"
+msgstr "Tiempo de Preparación"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:62
+msgid "Waiting Time"
+msgstr "Tiempo de espera"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:73
+msgid "Select Keywords"
+msgstr "Seleccionar palabras clave"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:88
+#: .\cookbook\templates\recipe_view.html:218
+msgid "Nutrition"
+msgstr "Información Nutricional"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:92
+#: .\cookbook\templates\forms\edit_internal_recipe.html:142
+msgid "Delete Step"
+msgstr "Eliminar paso"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:96
+#: .\cookbook\templates\recipe_view.html:222
+msgid "Calories"
+msgstr "Calorías"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:99
+#: .\cookbook\templates\recipe_view.html:230
+msgid "Carbohydrates"
+msgstr "Carbohidratos"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:102
+#: .\cookbook\templates\recipe_view.html:238
+msgid "Fats"
+msgstr "Grasas"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:104
+#: .\cookbook\templates\recipe_view.html:246
+msgid "Proteins"
+msgstr "Proteinas"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:126
+#: .\cookbook\templates\forms\edit_internal_recipe.html:426
+#: .\cookbook\templates\recipe_view.html:287
+msgid "Step"
+msgstr "Paso"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:147
+msgid "Show as header"
+msgstr "Mostrar como encabezado"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:153
+msgid "Hide as header"
+msgstr "Ocultar como encabezado"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:158
+msgid "Move Up"
+msgstr "Mover Arriba"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:163
+msgid "Move Down"
+msgstr "Mover Abajo"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:172
+msgid "Step Name"
+msgstr "Nombre del paso"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:176
+msgid "Step Type"
+msgstr "Tipo de paso"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:187
+msgid "Step time in Minutes"
+msgstr "Tiempo de paso en minutos"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:241
+#: .\cookbook\templates\shopping_list.html:148
+msgid "Select Unit"
+msgstr "Seleccionar unidad"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:242
+#: .\cookbook\templates\forms\edit_internal_recipe.html:266
+#: .\cookbook\templates\shopping_list.html:149
+#: .\cookbook\templates\shopping_list.html:171
+msgid "Create"
+msgstr "Crear"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:243
+#: .\cookbook\templates\forms\edit_internal_recipe.html:267
+#: .\cookbook\templates\shopping_list.html:150
+#: .\cookbook\templates\shopping_list.html:172
+#: .\cookbook\templates\shopping_list.html:214
+#: .\cookbook\templates\url_import.html:100
+#: .\cookbook\templates\url_import.html:132
+msgid "Select"
+msgstr "Seleccionar"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:265
+#: .\cookbook\templates\shopping_list.html:170
+msgid "Select Food"
+msgstr "Seleccionar Alimento"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:282
+#: .\cookbook\templates\meal_plan.html:249
+#: .\cookbook\templates\url_import.html:147
+msgid "Note"
+msgstr "Nota"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:299
+msgid "Delete Ingredient"
+msgstr "Eliminar ingrediente"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:305
+msgid "Make Header"
+msgstr "Crear encabezado"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:311
+msgid "Make Ingredient"
+msgstr "Crear ingrediente"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:317
+msgid "Disable Amount"
+msgstr "Deshabilitar cantidad"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:323
+msgid "Enable Amount"
+msgstr "Habilitar cantidad"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:349
+#: .\cookbook\templates\recipe_view.html:269
+#: .\cookbook\templates\url_import.html:171
+msgid "Instructions"
+msgstr "Instrucciones"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:362
+#: .\cookbook\templates\forms\edit_internal_recipe.html:390
+msgid "Save & View"
+msgstr "Guardar y ver"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:366
+#: .\cookbook\templates\forms\edit_internal_recipe.html:396
+msgid "Add Step"
+msgstr "Agregar paso"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:369
+#: .\cookbook\templates\forms\edit_internal_recipe.html:400
+msgid "Add Nutrition"
+msgstr "Añadir Información Nutricional"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:371
+#: .\cookbook\templates\forms\edit_internal_recipe.html:402
+msgid "Remove Nutrition"
+msgstr "Eliminar Información Nutricional"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:373
+#: .\cookbook\templates\forms\edit_internal_recipe.html:405
+msgid "View Recipe"
+msgstr "Ver la receta"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:375
+#: .\cookbook\templates\forms\edit_internal_recipe.html:407
+msgid "Delete Recipe"
+msgstr "Eliminar receta"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:413
+msgid "Steps"
+msgstr "Pasos"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:534
+#: .\cookbook\templates\forms\edit_internal_recipe.html:552
+#: .\cookbook\templates\forms\edit_internal_recipe.html:566
+#: .\cookbook\templates\forms\edit_internal_recipe.html:647
+#: .\cookbook\templates\forms\edit_internal_recipe.html:666
+#: .\cookbook\templates\forms\edit_internal_recipe.html:686
+#: .\cookbook\templates\meal_plan.html:442
+#: .\cookbook\templates\meal_plan.html:454
+#: .\cookbook\templates\meal_plan.html:509
+#: .\cookbook\templates\meal_plan.html:522
+#: .\cookbook\templates\meal_plan.html:533
+#: .\cookbook\templates\meal_plan.html:559
+#: .\cookbook\templates\meal_plan.html:570
+#: .\cookbook\templates\meal_plan.html:584
+#: .\cookbook\templates\meal_plan.html:591
+#: .\cookbook\templates\meal_plan.html:599
+#: .\cookbook\templates\shopping_list.html:453
+#: .\cookbook\templates\shopping_list.html:480
+#: .\cookbook\templates\shopping_list.html:516
+#: .\cookbook\templates\shopping_list.html:536
+#: .\cookbook\templates\shopping_list.html:547
+#: .\cookbook\templates\shopping_list.html:570
+#: .\cookbook\templates\shopping_list.html:596
+#: .\cookbook\templates\shopping_list.html:612
+#: .\cookbook\templates\shopping_list.html:654
+#: .\cookbook\templates\shopping_list.html:664
+#: .\cookbook\templates\shopping_list.html:673
+#: .\cookbook\templates\shopping_list.html:692
+#: .\cookbook\templates\url_import.html:308
+#: .\cookbook\templates\url_import.html:313
+#: .\cookbook\templates\url_import.html:322
+#: .\cookbook\templates\url_import.html:366
+#: .\cookbook\templates\url_import.html:384
+#: .\cookbook\templates\url_import.html:403
+msgid "Error"
+msgstr "Error"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:534
+msgid "There was an error loading the recipe!"
+msgstr "¡Hubo un error al cargar la receta!"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:545
+#: .\cookbook\templates\forms\edit_internal_recipe.html:562
+#: .\cookbook\templates\shopping_list.html:527
+#: .\cookbook\templates\shopping_list.html:543
+msgid "Updated"
+msgstr "Actualizada"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:545
+#: .\cookbook\templates\forms\edit_internal_recipe.html:562
+#: .\cookbook\templates\shopping_list.html:543
+msgid "Changes saved successfully!"
+msgstr "¡Los cambios se guardaron exitosamente!"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:552
+#: .\cookbook\templates\forms\edit_internal_recipe.html:566
+msgid "There was an error updating the recipe!"
+msgstr "¡Hubo un error al actualizar la receta!"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:610
+msgid "Are you sure that you want to delete this ingredient?"
+msgstr "¿Estás seguro de que quieres eliminar este ingrediente?"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:615
+msgid "Are you sure that you want to delete this step?"
+msgstr "¿Estás seguro de que quieres eliminar este paso?"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:647
+#: .\cookbook\templates\forms\edit_internal_recipe.html:666
+#: .\cookbook\templates\forms\edit_internal_recipe.html:686
+#: .\cookbook\templates\meal_plan.html:442
+#: .\cookbook\templates\meal_plan.html:454
+#: .\cookbook\templates\meal_plan.html:509
+#: .\cookbook\templates\meal_plan.html:522
+#: .\cookbook\templates\meal_plan.html:533
+#: .\cookbook\templates\meal_plan.html:559
+#: .\cookbook\templates\meal_plan.html:570
+#: .\cookbook\templates\meal_plan.html:584
+#: .\cookbook\templates\meal_plan.html:591
+#: .\cookbook\templates\meal_plan.html:599
+#: .\cookbook\templates\shopping_list.html:453
+#: .\cookbook\templates\shopping_list.html:480
+#: .\cookbook\templates\shopping_list.html:612
+#: .\cookbook\templates\shopping_list.html:654
+#: .\cookbook\templates\shopping_list.html:664
+#: .\cookbook\templates\shopping_list.html:673
+#: .\cookbook\templates\shopping_list.html:692
+#: .\cookbook\templates\url_import.html:308
+#: .\cookbook\templates\url_import.html:366
+#: .\cookbook\templates\url_import.html:384
+#: .\cookbook\templates\url_import.html:403
+msgid "There was an error loading a resource!"
+msgstr "¡Hubo un error al cargar un recurso!"
+
+#: .\cookbook\templates\forms\ingredients.html:15
+msgid "Edit Ingredients"
+msgstr "Editar ingredientes"
+
+#: .\cookbook\templates\forms\ingredients.html:16
+msgid ""
+"\n"
+"        The following form can be used if, accidentally, two (or more) units or ingredients where created that should be\n"
+"        the same.\n"
+"        It merges two units or ingredients and updates all recipes using them.\n"
+"    "
+msgstr ""
+"\n"
+"        La siguiente forma puede utilizarse si, accidentalmente, se crean dos (o más) unidades o ingredientes que deberían ser\n"
+"        iguales.\n"
+"        Fusiona dos unidades o ingredientes y actualiza todas las recetas que los usan.\n"
+"    "
+
+#: .\cookbook\templates\forms\ingredients.html:24
+#: .\cookbook\templates\stats.html:26
+msgid "Units"
+msgstr "Unidades"
+
+#: .\cookbook\templates\forms\ingredients.html:26
+msgid "Are you sure that you want to merge these two units ?"
+msgstr "¿Estás seguro de que quieres combinar estas dos unidades?"
+
+#: .\cookbook\templates\forms\ingredients.html:31
+#: .\cookbook\templates\forms\ingredients.html:40
+msgid "Merge"
+msgstr "Unir"
+
+#: .\cookbook\templates\forms\ingredients.html:36
+msgid "Are you sure that you want to merge these two ingredients ?"
+msgstr "¿Estás seguro de que quieres combinar estos dos ingredientes?"
+
+#: .\cookbook\templates\generic\delete_template.html:18
+#, python-format
+msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
+msgstr "¿Estás seguro de que quieres borrar el %(title)s: <b>%(object)s</b>?"
+
+#: .\cookbook\templates\generic\delete_template.html:21
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: .\cookbook\templates\generic\edit_template.html:30
+msgid "View"
+msgstr "Ver"
+
+#: .\cookbook\templates\generic\edit_template.html:34
+msgid "Delete original file"
+msgstr "Eliminar archivo original"
+
+#: .\cookbook\templates\generic\list_template.html:6
+#: .\cookbook\templates\generic\list_template.html:12
+msgid "List"
+msgstr "Listar"
+
+#: .\cookbook\templates\generic\list_template.html:25
+msgid "Filter"
+msgstr "Filtro"
+
+#: .\cookbook\templates\generic\list_template.html:30
+msgid "Import all"
+msgstr "Importar todo"
+
+#: .\cookbook\templates\generic\new_template.html:6
+#: .\cookbook\templates\generic\new_template.html:14
+#: .\cookbook\templates\meal_plan.html:316
+msgid "New"
+msgstr "Nuevo"
+
+#: .\cookbook\templates\generic\table_template.html:76
+#: .\cookbook\templates\recipes_table.html:112
+msgid "previous"
+msgstr "anterior"
+
+#: .\cookbook\templates\generic\table_template.html:98
+#: .\cookbook\templates\recipes_table.html:134
+msgid "next"
+msgstr "siguiente"
+
+#: .\cookbook\templates\history.html:20
+msgid "View Log"
+msgstr "Ver registro"
+
+#: .\cookbook\templates\history.html:24
+msgid "Cook Log"
+msgstr "Registro de cocina"
+
+#: .\cookbook\templates\import.html:6
+msgid "Import Recipes"
+msgstr "Importar recetas"
+
+#: .\cookbook\templates\import.html:14
+#: .\cookbook\templates\url_import.html:203 .\cookbook\views\delete.py:54
+#: .\cookbook\views\edit.py:161
+msgid "Import"
+msgstr "Importar"
+
+#: .\cookbook\templates\include\log_cooking.html:7
+msgid "Log Recipe Cooking"
+msgstr "Registrar receta cocinada"
+
+#: .\cookbook\templates\include\log_cooking.html:13
+msgid "All fields are optional and can be left empty."
+msgstr "Todos los campos son opcionales y pueden dejarse vacíos."
+
+#: .\cookbook\templates\include\log_cooking.html:16
+msgid "Servings"
+msgstr "Raciones"
+
+#: .\cookbook\templates\include\log_cooking.html:19
+msgid "Rating"
+msgstr "Calificación"
+
+#: .\cookbook\templates\include\log_cooking.html:27
+#: .\cookbook\templates\include\recipe_open_modal.html:18
+#: .\cookbook\templates\meal_plan.html:276
+#: .\cookbook\templates\meal_plan.html:320
+#: .\cookbook\templates\meal_plan.html:359
+msgid "Close"
+msgstr "Cerrar"
+
+#: .\cookbook\templates\include\recipe_open_modal.html:7
+#: .\cookbook\templates\meal_plan.html:243 .\cookbook\views\delete.py:25
+#: .\cookbook\views\edit.py:227 .\cookbook\views\new.py:36
+msgid "Recipe"
+msgstr "Receta"
+
+#: .\cookbook\templates\include\recipe_open_modal.html:32
+msgid "Open Recipe"
+msgstr "Abrir Receta"
+
+#: .\cookbook\templates\include\storage_backend_warning.html:4
+msgid "Security Warning"
+msgstr "Advertencia de seguridad"
+
+#: .\cookbook\templates\include\storage_backend_warning.html:5
+msgid ""
+"\n"
+"        The <b>Password and Token</b> field are stored as <b>plain text</b> inside the database.\n"
+"        This is necessary because they are needed to make API requests, but it also increases the risk of\n"
+"        someone stealing it. <br/>\n"
+"        To limit the possible damage tokens or accounts with limited access can be used.\n"
+"    "
+msgstr ""
+"\n"
+"        Los campos<b>Contraseña y Token</b>son almacenados en <b>texto plano</b> dentro de la base de datos.\n"
+"        Esto es necesario porque son requeridos para hacer peticiones de la API, pero esto incrementa el riesgo de\n"
+"        que alguien lo robe. <br/>\n"
+"        Para limitar los posibles daños se pueden utilizar tokens o cuentas con acceso limitado.\n"
+"    "
+
+#: .\cookbook\templates\index.html:29
+msgid "Search recipe ..."
+msgstr "Buscar receta ..."
+
+#: .\cookbook\templates\index.html:44
+msgid "New Recipe"
+msgstr "Nueva receta"
+
+#: .\cookbook\templates\index.html:47
+msgid "Website Import"
+msgstr "Importación de sitios web"
+
+#: .\cookbook\templates\index.html:53
+msgid "Advanced Search"
+msgstr "Búsqueda Avanzada"
+
+#: .\cookbook\templates\index.html:57
+msgid "Reset Search"
+msgstr "Restablecer búsqueda"
+
+#: .\cookbook\templates\index.html:85
+msgid "Last viewed"
+msgstr "Visto por última vez"
+
+#: .\cookbook\templates\index.html:87 .\cookbook\templates\meal_plan.html:174
+#: .\cookbook\templates\stats.html:22
+msgid "Recipes"
+msgstr "Recetas"
+
+#: .\cookbook\templates\index.html:94
+msgid "Log in to view Recipes"
+msgstr "Inicie sesión para ver recetas"
+
+#: .\cookbook\templates\markdown_info.html:5
+#: .\cookbook\templates\markdown_info.html:13
+msgid "Markdown Info"
+msgstr "Información de Markdown"
+
+#: .\cookbook\templates\markdown_info.html:14
+msgid ""
+"\n"
+"        Markdown is lightweight markup language that can be used to format plain text easily.\n"
+"        This site uses the <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> library to\n"
+"        convert your text into nice looking html. Its full markdown documentation can be found\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">here</a>.\n"
+"        An incomplete but most likely sufficient documentation can be found below.\n"
+"    "
+msgstr ""
+"\n"
+"        Markdown es un lenguaje de marcado ligero que puede ser usado para formatear fácilmente el texto.\n"
+"        Este sitio utiliza la biblioteca <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> para\n"
+"        convertir tu texto en un bonito html. La documentación completa de Markdown se puede encontrar\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">aquí</a>.\n"
+"        A continuación se incluye una documentación incompleta pero probablemente suficiente.\n"
+"    "
+
+#: .\cookbook\templates\markdown_info.html:25
+msgid "Headers"
+msgstr "Cabeceras"
+
+#: .\cookbook\templates\markdown_info.html:54
+msgid "Formatting"
+msgstr "Formato"
+
+#: .\cookbook\templates\markdown_info.html:56
+#: .\cookbook\templates\markdown_info.html:72
+msgid "Line breaks are inserted by adding two spaces after the end of a line"
+msgstr ""
+"Los saltos de línea se insertan añadiendo dos espacios después del final de "
+"una línea"
+
+#: .\cookbook\templates\markdown_info.html:57
+#: .\cookbook\templates\markdown_info.html:73
+msgid "or by leaving a blank line inbetween."
+msgstr "o dejando una línea en blanco entre ellos."
+
+#: .\cookbook\templates\markdown_info.html:59
+#: .\cookbook\templates\markdown_info.html:74
+msgid "This text is bold"
+msgstr "Este texto está en negrita"
+
+#: .\cookbook\templates\markdown_info.html:60
+#: .\cookbook\templates\markdown_info.html:75
+msgid "This text is in italics"
+msgstr "Este texto está en cursiva"
+
+#: .\cookbook\templates\markdown_info.html:61
+#: .\cookbook\templates\markdown_info.html:77
+msgid "Blockquotes are also possible"
+msgstr "Las citas también son posibles"
+
+#: .\cookbook\templates\markdown_info.html:84
+msgid "Lists"
+msgstr "Listas"
+
+#: .\cookbook\templates\markdown_info.html:85
+msgid ""
+"Lists can ordered or unorderd. It is <b>important to leave a blank line "
+"before the list!</b>"
+msgstr ""
+"Las listas pueden ser ordenadas o no ordenadas. <b>¡Es importante dejar una "
+"línea en blanco antes de la lista!</b>"
+
+#: .\cookbook\templates\markdown_info.html:87
+#: .\cookbook\templates\markdown_info.html:108
+msgid "Ordered List"
+msgstr "Lista ordenada"
+
+#: .\cookbook\templates\markdown_info.html:89
+#: .\cookbook\templates\markdown_info.html:90
+#: .\cookbook\templates\markdown_info.html:91
+#: .\cookbook\templates\markdown_info.html:110
+#: .\cookbook\templates\markdown_info.html:111
+#: .\cookbook\templates\markdown_info.html:112
+msgid "unordered list item"
+msgstr "elemento de lista desordenado"
+
+#: .\cookbook\templates\markdown_info.html:93
+#: .\cookbook\templates\markdown_info.html:114
+msgid "Unordered List"
+msgstr "Lista desordenada"
+
+#: .\cookbook\templates\markdown_info.html:95
+#: .\cookbook\templates\markdown_info.html:96
+#: .\cookbook\templates\markdown_info.html:97
+#: .\cookbook\templates\markdown_info.html:116
+#: .\cookbook\templates\markdown_info.html:117
+#: .\cookbook\templates\markdown_info.html:118
+msgid "ordered list item"
+msgstr "elemento de lista ordenada"
+
+#: .\cookbook\templates\markdown_info.html:125
+msgid "Images & Links"
+msgstr "Imágenes y enlaces"
+
+#: .\cookbook\templates\markdown_info.html:126
+msgid ""
+"Links can be formatted with Markdown. This applicaiton also allows to paste "
+"links directly into markdown fields without any formatting."
+msgstr ""
+"Los enlaces se pueden formatear con Markdown. Esta aplicación también "
+"permite pegar enlaces directamente en campos de Markdown sin ningun formato."
+
+#: .\cookbook\templates\markdown_info.html:132
+#: .\cookbook\templates\markdown_info.html:145
+msgid "This will become and Image"
+msgstr "Esto se convertirá en una imagen"
+
+#: .\cookbook\templates\markdown_info.html:152
+msgid "Tables"
+msgstr "Tablas"
+
+#: .\cookbook\templates\markdown_info.html:153
+msgid ""
+"Markdown tables are hard to create by hand. It is recommended to use a table"
+" editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
+"target=\"_blank\">this</a> one."
+msgstr ""
+"Las tablas de Markdown son difíciles de crear a mano. Se recomienda usar un "
+"editor de tablas como <a "
+"href=\"https://www.tablesgenerator.com/markdown_tables\" "
+"target=\"_blank\">este</a>. "
+
+#: .\cookbook\templates\markdown_info.html:155
+#: .\cookbook\templates\markdown_info.html:157
+#: .\cookbook\templates\markdown_info.html:171
+#: .\cookbook\templates\markdown_info.html:177
+msgid "Table"
+msgstr "Tabla"
+
+#: .\cookbook\templates\markdown_info.html:155
+#: .\cookbook\templates\markdown_info.html:172
+msgid "Header"
+msgstr "Cabecera"
+
+#: .\cookbook\templates\markdown_info.html:157
+#: .\cookbook\templates\markdown_info.html:178
+msgid "Cell"
+msgstr "Celda"
+
+#: .\cookbook\templates\meal_plan.html:101
+msgid "New Entry"
+msgstr "Nueva entrada"
+
+#: .\cookbook\templates\meal_plan.html:113
+#: .\cookbook\templates\shopping_list.html:48
+msgid "Search Recipe"
+msgstr "Buscar Receta"
+
+#: .\cookbook\templates\meal_plan.html:135
+#: .\cookbook\templates\meal_plan.html:640
+msgid "Title"
+msgstr "Titulo"
+
+#: .\cookbook\templates\meal_plan.html:137
+msgid "Note (optional)"
+msgstr "Nota (opcional)"
+
+#: .\cookbook\templates\meal_plan.html:139
+msgid ""
+"You can use markdown to format this field. See the <a "
+"href=\"/docs/markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">docs "
+"here</a>"
+msgstr ""
+"Puedes utilizar Markdown para dar formato a este campo. Consulta la <a "
+"href=\"/docs/markdown/\" target=\"_blank\" rel=\"noopener "
+"noreferrer\">documentación aquí</a>"
+
+#: .\cookbook\templates\meal_plan.html:143
+msgid "Recipe Multiplier"
+msgstr "Multiplicador de recetas"
+
+#: .\cookbook\templates\meal_plan.html:149
+msgid "Create only note"
+msgstr "Crear sólo una nota"
+
+#: .\cookbook\templates\meal_plan.html:164
+#: .\cookbook\templates\shopping_list.html:7
+#: .\cookbook\templates\shopping_list.html:25
+#: .\cookbook\templates\shopping_list.html:533
+msgid "Shopping List"
+msgstr "Lista de la Compra"
+
+#: .\cookbook\templates\meal_plan.html:168
+msgid "Shopping List currently empty"
+msgstr "La Lista de la Compra está vacía"
+
+#: .\cookbook\templates\meal_plan.html:171
+msgid "Open Shopping List"
+msgstr "Abrir Lista de la Compra"
+
+#: .\cookbook\templates\meal_plan.html:185
+msgid "Plan"
+msgstr "Menú"
+
+#: .\cookbook\templates\meal_plan.html:192
+msgid "Number of Days"
+msgstr "Número de Días"
+
+#: .\cookbook\templates\meal_plan.html:202
+msgid "Weekday offset"
+msgstr "Compensar día inicial"
+
+#: .\cookbook\templates\meal_plan.html:205
+msgid ""
+"Number of days starting from the first day of the week to offset the default"
+" view."
+msgstr ""
+"Número de días a partir del primer día de la semana para compensar la vista "
+"por defecto."
+
+#: .\cookbook\templates\meal_plan.html:213
+#: .\cookbook\templates\meal_plan.html:287
+msgid "Edit plan types"
+msgstr "Modificar el tipo de menú"
+
+#: .\cookbook\templates\meal_plan.html:215
+msgid "Show help"
+msgstr "Mostrar Ayuda"
+
+#: .\cookbook\templates\meal_plan.html:216
+msgid "Week iCal export"
+msgstr "Exportar a iCal"
+
+#: .\cookbook\templates\meal_plan.html:257
+#: .\cookbook\templates\meal_plan_entry.html:18
+msgid "Created by"
+msgstr "Creado por"
+
+#: .\cookbook\templates\meal_plan.html:263
+#: .\cookbook\templates\meal_plan_entry.html:20
+msgid "Shared with"
+msgstr "Compartido con"
+
+#: .\cookbook\templates\meal_plan.html:273
+#: .\cookbook\templates\recipe_view.html:43
+msgid "Add to Shopping"
+msgstr "Añadir para comprar"
+
+#: .\cookbook\templates\meal_plan.html:316
+msgid "New meal type"
+msgstr "Nuevo tipo de comida"
+
+#: .\cookbook\templates\meal_plan.html:331
+msgid "Meal Plan Help"
+msgstr "Ayuda del menú"
+
+#: .\cookbook\templates\meal_plan.html:337
+msgid ""
+"\n"
+"                            <p>The meal plan module allows planning of meals both with recipes or just notes.</p>\n"
+"                            <p>Simply select a recipe from the list of recently viewed recipes or search the one you\n"
+"                                want and drag it to the desired plan position. You can also add a note and a title and\n"
+"                                then drag the recipe to create a plan entry with a custom title and note. Creating only\n"
+"                                Notes is possible by dragging the create note box into the plan.</p>\n"
+"                            <p>Click on a recipe in order to open the detail view. Here you can also add it to the\n"
+"                                shopping list. You can also add all recipes of a day to the shopping list by\n"
+"                                clicking the shopping cart at the top of the table.</p>\n"
+"                            <p>Since a common use case is to plan meals together you can define\n"
+"                                users you want to share your plan with in the settings.\n"
+"                            </p>\n"
+"                            <p>You can also edit the types of meals you want to plan. If you share your plan with\n"
+"                                someone with\n"
+"                                different meals, their meal types will appear in your list as well. To prevent\n"
+"                                duplicates (e.g. Other and Misc.)\n"
+"                                name your meal types the same as the users you share your meals with and they will be\n"
+"                                merged.</p>\n"
+"                        "
+msgstr ""
+"\n"
+"                            <p>El módulo de menú permite planificar las comidas con recetas o con notas.</p>\n"
+"                            <p>Simplemente selecciona una receta de la lista de recetas vistas recientemente o busca la que\n"
+"                                quieras y arrastrala a la posición deseada del menú. También puede añadir una nota y un título y\n"
+"                                luego arrastrar la receta para crear una entrada del plan con un título y una nota personalizados. Es posible crear\n"
+"                                solamente notas arrastrando el cuadro de creación de notas al menú.</p>\n"
+"                            <p>Haga clic en una receta para abrir la vista detallada. Desde aquí también puedes añadirla a la\n"
+"                                lista de la compra. También puedes añadir todas las recetas de un día a la lista de la compra\n"
+"                                haciendo clic en el carrito de la compra en la parte superior de la tabla.</p>\n"
+"                            <p>Ya que un caso de uso común es planificar las comidas juntos, en los ajustes\n"
+"                                puedes definir los usuarios con los que quieres compartir el menú.\n"
+"                            </p>\n"
+"                            <p>También puedes editar los tipos de comidas del menú. Si compartes tu menú con\n"
+"                                alguien con\n"
+"                                diferentes tipos de comidas, sus tipos de comida aparecerán también en tu listado. Para prevenir\n"
+"                                duplicados (p. ej. Otros y Misc.)\n"
+"                                nombra los tipos de comida igual que el resto de usuarios con los que compartes tus comidas y serán\n"
+"                                combinados.</p>\n"
+"                        "
+
+#: .\cookbook\templates\meal_plan.html:609
+msgid ""
+"When deleting a meal type all entries using that type will be deleted as "
+"well. Deletion will apply when configuration is saved. Do you want to "
+"proceed?"
+msgstr ""
+"Al borrar un tipo de comida, todas las entradas que usen ese tipo serán "
+"borradas también. El borrado se aplicará cuando se guarde la configuración. "
+"¿Quieres continuar?"
+
+#: .\cookbook\templates\meal_plan_entry.html:6
+msgid "Meal Plan View"
+msgstr "Vista de menú"
+
+#: .\cookbook\templates\meal_plan_entry.html:50
+msgid "Never cooked before."
+msgstr "Nunca antes cocinado."
+
+#: .\cookbook\templates\meal_plan_entry.html:76
+msgid "Other meals on this day"
+msgstr "Otras comidas en este día"
+
+#: .\cookbook\templates\recipe_view.html:40
+msgid "Add to Book"
+msgstr "Añadir al Libro"
+
+#: .\cookbook\templates\recipe_view.html:46
+msgid "Add to Plan"
+msgstr "Añadir al menú"
+
+#: .\cookbook\templates\recipe_view.html:48
+#: .\cookbook\templates\recipes_table.html:81
+msgid "Log Cooking"
+msgstr "Registrar receta cocinada"
+
+#: .\cookbook\templates\recipe_view.html:50
+msgid "Print"
+msgstr "Imprimir"
+
+#: .\cookbook\templates\recipe_view.html:55
+msgid "Share"
+msgstr "Compartir"
+
+#: .\cookbook\templates\recipe_view.html:64
+msgid "in"
+msgstr "en"
+
+#: .\cookbook\templates\recipe_view.html:82
+msgid "Preparation time ~"
+msgstr "Tiempo de preparación ~"
+
+#: .\cookbook\templates\recipe_view.html:88
+msgid "Waiting time ~"
+msgstr "Tiempo de espera ~"
+
+#: .\cookbook\templates\recipe_view.html:206
+#: .\cookbook\templates\recipes_table.html:19
+#: .\cookbook\templates\recipes_table.html:23
+#: .\cookbook\templates\url_import.html:50
+msgid "Recipe Image"
+msgstr "Imagen de la receta"
+
+#: .\cookbook\templates\recipe_view.html:290
+msgid "Minutes"
+msgstr "Minutos"
+
+#: .\cookbook\templates\recipe_view.html:393
+#: .\cookbook\templates\recipe_view.html:430
+msgid "View external recipe"
+msgstr "Ver receta externa"
+
+#: .\cookbook\templates\recipe_view.html:408
+msgid "External recipe image"
+msgstr "Imagen de la receta externa"
+
+#: .\cookbook\templates\recipe_view.html:415
+msgid "External recipe"
+msgstr "Receta externa"
+
+#: .\cookbook\templates\recipe_view.html:417
+msgid ""
+"\n"
+"                                    This is an external recipe, which means you can only view it by opening the link\n"
+"                                    above.\n"
+"                                    You can convert this recipe to a fancy recipe by pressing the convert button. The\n"
+"                                    original\n"
+"                                    file\n"
+"                                    will still be accessible.\n"
+"                                "
+msgstr ""
+"\n"
+"                                    Esta es una receta externa, lo que significa que sólo puedes verla abriendo el enlace de\n"
+"                                    arriba.\n"
+"                                    Puedes convertir esta receta en una receta de lujo pulsando el botón de conversión.\n"
+"                                    El\n"
+"                                    archivo\n"
+"                                    seguirá siendo accesible.\n"
+"                                "
+
+#: .\cookbook\templates\recipe_view.html:428
+msgid "Convert now!"
+msgstr "¡Convertir ahora!"
+
+#: .\cookbook\templates\recipe_view.html:446
+#: .\cookbook\templates\stats.html:47
+msgid "Comments"
+msgstr "Comentarios"
+
+#: .\cookbook\templates\recipe_view.html:469 .\cookbook\views\delete.py:108
+#: .\cookbook\views\edit.py:143
+msgid "Comment"
+msgstr "Comentario"
+
+#: .\cookbook\templates\recipes_table.html:46
+#: .\cookbook\templates\url_import.html:55
+msgid "Preparation time ca."
+msgstr "Tiempo de preparación ca."
+
+#: .\cookbook\templates\recipes_table.html:52
+#: .\cookbook\templates\url_import.html:60
+msgid "Waiting time ca."
+msgstr "Tiempo de espera ca."
+
+#: .\cookbook\templates\recipes_table.html:55
+msgid "External"
+msgstr "Externo"
+
+#: .\cookbook\templates\registration\login.html:10
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+"Tu nombre de usuario y contraseña no coinciden. Por favor, inténtelo de "
+"nuevo."
+
+#: .\cookbook\templates\registration\signup.html:5
+msgid "Register"
+msgstr "Registrar"
+
+#: .\cookbook\templates\registration\signup.html:9
+msgid "Create your Account"
+msgstr "Crea tu Cuenta"
+
+#: .\cookbook\templates\registration\signup.html:14
+msgid "Create User"
+msgstr "Crear Usuario"
+
+#: .\cookbook\templates\rest_framework\api.html:5
+msgid "Recipe Home"
+msgstr "Página de inicio"
+
+#: .\cookbook\templates\settings.html:22
+msgid "Account"
+msgstr "Cuenta"
+
+#: .\cookbook\templates\settings.html:41
+msgid "Language"
+msgstr "Idioma"
+
+#: .\cookbook\templates\settings.html:66
+msgid "Style"
+msgstr "Estilo"
+
+#: .\cookbook\templates\settings.html:78
+msgid "API Token"
+msgstr "Token API"
+
+#: .\cookbook\templates\settings.html:79
+msgid ""
+"You can use both basic authentication and token based authentication to "
+"access the REST API."
+msgstr ""
+"Puedes utilizar tanto la autenticación básica como la autenticación basada "
+"en tokens para acceder a la API REST."
+
+#: .\cookbook\templates\settings.html:91
+msgid ""
+"Use the token as an Authorization header prefixed by the word token as shown"
+" in the following examples:"
+msgstr ""
+"Utilice el token como cabecera de autorización usando como prefijo la "
+"palabra token, tal y como se muestra en los siguientes ejemplos:"
+
+#: .\cookbook\templates\settings.html:93
+msgid "or"
+msgstr "o"
+
+#: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
+msgid "Cookbook Setup"
+msgstr "Configuración del libro de recetas"
+
+#: .\cookbook\templates\setup.html:14
+msgid "Setup"
+msgstr "Configuración"
+
+#: .\cookbook\templates\setup.html:15
+msgid "To start using this application you must first create a superuser."
+msgstr ""
+"Para empezar a usar esta aplicación, primero debes crear un superusuario."
+
+#: .\cookbook\templates\setup.html:20
+msgid "Create Superuser"
+msgstr "Crear Superusuario"
+
+#: .\cookbook\templates\shopping_list.html:71
+msgid "Shopping Recipes"
+msgstr "Recetas en el carro de la compra"
+
+#: .\cookbook\templates\shopping_list.html:75
+msgid "No recipes selected"
+msgstr "No hay recetas seleccionadas"
+
+#: .\cookbook\templates\shopping_list.html:135
+msgid "Amount"
+msgstr "Cantidad"
+
+#: .\cookbook\templates\shopping_list.html:196
+msgid "Finished"
+msgstr "Completada"
+
+#: .\cookbook\templates\shopping_list.html:213
+msgid "Select User"
+msgstr "Seleccionar Usuario"
+
+#: .\cookbook\templates\shopping_list.html:232
+msgid "You are offline, shopping list might not sync."
+msgstr ""
+"Estás desconectado, la lista de la compra podría no estar sincronizada."
+
+#: .\cookbook\templates\shopping_list.html:280
+msgid "Copy/Export"
+msgstr "Copiar/Exportar"
+
+#: .\cookbook\templates\shopping_list.html:284
+msgid "List Prefix"
+msgstr "Prefijo de la lista"
+
+#: .\cookbook\templates\shopping_list.html:516
+#: .\cookbook\templates\shopping_list.html:547
+#: .\cookbook\templates\shopping_list.html:570
+msgid "There was an error updating a resource!"
+msgstr "¡Hubo un error al actualizar un recurso!"
+
+#: .\cookbook\templates\shopping_list.html:527
+msgid "Object created successfully!"
+msgstr "¡Objeto creado con éxito!"
+
+#: .\cookbook\templates\shopping_list.html:536
+msgid "There was an error creating a resource!"
+msgstr "¡Hubo un error al crear un recurso!"
+
+#: .\cookbook\templates\shopping_list.html:596
+msgid "Please enter a valid food"
+msgstr "Por favor, introduzca un alimento válido"
+
+#: .\cookbook\templates\stats.html:4
+msgid "Stats"
+msgstr "Estadísticas"
+
+#: .\cookbook\templates\stats.html:19
+msgid "Number of objects"
+msgstr "Número de objetos"
+
+#: .\cookbook\templates\stats.html:30
+msgid "Recipe Imports"
+msgstr "Recetas importadas"
+
+#: .\cookbook\templates\stats.html:38
+msgid "Objects stats"
+msgstr "Estadísticas de objetos"
+
+#: .\cookbook\templates\stats.html:41
+msgid "Recipes without Keywords"
+msgstr "Recetas sin palabras clave"
+
+#: .\cookbook\templates\stats.html:43
+msgid "External Recipes"
+msgstr "Recetas Externas"
+
+#: .\cookbook\templates\stats.html:45
+msgid "Internal Recipes"
+msgstr "Recetas Internas"
+
+#: .\cookbook\templates\system.html:21 .\cookbook\views\lists.py:74
+msgid "Invite Links"
+msgstr "Enlaces de Invitación"
+
+#: .\cookbook\templates\system.html:22
+msgid "Show Links"
+msgstr "Mostrar Enlaces"
+
+#: .\cookbook\templates\system.html:26
+msgid "Backup & Restore"
+msgstr "Copiar y Restaurar"
+
+#: .\cookbook\templates\system.html:27
+msgid "Download Backup"
+msgstr "Descargar Copia de Seguridad"
+
+#: .\cookbook\templates\system.html:37
+msgid "System Information"
+msgstr "Información del Sistema"
+
+#: .\cookbook\templates\system.html:39
+msgid ""
+"\n"
+"        Django Recipes is an open source free software application. It can be found on\n"
+"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+"        Changelogs can be found <a href=\"https://github.com/vabene1111/recipes/releases\">here</a>.\n"
+"    "
+msgstr ""
+"\n"
+"        Django Recipes es una aplicación de software libre de código abierto. Se puede encontrar en\n"
+"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+"        Los registros de cambios se pueden encontrar <a href=\"https://github.com/vabene1111/recipes/releases\">aquí</a>.\n"
+"    "
+
+#: .\cookbook\templates\system.html:53
+msgid "Media Serving"
+msgstr "Servidor multimedia"
+
+#: .\cookbook\templates\system.html:54 .\cookbook\templates\system.html:69
+#: .\cookbook\templates\system.html:85
+msgid "Warning"
+msgstr "Advertencia"
+
+#: .\cookbook\templates\system.html:54 .\cookbook\templates\system.html:69
+#: .\cookbook\templates\system.html:85 .\cookbook\templates\system.html:100
+msgid "Ok"
+msgstr "Ok"
+
+#: .\cookbook\templates\system.html:56
+msgid ""
+"Serving media files directly using gunicorn/python is <b>not recommend</b>!\n"
+"            Please follow the steps described\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">here</a> to update\n"
+"            your installation.\n"
+"        "
+msgstr ""
+"Servir archivos multimedia utilizando directamente gunicorn/python <b>no está recomendado</b>!\n"
+"            Por favor, sigue los pasos descritos\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">aquí</a> para actualizar\n"
+"            tu instalación.\n"
+"        "
+
+#: .\cookbook\templates\system.html:62 .\cookbook\templates\system.html:78
+#: .\cookbook\templates\system.html:93 .\cookbook\templates\system.html:107
+msgid "Everything is fine!"
+msgstr "¡Todo va bien!"
+
+#: .\cookbook\templates\system.html:67
+msgid "Secret Key"
+msgstr "Clave Secreta"
+
+#: .\cookbook\templates\system.html:71
+msgid ""
+"\n"
+"            You do not have a <code>SECRET_KEY</code> configured in your <code>.env</code> file. Django defaulted to the\n"
+"            standard key\n"
+"            provided with the installation which is publicly know and insecure! Please set\n"
+"            <code>SECRET_KEY</code> int the <code>.env</code> configuration file.\n"
+"        "
+msgstr ""
+"\n"
+"            No has configurado la variable <code>SECRET_KEY</code> en el fichero <code>.env</code>. Django está utilizando la\n"
+"            clave estándar\n"
+"            proporcionada con la instalación, esta clave es pública e insegura. Por favor, configura\n"
+"            <code>SECRET_KEY</code> en el fichero de configuración <code>.env</code>.\n"
+"        "
+
+#: .\cookbook\templates\system.html:83
+msgid "Debug Mode"
+msgstr "Modo Depuración"
+
+#: .\cookbook\templates\system.html:87
+msgid ""
+"\n"
+"            This application is still running in debug mode. This is most likely not needed. Turn of debug mode by\n"
+"            setting\n"
+"            <code>DEBUG=0</code> int the <code>.env</code> configuration file.\n"
+"        "
+msgstr ""
+"\n"
+"            Esta aplicación está funcionando en modo de depuración. Lo más probable es que no sea necesario. Para desactivar el modo de depuración\n"
+"            configura\n"
+"            <code>DEBUG=0</code> en el fichero de configuración <code>.env</code>.\n"
+"        "
+
+#: .\cookbook\templates\system.html:98
+msgid "Database"
+msgstr "Base de Datos"
+
+#: .\cookbook\templates\system.html:100
+msgid "Info"
+msgstr "Información"
+
+#: .\cookbook\templates\system.html:102
+msgid ""
+"\n"
+"            This application is not running with a Postgres database backend. This is ok but not recommended as some\n"
+"            features only work with postgres databases.\n"
+"        "
+msgstr ""
+"\n"
+"            Esta aplicación no se ejecuta con un backend de base de datos Postgres. Esto es válido pero no es recomendado ya que algunas\n"
+"            características sólo funcionan con bases de datos Postgres.\n"
+"        "
+
+#: .\cookbook\templates\url_import.html:5
+msgid "URL Import"
+msgstr "Importar URL"
+
+#: .\cookbook\templates\url_import.html:23
+msgid "Enter website URL"
+msgstr "Introduce la URL del sitio web"
+
+#: .\cookbook\templates\url_import.html:44
+msgid "Recipe Name"
+msgstr "Nombre de la Receta"
+
+#: .\cookbook\templates\url_import.html:99
+#: .\cookbook\templates\url_import.html:131
+#: .\cookbook\templates\url_import.html:186
+msgid "Select one"
+msgstr "Seleccione uno"
+
+#: .\cookbook\templates\url_import.html:197
+msgid "All Keywords"
+msgstr "Todas las palabras clave."
+
+#: .\cookbook\templates\url_import.html:199
+msgid "Import all Keywords not only the ones already existing."
+msgstr "Importar todas las palabras clave no sólo las ya existentes."
+
+#: .\cookbook\templates\url_import.html:225
+msgid "Information"
+msgstr "Información"
+
+#: .\cookbook\templates\url_import.html:227
+msgid ""
+" Only websites containing ld+json or microdata information can currently\n"
+"                                    be imported. Most big recipe pages support this. If you site cannot be imported but\n"
+"                                    you think\n"
+"                                    it probably has some kind of structured data feel free to post an example in the\n"
+"                                    github issues."
+msgstr ""
+"Actualmente sólo se pueden importar sitios web que contengan información en\n"
+"                                    ld+json o microdatos. La mayoría de las grandes páginas de recetas soportan esto. Si tu sitio no puede ser importado pero \n"
+"                                    crees que\n"
+"                                    tiene algún tipo de datos estructurados, no dudes en poner un ejemplo en las\n"
+"                                    propuestas de GitHub."
+
+#: .\cookbook\templates\url_import.html:235
+msgid "Google ld+json Info"
+msgstr "Información de Google ld+json"
+
+#: .\cookbook\templates\url_import.html:238
+msgid "GitHub Issues"
+msgstr "Propuestas de GitHub"
+
+#: .\cookbook\templates\url_import.html:240
+msgid "Recipe Markup Specification"
+msgstr "Especificación de anotaciones de la receta"
+
+#: .\cookbook\templates\url_import.html:313
+msgid "Already importing the selected recipe, please wait!"
+msgstr "Ya se está importando la receta seleccionada, ¡por favor espere!"
+
+#: .\cookbook\templates\url_import.html:322
+msgid "An error occurred while trying to import this recipe!"
+msgstr "¡Se produjo un error al intentar importar esta receta!"
+
+#: .\cookbook\views\api.py:58
+msgid "Parameter filter_list incorrectly formatted"
+msgstr "Parámetro filter_list formateado incorrectamente"
+
+#: .\cookbook\views\api.py:70
+msgid "Preference for given user already exists"
+msgstr "Las preferencias para este usuario ya existen"
+
+#: .\cookbook\views\api.py:349
+msgid "Sync successful!"
+msgstr "¡Sincronización exitosa!"
+
+#: .\cookbook\views\api.py:352
+msgid "Error synchronizing with Storage"
+msgstr "Error de sincronización con el almacenamiento"
+
+#: .\cookbook\views\api.py:410
+msgid "The requested page could not be found."
+msgstr "La página solicitada no pudo ser encontrada."
+
+#: .\cookbook\views\api.py:413
+msgid ""
+"The requested page refused to provide any information (Status Code 403)."
+msgstr ""
+"La página solicitada se negó a proporcionar información (Código de estado "
+"403)."
+
+#: .\cookbook\views\data.py:83
+#, python-format
+msgid "Batch edit done. %(count)d recipe was updated."
+msgid_plural "Batch edit done. %(count)d Recipes where updated."
+msgstr[0] "Edición por lotes realizada. %(count)d Receta fue actualizada."
+msgstr[1] "Edición masiva realizada. %(count)d Recetas fueron actualizadas."
+
+#: .\cookbook\views\delete.py:66
+msgid "Monitor"
+msgstr "Monitor"
+
+#: .\cookbook\views\delete.py:90 .\cookbook\views\lists.py:66
+#: .\cookbook\views\new.py:75
+msgid "Storage Backend"
+msgstr "Backend de Almacenamiento"
+
+#: .\cookbook\views\delete.py:97
+msgid ""
+"Could not delete this storage backend as it is used in at least one monitor."
+msgstr ""
+"No se pudo borrar este backend de almacenamiento ya que se utiliza en al "
+"menos un monitor."
+
+#: .\cookbook\views\delete.py:119 .\cookbook\views\edit.py:175
+#: .\cookbook\views\new.py:125
+msgid "Recipe Book"
+msgstr "Libro de recetas"
+
+#: .\cookbook\views\delete.py:138
+msgid "Bookmarks"
+msgstr "Marcadores"
+
+#: .\cookbook\views\delete.py:160 .\cookbook\views\new.py:181
+msgid "Invite Link"
+msgstr "Enlace de invitación"
+
+#: .\cookbook\views\edit.py:93
+msgid "Food"
+msgstr "Comida"
+
+#: .\cookbook\views\edit.py:102
+msgid "You cannot edit this storage!"
+msgstr "¡No puede editar este almacenamiento!"
+
+#: .\cookbook\views\edit.py:121
+msgid "Storage saved!"
+msgstr "¡Almacenamiento guardado!"
+
+#: .\cookbook\views\edit.py:123
+msgid "There was an error updating this storage backend!"
+msgstr "¡Hubo un error al actualizar este backend de almacenamiento!"
+
+#: .\cookbook\views\edit.py:130
+msgid "Storage"
+msgstr "Almacenamiento"
+
+#: .\cookbook\views\edit.py:215
+msgid "Changes saved!"
+msgstr "¡Cambios guardados!"
+
+#: .\cookbook\views\edit.py:219
+msgid "Error saving changes!"
+msgstr "¡Error al guardar los cambios!"
+
+#: .\cookbook\views\edit.py:249
+msgid "Units merged!"
+msgstr "¡Unidades fusionadas!"
+
+#: .\cookbook\views\edit.py:262
+msgid "Foods merged!"
+msgstr "¡Alimentos fusionados!"
+
+#: .\cookbook\views\import_export.py:42
+msgid "Recipe imported successfully!"
+msgstr "¡Receta importada con éxito!"
+
+#: .\cookbook\views\import_export.py:45
+msgid "Something went wrong during the import!"
+msgstr "¡Algo salió mal durante la importación!"
+
+#: .\cookbook\views\import_export.py:48
+msgid "Could not parse the supplied JSON!"
+msgstr "¡No se pudo analizar el JSON proporcionado!"
+
+#: .\cookbook\views\import_export.py:79
+msgid ""
+"External recipes cannot be exported, please share the file directly or "
+"select an internal recipe."
+msgstr ""
+"Las recetas externas no se pueden exportar, comparta el archivo directamente"
+" o seleccione una receta interna."
+
+#: .\cookbook\views\lists.py:29
+msgid "Import Log"
+msgstr "Importar registro"
+
+#: .\cookbook\views\lists.py:38
+msgid "Discovery"
+msgstr "Descubrimiento"
+
+#: .\cookbook\views\lists.py:58
+msgid "Shopping Lists"
+msgstr "Listas de la compra"
+
+#: .\cookbook\views\new.py:98
+msgid "Imported new recipe!"
+msgstr "¡Nueva receta importada!"
+
+#: .\cookbook\views\new.py:101
+msgid "There was an error importing this recipe!"
+msgstr "¡Hubo un error al importar esta receta!"
+
+#: .\cookbook\views\views.py:86
+msgid "You do not have the required permissions to perform this action!"
+msgstr "¡No tienes los permisos necesarios para realizar esta acción!"
+
+#: .\cookbook\views\views.py:98
+msgid "Comment saved!"
+msgstr "¡Comentario guardado!"
+
+#: .\cookbook\views\views.py:108
+msgid "Bookmark saved!"
+msgstr "¡Marcador guardado!"
+
+#: .\cookbook\views\views.py:255
+msgid ""
+"The setup page can only be used to create the first user! If you have "
+"forgotten your superuser credentials please consult the django documentation"
+" on how to reset passwords."
+msgstr ""
+"La página de configuración sólo puede ser utilizada para crear el primer "
+"usuario. Si has olvidado tus credenciales de superusuario, por favor "
+"consulta la documentación de django sobre cómo restablecer las contraseñas."
+
+#: .\cookbook\views\views.py:262 .\cookbook\views\views.py:302
+msgid "Passwords dont match!"
+msgstr "¡Las contraseñas no coinciden!"
+
+#: .\cookbook\views\views.py:273 .\cookbook\views\views.py:311
+msgid "User has been created, please login!"
+msgstr "El usuario ha sido creado, ¡inicie sesión!"
+
+#: .\cookbook\views\views.py:288
+msgid "Malformed Invite Link supplied!"
+msgstr "¡Se proporcionó un enlace de invitación con formato incorrecto!"
+
+#: .\cookbook\views\views.py:328
+msgid "Invite Link not valid or already used!"
+msgstr "¡El enlace de invitación no es válido o ya se ha utilizado!"
