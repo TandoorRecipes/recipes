@@ -11,6 +11,7 @@ from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 
 from cookbook.models import Keyword
+from cookbook.helper.ingredient_parser import parse as parse_ingredient
 
 
 def get_from_html(html_text, url):
@@ -70,39 +71,12 @@ def find_recipe_json(ld_json, url):
         ingredients = []
 
         for x in ld_json['recipeIngredient']:
-            ingredient_split = x.split()
-            ingredient = None
-            amount = 0
-            unit = ''
-            if len(ingredient_split) > 2:
-                ingredient = " ".join(ingredient_split[2:])
-                unit = ingredient_split[1]
-
-                try:
-                    if 'fraction' in unicodedata.decomposition(ingredient_split[0]):
-                        frac_split = unicodedata.decomposition(ingredient_split[0]).split()
-                        amount = round(float((frac_split[1]).replace('003', '')) / float((frac_split[3]).replace('003', '')), 3)
-                    else:
-                        raise TypeError
-                except TypeError:  # raised by unicodedata.decomposition if there was no unicode character in parsed data
-                    try:
-                        amount = float(ingredient_split[0].replace(',', '.'))
-                    except ValueError:
-                        amount = 0
-                        ingredient = " ".join(ingredient_split)
-            if len(ingredient_split) == 2:
-                ingredient = " ".join(ingredient_split[1:])
-                unit = ''
-                try:
-                    amount = float(ingredient_split[0].replace(',', '.'))
-                except ValueError:
-                    amount = 0
-                    ingredient = " ".join(ingredient_split)
-            if len(ingredient_split) == 1:
-                ingredient = " ".join(ingredient_split)
-
-            if ingredient:
-                ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': ingredient, 'id': random.randrange(10000, 99999)}, 'original': x})
+            try:
+                amount, unit, ingredient, note = parse_ingredient(x)
+                if ingredient:
+                    ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': ingredient, 'id': random.randrange(10000, 99999)}, "note": note, 'original': x})
+            except:
+                pass
 
         ld_json['recipeIngredient'] = ingredients
     else:
