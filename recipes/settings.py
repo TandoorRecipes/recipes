@@ -31,6 +31,7 @@ REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
 
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
+FRACTION_PREF_DEFAULT = bool(int(os.getenv('FRACTION_PREF_DEFAULT', False)))
 
 # minimum interval that users can set for automatic sync of shopping lists
 SHOPPING_MIN_AUTOSYNC_INTERVAL = int(os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
@@ -162,7 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'Europe/Berlin'
+TIME_ZONE = os.getenv('TIMEZONE') if os.getenv('TIMEZONE') else 'Europe/Berlin'
 
 USE_I18N = True
 
@@ -175,6 +176,7 @@ LANGUAGES = [
     ('de', _('German')),
     ('nl', _('Dutch')),
     ('fr', _('French')),
+    ('ca', _('Catalan')),
 ]
 
 # Static files (CSS, JavaScript, Images)
