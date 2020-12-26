@@ -129,7 +129,7 @@ class RecipeBookEntryDelete(GroupRequiredMixin, DeleteView):
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
         if not (obj.book.created_by == request.user or request.user.is_superuser):
-            messages.add_message(request, messages.ERROR, _('You cannot interact with this object as its not owned by you!'))
+            messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
             return HttpResponseRedirect(reverse('index'))
         return super(RecipeBookEntryDelete, self).dispatch(request, *args, **kwargs)
 

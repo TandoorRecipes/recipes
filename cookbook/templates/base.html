@@ -84,7 +84,7 @@
             <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,data_batch_edit' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-tags"></i> {% trans 'Tags' %}
+                    <i class="fas fa-tags"></i> {% trans 'Keywords' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
@@ -139,7 +139,7 @@
                         {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'docs_markdown' %}"><i
-                                class="fab fa-markdown fa-fw"></i> {% trans 'Markdown Help' %}</a>
+                                class="fab fa-markdown fa-fw"></i> {% trans 'Markdown Guide' %}</a>
                         <a class="dropdown-item" href="https://github.com/vabene1111/recipes"><i
                                 class="fab fa-github fa-fw"></i> {% trans 'GitHub' %}</a>
                         <a class="dropdown-item" href="{% url 'docs_api' %}"><i
