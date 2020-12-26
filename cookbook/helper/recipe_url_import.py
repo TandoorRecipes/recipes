@@ -158,7 +158,7 @@ def find_recipe_json(ld_json, url):
     else:
         ld_json['recipeInstructions'] = ''
 
-    ld_json['recipeInstructions'] += '\n\n' + _('Imported from ') + url
+    ld_json['recipeInstructions'] += '\n\n' + _('Imported from') + ' ' + url
 
     if 'image' in ld_json:
         # check if list of images is returned, take first if so

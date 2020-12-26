@@ -238,7 +238,7 @@ msgstr "No heu iniciat la sessió i, per tant, no podeu veure aquesta pàgina."
 
 #: .\cookbook\helper\permission_helper.py:127
 #: .\cookbook\helper\permission_helper.py:141 .\cookbook\views\delete.py:132
-msgid "You cannot interact with this object as its not owned by you!"
+msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
 "No podeu interactuar amb aquest objecte ja que no és propietat vostra!"
 
@@ -430,7 +430,7 @@ msgid "Admin"
 msgstr "Admin"
 
 #: .\cookbook\templates\base.html:142
-msgid "Markdown Help"
+msgid "Markdown Guide"
 msgstr "Ajuda de Markdown"
 
 #: .\cookbook\templates\base.html:144
@@ -826,7 +826,7 @@ msgid "Units"
 msgstr "Unitats"
 
 #: .\cookbook\templates\forms\ingredients.html:26
-msgid "Are you sure that you want to merge these two units ?"
+msgid "Are you sure that you want to merge these two units?"
 msgstr "Segur que vols combinar aquestes dues unitats?"
 
 #: .\cookbook\templates\forms\ingredients.html:31
@@ -835,12 +835,12 @@ msgid "Merge"
 msgstr "Combina"
 
 #: .\cookbook\templates\forms\ingredients.html:36
-msgid "Are you sure that you want to merge these two ingredients ?"
+msgid "Are you sure that you want to merge these two ingredients?"
 msgstr "Segur que vols combinar aquests dos Ingredients?"
 
 #: .\cookbook\templates\generic\delete_template.html:18
 #, python-format
-msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
+msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b>?"
 msgstr "Segur que vols esborrar el %(title)s:<b>%(object)s</b>"
 
 #: .\cookbook\templates\generic\delete_template.html:21

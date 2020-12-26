@@ -141,7 +141,7 @@ class OwnerRequiredMixin(object):
             return HttpResponseRedirect(reverse_lazy('login'))
         else:
             if not is_object_owner(request.user, self.get_object()):
-                messages.add_message(request, messages.ERROR, _('You cannot interact with this object as its not owned by you!'))
+                messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
                 return HttpResponseRedirect(reverse('index'))
 
         return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
@@ -155,7 +155,7 @@ class CustomIsOwner(permissions.BasePermission):
     verifies user has ownership over object
     (either user or created_by or user is request user)
     """
-    message = _('You cannot interact with this object as its not owned by you!')
+    message = _('You cannot interact with this object as it is not owned by you!')
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
@@ -169,7 +169,7 @@ class CustomIsShared(permissions.BasePermission):  # TODO function duplicate/too
     Custom permission class for django rest framework views
     verifies user is shared for the object he is trying to access
     """
-    message = _('You cannot interact with this object as its not owned by you!')
+    message = _('You cannot interact with this object as it is not owned by you!')
 
     def has_permission(self, request, view):
         return request.user.is_authenticated

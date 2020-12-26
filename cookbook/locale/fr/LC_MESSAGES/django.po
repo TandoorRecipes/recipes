@@ -249,7 +249,7 @@ msgstr "Vous n'êtes pas connecté et ne pouvez donc pas afficher cette page !"
 #: .\cookbook\helper\permission_helper.py:144
 #: .\cookbook\helper\permission_helper.py:158
 #: .\cookbook\helper\permission_helper.py:172 .\cookbook\views\delete.py:132
-msgid "You cannot interact with this object as its not owned by you!"
+msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
 "Vous ne pouvez pas interagir avec cet objet car vous ne le possédez pas!"
 
@@ -266,7 +266,7 @@ msgstr ""
 "la recette."
 
 #: .\cookbook\helper\recipe_url_import.py:159
-msgid "Imported from "
+msgid "Imported from"
 msgstr "Importé depuis"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:12
@@ -440,7 +440,7 @@ msgid "Admin"
 msgstr "Admin"
 
 #: .\cookbook\templates\base.html:142
-msgid "Markdown Help"
+msgid "Markdown Guide"
 msgstr "Aide Markdown"
 
 #: .\cookbook\templates\base.html:144
@@ -874,7 +874,7 @@ msgid "Units"
 msgstr "Unités"
 
 #: .\cookbook\templates\forms\ingredients.html:26
-msgid "Are you sure that you want to merge these two units ?"
+msgid "Are you sure that you want to merge these two units?"
 msgstr "Êtes-vous sur de vouloir fusionner ces deux unités ?"
 
 #: .\cookbook\templates\forms\ingredients.html:31
@@ -883,12 +883,12 @@ msgid "Merge"
 msgstr "Fusionner"
 
 #: .\cookbook\templates\forms\ingredients.html:36
-msgid "Are you sure that you want to merge these two ingredients ?"
+msgid "Are you sure that you want to merge these two ingredients?"
 msgstr "Êtes-vous certain de vouloir fusionner ces deux ingrédients ?"
 
 #: .\cookbook\templates\generic\delete_template.html:18
 #, python-format
-msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
+msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b>?"
 msgstr "Êtes-vous certain de vouloir supprimer %(title)s : <b>%(object)s</b>"
 
 #: .\cookbook\templates\generic\delete_template.html:21
