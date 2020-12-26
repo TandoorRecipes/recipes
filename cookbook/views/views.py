@@ -202,6 +202,7 @@ def user_settings(request):
                 up.plan_share.set(form.cleaned_data['plan_share'])
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']
                 up.comments = form.cleaned_data['comments']
+                up.use_fractions = form.cleaned_data['use_fractions']
 
                 up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
                 if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
@@ -242,7 +243,7 @@ def history(request):
 
 @group_required('admin')
 def system(request):
-    postgres = False if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' else True
+    postgres = False if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql') else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 

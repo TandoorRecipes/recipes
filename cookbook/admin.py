@@ -172,3 +172,10 @@ class ShareLinkAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ShareLink, ShareLinkAdmin)
+
+
+class NutritionInformationAdmin(admin.ModelAdmin):
+    list_display = ('id',)
+
+
+admin.site.register(NutritionInformation, NutritionInformationAdmin)
