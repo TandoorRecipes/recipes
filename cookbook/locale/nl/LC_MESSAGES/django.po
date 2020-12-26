@@ -6,7 +6,6 @@
 # Translators:
 # 31a3ead7f9b1ec8ada1a36808eee4069_988cec9 <9478557dfb8b6cd81570ee9e754f1719_904168>, 2020
 # Jesse Kamps <jkamps@gmail.com>, 2020
-#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -14,10 +13,6 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-15 21:39+0100\n"
 "PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: Jesse Kamps <jkamps@gmail.com>, 2020\n"
-"Language-Team: Dutch (https://www.transifex.com/django-recipes/teams/110507/"
-"nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,6 +45,8 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Mogelijk maken van breuken bij ingrediënt aantallen (het automatisch "
+"converteren van decimalen naar breuken)"
 
 #: .\cookbook\forms.py:40
 msgid "Default user to share newly created meal plan entries with."
@@ -480,8 +477,8 @@ msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced"
 msgstr ""
-"Op deze pagina kan je alle mappen die gemonitord en gesynchroniseerd dienen "
-"te worden beheren."
+"Op deze pagina kan je alle mappen die bewaakt en gesynchroniseerd dienen te "
+"worden beheren."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
@@ -583,10 +580,8 @@ msgid "Edit Recipe"
 msgstr "Recept bewerken"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:59
-#, fuzzy
-#| msgid "Preperation Time"
 msgid "Preparation Time"
-msgstr "Voorbereidingstijd"
+msgstr "Bereidingstijd"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:62
 msgid "Waiting Time"
@@ -599,7 +594,7 @@ msgstr "Selecteer sleutelwoorden"
 #: .\cookbook\templates\forms\edit_internal_recipe.html:88
 #: .\cookbook\templates\recipe_view.html:218
 msgid "Nutrition"
-msgstr ""
+msgstr "Voedingswaarde"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:92
 #: .\cookbook\templates\forms\edit_internal_recipe.html:142
@@ -609,22 +604,22 @@ msgstr "Verwijder stap"
 #: .\cookbook\templates\forms\edit_internal_recipe.html:96
 #: .\cookbook\templates\recipe_view.html:222
 msgid "Calories"
-msgstr ""
+msgstr "Calorieën"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:99
 #: .\cookbook\templates\recipe_view.html:230
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Koolhydraten"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:102
 #: .\cookbook\templates\recipe_view.html:238
 msgid "Fats"
-msgstr ""
+msgstr "Vetten"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:104
 #: .\cookbook\templates\recipe_view.html:246
 msgid "Proteins"
-msgstr ""
+msgstr "Eiwitten"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:126
 #: .\cookbook\templates\forms\edit_internal_recipe.html:426
@@ -732,12 +727,12 @@ msgstr "Voeg stap toe"
 #: .\cookbook\templates\forms\edit_internal_recipe.html:369
 #: .\cookbook\templates\forms\edit_internal_recipe.html:400
 msgid "Add Nutrition"
-msgstr ""
+msgstr "Voedingswaarde toevoegen"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:371
 #: .\cookbook\templates\forms\edit_internal_recipe.html:402
 msgid "Remove Nutrition"
-msgstr ""
+msgstr "Voedingswaarde verwijderen"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:373
 #: .\cookbook\templates\forms\edit_internal_recipe.html:405
@@ -1247,20 +1242,20 @@ msgid "Plan"
 msgstr "Plan"
 
 #: .\cookbook\templates\meal_plan.html:192
-#, fuzzy
-#| msgid "Number of objects"
 msgid "Number of Days"
-msgstr "Aantal objecten"
+msgstr "Aantal dagen"
 
 #: .\cookbook\templates\meal_plan.html:202
 msgid "Weekday offset"
-msgstr ""
+msgstr "Weekdag aanpassing"
 
 #: .\cookbook\templates\meal_plan.html:205
 msgid ""
-"Number of days starting from the first day of the week to offset the default "
-"view."
+"Number of days starting from the first day of the week to offset the default"
+" view."
 msgstr ""
+"Aantal dagen startende met de eerste dag van de week om het standaard "
+"overzicht aan te passen."
 
 #: .\cookbook\templates\meal_plan.html:213
 #: .\cookbook\templates\meal_plan.html:287
@@ -1334,25 +1329,11 @@ msgid ""
 "                        "
 msgstr ""
 "\n"
-"<p>De maaltijdplanner maakt het mogelijk maaltijden op basis van recepten of "
-"notities te plannen.</p>\n"
-"<p>Selecteer een recept uit de lijst van recent bekeken recepten of zoek het "
-"recept dat je wil en sleep het naar de gewenste positie. Je kan ook eerst "
-"een notitie en titel toevoegen en dan het recept naar de gewenste positie "
-"slepen om een maaltijdplan met een aangepaste titel en notitie te maken. "
-"Alleen notities aanmaken is ook mogelijk door 'Maak notitie' in het "
-"maaltijdplan te slepen.</p>\n"
-"<p>Klik op een recept om het te openen en de details te bekijken. Hier kan "
-"je het ook aan de boodschappenlijst toevoegen door op het winkelwagentje "
-"bovenaan de tabel te klikken.</p>\n"
-"<p>Omdat maaltijden vaak gezamenlijk worden gepland kan je in de "
-"instellingen gebruikers aangeven met wie je het maaltijdplan wil delen.</p>\n"
-"<p>Je kan ook de soort maaltijden die je wil plannen bewerken. Als je jouw "
-"plan deelt met iemand met andere soorten, dan zullen deze ook in jouw lijst "
-"verschijnen. Gelijknamige soorten worden samengevoegd. Zorg er daarom voor "
-"dat de gebruikte soorten overeenkomen met de gebruiker met wie je je "
-"maaltijdplannen deelt. Dit voorkomt dubbelingen (zoals Overige en "
-"Willekeurig).</p>"
+"<p>De maaltijdplanner maakt het mogelijk maaltijden op basis van recepten of notities te plannen.</p>\n"
+"<p>Selecteer een recept uit de lijst van recent bekeken recepten of zoek het recept dat je wil en sleep het naar de gewenste positie. Je kan ook eerst een notitie en titel toevoegen en dan het recept naar de gewenste positie slepen om een maaltijdplan met een aangepaste titel en notitie te maken. Alleen notities aanmaken is ook mogelijk door 'Maak notitie' in het maaltijdplan te slepen.</p>\n"
+"<p>Klik op een recept om het te openen en de details te bekijken. Hier kan je het ook aan de boodschappenlijst toevoegen door op het winkelwagentje bovenaan de tabel te klikken.</p>\n"
+"<p>Omdat maaltijden vaak gezamenlijk worden gepland kan je in de instellingen gebruikers aangeven met wie je het maaltijdplan wil delen.</p>\n"
+"<p>Je kan ook de soort maaltijden die je wil plannen bewerken. Als je jouw plan deelt met iemand met andere soorten, dan zullen deze ook in jouw lijst verschijnen. Gelijknamige soorten worden samengevoegd. Zorg er daarom voor dat de gebruikte soorten overeenkomen met de gebruiker met wie je je maaltijdplannen deelt. Dit voorkomt dubbelingen (zoals Overige en Willekeurig).</p>"
 
 #: .\cookbook\templates\meal_plan.html:609
 msgid ""
@@ -1402,16 +1383,12 @@ msgid "in"
 msgstr "binnen"
 
 #: .\cookbook\templates\recipe_view.html:82
-#, fuzzy
-#| msgid "Preparation time ca."
 msgid "Preparation time ~"
-msgstr "Geschatte voorbereidingstijd"
+msgstr "Bereidingstijd"
 
 #: .\cookbook\templates\recipe_view.html:88
-#, fuzzy
-#| msgid "Waiting time ca."
 msgid "Waiting time ~"
-msgstr "Geschatte wachttijd "
+msgstr "Wachttijd"
 
 #: .\cookbook\templates\recipe_view.html:206
 #: .\cookbook\templates\recipes_table.html:19
@@ -1576,14 +1553,13 @@ msgid "Finished"
 msgstr "Afgerond"
 
 #: .\cookbook\templates\shopping_list.html:213
-#, fuzzy
-#| msgid "Select one"
 msgid "Select User"
-msgstr "Selecteer één"
+msgstr "Selecteer gebruiker"
 
 #: .\cookbook\templates\shopping_list.html:232
 msgid "You are offline, shopping list might not sync."
 msgstr ""
+"Je bent offline, boodschappenlijstje wordt mogelijk niet gesynchroniseerd."
 
 #: .\cookbook\templates\shopping_list.html:280
 msgid "Copy/Export"
@@ -1872,7 +1848,7 @@ msgstr[1] "Batch bewerking voldaan. %(count)d Recepten zijn geupdatet."
 
 #: .\cookbook\views\delete.py:66
 msgid "Monitor"
-msgstr "Observator"
+msgstr "Bewaker"
 
 #: .\cookbook\views\delete.py:90 .\cookbook\views\lists.py:66
 #: .\cookbook\views\new.py:75
@@ -1884,7 +1860,7 @@ msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
 msgstr ""
 "Dit Opslag backend kon niet verwijderd worden omdat het gebruikt wordt in "
-"tenminste een Observator."
+"tenminste een Bewaker."
 
 #: .\cookbook\views\delete.py:119 .\cookbook\views\edit.py:175
 #: .\cookbook\views\new.py:125
