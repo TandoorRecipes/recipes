@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Alessandro Spallina <alessandrospallina1@gmail.com>, 2020
 # Oliver Thomas Cervera <cervera93-10@yahoo.it>, 2020
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -15,12 +15,11 @@ msgstr ""
 "POT-Creation-Date: 2020-12-26 13:48+0100\n"
 "PO-Revision-Date: 2020-06-02 19:28+0000\n"
 "Last-Translator: Oliver Thomas Cervera <cervera93-10@yahoo.it>, 2020\n"
-"Language-Team: Italian (https://www.transifex.com/django-recipes/"
-"teams/110507/it/)\n"
-"Language: it\n"
+"Language-Team: Italian (https://www.transifex.com/django-recipes/teams/110507/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cookbook/filters.py:15 cookbook/templates/base.html:80
@@ -36,8 +35,8 @@ msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
-"Colore della barra di navigazione in alto. Non tutti i colori funzionano con "
-"tutti i temi, provali e basta!"
+"Colore della barra di navigazione in alto. Non tutti i colori funzionano con"
+" tutti i temi, provali e basta!"
 
 #: cookbook/forms.py:38
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
@@ -58,6 +57,8 @@ msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
 msgstr ""
+"Gli utenti con i quali le nuove voci del piano alimentare/lista della spesa "
+"devono essere condivise per impostazione predefinita."
 
 #: cookbook/forms.py:41
 msgid "Show recently viewed recipes on search page."
@@ -80,11 +81,11 @@ msgid ""
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
 "L'impostazione su 0 disabiliterà la sincronizzazione automatica. Quando si "
-"visualizza una lista della spesa, la lista viene aggiornata ogni tot secondi "
-"impostati per sincronizzare le modifiche che qualcun altro potrebbe aver "
-"fatto. Utile per gli acquisti con più persone, ma potrebbe utilizzare un po' "
-"di dati mobili. Se inferiore al limite di istanza viene ripristinato durante "
-"il salvataggio."
+"visualizza una lista della spesa, la lista viene aggiornata ogni tot secondi"
+" impostati per sincronizzare le modifiche che qualcun altro potrebbe aver "
+"fatto. Utile per gli acquisti con più persone, ma potrebbe utilizzare un po'"
+" di dati mobili. Se inferiore al limite di istanza viene ripristinato "
+"durante il salvataggio."
 
 #: cookbook/forms.py:62
 msgid ""
@@ -191,11 +192,11 @@ msgstr "Lascia vuoto per nextcloud e inserisci l'api token per dropbox."
 
 #: cookbook/forms.py:211
 msgid ""
-"Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
-"php/webdav/</code> is added automatically)"
+"Leave empty for dropbox and enter only base url for nextcloud "
+"(<code>/remote.php/webdav/</code> is added automatically)"
 msgstr ""
-"Lascia vuoto per dropbox e inserisci solo l'url base per nextcloud (<code>/"
-"remote.php/webdav/</code> è aggiunto automaticamente)"
+"Lascia vuoto per dropbox e inserisci solo l'url base per nextcloud "
+"(<code>/remote.php/webdav/</code> è aggiunto automaticamente)"
 
 #: cookbook/forms.py:230
 msgid "Search String"
@@ -215,13 +216,14 @@ msgstr ""
 "È possibile visualizzare l'elenco degli utenti predefiniti con cui "
 "condividere le ricette nelle impostazioni."
 
-#: cookbook/forms.py:272 cookbook/templates/forms/edit_internal_recipe.html:352
+#: cookbook/forms.py:272
+#: cookbook/templates/forms/edit_internal_recipe.html:352
 msgid ""
-"You can use markdown to format this field. See the <a href=\"/docs/markdown/"
-"\">docs here</a>"
+"You can use markdown to format this field. See the <a "
+"href=\"/docs/markdown/\">docs here</a>"
 msgstr ""
-"Puoi usare markdown per formattare questo campo. Guarda la <a href=\"/docs/"
-"markdown/\">documentazione qui</a>"
+"Puoi usare markdown per formattare questo campo. Guarda la <a "
+"href=\"/docs/markdown/\">documentazione qui</a>"
 
 #: cookbook/forms.py:273
 msgid "Scaling factor for recipe."
@@ -250,7 +252,7 @@ msgstr "Non sei loggato e quindi non puoi visualizzare questa pagina!"
 #: cookbook/helper/permission_helper.py:158
 #: cookbook/helper/permission_helper.py:172 cookbook/views/delete.py:132
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "Non puoi interagire con questo oggetto perché non è di tua proprietà!"
+msgstr "Non puoi interagire con questo oggetto perché non ne hai i diritti!"
 
 #: cookbook/helper/recipe_url_import.py:36
 msgid "The requested site provided malformed data and cannot be read."
@@ -260,11 +262,11 @@ msgstr ""
 
 #: cookbook/helper/recipe_url_import.py:45
 msgid ""
-"The requested site does not provide any recognized data format to import the "
-"recipe from."
+"The requested site does not provide any recognized data format to import the"
+" recipe from."
 msgstr ""
-"Il sito richiesto da cui importare la ricetta non fornisce un formato di "
-"dati riconosciuto."
+"Il sito richiesto non fornisce un formato di dati riconosciuto da cui "
+"importare la ricetta."
 
 #: cookbook/helper/recipe_url_import.py:161
 msgid "Imported from"
@@ -321,7 +323,8 @@ msgstr "Tempo"
 #: cookbook/tables.py:29 cookbook/templates/books.html:36
 #: cookbook/templates/generic/edit_template.html:6
 #: cookbook/templates/generic/edit_template.html:14
-#: cookbook/templates/meal_plan.html:274 cookbook/templates/recipe_view.html:38
+#: cookbook/templates/meal_plan.html:274
+#: cookbook/templates/recipe_view.html:38
 #: cookbook/templates/recipes_table.html:77
 #: cookbook/templates/shopping_list.html:29
 msgid "Edit"
@@ -436,7 +439,7 @@ msgstr "Amministratore"
 
 #: cookbook/templates/base.html:142
 msgid "Markdown Guide"
-msgstr "Aiuto Markdown"
+msgstr "Informazioni su Markdown"
 
 #: cookbook/templates/base.html:144
 msgid "GitHub"
@@ -479,16 +482,12 @@ msgid "Manage watched Folders"
 msgstr "Gestisci cartelle controllate"
 
 #: cookbook/templates/batch/monitor.html:14
-#, fuzzy
-#| msgid ""
-#| "On this Page you can manage all storage folder locations that should be "
-#| "monitored and synced"
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
-"In questa pagina puoi gestire tutte le posizioni delle cartelle di "
-"archiviazione che devono essere monitorate e sincronizzate"
+"In questa pagina puoi gestire i percorsi delle cartelle di archiviazione che"
+" devono essere monitorate e sincronizzate."
 
 #: cookbook/templates/batch/monitor.html:16
 msgid "The path must be in the following format"
@@ -691,7 +690,8 @@ msgid "Select Food"
 msgstr "Seleziona alimento"
 
 #: cookbook/templates/forms/edit_internal_recipe.html:282
-#: cookbook/templates/meal_plan.html:249 cookbook/templates/url_import.html:147
+#: cookbook/templates/meal_plan.html:249
+#: cookbook/templates/url_import.html:147
 msgid "Note"
 msgstr "Nota"
 
@@ -846,19 +846,14 @@ msgstr "Modifica Ingredienti"
 #: cookbook/templates/forms/ingredients.html:16
 msgid ""
 "\n"
-"        The following form can be used if, accidentally, two (or more) units "
-"or ingredients where created that should be\n"
+"        The following form can be used if, accidentally, two (or more) units or ingredients where created that should be\n"
 "        the same.\n"
-"        It merges two units or ingredients and updates all recipes using "
-"them.\n"
+"        It merges two units or ingredients and updates all recipes using them.\n"
 "    "
 msgstr ""
 "\n"
-"        Questo modulo può essere utilizzato se, accidentalmente,  sono stati "
-"creati due (o più) unità di misura o ingredienti che dovrebbero essere lo "
-"stesso. \n"
-"Unisce due unità di misura o ingredienti e aggiorna tutte le ricette che li "
-"utilizzano."
+"        Questo modulo può essere utilizzato se, accidentalmente,  sono stati creati due (o più) unità di misura o ingredienti che dovrebbero essere lo stesso. \n"
+"Unisce due unità di misura o ingredienti e aggiorna tutte le ricette che li utilizzano."
 
 #: cookbook/templates/forms/ingredients.html:24
 #: cookbook/templates/stats.html:26
@@ -879,8 +874,7 @@ msgid "Are you sure that you want to merge these two ingredients?"
 msgstr "Sei sicuro di volere unire questi due ingredienti?"
 
 #: cookbook/templates/generic/delete_template.html:18
-#, fuzzy, python-format
-#| msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b>?"
+#, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr "Sei sicuro di volere eliminare %(title)s: <b>%(object)s</b>"
 
@@ -982,19 +976,15 @@ msgstr "Avviso di Sicurezza"
 #: cookbook/templates/include/storage_backend_warning.html:5
 msgid ""
 "\n"
-"        The <b>Password and Token</b> field are stored as <b>plain text</b> "
-"inside the database.\n"
-"        This is necessary because they are needed to make API requests, but "
-"it also increases the risk of\n"
+"        The <b>Password and Token</b> field are stored as <b>plain text</b> inside the database.\n"
+"        This is necessary because they are needed to make API requests, but it also increases the risk of\n"
 "        someone stealing it. <br/>\n"
-"        To limit the possible damage tokens or accounts with limited access "
-"can be used.\n"
+"        To limit the possible damage tokens or accounts with limited access can be used.\n"
 "    "
 msgstr ""
 "\n"
 "I campi <b>Password e Token</b> sono salvati <b>in chiaro</b> nel database.\n"
-"È necessario perché servono per fare richieste API, ma questo aumenta il "
-"rischio che\n"
+"È necessario perché servono per fare richieste API, ma questo aumenta il rischio che\n"
 "qualcuno possa impossessarsene.<br/>\n"
 "Per liminare il danno puoi usare account con accesso limitato o i token."
 
@@ -1039,29 +1029,19 @@ msgstr "Informazioni su Markdown"
 #: cookbook/templates/markdown_info.html:14
 msgid ""
 "\n"
-"        Markdown is lightweight markup language that can be used to format "
-"plain text easily.\n"
-"        This site uses the <a href=\"https://python-markdown.github.io/\" "
-"target=\"_blank\">Python Markdown</a> library to\n"
-"        convert your text into nice looking html. Its full markdown "
-"documentation can be found\n"
-"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
-"target=\"_blank\">here</a>.\n"
-"        An incomplete but most likely sufficient documentation can be found "
-"below.\n"
+"        Markdown is lightweight markup language that can be used to format plain text easily.\n"
+"        This site uses the <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> library to\n"
+"        convert your text into nice looking html. Its full markdown documentation can be found\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">here</a>.\n"
+"        An incomplete but most likely sufficient documentation can be found below.\n"
 "    "
 msgstr ""
 "\n"
-"      Markdown è un linguaggio di markup molto leggero che può essere "
-"utilizzato per formattare facilmente del testo.\n"
-"      Questo sito utilizza la libreria <a href=\"https://python-markdown."
-"github.io/\" target=\"_blank\">Python Markdown</a> per\n"
-"      convertire il tuo testo in html formattato. È possibile trovare la "
-"documentazione completa del markdown\n"
-"      <a href=\"https://daringfireball.net/projects/markdown/syntax\" target="
-"\"_blank\">qui</a>.\n"
-"      Di seguito è possibile trovare una documentazione incompleta ma molto "
-"probabilmente sufficiente."
+"      Markdown è un linguaggio di markup molto leggero che può essere utilizzato per formattare facilmente del testo.\n"
+"      Questo sito utilizza la libreria <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> per\n"
+"      convertire il tuo testo in html formattato. È possibile trovare la documentazione completa del markdown\n"
+"      <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">qui</a>.\n"
+"      Di seguito è possibile trovare una documentazione incompleta ma molto probabilmente sufficiente."
 
 #: cookbook/templates/markdown_info.html:25
 msgid "Headers"
@@ -1162,13 +1142,14 @@ msgstr "Tabelle"
 
 #: cookbook/templates/markdown_info.html:153
 msgid ""
-"Markdown tables are hard to create by hand. It is recommended to use a table "
-"editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
+"Markdown tables are hard to create by hand. It is recommended to use a table"
+" editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
 "target=\"_blank\">this</a> one."
 msgstr ""
 "Le tabelle in markdown sono difficili da creare a mano. È raccomandato "
-"utilizzare un editor di tabelle come <a href=\"https://www.tablesgenerator."
-"com/markdown_tables\" target=\"_blank\">questo</a>."
+"utilizzare un editor di tabelle come <a "
+"href=\"https://www.tablesgenerator.com/markdown_tables\" "
+"target=\"_blank\">questo</a>."
 
 #: cookbook/templates/markdown_info.html:155
 #: cookbook/templates/markdown_info.html:157
@@ -1206,12 +1187,13 @@ msgstr "Note (opzionale)"
 
 #: cookbook/templates/meal_plan.html:139
 msgid ""
-"You can use markdown to format this field. See the <a href=\"/docs/markdown/"
-"\" target=\"_blank\" rel=\"noopener noreferrer\">docs here</a>"
+"You can use markdown to format this field. See the <a "
+"href=\"/docs/markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">docs "
+"here</a>"
 msgstr ""
-"Puoi usare markdown per formattare questo campo. Guarda la <a href=\"/docs/"
-"markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">documentazione "
-"qui</a>"
+"Puoi usare markdown per formattare questo campo. Guarda la <a "
+"href=\"/docs/markdown/\" target=\"_blank\" rel=\"noopener "
+"noreferrer\">documentazione qui</a>"
 
 #: cookbook/templates/meal_plan.html:143
 msgid "Recipe Multiplier"
@@ -1250,8 +1232,8 @@ msgstr "Correzione giorni feriali"
 
 #: cookbook/templates/meal_plan.html:205
 msgid ""
-"Number of days starting from the first day of the week to offset the default "
-"view."
+"Number of days starting from the first day of the week to offset the default"
+" view."
 msgstr ""
 "Numero di giorni a partire dal primo giorno della settimana per correggere "
 "la visualizzazione predefinita."
@@ -1278,7 +1260,8 @@ msgstr "Creato da"
 msgid "Shared with"
 msgstr "Condiviso con"
 
-#: cookbook/templates/meal_plan.html:273 cookbook/templates/recipe_view.html:43
+#: cookbook/templates/meal_plan.html:273
+#: cookbook/templates/recipe_view.html:43
 msgid "Add to Shopping"
 msgstr "Aggiunti agli Acquisti"
 
@@ -1293,62 +1276,38 @@ msgstr "Aiuto per il piano alimentare"
 #: cookbook/templates/meal_plan.html:337
 msgid ""
 "\n"
-"                            <p>The meal plan module allows planning of meals "
-"both with recipes or just notes.</p>\n"
-"                            <p>Simply select a recipe from the list of "
-"recently viewed recipes or search the one you\n"
-"                                want and drag it to the desired plan "
-"position. You can also add a note and a title and\n"
-"                                then drag the recipe to create a plan entry "
-"with a custom title and note. Creating only\n"
-"                                Notes is possible by dragging the create "
-"note box into the plan.</p>\n"
-"                            <p>Click on a recipe in order to open the detail "
-"view. Here you can also add it to the\n"
-"                                shopping list. You can also add all recipes "
-"of a day to the shopping list by\n"
-"                                clicking the shopping cart at the top of the "
-"table.</p>\n"
-"                            <p>Since a common use case is to plan meals "
-"together you can define\n"
-"                                users you want to share your plan with in "
-"the settings.\n"
+"                            <p>The meal plan module allows planning of meals both with recipes or just notes.</p>\n"
+"                            <p>Simply select a recipe from the list of recently viewed recipes or search the one you\n"
+"                                want and drag it to the desired plan position. You can also add a note and a title and\n"
+"                                then drag the recipe to create a plan entry with a custom title and note. Creating only\n"
+"                                Notes is possible by dragging the create note box into the plan.</p>\n"
+"                            <p>Click on a recipe in order to open the detail view. Here you can also add it to the\n"
+"                                shopping list. You can also add all recipes of a day to the shopping list by\n"
+"                                clicking the shopping cart at the top of the table.</p>\n"
+"                            <p>Since a common use case is to plan meals together you can define\n"
+"                                users you want to share your plan with in the settings.\n"
 "                            </p>\n"
-"                            <p>You can also edit the types of meals you want "
-"to plan. If you share your plan with\n"
+"                            <p>You can also edit the types of meals you want to plan. If you share your plan with\n"
 "                                someone with\n"
-"                                different meals, their meal types will "
-"appear in your list as well. To prevent\n"
+"                                different meals, their meal types will appear in your list as well. To prevent\n"
 "                                duplicates (e.g. Other and Misc.)\n"
-"                                name your meal types the same as the users "
-"you share your meals with and they will be\n"
+"                                name your meal types the same as the users you share your meals with and they will be\n"
 "                                merged.</p>\n"
 "                        "
 msgstr ""
 "\n"
-"<p>Il modulo del piano alimentare consente di pianificare i pasti sia con "
-"ricette che con semplici note.</p>\n"
+"<p>Il modulo del piano alimentare consente di pianificare i pasti sia con ricette che con semplici note.</p>\n"
 "<p>Seleziona una ricetta dalla lista delle ricette recenti o cercane una,\n"
-"quindi spostala sulla posizione desiderata. Puoi anche aggiungere una nota e "
-"un titolo e\n"
-"poi trascinare la ricetta per creare una voce nel piano con un titolo e una "
-"nota personalizzata. Si possono anche creare\n"
+"quindi spostala sulla posizione desiderata. Puoi anche aggiungere una nota e un titolo e\n"
+"poi trascinare la ricetta per creare una voce nel piano con un titolo e una nota personalizzata. Si possono anche creare\n"
 "delle note trascinando la casella della nota nel piano.</p>\n"
-"<p>Clicca su una ricetta per aprire la pagina dei dettagli. Qui potrai anche "
-"aggiungerla alla lista della spesa. Puoi anche aggiungere tutte le ricette "
-"di un giorno alla lista della spesa, basterà cliccare sul carrello sopra la "
-"tabella.</p>\n"
-"<p>Dato che è comune pianificare i pasti con qualcun altro, nelle "
-"impostazioni puoi scegliere gli utenti con i quali condividere il tuo piano."
-"</p>\n"
-"<p>Puoi anche modificare i tipi di pasto che vuoi pianificare. Se condividi "
-"il piano con\n"
+"<p>Clicca su una ricetta per aprire la pagina dei dettagli. Qui potrai anche aggiungerla alla lista della spesa. Puoi anche aggiungere tutte le ricette di un giorno alla lista della spesa, basterà cliccare sul carrello sopra la tabella.</p>\n"
+"<p>Dato che è comune pianificare i pasti con qualcun altro, nelle impostazioni puoi scegliere gli utenti con i quali condividere il tuo piano.</p>\n"
+"<p>Puoi anche modificare i tipi di pasto che vuoi pianificare. Se condividi il piano con\n"
 "qualcuno\n"
-"con pasti differenti, i loro tipi di pasto appariranno anche nella tua "
-"lista. Per prevenire\n"
+"con pasti differenti, i loro tipi di pasto appariranno anche nella tua lista. Per prevenire\n"
 "duplicati (es. Altri e Varie)\n"
-"dai nomi ai tuoi tipi di pasto uguali ai tuoi utenti in modo che verranno "
-"uniti.</p>"
+"dai nomi ai tuoi tipi di pasto uguali ai tuoi utenti in modo che verranno uniti.</p>"
 
 #: cookbook/templates/meal_plan.html:609
 msgid ""
@@ -1432,11 +1391,9 @@ msgstr "Ricetta Esterna"
 #: cookbook/templates/recipe_view.html:417
 msgid ""
 "\n"
-"                                    This is an external recipe, which means "
-"you can only view it by opening the link\n"
+"                                    This is an external recipe, which means you can only view it by opening the link\n"
 "                                    above.\n"
-"                                    You can convert this recipe to a fancy "
-"recipe by pressing the convert button. The\n"
+"                                    You can convert this recipe to a fancy recipe by pressing the convert button. The\n"
 "                                    original\n"
 "                                    file\n"
 "                                    will still be accessible.\n"
@@ -1445,8 +1402,7 @@ msgstr ""
 "\n"
 "Questa è una ricetta esterna, che significa puoi solo aprirla con il link \n"
 "qui sopra.\n"
-"Puoi convertire questa ricetta ad una più bella cliccando il tasto "
-"Converti.\n"
+"Puoi convertire questa ricetta ad una più bella cliccando il tasto Converti.\n"
 "Il\n"
 "file \n"
 "originale\n"
@@ -1481,7 +1437,8 @@ msgstr "Esterna"
 
 #: cookbook/templates/registration/login.html:10
 msgid "Your username and password didn't match. Please try again."
-msgstr "La combinazione inserita di username e password non è valida. Riprova."
+msgstr ""
+"La combinazione inserita di username e password non è valida. Riprova."
 
 #: cookbook/templates/registration/signup.html:5
 msgid "Register"
@@ -1525,8 +1482,8 @@ msgstr ""
 
 #: cookbook/templates/settings.html:91
 msgid ""
-"Use the token as an Authorization header prefixed by the word token as shown "
-"in the following examples:"
+"Use the token as an Authorization header prefixed by the word token as shown"
+" in the following examples:"
 msgstr ""
 "Usa il token come header Authorization preceduto dalla parola Token come "
 "negli esempi seguenti:"
@@ -1653,18 +1610,14 @@ msgstr "Informazioni di sistema"
 #: cookbook/templates/system.html:39
 msgid ""
 "\n"
-"        Django Recipes is an open source free software application. It can "
-"be found on\n"
+"        Django Recipes is an open source free software application. It can be found on\n"
 "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-"recipes/releases\">here</a>.\n"
+"        Changelogs can be found <a href=\"https://github.com/vabene1111/recipes/releases\">here</a>.\n"
 "    "
 msgstr ""
 "\n"
-"Django Recipes è una applicazione gratuita e open source. È disponibile su "
-"<a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"Le ultime novità sono disponibili <a href=\"https://github.com/vabene1111/"
-"recipes/releases\">qui</a>."
+"Django Recipes è una applicazione gratuita e open source. È disponibile su <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+"Le ultime novità sono disponibili <a href=\"https://github.com/vabene1111/recipes/releases\">qui</a>."
 
 #: cookbook/templates/system.html:53
 msgid "Media Serving"
@@ -1684,16 +1637,13 @@ msgstr "Ok"
 msgid ""
 "Serving media files directly using gunicorn/python is <b>not recommend</b>!\n"
 "            Please follow the steps described\n"
-"            <a href=\"https://github.com/vabene1111/recipes/releases/"
-"tag/0.8.1\">here</a> to update\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">here</a> to update\n"
 "            your installation.\n"
 "        "
 msgstr ""
-"Erogare i file multimediali usando gunicorn/python <b>non è raccomandato</"
-"b>!\n"
+"Erogare i file multimediali usando gunicorn/python <b>non è raccomandato</b>!\n"
 "Segui i passi descritti\n"
-"<a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">qui</a> "
-"per aggiornare la tua installazione."
+"<a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">qui</a> per aggiornare la tua installazione."
 
 #: cookbook/templates/system.html:62 cookbook/templates/system.html:78
 #: cookbook/templates/system.html:93 cookbook/templates/system.html:107
@@ -1707,18 +1657,14 @@ msgstr "Chiave segreta"
 #: cookbook/templates/system.html:71
 msgid ""
 "\n"
-"            You do not have a <code>SECRET_KEY</code> configured in your "
-"<code>.env</code> file. Django defaulted to the\n"
+"            You do not have a <code>SECRET_KEY</code> configured in your <code>.env</code> file. Django defaulted to the\n"
 "            standard key\n"
-"            provided with the installation which is publicly know and "
-"insecure! Please set\n"
-"            <code>SECRET_KEY</code> int the <code>.env</code> configuration "
-"file.\n"
+"            provided with the installation which is publicly know and insecure! Please set\n"
+"            <code>SECRET_KEY</code> int the <code>.env</code> configuration file.\n"
 "        "
 msgstr ""
 "\n"
-"Non hai inserito una <code>SECRET_KEY</code> nel file <code>.env</code>. "
-"Django ha dovuto usare la chiave standard\n"
+"Non hai inserito una <code>SECRET_KEY</code> nel file <code>.env</code>. Django ha dovuto usare la chiave standard\n"
 "dell'installazione che è pubblica e insicura! Sei pregato di aggiungere una\n"
 "<code>SECRET_KEY</code> nel file di configurazione <code>.env</code>."
 
@@ -1729,16 +1675,13 @@ msgstr "Modalità di debug"
 #: cookbook/templates/system.html:87
 msgid ""
 "\n"
-"            This application is still running in debug mode. This is most "
-"likely not needed. Turn of debug mode by\n"
+"            This application is still running in debug mode. This is most likely not needed. Turn of debug mode by\n"
 "            setting\n"
-"            <code>DEBUG=0</code> int the <code>.env</code> configuration "
-"file.\n"
+"            <code>DEBUG=0</code> int the <code>.env</code> configuration file.\n"
 "        "
 msgstr ""
 "\n"
-"Questa applicazione è in esecuzione in modalità di debug. Probabilmente non "
-"è necessario, spegni la modalità di debug \n"
+"Questa applicazione è in esecuzione in modalità di debug. Probabilmente non è necessario, spegni la modalità di debug \n"
 "configurando\n"
 "<code>DEBUG=0</code> nel file di configurazione<code>.env</code>."
 
@@ -1753,14 +1696,12 @@ msgstr "Info"
 #: cookbook/templates/system.html:102
 msgid ""
 "\n"
-"            This application is not running with a Postgres database "
-"backend. This is ok but not recommended as some\n"
+"            This application is not running with a Postgres database backend. This is ok but not recommended as some\n"
 "            features only work with postgres databases.\n"
 "        "
 msgstr ""
 "\n"
-"Questa applicazione non sta girando su un database Postgres. Non è "
-"raccomandato perché alcune\n"
+"Questa applicazione non sta girando su un database Postgres. Non è raccomandato perché alcune\n"
 "funzionalità sono disponibili solo con un database Posgres."
 
 #: cookbook/templates/url_import.html:5
@@ -1775,7 +1716,8 @@ msgstr "Inserisci la URL del sito web"
 msgid "Recipe Name"
 msgstr "Nome Ricetta"
 
-#: cookbook/templates/url_import.html:99 cookbook/templates/url_import.html:131
+#: cookbook/templates/url_import.html:99
+#: cookbook/templates/url_import.html:131
 #: cookbook/templates/url_import.html:186
 msgid "Select one"
 msgstr "Seleziona un elemento"
@@ -1795,18 +1737,14 @@ msgstr "Info"
 #: cookbook/templates/url_import.html:227
 msgid ""
 " Only websites containing ld+json or microdata information can currently\n"
-"                                    be imported. Most big recipe pages "
-"support this. If you site cannot be imported but\n"
+"                                    be imported. Most big recipe pages support this. If you site cannot be imported but\n"
 "                                    you think\n"
-"                                    it probably has some kind of structured "
-"data feel free to post an example in the\n"
+"                                    it probably has some kind of structured data feel free to post an example in the\n"
 "                                    github issues."
 msgstr ""
-"Possono essere importati solo i siti che contengono informazioni Id+json o "
-"microdata.\n"
-"I maggiori siti di ricette generalmente sono supportati.\n"
-"Se questo sito non può essere importato ma credi che abbia una qualche tipo "
-"di struttura dati, puoi inviare un esempio nella sezione Problemi di GitHub."
+"Possono essere importati solo i siti che contengono informazioni Id+json o microdata.\n"
+"I maggiori siti di ricette di solito sono supportati.\n"
+"Se questo sito non può essere importato ma credi che abbia una qualche tipo di struttura dati, puoi inviare un esempio nella sezione Issues su GitHub."
 
 #: cookbook/templates/url_import.html:235
 msgid "Google ld+json Info"
@@ -1814,7 +1752,7 @@ msgstr "Info Google Id+json"
 
 #: cookbook/templates/url_import.html:238
 msgid "GitHub Issues"
-msgstr "Problemi aperti su GitHub"
+msgstr "Issues (Problemi aperti) su GitHub"
 
 #: cookbook/templates/url_import.html:240
 msgid "Recipe Markup Specification"
@@ -1860,7 +1798,8 @@ msgstr ""
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] "Modifica di massa completata. %(count)d ricetta è stata aggiornata."
+msgstr[0] ""
+"Modifica di massa completata. %(count)d ricetta è stata aggiornata."
 msgstr[1] ""
 "Modifica di massa completata. %(count)d ricette sono state aggiornate."
 
@@ -1986,8 +1925,8 @@ msgstr "Preferito salvato!"
 #: cookbook/views/views.py:255
 msgid ""
 "The setup page can only be used to create the first user! If you have "
-"forgotten your superuser credentials please consult the django documentation "
-"on how to reset passwords."
+"forgotten your superuser credentials please consult the django documentation"
+" on how to reset passwords."
 msgstr ""
 "La pagina di configurazione può essere usata solo per creare il primo "
 "utente! Se hai dimenticato le credenziali del tuo super utente controlla la "
@@ -2008,11 +1947,3 @@ msgstr "È stato fornito un link di invito non valido!"
 #: cookbook/views/views.py:328
 msgid "Invite Link not valid or already used!"
 msgstr "Il link di invito non è valido o è stato già usato!"
-
-#~ msgid "Default user to share newly created meal plan entries with."
-#~ msgstr ""
-#~ "Utente predefinito con cui condividere le voci del piano alimentare "
-#~ "appena creato."
-
-#~ msgid "Tags"
-#~ msgstr "Tag"
