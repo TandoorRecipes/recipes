@@ -5,15 +5,14 @@ from django.db import migrations
 
 def migrate_empty_units(apps, schema_editor):
     Unit = apps.get_model('cookbook', 'Unit')
-    Step = apps.get_model('cookbook', 'Step')
+    Ingredient = apps.get_model('cookbook', 'Ingredient')
 
     empty_units = Unit.objects.filter(name='').all()
     for x in empty_units:
-        for s in Step.objects.all():
-            for i in s.ingredients.all():
-                if i.unit == x:
-                    i.unit = None
-                    i.save()
+        for i in Ingredient.objects.all():
+            if i.unit == x:
+                i.unit = None
+                i.save()
         x.delete()
 
 
