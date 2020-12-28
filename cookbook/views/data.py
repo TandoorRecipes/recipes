@@ -125,7 +125,7 @@ def import_url(request):
             ingredient = Ingredient()
 
             ingredient.food, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
-            if ing['unit']:
+            if ing['unit'] and ing['unit']['text'] != '':
                 ingredient.unit, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
 
             # TODO properly handle no_amount recipes
@@ -143,7 +143,7 @@ def import_url(request):
             step.ingredients.add(ingredient)
             print(ingredient)
 
-        if data['image'] != '':
+        if 'image' in data and data['image'] != '':
             try:
                 response = requests.get(data['image'])
                 img = Image.open(BytesIO(response.content))

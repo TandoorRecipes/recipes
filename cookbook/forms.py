@@ -37,7 +37,7 @@ class UserPreferenceForm(forms.ModelForm):
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
             'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),
             'use_fractions': _('Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
-            'plan_share': _('Default user to share newly created meal plan entries with.'),
+            'plan_share': _('Users with whom newly created meal plan/shopping list entries should be shared by default.'),
             'show_recent': _('Show recently viewed recipes on search page.'),
             'ingredient_decimals': _('Number of decimals to round ingredients.'),
             'comments': _('If you want to be able to create and see comments underneath recipes.'),

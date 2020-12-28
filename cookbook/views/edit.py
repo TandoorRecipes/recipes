@@ -239,27 +239,33 @@ def edit_ingredients(request):
         if units_form.is_valid():
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
-            recipe_ingredients = Ingredient.objects.filter(unit=old_unit).all()
-            for i in recipe_ingredients:
-                i.unit = new_unit
-                i.save()
+            if new_unit != old_unit:
+                recipe_ingredients = Ingredient.objects.filter(unit=old_unit).all()
+                for i in recipe_ingredients:
+                    i.unit = new_unit
+                    i.save()
 
-            old_unit.delete()
-            success = True
-            messages.add_message(request, messages.SUCCESS, _('Units merged!'))
+                old_unit.delete()
+                success = True
+                messages.add_message(request, messages.SUCCESS, _('Units merged!'))
+            else:
+                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
 
         food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix)
         if food_form.is_valid():
             new_food = food_form.cleaned_data['new_food']
             old_food = food_form.cleaned_data['old_food']
-            ingredients = Ingredient.objects.filter(food=old_food).all()
-            for i in ingredients:
-                i.food = new_food
-                i.save()
+            if new_food != old_food:
+                ingredients = Ingredient.objects.filter(food=old_food).all()
+                for i in ingredients:
+                    i.food = new_food
+                    i.save()
 
-            old_food.delete()
-            success = True
-            messages.add_message(request, messages.SUCCESS, _('Foods merged!'))
+                old_food.delete()
+                success = True
+                messages.add_message(request, messages.SUCCESS, _('Foods merged!'))
+            else:
+                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
 
         if success:
             units_form = UnitMergeForm()
