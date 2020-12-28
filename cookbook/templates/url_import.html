@@ -246,6 +246,7 @@
 
     </div>
 
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
@@ -283,6 +284,8 @@
                 this.searchKeywords('')
                 this.searchUnits('')
                 this.searchIngredients('')
+
+                 this.makeToast(gettext('Error'), gettext('There was an error loading a resource!'), 'danger')
             },
             methods: {
                 makeToast: function (title, message, variant = null) {
@@ -305,12 +308,12 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 importRecipe: function () {
                     if (this.importing_recipe) {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'Already importing the selected recipe, please wait!' %}', 'danger')
+                        this.makeToast(gettext('Error'), gettext('Already importing the selected recipe, please wait!'), 'danger')
                         return;
                     }
                     this.importing_recipe = true
@@ -319,7 +322,7 @@
                         window.location.href = response.data
                     }).catch((err) => {
                         console.log(err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'An error occurred while trying to import this recipe!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', gettext('An error occurred while trying to import this recipe!') + err.bodyText, 'danger')
                     })
                 },
                 deleteIngredient: function (i) {
@@ -363,7 +366,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -381,7 +384,7 @@
                         this.units_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchIngredients: function (query) {
@@ -400,7 +403,7 @@
                         this.ingredients_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast('{% trans 'Error' %}', gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
             }

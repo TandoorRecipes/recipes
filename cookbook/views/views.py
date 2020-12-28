@@ -7,7 +7,7 @@ from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
@@ -83,7 +83,8 @@ def recipe_view(request, pk, share=None):
 
     if request.method == "POST":
         if not request.user.is_authenticated:
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to perform this action!'))
+            messages.add_message(request, messages.ERROR,
+                                 _('You do not have the required permissions to perform this action!'))
             return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': recipe.pk, 'share': share}))
 
         comment_form = CommentForm(request.POST, prefix='comment')
@@ -110,13 +111,17 @@ def recipe_view(request, pk, share=None):
     comment_form = CommentForm()
     bookmark_form = RecipeBookEntryForm()
 
+    user_servings = CookLog.objects.filter(recipe=recipe, created_by=request.user,
+                                           servings__gt=0).all().aggregate(Avg('servings'))['servings__avg']
+
     if request.user.is_authenticated:
-        if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(created_at__gt=(timezone.now() - timezone.timedelta(minutes=5))).exists():
+        if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(
+                created_at__gt=(timezone.now() - timezone.timedelta(minutes=5))).exists():
             ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
     return render(request, 'recipe_view.html',
                   {'recipe': recipe, 'comments': comments, 'comment_form': comment_form,
-                   'bookmark_form': bookmark_form, 'share': share})
+                   'bookmark_form': bookmark_form, 'share': share, 'user_servings': user_servings})
 
 
 @group_required('user')
@@ -158,7 +163,8 @@ def meal_plan_entry(request, pk):
         messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
         return HttpResponseRedirect(reverse_lazy('index'))
 
-    same_day_plan = MealPlan.objects.filter(date=plan.date).exclude(pk=plan.pk).filter(Q(created_by=request.user) | Q(shared=request.user)).order_by('meal_type').all()
+    same_day_plan = MealPlan.objects.filter(date=plan.date).exclude(pk=plan.pk).filter(
+        Q(created_by=request.user) | Q(shared=request.user)).order_by('meal_type').all()
 
     return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
 
@@ -231,7 +237,9 @@ def user_settings(request):
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
 
-    return render(request, 'settings.html', {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form, 'api_token': api_token})
+    return render(request, 'settings.html',
+                  {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form,
+                   'api_token': api_token})
 
 
 @group_required('guest')
@@ -243,16 +251,20 @@ def history(request):
 
 @group_required('admin')
 def system(request):
-    postgres = False if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql') else True
+    postgres = False if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' or
+                         settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql') else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
-    return render(request, 'system.html', {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'version': VERSION_NUMBER, 'ref': BUILD_REF, 'secret_key': secret_key})
+    return render(request, 'system.html',
+                  {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres,
+                   'version': VERSION_NUMBER, 'ref': BUILD_REF, 'secret_key': secret_key})
 
 
 def setup(request):
     if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
-        messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
+        messages.add_message(request, messages.ERROR, _(
+            'The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
         return HttpResponseRedirect(reverse('login'))
 
     if request.method == 'POST':
