@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import User, Group
+from django.core.validators import MinLengthValidator
 from django.utils.translation import gettext as _
 from django.db import models
 from django_random_queryset import RandomManager
@@ -136,7 +137,7 @@ class Keyword(models.Model):
 
 
 class Unit(models.Model):
-    name = models.CharField(unique=True, max_length=128)
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
