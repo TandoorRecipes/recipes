@@ -111,8 +111,10 @@ def recipe_view(request, pk, share=None):
     comment_form = CommentForm()
     bookmark_form = RecipeBookEntryForm()
 
-    user_servings = CookLog.objects.filter(recipe=recipe, created_by=request.user,
-                                           servings__gt=0).all().aggregate(Avg('servings'))['servings__avg']
+    user_servings = None
+    if request.user.is_authenticated:
+        user_servings = CookLog.objects.filter(recipe=recipe, created_by=request.user,
+                                               servings__gt=0).all().aggregate(Avg('servings'))['servings__avg']
 
     if request.user.is_authenticated:
         if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(
