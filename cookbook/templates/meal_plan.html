@@ -122,8 +122,11 @@
                         </div>
                         <draggable class="list-group" :list="recipes"
                                    :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneRecipe">
-                            <div class="list-group-item" v-for="(element, index) in recipes" :key="element.id">
-                                <i class="fas fa-arrows-alt"></i> [[element.name]]
+                            <div class="list-group-item d-flex align-items-center justify-content-between" v-for="(element, index) in recipes" :key="element.id">
+                                <span>
+                                    <i class="fas fa-arrows-alt"></i> [[element.name]]
+                                </span>
+                                <span class="badge badge-light badge-pill">[[element.servings]]</span>
                             </div>
                         </draggable>
                     </div>
@@ -140,7 +143,7 @@
                             <br/>
                             <br/>
                             <input type="number" class="form-control" v-model="new_note_multiplier"
-                                   placeholder="{% trans 'Recipe Multiplier' %}" style="margin-bottom: 8px">
+                                   placeholder="{% trans 'Serving Count' %}" style="margin-bottom: 8px">
                             <br/>
                             <draggable :list="pseudo_note_list"
                                        :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneNote">
@@ -243,6 +246,9 @@
                             <small class="text-muted">{% trans 'Recipe' %}</small><br/>
                             <a v-bind:href="planDetailRecipeUrl()" target="_blank">[[ plan_detail.recipe_name ]]</a>
                             <br/>
+                            <br/>
+                            <small class="text-muted">{% trans 'Serving Count' %}</small><br/>
+                            <span>[[ plan_detail.recipe_multiplier ]]</span>
                         </template>
 
                         <template v-if="plan_detail.note !== ''">
@@ -615,7 +621,7 @@
                         id: Math.round(Math.random() * 1000) + 10000,
                         recipe: recipe.id,
                         recipe_name: recipe.name,
-                        recipe_multiplier: (this.new_note_multiplier > 1) ? this.new_note_multiplier : 1,
+                        recipe_multiplier: (this.new_note_multiplier > 1) ? this.new_note_multiplier : recipe.servings,
                         title: this.new_note_title,
                         note: this.new_note_text,
                         is_new: true

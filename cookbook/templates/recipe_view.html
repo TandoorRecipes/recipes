@@ -39,7 +39,7 @@
                         <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
                             <i class="fas fa-bookmark fa-fw"></i> {% trans 'Add to Book' %}</button>
 
-                        <a class="dropdown-item" v-bind:href="getShoppingUrl()" v-if="has_ingredients">
+                        <a class="dropdown-item" v-bind:href="shopping_url" v-if="has_ingredients">
                             <i class="fas fa-shopping-cart fa-fw"></i> {% trans 'Add to Shopping' %}</a>
 
                         <a class="dropdown-item" href="{% url 'new_meal_plan' %}?recipe={{ recipe.pk }}"><i
@@ -109,8 +109,8 @@
                         <div class="col col-md-3">
 
                             <div class="input-group d-print-none">
-                                <input type="number" value="1" min="1" max="999" class="form-control"
-                                       v-model="ingredient_factor"/>
+                                <input type="number" value="1" maxlength="3" class="form-control"
+                                       v-model="servings"/>
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-calculator"></i></span>
                                 </div>
@@ -516,6 +516,8 @@
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
 
+        const recipe_servings = {{ recipe.servings }}
+
         let app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#id_base_container',
@@ -523,9 +525,16 @@
                 recipe: undefined,
                 has_ingredients: false,
                 has_times: false,
-                ingredient_factor: 1,
+                servings: recipe_servings,
             },
-
+            computed: {
+                ingredient_factor: function () {
+                    return this.servings / recipe_servings
+                },
+                shopping_url: function () {
+                    return `{% url 'view_shopping' %}?r=[${this.recipe.id},${this.servings}]`
+                },
+            },
             mounted: function () {
                 this.loadRecipe()
             },
@@ -576,9 +585,6 @@
                         time_diff += s.time
                     }
 
-                },
-                getShoppingUrl: function () {
-                    return `{% url 'view_shopping' %}?r=[${this.recipe.id},${this.ingredient_factor}]`
                 },
                 calculateAmount: function (amount) {
                     {% if request.user.userpreference.use_fractions %}

@@ -88,13 +88,14 @@ class InternalRecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('name', 'image', 'working_time', 'waiting_time', 'keywords')
+        fields = ('name', 'image', 'working_time', 'waiting_time', 'servings', 'keywords')
 
         labels = {
             'name': _('Name'),
             'keywords': _('Keywords'),
             'working_time': _('Preparation time in minutes'),
             'waiting_time': _('Waiting time (cooking/baking) in minutes'),
+            'servings': _('Number of servings'),
         }
         widgets = {'keywords': MultiSelectWidget}
 
