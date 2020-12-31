@@ -369,7 +369,8 @@
         </div>
 
     </div>
-
+    
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script type="application/javascript">
         moment.locale('{{request.LANGUAGE_CODE}}');
 
@@ -445,7 +446,7 @@
                         this.plan_entries = response.data;
                     }).catch((err) => {
                         console.log("getPlanEntries error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 getPlanTypes: function () {
@@ -457,7 +458,7 @@
                         }
                     }).catch((err) => {
                         console.log("getPlanTypes error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 buildGrid: function () {
@@ -512,7 +513,7 @@
                         this.recipes = response.data;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 getMdNote: function () {
@@ -525,7 +526,7 @@
                         this.recipes = response.data;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 updateUserNames: function () {
@@ -536,7 +537,7 @@
 
                     }).catch((err) => {
                         console.log("updateUserNames error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 dragChanged: function (date, meal_type, evt) {
@@ -562,7 +563,7 @@
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
-                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                             })
                         }
                     }
@@ -573,7 +574,7 @@
                         this.meal_plan[entry.meal_type_name].days[entry.date].items = this.meal_plan[entry.meal_type_name].days[entry.date].items.filter(item => item !== entry)
                     }).catch((err) => {
                         console.log("deleteEntry error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 updatePlanTypes: function () {
@@ -587,14 +588,14 @@
                                 promise_list.push(this.$http.post("{% url 'api:mealtype-list' %}", x).then((response) => {
                                 }).catch((err) => {
                                     console.log("updatePlanTypes create error: ", err);
-                                    this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                    this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                                 }))
                         } else if (x.delete) {
                             if (x.id !== undefined) {
                                 promise_list.push(this.$http.delete(`{% url 'api:mealtype-list' %}${x.id}/`, x).then((response) => {
                                 }).catch((err) => {
                                     console.log("updatePlanTypes delete error: ", err);
-                                    this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                    this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                                 }))
                             }
                         } else {
@@ -602,7 +603,7 @@
 
                             }).catch((err) => {
                                 console.log("updatePlanTypes update error: ", err);
-                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                             }))
                         }
                     }
@@ -612,7 +613,7 @@
                     })
                 },
                 markTypeDelete: function (element) {
-                    if (confirm('{% trans 'When deleting a meal type all entries using that type will be deleted as well. Deletion will apply when configuration is saved. Do you want to proceed?' %}')) {
+                    if (confirm(gettext('When deleting a meal type all entries using that type will be deleted as well. Deletion will apply when configuration is saved. Do you want to proceed?'))) {
                         element.delete = true
                     }
                 },
@@ -643,7 +644,7 @@
                     }
 
                     if (new_entry.title === '') {
-                        new_entry.title = '{% trans 'Title' %}'
+                        new_entry.title = gettext('Title')
                     }
 
                     this.new_note_title = ''

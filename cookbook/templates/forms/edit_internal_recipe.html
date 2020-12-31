@@ -442,6 +442,8 @@
 {% endblock %}
 
 {% block script %}
+    
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
@@ -534,7 +536,7 @@
                     }).catch((err) => {
                         this.loading = false
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading the recipe!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading the recipe!') + err.bodyText, 'danger')
                     })
                 },
                 updateRecipe: function (view_after) {
@@ -545,14 +547,14 @@
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe,
                         {}).then((response) => {
                         console.log(response)
-                        this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+                        this.makeToast(gettext('Updated'), gettext('Changes saved successfully!'), 'success')
                         this.recipe_changed = false
                         if (view_after) {
                             location.href = "{% url 'view_recipe' 12345 %}".replace(/12345/, this.recipe.id);
                         }
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating the recipe!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error updating the recipe!') + err.bodyText, 'danger')
                     })
                 },
                 imageChanged: function (event) {
@@ -562,11 +564,11 @@
                         this.$http.put("{% url 'api:recipe-detail' recipe.pk %}" + 'image/', fd,
                             {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
                             console.log(response)
-                            this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+                            this.makeToast(gettext('Updated'), gettext('Changes saved successfully!'), 'success')
 
                         }).catch((err) => {
                             console.log(err)
-                            this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating the recipe!' %}' + err.body.image, 'danger')
+                            this.makeToast(gettext('Error'), gettext('There was an error updating the recipe!') + err.body.image, 'danger')
                         })
 
                         let reader = new FileReader();
@@ -610,12 +612,12 @@
 
                 },
                 removeIngredient: function (step, ingredient) {
-                    if (confirm('{% trans 'Are you sure that you want to delete this ingredient?' %}')) {
+                    if (confirm(gettext('Are you sure that you want to delete this ingredient?'))) {
                         step.ingredients = step.ingredients.filter(item => item !== ingredient)
                     }
                 },
                 removeStep: function (step) {
-                    if (confirm('{% trans 'Are you sure that you want to delete this step?' %}')) {
+                    if (confirm(gettext('Are you sure that you want to delete this step?'))) {
                         this.recipe.steps = this.recipe.steps.filter(item => item !== step)
                     }
                 },
@@ -647,7 +649,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -666,7 +668,7 @@
                         }
                         this.units_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchFoods: function (query) {
@@ -686,7 +688,7 @@
 
                         this.foods_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 scrollToStep: function (step_index) {

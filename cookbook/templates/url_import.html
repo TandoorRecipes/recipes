@@ -144,7 +144,8 @@
                                             </multiselect>
                                         </div>
                                         <div class="col-md-2">
-                                            <input type="text" placeholder="{% trans 'Note' %}" class="form-control" v-model="i.note">
+                                            <input type="text" placeholder="{% trans 'Note' %}" class="form-control"
+                                                   v-model="i.note">
                                         </div>
                                         <div class="col-md-1">
                                             <button class="btn btn-outline-danger btn-lg" type="button"
@@ -196,11 +197,13 @@
                 <div class="form-group">
                     {% trans 'All Keywords' %}<br/>
                     <input id="id_all_keywords" type="checkbox"
-                           v-model="all_keywords"> <label for="id_all_keywords">{% trans 'Import all Keywords not only the ones already existing.' %}</label>
+                           v-model="all_keywords"> <label
+                        for="id_all_keywords">{% trans 'Import all Keywords not only the ones already existing.' %}</label>
                 </div>
 
                 <div class="form-group">
-                    <button type="button" class="btn btn-success" @click="importRecipe()" :disabled="importing_recipe">{% trans 'Import' %}</button>
+                    <button type="button" class="btn btn-success" @click="importRecipe()"
+                            :disabled="importing_recipe">{% trans 'Import' %}</button>
                 </div>
 
                 <br/>
@@ -285,7 +288,6 @@
                 this.searchUnits('')
                 this.searchIngredients('')
 
-                 this.makeToast(gettext('Error'), gettext('There was an error loading a resource!'), 'danger')
             },
             methods: {
                 makeToast: function (title, message, variant = null) {
@@ -301,7 +303,7 @@
                     this.recipe_data = undefined
                     this.error = undefined
                     this.loading = true
-                    this.$http.post("{% url 'api_recipe_from_url' %}", {'url' : this.remote_url}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_url' %}", {'url': this.remote_url}, {emulateJSON: true}).then((response) => {
                         this.recipe_data = response.data;
                         this.loading = false
                     }).catch((err) => {
@@ -322,7 +324,7 @@
                         window.location.href = response.data
                     }).catch((err) => {
                         console.log(err);
-                        this.makeToast('{% trans 'Error' %}', gettext('An error occurred while trying to import this recipe!') + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('An error occurred while trying to import this recipe!') + err.bodyText, 'danger')
                     })
                 },
                 deleteIngredient: function (i) {
@@ -366,7 +368,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchUnits: function (query) {
@@ -384,7 +386,7 @@
                         this.units_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchIngredients: function (query) {
@@ -403,7 +405,7 @@
                         this.ingredients_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
             }
