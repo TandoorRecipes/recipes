@@ -1,6 +1,7 @@
 # Recipes ![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop)
 
-Recipes is a Django application to manage, tag and search recipes using either built in models or external storage providers hosting PDF's, Images or other files.
+Recipes is a Django application to manage, tag and search recipes using either built in models or 
+external storage providers hosting PDF's, Images or other files.
 
 ![Preview](docs/preview.png)
 
@@ -17,31 +18,43 @@ Recipes is a Django application to manage, tag and search recipes using either b
 - :shopping_cart: Generate **shopping** lists from recipes
 - :calendar: Create a **Plan** on what to eat when
 - :family: **Share** recipes with friends and comment on them to suggest or remember changes you made
+- :us: automatically convert decimal units to **fractions** for those who like this
 - :whale: Easy setup with **Docker**
 - :art: Customize your interface with **themes**
 - :envelope: Export and import recipes from other users
+- :earth_africa: localized in many languages thanks to the awesome community
 - :heavy_plus_sign: Many more like recipe scaling, image compression, cookbooks, printing views, ...
 
 This application is meant for people with a collection of recipes they want to share with family and friends or simply
-store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as a public page.
+store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as 
+a public page.
 Some Documentation can be found [here](https://github.com/vabene1111/recipes/wiki)
+
+While this application has been around for a while and is actively used by many (including myself) it is still considered
+**beta** software that has a lot of rough edges and unpolished parts.
 
 ## Installation
 
 The docker image (`vabene1111/recipes`) simply exposes the application on port `8080`. You may choose any preferred installation method, the following are just examples to make it easier.
 
-### Docker-Compose
+> I will try to support issues with any kind of installation but since I run the docker setup I can only offer 
+> limited help for other methods.
+
+### Docker-Compose [Recommended]
 
 1. Choose one of the included configurations [here](docs/docker).
 2. Download the environment (config) file template and fill it out `wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env`
 3. Start the container `docker-compose up -d`
-4. Open the page to create the first user. Alternatively use `docker-compose exec web_recipes createsuperuser`
+4. Open the page to create the first user.
 
 ### Manual
 
 **Python >= 3.8** is required to run this!
+Refer to [manual install](docs/manual_install) for detailed instructions.
 
-Refer to [manual install](docs/manual_install) for detailled instructions.
+### Kubernetes
+
+You can find a basic kubernetes setup [here](docs/k8s/). Please see the README in the folder for more detail.
 
 ## Updating
 
@@ -52,14 +65,25 @@ While intermediate updates can be skipped when updating please make sure to **re
 2. Pull the latest image using `docker-compose pull`
 3. Start the container again using `docker-compose up -d`
 
-## Kubernetes
-
-You can find a basic kubernetes setup [here](docs/k8s/). Please see the README in the folder for more detail.
-
 ## Contributing
 
 Pull Requests and ideas are welcome, feel free to contribute in any way.
-For any questions on how to work with django please refer to their excellent [documentation](https://www.djangoproject.com/start/).
+
+**If you want feel free to open an issue or pull request to add yourself to the list of awesome contributors.**
+
+### Getting Started
+This application is developed using the django framework for Python. They have excellent 
+[documentation](https://www.djangoproject.com/start/) on how to get started, so I will only give you the basics here
+
+1. Clone this repository wherever you like and install the Python language for your OS (at least version 3.8)
+2. Open it in your favorite editor/IDE (e.g. PyCharm)
+    1. if you want, create a virutal environment for all your packages.
+3. Install all required packages by running `pip install -r requirements.txt`
+4. Run the migrations `python manage.py migrate`
+5. Start the development server `python manage.py runserver`
+
+There is **no** need to set any environment variables. By default, a simple sqlite database is used and all settings are
+populated from default values.
 
 ### Translating
 

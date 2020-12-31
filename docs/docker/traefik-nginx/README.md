@@ -1,4 +1,4 @@
-This is the recommended setup to run django recipes with traefik.
+**This is the recommended setup to run django recipes with traefik.**
 
 ----
 
