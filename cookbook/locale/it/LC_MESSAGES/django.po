@@ -1018,7 +1018,7 @@ msgid "Recipes"
 msgstr "Ricette"
 
 #: cookbook/templates/index.html:94
-msgid "Log in to view Recipes"
+msgid "Log in to view recipes"
 msgstr "Effettua il login per vedere le ricette"
 
 #: cookbook/templates/markdown_info.html:5
@@ -1031,7 +1031,7 @@ msgid ""
 "\n"
 "        Markdown is lightweight markup language that can be used to format plain text easily.\n"
 "        This site uses the <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> library to\n"
-"        convert your text into nice looking html. Its full markdown documentation can be found\n"
+"        convert your text into nice looking HTML. Its full markdown documentation can be found\n"
 "        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">here</a>.\n"
 "        An incomplete but most likely sufficient documentation can be found below.\n"
 "    "
@@ -1070,7 +1070,7 @@ msgstr "Questo testo è in grassetto"
 
 #: cookbook/templates/markdown_info.html:60
 #: cookbook/templates/markdown_info.html:75
-msgid "This text is in italics"
+msgid "This text is italic"
 msgstr "Questo testo è in corsivo"
 
 #: cookbook/templates/markdown_info.html:61
@@ -1124,7 +1124,7 @@ msgstr "Immagini & Link"
 
 #: cookbook/templates/markdown_info.html:126
 msgid ""
-"Links can be formatted with Markdown. This applicaiton also allows to paste "
+"Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
 "I link possono essere formattati con Markdown. Questa applicazione consente "
@@ -1133,7 +1133,7 @@ msgstr ""
 
 #: cookbook/templates/markdown_info.html:132
 #: cookbook/templates/markdown_info.html:145
-msgid "This will become and Image"
+msgid "This will become and image"
 msgstr "Questo diventerà un Immagine"
 
 #: cookbook/templates/markdown_info.html:152
@@ -1211,7 +1211,7 @@ msgid "Shopping List"
 msgstr "Lista degli Acquisti"
 
 #: cookbook/templates/meal_plan.html:168
-msgid "Shopping List currently empty"
+msgid "Shopping list currently empty"
 msgstr "La Lista degli Acquisti è attualmente vuota"
 
 #: cookbook/templates/meal_plan.html:171
@@ -1276,7 +1276,7 @@ msgstr "Aiuto per il piano alimentare"
 #: cookbook/templates/meal_plan.html:337
 msgid ""
 "\n"
-"                            <p>The meal plan module allows planning of meals both with recipes or just notes.</p>\n"
+"                            <p>The meal plan module allows planning of meals both with recipes and notes.</p>\n"
 "                            <p>Simply select a recipe from the list of recently viewed recipes or search the one you\n"
 "                                want and drag it to the desired plan position. You can also add a note and a title and\n"
 "                                then drag the recipe to create a plan entry with a custom title and note. Creating only\n"
@@ -1501,12 +1501,12 @@ msgid "Setup"
 msgstr "Configurazione"
 
 #: cookbook/templates/setup.html:15
-msgid "To start using this application you must first create a superuser."
+msgid "To start using this application you must first create a superuser account."
 msgstr ""
 "Per iniziare a usare questa applicazione devi prima creare un super utente."
 
 #: cookbook/templates/setup.html:20
-msgid "Create Superuser"
+msgid "Create Superuser account"
 msgstr "Crea super utente"
 
 #: cookbook/templates/shopping_list.html:71
@@ -1530,7 +1530,7 @@ msgid "Select User"
 msgstr "Seleziona utente"
 
 #: cookbook/templates/shopping_list.html:232
-msgid "You are offline, shopping list might not sync."
+msgid "You are offline, shopping list might not syncronize."
 msgstr "Sei offline e la lista della spesa potrebbe non sincronizzarsi."
 
 #: cookbook/templates/shopping_list.html:280
@@ -1727,7 +1727,7 @@ msgid "All Keywords"
 msgstr "Tutte le parole chiave"
 
 #: cookbook/templates/url_import.html:199
-msgid "Import all Keywords not only the ones already existing."
+msgid "Import all keywords, not only the ones already existing."
 msgstr "Importa tutte le parole chiave, non solo quelle che già esistono."
 
 #: cookbook/templates/url_import.html:225

@@ -1026,7 +1026,7 @@ msgid "Recipes"
 msgstr "Receptes"
 
 #: cookbook/templates/index.html:94
-msgid "Log in to view Recipes"
+msgid "Log in to view recipes"
 msgstr "Inicia sessió per veure receptes"
 
 #: cookbook/templates/markdown_info.html:5
@@ -1041,7 +1041,7 @@ msgid ""
 "plain text easily.\n"
 "        This site uses the <a href=\"https://python-markdown.github.io/\" "
 "target=\"_blank\">Python Markdown</a> library to\n"
-"        convert your text into nice looking html. Its full markdown "
+"        convert your text into nice looking HTML. Its full markdown "
 "documentation can be found\n"
 "        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
 "target=\"_blank\">here</a>.\n"
@@ -1087,7 +1087,7 @@ msgstr "Aquest text està en negreta"
 
 #: cookbook/templates/markdown_info.html:60
 #: cookbook/templates/markdown_info.html:75
-msgid "This text is in italics"
+msgid "This text is italic"
 msgstr "Aquest text està en cursiva"
 
 #: cookbook/templates/markdown_info.html:61
@@ -1141,7 +1141,7 @@ msgstr "Imatges i enllaços"
 
 #: cookbook/templates/markdown_info.html:126
 msgid ""
-"Links can be formatted with Markdown. This applicaiton also allows to paste "
+"Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
 "Els enllaços es poden formatar amb Markdown. Aquesta aplicació també permet "
@@ -1149,7 +1149,7 @@ msgstr ""
 
 #: cookbook/templates/markdown_info.html:132
 #: cookbook/templates/markdown_info.html:145
-msgid "This will become and Image"
+msgid "This will become and image"
 msgstr "Això es convertirà en i Imatge"
 
 #: cookbook/templates/markdown_info.html:152
@@ -1225,7 +1225,7 @@ msgid "Shopping List"
 msgstr "Llista de la Compra"
 
 #: cookbook/templates/meal_plan.html:168
-msgid "Shopping List currently empty"
+msgid "Shopping list currently empty"
 msgstr "Llista de la Compra buida actualment"
 
 #: cookbook/templates/meal_plan.html:171
@@ -1547,13 +1547,13 @@ msgid "Setup"
 msgstr "Opcions"
 
 #: cookbook/templates/setup.html:15
-msgid "To start using this application you must first create a superuser."
+msgid "To start using this application you must first create a superuser account."
 msgstr ""
 "Per començar a utilitzar aquesta aplicació, primer heu de crear un "
 "superusuari."
 
 #: cookbook/templates/setup.html:20
-msgid "Create Superuser"
+msgid "Create Superuser account"
 msgstr "Crear Superusuari"
 
 #: cookbook/templates/shopping_list.html:71
@@ -1579,7 +1579,7 @@ msgid "Select User"
 msgstr "Sel·lecciona un"
 
 #: cookbook/templates/shopping_list.html:232
-msgid "You are offline, shopping list might not sync."
+msgid "You are offline, shopping list might not syncronize."
 msgstr ""
 
 #: cookbook/templates/shopping_list.html:280
@@ -1795,7 +1795,7 @@ msgid "All Keywords"
 msgstr "Totes les paraules clau"
 
 #: cookbook/templates/url_import.html:199
-msgid "Import all Keywords not only the ones already existing."
+msgid "Import all keywords, not only the ones already existing."
 msgstr "Importeu totes les paraules clau, no només les ja existents."
 
 #: cookbook/templates/url_import.html:225

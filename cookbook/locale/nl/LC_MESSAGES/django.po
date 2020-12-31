@@ -1018,7 +1018,7 @@ msgid "Recipes"
 msgstr "Recepten"
 
 #: cookbook/templates/index.html:94
-msgid "Log in to view Recipes"
+msgid "Log in to view recipes"
 msgstr "Log in om recepten te bekijken"
 
 #: cookbook/templates/markdown_info.html:5
@@ -1033,7 +1033,7 @@ msgid ""
 "plain text easily.\n"
 "        This site uses the <a href=\"https://python-markdown.github.io/\" "
 "target=\"_blank\">Python Markdown</a> library to\n"
-"        convert your text into nice looking html. Its full markdown "
+"        convert your text into nice looking HTML. Its full markdown "
 "documentation can be found\n"
 "        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
 "target=\"_blank\">here</a>.\n"
@@ -1078,7 +1078,7 @@ msgstr "Deze tekst is dikgedrukt"
 
 #: cookbook/templates/markdown_info.html:60
 #: cookbook/templates/markdown_info.html:75
-msgid "This text is in italics"
+msgid "This text is italic"
 msgstr "Deze tekst is schuingedrukt"
 
 #: cookbook/templates/markdown_info.html:61
@@ -1132,7 +1132,7 @@ msgstr "Afbeeldingen & Links"
 
 #: cookbook/templates/markdown_info.html:126
 msgid ""
-"Links can be formatted with Markdown. This applicaiton also allows to paste "
+"Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
 "Het is mogelijk om Links te formatteren met Markdown. Deze aplicatie staat "
@@ -1140,7 +1140,7 @@ msgstr ""
 
 #: cookbook/templates/markdown_info.html:132
 #: cookbook/templates/markdown_info.html:145
-msgid "This will become and Image"
+msgid "This will become and image"
 msgstr "Dit wordt een afbeelding."
 
 #: cookbook/templates/markdown_info.html:152
@@ -1215,7 +1215,7 @@ msgid "Shopping List"
 msgstr "Boodschappenlijstje"
 
 #: cookbook/templates/meal_plan.html:168
-msgid "Shopping List currently empty"
+msgid "Shopping list currently empty"
 msgstr "Boodschappenlijstje is nog leeg"
 
 #: cookbook/templates/meal_plan.html:171
@@ -1524,12 +1524,12 @@ msgid "Setup"
 msgstr "Setup"
 
 #: cookbook/templates/setup.html:15
-msgid "To start using this application you must first create a superuser."
+msgid "To start using this application you must first create a superuser account."
 msgstr ""
 "Om deze applicatie te gebruiken dien je eerst een Superuser aan te maken."
 
 #: cookbook/templates/setup.html:20
-msgid "Create Superuser"
+msgid "Create Superuser account"
 msgstr "Superuser creëren"
 
 #: cookbook/templates/shopping_list.html:71
@@ -1553,7 +1553,7 @@ msgid "Select User"
 msgstr "Selecteer gebruiker"
 
 #: cookbook/templates/shopping_list.html:232
-msgid "You are offline, shopping list might not sync."
+msgid "You are offline, shopping list might not syncronize."
 msgstr ""
 "Je bent offline, boodschappenlijstje wordt mogelijk niet gesynchroniseerd."
 
@@ -1765,7 +1765,7 @@ msgid "All Keywords"
 msgstr "Alle sleutelwoorden"
 
 #: cookbook/templates/url_import.html:199
-msgid "Import all Keywords not only the ones already existing."
+msgid "Import all keywords, not only the ones already existing."
 msgstr "Importeer alle sleutelwoorden, niet alleen de reeds bestaande."
 
 #: cookbook/templates/url_import.html:225

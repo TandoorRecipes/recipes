@@ -14,7 +14,7 @@
     {% blocktrans %}
         Markdown is lightweight markup language that can be used to format plain text easily.
         This site uses the <a href="https://python-markdown.github.io/" target="_blank">Python Markdown</a> library to
-        convert your text into nice looking html. Its full markdown documentation can be found
+        convert your text into nice looking HTML. Its full markdown documentation can be found
         <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">here</a>.
         An incomplete but most likely sufficient documentation can be found below.
     {% endblocktrans %}
@@ -57,7 +57,7 @@
         {% trans 'or by leaving a blank line inbetween.' %}
 
         **{% trans 'This text is bold' %}**
-        *{% trans 'This text is in italics' %}*
+        *{% trans 'This text is italic' %}*
         > {% trans 'Blockquotes are also possible' %}
     </code></pre>
 
@@ -72,7 +72,7 @@
             {% trans 'Line breaks are inserted by adding two spaces after the end of a line' %}<br/>
             {% trans 'or by leaving a blank line inbetween.' %}<br/><br/>
             <b>{% trans 'This text is bold' %}</b><br/>
-            <i>{% trans 'This text is in italics' %}</i>
+            <i>{% trans 'This text is italic' %}</i>
             <blockquote>
                 <p>{% trans 'Blockquotes are also possible' %}</p>
             </blockquote>
@@ -123,13 +123,13 @@
 
     <br/>
     <h2>{% trans 'Images & Links' %}</h2>
-    {% trans 'Links can be formatted with Markdown. This applicaiton also allows to paste links directly into markdown fields without any formatting.' %}
+    {% trans 'Links can be formatted with Markdown. This application also allows to paste links directly into markdown fields without any formatting.' %}
     <pre class="intro-code code-block"><code>
         https://github.com/vabene1111/recipes
         [](https://github.com/vabene1111/recipes)
         [GitHub](https://github.com/vabene1111/recipes)
 
-        ![{% trans 'This will become and Image' %}]({% static 'favicon.png' %})
+        ![{% trans 'This will become and image' %}]({% static 'favicon.png' %})
     </code></pre>
 
     <div style="text-align: center">
@@ -142,7 +142,7 @@
         <div class="card-body">
             <a href="https://github.com/vabene1111/recipes">https://github.com/vabene1111/recipes</a> <br/>
             <a href="https://github.com/vabene1111/recipes">GitHub</a> <br/>
-            <img src="{% static 'favicon.png' %}" class="img-fluid" alt="{% trans 'This will become and Image' %}"
+            <img src="{% static 'favicon.png' %}" class="img-fluid" alt="{% trans 'This will become and image' %}"
                  style="height: 3vw">
         </div>
 
@@ -150,7 +150,7 @@
 
     <br/>
     <h2>{% trans 'Tables' %}</h2>
-    {% trans 'Markdown tables are hard to create by hand. It is recommended to use a table editor like <a href="https://www.tablesgenerator.com/markdown_tables" target="_blank">this</a> one.' %}
+    {% trans 'Markdown tables are hard to create by hand. It is recommended to use a table editor like <a href="https://www.tablesgenerator.com/markdown_tables" rel="noreferrer noopener" target="_blank">this one.</a>' %}
     <pre class="intro-code code-block"><code>
         |  {% trans 'Table' %} | {% trans 'Header' %}  |
         |--------|---------|
