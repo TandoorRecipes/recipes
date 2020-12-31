@@ -89,13 +89,13 @@
                                         <div class="input-group input-group-sm my-auto">
                                             <div class="input-group-prepend">
                                                 <button class="text-muted btn btn-outline-primary shadow-none"
-                                                        @click="((x.multiplier - 1) > 0) ? x.multiplier -= 1 : 1">-
+                                                        @click="((x.servings - 1) > 0) ? x.servings -= 1 : 1">-
                                                 </button>
                                             </div>
-                                            <input class="form-control" type="number" v-model="x.multiplier">
+                                            <input class="form-control" type="number" v-model="x.servings">
                                             <div class="input-group-append">
                                                 <button class="text-muted btn btn-outline-primary shadow-none"
-                                                        @click="x.multiplier += 1">
+                                                        @click="x.servings += 1">
                                                     +
                                                 </button>
                                             </div>
@@ -348,15 +348,10 @@
                 }
             },
             computed: {
-                multiplier_cache() {
+                servings_cache() {
                     let cache = {}
                     this.shopping_list.recipes.forEach((r) => {
-                        let multiplier = r.servings;
-                        if(!Number.isNaN(r.multiplier)){
-                            multiplier = parseFloat(r.multiplier)
-                        }
-                        cache[r.id] = multiplier / r.servings;
-
+                        cache[r.id] = r.servings;
                     })
                     return cache
                 },
@@ -369,7 +364,7 @@
                         let item = {}
                         Object.assign(item, element);
                         if (item.list_recipe !== null) {
-                            item.amount = item.amount * this.multiplier_cache[item.list_recipe]
+                            item.amount = item.amount * this.servings_cache[item.list_recipe]
                         }
                         item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
                         entries.push(item)
@@ -407,7 +402,7 @@
                     this.edit_mode = true
                     let loadingRecipes = []
                     {% for r in recipes %}
-                        loadingRecipes.push(this.loadInitialRecipe({{ r.recipe }}, {{ r.multiplier }}))
+                        loadingRecipes.push(this.loadInitialRecipe({{ r.recipe }}, {{ r.servings }}))
                     {% endfor %}
 
                     Promise.allSettled(loadingRecipes).then(() => {
@@ -452,9 +447,9 @@
                         solid: true
                     })
                 },
-                loadInitialRecipe: function (recipe, multiplier) {
+                loadInitialRecipe: function (recipe, servings) {
                     return this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe)).then((response) => {
-                        this.addRecipeToList(response.data, multiplier)
+                        this.addRecipeToList(response.data, servings)
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
@@ -622,14 +617,13 @@
                 getRecipeUrl: function (id) { //TODO generic function that can be reused else were
                     return '{% url 'view_recipe' 123456 %}'.replace('123456', id)
                 },
-                addRecipeToList: function (recipe, multiplier = 1) {
+                addRecipeToList: function (recipe, servings = 1) {
                     let slr = {
                         "created": true,
                         "id": Math.random() * 1000,
                         "recipe": recipe.id,
                         "recipe_name": recipe.name,
-                        "multiplier": multiplier,
-                        "servings": recipe.servings,
+                        "servings": servings,
                     }
 
                     this.shopping_list.recipes.push(slr)

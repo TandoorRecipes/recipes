@@ -142,7 +142,7 @@
                                     class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/" target="_blank" rel="noopener noreferrer">docs here</a>' %}</span></small>
                             <br/>
                             <br/>
-                            <input type="number" class="form-control" v-model="new_note_multiplier"
+                            <input type="number" class="form-control" v-model="new_note_servings"
                                    placeholder="{% trans 'Serving Count' %}" style="margin-bottom: 8px">
                             <br/>
                             <draggable :list="pseudo_note_list"
@@ -248,7 +248,7 @@
                             <br/>
                             <br/>
                             <small class="text-muted">{% trans 'Serving Count' %}</small><br/>
-                            <span>[[ plan_detail.recipe_multiplier ]]</span>
+                            <span>[[ plan_detail.servings ]]</span>
                         </template>
 
                         <template v-if="plan_detail.note !== ''">
@@ -397,7 +397,7 @@
                 ],
                 new_note_title: '',
                 new_note_text: '',
-                new_note_multiplier: '',
+                new_note_servings: '',
                 default_shared_users: [],
                 user_id_update: [],
                 user_names: {},
@@ -622,7 +622,7 @@
                         id: Math.round(Math.random() * 1000) + 10000,
                         recipe: recipe.id,
                         recipe_name: recipe.name,
-                        recipe_multiplier: (this.new_note_multiplier > 1) ? this.new_note_multiplier : recipe.servings,
+                        servings: (this.new_note_servings > 1) ? this.new_note_servings : recipe.servings,
                         title: this.new_note_title,
                         note: this.new_note_text,
                         is_new: true
@@ -630,7 +630,7 @@
 
                     this.new_note_title = ''
                     this.new_note_text = ''
-                    this.new_note_multiplier = ''
+                    this.new_note_servings = ''
 
                     return r
                 },
@@ -639,7 +639,7 @@
                         id: Math.round(Math.random() * 1000) + 10000,
                         title: this.new_note_title,
                         note: this.new_note_text,
-                        recipe_multiplier: 1,
+                        servings: 1,
                         is_new: true,
                     }
 
@@ -649,7 +649,7 @@
 
                     this.new_note_title = ''
                     this.new_note_text = ''
-                    this.new_note_multiplier = ''
+                    this.new_note_servings = ''
                     return new_entry
                 },
                 planElementName: function (element) {
@@ -692,10 +692,10 @@
                     let first = true
                     for (let se of this.shopping_list) {
                         if (first) {
-                            url += `?r=[${se.recipe},${se.recipe_multiplier}]`
+                            url += `?r=[${se.recipe},${se.servings}]`
                             first = false
                         } else {
-                            url += `&r=[${se.recipe},${se.recipe_multiplier}]`
+                            url += `&r=[${se.recipe},${se.servings}]`
                         }
                     }
                     return url

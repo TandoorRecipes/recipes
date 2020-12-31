@@ -147,7 +147,7 @@ admin.site.register(CookLog, CookLogAdmin)
 
 
 class ShoppingListRecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'recipe', 'multiplier')
+    list_display = ('id', 'recipe', 'servings')
 
 
 admin.site.register(ShoppingListRecipe, ShoppingListRecipeAdmin)
