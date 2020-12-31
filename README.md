@@ -18,7 +18,7 @@ external storage providers hosting PDF's, Images or other files.
 - :shopping_cart: Generate **shopping** lists from recipes
 - :calendar: Create a **Plan** on what to eat when
 - :family: **Share** recipes with friends and comment on them to suggest or remember changes you made
-- :flag-us: automatically convert decimal units to **fractions** for those who like this
+- :heavy_division_sign: automatically convert decimal units to **fractions** for those who like this
 - :whale: Easy setup with **Docker**
 - :art: Customize your interface with **themes**
 - :envelope: Export and import recipes from other users
