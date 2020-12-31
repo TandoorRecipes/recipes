@@ -156,6 +156,10 @@ class RecipeSerializer(WritableNestedModelSerializer):
         fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal', 'nutrition', 'servings']
         read_only_fields = ['image', 'created_by', 'created_at']
 
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request']._user
+        return super().create(validated_data)
+
 
 class RecipeImageSerializer(WritableNestedModelSerializer):
     class Meta:
