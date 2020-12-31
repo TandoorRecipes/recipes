@@ -1,3 +1,5 @@
+> :warning: This guide was contributed by the community and is neither officially supported, nor updated or tested.
+
 Many people appear to host this application on their Synology NAS. The following documentation was provided by 
 @therealschimmi in [this issue discussion](https://github.com/vabene1111/recipes/issues/98#issuecomment-643062907).
 
