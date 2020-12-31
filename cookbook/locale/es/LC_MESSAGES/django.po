@@ -1025,7 +1025,7 @@ msgid "Recipes"
 msgstr "Recetas"
 
 #: cookbook/templates/index.html:94
-msgid "Log in to view Recipes"
+msgid "Log in to view recipes"
 msgstr "Inicie sesión para ver recetas"
 
 #: cookbook/templates/markdown_info.html:5
@@ -1038,7 +1038,7 @@ msgid ""
 "\n"
 "        Markdown is lightweight markup language that can be used to format plain text easily.\n"
 "        This site uses the <a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> library to\n"
-"        convert your text into nice looking html. Its full markdown documentation can be found\n"
+"        convert your text into nice looking HTML. Its full markdown documentation can be found\n"
 "        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">here</a>.\n"
 "        An incomplete but most likely sufficient documentation can be found below.\n"
 "    "
@@ -1078,7 +1078,7 @@ msgstr "Este texto está en negrita"
 
 #: cookbook/templates/markdown_info.html:60
 #: cookbook/templates/markdown_info.html:75
-msgid "This text is in italics"
+msgid "This text is italic"
 msgstr "Este texto está en cursiva"
 
 #: cookbook/templates/markdown_info.html:61
@@ -1132,7 +1132,7 @@ msgstr "Imágenes y enlaces"
 
 #: cookbook/templates/markdown_info.html:126
 msgid ""
-"Links can be formatted with Markdown. This applicaiton also allows to paste "
+"Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
 "Los enlaces se pueden formatear con Markdown. Esta aplicación también "
@@ -1140,7 +1140,7 @@ msgstr ""
 
 #: cookbook/templates/markdown_info.html:132
 #: cookbook/templates/markdown_info.html:145
-msgid "This will become and Image"
+msgid "This will become and image"
 msgstr "Esto se convertirá en una imagen"
 
 #: cookbook/templates/markdown_info.html:152
@@ -1218,7 +1218,7 @@ msgid "Shopping List"
 msgstr "Lista de la Compra"
 
 #: cookbook/templates/meal_plan.html:168
-msgid "Shopping List currently empty"
+msgid "Shopping list currently empty"
 msgstr "La Lista de la Compra está vacía"
 
 #: cookbook/templates/meal_plan.html:171
@@ -1283,7 +1283,7 @@ msgstr "Ayuda del menú"
 #: cookbook/templates/meal_plan.html:337
 msgid ""
 "\n"
-"                            <p>The meal plan module allows planning of meals both with recipes or just notes.</p>\n"
+"                            <p>The meal plan module allows planning of meals both with recipes and notes.</p>\n"
 "                            <p>Simply select a recipe from the list of recently viewed recipes or search the one you\n"
 "                                want and drag it to the desired plan position. You can also add a note and a title and\n"
 "                                then drag the recipe to create a plan entry with a custom title and note. Creating only\n"
@@ -1515,12 +1515,12 @@ msgid "Setup"
 msgstr "Configuración"
 
 #: cookbook/templates/setup.html:15
-msgid "To start using this application you must first create a superuser."
+msgid "To start using this application you must first create a superuser account."
 msgstr ""
 "Para empezar a usar esta aplicación, primero debes crear un superusuario."
 
 #: cookbook/templates/setup.html:20
-msgid "Create Superuser"
+msgid "Create Superuser account"
 msgstr "Crear Superusuario"
 
 #: cookbook/templates/shopping_list.html:71
@@ -1544,7 +1544,7 @@ msgid "Select User"
 msgstr "Seleccionar Usuario"
 
 #: cookbook/templates/shopping_list.html:232
-msgid "You are offline, shopping list might not sync."
+msgid "You are offline, shopping list might not syncronize."
 msgstr ""
 "Estás desconectado, la lista de la compra podría no estar sincronizada."
 
@@ -1750,7 +1750,7 @@ msgid "All Keywords"
 msgstr "Todas las palabras clave."
 
 #: cookbook/templates/url_import.html:199
-msgid "Import all Keywords not only the ones already existing."
+msgid "Import all keywords, not only the ones already existing."
 msgstr "Importar todas las palabras clave no sólo las ya existentes."
 
 #: cookbook/templates/url_import.html:225

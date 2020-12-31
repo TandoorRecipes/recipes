@@ -168,7 +168,7 @@
                     </div>
 
                     <div class="card-body">
-                        <template v-if="shopping_list.length < 1">{% trans 'Shopping List currently empty' %}</template>
+                        <template v-if="shopping_list.length < 1">{% trans 'Shopping list currently empty' %}</template>
                         <template v-else>
                             <a v-bind:href="getShoppingUrl()" class="btn btn-success"
                                target="_blank">{% trans 'Open Shopping List' %}</a>
@@ -341,12 +341,12 @@
                     </div>
                     <div class="modal-body">
                         {% blocktrans %}
-                            <p>The meal plan module allows planning of meals both with recipes or just notes.</p>
+                            <p>The meal plan module allows planning of meals both with recipes and notes.</p>
                             <p>Simply select a recipe from the list of recently viewed recipes or search the one you
                                 want and drag it to the desired plan position. You can also add a note and a title and
                                 then drag the recipe to create a plan entry with a custom title and note. Creating only
                                 Notes is possible by dragging the create note box into the plan.</p>
-                            <p>Click on a recipe in order to open the detail view. Here you can also add it to the
+                            <p>Click on a recipe in order to open the detailed view. There you can also add it to the
                                 shopping list. You can also add all recipes of a day to the shopping list by
                                 clicking the shopping cart at the top of the table.</p>
                             <p>Since a common use case is to plan meals together you can define

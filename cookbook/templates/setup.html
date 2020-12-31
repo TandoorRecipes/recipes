@@ -12,12 +12,12 @@
 {% block content %}
 
     <h1>{% trans 'Setup' %}</h1>
-    <p>{% blocktrans %}To start using this application you must first create a superuser.{% endblocktrans %}</p>
+    <p>{% blocktrans %}To start using this application you must first create a superuser account.{% endblocktrans %}</p>
 
     <form action="." method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create Superuser' %}</button>
+        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create Superuser account' %}</button>
     </form>
 
 {% endblock %}
