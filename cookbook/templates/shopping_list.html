@@ -305,6 +305,8 @@
 
 {% endblock %}
 {% block script %}
+    
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
@@ -455,7 +457,7 @@
                         this.addRecipeToList(response.data, multiplier)
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 loadShoppingList: function (autosync = false) {
@@ -482,7 +484,7 @@
                             }
                         }).catch((err) => {
                             console.log(err)
-                            this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                            this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                         })
                     } else {
                         this.shopping_list = {
@@ -518,7 +520,7 @@
                                 }
                             }).catch((err) => {
                                 console.log(err)
-                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                             }))
                         }
                     }
@@ -529,7 +531,7 @@
                         if (this.shopping_list_id === null) {
                             return this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
-                                this.makeToast('{% trans 'Updated' %}', '{% trans 'Object created successfully!' %}', 'success')
+                                this.makeToast(gettext('Updated'), gettext('Object created successfully!'), 'success')
                                 this.loading = false
 
                                 this.shopping_list = response.body
@@ -538,18 +540,18 @@
                                 window.history.pushState('shopping_list', '{% trans 'Shopping List' %}', "{% url 'view_shopping' 123456 %}".replace('123456', this.shopping_list_id));
                             }).catch((err) => {
                                 console.log(err)
-                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error creating a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), '{% trans 'There was an error creating a resource!' %}' + err.bodyText, 'danger')
                                 this.loading = false
                             })
                         } else {
                             return this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.shopping_list = response.body
-                                this.makeToast('{% trans 'Updated' %}', '{% trans 'Changes saved successfully!' %}', 'success')
+                                this.makeToast(gettext('Updated'), gettext('Changes saved successfully!'), 'success')
                                 this.loading = false
                             }).catch((err) => {
                                 console.log(err)
-                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                                 this.loading = false
                             })
                         }
@@ -572,7 +574,7 @@
 
                             }).catch((err) => {
                                 console.log(err)
-                                this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error updating a resource!' %}' + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                                 this.loading = false
                             })
 
@@ -598,7 +600,7 @@
 
                         this.$refs.new_entry_amount.focus();
                     } else {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'Please enter a valid food' %}', 'danger')
+                        this.makeToast(gettext('Error'), gettext('Please enter a valid food'), 'danger')
                     }
                 },
                 getRecipes: function () {
@@ -614,7 +616,7 @@
                         this.recipes = response.data;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 getRecipeUrl: function (id) { //TODO generic function that can be reused else were
@@ -657,7 +659,7 @@
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
 
@@ -667,7 +669,7 @@
                         this.units = response.data;
                         this.units_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 searchFoods: function (query) { //TODO move to central component
@@ -676,7 +678,7 @@
                         this.foods = response.data
                         this.foods_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 addFoodType: function (tag, index) { //TODO move to central component
@@ -695,7 +697,7 @@
                         this.users = response.data
                         this.users_loading = false
                     }).catch((err) => {
-                        this.makeToast('{% trans 'Error' %}', '{% trans 'There was an error loading a resource!' %}' + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
             },
