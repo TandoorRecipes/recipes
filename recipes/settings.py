@@ -179,6 +179,7 @@ LANGUAGES = [
     ('ca', _('Catalan')),
     ('es', _('Spanish')),
     ('it', _('Italian')),
+    ('lv', _('Latvian')),
 ]
 
 # Static files (CSS, JavaScript, Images)
