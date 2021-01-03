@@ -1,5 +1,6 @@
+site_name: Recipes
 theme:
-  name: Recipes
+  name: material
   custom_dir: mkdocs-material/material
 
   # 404 page
