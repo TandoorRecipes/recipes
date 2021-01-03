@@ -42,7 +42,7 @@ The docker image (`vabene1111/recipes`) simply exposes the application on port `
 
 ### Docker-Compose [Recommended]
 
-1. Choose one of the included configurations [here](docs/docker).
+1. Choose one of the included configurations [here](docs/install/docker).
 2. Download the environment (config) file template and fill it out `wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env`
 3. Start the container `docker-compose up -d`
 4. Open the page to create the first user.
@@ -50,11 +50,11 @@ The docker image (`vabene1111/recipes`) simply exposes the application on port `
 ### Manual
 
 **Python >= 3.8** is required to run this!
-Refer to [manual install](docs/manual_install) for detailed instructions.
+Refer to [manual install](docs/install/manual_install) for detailed instructions.
 
 ### Kubernetes
 
-You can find a basic kubernetes setup [here](docs/k8s/). Please see the README in the folder for more detail.
+You can find a basic kubernetes setup [here](docs/install/k8s/). Please see the README in the folder for more detail.
 
 ## Updating
 
