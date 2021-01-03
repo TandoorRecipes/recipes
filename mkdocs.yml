@@ -1,21 +1,3 @@
 site_name: Recipes
 theme:
-  name: null
-  custom_dir: mkdocs-material/material
-
-  # 404 page
-  static_templates:
-    - 404.html
-
-  # Necessary for search to work properly
-  include_search_page: false
-  search_index_only: true
-
-  # Default values, taken from mkdocs_theme.yml
-  language: en
-  font:
-    text: Roboto
-    code: Roboto Mono
-  favicon: cookbook/static/favicon.png
-  icon:
-    logo: logo
+  name: material
