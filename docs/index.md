@@ -2,8 +2,6 @@
 
 The recipe manager that allows you to manage your ever growing collection of digital recipes.
 
-{{ site.data.navigation}}
-
 ## Features
 
 - :package: **Sync** files with Dropbox and Nextcloud (more can easily be added)
