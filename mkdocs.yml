@@ -1,3 +1,14 @@
 site_name: Recipes
+site_description: Documentation for Firefly III
+site_author: vabene1111
+repo_url: https://github.com/vabene1111/recipes
+edit_uri: https://github.com/vabene1111/recipes/tree/develop/docs
 theme:
   name: material
+  palette:
+    primary: lime
+    accent: deep orange
+    logo: cookbook/static/favicon.png
+    favicon: cookbook/static/favicon.ico
+    icon:
+      repo: fontawesome/brands/github
