@@ -12,3 +12,13 @@ theme:
     favicon: cookbook/static/favicon.ico
     icon:
       repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Home: 'index.md'
+  - Installation:
+      - Docker: install/docker/docker.md
