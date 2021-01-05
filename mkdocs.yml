@@ -23,9 +23,11 @@ nav:
   - Home: 'index.md'
   - Installation:
       - Docker: install/docker.md
+      - Unraid: install/unraid.md
       - Synology: install/synology.md
       - Kubernetes: install/kubernetes.md
       - Manual: install/manual.md
+      - Other setups: install/other.md
   - System:
       - Updating: system/updating.md
       - Backup: system/backup.md

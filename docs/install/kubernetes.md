@@ -1,9 +1,6 @@
 !!! info "Community Contributed"
     This guide was contributed by the community and is neither officially supported, nor updated or tested.
 
-
-# Kubernetes
-
 This is a basic kubernetes setup. 
 Please note that this does not necessarily follow Kubernetes best practices and should only used as a 
 basis to build your own setup from!
