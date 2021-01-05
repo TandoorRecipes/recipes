@@ -325,6 +325,10 @@
                                                                         @click="ingredient.no_amount = false"><i
                                                                         class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Enable Amount' %}
                                                                 </button>
+                                                                <button type="button" class="dropdown-item"
+                                                                        @click="copyTemplateReference(index)"><i
+                                                                        class="fas fa-code"></i> {% trans 'Copy Template Reference' %}
+                                                                </button>
                                                             </div>
 
                                                         </div>
@@ -442,7 +446,7 @@
 {% endblock %}
 
 {% block script %}
-    
+
     <script src="{% url 'javascript-catalog' %}"></script>
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
@@ -699,6 +703,14 @@
                 },
                 removeNutrition: function () {
                     this.recipe.nutrition = null
+                },
+                copyTemplateReference: function (index) {
+                    const el = document.createElement('textarea');
+                    el.value = `\u007B\u007B ingredients[${index}] \u007D\u007D`;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
                 }
             }
         });
