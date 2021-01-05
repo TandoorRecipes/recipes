@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q, Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django_tables2 import RequestConfig
@@ -41,7 +41,7 @@ def index(request):
 
         return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
     except UserPreference.DoesNotExist:
-        return HttpResponseRedirect(reverse_lazy('view_search'))
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
 
 
 def search(request):
@@ -70,7 +70,7 @@ def search(request):
 
         return render(request, 'index.html', {'recipes': table, 'filter': f, 'last_viewed': last_viewed})
     else:
-        return render(request, 'index.html')
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
 
 
 def recipe_view(request, pk, share=None):
@@ -78,7 +78,7 @@ def recipe_view(request, pk, share=None):
 
     if not request.user.is_authenticated and not share_link_valid(recipe, share):
         messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
 
     comments = Comment.objects.filter(recipe=recipe)
 

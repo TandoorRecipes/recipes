@@ -115,7 +115,7 @@ def group_required(*groups_required):
     def in_groups(u):
         return has_group_permission(u, groups_required)
 
-    return user_passes_test(in_groups, login_url='index')
+    return user_passes_test(in_groups)
 
 
 class GroupRequiredMixin(object):
@@ -138,7 +138,7 @@ class OwnerRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
-            return HttpResponseRedirect(reverse_lazy('login'))
+            return HttpResponseRedirect(reverse_lazy('login') + '?next=' + request.path)
         else:
             if not is_object_owner(request.user, self.get_object()):
                 messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
