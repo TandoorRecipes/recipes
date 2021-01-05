@@ -1,6 +1,6 @@
 bleach==3.2.1
 bleach-whitelist==0.0.11
-Django==3.1.4
+Django==3.1.5
 django-annoying==0.10.6
 django-autocomplete-light==3.8.1
 django-cleanup==5.1.0
