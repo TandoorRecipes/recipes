@@ -16,8 +16,9 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./staticfiles:/opt/recipes/staticfiles
-      - ./mediafiles:/opt/recipes/mediafiles
+      - staticfiles:/opt/recipes/staticfiles
+      - mediafiles:/opt/recipes/mediafiles
+      - nginx_config:/opt/recipes/nginx/conf.d
     depends_on:
       - db_recipes
     networks:
@@ -29,13 +30,14 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./mediafiles:/media
+      - nginx_config:/etc/nginx/conf.d:ro
+      - staticfiles:/static
+      - mediafiles:/media
     labels: # traefik example labels
       - "traefik.enable=true"
       - "traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`, `recipes.myotherdomain.com`)"
-      - "traefik.http.routers.recipes.entrypoints=web_secure"
-      - "traefik.http.routers.recipes.tls.certresolver=le_resolver"
+      - "traefik.http.routers.recipes.entrypoints=web_secure" # your https endpoint
+      - "traefik.http.routers.recipes.tls.certresolver=le_resolver" # your cert resolver
     networks:
       - default
       - traefik
@@ -44,3 +46,13 @@ networks:
   default:
   traefik: # This is you external traefik network
     external: true
+
+volumes:
+  nginx
+  staticfiles
+  mediafiles:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './mediafiles'

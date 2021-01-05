@@ -1,4 +1,8 @@
-# Recipes ![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop)
+# Recipes 
+![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop) 
+![Stars](https://img.shields.io/github/stars/vabene1111/recipes)
+![Forks](https://img.shields.io/github/forks/vabene1111/recipes)
+![Docker Pulls](https://img.shields.io/docker/pulls/vabene1111/recipes)
 
 Recipes is a Django application to manage, tag and search recipes using either built in models or 
 external storage providers hosting PDF's, Images or other files.
@@ -34,36 +38,7 @@ While this application has been around for a while and is actively used by many 
 **beta** software that has a lot of rough edges and unpolished parts.
 
 ## Installation
-
-The docker image (`vabene1111/recipes`) simply exposes the application on port `8080`. You may choose any preferred installation method, the following are just examples to make it easier.
-
-> I will try to support issues with any kind of installation but since I run the docker setup I can only offer 
-> limited help for other methods.
-
-### Docker-Compose [Recommended]
-
-1. Choose one of the included configurations [here](docs/install/docker).
-2. Download the environment (config) file template and fill it out `wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env`
-3. Start the container `docker-compose up -d`
-4. Open the page to create the first user.
-
-### Manual
-
-**Python >= 3.8** is required to run this!
-Refer to [manual install](docs/install/manual_install) for detailed instructions.
-
-### Kubernetes
-
-You can find a basic kubernetes setup [here](docs/install/k8s/). Please see the README in the folder for more detail.
-
-## Updating
-
-While intermediate updates can be skipped when updating please make sure to **read the release notes** in case some special action is required to update.
-
-0. Before updating it is recommended to **create a backup!**
-1. Stop the container using `docker-compose down`
-2. Pull the latest image using `docker-compose pull`
-3. Start the container again using `docker-compose up -d`
+Please refer to the Installation section of the [Documentation](https://vabene1111.github.io/recipes/).
 
 ## Contributing
 
