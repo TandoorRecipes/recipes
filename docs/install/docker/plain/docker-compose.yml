@@ -14,8 +14,9 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./staticfiles:/opt/recipes/staticfiles
-      - ./mediafiles:/opt/recipes/mediafiles
+      - staticfiles:/opt/recipes/staticfiles
+      - mediafiles:/opt/recipes/mediafiles
+      - nginx_config:/opt/recipes/nginx/conf.d
     depends_on:
       - db_recipes
 
@@ -27,6 +28,16 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./staticfiles:/static
-      - ./mediafiles:/media
+      - nginx_config:/etc/nginx/conf.d:ro
+      - staticfiles:/static
+      - mediafiles:/media
+
+volumes:
+  nginx
+  staticfiles
+  mediafiles:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './mediafiles'
