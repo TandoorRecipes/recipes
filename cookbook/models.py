@@ -180,6 +180,10 @@ class Step(models.Model):
     order = models.IntegerField(default=0)
     show_as_header = models.BooleanField(default=True)
 
+    def get_instruction_render(self):
+        from cookbook.helper.template_helper import render_instructions
+        return render_instructions(self)
+
     class Meta:
         ordering = ['order', 'pk']
 
