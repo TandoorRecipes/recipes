@@ -28,6 +28,10 @@ nav:
       - Kubernetes: install/kubernetes.md
       - Manual: install/manual.md
       - Other setups: install/other.md
+  - Features:
+      - Tempalating: features/templating.md
+      - Storages and Sync: features/external_recipes.md
   - System:
       - Updating: system/updating.md
+      - Permission System: system/permissions.md
       - Backup: system/backup.md
