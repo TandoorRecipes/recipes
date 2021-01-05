@@ -1074,7 +1074,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
-msgid "This will become and image"
+msgid "This will become an image"
 msgstr "Tas kļūs par attēlu"
 
 #: .\cookbook\templates\markdown_info.html:152
