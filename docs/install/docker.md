@@ -10,20 +10,21 @@ Please read the instructions/notes on each example carefully and decide if this 
 
 The docker image (`vabene1111/recipes`) simply exposes the application on port `8080`.
 
-It can be run and exposed on port 80 using
+It can be run and exposed on port 80 using:
 
 ```shell
 docker run -d \
     -v ./staticfiles:/opt/recipes/staticfiles \
     -v ./mediafiles:/opt/recipes/mediafiles \
     -p 80:8080 \
-    -e SECRET_KEY=
-    -e DB_ENGINE=django.db.backends.postgresql
-    -e POSTGRES_HOST=db_recipes
-    -e POSTGRES_PORT=5432
-    -e POSTGRES_USER=djangodb
-    -e POSTGRES_PASSWORD=
-    -e POSTGRES_DB=djangodb
+    -e SECRET_KEY=YOUR_SECRET_KEY \
+    -e DB_ENGINE=django.db.backends.postgresql \
+    -e POSTGRES_HOST=db_recipes \
+    -e POSTGRES_PORT=5432 \
+    -e POSTGRES_USER=djangodb \
+    -e POSTGRES_PASSWORD=YOUR_POSTGRES_SECRET_KEY \
+    -e POSTGRES_DB=djangodb \
+    --name recipes_1 \
     vabene1111/recipes
 ```
 
@@ -60,6 +61,8 @@ services:
   web_recipes:
     image: vabene1111/recipes
     restart: always
+    ports:
+      - 80:8080
     env_file:
       - ./.env
     volumes:
@@ -82,8 +85,8 @@ services:
       - mediafiles:/media
 
 volumes:
-  nginx
-  staticfiles
+  nginx_config:
+  staticfiles:
   mediafiles:
     driver: local
     driver_opts:
