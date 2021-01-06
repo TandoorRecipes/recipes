@@ -8,9 +8,9 @@ Please read the instructions/notes on each example carefully and decide if this 
 
 ## Docker
 
-The docker image (`vabene1111/recipes`) simply exposes the application on port `8080`.
+The docker image (`vabene1111/recipes`) simply exposes the application on the container's port `8080`.
 
-It can be run and exposed on port 80 using:
+It can be run and accessed on port 80 using:
 
 ```shell
 docker run -d \
@@ -61,8 +61,6 @@ services:
   web_recipes:
     image: vabene1111/recipes
     restart: always
-    ports:
-      - 80:8080
     env_file:
       - ./.env
     volumes:
