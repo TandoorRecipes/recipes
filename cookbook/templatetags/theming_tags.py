@@ -34,7 +34,7 @@ def nav_color(request):
 def sticky_nav(request):
     if (not request.user.is_authenticated and STICKY_NAV_PREF_DEFAULT) or \
             (request.user.is_authenticated and request.user.userpreference.sticky_navbar):
-        return 'position: sticky; top: 0; left: 0; z-index:1000'
+        return 'position: sticky; top: 0; left: 0; z-index: 1000;'
     else:
         return ''
 
