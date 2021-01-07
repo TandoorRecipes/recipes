@@ -146,7 +146,7 @@ class Unit(models.Model):
 
 
 class Food(models.Model):
-    name = models.CharField(unique=True, max_length=128)
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):

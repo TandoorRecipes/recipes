@@ -124,7 +124,9 @@ def import_url(request):
         for ing in data['recipeIngredient']:
             ingredient = Ingredient()
 
-            ingredient.food, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
+            if ing['ingredient']['text'] != '':
+                ingredient.food, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
+
             if ing['unit'] and ing['unit']['text'] != '':
                 ingredient.unit, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
 

@@ -76,7 +76,7 @@ def find_recipe_json(ld_json, url):
                 if ingredient:
                     ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': ingredient, 'id': random.randrange(10000, 99999)}, "note": note, 'original': x})
             except:
-                pass
+                ingredients.append({'amount': 0, 'unit': {'text': "", 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': x, 'id': random.randrange(10000, 99999)}, "note": "", 'original': x})
 
         ld_json['recipeIngredient'] = ingredients
     else:
