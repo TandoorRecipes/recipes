@@ -71,12 +71,13 @@ def find_recipe_json(ld_json, url):
         ingredients = []
 
         for x in ld_json['recipeIngredient']:
-            try:
-                amount, unit, ingredient, note = parse_ingredient(x)
-                if ingredient:
-                    ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': ingredient, 'id': random.randrange(10000, 99999)}, "note": note, 'original': x})
-            except:
-                ingredients.append({'amount': 0, 'unit': {'text': "", 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': x, 'id': random.randrange(10000, 99999)}, "note": "", 'original': x})
+            if x.replace(' ','') != '':
+                try:
+                    amount, unit, ingredient, note = parse_ingredient(x)
+                    if ingredient:
+                        ingredients.append({'amount': amount, 'unit': {'text': unit, 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': ingredient, 'id': random.randrange(10000, 99999)}, "note": note, 'original': x})
+                except:
+                    ingredients.append({'amount': 0, 'unit': {'text': "", 'id': random.randrange(10000, 99999)}, 'ingredient': {'text': x, 'id': random.randrange(10000, 99999)}, "note": "", 'original': x})
 
         ld_json['recipeIngredient'] = ingredients
     else:
