@@ -47,6 +47,10 @@ The main, and also recommended, installation option is to install this applicati
 
 This configuration exposes the application through an nginx web server on port 80 of your machine.
 
+```shell
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
+```
+
 ```yaml
 version: "3"
 services:
@@ -65,8 +69,8 @@ services:
       - ./.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
-      - mediafiles:/opt/recipes/mediafiles
       - nginx_config:/opt/recipes/nginx/conf.d
+      - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
       - db_recipes
 
@@ -77,20 +81,16 @@ services:
       - 80:80
     env_file:
       - ./.env
+    depends_on:
+      - web_recipes
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static
-      - mediafiles:/media
+      - ./mediafiles:/media
 
 volumes:
   nginx_config:
   staticfiles:
-  mediafiles:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: './mediafiles'
 ```
 
 ### Reverse Proxy
@@ -105,6 +105,10 @@ If you use traefik, this configuration is the one for you.
     Please refer to [their excellent documentation](https://doc.traefik.io/traefik/). If that does not help,
     [this little example](traefik.md) might be for you.
 
+```shell
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-proxy/docker-compose.yml
+```
+
 ```yaml
 version: "3"
 services:
@@ -125,8 +129,8 @@ services:
       - ./.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
-      - mediafiles:/opt/recipes/mediafiles
       - nginx_config:/opt/recipes/nginx/conf.d
+      - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
       - db_recipes
     networks:
@@ -140,12 +144,14 @@ services:
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static
-      - mediafiles:/media
+      - ./mediafiles:/media
     labels: # traefik example labels
       - "traefik.enable=true"
       - "traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`, `recipes.myotherdomain.com`)"
       - "traefik.http.routers.recipes.entrypoints=web_secure" # your https endpoint
       - "traefik.http.routers.recipes.tls.certresolver=le_resolver" # your cert resolver
+    depends_on:
+      - web_recipes
     networks:
       - default
       - traefik
@@ -156,14 +162,8 @@ networks:
     external: true
 
 volumes:
-  nginx
-  staticfiles
-  mediafiles:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: './mediafiles'
+  nginx:
+  staticfiles:
 ```
 
 #### nginx-proxy
@@ -180,6 +180,10 @@ LETSENCRYPT_HOST=
 LETSENCRYPT_EMAIL=
 ```
 
+```shell
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
+```
+
 ```yaml
 version: "3"
 services:
@@ -200,8 +204,8 @@ services:
       - ./.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
-      - mediafiles:/opt/recipes/mediafiles
       - nginx_config:/opt/recipes/nginx/conf.d
+      - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
       - db_recipes
     networks:
@@ -212,10 +216,12 @@ services:
     restart: always
     env_file:
       - ./.env
+    depends_on:
+      - web_recipes
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static
-      - mediafiles:/media
+      - ./mediafiles:/media
     networks:
       - default
       - nginx-proxy
@@ -227,14 +233,8 @@ networks:
       name: nginx-proxy
 
 volumes:
-  nginx
-  staticfiles
-  mediafiles:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: './mediafiles'
+  nginx:
+  staticfiles:
 ```
 
 ## Additional Information
