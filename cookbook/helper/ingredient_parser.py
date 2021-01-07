@@ -1,6 +1,7 @@
 import unicodedata
 import string
 
+
 def parse_fraction(x):
     if len(x) == 1 and 'fraction' in unicodedata.decomposition(x):
         frac_split = unicodedata.decomposition(x[-1:]).split()
@@ -14,13 +15,14 @@ def parse_fraction(x):
         except ZeroDivisionError:
             raise ValueError
 
+
 def parse_amount(x):
     amount = 0
     unit = ''
-    
+
     did_check_frac = False
     end = 0
-    while end < len(x) and (x[end] in string.digits or ((x[end] == '.' or x[end] == ',') and end + 1 < len(x) and x[end+1] in string.digits)):
+    while end < len(x) and (x[end] in string.digits or ((x[end] == '.' or x[end] == ',') and end + 1 < len(x) and x[end + 1] in string.digits)):
         end += 1
     if end > 0:
         amount = float(x[:end].replace(',', '.'))
@@ -34,32 +36,34 @@ def parse_amount(x):
         else:
             try:
                 amount += parse_fraction(x[end])
-                unit = x[end+1:]
+                unit = x[end + 1:]
             except ValueError:
                 unit = x[end:]
     return amount, unit
+
 
 def parse_ingredient_with_comma(tokens):
     ingredient = ''
     note = ''
     start = 0
-    # search for first occurence of an argument ending in a comma
+    # search for first occurrence of an argument ending in a comma
     while start < len(tokens) and not tokens[start].endswith(','):
         start += 1
     if start == len(tokens):
         # no token ending in a comma found -> use everything as ingredient
         ingredient = ' '.join(tokens)
     else:
-        ingredient = ' '.join(tokens[:start+1])[:-1]
-        note = ' '.join(tokens[start+1:])
+        ingredient = ' '.join(tokens[:start + 1])[:-1]
+        note = ' '.join(tokens[start + 1:])
     return ingredient, note
+
 
 def parse_ingredient(tokens):
     ingredient = ''
     note = ''
     if tokens[-1].endswith(')'):
         # Check if the matching opening bracket is in the same token
-        if ((not tokens[-1].startswith('(')) and ('(' in tokens[-1])):
+        if (not tokens[-1].startswith('(')) and ('(' in tokens[-1]):
             return parse_ingredient_with_comma(tokens)
         # last argument ends with closing bracket -> look for opening bracket
         start = len(tokens) - 1
@@ -79,13 +83,14 @@ def parse_ingredient(tokens):
         ingredient, note = parse_ingredient_with_comma(tokens)
     return ingredient, note
 
+
 def parse(x):
     # initialize default values
     amount = 0
     unit = ''
     ingredient = ''
     note = ''
-    
+
     tokens = x.split()
     if len(tokens) == 1:
         # there only is one argument, that must be the ingredient
