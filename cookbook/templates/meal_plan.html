@@ -194,7 +194,7 @@
                                 <label>
                                     {% trans 'Number of Days' %}
                                     <input class="form-control" type="number" v-model="number_of_days"
-                                           @change="updatePlan(); $cookies.set('number_of_days',number_of_days)">
+                                           @change="updatePlan(); $cookies.set('number_of_days',number_of_days, -1)">
                                 </label>
                             </div>
 
@@ -204,7 +204,7 @@
                                 <label>
                                     {% trans 'Weekday offset' %}
                                     <input class="form-control" type="number" v-model="start_offset"
-                                           @change="updatePlan(); $cookies.set('start_offset',start_offset)">
+                                           @change="updatePlan(); $cookies.set('start_offset',start_offset, -1)">
                                     <small class="text-muted">{% trans 'Number of days starting from the first day of the week to offset the default view.' %}</small>
                                 </label>
                             </div>
