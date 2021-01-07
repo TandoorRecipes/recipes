@@ -129,6 +129,9 @@ def parse(x):
                 # only two arguments, first one is the amount which means this is the ingredient
                 ingredient = tokens[1]
         except ValueError:
-            # can't parse first argument as amount -> no unit -> parse everything as ingredient
-            ingredient, note = parse_ingredient(tokens)
+            try:
+                # can't parse first argument as amount -> no unit -> parse everything as ingredient
+                ingredient, note = parse_ingredient(tokens)
+            except ValueError:
+                ingredient = ' '.join(tokens[1:])
     return amount, unit.strip(), ingredient.strip(), note.strip()
