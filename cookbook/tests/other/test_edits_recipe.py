@@ -1,6 +1,6 @@
 import json
 
-from cookbook.helper.ingredient_parser import parse_ingredient
+from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.recipe_url_import import get_from_html
 from cookbook.tests.test_setup import TestBase
 
@@ -74,7 +74,8 @@ class TestEditsRecipe(TestBase):
             "ägg": (0, "", "ägg", ""),
             "50 g smör eller margarin": (50, "g", "smör eller margarin", ""),
             "3,5 l Wasser": (3.5, "l", "Wasser", ""),
-            "3.5 l Wasser": (3.5, "l", "Wasser", "")
+            "3.5 l Wasser": (3.5, "l", "Wasser", ""),
+            "400 g Karotte(n)": (400, "g", "Karotte(n)", "")
         }
         # for German you could say that if an ingredient does not have an amount and it starts with a lowercase letter, then that is a unit ("etwas", "evtl.")
         # does not apply to English tho
@@ -83,5 +84,5 @@ class TestEditsRecipe(TestBase):
         count = 0
         for key, val in expectations.items():
             count += 1
-            parsed = parse_ingredient(key)
-            self.assertNotEqual(val, parsed)
+            parsed = parse(key)
+            self.assertEqual(val, parsed)

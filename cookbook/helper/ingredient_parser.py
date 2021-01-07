@@ -58,6 +58,9 @@ def parse_ingredient(tokens):
     ingredient = ''
     note = ''
     if tokens[-1].endswith(')'):
+        # Check if the matching opening bracket is in the same token
+        if ((not tokens[-1].startswith('(')) and ('(' in tokens[-1])):
+            return parse_ingredient_with_comma(tokens)
         # last argument ends with closing bracket -> look for opening bracket
         start = len(tokens) - 1
         while not tokens[start].startswith('(') and not start == 0:
@@ -126,6 +129,9 @@ def parse(x):
                 # only two arguments, first one is the amount which means this is the ingredient
                 ingredient = tokens[1]
         except ValueError:
-            # can't parse first argument as amount -> no unit -> parse everything as ingredient
-            ingredient, note = parse_ingredient(tokens)
+            try:
+                # can't parse first argument as amount -> no unit -> parse everything as ingredient
+                ingredient, note = parse_ingredient(tokens)
+            except ValueError:
+                ingredient = ' '.join(tokens[1:])
     return amount, unit.strip(), ingredient.strip(), note.strip()
