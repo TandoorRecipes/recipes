@@ -122,7 +122,8 @@
                         </div>
                         <draggable class="list-group" :list="recipes"
                                    :group="{ name: 'plan', pull: 'clone', put: false }" :clone="cloneRecipe">
-                            <div class="list-group-item d-flex align-items-center justify-content-between" v-for="(element, index) in recipes" :key="element.id">
+                            <div class="list-group-item d-flex align-items-center justify-content-between"
+                                 v-for="(element, index) in recipes" :key="element.id">
                                 <span>
                                     <i class="fas fa-arrows-alt"></i> [[element.name]]
                                 </span>
@@ -369,8 +370,11 @@
         </div>
 
     </div>
-    
+
     <script src="{% url 'javascript-catalog' %}"></script>
+
+    <script src="{% static 'vue/components/Toast.js' %}" type="application/javascript"></script>
+
     <script type="application/javascript">
         moment.locale('{{request.LANGUAGE_CODE}}');
 
@@ -380,6 +384,7 @@
         let app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#app',
+            mixin: [toast_mixin],
             data: {
                 start_date: undefined,
                 start_offset: 0,
@@ -417,17 +422,11 @@
 
                 this.updatePlan();
                 this.getRecipes();
+
+                //this.makeToast('success', 'this actually works', 'success')
             },
             methods: {
-                makeToast: function (title, message, variant = null) {
-                    //TODO remove duplicate function in favor of central one
-                    this.$bvToast.toast(message, {
-                        title: title,
-                        variant: variant,
-                        toaster: 'b-toaster-top-center',
-                        solid: true
-                    })
-                },
+
                 updatePlan: function () {
                     this.dates = [];
                     for (var i = 0; i <= (this.number_of_days - 1); i++) {
