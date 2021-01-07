@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django_random_queryset import RandomManager
 
-from recipes.settings import COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT
+from recipes.settings import COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, STICKY_NAV_PREF_DEFAULT
 
 
 def get_user_name(self):
@@ -78,6 +78,7 @@ class UserPreference(models.Model):
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
+    sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
 
     def __str__(self):
         return str(self.user)

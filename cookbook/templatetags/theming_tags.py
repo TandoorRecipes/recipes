@@ -2,6 +2,7 @@ from django import template
 from django.templatetags.static import static
 
 from cookbook.models import UserPreference
+from recipes.settings import STICKY_NAV_PREF_DEFAULT
 
 register = template.Library()
 
@@ -27,6 +28,15 @@ def nav_color(request):
     if not request.user.is_authenticated:
         return 'primary'
     return request.user.userpreference.nav_color.lower()
+
+
+@register.simple_tag
+def sticky_nav(request):
+    if (not request.user.is_authenticated and STICKY_NAV_PREF_DEFAULT) or \
+            (request.user.is_authenticated and request.user.userpreference.sticky_navbar):
+        return 'position: sticky; top: 0; left: 0; z-index: 1000;'
+    else:
+        return ''
 
 
 @register.simple_tag
