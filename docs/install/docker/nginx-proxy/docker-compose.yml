@@ -17,8 +17,8 @@ services:
       - ./.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
-      - mediafiles:/opt/recipes/mediafiles
       - nginx_config:/opt/recipes/nginx/conf.d
+      - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
       - db_recipes
     networks:
@@ -29,10 +29,12 @@ services:
     restart: always
     env_file:
       - ./.env
+    depends_on:
+      - web_recipes
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static
-      - mediafiles:/media
+      - ./mediafiles:/media
     networks:
       - default
       - nginx-proxy
@@ -44,11 +46,5 @@ networks:
       name: nginx-proxy
 
 volumes:
-  nginx
-  staticfiles
-  mediafiles:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: './mediafiles'
+  nginx:
+  staticfiles:
