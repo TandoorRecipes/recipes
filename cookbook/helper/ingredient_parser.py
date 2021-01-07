@@ -58,6 +58,9 @@ def parse_ingredient(tokens):
     ingredient = ''
     note = ''
     if tokens[-1].endswith(')'):
+        # Check if the matching opening bracket is in the same token
+        if ((not tokens[-1].startswith('(')) and ('(' in tokens[-1])):
+            return parse_ingredient_with_comma(tokens)
         # last argument ends with closing bracket -> look for opening bracket
         start = len(tokens) - 1
         while not tokens[start].startswith('(') and not start == 0:
