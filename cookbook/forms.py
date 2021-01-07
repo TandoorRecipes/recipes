@@ -30,7 +30,7 @@ class UserPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = UserPreference
-        fields = ('default_unit', 'use_fractions', 'theme', 'nav_color', 'default_page', 'show_recent', 'search_style', 'plan_share', 'ingredient_decimals', 'shopping_auto_sync', 'comments')
+        fields = ('default_unit', 'use_fractions', 'theme', 'nav_color', 'sticky_navbar', 'default_page', 'show_recent', 'search_style', 'plan_share', 'ingredient_decimals', 'shopping_auto_sync', 'comments')
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
@@ -42,7 +42,8 @@ class UserPreferenceForm(forms.ModelForm):
             'comments': _('If you want to be able to create and see comments underneath recipes.'),
             'shopping_auto_sync': _(
                 'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
-                'of mobile data. If lower than instance limit it is reset when saving.')
+                'of mobile data. If lower than instance limit it is reset when saving.'),
+            'sticky_navbar': _('Makes the navbar stick to the top of the page.')
         }
 
         widgets = {
