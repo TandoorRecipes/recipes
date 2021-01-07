@@ -35,3 +35,4 @@ nav:
       - Updating: system/updating.md
       - Permission System: system/permissions.md
       - Backup: system/backup.md
+  - Contributing: contribute.md
