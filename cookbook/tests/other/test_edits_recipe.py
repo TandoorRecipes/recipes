@@ -1,6 +1,6 @@
 import json
 
-from cookbook.helper.ingredient_parser import parse_ingredient
+from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.recipe_url_import import get_from_html
 from cookbook.tests.test_setup import TestBase
 
@@ -83,5 +83,5 @@ class TestEditsRecipe(TestBase):
         count = 0
         for key, val in expectations.items():
             count += 1
-            parsed = parse_ingredient(key)
-            self.assertNotEqual(val, parsed)
+            parsed = parse(key)
+            self.assertEqual(val, parsed)
