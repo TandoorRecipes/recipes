@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'emoji_picker',
     'rest_framework',
     'rest_framework.authtoken',
+    'webpack_loader',
     'django_cleanup.apps.CleanupConfig',
     'cookbook.apps.CookbookConfig',
 ]
@@ -158,6 +159,21 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Settings regarding the vue webpack integration
+
+VUE_FRONTEND_DIR = os.path.join(BASE_DIR, 'vue')
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
+        'STATS_FILE': os.path.join(VUE_FRONTEND_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
