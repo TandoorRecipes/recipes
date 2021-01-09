@@ -1,0 +1,21 @@
+{
+  "name": "Recipes",
+  "description": "Application to manage, tag and search recipes.",
+  "icons": [
+    {
+      "src": "/static/manifest/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/manifest/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/search",
+  "background_color": "#18BC9C",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#18BC9C"
+}
