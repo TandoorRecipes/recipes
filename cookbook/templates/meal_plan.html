@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
-
+{% load render_bundle from webpack_loader %}
 {% block title %}{% trans 'Meal-Plan' %}{% endblock %}
 
 {% block extra_head %}
@@ -20,7 +20,12 @@
 
 {% block content %}
 
+    {% render_bundle 'chunk-vendors' %}
+    {% render_bundle 'vue_app_01' %}
+
     <div id="app">
+        <HelloWorld msg="Welcome to Your Vue.js App"/>
+
         <div class="row">
             <div class="col-md-4 offset-md-4">
                 <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
