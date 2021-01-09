@@ -7,6 +7,7 @@ from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.db.models import Q, Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -105,9 +106,13 @@ def recipe_view(request, pk, share=None):
             bookmark.recipe = recipe
             bookmark.book = bookmark_form.cleaned_data['book']
 
-            bookmark.save()
-
-            messages.add_message(request, messages.SUCCESS, _('Bookmark saved!'))
+            try:
+                bookmark.save()
+            except IntegrityError as e:
+                if 'UNIQUE constraint' in str(e.args):
+                    messages.add_message(request, messages.ERROR, _('This recipe is already linked to the book!'))
+            else:
+                messages.add_message(request, messages.SUCCESS, _('Bookmark saved!'))
 
     comment_form = CommentForm()
     bookmark_form = RecipeBookEntryForm()
