@@ -265,6 +265,9 @@ class RecipeBookEntry(models.Model):
     def __str__(self):
         return self.recipe.name
 
+    class Meta:
+        unique_together = (('recipe', 'book'),)
+
 
 class MealType(models.Model):
     name = models.CharField(max_length=128)
