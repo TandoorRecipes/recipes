@@ -1,18 +1,24 @@
 from decimal import Decimal
 
 from django.contrib.auth.models import User
-from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
+from drf_writable_nested import (UniqueFieldsMixin,
+                                 WritableNestedModelSerializer)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from cookbook.models import MealPlan, MealType, Recipe, ViewLog, UserPreference, Storage, Sync, SyncLog, Keyword, Unit, Ingredient, Comment, RecipeImport, RecipeBook, RecipeBookEntry, ShareLink, CookLog, Food, Step, ShoppingList, \
-    ShoppingListEntry, ShoppingListRecipe, NutritionInformation
+from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
+                             MealPlan, MealType, NutritionInformation, Recipe,
+                             RecipeBook, RecipeBookEntry, RecipeImport,
+                             ShareLink, ShoppingList, ShoppingListEntry,
+                             ShoppingListRecipe, Step, Storage, Sync, SyncLog,
+                             Unit, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
 
 
 class CustomDecimalField(serializers.Field):
     """
-        Custom decimal field to normalize useless decimal places and allow commas as decimal separators
+    Custom decimal field to normalize useless decimal places
+    and allow commas as decimal separators
     """
 
     def to_representation(self, value):
@@ -47,15 +53,21 @@ class UserNameSerializer(WritableNestedModelSerializer):
 class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
-        fields = ('user', 'theme', 'nav_color', 'default_unit', 'default_page', 'search_style', 'show_recent',
-                  'plan_share', 'ingredient_decimals', 'comments')
+        fields = (
+            'user', 'theme', 'nav_color', 'default_unit', 'default_page',
+            'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
+            'comments'
+        )
         read_only_fields = ['user']
 
 
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
-        fields = ('id', 'name', 'method', 'username', 'password', 'token', 'created_by')
+        fields = (
+            'id', 'name', 'method', 'username', 'password',
+            'token', 'created_by'
+        )
 
         extra_kwargs = {
             'password': {'write_only': True},
@@ -66,7 +78,10 @@ class StorageSerializer(serializers.ModelSerializer):
 class SyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sync
-        fields = ('id', 'storage', 'path', 'active', 'last_checked', 'created_at', 'updated_at')
+        fields = (
+            'id', 'storage', 'path', 'active', 'last_checked',
+            'created_at', 'updated_at'
+        )
 
 
 class SyncLogSerializer(serializers.ModelSerializer):
@@ -82,13 +97,17 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def create(self, validated_data):
-        # since multi select tags dont have id's duplicate names might be routed to create
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
         obj, created = Keyword.objects.get_or_create(**validated_data)
         return obj
 
     class Meta:
         model = Keyword
-        fields = ('id', 'name', 'icon', 'label', 'description', 'created_at', 'updated_at')
+        fields = (
+            'id', 'name', 'icon', 'label', 'description',
+            'created_at', 'updated_at'
+        )
 
         read_only_fields = ('id',)
 
@@ -96,7 +115,8 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
-        # since multi select tags dont have id's duplicate names might be routed to create
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
         obj, created = Unit.objects.get_or_create(**validated_data)
         return obj
 
@@ -109,7 +129,8 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
-        # since multi select tags dont have id's duplicate names might be routed to create
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
         obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 
@@ -129,7 +150,10 @@ class IngredientSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('id', 'food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
+        fields = (
+            'id', 'food', 'unit', 'amount', 'note', 'order',
+            'is_header', 'no_amount'
+        )
 
 
 class StepSerializer(WritableNestedModelSerializer):
@@ -137,7 +161,10 @@ class StepSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Step
-        fields = ('id', 'name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
+        fields = (
+            'id', 'name', 'type', 'instruction', 'ingredients',
+            'time', 'order', 'show_as_header'
+        )
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
@@ -153,7 +180,11 @@ class RecipeSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ['id', 'name', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'internal', 'nutrition', 'servings']
+        fields = (
+            'id', 'name', 'image', 'keywords', 'steps', 'working_time',
+            'waiting_time', 'created_by', 'created_at', 'updated_at',
+            'internal', 'nutrition', 'servings'
+        )
         read_only_fields = ['image', 'created_by', 'created_at']
 
     def create(self, validated_data):
@@ -209,7 +240,11 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MealPlan
-        fields = ('id', 'title', 'recipe', 'servings', 'note', 'note_markdown', 'date', 'meal_type', 'created_by', 'shared', 'recipe_name', 'meal_type_name')
+        fields = (
+            'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
+            'date', 'meal_type', 'created_by', 'shared', 'recipe_name',
+            'meal_type_name'
+        )
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
@@ -229,7 +264,9 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = ShoppingListEntry
-        fields = ('id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked')
+        fields = (
+            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked'
+        )
         read_only_fields = ('id',)
 
 
@@ -246,7 +283,10 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = ShoppingList
-        fields = ('id', 'uuid', 'note', 'recipes', 'entries', 'shared', 'finished', 'created_by', 'created_at',)
+        fields = (
+            'id', 'uuid', 'note', 'recipes', 'entries',
+            'shared', 'finished', 'created_by', 'created_at'
+        )
         read_only_fields = ('id',)
 
 
