@@ -1,8 +1,19 @@
-# flake8: noqa
-from cookbook.views.api import *
-from cookbook.views.data import *
-from cookbook.views.delete import *
-from cookbook.views.edit import *
-from cookbook.views.lists import *
-from cookbook.views.new import *
-from cookbook.views.views import *
+import cookbook.views.api
+import cookbook.views.data
+import cookbook.views.delete
+import cookbook.views.edit
+import cookbook.views.import_export
+import cookbook.views.lists
+import cookbook.views.new
+import cookbook.views.views
+
+__all__ = [
+    'api',
+    'data',
+    'delete',
+    'edit',
+    'import_export',
+    'lists',
+    'new',
+    'views',
+]
