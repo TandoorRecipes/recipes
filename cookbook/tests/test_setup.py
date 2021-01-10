@@ -1,6 +1,6 @@
 from django.contrib import auth
-from django.contrib.auth.models import User, Group
-from django.test import TestCase, Client
+from django.contrib.auth.models import Group, User
+from django.test import Client, TestCase
 
 
 class TestBase(TestCase):
@@ -38,8 +38,14 @@ class TestBase(TestCase):
         user.is_superuser = True
         user.save()
 
-    def batch_requests(self, clients, url, method='get', payload={}, content_type=''):
+    def batch_requests(
+            self, clients, url, method='get', payload={}, content_type=''
+    ):
         for c in clients:
             if method == 'get':
                 r = c[0].get(url)
-                self.assertEqual(r.status_code, c[1], msg=f'GET request failed for user {auth.get_user(c[0])} when testing url {url}')
+                self.assertEqual(
+                    r.status_code,
+                    c[1],
+                    msg=f'GET request failed for user {auth.get_user(c[0])} when testing url {url}'  # noqa: E501
+                )
