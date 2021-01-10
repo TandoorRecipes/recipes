@@ -1,5 +1,4 @@
 import markdown
-
 from markdown.treeprocessors import Treeprocessor
 
 
@@ -21,4 +20,8 @@ class StyleTreeprocessor(Treeprocessor):
 
 class MarkdownFormatExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
-        md.treeprocessors.register(StyleTreeprocessor(), 'StyleTreeprocessor', 10)
+        md.treeprocessors.register(
+            StyleTreeprocessor(),
+            'StyleTreeprocessor',
+            10
+        )
