@@ -29,7 +29,9 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
         obj.internal = True
         obj.save()
         obj.steps.add(Step.objects.create())
-        return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
+        return HttpResponseRedirect(
+            reverse('edit_recipe', kwargs={'pk': obj.pk})
+        )
 
     def get_success_url(self):
         return reverse('edit_recipe', kwargs={'pk': self.object.pk})
@@ -44,7 +46,9 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
 def share_link(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     link = ShareLink.objects.create(recipe=recipe, created_by=request.user)
-    return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': pk, 'share': link.uuid}))
+    return HttpResponseRedirect(
+        reverse('view_recipe', kwargs={'pk': pk, 'share': link.uuid})
+    )
 
 
 class KeywordCreate(GroupRequiredMixin, CreateView):
@@ -71,7 +75,9 @@ class StorageCreate(GroupRequiredMixin, CreateView):
         obj = form.save(commit=False)
         obj.created_by = self.request.user
         obj.save()
-        return HttpResponseRedirect(reverse('edit_storage', kwargs={'pk': obj.pk}))
+        return HttpResponseRedirect(
+            reverse('edit_storage', kwargs={'pk': obj.pk})
+        )
 
     def get_context_data(self, **kwargs):
         context = super(StorageCreate, self).get_context_data(**kwargs)
@@ -98,14 +104,25 @@ def create_new_external_recipe(request, import_id):
 
             RecipeImport.objects.get(id=import_id).delete()
 
-            messages.add_message(request, messages.SUCCESS, _('Imported new recipe!'))
+            messages.add_message(
+                request, messages.SUCCESS, _('Imported new recipe!')
+            )
             return redirect('list_recipe_import')
         else:
-            messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('There was an error importing this recipe!')
+            )
     else:
         new_recipe = RecipeImport.objects.get(id=import_id)
         form = ImportRecipeForm(
-            initial={'file_path': new_recipe.file_path, 'name': new_recipe.name, 'file_uid': new_recipe.file_uid})
+            initial={
+                'file_path': new_recipe.file_path,
+                'name': new_recipe.name,
+                'file_uid': new_recipe.file_uid
+            }
+        )
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
 
@@ -138,14 +155,28 @@ class MealPlanCreate(GroupRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = self.form_class(**self.get_form_kwargs())
-        form.fields['meal_type'].queryset = MealType.objects.filter(created_by=self.request.user).all()
+        form.fields['meal_type'].queryset = MealType.objects.filter(
+            created_by=self.request.user
+        ).all()
         return form
 
     def get_initial(self):
         return dict(
-            meal_type=self.request.GET['meal'] if 'meal' in self.request.GET else None,
-            date=datetime.strptime(self.request.GET['date'], '%Y-%m-%d') if 'date' in self.request.GET else None,
-            shared=self.request.user.userpreference.plan_share.all() if self.request.user.userpreference.plan_share else None
+            meal_type=(
+                self.request.GET['meal']
+                if 'meal' in self.request.GET
+                else None
+            ),
+            date=(
+                datetime.strptime(self.request.GET['date'], '%Y-%m-%d')
+                if 'date' in self.request.GET
+                else None
+            ),
+            shared=(
+                self.request.user.userpreference.plan_share.all()
+                if self.request.user.userpreference.plan_share
+                else None
+            )
         )
 
     def form_valid(self, form):
@@ -162,7 +193,7 @@ class MealPlanCreate(GroupRequiredMixin, CreateView):
         if recipe:
             if re.match(r'^([0-9])+$', recipe):
                 if Recipe.objects.filter(pk=int(recipe)).exists():
-                    context['default_recipe'] = Recipe.objects.get(pk=int(recipe))
+                    context['default_recipe'] = Recipe.objects.get(pk=int(recipe))  # noqa: E501
 
         return context
 
