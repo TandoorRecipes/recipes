@@ -1,30 +1,28 @@
-import copy
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from uuid import UUID
+
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash, authenticate
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.db.models import Q, Avg
+from django.db.models import Avg, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.decorators.clickjacking import xframe_options_exempt
-from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
-
-from django.conf import settings
+from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
 from cookbook.forms import *
 from cookbook.helper.permission_helper import group_required, share_link_valid
-from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLogTable
-
+from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
+                             ViewLogTable)
 from recipes.version import *
 
 
@@ -129,7 +127,8 @@ def recipe_view(request, pk, share=None):
 
     return render(request, 'recipe_view.html',
                   {'recipe': recipe, 'comments': comments, 'comment_form': comment_form,
-                   'bookmark_form': bookmark_form, 'share': share, 'user_servings': user_servings})
+                   'bookmark_form': bookmark_form, 'share': share, 'user_servings': user_servings
+                   })
 
 
 @group_required('user')
@@ -248,7 +247,8 @@ def user_settings(request):
 
     return render(request, 'settings.html',
                   {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form,
-                   'api_token': api_token})
+                   'api_token': api_token
+                   })
 
 
 @group_required('guest')
@@ -267,7 +267,8 @@ def system(request):
 
     return render(request, 'system.html',
                   {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres,
-                   'version': VERSION_NUMBER, 'ref': BUILD_REF, 'secret_key': secret_key})
+                   'version': VERSION_NUMBER, 'ref': BUILD_REF, 'secret_key': secret_key
+                   })
 
 
 def setup(request):

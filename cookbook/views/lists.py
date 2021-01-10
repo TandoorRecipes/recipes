@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django.shortcuts import render
@@ -9,8 +8,11 @@ from django_tables2 import RequestConfig
 
 from cookbook.filters import IngredientFilter, ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Keyword, SyncLog, RecipeImport, Storage, Food, ShoppingList, InviteLink
-from cookbook.tables import KeywordTable, ImportLogTable, RecipeImportTable, StorageTable, IngredientTable, ShoppingListTable, InviteLinkTable
+from cookbook.models import (Food, InviteLink, Keyword, RecipeImport,
+                             ShoppingList, Storage, SyncLog)
+from cookbook.tables import (ImportLogTable, IngredientTable, InviteLinkTable,
+                             KeywordTable, RecipeImportTable,
+                             ShoppingListTable, StorageTable)
 
 
 @group_required('user')

@@ -4,7 +4,6 @@ import re
 import uuid
 
 import requests
-from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
@@ -12,28 +11,45 @@ from django.contrib.auth.models import User
 from django.core import management
 from django.core.files import File
 from django.db.models import Q
-from django.http import HttpResponse, FileResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect
-from django.utils import timezone, dateformat
+from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
-from django.views.generic.base import View
 from icalendar import Calendar, Event
-from rest_framework import viewsets, permissions, decorators
+from PIL import Image
+from rest_framework import decorators, permissions, viewsets
 from rest_framework.exceptions import APIException
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
-from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
+from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
+                                   UpdateModelMixin)
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 
-from cookbook.helper.permission_helper import group_required, CustomIsOwner, CustomIsAdmin, CustomIsUser, CustomIsGuest, CustomIsShare, CustomIsShared
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
+                                               CustomIsOwner, CustomIsShare,
+                                               CustomIsShared, CustomIsUser,
+                                               group_required)
 from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.models import Recipe, Sync, Storage, CookLog, MealPlan, MealType, ViewLog, UserPreference, RecipeBook, Ingredient, Food, Step, Keyword, Unit, SyncLog, ShoppingListRecipe, ShoppingList, ShoppingListEntry
+from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
+                             MealType, Recipe, RecipeBook, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Step,
+                             Storage, Sync, SyncLog, Unit, UserPreference,
+                             ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.serializer import MealPlanSerializer, MealTypeSerializer, RecipeSerializer, ViewLogSerializer, UserNameSerializer, UserPreferenceSerializer, RecipeBookSerializer, IngredientSerializer, FoodSerializer, StepSerializer, \
-    KeywordSerializer, RecipeImageSerializer, StorageSerializer, SyncSerializer, SyncLogSerializer, UnitSerializer, ShoppingListSerializer, ShoppingListRecipeSerializer, ShoppingListEntrySerializer, ShoppingListEntryCheckedSerializer, \
-    ShoppingListAutoSyncSerializer
+from cookbook.serializer import (FoodSerializer, IngredientSerializer,
+                                 KeywordSerializer, MealPlanSerializer,
+                                 MealTypeSerializer, RecipeBookSerializer,
+                                 RecipeImageSerializer, RecipeSerializer,
+                                 ShoppingListAutoSyncSerializer,
+                                 ShoppingListEntrySerializer,
+                                 ShoppingListRecipeSerializer,
+                                 ShoppingListSerializer, StepSerializer,
+                                 StorageSerializer, SyncLogSerializer,
+                                 SyncSerializer, UnitSerializer,
+                                 UserNameSerializer, UserPreferenceSerializer,
+                                 ViewLogSerializer)
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
