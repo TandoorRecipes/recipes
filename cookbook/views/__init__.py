@@ -1,3 +1,4 @@
+# flake8: noqa
 from cookbook.views.api import *
 from cookbook.views.data import *
 from cookbook.views.delete import *
