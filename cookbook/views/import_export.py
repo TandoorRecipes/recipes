@@ -5,7 +5,7 @@ from json import JSONDecodeError
 
 from django.contrib import messages
 from django.core.files.base import ContentFile
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _

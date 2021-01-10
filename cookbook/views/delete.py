@@ -1,15 +1,17 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
-from cookbook.helper.permission_helper import group_required, GroupRequiredMixin, OwnerRequiredMixin
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, RecipeBook, \
-    RecipeBookEntry, MealPlan, Food, InviteLink
+from cookbook.helper.permission_helper import (GroupRequiredMixin,
+                                               OwnerRequiredMixin,
+                                               group_required)
+from cookbook.models import (Comment, InviteLink, Keyword, MealPlan, Recipe,
+                             RecipeBook, RecipeBookEntry, RecipeImport,
+                             Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 

@@ -7,12 +7,16 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, RecipeBookForm, FoodForm, FoodMergeForm
-from cookbook.helper.permission_helper import OwnerRequiredMixin
-from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, Ingredient, RecipeBook, \
-    MealPlan, Food, MealType
+from cookbook.forms import (CommentForm, ExternalRecipeForm, FoodForm,
+                            FoodMergeForm, KeywordForm, MealPlanForm,
+                            RecipeBookForm, StorageForm, SyncForm,
+                            UnitMergeForm)
+from cookbook.helper.permission_helper import (GroupRequiredMixin,
+                                               OwnerRequiredMixin,
+                                               group_required)
+from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
+                             MealType, Recipe, RecipeBook, RecipeImport,
+                             Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 

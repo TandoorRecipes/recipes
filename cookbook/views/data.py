@@ -3,19 +3,20 @@ from datetime import datetime
 from io import BytesIO
 
 import requests
-from PIL import Image, UnidentifiedImageError
 from django.contrib import messages
 from django.core.files import File
 from django.db.transaction import atomic
-from django.utils.translation import gettext as _
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
+from PIL import Image, UnidentifiedImageError
 
-from cookbook.forms import SyncForm, BatchEditForm
-from cookbook.helper.permission_helper import group_required, has_group_permission
+from cookbook.forms import BatchEditForm, SyncForm
+from cookbook.helper.permission_helper import (group_required,
+                                               has_group_permission)
 from cookbook.models import *
 from cookbook.tables import SyncTable
 
