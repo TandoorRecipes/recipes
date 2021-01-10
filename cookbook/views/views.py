@@ -359,6 +359,10 @@ def api_info(request):
     return render(request, 'api_info.html', {})
 
 
+def offline(request):
+    return render(request, 'offline.html', {})
+
+
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))

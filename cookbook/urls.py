@@ -1,6 +1,7 @@
 from pydoc import locate
 
 from django.urls import path, include
+from django.views.generic import TemplateView
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 
@@ -41,6 +42,8 @@ urlpatterns = [
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
+    path('offline/', views.offline, name='view_offline'),
+    path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service_worker'),
     path('test/', views.test, name='view_test'),
 
     path('import/', import_export.import_recipe, name='view_import'),
