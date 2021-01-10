@@ -1,20 +1,16 @@
 """
 Source: https://djangosnippets.org/snippets/1703/
 """
+from cookbook.models import ShareLink
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import ValidationError
-
-from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.translation import gettext as _
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 
-from cookbook.models import ShareLink
-
-
-# Helper Functions
 
 def get_allowed_groups(groups_required):
     """
@@ -34,8 +30,8 @@ def get_allowed_groups(groups_required):
 def has_group_permission(user, groups):
     """
     Tests if a given user is member of a certain group (or any higher group)
-    Superusers always bypass permission checks. Unauthenticated users cant be member of any
-    group thus always return false.
+    Superusers always bypass permission checks.
+    Unauthenticated users cant be member of any group thus always return false.
     :param user: django auth user object
     :param groups: list or tuple of groups the user should be checked for
     :return: True if user is in allowed groups, false otherwise
@@ -44,7 +40,8 @@ def has_group_permission(user, groups):
         return False
     groups_allowed = get_allowed_groups(groups)
     if user.is_authenticated:
-        if user.is_superuser | bool(user.groups.filter(name__in=groups_allowed)):
+        if (user.is_superuser
+                | bool(user.groups.filter(name__in=groups_allowed))):
             return True
     return False
 
@@ -52,13 +49,15 @@ def has_group_permission(user, groups):
 def is_object_owner(user, obj):
     """
     Tests if a given user is the owner of a given object
-    test performed by checking user against the objects user and create_by field (if exists)
+    test performed by checking user against the objects user
+    and create_by field (if exists)
     superusers bypass all checks, unauthenticated users cannot own anything
     :param user django auth user object
     :param obj any object that should be tested
     :return: true if user is owner of object, false otherwise
     """
-    # TODO this could be improved/cleaned up by adding get_owner methods to all models that allow owner checks
+    # TODO this could be improved/cleaned up by adding
+    #      get_owner methods to all models that allow owner checks
     if not user.is_authenticated:
         return False
     if user.is_superuser:
@@ -81,7 +80,8 @@ def is_object_shared(user, obj):
     :param obj any object that should be tested
     :return: true if user is shared for object, false otherwise
     """
-    # TODO this could be improved/cleaned up by adding share checks for relevant objects
+    # TODO this could be improved/cleaned up by adding
+    #      share checks for relevant objects
     if not user.is_authenticated:
         return False
     if user.is_superuser:
@@ -94,10 +94,14 @@ def share_link_valid(recipe, share):
     Verifies the validity of a share uuid
     :param recipe: recipe object
     :param share: share uuid
-    :return: true if a share link with the given recipe and uuid exists, false otherwise
+    :return: true if a share link with the given recipe and uuid exists
     """
     try:
-        return True if ShareLink.objects.filter(recipe=recipe, uuid=share).exists() else False
+        return (
+            True
+            if ShareLink.objects.filter(recipe=recipe, uuid=share).exists()
+            else False
+        )
     except ValidationError:
         return False
 
@@ -106,8 +110,8 @@ def share_link_valid(recipe, share):
 
 def group_required(*groups_required):
     """
-    Decorator that tests the requesting user to be member of at least one of the provided groups
-    or higher level groups
+    Decorator that tests the requesting user to be member
+    of at least one of the provided groups or higher level groups
     :param groups_required: list of required groups
     :return: true if member of group, false otherwise
     """
@@ -127,24 +131,40 @@ class GroupRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         if not has_group_permission(request.user, self.groups_required):
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('You do not have the required permissions to view this page!')  # noqa: E501
+            )
             return HttpResponseRedirect(reverse_lazy('index'))
 
-        return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super(GroupRequiredMixin, self) \
+            .dispatch(request, *args, **kwargs)
 
 
 class OwnerRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
-            return HttpResponseRedirect(reverse_lazy('login') + '?next=' + request.path)
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('You are not logged in and therefore cannot view this page!')
+            )
+            return HttpResponseRedirect(
+                reverse_lazy('login') + '?next=' + request.path
+            )
         else:
             if not is_object_owner(request.user, self.get_object()):
-                messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
+                )
                 return HttpResponseRedirect(reverse('index'))
 
-        return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super(OwnerRequiredMixin, self) \
+            .dispatch(request, *args, **kwargs)
 
 
 # Django Rest Framework Permission classes
@@ -155,7 +175,7 @@ class CustomIsOwner(permissions.BasePermission):
     verifies user has ownership over object
     (either user or created_by or user is request user)
     """
-    message = _('You cannot interact with this object as it is not owned by you!')
+    message = _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
@@ -164,12 +184,13 @@ class CustomIsOwner(permissions.BasePermission):
         return is_object_owner(request.user, obj)
 
 
-class CustomIsShared(permissions.BasePermission):  # TODO function duplicate/too similar name
+# TODO function duplicate/too similar name
+class CustomIsShared(permissions.BasePermission):
     """
     Custom permission class for django rest framework views
     verifies user is shared for the object he is trying to access
     """
-    message = _('You cannot interact with this object as it is not owned by you!')
+    message = _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
