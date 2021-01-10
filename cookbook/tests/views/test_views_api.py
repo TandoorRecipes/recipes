@@ -1,8 +1,7 @@
-from django.contrib import auth
-from django.urls import reverse
-
 from cookbook.models import Recipe
 from cookbook.tests.views.test_views import TestViews
+from django.contrib import auth
+from django.urls import reverse
 
 
 class TestViewsApi(TestViews):
