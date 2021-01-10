@@ -33,7 +33,8 @@ def delete_recipe_source(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
 
     if recipe.storage.method == Storage.DROPBOX:
-        Dropbox.delete_file(recipe)  # TODO central location to handle storage type switches
+        # TODO central location to handle storage type switches
+        Dropbox.delete_file(recipe)
     if recipe.storage.method == Storage.NEXTCLOUD:
         Nextcloud.delete_file(recipe)
 
@@ -96,7 +97,11 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
         try:
             return self.delete(request, *args, **kwargs)
         except ProtectedError:
-            messages.add_message(request, messages.WARNING, _('Could not delete this storage backend as it is used in at least one monitor.'))
+            messages.add_message(
+                request,
+                messages.WARNING,
+                _('Could not delete this storage backend as it is used in at least one monitor.')  # noqa: E501
+            )
             return HttpResponseRedirect(reverse('list_storage'))
 
 
@@ -130,10 +135,16 @@ class RecipeBookEntryDelete(GroupRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        if not (obj.book.created_by == request.user or request.user.is_superuser):
-            messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
+        if not (obj.book.created_by == request.user
+                or request.user.is_superuser):
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
+            )
             return HttpResponseRedirect(reverse('index'))
-        return super(RecipeBookEntryDelete, self).dispatch(request, *args, **kwargs)
+        return super(RecipeBookEntryDelete, self) \
+            .dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(RecipeBookEntryDelete, self).get_context_data(**kwargs)
