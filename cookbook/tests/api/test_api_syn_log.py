@@ -1,11 +1,9 @@
 import json
 
-from django.contrib import auth
-from django.db.models import ProtectedError
-from django.urls import reverse
-
 from cookbook.models import Storage, Sync, SyncLog
 from cookbook.tests.views.test_views import TestViews
+from django.contrib import auth
+from django.urls import reverse
 
 
 class TestApiSyncLog(TestViews):
@@ -26,12 +24,22 @@ class TestApiSyncLog(TestViews):
             path='path'
         )
 
-        self.sync_log = SyncLog.objects.create(sync=self.sync, status='success')
+        self.sync_log = SyncLog.objects.create(
+            sync=self.sync, status='success'
+        )
 
     def test_sync_log_list(self):
         # verify view permissions are applied accordingly
-        self.batch_requests([(self.anonymous_client, 403), (self.guest_client_1, 403), (self.user_client_1, 403), (self.admin_client_1, 200), (self.superuser_client, 200)],
-                            reverse('api:synclog-list'))
+        self.batch_requests(
+            [
+                (self.anonymous_client, 403),
+                (self.guest_client_1, 403),
+                (self.user_client_1, 403),
+                (self.admin_client_1, 200),
+                (self.superuser_client, 200)
+            ],
+            reverse('api:synclog-list')
+        )
 
         # verify log entry is returned
         r = self.admin_client_1.get(reverse('api:synclog-list'))
@@ -42,10 +50,21 @@ class TestApiSyncLog(TestViews):
 
     def test_sync_log_update(self):
         # read only view
-        r = self.admin_client_1.patch(reverse('api:synclog-detail', args={self.sync.id}), {'path': 'new'}, content_type='application/json')
+        r = self.admin_client_1.patch(
+            reverse(
+                'api:synclog-detail',
+                args={self.sync.id}
+            ),
+            {'path': 'new'},
+            content_type='application/json'
+        )
         self.assertEqual(r.status_code, 405)
 
     def test_sync_log_delete(self):
         # read only view
-        r = self.admin_client_1.delete(reverse('api:synclog-detail', args={self.sync.id}))
+        r = self.admin_client_1.delete(
+            reverse(
+                'api:synclog-detail',
+                args={self.sync.id})
+        )
         self.assertEqual(r.status_code, 405)
