@@ -70,8 +70,10 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
             filter_list = self.request.query_params.get('filter_list', None)
             if filter_list is not None:
                 queryset = queryset.filter(pk__in=json.loads(filter_list))
-        except ValueError as e:
-            raise APIException(_('Parameter filter_list incorrectly formatted'))
+        except ValueError:
+            raise APIException(
+                _('Parameter filter_list incorrectly formatted')
+            )
 
         return queryset
 
@@ -134,7 +136,8 @@ class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
        list:
        optional parameters
 
-       - **query**: search keywords for a string contained in the keyword name (case in-sensitive)
+       - **query**: search keywords for a string contained
+                    in the keyword name (case in-sensitive)
        - **limit**: limits the amount of returned results
        """
     queryset = Keyword.objects.all()
@@ -154,7 +157,12 @@ class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
 
-class RecipeBookViewSet(RetrieveModelMixin, UpdateModelMixin, ListModelMixin, viewsets.GenericViewSet):
+class RecipeBookViewSet(
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    ListModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
     permission_classes = [CustomIsOwner, CustomIsAdmin]
@@ -179,7 +187,10 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]  # TODO fix permissions
 
     def get_queryset(self):
-        queryset = MealPlan.objects.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).distinct().all()
+        queryset = MealPlan.objects.filter(
+            Q(created_by=self.request.user) |
+            Q(shared=self.request.user)
+        ).distinct().all()
 
         from_date = self.request.query_params.get('from_date', None)
         if from_date is not None:
@@ -193,15 +204,16 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
 class MealTypeViewSet(viewsets.ModelViewSet):
     """
-    list:
-    returns list of meal types created by the requesting user ordered by the order field
+    returns list of meal types created by the
+    requesting user ordered by the order field.
     """
     queryset = MealType.objects.order_by('order').all()
     serializer_class = MealTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = MealType.objects.order_by('order', 'id').filter(created_by=self.request.user).all()
+        queryset = MealType.objects.order_by('order', 'id') \
+            .filter(created_by=self.request.user).all()
         return queryset
 
 
@@ -222,12 +234,14 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     list:
     optional parameters
 
-    - **query**: search recipes for a string contained in the recipe name (case in-sensitive)
+    - **query**: search recipes for a string contained
+                 in the recipe name (case in-sensitive)
     - **limit**: limits the amount of returned results
     """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = [CustomIsShare | CustomIsGuest]  # TODO split read and write permission for meal plan guest
+    # TODO split read and write permission for meal plan guest
+    permission_classes = [CustomIsShare | CustomIsGuest]
 
     def get_queryset(self):
 
@@ -247,7 +261,9 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     )
     def image(self, request, pk):
         obj = self.get_object()
-        serializer = self.serializer_class(obj, data=request.data, partial=True)
+        serializer = self.serializer_class(
+            obj, data=request.data, partial=True
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -291,7 +307,9 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return self.queryset
-        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).all()
+        return self.queryset.filter(
+            Q(created_by=self.request.user) | Q(shared=self.request.user)
+        ).all()
 
     def get_serializer_class(self):
         autosync = self.request.query_params.get('autosync', None)
@@ -306,7 +324,8 @@ class ViewLogViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
+        queryset = ViewLog.objects \
+                       .filter(created_by=self.request.user).all()[:5]
         return queryset
 
 
@@ -323,7 +342,8 @@ def get_recipe_provider(recipe):
 
 def update_recipe_links(recipe):
     if not recipe.link:
-        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)  # TODO response validation in apis
+        # TODO response validation in apis
+        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
 
     recipe.save()
 
@@ -362,10 +382,14 @@ def sync_all(request):
                 error = True
 
     if not error:
-        messages.add_message(request, messages.SUCCESS, _('Sync successful!'))
+        messages.add_message(
+            request, messages.SUCCESS, _('Sync successful!')
+        )
         return redirect('list_recipe_import')
     else:
-        messages.add_message(request, messages.ERROR, _('Error synchronizing with Storage'))
+        messages.add_message(
+            request, messages.ERROR, _('Error synchronizing with Storage')
+        )
         return redirect('list_recipe_import')
 
 
@@ -390,7 +414,9 @@ def log_cooking(request, recipe_id):
 
 @group_required('user')
 def get_plan_ical(request, from_date, to_date):
-    queryset = MealPlan.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
+    queryset = MealPlan.objects.filter(
+        Q(created_by=request.user) | Q(shared=request.user)
+    ).distinct().all()
 
     if from_date is not None:
         queryset = queryset.filter(date__gte=from_date)
@@ -410,7 +436,7 @@ def get_plan_ical(request, from_date, to_date):
         cal.add_component(event)
 
     response = FileResponse(io.BytesIO(cal.to_ical()))
-    response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'
+    response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'  # noqa: E501
 
     return response
 
@@ -419,14 +445,28 @@ def get_plan_ical(request, from_date, to_date):
 def recipe_from_url(request):
     url = request.POST['url']
 
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
+    }
     try:
         response = requests.get(url, headers=headers)
     except requests.exceptions.ConnectionError:
-        return JsonResponse({'error': True, 'msg': _('The requested page could not be found.')}, status=400)
+        return JsonResponse(
+            {
+                'error': True,
+                'msg': _('The requested page could not be found.')
+            },
+            status=400
+        )
 
     if response.status_code == 403:
-        return JsonResponse({'error': True, 'msg': _('The requested page refused to provide any information (Status Code 403).')}, status=400)
+        return JsonResponse(
+            {
+                'error': True,
+                'msg': _('The requested page refused to provide any information (Status Code 403).')  # noqa: E501
+            },
+            status=400
+        )
     return get_from_html(response.text, url)
 
 
@@ -435,9 +475,11 @@ def get_backup(request):
         return HttpResponse('', status=403)
 
     buf = io.StringIO()
-    management.call_command('dumpdata', exclude=['contenttypes', 'auth'], stdout=buf)
+    management.call_command(
+        'dumpdata', exclude=['contenttypes', 'auth'], stdout=buf
+    )
 
     response = FileResponse(buf.getvalue())
-    response["Content-Disposition"] = f'attachment; filename=backup{date_format(timezone.now(), format="SHORT_DATETIME_FORMAT", use_l10n=True)}.json'
+    response["Content-Disposition"] = f'attachment; filename=backup{date_format(timezone.now(), format="SHORT_DATETIME_FORMAT", use_l10n=True)}.json'  # noqa: E501
 
     return response
