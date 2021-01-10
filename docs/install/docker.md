@@ -162,7 +162,7 @@ networks:
     external: true
 
 volumes:
-  nginx:
+  nginx_config:
   staticfiles:
 ```
 
@@ -233,7 +233,7 @@ networks:
       name: nginx-proxy
 
 volumes:
-  nginx:
+  nginx_config:
   staticfiles:
 ```
 
