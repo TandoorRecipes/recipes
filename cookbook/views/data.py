@@ -1,4 +1,5 @@
 import json
+import uuid
 from datetime import datetime
 from io import BytesIO
 
@@ -17,7 +18,8 @@ from PIL import Image, UnidentifiedImageError
 from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.permission_helper import (group_required,
                                                has_group_permission)
-from cookbook.models import *
+from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
+                             RecipeImport, Step, Sync, Unit)
 from cookbook.tables import SyncTable
 
 
@@ -25,7 +27,10 @@ from cookbook.tables import SyncTable
 def sync(request):
     if request.method == "POST":
         if not has_group_permission(request.user, ['admin']):
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            messages.add_message(
+                request, messages.ERROR,
+                _('You do not have the required permissions to view this page!')  # noqa: E501
+            )
             return HttpResponseRedirect(reverse('data_sync'))
         form = SyncForm(request.POST)
         if form.is_valid():
@@ -39,9 +44,15 @@ def sync(request):
         form = SyncForm()
 
     monitored_paths = SyncTable(Sync.objects.all())
-    RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
+    RequestConfig(
+        request, paginate={'per_page': 25}
+    ).configure(monitored_paths)
 
-    return render(request, 'batch/monitor.html', {'form': form, 'monitored_paths': monitored_paths})
+    return render(
+        request,
+        'batch/monitor.html',
+        {'form': form, 'monitored_paths': monitored_paths}
+    )
 
 
 @group_required('user')
@@ -53,7 +64,13 @@ def sync_wait(request):
 def batch_import(request):
     imports = RecipeImport.objects.all()
     for new_recipe in imports:
-        recipe = Recipe(name=new_recipe.name, file_path=new_recipe.file_path, storage=new_recipe.storage, file_uid=new_recipe.file_uid, created_by=request.user)
+        recipe = Recipe(
+            name=new_recipe.name,
+            file_path=new_recipe.file_path,
+            storage=new_recipe.storage,
+            file_uid=new_recipe.file_uid,
+            created_by=request.user
+        )
         recipe.save()
         new_recipe.delete()
 
@@ -116,7 +133,8 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if kw['id'] != "null" and (k := Keyword.objects.filter(id=kw['id']).first()):
+            if kw['id'] != "null" \
+                    and (k := Keyword.objects.filter(id=kw['id']).first()):
                 recipe.keywords.add(k)
             elif data['all_keywords']:
                 k = Keyword.objects.create(name=kw['text'])
@@ -126,10 +144,14 @@ def import_url(request):
             ingredient = Ingredient()
 
             if ing['ingredient']['text'] != '':
-                ingredient.food, f_created = Food.objects.get_or_create(name=ing['ingredient']['text'])
+                ingredient.food, f_created = Food.objects.get_or_create(
+                    name=ing['ingredient']['text']
+                )
 
             if ing['unit'] and ing['unit']['text'] != '':
-                ingredient.unit, u_created = Unit.objects.get_or_create(name=ing['unit']['text'])
+                ingredient.unit, u_created = Unit.objects.get_or_create(
+                    name=ing['unit']['text']
+                )
 
             # TODO properly handle no_amount recipes
             if isinstance(ing['amount'], str):
@@ -138,7 +160,8 @@ def import_url(request):
                 except ValueError:
                     ingredient.no_amount = True
                     pass
-            elif isinstance(ing['amount'], float) or isinstance(ing['amount'], int):
+            elif isinstance(ing['amount'], float) \
+                    or isinstance(ing['amount'], int):
                 ingredient.amount = ing['amount']
             ingredient.note = ing['note'] if 'note' in ing else ''
 
@@ -159,7 +182,9 @@ def import_url(request):
 
                 im_io = BytesIO()
                 img.save(im_io, 'PNG', quality=70)
-                recipe.image = File(im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png')
+                recipe.image = File(
+                    im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png'
+                )
                 recipe.save()
             except UnidentifiedImageError:
                 pass
