@@ -9,12 +9,11 @@ from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
 from cookbook.forms import (ImportRecipeForm, InviteLinkForm, KeywordForm,
-                            MealPlanForm, RecipeBookForm, RecipeImport,
-                            Storage, StorageForm)
+                            MealPlanForm, RecipeBookForm, Storage, StorageForm)
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
 from cookbook.models import (InviteLink, Keyword, MealPlan, MealType, Recipe,
-                             RecipeBook, ShareLink, Step)
+                             RecipeBook, RecipeImport, ShareLink, Step)
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
