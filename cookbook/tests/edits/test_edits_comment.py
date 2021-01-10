@@ -1,8 +1,7 @@
-from django.contrib import auth
-from django.urls import reverse
-
 from cookbook.models import Comment, Recipe
 from cookbook.tests.views.test_views import TestViews
+from django.contrib import auth
+from django.urls import reverse
 
 
 class TestEditsComment(TestViews):
@@ -25,7 +24,17 @@ class TestEditsComment(TestViews):
         self.url = reverse('edit_comment', args=[self.comment.pk])
 
     def test_new_comment(self):
-        r = self.user_client_1.post(reverse('view_recipe', args=[self.recipe.pk]), {'comment-text': 'Test Comment Text', 'comment-recipe': self.recipe.pk})
+        r = self.user_client_1.post(
+            reverse(
+                'view_recipe',
+                args=[self.recipe.pk]
+            ),
+            {
+                'comment-text': 'Test Comment Text',
+                'comment-recipe': self.recipe.pk
+            }
+        )
+
         self.assertEqual(r.status_code, 200)
 
     def test_edit_comment_permissions(self):
