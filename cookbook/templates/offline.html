@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Offline" %}{% endblock %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div style="text-align: center">
+
+        <h1 class="">Offline</h1>
+        <br/>
+
+        <span>{% trans 'You are currently offline!' %}</span>
+        <span>{% trans 'This app does not (yet) support offline functionality. Please make sure to re-establish a network connection.' %}</span>
+        <br/>
+        <br/>
+        <i class="fas fa-search fa-8x"></i>
+        <br/>
+        <br/>
+
+
+        <br/>
+        <br/>
+    </div>
+
+{% endblock %}

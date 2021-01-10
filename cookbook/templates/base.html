@@ -49,7 +49,8 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %}" id="id_main_nav" style="{% sticky_nav request %}">
+<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %}" id="id_main_nav"
+     style="{% sticky_nav request %}">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
             aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -210,6 +211,18 @@
 
 {% block script %}
 {% endblock script %}
+
+<script type="application/javascript">
+    window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", { scope: '/' }).then(function (reg) {
+                console.log('Successfully registered service worker', reg);
+            }).catch(function (err) {
+                console.warn('Error whilst registering service worker', err);
+            });
+        }
+    });
+</script>
 
 </body>
 </html>
