@@ -4,13 +4,14 @@ from datetime import date, timedelta
 
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group, User
 from django.core.validators import MinLengthValidator
-from django.utils.translation import gettext as _
 from django.db import models
+from django.utils.translation import gettext as _
 from django_random_queryset import RandomManager
 
-from recipes.settings import COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, STICKY_NAV_PREF_DEFAULT
+from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
+                              STICKY_NAV_PREF_DEFAULT)
 
 
 def get_user_name(self):
@@ -39,7 +40,12 @@ class UserPreference(models.Model):
     FLATLY = 'FLATLY'
     SUPERHERO = 'SUPERHERO'
 
-    THEMES = ((BOOTSTRAP, 'Bootstrap'), (DARKLY, 'Darkly'), (FLATLY, 'Flatly'), (SUPERHERO, 'Superhero'))
+    THEMES = (
+        (BOOTSTRAP, 'Bootstrap'),
+        (DARKLY, 'Darkly'),
+        (FLATLY, 'Flatly'),
+        (SUPERHERO, 'Superhero')
+    )
 
     # Nav colors
     PRIMARY = 'PRIMARY'
@@ -51,14 +57,26 @@ class UserPreference(models.Model):
     LIGHT = 'LIGHT'
     DARK = 'DARK'
 
-    COLORS = ((PRIMARY, 'Primary'), (SECONDARY, 'Secondary'), (SUCCESS, 'Success'), (INFO, 'Info'), (WARNING, 'Warning'), (DANGER, 'Danger'), (LIGHT, 'Light'), (DARK, 'Dark'))
+    COLORS = (
+        (PRIMARY, 'Primary'),
+        (SECONDARY, 'Secondary'),
+        (SUCCESS, 'Success'), (INFO, 'Info'),
+        (WARNING, 'Warning'),
+        (DANGER, 'Danger'),
+        (LIGHT, 'Light'),
+        (DARK, 'Dark')
+    )
 
     # Default Page
     SEARCH = 'SEARCH'
     PLAN = 'PLAN'
     BOOKS = 'BOOKS'
 
-    PAGES = ((SEARCH, _('Search')), (PLAN, _('Meal-Plan')), (BOOKS, _('Books')),)
+    PAGES = (
+        (SEARCH, _('Search')),
+        (PLAN, _('Meal-Plan')),
+        (BOOKS, _('Books')),
+    )
 
     # Search Style
     SMALL = 'SMALL'
@@ -68,13 +86,21 @@ class UserPreference(models.Model):
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
-    nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
+    nav_color = models.CharField(
+        choices=COLORS, max_length=128, default=PRIMARY
+    )
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
-    default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
-    search_style = models.CharField(choices=SEARCH_STYLE, max_length=64, default=LARGE)
+    default_page = models.CharField(
+        choices=PAGES, max_length=64, default=SEARCH
+    )
+    search_style = models.CharField(
+        choices=SEARCH_STYLE, max_length=64, default=LARGE
+    )
     show_recent = models.BooleanField(default=True)
-    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
+    plan_share = models.ManyToManyField(
+        User, blank=True, related_name='plan_share_default'
+    )
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
@@ -90,7 +116,9 @@ class Storage(models.Model):
     STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (NEXTCLOUD, 'Nextcloud'))
 
     name = models.CharField(max_length=128)
-    method = models.CharField(choices=STORAGE_TYPES, max_length=128, default=DROPBOX)
+    method = models.CharField(
+        choices=STORAGE_TYPES, max_length=128, default=DROPBOX
+    )
     username = models.CharField(max_length=128, blank=True, null=True)
     password = models.CharField(max_length=128, blank=True, null=True)
     token = models.CharField(max_length=512, blank=True, null=True)
@@ -138,7 +166,9 @@ class Keyword(models.Model):
 
 
 class Unit(models.Model):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    name = models.CharField(
+        unique=True, max_length=128, validators=[MinLengthValidator(1)]
+    )
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -146,16 +176,24 @@ class Unit(models.Model):
 
 
 class Food(models.Model):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
-    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(
+        unique=True, max_length=128, validators=[MinLengthValidator(1)]
+    )
+    recipe = models.ForeignKey(
+        'Recipe', null=True, blank=True, on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return self.name
 
 
 class Ingredient(models.Model):
-    food = models.ForeignKey(Food, on_delete=models.PROTECT, null=True, blank=True)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
+    food = models.ForeignKey(
+        Food, on_delete=models.PROTECT, null=True, blank=True
+    )
+    unit = models.ForeignKey(
+        Unit, on_delete=models.PROTECT, null=True, blank=True
+    )
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
@@ -174,7 +212,11 @@ class Step(models.Model):
     TIME = 'TIME'
 
     name = models.CharField(max_length=128, default='', blank=True)
-    type = models.CharField(choices=((TEXT, _('Text')), (TIME, _('Time')),), default=TEXT, max_length=16)
+    type = models.CharField(
+        choices=((TEXT, _('Text')), (TIME, _('Time')),),
+        default=TEXT,
+        max_length=16
+    )
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)
     time = models.IntegerField(default=0, blank=True)
@@ -191,20 +233,26 @@ class Step(models.Model):
 
 class NutritionInformation(models.Model):
     fats = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    carbohydrates = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    carbohydrates = models.DecimalField(
+        default=0, decimal_places=16, max_digits=32
+    )
     proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    source = models.CharField(max_length=512, default="", null=True, blank=True)
+    source = models.CharField(
+        max_length=512, default="", null=True, blank=True
+    )
 
     def __str__(self):
-        return f'Nutrition'
+        return 'Nutrition'
 
 
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
     servings = models.IntegerField(default=1)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
-    storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
+    storage = models.ForeignKey(
+        Storage, on_delete=models.PROTECT, blank=True, null=True
+    )
     file_uid = models.CharField(max_length=256, default="", blank=True)
     file_path = models.CharField(max_length=512, default="", blank=True)
     link = models.CharField(max_length=512, null=True, blank=True)
@@ -214,7 +262,9 @@ class Recipe(models.Model):
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
-    nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
+    nutrition = models.ForeignKey(
+        NutritionInformation, blank=True, null=True, on_delete=models.CASCADE
+    )
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -251,7 +301,9 @@ class RecipeBook(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
-    shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
+    shared = models.ManyToManyField(
+        User, blank=True, related_name='shared_with'
+    )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -265,6 +317,9 @@ class RecipeBookEntry(models.Model):
     def __str__(self):
         return self.recipe.name
 
+    class Meta:
+        unique_together = (('recipe', 'book'),)
+
 
 class MealType(models.Model):
     name = models.CharField(max_length=128)
@@ -276,11 +331,15 @@ class MealType(models.Model):
 
 
 class MealPlan(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, blank=True, null=True
+    )
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
+    shared = models.ManyToManyField(
+        User, blank=True, related_name='plan_share'
+    )
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
     date = models.DateField()
@@ -298,7 +357,9 @@ class MealPlan(models.Model):
 
 
 class ShoppingListRecipe(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, null=True, blank=True
+    )
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
 
     def __str__(self):
@@ -312,9 +373,13 @@ class ShoppingListRecipe(models.Model):
 
 
 class ShoppingListEntry(models.Model):
-    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)
+    list_recipe = models.ForeignKey(
+        ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True
+    )
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
+    unit = models.ForeignKey(
+        Unit, on_delete=models.CASCADE, null=True, blank=True
+    )
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
@@ -334,7 +399,9 @@ class ShoppingList(models.Model):
     note = models.TextField(blank=True, null=True)
     recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
     entries = models.ManyToManyField(ShoppingListEntry, blank=True)
-    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
+    shared = models.ManyToManyField(
+        User, blank=True, related_name='list_share'
+    )
     finished = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -358,7 +425,9 @@ class InviteLink(models.Model):
     username = models.CharField(blank=True, max_length=64)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     valid_until = models.DateField(default=date.today() + timedelta(days=14))
-    used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
+    used_by = models.ForeignKey(
+        User, null=True, on_delete=models.CASCADE, related_name='used_by'
+    )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -1,14 +1,16 @@
+from cookbook.models import Food, Keyword, Recipe, Unit
+
 from dal import autocomplete
 
-from cookbook.models import Keyword, Recipe, Unit, Food
 
+class BaseAutocomplete(autocomplete.Select2QuerySetView):
+    model = None
 
-class KeywordAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-            return Keyword.objects.none()
+            return self.model.objects.none()
 
-        qs = Keyword.objects.all()
+        qs = self.model.objects.all()
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
@@ -16,40 +18,17 @@ class KeywordAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-class IngredientsAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Food.objects.none()
-
-        qs = Food.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__icontains=self.q)
-
-        return qs
+class KeywordAutocomplete(BaseAutocomplete):
+    model = Keyword
 
 
-class RecipeAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Recipe.objects.none()
-
-        qs = Recipe.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__icontains=self.q)
-
-        return qs
+class IngredientsAutocomplete(BaseAutocomplete):
+    model = Food
 
 
-class UnitAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Unit.objects.none()
+class RecipeAutocomplete(BaseAutocomplete):
+    model = Recipe
 
-        qs = Unit.objects.all()
 
-        if self.q:
-            qs = qs.filter(name__icontains=self.q)
-
-        return qs
+class UnitAutocomplete(BaseAutocomplete):
+    model = Unit

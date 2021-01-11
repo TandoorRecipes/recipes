@@ -7,6 +7,7 @@ from cookbook.tests.test_setup import TestBase
 
 class TestEditsRecipe(TestBase):
 
+    # flake8: noqa
     def test_ld_json(self):
         test_list = [
             {'file': 'cookbook/tests/resources/websites/ld_json_1.html', 'result_length': 3218},
@@ -77,10 +78,10 @@ class TestEditsRecipe(TestBase):
             "3.5 l Wasser": (3.5, "l", "Wasser", ""),
             "400 g Karotte(n)": (400, "g", "Karotte(n)", "")
         }
-        # for German you could say that if an ingredient does not have an amount and it starts with a lowercase letter, then that is a unit ("etwas", "evtl.")
-        # does not apply to English tho
+        # for German you could say that if an ingredient does not have
+        # an amount # and it starts with a lowercase letter, then that
+        # is a unit ("etwas", "evtl.") does not apply to English tho
 
-        errors = 0
         count = 0
         for key, val in expectations.items():
             count += 1

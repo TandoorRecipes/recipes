@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import *
+
+from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
+                     MealPlan, MealType, NutritionInformation, Recipe,
+                     RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
+                     ShoppingList, ShoppingListEntry, ShoppingListRecipe,
+                     Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
+                     ViewLog)
 
 
 class SpaceAdmin(admin.ModelAdmin):
@@ -10,7 +16,10 @@ admin.site.register(Space, SpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style', 'comments')
+    list_display = (
+        'name', 'theme', 'nav_color',
+        'default_page', 'search_style', 'comments'
+    )
 
     @staticmethod
     def name(obj):
@@ -133,7 +142,10 @@ admin.site.register(ViewLog, ViewLogAdmin)
 
 
 class InviteLinkAdmin(admin.ModelAdmin):
-    list_display = ('username', 'group', 'valid_until', 'created_by', 'created_at', 'used_by')
+    list_display = (
+        'username', 'group', 'valid_until',
+        'created_by', 'created_at', 'used_by'
+    )
 
 
 admin.site.register(InviteLink, InviteLinkAdmin)
