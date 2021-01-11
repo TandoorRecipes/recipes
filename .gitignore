@@ -77,3 +77,4 @@ postgresql/
 
 
 /docker-compose.override.yml
+vue/node_modules
