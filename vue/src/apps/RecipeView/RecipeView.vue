@@ -15,10 +15,13 @@
 import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
 
-import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {makeToast} from "@/utils/utils.js";
+//import {gettext} from "@/utils/jsi18n";
+
+const _ = window.gettext
+
 import Step from "@/components/Step";
 import axios from "axios";
 
@@ -52,7 +55,7 @@ export default {
   mounted() {
     //makeToast("Error", "Error", "danger")
     this.loadRecipe(5)
-
+    console.log(_('Error'))
   },
   methods: {
     loadRecipe: function (recipe_id) {
@@ -62,6 +65,7 @@ export default {
         this.loading = false;
       }).catch((err) => {
         console.log(err)
+        makeToast('Error', 'There was an error loading a resource!', 'danger')
       })
     }
 
