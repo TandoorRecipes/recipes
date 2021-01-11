@@ -389,7 +389,7 @@ msgstr "Modifica di massa"
 
 #: cookbook/templates/base.html:98
 msgid "Storage Data"
-msgstr "Dati di archiviazione"
+msgstr "Dati e Archiviazione"
 
 #: cookbook/templates/base.html:102
 msgid "Storage Backends"
@@ -470,8 +470,8 @@ msgstr "Modifica di massa per ricette"
 #: cookbook/templates/batch/edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
-"Aggiungi le parole chiave specificate a tutte le ricette che contengono una "
-"parola"
+"Aggiungi a tutte le ricette che contengono una determinata stringa le parole"
+" chiave desiderate "
 
 #: cookbook/templates/batch/monitor.html:6 cookbook/views/edit.py:59
 msgid "Sync"
@@ -998,7 +998,7 @@ msgstr "Nuova Ricetta"
 
 #: cookbook/templates/index.html:47
 msgid "Website Import"
-msgstr "Importa da Sito Web"
+msgstr "Importa dal web"
 
 #: cookbook/templates/index.html:53
 msgid "Advanced Search"
@@ -1419,7 +1419,7 @@ msgstr "Commenti"
 #: cookbook/templates/recipe_view.html:469 cookbook/views/delete.py:108
 #: cookbook/views/edit.py:143
 msgid "Comment"
-msgstr "Commenta"
+msgstr "Commento"
 
 #: cookbook/templates/recipes_table.html:46
 #: cookbook/templates/url_import.html:55
@@ -1711,7 +1711,7 @@ msgstr "Importa da URL"
 
 #: cookbook/templates/url_import.html:23
 msgid "Enter website URL"
-msgstr "Inserisci la URL del sito web"
+msgstr "Inserisci l'indirizzo del sito web"
 
 #: cookbook/templates/url_import.html:44
 msgid "Recipe Name"
