@@ -1,8 +1,12 @@
 <template>
-  <div id="app">
-    <h1>Recipe View</h1>
+  <div id="app" v-if="!loading">
+    <h1>{{ recipe.name }}</h1>
 
-    {{ recipe }}
+    <img v-bind:src="recipe.image">
+
+    <div v-for="s in recipe.steps" v-bind:key="s.id">
+      <Step v-bind:step="s" v-bind:servings="servings"></Step>
+    </div>
   </div>
 
 </template>
@@ -15,25 +19,47 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {makeToast} from "@/utils/utils.js";
+import Step from "@/components/Step";
+import axios from "axios";
+
 
 Vue.use(BootstrapVue)
 
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+  state: {
+    servings: 1
+  }
+})
+
+
 export default {
-  name: 'App',
-  components: {},
+  name: 'RecipeView',
+  store: store,
+  components: {
+    Step
+  },
   data() {
     return {
-      recipe: undefined
+      loading: true,
+      recipe: undefined,
+      servings: 1,
     }
   },
   mounted() {
-    makeToast("Error", "Error", "danger")
+    //makeToast("Error", "Error", "danger")
     this.loadRecipe(5)
+
   },
   methods: {
     loadRecipe: function (recipe_id) {
-      fetch(`/api/recipe/${recipe_id}`).then((response) => {
+      axios.get(`/api/recipe/${recipe_id}`).then((response) => {
+
         this.recipe = response.data;
+        this.loading = false;
       }).catch((err) => {
         console.log(err)
       })

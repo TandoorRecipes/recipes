@@ -1,15 +1,19 @@
+{% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
+{% load static %}
+
+{% block title %}{{ recipe.name }}{% endblock %}
+
+{% block content %}
+
+    <div id="app">
+        <recipe-view></recipe-view>
+    </div>
+
+{% endblock %}
 
 
-<div id="app">
-    <app></app>
-</div>
-
-{% render_bundle 'chunk-vendors' %}
-{% render_bundle 'recipe_view' %}
-
-<script>
-
-
-
-</script>
+{% block script %}
+    {% render_bundle 'chunk-vendors' %}
+    {% render_bundle 'recipe_view' %}
+{% endblock %}
