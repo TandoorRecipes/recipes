@@ -1,11 +1,10 @@
 import uuid
 
-from django.contrib import auth
-from django.urls import reverse
-
 from cookbook.helper.permission_helper import share_link_valid
 from cookbook.models import Recipe, ShareLink
 from cookbook.tests.views.test_views import TestViews
+from django.contrib import auth
+from django.urls import reverse
 
 
 class TestViewsGeneral(TestViews):
@@ -31,14 +30,23 @@ class TestViewsGeneral(TestViews):
         self.assertIsNotNone(share)
         self.assertTrue(share_link_valid(internal_recipe, share.uuid))
 
-        url = reverse('view_recipe', kwargs={'pk': internal_recipe.pk, 'share': share.uuid})
+        url = reverse(
+            'view_recipe',
+            kwargs={'pk': internal_recipe.pk, 'share': share.uuid}
+        )
         r = self.anonymous_client.get(url)
         self.assertEqual(r.status_code, 200)
 
-        url = reverse('view_recipe', kwargs={'pk': (internal_recipe.pk + 1), 'share': share.uuid})
+        url = reverse(
+            'view_recipe',
+            kwargs={'pk': (internal_recipe.pk + 1), 'share': share.uuid}
+        )
         r = self.anonymous_client.get(url)
         self.assertEqual(r.status_code, 404)
 
-        url = reverse('view_recipe', kwargs={'pk': internal_recipe.pk, 'share': uuid.uuid4()})
+        url = reverse(
+            'view_recipe',
+            kwargs={'pk': internal_recipe.pk, 'share': uuid.uuid4()}
+        )
         r = self.anonymous_client.get(url)
         self.assertEqual(r.status_code, 302)

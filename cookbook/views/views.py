@@ -1,36 +1,40 @@
-import copy
 import os
 from datetime import datetime, timedelta
+from typing import re
 from uuid import UUID
+
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash, authenticate
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.db.models import Q, Avg
+from django.db.models import Avg, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.decorators.clickjacking import xframe_options_exempt
-from django_tables2 import RequestConfig
 from django.utils.translation import gettext as _
-
-from django.conf import settings
+from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
-from cookbook.forms import *
+from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
+                            UserCreateForm, UserNameForm, UserPreference,
+                            UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid
-from cookbook.tables import RecipeTable, RecipeTableSmall, CookLogTable, ViewLogTable
-
-from recipes.version import *
+from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
+                             RecipeBook, RecipeBookEntry, ViewLog)
+from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
+                             ViewLogTable)
+from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
 def index(request):
     if not request.user.is_authenticated:
-        if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
+        if (User.objects.count() < 1
+                and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS):  # noqa: E501
             return HttpResponseRedirect(reverse_lazy('view_setup'))
         return HttpResponseRedirect(reverse_lazy('view_search'))
     try:
@@ -40,14 +44,19 @@ def index(request):
             UserPreference.BOOKS: reverse_lazy('view_books'),
         }
 
-        return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
+        return HttpResponseRedirect(
+            page_map.get(request.user.userpreference.default_page)
+        )
     except UserPreference.DoesNotExist:
         return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
 
 
 def search(request):
     if request.user.is_authenticated:
-        f = RecipeFilter(request.GET, queryset=Recipe.objects.all().order_by('name'))
+        f = RecipeFilter(
+            request.GET,
+            queryset=Recipe.objects.all().order_by('name')
+        )
 
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -56,7 +65,10 @@ def search(request):
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         if request.GET == {} and request.user.userpreference.show_recent:
-            qs = Recipe.objects.filter(viewlog__created_by=request.user).order_by('-viewlog__created_at').all()
+            qs = Recipe.objects \
+                .filter(viewlog__created_by=request.user) \
+                .order_by('-viewlog__created_at') \
+                .all()
 
             recent_list = []
             for r in qs:
@@ -69,7 +81,11 @@ def search(request):
         else:
             last_viewed = None
 
-        return render(request, 'index.html', {'recipes': table, 'filter': f, 'last_viewed': last_viewed})
+        return render(
+            request,
+            'index.html',
+            {'recipes': table, 'filter': f, 'last_viewed': last_viewed}
+        )
     else:
         return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
 
@@ -77,17 +93,30 @@ def search(request):
 def recipe_view(request, pk, share=None):
     recipe = get_object_or_404(Recipe, pk=pk)
 
-    if not request.user.is_authenticated and not share_link_valid(recipe, share):
-        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+    if not (request.user.is_authenticated
+            and not share_link_valid(recipe, share)):
+        messages.add_message(
+            request,
+            messages.ERROR,
+            _('You do not have the required permissions to view this page!')
+        )
         return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
 
     comments = Comment.objects.filter(recipe=recipe)
 
     if request.method == "POST":
         if not request.user.is_authenticated:
-            messages.add_message(request, messages.ERROR,
-                                 _('You do not have the required permissions to perform this action!'))
-            return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': recipe.pk, 'share': share}))
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('You do not have the required permissions to perform this action!')  # noqa: E501
+            )
+            return HttpResponseRedirect(
+                reverse(
+                    'view_recipe',
+                    kwargs={'pk': recipe.pk, 'share': share}
+                )
+            )
 
         comment_form = CommentForm(request.POST, prefix='comment')
         if comment_form.is_valid():
@@ -98,7 +127,9 @@ def recipe_view(request, pk, share=None):
 
             comment.save()
 
-            messages.add_message(request, messages.SUCCESS, _('Comment saved!'))
+            messages.add_message(
+                request, messages.SUCCESS, _('Comment saved!')
+            )
 
         bookmark_form = RecipeBookEntryForm(request.POST, prefix='bookmark')
         if bookmark_form.is_valid():
@@ -110,42 +141,75 @@ def recipe_view(request, pk, share=None):
                 bookmark.save()
             except IntegrityError as e:
                 if 'UNIQUE constraint' in str(e.args):
-                    messages.add_message(request, messages.ERROR, _('This recipe is already linked to the book!'))
+                    messages.add_message(
+                        request,
+                        messages.ERROR,
+                        _('This recipe is already linked to the book!')
+                    )
             else:
-                messages.add_message(request, messages.SUCCESS, _('Bookmark saved!'))
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    _('Bookmark saved!')
+                )
 
     comment_form = CommentForm()
     bookmark_form = RecipeBookEntryForm()
 
     user_servings = None
     if request.user.is_authenticated:
-        user_servings = CookLog.objects.filter(recipe=recipe, created_by=request.user,
-                                               servings__gt=0).all().aggregate(Avg('servings'))['servings__avg']
+        user_servings = CookLog.objects.filter(
+            recipe=recipe,
+            created_by=request.user,
+            servings__gt=0
+        ).all().aggregate(Avg('servings'))['servings__avg']
 
     if request.user.is_authenticated:
-        if not ViewLog.objects.filter(recipe=recipe).filter(created_by=request.user).filter(
-                created_at__gt=(timezone.now() - timezone.timedelta(minutes=5))).exists():
+        if not ViewLog.objects \
+                .filter(recipe=recipe) \
+                .filter(created_by=request.user) \
+                .filter(created_at__gt=(
+                timezone.now() - timezone.timedelta(minutes=5))) \
+                .exists():
             ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
-    return render(request, 'recipe_view.html',
-                  {'recipe': recipe, 'comments': comments, 'comment_form': comment_form,
-                   'bookmark_form': bookmark_form, 'share': share, 'user_servings': user_servings})
+    return render(
+        request,
+        'recipe_view.html',
+        {
+            'recipe': recipe,
+            'comments': comments,
+            'comment_form': comment_form,
+            'bookmark_form': bookmark_form,
+            'share': share,
+            'user_servings': user_servings
+        }
+    )
 
 
 @group_required('user')
 def books(request):
     book_list = []
 
-    books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).distinct().all()
+    books = RecipeBook.objects.filter(
+        Q(created_by=request.user) | Q(shared=request.user)
+    ).distinct().all()
 
     for b in books:
-        book_list.append({'book': b, 'recipes': RecipeBookEntry.objects.filter(book=b).all()})
+        book_list.append(
+            {
+                'book': b,
+                'recipes': RecipeBookEntry.objects.filter(book=b).all()
+            }
+        )
 
     return render(request, 'books.html', {'book_list': book_list})
 
 
 def get_start_end_from_week(p_year, p_week):
-    first_day_of_week = datetime.strptime(f'{p_year}-W{int(p_week) - 1}-1', "%Y-W%W-%w").date()
+    first_day_of_week = datetime.strptime(
+        f'{p_year}-W{int(p_week) - 1}-1', "%Y-W%W-%w"
+    ).date()
     last_day_of_week = first_day_of_week + timedelta(days=6.9)
     return first_day_of_week, last_day_of_week
 
@@ -168,13 +232,24 @@ def meal_plan_entry(request, pk):
     plan = MealPlan.objects.get(pk=pk)
 
     if plan.created_by != request.user and plan.shared != request.user:
-        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+        messages.add_message(
+            request,
+            messages.ERROR,
+            _('You do not have the required permissions to view this page!')
+        )
         return HttpResponseRedirect(reverse_lazy('index'))
 
-    same_day_plan = MealPlan.objects.filter(date=plan.date).exclude(pk=plan.pk).filter(
-        Q(created_by=request.user) | Q(shared=request.user)).order_by('meal_type').all()
+    same_day_plan = MealPlan.objects \
+        .filter(date=plan.date) \
+        .exclude(pk=plan.pk) \
+        .filter(Q(created_by=request.user) | Q(shared=request.user)) \
+        .order_by('meal_type').all()
 
-    return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
+    return render(
+        request,
+        'meal_plan_entry.html',
+        {'plan': plan, 'same_day_plan': same_day_plan}
+    )
 
 
 @group_required('user')
@@ -189,7 +264,11 @@ def shopping_list(request, pk=None):
             if recipe := Recipe.objects.filter(pk=int(rid)).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
 
-    return render(request, 'shopping_list.html', {'shopping_list_id': pk, 'recipes': recipes})
+    return render(
+        request,
+        'shopping_list.html',
+        {'shopping_list_id': pk, 'recipes': recipes}
+    )
 
 
 @group_required('guest')
@@ -214,22 +293,22 @@ def user_settings(request):
                 up.show_recent = form.cleaned_data['show_recent']
                 up.search_style = form.cleaned_data['search_style']
                 up.plan_share.set(form.cleaned_data['plan_share'])
-                up.ingredient_decimals = form.cleaned_data['ingredient_decimals']
+                up.ingredient_decimals = form.cleaned_data['ingredient_decimals']  # noqa: E501
                 up.comments = form.cleaned_data['comments']
                 up.use_fractions = form.cleaned_data['use_fractions']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
 
                 up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
-                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
-                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
+                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:  # noqa: E501
+                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL  # noqa: E501
 
                 up.save()
 
         if 'user_name_form' in request.POST:
             user_name_form = UserNameForm(request.POST, prefix='name')
             if user_name_form.is_valid():
-                request.user.first_name = user_name_form.cleaned_data['first_name']
-                request.user.last_name = user_name_form.cleaned_data['last_name']
+                request.user.first_name = user_name_form.cleaned_data['first_name']  # noqa: E501
+                request.user.last_name = user_name_form.cleaned_data['last_name']  # noqa: E501
                 request.user.save()
 
         if 'password_form' in request.POST:
@@ -246,40 +325,74 @@ def user_settings(request):
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
 
-    return render(request, 'settings.html',
-                  {'preference_form': preference_form, 'user_name_form': user_name_form, 'password_form': password_form,
-                   'api_token': api_token})
+    return render(
+        request,
+        'settings.html',
+        {
+            'preference_form': preference_form,
+            'user_name_form': user_name_form,
+            'password_form': password_form,
+            'api_token': api_token
+        }
+    )
 
 
 @group_required('guest')
 def history(request):
-    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user).order_by('-created_at').all())
-    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
-    return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
+    view_log = ViewLogTable(
+        ViewLog.objects.filter(
+            created_by=request.user
+        ).order_by('-created_at').all()
+    )
+    cook_log = CookLogTable(
+        CookLog.objects.filter(
+            created_by=request.user
+        ).order_by('-created_at').all()
+    )
+    return render(
+        request,
+        'history.html',
+        {'view_log': view_log, 'cook_log': cook_log}
+    )
 
 
 @group_required('admin')
 def system(request):
-    postgres = False if (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2' or
-                         settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql') else True
+    postgres = False if (
+            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
+            or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
+    ) else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
-    return render(request, 'system.html',
-                  {'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres,
-                   'version': VERSION_NUMBER, 'ref': BUILD_REF, 'secret_key': secret_key})
+    return render(
+        request,
+        'system.html',
+        {
+            'gunicorn_media': settings.GUNICORN_MEDIA,
+            'debug': settings.DEBUG,
+            'postgres': postgres,
+            'version': VERSION_NUMBER,
+            'ref': BUILD_REF,
+            'secret_key': secret_key
+        }
+    )
 
 
 def setup(request):
-    if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
-        messages.add_message(request, messages.ERROR, _(
-            'The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
+    if (User.objects.count() > 0
+            or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS):  # noqa: E501
+        messages.add_message(
+            request,
+            messages.ERROR,
+            _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.')  # noqa: E501
+        )
         return HttpResponseRedirect(reverse('login'))
 
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+            if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
                 form.add_error('password', _('Passwords dont match!'))
             else:
                 user = User(
@@ -291,7 +404,11 @@ def setup(request):
                     validate_password(form.cleaned_data['password'], user=user)
                     user.set_password(form.cleaned_data['password'])
                     user.save()
-                    messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        _('User has been created, please login!')
+                    )
                     return HttpResponseRedirect(reverse('login'))
                 except ValidationError as e:
                     for m in e:
@@ -306,10 +423,14 @@ def signup(request, token):
     try:
         token = UUID(token, version=4)
     except ValueError:
-        messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
+        messages.add_message(
+            request, messages.ERROR, _('Malformed Invite Link supplied!')
+        )
         return HttpResponseRedirect(reverse('index'))
 
-    if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
+    if link := InviteLink.objects.filter(
+            valid_until__gte=datetime.today(), used_by=None, uuid=token) \
+            .first():
         if request.method == 'POST':
 
             form = UserCreateForm(request.POST)
@@ -319,17 +440,23 @@ def signup(request, token):
                 form.data = data
 
             if form.is_valid():
-                if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+                if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
                     form.add_error('password', _('Passwords dont match!'))
                 else:
                     user = User(
                         username=form.cleaned_data['name'],
                     )
                     try:
-                        validate_password(form.cleaned_data['password'], user=user)
+                        validate_password(
+                            form.cleaned_data['password'], user=user
+                        )
                         user.set_password(form.cleaned_data['password'])
                         user.save()
-                        messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+                        messages.add_message(
+                            request,
+                            messages.SUCCESS,
+                            _('User has been created, please login!')
+                        )
 
                         link.used_by = user
                         link.save()
@@ -344,9 +471,13 @@ def signup(request, token):
         if link.username != '':
             form.fields['name'].initial = link.username
             form.fields['name'].disabled = True
-        return render(request, 'registration/signup.html', {'form': form, 'link': link})
+        return render(
+            request, 'registration/signup.html', {'form': form, 'link': link}
+        )
 
-    messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
+    messages.add_message(
+        request, messages.ERROR, _('Invite Link not valid or already used!')
+    )
     return HttpResponseRedirect(reverse('index'))
 
 

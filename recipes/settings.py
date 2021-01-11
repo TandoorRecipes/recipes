@@ -14,8 +14,8 @@ import random
 import string
 
 from django.contrib import messages
-from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

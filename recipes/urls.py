@@ -1,4 +1,5 @@
-"""recipes URL Configuration
+"""
+recipes URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -15,9 +16,8 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import url
-from django.conf.urls.static import static
-from django.urls import include, path
 from django.contrib import admin
+from django.urls import include, path
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 
@@ -26,8 +26,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
-    path('jsi18n/', JavaScriptCatalog.as_view(domain='django'), name='javascript-catalog'),
+    path(
+        'jsi18n/',
+        JavaScriptCatalog.as_view(domain='django'),
+        name='javascript-catalog'
+    ),
 ]
 
 if settings.GUNICORN_MEDIA or settings.DEBUG:
-    urlpatterns += url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    urlpatterns += url(
+        r'^media/(?P<path>.*)$',
+        serve,
+        {'document_root': settings.MEDIA_ROOT}
+    ),
