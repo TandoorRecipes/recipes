@@ -378,8 +378,6 @@
 
     <script src="{% url 'javascript-catalog' %}"></script>
 
-    <script src="{% static 'vue/components/Toast.js' %}" type="application/javascript"></script>
-
     <script type="application/javascript">
         moment.locale('{{request.LANGUAGE_CODE}}');
 
@@ -389,7 +387,6 @@
         let app = new Vue({
             delimiters: ['[[', ']]'],
             el: '#app',
-            mixin: [toast_mixin],
             data: {
                 start_date: undefined,
                 start_offset: 0,
@@ -431,7 +428,14 @@
                 //this.makeToast('success', 'this actually works', 'success')
             },
             methods: {
-
+                makeToast: function (title, message, variant = null) {
+                    this.$bvToast.toast(message, {
+                        title: title,
+                        variant: variant,
+                        toaster: 'b-toaster-top-center',
+                        solid: true
+                    })
+                },
                 updatePlan: function () {
                     this.dates = [];
                     for (var i = 0; i <= (this.number_of_days - 1); i++) {

@@ -1,12 +1,8 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
 const pages = {
-    'vue_app_01': {
-        entry: './src/main.js',
-        chunks: ['chunk-vendors']
-    },
-    'util': {
-        entry: './src/utils.js',
+    'recipe_view': {
+        entry: './src/apps/RecipeView/main.js',
         chunks: ['chunk-vendors']
     },
 }
