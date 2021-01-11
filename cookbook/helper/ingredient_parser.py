@@ -1,11 +1,12 @@
-import unicodedata
 import string
+import unicodedata
 
 
 def parse_fraction(x):
     if len(x) == 1 and 'fraction' in unicodedata.decomposition(x):
         frac_split = unicodedata.decomposition(x[-1:]).split()
-        return float((frac_split[1]).replace('003', '')) / float((frac_split[3]).replace('003', ''))
+        return (float((frac_split[1]).replace('003', ''))
+                / float((frac_split[3]).replace('003', '')))
     else:
         frac_split = x.split('/')
         if not len(frac_split) == 2:
@@ -22,7 +23,17 @@ def parse_amount(x):
 
     did_check_frac = False
     end = 0
-    while end < len(x) and (x[end] in string.digits or ((x[end] == '.' or x[end] == ',') and end + 1 < len(x) and x[end + 1] in string.digits)):
+    while (
+            end < len(x)
+            and (
+                    x[end] in string.digits
+                    or (
+                            (x[end] == '.' or x[end] == ',')
+                            and end + 1 < len(x)
+                            and x[end + 1] in string.digits
+                    )
+            )
+    ):
         end += 1
     if end > 0:
         amount = float(x[:end].replace(',', '.'))
@@ -70,13 +81,13 @@ def parse_ingredient(tokens):
         while not tokens[start].startswith('(') and not start == 0:
             start -= 1
         if start == 0:
-            # the whole list is wrapped in brackets -> assume it is an error (e.g. assumed first argument was the unit)
+            # the whole list is wrapped in brackets -> assume it is an error (e.g. assumed first argument was the unit)  # noqa: E501
             raise ValueError
         elif start < 0:
             # no opening bracket anywhere -> just ignore the last bracket
             ingredient, note = parse_ingredient_with_comma(tokens)
         else:
-            # opening bracket found -> split in ingredient and note, remove brackets from note
+            # opening bracket found -> split in ingredient and note, remove brackets from note  # noqa: E501
             note = ' '.join(tokens[start:])[1:-1]
             ingredient = ' '.join(tokens[:start])
     else:
@@ -99,19 +110,20 @@ def parse(x):
         try:
             # try to parse first argument as amount
             amount, unit = parse_amount(tokens[0])
-            # only try to parse second argument as amount if there are at least three arguments
-            # if it already has a unit there can't be a fraction for the amount
+            # only try to parse second argument as amount if there are at least
+            # three arguments if it already has a unit there can't be
+            # a fraction for the amount
             if len(tokens) > 2:
                 try:
                     if not unit == '':
-                        # a unit is already found, no need to try the second argument for a fraction
-                        # probably not the best method to do it, but I didn't want to make an if check and paste the exact same thing in the else as already is in the except
+                        # a unit is already found, no need to try the second argument for a fraction  # noqa: E501
+                        # probably not the best method to do it, but I didn't want to make an if check and paste the exact same thing in the else as already is in the except  # noqa: E501
                         raise ValueError
-                    # try to parse second argument as amount and add that, in case of '2 1/2' or '2 ½'
+                    # try to parse second argument as amount and add that, in case of '2 1/2' or '2 ½'  # noqa: E501
                     amount += parse_fraction(tokens[1])
                     # assume that units can't end with a comma
                     if len(tokens) > 3 and not tokens[2].endswith(','):
-                        # try to use third argument as unit and everything else as ingredient, use everything as ingredient if it fails
+                        # try to use third argument as unit and everything else as ingredient, use everything as ingredient if it fails  # noqa: E501
                         try:
                             ingredient, note = parse_ingredient(tokens[3:])
                             unit = tokens[2]
@@ -122,7 +134,7 @@ def parse(x):
                 except ValueError:
                     # assume that units can't end with a comma
                     if not tokens[1].endswith(','):
-                        # try to use second argument as unit and everything else as ingredient, use everything as ingredient if it fails
+                        # try to use second argument as unit and everything else as ingredient, use everything as ingredient if it fails  # noqa: E501
                         try:
                             ingredient, note = parse_ingredient(tokens[2:])
                             unit = tokens[1]
@@ -131,11 +143,13 @@ def parse(x):
                     else:
                         ingredient, note = parse_ingredient(tokens[1:])
             else:
-                # only two arguments, first one is the amount which means this is the ingredient
+                # only two arguments, first one is the amount
+                # which means this is the ingredient
                 ingredient = tokens[1]
         except ValueError:
             try:
-                # can't parse first argument as amount -> no unit -> parse everything as ingredient
+                # can't parse first argument as amount
+                # -> no unit -> parse everything as ingredient
                 ingredient, note = parse_ingredient(tokens)
             except ValueError:
                 ingredient = ' '.join(tokens[1:])

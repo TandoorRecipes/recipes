@@ -1,13 +1,12 @@
 import bleach
 import markdown as md
-from bleach_whitelist import markdown_tags, markdown_attrs
-from django import template
-from django.db.models import Avg
-from django.urls import reverse, NoReverseMatch
-
+from bleach_whitelist import markdown_attrs, markdown_tags
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
-from cookbook.models import get_model_name, Space
+from cookbook.models import Space, get_model_name
+from django import template
+from django.db.models import Avg
+from django.urls import NoReverseMatch, reverse
 from recipes import settings
 
 register = template.Library()
@@ -33,8 +32,16 @@ def delete_url(model, pk):
 
 @register.filter()
 def markdown(value):
-    tags = markdown_tags + ['pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead']
-    parsed_md = md.markdown(value, extensions=['markdown.extensions.fenced_code', 'tables', UrlizeExtension(), MarkdownFormatExtension()])
+    tags = markdown_tags + [
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
+    ]
+    parsed_md = md.markdown(
+        value,
+        extensions=[
+            'markdown.extensions.fenced_code', 'tables',
+            UrlizeExtension(), MarkdownFormatExtension()
+        ]
+    )
     markdown_attrs['*'] = markdown_attrs['*'] + ['class']
     return bleach.clean(parsed_md, tags, markdown_attrs)
 
@@ -43,7 +50,9 @@ def markdown(value):
 def recipe_rating(recipe, user):
     if not user.is_authenticated:
         return ''
-    rating = recipe.cooklog_set.filter(created_by=user).aggregate(Avg('rating'))
+    rating = recipe.cooklog_set \
+        .filter(created_by=user) \
+        .aggregate(Avg('rating'))
     if rating['rating__avg']:
 
         rating_stars = '<span style="display: inline-block;">'
@@ -51,7 +60,7 @@ def recipe_rating(recipe, user):
             rating_stars = rating_stars + '<i class="fas fa-star fa-xs"></i>'
 
         if rating['rating__avg'] % 1 >= 0.5:
-            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'
+            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'  # noqa: E501
 
         rating_stars += '</span>'
 
