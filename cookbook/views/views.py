@@ -93,8 +93,7 @@ def search(request):
 def recipe_view(request, pk, share=None):
     recipe = get_object_or_404(Recipe, pk=pk)
 
-    if not (request.user.is_authenticated
-            and not share_link_valid(recipe, share)):
+    if not request.user.is_authenticated and not share_link_valid(recipe, share):
         messages.add_message(
             request,
             messages.ERROR,
