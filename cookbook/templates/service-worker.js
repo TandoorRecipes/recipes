@@ -50,7 +50,6 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
     // We only want to call event.respondWith() if this is a navigation request
     // for an HTML page.
-    console.log("fetch event called");
     if (event.request.mode === "navigate") {
         event.respondWith(
             (async () => {
@@ -62,7 +61,6 @@ self.addEventListener("fetch", (event) => {
                     }
 
                     // Always try the network first.
-                    console.log("Served from network");
                     const networkResponse = await fetch(event.request);
                     return networkResponse;
                 } catch (error) {
