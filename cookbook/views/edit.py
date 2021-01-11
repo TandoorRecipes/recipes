@@ -7,12 +7,16 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 
-from cookbook.forms import ExternalRecipeForm, KeywordForm, StorageForm, SyncForm, CommentForm, \
-    MealPlanForm, UnitMergeForm, RecipeBookForm, FoodForm, FoodMergeForm
-from cookbook.helper.permission_helper import OwnerRequiredMixin
-from cookbook.helper.permission_helper import group_required, GroupRequiredMixin
-from cookbook.models import Recipe, Sync, Keyword, RecipeImport, Storage, Comment, Ingredient, RecipeBook, \
-    MealPlan, Food, MealType
+from cookbook.forms import (CommentForm, ExternalRecipeForm, FoodForm,
+                            FoodMergeForm, KeywordForm, MealPlanForm,
+                            RecipeBookForm, StorageForm, SyncForm,
+                            UnitMergeForm)
+from cookbook.helper.permission_helper import (GroupRequiredMixin,
+                                               OwnerRequiredMixin,
+                                               group_required)
+from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
+                             MealType, Recipe, RecipeBook, RecipeImport,
+                             Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 
@@ -40,7 +44,9 @@ def convert_recipe(request, pk):
 def internal_recipe_update(request, pk):
     recipe_instance = get_object_or_404(Recipe, pk=pk)
 
-    return render(request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance})
+    return render(
+        request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance}
+    )
 
 
 class SyncUpdate(GroupRequiredMixin, UpdateView):
@@ -99,7 +105,9 @@ def edit_storage(request, pk):
     instance = get_object_or_404(Storage, pk=pk)
 
     if not (instance.created_by == request.user or request.user.is_superuser):
-        messages.add_message(request, messages.ERROR, _('You cannot edit this storage!'))
+        messages.add_message(
+            request, messages.ERROR, _('You cannot edit this storage!')
+        )
         return HttpResponseRedirect(reverse('list_storage'))
 
     if request.method == "POST":
@@ -118,16 +126,26 @@ def edit_storage(request, pk):
 
             instance.save()
 
-            messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
+            messages.add_message(
+                request, messages.SUCCESS, _('Storage saved!')
+            )
         else:
-            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend!'))
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('There was an error updating this storage backend!')
+            )
     else:
         pseudo_instance = instance
         pseudo_instance.password = '__NO__CHANGE__'
         pseudo_instance.token = '__NO__CHANGE__'
         form = StorageForm(instance=pseudo_instance)
 
-    return render(request, 'generic/edit_template.html', {'form': form, 'title': _('Storage')})
+    return render(
+        request,
+        'generic/edit_template.html',
+        {'form': form, 'title': _('Storage')}
+    )
 
 
 class CommentUpdate(OwnerRequiredMixin, UpdateView):
@@ -141,7 +159,9 @@ class CommentUpdate(OwnerRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(CommentUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Comment")
-        context['view_url'] = reverse('view_recipe', args=[self.object.recipe.pk])
+        context['view_url'] = reverse(
+            'view_recipe', args=[self.object.recipe.pk]
+        )
         return context
 
 
@@ -186,7 +206,8 @@ class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = self.form_class(**self.get_form_kwargs())
-        form.fields['meal_type'].queryset = MealType.objects.filter(created_by=self.request.user).all()
+        form.fields['meal_type'].queryset = MealType.objects \
+            .filter(created_by=self.request.user).all()
         return form
 
     def get_context_data(self, **kwargs):
@@ -206,17 +227,28 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
         old_recipe = Recipe.objects.get(pk=self.object.pk)
         if not old_recipe.name == self.object.name:
             if self.object.storage.method == Storage.DROPBOX:
-                Dropbox.rename_file(old_recipe, self.object.name)  # TODO central location to handle storage type switches
+                # TODO central location to handle storage type switches
+                Dropbox.rename_file(old_recipe, self.object.name)
             if self.object.storage.method == Storage.NEXTCLOUD:
                 Nextcloud.rename_file(old_recipe, self.object.name)
 
-            self.object.file_path = os.path.dirname(self.object.file_path) + '/' + self.object.name + os.path.splitext(self.object.file_path)[1]
+            self.object.file_path = "%s/%s%s" % (
+                os.path.dirname(self.object.file_path),
+                self.object.name,
+                os.path.splitext(self.object.file_path)[1]
+            )
 
-        messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
+        messages.add_message(
+            self.request, messages.SUCCESS, _('Changes saved!')
+        )
         return super(ExternalRecipeUpdate, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, _('Error saving changes!'))
+        messages.add_message(
+            self.request,
+            messages.ERROR,
+            _('Error saving changes!')
+        )
         return super(ExternalRecipeUpdate, self).form_valid(form)
 
     def get_success_url(self):
@@ -227,7 +259,9 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
         context['title'] = _("Recipe")
         context['view_url'] = reverse('view_recipe', args=[self.object.pk])
         if self.object.storage:
-            context['delete_external_url'] = reverse('delete_recipe_source', args=[self.object.pk])
+            context['delete_external_url'] = reverse(
+                'delete_recipe_source', args=[self.object.pk]
+            )
         return context
 
 
@@ -240,16 +274,23 @@ def edit_ingredients(request):
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
             if new_unit != old_unit:
-                recipe_ingredients = Ingredient.objects.filter(unit=old_unit).all()
+                recipe_ingredients = Ingredient.objects \
+                    .filter(unit=old_unit).all()
                 for i in recipe_ingredients:
                     i.unit = new_unit
                     i.save()
 
                 old_unit.delete()
                 success = True
-                messages.add_message(request, messages.SUCCESS, _('Units merged!'))
+                messages.add_message(
+                    request, messages.SUCCESS, _('Units merged!')
+                )
             else:
-                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    _('Cannot merge with the same object!')
+                )
 
         food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix)
         if food_form.is_valid():
@@ -263,9 +304,15 @@ def edit_ingredients(request):
 
                 old_food.delete()
                 success = True
-                messages.add_message(request, messages.SUCCESS, _('Foods merged!'))
+                messages.add_message(
+                    request, messages.SUCCESS, _('Foods merged!')
+                )
             else:
-                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    _('Cannot merge with the same object!')
+                )
 
         if success:
             units_form = UnitMergeForm()
@@ -274,4 +321,8 @@ def edit_ingredients(request):
         units_form = UnitMergeForm()
         food_form = FoodMergeForm()
 
-    return render(request, 'forms/ingredients.html', {'units_form': units_form, 'food_form': food_form})
+    return render(
+        request,
+        'forms/ingredients.html',
+        {'units_form': units_form, 'food_form': food_form}
+    )

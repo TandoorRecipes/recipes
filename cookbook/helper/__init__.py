@@ -1,1 +1,5 @@
-from cookbook.helper.dal import *
+import cookbook.helper.dal
+
+__all__ = [
+    'dal',
+]

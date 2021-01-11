@@ -1,8 +1,7 @@
+from cookbook.models import Food, Recipe, Storage, Unit
+from cookbook.tests.views.test_views import TestViews
 from django.contrib import auth
 from django.urls import reverse
-
-from cookbook.models import Recipe, Ingredient, Unit, Storage, Food
-from cookbook.tests.views.test_views import TestViews
 
 
 class TestEditsRecipe(TestViews):
@@ -70,7 +69,17 @@ class TestEditsRecipe(TestViews):
         r = self.anonymous_client.get(url)
         self.assertEqual(r.status_code, 403)
 
-        r = self.user_client_1.put(url, {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'keywords': [], 'steps': []}, content_type='application/json')
+        r = self.user_client_1.put(
+            url,
+            {
+                'name': 'Changed',
+                'working_time': 15,
+                'waiting_time': 15,
+                'keywords': [],
+                'steps': []
+            },
+            content_type='application/json'
+        )
         self.assertEqual(r.status_code, 200)
 
         recipe = Recipe.objects.get(pk=recipe.pk)
@@ -79,18 +88,39 @@ class TestEditsRecipe(TestViews):
         Food.objects.create(name='Egg')
         Unit.objects.create(name='g')
 
-        r = self.user_client_1.put(url, {'name': 'Changed', 'working_time': 15, 'waiting_time': 15, 'keywords': [],
-                                         'steps': [{'ingredients': [
-                                             {"food": {"name": "test food"}, "unit": {"name": "test unit"}, 'amount': 12, 'note': "test note"},
-                                             {"food": {"name": "test food 2"}, "unit": {"name": "test unit 2"}, 'amount': 42, 'note': "test note 2"}
-                                         ]}]}, content_type='application/json')
+        r = self.user_client_1.put(
+            url,
+            {
+                'name': 'Changed',
+                'working_time': 15,
+                'waiting_time': 15,
+                'keywords': [],
+                'steps': [
+                    {
+                        'ingredients': [
+                            {
+                                'food': {'name': 'test food'},
+                                'unit': {'name': 'test unit'},
+                                'amount': 12, 'note': 'test note'
+                            },
+                            {
+                                'food': {'name': 'test food 2'},
+                                'unit': {'name': 'test unit 2'},
+                                'amount': 42, 'note': 'test note 2'
+                            }
+                        ]
+                    }
+                ]
+            },
+            content_type='application/json'
+        )
         self.assertEqual(r.status_code, 200)
         self.assertEqual(2, recipe.steps.first().ingredients.count())
 
-        with open('cookbook/tests/resources/image.jpg', 'rb') as file:
+        with open('cookbook/tests/resources/image.jpg', 'rb') as file:  # noqa: E501,F841
             pass  # TODO new image tests
 
-        with open('cookbook/tests/resources/image.png', 'rb') as file:
+        with open('cookbook/tests/resources/image.png', 'rb') as file:  # noqa:  E501,F841
             pass  # TODO new image tests
 
     def test_external_recipe_update(self):
@@ -117,7 +147,10 @@ class TestEditsRecipe(TestViews):
         r = self.anonymous_client.get(url)
         self.assertEqual(r.status_code, 302)
 
-        r = self.user_client_1.post(url, {'name': 'Test', 'working_time': 15, 'waiting_time': 15, })
+        r = self.user_client_1.post(
+            url,
+            {'name': 'Test', 'working_time': 15, 'waiting_time': 15, }
+        )
         recipe.refresh_from_db()
         self.assertEqual(recipe.working_time, 15)
         self.assertEqual(recipe.waiting_time, 15)
