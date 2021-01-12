@@ -102,6 +102,8 @@ if REVERSE_PROXY_AUTH:
     MIDDLEWARE.append('recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
