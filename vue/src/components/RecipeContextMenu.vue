@@ -1,8 +1,6 @@
 <template>
   <div>
-    {{ resolveDjangoUrl('api:recipe-detail', 5) }}
 
-    <div class="col col-md-4 d-print-none" style="text-align: right">
       <div class="dropdown">
         <a class="btn shadow-none" href="#" role="button" id="dropdownMenuLink"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,7 +39,7 @@
         </div>
 
 
-      </div>
+
     </div>
 
   </div>
