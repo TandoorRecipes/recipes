@@ -24,6 +24,10 @@ SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_S
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
 
@@ -74,6 +78,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
     'webpack_loader',
+    'django_js_reverse',
     'cookbook.apps.CookbookConfig',
 ]
 

@@ -1,6 +1,7 @@
 <template>
   <div id="app" v-if="!loading">
     <h1>{{ recipe.name }}</h1>
+    <recipe-context-menu v-bind:recipe="recipe"></recipe-context-menu>
 
     <img v-bind:src="recipe.image">
 
@@ -17,31 +18,23 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {makeToast} from "@/utils/utils.js";
-
-const _ = window.gettext
+import {apiLoadRecipe} from "@/utils/api";
 
 import Step from "@/components/Step";
+import RecipeContextMenu from "@/components/RecipeContextMenu";
+import {GettextMixin, ToastMixin} from "@/utils/utils";
 
 Vue.use(BootstrapVue)
 
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  state: {
-    servings: 1
-  }
-})
-
-import {apiLoadRecipe} from "@/utils/django";
-
 export default {
   name: 'RecipeView',
-  store: store,
+  mixins: [
+    GettextMixin,
+    ToastMixin,
+  ],
   components: {
-    Step
+    Step,
+    RecipeContextMenu,
   },
   data() {
     return {

@@ -1,0 +1,18 @@
+<!--
+As there is apparently no good way to pass django named URLs to Vue/Webpack we will pack the urls we need into
+this object and load it in all the templates where we load Vue apps
+
+Reason for not using other alternatives
+
+## django-js-reverse
+bad performance because the 25kb or so path file needs to be loaded before any other request can be made
+or all paths need to be printed in template which is apparently not recommended for CSP reasons (although this here
+might do the same)
+
+-->
+
+<script type="application/javascript">
+    window.DJANGO_URLS = {
+        'edit_storage'
+    }
+</script>
