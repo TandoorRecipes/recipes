@@ -27,7 +27,7 @@ def import_recipe(request):
                     re.sub(r'"id":([0-9])+,', '', form.cleaned_data['recipe'])
                 )
 
-                sr = RecipeSerializer(data=data)
+                sr = RecipeSerializer(data=data, context={'request': request})
                 if sr.is_valid():
                     sr.validated_data['created_by'] = request.user
                     recipe = sr.save()
