@@ -23,10 +23,36 @@
 
 
     <div class="row">
-      <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && has_ingredients">
-        <div v-for="s in recipe.steps" v-bind:key="s.id">
-          <div v-for="i in s.ingredients" v-bind:key="i.id">
-            <Ingredient v-bind:ingredient="i"></Ingredient>
+      <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
+
+        <div class="card border-primary">
+          <div class="card-body">
+            <div class="row">
+              <div class="col col-md-9">
+                <h4 class="card-title">{{ _('Ingredients') }}</h4>
+              </div>
+              <div class="col col-md-3">
+                <div class="input-group d-print-none">
+                  <input type="number" value="1" maxlength="3" class="form-control" style="min-width: 2vw"
+                         v-model="servings"/>
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-sm">
+                  <div v-for="s in recipe.steps" v-bind:key="s.id">
+                    <div v-for="i in s.ingredients" v-bind:key="i.id">
+                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings"></Ingredient>
+                    </div>
+                  </div>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -34,13 +60,16 @@
       <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2" style="text-align: center">
         <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
              :alt="_( 'Recipe Image')">
-        <br/>
-        <br/>
+
+        <div>
+
+        </div>
+
       </div>
     </div>
 
-    <div v-for="s in recipe.steps" v-bind:key="s.id">
-      <Step v-bind:step="s" v-bind:servings="servings"></Step>
+    <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
+      <Step v-bind:step="s" v-bind:servings="servings" v-bind:index="index"></Step>
     </div>
 
   </div>
@@ -77,7 +106,7 @@ export default {
       loading: true,
       recipe_id: window.RECIPE_ID,
       recipe: undefined,
-      has_ingredients: false,
+      ingredient_count: 0,
       servings: 1,
     }
   },
@@ -91,9 +120,8 @@ export default {
         this.loading = false
 
         for (let step of this.recipe.steps) {
-          if (step.ingredients.length > 0) {
-            this.has_ingredients = true
-          }
+          this.ingredient_count += step.ingredients.length
+
           if (step.time !== 0) {
             this.has_times = true
           }

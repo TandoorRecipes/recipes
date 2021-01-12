@@ -22,9 +22,13 @@
         <script src="{% static 'django_js_reverse/js/reverse.js' %}"></script>
     {% endif %}
 
-    <script type="application/javascript">
-        window.RECIPE_ID = 5;
 
+    <script type="application/javascript">
+        window.RECIPE_ID = 6;
+        window.USER_PREF = {
+            'use_fractions': {% if request.user.userpreference.use_fractions %} true {% else %} false {% endif %},
+            'ingredient_decimals': {{ request.user.userpreference.ingredient_decimals }},
+        }
     </script>
 
     {% render_bundle 'chunk-vendors' %}

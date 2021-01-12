@@ -62,3 +62,37 @@ export const ResolveUrlMixin = {
 export function resolveDjangoUrl(url, params) {
     return window.Urls[url](params)
 }
+
+/*
+* other utilities
+* */
+
+export function getUserPreference(pref) {
+    return window.USER_PREF[pref]
+}
+
+import {frac} from "@/utils/fractions";
+
+export function calculateAmount(amount, factor) {
+    if (getUserPreference('user_fractions')) {
+        let return_string = ''
+        let fraction = frac.cont((amount * factor), 9, true)
+
+        if (fraction[0] > 0) {
+            return_string += fraction[0]
+        }
+
+        if (fraction[1] > 0) {
+            return_string += ` <sup>${(fraction[1])}</sup>&frasl;<sub>${(fraction[2])}</sub>`
+        }
+
+        return return_string
+    } else {
+        return roundDecimals(amount * factor)
+    }
+}
+
+export function roundDecimals(num) {
+    let decimals = ((getUserPreference('user_fractions')) ? getUserPreference('user_fractions') : 2);
+    return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
+}
