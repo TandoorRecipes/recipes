@@ -188,7 +188,7 @@ class RecipeSerializer(WritableNestedModelSerializer):
         read_only_fields = ['image', 'created_by', 'created_at']
 
     def create(self, validated_data):
-        validated_data['created_by'] = self.context['request']._user
+        validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
 
