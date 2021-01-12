@@ -3179,6 +3179,11 @@ dir-glob@^2.0.0, dir-glob@^2.2.2:
   dependencies:
     path-type "^3.0.0"
 
+django-js-reverse@^0.10.1-a.0:
+  version "0.10.1-a.0"
+  resolved "https://registry.yarnpkg.com/django-js-reverse/-/django-js-reverse-0.10.1-a.0.tgz#ff915561930d3292c7e33c8b4d6f10ae8cecc8a0"
+  integrity sha512-t0lHG4LMjkpXBtRL6oQwBX1S5aygZgddQ4IEhTX9icRvRcGv2sx5zyrf1sKj6e8xtO7boibzWI94bSphoG6llw==
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/dns-equal/download/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
