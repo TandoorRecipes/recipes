@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
+from django_js_reverse import views as reverse_views
 
 urlpatterns = [
     path('', include('cookbook.urls')),
@@ -31,6 +32,7 @@ urlpatterns = [
         JavaScriptCatalog.as_view(domain='django'),
         name='javascript-catalog'
     ),
+    url(r'^jsreverse.json$', reverse_views.urls_js, name='js_reverse'),
 ]
 
 if settings.GUNICORN_MEDIA or settings.DEBUG:
