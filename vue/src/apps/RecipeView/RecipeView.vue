@@ -18,13 +18,10 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {makeToast} from "@/utils/utils.js";
-//import {gettext} from "@/utils/jsi18n";
 
 const _ = window.gettext
 
 import Step from "@/components/Step";
-import axios from "axios";
-
 
 Vue.use(BootstrapVue)
 
@@ -38,6 +35,7 @@ const store = new Vuex.Store({
   }
 })
 
+import {apiLoadRecipe} from "@/utils/django";
 
 export default {
   name: 'RecipeView',
@@ -48,29 +46,24 @@ export default {
   data() {
     return {
       loading: true,
+      recipe_id: window.RECIPE_ID,
       recipe: undefined,
       servings: 1,
     }
   },
   mounted() {
-    //makeToast("Error", "Error", "danger")
-    this.loadRecipe(5)
-    console.log(_('Error'))
+    this.loadRecipe(this.recipe_id)
   },
   methods: {
     loadRecipe: function (recipe_id) {
-      axios.get(`/api/recipe/${recipe_id}`).then((response) => {
-
-        this.recipe = response.data;
-        this.loading = false;
-      }).catch((err) => {
-        console.log(err)
-        makeToast('Error', 'There was an error loading a resource!', 'danger')
+      apiLoadRecipe(recipe_id).then(recipe => {
+        this.recipe = recipe
+        this.loading = false
       })
     }
-
   }
 }
+
 </script>
 
 <style>
