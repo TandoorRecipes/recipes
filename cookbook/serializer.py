@@ -159,6 +159,10 @@ class IngredientSerializer(WritableNestedModelSerializer):
 class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
+    ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
+
+    def get_ingredients_vue(self, obj):
+        return obj.get_instruction_render()
 
     def get_ingredients_markdown(self, obj):
         return obj.get_instruction_render()
@@ -167,7 +171,7 @@ class StepSerializer(WritableNestedModelSerializer):
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'time', 'order', 'show_as_header'
+            'ingredients_vue', 'time', 'order', 'show_as_header'
         )
 
 
