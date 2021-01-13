@@ -81,11 +81,15 @@
             <br/>
             <div class="row">
               <div class="col-md-12">
+                <table class="table table-sm">
                   <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                   <template v-for="s in recipe.steps">
-                      <Ingredients :step="s" :servings="servings" :key="s.id"></Ingredients>
+                    <template v-for="i in s.ingredients">
+                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
+                    </template>
                   </template>
                   <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+                </table>
               </div>
             </div>
           </div>
@@ -139,7 +143,7 @@ import {apiLoadRecipe} from "@/utils/api";
 import Step from "@/components/Step";
 import RecipeContextMenu from "@/components/RecipeContextMenu";
 import {GettextMixin, ToastMixin} from "@/utils/utils";
-import Ingredients from "@/components/Ingredients";
+import Ingredient from "@/components/Ingredient";
 
 import PdfViewer from "@/components/PdfViewer";
 import ImageViewer from "@/components/ImageViewer";
@@ -160,7 +164,7 @@ export default {
   components: {
     PdfViewer,
     ImageViewer,
-    Ingredients,
+    Ingredient,
     Step,
     RecipeContextMenu,
     Nutrition,

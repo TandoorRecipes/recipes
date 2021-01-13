@@ -31,7 +31,13 @@
       <b-collapse id="collapse-1" v-model="details_visible">
         <div class="row">
           <div class="col col-md-4" v-if="step.ingredients.length > 0 && recipe.steps.length > 1">
-            <Ingredients :step="step" :servings="servings"></Ingredients>
+            <table class="table table-sm">
+              <!-- eslint-disable vue/no-v-for-template-key-on-child -->
+              <template v-for="i in step.ingredients">
+                <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
+              </template>
+              <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+            </table>
           </div>
           <div class="col" :class="{ 'col-md-8':  recipe.steps.length > 1, 'col-md-12':  recipe.steps.length <= 1,}">
             <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
@@ -108,12 +114,12 @@
 
 import {calculateAmount} from "@/utils/utils";
 
+import Ingredient from "@/components/Ingredient";
 import {GettextMixin} from "@/utils/utils";
 
 import CompileComponent from "@/components/CompileComponent";
 import Vue from "vue";
 import moment from "moment";
-import Ingredients from "@/components/Ingredients";
 
 Vue.prototype.moment = moment
 
@@ -123,7 +129,7 @@ export default {
     GettextMixin,
   ],
   components: {
-    Ingredients,
+    Ingredient,
     CompileComponent,
   },
   props: {
