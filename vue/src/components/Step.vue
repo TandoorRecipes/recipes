@@ -60,7 +60,7 @@
           </b-link>
         </div>
 
-        <div class="col-1" style="text-align: right">
+        <div class="col-2" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
                     class="shadow-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
