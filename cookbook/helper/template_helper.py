@@ -16,7 +16,7 @@ class IngredientObject(object):
         if ingredient.no_amount:
             self.amount = ""
         else:
-            self.amount = f'[[calculateAmount({ingredient.amount})]]'
+            self.amount = f"<scalable-number v-bind:number='{ingredient.amount}' v-bind:factor='servings'></scalable-number>"
         if ingredient.unit:
             self.unit = ingredient.unit
         else:
@@ -32,17 +32,7 @@ class IngredientObject(object):
 
 
 def render_instructions(step):  # TODO deduplicate markdown cleanup code
-
-    ingredients = []
-
-    for i in step.ingredients.all():
-        ingredients.append(IngredientObject(i))
-
-    try:
-        template = Template(step.instruction)
-        instructions = template.render(ingredients=ingredients)
-    except TemplateSyntaxError:
-        instructions = step.instruction
+    instructions = step.instruction
 
     tags = markdown_tags + [
         'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
@@ -56,4 +46,17 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     )
     markdown_attrs['*'] = markdown_attrs['*'] + ['class']
 
-    return bleach.clean(parsed_md, tags, markdown_attrs)
+    instructions = bleach.clean(parsed_md, tags, markdown_attrs)
+
+    ingredients = []
+
+    for i in step.ingredients.all():
+        ingredients.append(IngredientObject(i))
+
+    try:
+        template = Template(instructions)
+        instructions = template.render(ingredients=ingredients)
+    except TemplateSyntaxError:
+        pass
+
+    return instructions
