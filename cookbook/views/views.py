@@ -497,4 +497,6 @@ def test(request, pk):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    return render(request, 'test.html', {'pk': pk})
+    recipe = Recipe.objects.get(pk=pk)
+
+    return render(request, 'test.html', {'recipe': recipe})

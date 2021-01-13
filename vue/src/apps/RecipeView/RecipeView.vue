@@ -1,35 +1,61 @@
 <template>
   <div id="app" v-if="!loading">
-
     <div class="row">
-      <div class="col col-md-8">
+      <div class="col-12" style="text-align: center">
         <h3>{{ recipe.name }}</h3>
-        <!--TODO rating -->
-        <!--TODO username -->
-        <!--TODO storage -->
-      </div>
-      <div class="col col-md-4 d-print-none" style="text-align: right">
-        <recipe-context-menu v-bind:recipe="recipe"></recipe-context-menu>
       </div>
     </div>
 
-    <!--TODO keywords -->
-    <span class="badge badge-secondary"><i class="fas fa-user-clock"></i>
-      {{ _('Preparation time ~') }} {{ recipe.working_time }} {{ _('min') }}
-    </span>
-    <span class="badge badge-secondary"><i class="far fa-clock"></i>
-      {{ _('Waiting time ~') }} {{ recipe.waiting_time }} {{ _('min') }}
-    </span>
-
-
     <div class="row">
+      <div class="col-12" style="text-align: center">
+        <i>Hier könnte ihre Rezeptbeschreibung stehen</i>
+      </div>
+    </div>
+
+    <hr/>
+    <div class="row">
+      <div class="col-3">
+        <table>
+          <tr>
+            <td rowspan="2"><i class="fas fa-user-clock fa-2x text-primary"></i></td>
+            <td><span class="text-primary"><b>{{ _('Preparation') }}</b></span></td>
+          </tr>
+          <tr>
+            <td> {{ recipe.working_time }} {{ _('min') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="col-3">
+        <table>
+          <tr>
+            <td rowspan="2"><i class="far fa-clock fa-2x text-primary"></i></td>
+            <td><span class="text-primary"><b>{{ _('Waiting') }}</b></span></td>
+          </tr>
+          <tr>
+            <td>{{ recipe.waiting_time }} {{ _('min') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="col-3">
+        Hier kann noch text stehen
+      </div>
+
+      <div class="col-3" style="text-align: right">
+        <recipe-context-menu v-bind:recipe="recipe"></recipe-context-menu>
+      </div>
+    </div>
+    <hr/>
+
+    <div class="row" style="margin-top: 2vh">
       <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
 
         <div class="card border-primary">
           <div class="card-body">
             <div class="row">
               <div class="col col-md-8">
-                <h4 class="card-title">{{ _('Ingredients') }}</h4>
+                <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ _('Ingredients') }}</h4>
               </div>
               <div class="col col-md-4">
                 <div class="input-group d-print-none">
@@ -57,16 +83,32 @@
         </div>
       </div>
 
-      <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2" style="text-align: center">
-        <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
-             :alt="_( 'Recipe Image')" v-if="recipe.image !== null">
+      <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
+        <div class="row">
+          <div class="col-12">
+
+            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
+                 :alt="_( 'Recipe Image')" v-if="recipe.image !== null">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 2vh">
+          <div class="col-12">
+            <Nutrition :recipe="recipe" :servings="servings"></Nutrition>
+          </div>
+        </div>
       </div>
+
+
     </div>
+
+    <!--TODO Nutritions -->
 
     <div v-if="recipe.file_path.includes('.pdf')">
       <PdfViewer :recipe="recipe"></PdfViewer>
     </div>
-    <div v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
+    <div
+        v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
       <ImageViewer :recipe="recipe"></ImageViewer>
     </div>
 
@@ -94,9 +136,9 @@ import RecipeContextMenu from "@/components/RecipeContextMenu";
 import {GettextMixin, ToastMixin} from "@/utils/utils";
 import Ingredient from "@/components/Ingredient";
 
-import ScalableNumber from "@/components/ScalableNumber";
 import PdfViewer from "@/components/PdfViewer";
 import ImageViewer from "@/components/ImageViewer";
+import Nutrition from "@/components/Nutrition";
 
 Vue.use(BootstrapVue)
 
@@ -112,7 +154,7 @@ export default {
     Ingredient,
     Step,
     RecipeContextMenu,
-    ScalableNumber, // eslint-disable-line
+    Nutrition,
   },
   data() {
     return {
