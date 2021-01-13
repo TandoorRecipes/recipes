@@ -248,6 +248,7 @@ class NutritionInformation(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
+    description = models.CharField(max_length=512, blank=True, null=True)
     servings = models.IntegerField(default=1)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
     storage = models.ForeignKey(

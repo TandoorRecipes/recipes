@@ -189,7 +189,7 @@ class RecipeSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'name', 'image', 'keywords', 'steps', 'working_time',
+            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
             'internal', 'nutrition', 'servings', 'file_path'
         )
