@@ -153,7 +153,6 @@ def recipe_view(request, pk, share=None):
                 )
 
     comment_form = CommentForm()
-    bookmark_form = RecipeBookEntryForm()
 
     user_servings = None
     if request.user.is_authenticated:
@@ -172,18 +171,7 @@ def recipe_view(request, pk, share=None):
                 .exists():
             ViewLog.objects.create(recipe=recipe, created_by=request.user)
 
-    return render(
-        request,
-        'recipe_view.html',
-        {
-            'recipe': recipe,
-            'comments': comments,
-            'comment_form': comment_form,
-            'bookmark_form': bookmark_form,
-            'share': share,
-            'user_servings': user_servings
-        }
-    )
+    return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'user_servings': user_servings})
 
 
 @group_required('user')

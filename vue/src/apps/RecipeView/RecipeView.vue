@@ -1,132 +1,136 @@
 <template>
-  <div id="app" v-if="!loading">
+  <div id="app">
+    <template v-if="loading">
+      <loading-spinner></loading-spinner>
+    </template>
 
-    <div class="row">
-      <div class="col-12" style="text-align: center">
-        <h3>{{ recipe.name }}</h3>
-      </div>
-    </div>
-
-    <div style="text-align: center">
-      <keywords :recipe="recipe"></keywords>
-    </div>
-
-    <div class="row" style="margin-top: 8px">
-      <div class="col-12" style="text-align: center">
-        <i>{{ recipe.description }}</i>
-      </div>
-    </div>
-
-    <hr/>
-    <div class="row">
-      <div class="col col-md-3">
-        <div class="row d-flex" style="padding-left: 16px;height: 100%">
-          <div class="my-auto" style="padding-right: 4px">
-           <i class="fas fa-user-clock fa-2x text-primary"></i>
-          </div>
-          <div class="my-auto" style="padding-right: 4px">
-            <span class="text-primary"><b>{{ _('Preparation') }}</b></span><br/>
-            {{ recipe.working_time }} {{ _('min') }}
-          </div>
+    <div v-if="!loading">
+      <div class="row">
+        <div class="col-12" style="text-align: center">
+          <h3>{{ recipe.name }}</h3>
         </div>
       </div>
 
-      <div class="col col-md-3">
-        <div class="row d-flex" style="height: 100%">
-          <div class="my-auto" style="padding-right: 4px">
-           <i class="far fa-clock fa-2x text-primary"></i>
-          </div>
-          <div class="my-auto" style="padding-right: 4px">
-            <span class="text-primary"><b>{{ _('Waiting') }}</b></span><br/>
-            {{ recipe.waiting_time }} {{ _('min') }}
-          </div>
+      <div style="text-align: center">
+        <keywords :recipe="recipe"></keywords>
+      </div>
+
+      <div class="row" style="margin-top: 8px">
+        <div class="col-12" style="text-align: center">
+          <i>{{ recipe.description }}</i>
         </div>
       </div>
 
-      <div class="col col-md-4 col-10">
-        <div class="row d-flex" style="padding-left: 16px;height: 100%">
-          <div class="my-auto" style="padding-right: 4px">
-            <i class="fas fa-pizza-slice fa-2x text-primary"></i>
+      <hr/>
+      <div class="row">
+        <div class="col col-md-3">
+          <div class="row d-flex" style="padding-left: 16px;height: 100%">
+            <div class="my-auto" style="padding-right: 4px">
+              <i class="fas fa-user-clock fa-2x text-primary"></i>
+            </div>
+            <div class="my-auto" style="padding-right: 4px">
+              <span class="text-primary"><b>{{ _('Preparation') }}</b></span><br/>
+              {{ recipe.working_time }} {{ _('min') }}
+            </div>
           </div>
-          <div class="my-auto" style="padding-right: 4px">
-            <input dir="rtl"
+        </div>
+
+        <div class="col col-md-3">
+          <div class="row d-flex" style="height: 100%">
+            <div class="my-auto" style="padding-right: 4px">
+              <i class="far fa-clock fa-2x text-primary"></i>
+            </div>
+            <div class="my-auto" style="padding-right: 4px">
+              <span class="text-primary"><b>{{ _('Waiting') }}</b></span><br/>
+              {{ recipe.waiting_time }} {{ _('min') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col col-md-4 col-10">
+          <div class="row d-flex" style="padding-left: 16px;height: 100%">
+            <div class="my-auto" style="padding-right: 4px">
+              <i class="fas fa-pizza-slice fa-2x text-primary"></i>
+            </div>
+            <div class="my-auto" style="padding-right: 4px">
+              <input dir="rtl"
                      style="border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
                      value="1" maxlength="3"
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
-          </div>
-          <div class="my-auto">
-            <b>{{ _('Servings') }}</b>
+            </div>
+            <div class="my-auto">
+              <b>{{ _('Servings') }}</b>
+            </div>
           </div>
         </div>
+
+        <div class="col col-md-2 col-2 my-auto" style="text-align: right; padding-right: 1vw">
+          <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
+        </div>
       </div>
+      <hr/>
 
-      <div class="col col-md-2 col-2 my-auto" style="text-align: right; padding-right: 1vw">
-        <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
-      </div>
-    </div>
-    <hr/>
-
-    <div class="row" style="margin-top: 2vh">
-      <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
-
-        <div class="card border-primary">
-          <div class="card-body">
-            <div class="row">
-              <div class="col col-md-8">
-                <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ _('Ingredients') }}</h4>
+      <div class="row" style="margin-top: 2vh">
+        <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0"
+             style="margin-top: 2vh">
+          <div class="card border-primary">
+            <div class="card-body">
+              <div class="row">
+                <div class="col col-md-8">
+                  <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ _('Ingredients') }}</h4>
+                </div>
               </div>
-            </div>
-            <br/>
-            <div class="row">
-              <div class="col-md-12">
-                <table class="table table-sm">
-                  <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-                  <template v-for="s in recipe.steps">
-                    <template v-for="i in s.ingredients">
-                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"
-                                  @checked-state-changed="updateIngredientCheckedState"></Ingredient>
+              <br/>
+              <div class="row">
+                <div class="col-md-12">
+                  <table class="table table-sm">
+                    <!-- eslint-disable vue/no-v-for-template-key-on-child -->
+                    <template v-for="s in recipe.steps">
+                      <template v-for="i in s.ingredients">
+                        <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"
+                                    @checked-state-changed="updateIngredientCheckedState"></Ingredient>
+                      </template>
                     </template>
-                  </template>
-                  <!-- eslint-enable vue/no-v-for-template-key-on-child -->
-                </table>
+                    <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
-        <div class="row">
-          <div class="col-12">
+        <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
+          <div class="row">
+            <div class="col-12">
 
-            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
-                 :alt="_( 'Recipe Image')" v-if="recipe.image !== null">
+              <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
+                   :alt="_( 'Recipe Image')" v-if="recipe.image !== null">
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 2vh">
+            <div class="col-12">
+              <Nutrition :recipe="recipe" :servings="servings"></Nutrition>
+            </div>
           </div>
         </div>
 
-        <div class="row" style="margin-top: 2vh">
-          <div class="col-12">
-            <Nutrition :recipe="recipe" :servings="servings"></Nutrition>
-          </div>
-        </div>
+
       </div>
 
+      <div v-if="recipe.file_path.includes('.pdf')">
+        <PdfViewer :recipe="recipe"></PdfViewer>
+      </div>
+      <div
+          v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
+        <ImageViewer :recipe="recipe"></ImageViewer>
+      </div>
 
+      <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
+        <Step :recipe="recipe" :step="s" :servings="servings" :index="index" :start_time="start_time"
+              @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
+      </div>
     </div>
-
-    <div v-if="recipe.file_path.includes('.pdf')">
-      <PdfViewer :recipe="recipe"></PdfViewer>
-    </div>
-    <div
-        v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
-      <ImageViewer :recipe="recipe"></ImageViewer>
-    </div>
-
-    <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-      <Step :recipe="recipe" :step="s" :servings="servings" :index="index" :start_time="start_time"
-            @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
-    </div>
-
   </div>
 </template>
 
@@ -149,6 +153,7 @@ import Nutrition from "@/components/Nutrition";
 
 import moment from 'moment'
 import Keywords from "@/components/Keywords";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 Vue.prototype.moment = moment
 
@@ -168,6 +173,7 @@ export default {
     RecipeContextMenu,
     Nutrition,
     Keywords,
+    LoadingSpinner,
   },
   data() {
     return {
@@ -191,7 +197,7 @@ export default {
           this.ingredient_count += step.ingredients.length
 
           for (let ingredient of step.ingredients) {
-             this.$set(ingredient, 'checked', false)
+            this.$set(ingredient, 'checked', false)
           }
 
           step.time_offset = total_time
