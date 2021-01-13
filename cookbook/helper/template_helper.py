@@ -16,13 +16,13 @@ class IngredientObject(object):
         if ingredient.no_amount:
             self.amount = ""
         else:
-            self.amount = f"<scalable-number v-bind:number='{ingredient.amount}' v-bind:factor='servings'></scalable-number>"
+            self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='servings'></scalable-number>"
         if ingredient.unit:
-            self.unit = ingredient.unit
+            self.unit = bleach.clean(str(ingredient.unit))
         else:
             self.unit = ""
-        self.food = ingredient.food
-        self.note = ingredient.note
+        self.food = bleach.clean(str(ingredient.food))
+        self.note = bleach.clean(str(ingredient.note))
 
     def __str__(self):
         ingredient = self.amount
