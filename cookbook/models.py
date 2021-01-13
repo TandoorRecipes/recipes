@@ -421,11 +421,15 @@ class ShareLink(models.Model):
         return f'{self.recipe} - {self.uuid}'
 
 
+def default_valid_until():
+    return date.today() + timedelta(days=14)
+
+
 class InviteLink(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     username = models.CharField(blank=True, max_length=64)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    valid_until = models.DateField(default=date.today() + timedelta(days=14))
+    valid_until = models.DateField(default=default_valid_until)
     used_by = models.ForeignKey(
         User, null=True, on_delete=models.CASCADE, related_name='used_by'
     )
