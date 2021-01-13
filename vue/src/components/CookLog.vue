@@ -1,7 +1,6 @@
 <template>
 
   <div>
-
     <b-modal class="modal" id="id_modal_cook_log" :title="_('Log Recipe Cooking')" :ok-title="_('Save')"
              :cancel-title="_('Close')" @ok="logCook()">
 
@@ -10,10 +9,11 @@
 
         <label for="id_log_servings">{{ _('Servings') }}</label>
         <input class="form-control" type="number" id="id_log_servings" v-model="logObject.servings">
-        <label style="margin-top: 2vh" for="id_log_rating">{{ _('Rating') }} - <span
+
+        <label style="margin-top: 2vh">{{ _('Rating') }} - <span
             id="id_rating_show">{{ logObject.rating }}/5</span></label>
-        <input type="range" class="custom-range" min="0" max="5" id="id_log_rating" name="log_rating"
-               value="0" v-model="logObject.rating">
+
+        <b-form-rating v-model="logObject.rating"></b-form-rating>
 
         <label for="id_date" style="margin-top: 2vh">{{ _('Date') }}</label>
         <input type="datetime-local" id="id_date" class="form-control" v-model="logObject.created_at">
