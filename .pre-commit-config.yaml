@@ -6,6 +6,7 @@ repos:
       - id: pre-commit-yarn-build
         name: Build javascript files
         entry: yarn --cwd ./vue build
+        always_run: true
         language: system
         types: [ python ]
         pass_filenames: false
