@@ -1,3 +1,7 @@
+!!! danger
+    The version containing Templating is not yet released! This documentation is only to illustrate the pending changes
+    facilitate the discussion.
+
 With the Version `0.14.0` support for using a custom Jinja2 Template in recipe step instructions has been added.
 
 This allows you to write ingredients with their corresponding amount directly inside the text while still profiting
