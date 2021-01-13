@@ -7,6 +7,8 @@
       </div>
     </div>
 
+    <!--TODO Tags -->
+
     <div class="row">
       <div class="col-12" style="text-align: center">
         <i>{{ recipe.description }}</i>
@@ -113,8 +115,6 @@
 
     </div>
 
-    <!--TODO Nutritions -->
-
     <div v-if="recipe.file_path.includes('.pdf')">
       <PdfViewer :recipe="recipe"></PdfViewer>
     </div>
@@ -125,11 +125,9 @@
 
     <!--TODO timers -->
     <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-      <Step :recipe="recipe" v-bind:step="s" v-bind:servings="servings" v-bind:index="index"></Step>
+      <Step :recipe="recipe" :step="s" :servings="servings" :index="index" :start_time="start_time"
+      @update-start-time="updateStartTime"></Step>
     </div>
-
-
-    <!--TODO Comments -->
 
   </div>
 </template>
@@ -150,6 +148,10 @@ import Ingredient from "@/components/Ingredient";
 import PdfViewer from "@/components/PdfViewer";
 import ImageViewer from "@/components/ImageViewer";
 import Nutrition from "@/components/Nutrition";
+
+import moment from 'moment'
+
+Vue.prototype.moment = moment
 
 Vue.use(BootstrapVue)
 
@@ -174,28 +176,34 @@ export default {
       recipe: undefined,
       ingredient_count: 0,
       servings: 1,
+      start_time: ""
     }
   },
   mounted() {
     this.loadRecipe(this.recipe_id)
   },
   methods: {
-    openCookLogModal: function () {
-      this.$bvModal.show('id_modal_cook_log')
-    },
     loadRecipe: function (recipe_id) {
       apiLoadRecipe(recipe_id).then(recipe => {
         this.recipe = recipe
         this.loading = false
 
+        let total_time = 0
         for (let step of this.recipe.steps) {
           this.ingredient_count += step.ingredients.length
 
-          if (step.time !== 0) {
-            this.has_times = true
-          }
+          step.time_offset = total_time
+          total_time += step.time
+        }
+
+        // set start time only if there are any steps with timers (otherwise no timers are rendered)
+        if (total_time > 0) {
+          this.start_time = moment().format('yyyy-MM-DDTHH:mm')
         }
       })
+    },
+    updateStartTime: function (e) {
+      this.start_time = e
     }
   }
 }

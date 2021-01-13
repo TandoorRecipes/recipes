@@ -50,17 +50,12 @@ export default {
         recipe: this.recipe.id,
         servings: 0,
         rating: 0,
-        created_at: moment().format('yyyy-MM-DDTHH:MM')
+        created_at: moment().format('yyyy-MM-DDTHH:mm')
       }
     }
   },
   methods: {
     logCook: function () {
-
-      let obj = JSON.parse(JSON.stringify(this.logObject))
-
-      obj.created_at = moment(obj.created_at, 'yyyy-MM-DDTHH:MM').format('yyyy-MM-DD HH:MM')
-      console.log('updating: ', obj)
       apiLogCooking(this.logObject)
     },
   }
