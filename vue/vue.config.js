@@ -15,7 +15,7 @@ module.exports = {
         ? ''
         : 'http://localhost:8080/',
     outputDir: '../cookbook/static/vue/',
-
+    runtimeCompiler: true,
     chainWebpack: config => {
 
         config.optimization

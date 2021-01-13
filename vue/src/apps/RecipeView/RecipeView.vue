@@ -34,7 +34,7 @@
               <div class="col col-md-3">
                 <div class="input-group d-print-none">
                   <input type="number" value="1" maxlength="3" class="form-control" style="min-width: 2vw"
-                         v-model="servings"/>
+                         v-model.number="servings"/>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-calculator"></i></span>
                   </div>
@@ -68,9 +68,13 @@
       </div>
     </div>
 
+    <!--TODO timers -->
     <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
       <Step v-bind:step="s" v-bind:servings="servings" v-bind:index="index"></Step>
     </div>
+
+
+    <!--TODO Comments -->
 
   </div>
 </template>
@@ -88,6 +92,8 @@ import RecipeContextMenu from "@/components/RecipeContextMenu";
 import {GettextMixin, ToastMixin} from "@/utils/utils";
 import Ingredient from "@/components/Ingredient";
 
+import ScalableNumber from "@/components/ScalableNumber";
+
 Vue.use(BootstrapVue)
 
 export default {
@@ -100,6 +106,7 @@ export default {
     Ingredient,
     Step,
     RecipeContextMenu,
+    ScalableNumber, // eslint-disable-line
   },
   data() {
     return {

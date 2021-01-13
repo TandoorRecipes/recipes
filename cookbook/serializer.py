@@ -158,11 +158,15 @@ class IngredientSerializer(WritableNestedModelSerializer):
 
 class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
+    ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
+
+    def get_ingredients_markdown(self, obj):
+        return obj.get_instruction_render()
 
     class Meta:
         model = Step
         fields = (
-            'id', 'name', 'type', 'instruction', 'ingredients',
+            'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
             'time', 'order', 'show_as_header'
         )
 
