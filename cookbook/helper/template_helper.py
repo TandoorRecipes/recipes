@@ -16,7 +16,7 @@ class IngredientObject(object):
         if ingredient.no_amount:
             self.amount = ""
         else:
-            self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='servings'></scalable-number>"
+            self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='ingredient_factor'></scalable-number>"
         if ingredient.unit:
             self.unit = bleach.clean(str(ingredient.unit))
         else:

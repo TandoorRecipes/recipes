@@ -65,11 +65,11 @@ export default {
   ],
   props: {
     recipe: Object,
-    servings: Number,
+    ingredient_factor: Number,
   },
   methods: {
     calculateAmount: function (x) {
-      return calculateAmount(x, this.servings)
+      return calculateAmount(x, this.ingredient_factor)
     }
   }
 }

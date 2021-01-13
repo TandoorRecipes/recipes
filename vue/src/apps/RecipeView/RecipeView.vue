@@ -87,7 +87,7 @@
                     <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                     <template v-for="s in recipe.steps">
                       <template v-for="i in s.ingredients">
-                        <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"
+                        <Ingredient :ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
                                     @checked-state-changed="updateIngredientCheckedState"></Ingredient>
                       </template>
                     </template>
@@ -110,7 +110,7 @@
 
           <div class="row" style="margin-top: 2vh">
             <div class="col-12">
-              <Nutrition :recipe="recipe" :servings="servings"></Nutrition>
+              <Nutrition :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@
       </div>
 
       <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-        <Step :recipe="recipe" :step="s" :servings="servings" :index="index" :start_time="start_time"
+        <Step :recipe="recipe" :step="s" :ingredient_factor="ingredient_factor" :index="index" :start_time="start_time"
               @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
       </div>
     </div>
@@ -175,6 +175,11 @@ export default {
     Keywords,
     LoadingSpinner,
   },
+  computed: {
+    ingredient_factor: function () {
+      return this.servings / this.recipe.servings
+    },
+  },
   data() {
     return {
       loading: true,
@@ -191,6 +196,11 @@ export default {
   methods: {
     loadRecipe: function (recipe_id) {
       apiLoadRecipe(recipe_id).then(recipe => {
+
+        if (window.USER_SERVINGS !== 0) {
+          recipe.servings = window.USER_SERVINGS
+        }
+        this.servings = recipe.servings
 
         let total_time = 0
         for (let step of recipe.steps) {
