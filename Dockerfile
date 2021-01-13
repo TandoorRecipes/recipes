@@ -17,8 +17,4 @@ WORKDIR /opt/recipes
 COPY . ./
 RUN chmod +x boot.sh
 
-WORKDIR /opt/recipes/vue
-RUN yarn install
-RUN yarn build
-
 ENTRYPOINT ["/opt/recipes/boot.sh"]
