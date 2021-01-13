@@ -28,12 +28,12 @@
         <div class="card border-primary">
           <div class="card-body">
             <div class="row">
-              <div class="col col-md-9">
+              <div class="col col-md-8">
                 <h4 class="card-title">{{ _('Ingredients') }}</h4>
               </div>
-              <div class="col col-md-3">
+              <div class="col col-md-4">
                 <div class="input-group d-print-none">
-                  <input type="number" value="1" maxlength="3" class="form-control" style="min-width: 2vw"
+                  <input type="number" value="1" maxlength="3" class="form-control" style="min-width: 4vw;"
                          v-model.number="servings"/>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-calculator"></i></span>

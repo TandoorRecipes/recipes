@@ -9,6 +9,13 @@ import Vue from 'vue'
 
 import ScalableNumber from "@/components/ScalableNumber";
 
+/*
+i dont 100% understand this kind of dirty workaround but it works ...
+If you read this and know a better way of running arbitrary vue code that comes from an API endpoint let me know
+
+obviously only run trusted code this way ...
+*/
+
 export default {
   name: 'CompileComponent',
   props: ['code', 'servings'],
@@ -23,10 +30,10 @@ export default {
       components: {
         ScalableNumber, // eslint-disable-line
       },
-      template: `
-        <div>${this.code}</div>`
+      template: `<div>${this.code}</div>`
     })
 
   }
 }
 </script>
+
