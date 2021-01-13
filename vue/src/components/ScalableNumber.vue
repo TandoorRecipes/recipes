@@ -1,5 +1,6 @@
 <template>
-  <p>{{ calculateAmount(number) }}</p>
+  <span>{{ calculateAmount(number) }}</span>
+
 </template>
 
 <script>
