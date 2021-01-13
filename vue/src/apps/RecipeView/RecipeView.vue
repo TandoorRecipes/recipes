@@ -187,7 +187,6 @@ export default {
   data() {
     return {
       loading: true,
-      recipe_id: window.RECIPE_ID,
       recipe: undefined,
       ingredient_count: 0,
       servings: 1,
@@ -195,7 +194,7 @@ export default {
     }
   },
   mounted() {
-    this.loadRecipe(this.recipe_id)
+    this.loadRecipe(window.RECIPE_ID)
   },
   methods: {
     loadRecipe: function (recipe_id) {
