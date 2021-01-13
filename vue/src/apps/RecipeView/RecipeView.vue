@@ -8,7 +8,7 @@
 
     <div class="row">
       <div class="col-12" style="text-align: center">
-        <i>Hier könnte ihre Rezeptbeschreibung stehen</i>
+        <i>{{ recipe.description }}</i>
       </div>
     </div>
 
@@ -41,11 +41,13 @@
       <div class="col col-md-4 col-10">
         <table>
           <tr>
-            <td >
+            <td>
               <i class="fas fa-pizza-slice fa-2x text-primary"></i>
             </td>
-            <td >
-              <input dir="rtl" style="border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px" value="1" maxlength="3"
+            <td>
+              <input dir="rtl"
+                     style="border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
+                     value="1" maxlength="3"
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </td>
 
@@ -79,7 +81,7 @@
                 <table class="table table-sm">
                   <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                   <template v-for="s in recipe.steps">
-                    <template v-for="i in s.ingredients" >
+                    <template v-for="i in s.ingredients">
                       <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
                     </template>
                   </template>
