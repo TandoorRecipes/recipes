@@ -18,51 +18,47 @@
     <hr/>
     <div class="row">
       <div class="col col-md-3">
-        <table>
-          <tr>
-            <td rowspan="2"><i class="fas fa-user-clock fa-2x text-primary"></i></td>
-            <td><span class="text-primary"><b>{{ _('Preparation') }}</b></span></td>
-          </tr>
-          <tr>
-            <td> {{ recipe.working_time }} {{ _('min') }}</td>
-          </tr>
-        </table>
+        <div class="row d-flex" style="padding-left: 16px;height: 100%">
+          <div class="my-auto" style="padding-right: 4px">
+           <i class="fas fa-user-clock fa-2x text-primary"></i>
+          </div>
+          <div class="my-auto" style="padding-right: 4px">
+            <span class="text-primary"><b>{{ _('Preparation') }}</b></span><br/>
+            {{ recipe.working_time }} {{ _('min') }}
+          </div>
+        </div>
       </div>
 
-      <div class="col  col-md-3">
-        <table>
-          <tr>
-            <td rowspan="2"><i class="far fa-clock fa-2x text-primary"></i></td>
-            <td><span class="text-primary"><b>{{ _('Waiting') }}</b></span></td>
-          </tr>
-          <tr>
-            <td>{{ recipe.waiting_time }} {{ _('min') }}</td>
-          </tr>
-        </table>
+      <div class="col col-md-3">
+        <div class="row d-flex" style="height: 100%">
+          <div class="my-auto" style="padding-right: 4px">
+           <i class="far fa-clock fa-2x text-primary"></i>
+          </div>
+          <div class="my-auto" style="padding-right: 4px">
+            <span class="text-primary"><b>{{ _('Waiting') }}</b></span><br/>
+            {{ recipe.waiting_time }} {{ _('min') }}
+          </div>
+        </div>
       </div>
 
       <div class="col col-md-4 col-10">
-        <table>
-          <tr>
-            <td>
-              <i class="fas fa-pizza-slice fa-2x text-primary"></i>
-            </td>
-            <td>
-              <input dir="rtl"
+        <div class="row d-flex" style="padding-left: 16px;height: 100%">
+          <div class="my-auto" style="padding-right: 4px">
+            <i class="fas fa-pizza-slice fa-2x text-primary"></i>
+          </div>
+          <div class="my-auto" style="padding-right: 4px">
+            <input dir="rtl"
                      style="border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
                      value="1" maxlength="3"
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
-            </td>
-
-            <td style="padding-left: 0.5vw">
-              <b>{{ _('Servings') }}</b>
-            </td>
-          </tr>
-        </table>
-
+          </div>
+          <div class="my-auto">
+            <b>{{ _('Servings') }}</b>
+          </div>
+        </div>
       </div>
 
-      <div class="col col-md-2 col-2" style="text-align: right; padding-right: 1vw">
+      <div class="col col-md-2 col-2 my-auto" style="text-align: right; padding-right: 1vw">
         <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
       </div>
     </div>
@@ -124,7 +120,6 @@
       <ImageViewer :recipe="recipe"></ImageViewer>
     </div>
 
-    <!--TODO timers -->
     <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
       <Step :recipe="recipe" :step="s" :servings="servings" :index="index" :start_time="start_time"
             @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
