@@ -14,14 +14,18 @@
           <i class="fas fa-bookmark fa-fw"></i> {{ _('Add to Book') }}
         </button>
 
-        <a class="dropdown-item" :href="recipe.name" v-if="true"> <!--TODO implement -->
-          <i class="fas fa-shopping-cart fa-fw"></i> {{ _('Add to Shopping') }} </a>
+        <a class="dropdown-item" :href="`${resolveDjangoUrl('view_shopping') }?r=[${recipe.id},${servings_value}]`"
+           v-if="recipe.internal" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-shopping-cart fa-fw"></i> {{ _('Add to Shopping') }}
+        </a>
 
-        <a class="dropdown-item" :href="resolveDjangoUrl('new_meal_plan', recipe.id)"><i
-            class="fas fa-calendar fa-fw"></i> {{ _('Add to Plan') }}</a>
+        <a class="dropdown-item" :href="`${resolveDjangoUrl('new_meal_plan') }?r=${recipe.id}`"
+           target="_blank" rel="noopener noreferrer"><i
+            class="fas fa-calendar fa-fw"></i> {{ _('Add to Plan') }}
+        </a>
 
 
-        <button class="dropdown-item"  @click="$bvModal.show('id_modal_cook_log')"><i
+        <button class="dropdown-item" @click="$bvModal.show('id_modal_cook_log')"><i
             class="fas fa-clipboard-list fa-fw"></i> {{ _('Log Cooking') }}
         </button>
 
@@ -29,13 +33,11 @@
             class="fas fa-print fa-fw"></i> {{ _('Print') }}
         </button>
 
-        <a class="dropdown-item" :href="resolveDjangoUrl('view_export', recipe.id)" target="_blank"
+        <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank"
            rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ _('Export') }}</a>
 
         <a class="dropdown-item" :href="resolveDjangoUrl('new_share_link', recipe.id)" target="_blank"
-           rel="noopener noreferrer" v-if="recipe.internal"><i class="fas fa-share-alt fa-fw"></i> {{
-            _('Share')
-          }}</a>
+           rel="noopener noreferrer" v-if="recipe.internal"><i class="fas fa-share-alt fa-fw"></i> {{ _('Share') }}</a>
       </div>
 
 
@@ -59,8 +61,20 @@ export default {
   components: {
     CookLog
   },
+  data() {
+    return {
+      servings_value: 0
+    }
+  },
   props: {
     recipe: Object,
+    servings: {
+      type: Number,
+      default: -1
+    }
+  },
+  mounted() {
+    this.servings_value = ((this.servings === -1) ? this.recipe.servings : this.servings)
   }
 }
 </script>
