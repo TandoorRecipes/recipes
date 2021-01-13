@@ -122,7 +122,7 @@
 
     <!--TODO timers -->
     <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-      <Step v-bind:step="s" v-bind:servings="servings" v-bind:index="index"></Step>
+      <Step :recipe="recipe" v-bind:step="s" v-bind:servings="servings" v-bind:index="index"></Step>
     </div>
 
 

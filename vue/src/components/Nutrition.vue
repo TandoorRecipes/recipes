@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div v-if="recipe.nutrition !== null">
     <div class="card border-success">
 
       <div class="card-body">
