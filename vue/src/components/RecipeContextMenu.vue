@@ -8,8 +8,13 @@
       </a>
 
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+
         <a class="dropdown-item" :href="resolveDjangoUrl('edit_recipe', recipe.id)"><i
             class="fas fa-pencil-alt fa-fw"></i> {{ _('Edit') }}</a>
+
+        <a class="dropdown-item" :href="resolveDjangoUrl('edit_convert_recipe', recipe.id)" v-if="!recipe.internal"><i
+            class="fas fa-exchange-alt fa-fw"></i> {{ _('Convert to internal recipe') }}</a>
+
         <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
           <i class="fas fa-bookmark fa-fw"></i> {{ _('Add to Book') }}
         </button>

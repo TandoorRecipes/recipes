@@ -118,13 +118,16 @@
 
       </div>
 
-      <div v-if="recipe.file_path.includes('.pdf')">
-        <PdfViewer :recipe="recipe"></PdfViewer>
-      </div>
-      <div
-          v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
-        <ImageViewer :recipe="recipe"></ImageViewer>
-      </div>
+      <template v-if="!recipe.internal">
+        <div v-if="recipe.file_path.includes('.pdf')">
+          <PdfViewer :recipe="recipe"></PdfViewer>
+        </div>
+        <div
+            v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
+          <ImageViewer :recipe="recipe"></ImageViewer>
+        </div>
+      </template>
+
 
       <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
         <Step :recipe="recipe" :step="s" :ingredient_factor="ingredient_factor" :index="index" :start_time="start_time"
@@ -144,7 +147,7 @@ import {apiLoadRecipe} from "@/utils/api";
 
 import Step from "@/components/Step";
 import RecipeContextMenu from "@/components/RecipeContextMenu";
-import {GettextMixin, ToastMixin} from "@/utils/utils";
+import {GettextMixin, ResolveUrlMixin, ToastMixin} from "@/utils/utils";
 import Ingredient from "@/components/Ingredient";
 
 import PdfViewer from "@/components/PdfViewer";
@@ -163,6 +166,7 @@ export default {
   name: 'RecipeView',
   mixins: [
     GettextMixin,
+    ResolveUrlMixin,
     ToastMixin,
   ],
   components: {

@@ -162,6 +162,9 @@ def recipe_view(request, pk, share=None):
             servings__gt=0
         ).all().aggregate(Avg('servings'))['servings__avg']
 
+    if not user_servings:
+        user_servings = 0
+
     if request.user.is_authenticated:
         if not ViewLog.objects \
                 .filter(recipe=recipe) \
