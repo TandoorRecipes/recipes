@@ -18,7 +18,6 @@ export default {
   },
   methods: {
     calculateAmount: function (x) {
-      console.log("calculated amount")
       return calculateAmount(x, this.factor)
     }
   }

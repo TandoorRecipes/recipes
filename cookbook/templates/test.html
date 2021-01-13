@@ -1,10 +1,36 @@
 {% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
 {% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load custom_tags %}
 
 {% block title %}{{ recipe.name }}{% endblock %}
 
 {% block content %}
+    {% recipe_rating recipe request.user as rating %}
+    <!--
+    <div class="row">
+        <div class="col-md-12">
+            <h3>{{ recipe.name }} {{ rating|safe }}</h3>
+
+            {% if recipe.storage %}
+                <small>{% trans 'in' %} <a
+                        href="{% url 'edit_storage' recipe.storage.pk %}">{{ recipe.storage.name }}</a></small><br/>
+            {% endif %}
+
+            {% if recipe.internal %}
+                <small>{% trans 'by' %} {{ recipe.created_by.get_user_name }}<br/></small>
+            {% endif %}
+
+            {% if recipe.keywords %}
+                {% for x in recipe.keywords.all %}
+                    <span class="badge badge-pill badge-light">{{ x }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+-->
 
     <div id="app">
         <recipe-view recipe_id="5"></recipe-view>
@@ -24,7 +50,7 @@
 
 
     <script type="application/javascript">
-        window.RECIPE_ID = {{pk}};
+        window.RECIPE_ID = {{recipe.pk}};
         window.USER_PREF = {
             'use_fractions': {% if request.user.userpreference.use_fractions %} true {% else %} false {% endif %},
             'ingredient_decimals': {{ request.user.userpreference.ingredient_decimals }},
