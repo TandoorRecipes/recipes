@@ -34,7 +34,7 @@
             <table class="table table-sm">
               <!-- eslint-disable vue/no-v-for-template-key-on-child -->
               <template v-for="i in step.ingredients">
-                <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
+                <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id" @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient>
               </template>
               <!-- eslint-enable vue/no-v-for-template-key-on-child -->
             </table>

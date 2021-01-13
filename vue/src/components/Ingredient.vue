@@ -1,7 +1,8 @@
 <template>
-    <tr>
+    <tr @click="$emit('checked-state-changed', ingredient)">
       <td>
-        <input type="checkbox">
+        <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
+        <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
       </td>
       <td>
         <span v-if="ingredient.amount !== 0">{{ calculateAmount(ingredient.amount) }}</span>
@@ -37,6 +38,11 @@ export default {
     servings: {
       type: Number,
       default: 1,
+    }
+  },
+  data() {
+    return {
+      checked: false
     }
   },
   methods: {

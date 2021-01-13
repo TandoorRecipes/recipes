@@ -85,7 +85,8 @@
                   <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                   <template v-for="s in recipe.steps">
                     <template v-for="i in s.ingredients">
-                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
+                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"
+                                  @checked-state-changed="updateIngredientCheckedState"></Ingredient>
                     </template>
                   </template>
                   <!-- eslint-enable vue/no-v-for-template-key-on-child -->
@@ -126,7 +127,7 @@
     <!--TODO timers -->
     <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
       <Step :recipe="recipe" :step="s" :servings="servings" :index="index" :start_time="start_time"
-      @update-start-time="updateStartTime"></Step>
+            @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
     </div>
 
   </div>
@@ -185,12 +186,14 @@ export default {
   methods: {
     loadRecipe: function (recipe_id) {
       apiLoadRecipe(recipe_id).then(recipe => {
-        this.recipe = recipe
-        this.loading = false
 
         let total_time = 0
-        for (let step of this.recipe.steps) {
+        for (let step of recipe.steps) {
           this.ingredient_count += step.ingredients.length
+
+          for (let ingredient of step.ingredients) {
+             this.$set(ingredient, 'checked', false)
+          }
 
           step.time_offset = total_time
           total_time += step.time
@@ -200,11 +203,23 @@ export default {
         if (total_time > 0) {
           this.start_time = moment().format('yyyy-MM-DDTHH:mm')
         }
+
+        this.recipe = recipe
+        this.loading = false
       })
     },
     updateStartTime: function (e) {
       this.start_time = e
-    }
+    },
+    updateIngredientCheckedState: function (e) {
+      for (let step of this.recipe.steps) {
+        for (let ingredient of step.ingredients) {
+          if (ingredient.id === e.id) {
+            this.$set(ingredient, 'checked', !ingredient.checked)
+          }
+        }
+      }
+    },
   }
 }
 
