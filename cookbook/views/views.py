@@ -1,6 +1,6 @@
 import os
+import re
 from datetime import datetime, timedelta
-from typing import re
 from uuid import UUID
 
 from django.conf import settings

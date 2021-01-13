@@ -61,7 +61,7 @@
       </div>
 
       <div class="col col-md-2 col-2" style="text-align: right; padding-right: 1vw">
-        <recipe-context-menu v-bind:recipe="recipe"></recipe-context-menu>
+        <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
       </div>
     </div>
     <hr/>

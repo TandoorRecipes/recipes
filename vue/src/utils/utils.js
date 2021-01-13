@@ -53,13 +53,13 @@ export const ResolveUrlMixin = {
          * @param {string} url name of url
          * @param {*} params tuple of params to pass to django named url
          */
-        resolveDjangoUrl: function (url, params) {
+        resolveDjangoUrl: function (url, params = null) {
             return resolveDjangoUrl(url, params)
         }
     }
 }
 
-export function resolveDjangoUrl(url, params=null) {
+export function resolveDjangoUrl(url, params = null) {
     if (params !== null) {
         return window.Urls[url](params)
     } else {
