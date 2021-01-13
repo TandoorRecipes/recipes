@@ -49,7 +49,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer)
+                                 ViewLogSerializer, CookLogSerializer)
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -328,6 +328,15 @@ class ViewLogViewSet(viewsets.ModelViewSet):
                        .filter(created_by=self.request.user).all()[:5]
         return queryset
 
+
+class CookLogViewSet(viewsets.ModelViewSet):
+    queryset = CookLog.objects.all()
+    serializer_class = CookLogSerializer
+    permission_classes = [CustomIsOwner]
+
+    def get_queryset(self):
+        queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
+        return queryset
 
 # -------------- non django rest api views --------------------
 

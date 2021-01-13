@@ -59,8 +59,12 @@ export const ResolveUrlMixin = {
     }
 }
 
-export function resolveDjangoUrl(url, params) {
-    return window.Urls[url](params)
+export function resolveDjangoUrl(url, params=null) {
+    if (params !== null) {
+        return window.Urls[url](params)
+    } else {
+        return window.Urls[url]()
+    }
 }
 
 /*
