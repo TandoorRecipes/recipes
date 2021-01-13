@@ -1,6 +1,4 @@
 #!/bin/sh
-cd /opt/recipes
-
 source venv/bin/activate
 
 echo "Updating database"
