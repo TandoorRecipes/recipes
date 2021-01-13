@@ -493,8 +493,8 @@ def offline(request):
     return render(request, 'offline.html', {})
 
 
-def test(request):
+def test(request, pk):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    return render(request, 'test.html', {'test': None})
+    return render(request, 'test.html', {'pk': pk})

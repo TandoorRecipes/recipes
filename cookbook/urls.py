@@ -56,7 +56,7 @@ urlpatterns = [
         ),
         name='service_worker'
     ),
-    path('test/', views.test, name='view_test'),
+    path('test/<int:pk>', views.test, name='view_test'),
 
     path('import/', import_export.import_recipe, name='view_import'),
     path('export/', import_export.export_recipe, name='view_export'),

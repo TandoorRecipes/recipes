@@ -24,7 +24,7 @@
 
 
     <script type="application/javascript">
-        window.RECIPE_ID = 6;
+        window.RECIPE_ID = {{pk}};
         window.USER_PREF = {
             'use_fractions': {% if request.user.userpreference.use_fractions %} true {% else %} false {% endif %},
             'ingredient_decimals': {{ request.user.userpreference.ingredient_decimals }},
