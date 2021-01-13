@@ -1,5 +1,4 @@
 <template>
-  <div>
     <tr>
       <td>
         <input type="checkbox">
@@ -25,7 +24,6 @@
         </div>
       </td>
     </tr>
-  </div>
 </template>
 
 <script>

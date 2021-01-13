@@ -77,11 +77,13 @@
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-sm">
-                  <div v-for="s in recipe.steps" v-bind:key="s.id">
-                    <div v-for="i in s.ingredients" v-bind:key="i.id">
-                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings"></Ingredient>
-                    </div>
-                  </div>
+                  <!-- eslint-disable vue/no-v-for-template-key-on-child -->
+                  <template v-for="s in recipe.steps">
+                    <template v-for="i in s.ingredients" >
+                      <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
+                    </template>
+                  </template>
+                  <!-- eslint-enable vue/no-v-for-template-key-on-child -->
                 </table>
               </div>
             </div>
