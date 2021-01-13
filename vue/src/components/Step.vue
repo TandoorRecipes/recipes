@@ -1,30 +1,58 @@
 <template>
 
   <div>
+    <hr/>
+    <template v-if="step.type === 'TEXT'">
+      <div class="row">
+        <div class="col col-md4">
+          <h5 class="text-primary">
+            <template v-if="step.name">{{ step.name }}</template>
+            <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
 
-    <h5 class="text-secondary">
-      <template v-if="step.name">{{ step.name }}</template>
-      <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
-    </h5>
-
-    <div class="row">
-
-      <div class="col-md-4">
-        <i class="fa fa-stopwatch"></i> {{ step.time }}
-
-        <table class="table table-sm">
-          <div v-for="i in step.ingredients" v-bind:key="i.id">
-            <Ingredient v-bind:ingredient="i" v-bind:servings="servings"></Ingredient>
-          </div>
-        </table>
+            <small style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fas fa-user-clock"></i>
+              {{ step.time }} {{ _('min') }}</small>
+          </h5>
+        </div>
       </div>
 
-      <div class="col-md-8">
-        <i class="fas fa-paragraph text-secondary"></i>
-        <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
+
+      <div class="row">
+
+        <div class="col col-md-4">
+          <table class="table table-sm">
+            <!-- eslint-disable vue/no-v-for-template-key-on-child -->
+            <template v-for="i in step.ingredients">
+              <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id"></Ingredient>
+            </template>
+            <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+          </table>
+        </div>
+
+        <div class="col col-md-8">
+          <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
+        </div>
+      </div>
+    </template>
+    <template v-if="step.type === 'TIME'">
+      <div class="row">
+        <div class="col col-md-12" style="text-align: center">
+          <h4 class="text-primary">
+            <template v-if="step.name">{{ step.name }}</template>
+            <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
+          </h4>
+           <span style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fa fa-stopwatch"></i>
+              {{ step.time }} {{ _('min') }}</span>
+        </div>
+      </div>
+      <div class="row" v-if="step.instruction !== ''">
+        <div class="col col-md-12" style="text-align: center">
+          <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
+        </div>
 
       </div>
-    </div>
+
+    </template>
+
 
   </div>
 
