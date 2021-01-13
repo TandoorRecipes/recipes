@@ -3,7 +3,7 @@
       <td>
         <input type="checkbox">
       </td>
-      <td>
+      <td style="text-align: right">
         <span v-if="ingredient.amount !== 0">{{ calculateAmount(ingredient.amount) }}</span>
       </td>
       <td>
@@ -31,7 +31,7 @@
 import {calculateAmount} from "@/utils/utils";
 
 export default {
-  name: 'Ingredient',
+  name: 'IngredientRow',
   props: {
     ingredient: Object,
     servings: {
