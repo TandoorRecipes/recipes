@@ -21,11 +21,8 @@
 
       <div class="col-md-9">
         <i class="fas fa-paragraph text-secondary"></i>
-        <span v-html="step.ingredients_markdown">
+        <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
 
-        </span>
-
-         <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
       </div>
     </div>
 
@@ -39,7 +36,6 @@ import {calculateAmount} from "@/utils/utils";
 
 import Ingredient from "@/components/Ingredient";
 import {GettextMixin} from "@/utils/utils";
-import ScalableNumber from "@/components/ScalableNumber";
 
 import CompileComponent from "@/components/CompileComponent";
 
@@ -50,8 +46,7 @@ export default {
   ],
   components: {
     Ingredient,
-    CompileComponent, //eslint-disable-line
-    ScalableNumber, // eslint-disable-line
+    CompileComponent,
   },
   props: {
     step: Object,
