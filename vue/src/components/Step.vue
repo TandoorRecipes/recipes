@@ -77,33 +77,35 @@
       </b-collapse>
     </template>
 
-    <b-popover
-        :target="`id_reactive_popover_${step.id}`"
-        triggers="click"
-        placement="bottom"
-        :ref="`id_reactive_popover_${step.id}`"
-        :title="_('Step start time')">
-      <div>
-        <b-form-group
-            label="Time"
-            label-for="popover-input-1"
-            label-cols="3"
-            class="mb-1">
-          <b-form-input
-              type="datetime-local"
-              id="popover-input-1"
-              v-model.datetime-local="set_time_input"
-              size="sm"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-      <div class="row" style="margin-top: 1vh">
-        <div class="col-12" style="text-align: right">
-          <b-button @click="closePopover" size="sm" variant="secondary" style="margin-right:8px">Cancel</b-button>
-          <b-button @click="updateTime" size="sm" variant="primary">Ok</b-button>
+    <div v-if="start_time !== ''">
+      <b-popover
+          :target="`id_reactive_popover_${step.id}`"
+          triggers="click"
+          placement="bottom"
+          :ref="`id_reactive_popover_${step.id}`"
+          :title="_('Step start time')">
+        <div>
+          <b-form-group
+              label="Time"
+              label-for="popover-input-1"
+              label-cols="3"
+              class="mb-1">
+            <b-form-input
+                type="datetime-local"
+                id="popover-input-1"
+                v-model.datetime-local="set_time_input"
+                size="sm"
+            ></b-form-input>
+          </b-form-group>
         </div>
-      </div>
-    </b-popover>
+        <div class="row" style="margin-top: 1vh">
+          <div class="col-12" style="text-align: right">
+            <b-button @click="closePopover" size="sm" variant="secondary" style="margin-right:8px">Cancel</b-button>
+            <b-button @click="updateTime" size="sm" variant="primary">Ok</b-button>
+          </div>
+        </div>
+      </b-popover>
+    </div>
   </div>
 
 </template>
