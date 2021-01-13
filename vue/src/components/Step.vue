@@ -34,13 +34,13 @@
             <table class="table table-sm">
               <!-- eslint-disable vue/no-v-for-template-key-on-child -->
               <template v-for="i in step.ingredients">
-                <Ingredient v-bind:ingredient="i" v-bind:servings="servings" :key="i.id" @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient>
+                <Ingredient v-bind:ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id" @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient>
               </template>
               <!-- eslint-enable vue/no-v-for-template-key-on-child -->
             </table>
           </div>
           <div class="col" :class="{ 'col-md-8':  recipe.steps.length > 1, 'col-md-12':  recipe.steps.length <= 1,}">
-            <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
+            <compile-component :code="step.ingredients_markdown" :ingredient_factor="ingredient_factor"></compile-component>
           </div>
         </div>
       </b-collapse>
@@ -71,7 +71,7 @@
       <b-collapse id="collapse-1" v-model="details_visible">
         <div class="row" v-if="step.instruction !== ''">
           <div class="col col-md-12" style="text-align: center">
-            <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
+            <compile-component :code="step.ingredients_markdown" :ingredient_factor="ingredient_factor"></compile-component>
           </div>
         </div>
       </b-collapse>
@@ -134,7 +134,7 @@ export default {
   },
   props: {
     step: Object,
-    servings: Number,
+    ingredient_factor: Number,
     index: Number,
     recipe: Object,
     start_time: String,
@@ -151,7 +151,7 @@ export default {
   methods: {
     calculateAmount: function (x) {
       // used by the jinja2 template
-      return calculateAmount(x, this.servings)
+      return calculateAmount(x, this.ingredient_factor)
     },
     updateTime: function () {
       this.$emit('update-start-time', moment(this.set_time_input).add(this.time_offset * -1, 'minutes').format('yyyy-MM-DDTHH:mm'))

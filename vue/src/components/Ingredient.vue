@@ -35,7 +35,7 @@ export default {
   name: 'Ingredient',
   props: {
     ingredient: Object,
-    servings: {
+    ingredient_factor: {
       type: Number,
       default: 1,
     }
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     calculateAmount: function (x) {
-      return calculateAmount(x, this.servings)
+      return calculateAmount(x, this.ingredient_factor)
     }
   }
 }

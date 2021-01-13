@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="compiled" :servings="servings" :code="code"></component>
+    <component :is="compiled" :ingredient_factor="ingredient_factor" :code="code"></component>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ obviously only run trusted code this way ...
 
 export default {
   name: 'CompileComponent',
-  props: ['code', 'servings'],
+  props: ['code', 'ingredient_factor'],
   data() {
     return {
       compiled: null,
@@ -26,7 +26,7 @@ export default {
   },
   mounted() {
     this.compiled = Vue.component('compiled-component', {
-      props: ['servings', 'code'],
+      props: ['ingredient_factor', 'code'],
       components: {
         ScalableNumber, // eslint-disable-line
       },
