@@ -7,6 +7,7 @@ from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django.core.validators import MinLengthValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_random_queryset import RandomManager
 
@@ -443,7 +444,7 @@ class InviteLink(models.Model):
 class CookLog(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     rating = models.IntegerField(null=True)
     servings = models.IntegerField(default=0)
 

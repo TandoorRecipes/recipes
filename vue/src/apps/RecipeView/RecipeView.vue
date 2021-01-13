@@ -1,5 +1,6 @@
 <template>
   <div id="app" v-if="!loading">
+
     <div class="row">
       <div class="col-12" style="text-align: center">
         <h3>{{ recipe.name }}</h3>
@@ -179,6 +180,9 @@ export default {
     this.loadRecipe(this.recipe_id)
   },
   methods: {
+    openCookLogModal: function () {
+      this.$bvModal.show('id_modal_cook_log')
+    },
     loadRecipe: function (recipe_id) {
       apiLoadRecipe(recipe_id).then(recipe => {
         this.recipe = recipe

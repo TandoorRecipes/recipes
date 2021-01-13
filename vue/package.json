@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
+    "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.12",
     "vuex": "^3.6.0"
