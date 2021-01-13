@@ -6,11 +6,15 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 export function apiLoadRecipe(recipe_id) {
-    return axios.get(resolveDjangoUrl('api:recipe-detail', recipe_id)).then((response) => {
+    let url = resolveDjangoUrl('api:recipe-detail', recipe_id)
+    if (window.SHARE_UID !== undefined) {
+        url += '?share=' + window.SHARE_UID
+    }
+
+    return axios.get(url).then((response) => {
         return response.data
     }).catch((err) => {
-        console.log(err.response)
-        makeToast('Error', 'There was an error loading a resource!', 'danger')
+        handleError(err, 'There was an error loading a resource!', 'danger')
     })
 }
 
