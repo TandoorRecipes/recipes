@@ -149,7 +149,7 @@ class TestEditsRecipe(TestViews):
 
         r = self.user_client_1.post(
             url,
-            {'name': 'Test', 'working_time': 15, 'waiting_time': 15, }
+            {'name': 'Test', 'working_time': 15, 'waiting_time': 15, 'servings': 1, }
         )
         recipe.refresh_from_db()
         self.assertEqual(recipe.working_time, 15)
