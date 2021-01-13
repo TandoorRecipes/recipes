@@ -1,1 +1,1 @@
-{"status":"compiling","publicPath":"http://localhost:8080/"}
+{"status":"done","chunks":{"chunk-vendors":[{"name":"css/chunk-vendors.css","path":"F:\\Developement\\Django\\recipes\\cookbook\\static\\vue\\css\\chunk-vendors.css"},{"name":"js/chunk-vendors.js","path":"F:\\Developement\\Django\\recipes\\cookbook\\static\\vue\\js\\chunk-vendors.js"}],"recipe_view":[{"name":"js/recipe_view.js","path":"F:\\Developement\\Django\\recipes\\cookbook\\static\\vue\\js\\recipe_view.js"}]}}
