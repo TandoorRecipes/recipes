@@ -10,6 +10,10 @@
           </div>
         </div>
 
+        <div class="d-flex flex-row">
+
+        </div>
+
 
         <div class="row">
           <div class="col-12">
@@ -25,11 +29,31 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-12">
-            {{ _('Fats') }}
-            {{ calculateAmount(recipe.nutrition.fats) }} g
+        <div class="d-flex flex-row">
+          <div class="flex-column">
+            <div class="">
+              {{ _('Fats') }}
+            </div>
+            <div class="">
+              {{ calculateAmount(recipe.nutrition.fats) }}
+            </div>
+            <div class="">
+              g
+            </div>
           </div>
+
+          <div class="flex-column">
+            <div class="">
+              {{ _('Fats') }}
+            </div>
+            <div class="">
+              {{ calculateAmount(recipe.nutrition.fats) }}
+            </div>
+            <div class="">
+              g
+            </div>
+          </div>
+
         </div>
 
         <div class="row">

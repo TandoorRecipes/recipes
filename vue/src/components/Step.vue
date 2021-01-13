@@ -9,17 +9,17 @@
 
     <div class="row">
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <i class="fa fa-stopwatch"></i> {{ step.time }}
 
-        <table>
+        <table class="table table-sm">
           <div v-for="i in step.ingredients" v-bind:key="i.id">
             <Ingredient v-bind:ingredient="i" v-bind:servings="servings"></Ingredient>
           </div>
         </table>
       </div>
 
-      <div class="col-md-9">
+      <div class="col-md-8">
         <i class="fas fa-paragraph text-secondary"></i>
         <compile-component :code="step.ingredients_markdown" :servings="servings"></compile-component>
 
