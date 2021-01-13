@@ -84,7 +84,7 @@ class ExternalRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = (
-            'name', 'keywords', 'working_time', 'waiting_time',
+            'name', 'keywords', 'description', 'servings', 'working_time', 'waiting_time',
             'file_path', 'storage', 'file_uid'
         )
 
