@@ -19,8 +19,6 @@
                     class="d-print-none"> <i class="far fa-comment"></i>
           </span>
 
-
-
           <div class="d-none d-print-block">
             <i class="far fa-comment-alt"></i> {{ ingredient.note }}
           </div>

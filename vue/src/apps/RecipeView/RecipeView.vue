@@ -14,7 +14,7 @@
 
     <hr/>
     <div class="row">
-      <div class="col-3">
+      <div class="col col-md-3">
         <table>
           <tr>
             <td rowspan="2"><i class="fas fa-user-clock fa-2x text-primary"></i></td>
@@ -26,7 +26,7 @@
         </table>
       </div>
 
-      <div class="col-3">
+      <div class="col  col-md-3">
         <table>
           <tr>
             <td rowspan="2"><i class="far fa-clock fa-2x text-primary"></i></td>
@@ -38,11 +38,26 @@
         </table>
       </div>
 
-      <div class="col-3">
-        Hier kann noch text stehen
+      <div class="col col-md-4 col-10">
+        <table>
+          <tr>
+            <td >
+              <i class="fas fa-pizza-slice fa-2x text-primary"></i>
+            </td>
+            <td >
+              <input dir="rtl" style="border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px" value="1" maxlength="3"
+                     type="number" class="form-control form-control-lg" v-model.number="servings"/>
+            </td>
+
+            <td style="padding-left: 0.5vw">
+              <b>{{ _('Servings') }}</b>
+            </td>
+          </tr>
+        </table>
+
       </div>
 
-      <div class="col-3" style="text-align: right">
+      <div class="col col-md-2 col-2" style="text-align: right; padding-right: 1vw">
         <recipe-context-menu v-bind:recipe="recipe"></recipe-context-menu>
       </div>
     </div>
@@ -56,15 +71,6 @@
             <div class="row">
               <div class="col col-md-8">
                 <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ _('Ingredients') }}</h4>
-              </div>
-              <div class="col col-md-4">
-                <div class="input-group d-print-none">
-                  <input type="number" value="1" maxlength="3" class="form-control" style="min-width: 4vw;"
-                         v-model.number="servings"/>
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-calculator"></i></span>
-                  </div>
-                </div>
               </div>
             </div>
             <br/>

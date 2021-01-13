@@ -48,7 +48,7 @@ module.exports = {
             .host('localhost')
             .port(8080)
             .hotOnly(true)
-            .watchOptions({poll: 1000})
+            .watchOptions({poll: 500})
             .https(false)
             .headers({"Access-Control-Allow-Origin": ["*"]})
 
