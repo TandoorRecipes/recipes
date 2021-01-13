@@ -59,13 +59,15 @@
 
       <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2" style="text-align: center">
         <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
-             :alt="_( 'Recipe Image')">
-
-        <div>
-
-        </div>
-
+             :alt="_( 'Recipe Image')" v-if="recipe.image !== null">
       </div>
+    </div>
+
+    <div v-if="recipe.file_path.includes('.pdf')">
+      <PdfViewer :recipe="recipe"></PdfViewer>
+    </div>
+    <div v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
+      <ImageViewer :recipe="recipe"></ImageViewer>
     </div>
 
     <!--TODO timers -->
@@ -93,6 +95,8 @@ import {GettextMixin, ToastMixin} from "@/utils/utils";
 import Ingredient from "@/components/Ingredient";
 
 import ScalableNumber from "@/components/ScalableNumber";
+import PdfViewer from "@/components/PdfViewer";
+import ImageViewer from "@/components/ImageViewer";
 
 Vue.use(BootstrapVue)
 
@@ -103,6 +107,8 @@ export default {
     ToastMixin,
   ],
   components: {
+    PdfViewer,
+    ImageViewer,
     Ingredient,
     Step,
     RecipeContextMenu,

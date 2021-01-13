@@ -32,12 +32,8 @@ urlpatterns = [
         JavaScriptCatalog.as_view(domain='django'),
         name='javascript-catalog'
     ),
-    url(r'^jsreverse.json$', reverse_views.urls_js, name='js_reverse'),
 ]
 
 if settings.GUNICORN_MEDIA or settings.DEBUG:
-    urlpatterns += url(
-        r'^media/(?P<path>.*)$',
-        serve,
-        {'document_root': settings.MEDIA_ROOT}
-    ),
+    urlpatterns += url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    urlpatterns += url(r'^jsreverse.json$', reverse_views.urls_js, name='js_reverse'),
