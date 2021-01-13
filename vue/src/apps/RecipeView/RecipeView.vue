@@ -7,9 +7,11 @@
       </div>
     </div>
 
-    <!--TODO Tags -->
+    <div style="text-align: center">
+      <keywords :recipe="recipe"></keywords>
+    </div>
 
-    <div class="row">
+    <div class="row" style="margin-top: 8px">
       <div class="col-12" style="text-align: center">
         <i>{{ recipe.description }}</i>
       </div>
@@ -146,6 +148,7 @@ import ImageViewer from "@/components/ImageViewer";
 import Nutrition from "@/components/Nutrition";
 
 import moment from 'moment'
+import Keywords from "@/components/Keywords";
 
 Vue.prototype.moment = moment
 
@@ -164,6 +167,7 @@ export default {
     Step,
     RecipeContextMenu,
     Nutrition,
+    Keywords,
   },
   data() {
     return {
