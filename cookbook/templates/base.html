@@ -220,6 +220,8 @@
             }).catch(function (err) {
                 console.warn('Error whilst registering service worker', err);
             });
+        } else {
+            console.warn('service worker not in navigator');
         }
     });
 </script>

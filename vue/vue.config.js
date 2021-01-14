@@ -5,6 +5,10 @@ const pages = {
         entry: './src/apps/RecipeView/main.js',
         chunks: ['chunk-vendors']
     },
+    'service_worker': {
+        entry: './src/serviceWorker.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {
@@ -16,19 +20,33 @@ module.exports = {
         : 'http://localhost:8080/',
     outputDir: '../cookbook/static/vue/',
     runtimeCompiler: true,
+
+    pwa: {
+        name: 'Recipes',
+        themeColor: '#4DBA87',
+        msTileColor: '#000000',
+        appleMobileWebAppCapable: 'yes',
+        appleMobileWebAppStatusBarStyle: 'black',
+
+        workboxPluginMode: 'GenerateSW',
+        workboxOptions: {
+            offlineGoogleAnalytics: false,
+            inlineWorkboxRuntime: true,
+
+        }
+    },
     chainWebpack: config => {
 
-        config.optimization
-            .splitChunks({
-                cacheGroups: {
-                    vendor: {
-                        test: /[\\/]node_modules[\\/]/,
-                        name: "chunk-vendors",
-                        chunks: "all",
-                        priority: 1
-                    },
+        config.optimization.splitChunks({
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "chunk-vendors",
+                    chunks: "all",
+                    priority: 1
                 },
-            });
+            },
+        });
 
         Object.keys(pages).forEach(page => {
             config.plugins.delete(`html-${page}`);

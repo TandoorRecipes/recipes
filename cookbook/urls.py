@@ -48,8 +48,6 @@ urlpatterns = [
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
-    path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service_worker'),
     path('test/<int:pk>', views.test, name='view_test'),
 
     path('import/', import_export.import_recipe, name='view_import'),
@@ -100,6 +98,9 @@ urlpatterns = [
 
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    path('offline/', views.offline, name='view_offline'),
+    path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service_worker'),
 
 ]
 

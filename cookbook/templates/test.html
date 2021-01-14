@@ -1,0 +1,11 @@
+<script type="application/javascript">
+    window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: '/'}).then(function (reg) {
+                console.warn('Successfully registered service worker', err);
+            }).catch(function (err) {
+                console.warn('Error whilst registering service worker', err);
+            });
+        }
+    });
+</script>
