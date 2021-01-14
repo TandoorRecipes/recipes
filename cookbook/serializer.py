@@ -90,6 +90,20 @@ class SyncLogSerializer(serializers.ModelSerializer):
         fields = ('id', 'sync', 'status', 'msg', 'created_at')
 
 
+class KeywordLabelSerializer(serializers.ModelSerializer):
+    label = serializers.SerializerMethodField('get_label')
+
+    def get_label(self, obj):
+        return str(obj)
+
+    class Meta:
+        model = Keyword
+        fields = (
+            'id', 'label',
+        )
+        read_only_fields = ('id', 'label')
+
+
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     label = serializers.SerializerMethodField('get_label')
 
@@ -179,6 +193,19 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = NutritionInformation
         fields = ('carbohydrates', 'fats', 'proteins', 'calories', 'source')
+
+
+class RecipeOverviewSerializer(WritableNestedModelSerializer):
+    keywords = KeywordLabelSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'name', 'description', 'image', 'keywords', 'working_time',
+            'waiting_time', 'created_by', 'created_at', 'updated_at',
+            'internal', 'servings', 'file_path'
+        )
+        read_only_fields = ['image', 'created_by', 'created_at']
 
 
 class RecipeSerializer(WritableNestedModelSerializer):
@@ -314,7 +341,7 @@ class ShareLinkSerializer(serializers.ModelSerializer):
 
 
 class CookLogSerializer(serializers.ModelSerializer):
-    def create(self, validated_data): # TODO make mixin
+    def create(self, validated_data):  # TODO make mixin
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 

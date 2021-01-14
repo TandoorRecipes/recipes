@@ -154,7 +154,9 @@ export default {
       return calculateAmount(x, this.ingredient_factor)
     },
     updateTime: function () {
-      this.$emit('update-start-time', moment(this.set_time_input).add(this.time_offset * -1, 'minutes').format('yyyy-MM-DDTHH:mm'))
+      let new_start_time = moment(this.set_time_input).add(this.step.time_offset * -1, 'minutes').format('yyyy-MM-DDTHH:mm')
+
+      this.$emit('update-start-time', new_start_time)
       this.closePopover()
     },
     closePopover: function () {
