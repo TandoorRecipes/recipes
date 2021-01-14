@@ -319,6 +319,12 @@ class RecipeBookEntry(models.Model):
     def __str__(self):
         return self.recipe.name
 
+    def get_owner(self):
+        try:
+            return self.book.created_by
+        except AttributeError:
+            return None
+
     class Meta:
         unique_together = (('recipe', 'book'),)
 

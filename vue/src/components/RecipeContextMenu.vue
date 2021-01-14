@@ -15,7 +15,7 @@
         <a class="dropdown-item" :href="resolveDjangoUrl('edit_convert_recipe', recipe.id)" v-if="!recipe.internal"><i
             class="fas fa-exchange-alt fa-fw"></i> {{ _('Convert to internal recipe') }}</a>
 
-        <button class="dropdown-item" onclick="$('#bookmarkModal').modal({'show':true})">
+        <button class="dropdown-item" @click="$bvModal.show('id_modal_add_book')">
           <i class="fas fa-bookmark fa-fw"></i> {{ _('Add to Book') }}
         </button>
 

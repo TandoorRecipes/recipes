@@ -21,7 +21,7 @@ from PIL import Image
 from rest_framework import decorators, permissions, viewsets
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
-                                   UpdateModelMixin)
+                                   UpdateModelMixin, CreateModelMixin)
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
@@ -35,7 +35,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog)
+                             ViewLog, RecipeBookEntry)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
@@ -49,7 +49,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer)
+                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer)
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -121,6 +121,13 @@ class StandardFilterMixin(ViewSetMixin):
         if query is not None:
             queryset = queryset.filter(name__icontains=query)
 
+        updated_at = self.request.query_params.get('updated_at', None)
+        if updated_at is not None:
+            try:
+                queryset = queryset.filter(updated_at__gte=updated_at)
+            except FieldError:
+                pass
+
         limit = self.request.query_params.get('limit', None)
         random = self.request.query_params.get('random', False)
         if limit is not None:
@@ -157,14 +164,21 @@ class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
 
-class RecipeBookViewSet(
-    RetrieveModelMixin,
-    UpdateModelMixin,
-    ListModelMixin,
-    viewsets.GenericViewSet
-):
+class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
+    permission_classes = [CustomIsOwner, CustomIsAdmin]
+
+    def get_queryset(self):
+        self.queryset = super(RecipeBookViewSet, self).get_queryset()
+        if self.request.user.is_superuser:
+            return self.queryset
+        return self.queryset.filter(created_by=self.request.user)
+
+
+class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
+    queryset = RecipeBookEntry.objects.all()
+    serializer_class = RecipeBookEntrySerializer
     permission_classes = [CustomIsOwner, CustomIsAdmin]
 
     def get_queryset(self):
@@ -253,6 +267,11 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
     # TODO write extensive tests for permissions
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return RecipeOverviewSerializer
+        return self.serializer_class
+
     @decorators.action(
         detail=True,
         methods=['PUT'],
@@ -337,6 +356,7 @@ class CookLogViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
         return queryset
+
 
 # -------------- non django rest api views --------------------
 

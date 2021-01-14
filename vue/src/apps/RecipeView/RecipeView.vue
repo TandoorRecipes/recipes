@@ -70,9 +70,8 @@
       </div>
       <hr/>
 
-      <div class="row" style="margin-top: 2vh">
-        <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0"
-             style="margin-top: 2vh">
+      <div class="row">
+        <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
           <div class="card border-primary">
             <div class="card-body">
               <div class="row">
@@ -108,7 +107,7 @@
             </div>
           </div>
 
-          <div class="row" style="margin-top: 2vh">
+          <div class="row" style="margin-top: 2vh; margin-bottom: 2vh">
             <div class="col-12">
               <Nutrition :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition>
             </div>
@@ -134,6 +133,8 @@
               @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
       </div>
     </div>
+
+    <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
   </div>
 </template>
 
@@ -157,6 +158,7 @@ import Nutrition from "@/components/Nutrition";
 import moment from 'moment'
 import Keywords from "@/components/Keywords";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import AddRecipeToBook from "@/components/AddRecipeToBook";
 
 Vue.prototype.moment = moment
 
@@ -178,6 +180,7 @@ export default {
     Nutrition,
     Keywords,
     LoadingSpinner,
+    AddRecipeToBook,
   },
   computed: {
     ingredient_factor: function () {
