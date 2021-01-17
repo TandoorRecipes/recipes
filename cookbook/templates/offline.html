@@ -29,3 +29,18 @@
     </div>
 
 {% endblock %}
+
+{% block script %}
+
+    <script type="application/javascript">
+
+        caches.open('html').then(productsRuntimeCache => {
+
+            productsRuntimeCache.keys().then(keys => {
+                console.log(keys)
+            });
+
+        });
+    </script>
+
+{% endblock %}
