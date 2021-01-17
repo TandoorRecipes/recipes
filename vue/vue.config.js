@@ -16,6 +16,20 @@ module.exports = {
         : 'http://localhost:8080/',
     outputDir: '../cookbook/static/vue/',
     runtimeCompiler: true,
+    pwa: {
+        name: 'Recipes',
+        themeColor: '#4DBA87',
+        msTileColor: '#000000',
+        appleMobileWebAppCapable: 'yes',
+        appleMobileWebAppStatusBarStyle: 'black',
+
+
+        workboxPluginMode: 'InjectManifest',
+        workboxOptions: {
+            swSrc: './src/sw.js',
+            swDest: '../../templates/sw.js',
+        }
+    },
     chainWebpack: config => {
 
         config.optimization.splitChunks({
@@ -29,11 +43,13 @@ module.exports = {
             },
         });
 
+        /*
         Object.keys(pages).forEach(page => {
             config.plugins.delete(`html-${page}`);
             config.plugins.delete(`preload-${page}`);
             config.plugins.delete(`prefetch-${page}`);
         })
+        */
 
         config
             .plugin('BundleTracker')
