@@ -59,7 +59,6 @@ export default {
   methods: {
     loadBook: function (query) {
       apiLoadCookBooks(query).then(results => {
-        console.log(results)
         this.books = results
       })
     },
