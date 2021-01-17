@@ -21,7 +21,6 @@ export function apiLoadRecipe(recipe_id) {
 
 export function apiLogCooking(cook_log) {
     return axios.post(resolveDjangoUrl('api:cooklog-list',), cook_log).then((response) => {
-        console.log(response)
         makeToast('Saved', 'Cook Log entry saved!', 'success')
     }).catch((err) => {
         handleError(err, 'There was an error creating a resource!', 'danger')
@@ -30,7 +29,6 @@ export function apiLogCooking(cook_log) {
 
 export function apiLoadCookBooks(query) {
     return axios.get(resolveDjangoUrl('api:recipebook-list') + '?query=' + query).then((response) => {
-        console.log(response)
         return response.data
     }).catch((err) => {
         handleError(err, 'There was an error creating a resource!', 'danger')
@@ -39,7 +37,6 @@ export function apiLoadCookBooks(query) {
 
 export function apiAddRecipeBookEntry(entry) {
     return axios.post(resolveDjangoUrl('api:recipebookentry-list',), entry).then((response) => {
-        console.log(response)
         makeToast('Saved', 'Recipe Book entry saved!', 'success')
     }).catch((err) => {
         handleError(err, 'There was an error creating a resource!', 'danger')
