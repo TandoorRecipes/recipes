@@ -585,7 +585,7 @@
 
                         }).catch((err) => {
                             console.log(err)
-                            this.makeToast(gettext('Error'), gettext('There was an error updating the recipe!') + err.body.image, 'danger')
+                            this.makeToast(gettext('Error'), gettext('There was an error updating the recipe!') + err.bodyText, 'danger')
                         })
 
                         let reader = new FileReader();
