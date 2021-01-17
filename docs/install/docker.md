@@ -106,7 +106,7 @@ If you use traefik, this configuration is the one for you.
     [this little example](traefik.md) might be for you.
 
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-proxy/docker-compose.yml
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
 ```
 
 ```yaml

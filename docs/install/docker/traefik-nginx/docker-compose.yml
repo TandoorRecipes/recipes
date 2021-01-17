@@ -50,5 +50,5 @@ networks:
     external: true
 
 volumes:
-  nginx:
+  nginx_config:
   staticfiles:
