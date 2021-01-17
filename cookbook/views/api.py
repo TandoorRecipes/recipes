@@ -9,6 +9,7 @@ from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import management
+from django.core.exceptions import FieldError
 from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -19,7 +20,7 @@ from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from PIL import Image
 from rest_framework import decorators, permissions, viewsets
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
                                    UpdateModelMixin, CreateModelMixin)
 from rest_framework.parsers import MultiPartParser
@@ -50,6 +51,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer)
+from recipes.settings import DEMO
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -284,6 +286,9 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
             obj, data=request.data, partial=True
         )
 
+        if DEMO:
+            raise PermissionDenied(detail='Not available in demo', code=None)
+
         if serializer.is_valid():
             serializer.save()
             img = Image.open(obj.image)
@@ -397,6 +402,12 @@ def get_recipe_file(request, recipe_id):
 
 @group_required('user')
 def sync_all(request):
+    if DEMO or True:
+        messages.add_message(
+            request, messages.ERROR, _('This feature is not available in the demo version!')
+        )
+        return redirect('index')
+
     monitors = Sync.objects.filter(active=True)
 
     error = False
