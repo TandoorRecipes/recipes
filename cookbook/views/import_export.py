@@ -14,7 +14,7 @@ from rest_framework.renderers import JSONRenderer
 from cookbook.forms import ExportForm, ImportForm
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import Recipe
-from cookbook.serializer import RecipeSerializer
+from cookbook.serializer import RecipeSerializer, RecipeExportSerializer
 
 
 @group_required('user')
@@ -24,10 +24,10 @@ def import_recipe(request):
         if form.is_valid():
             try:
                 data = json.loads(
-                    re.sub(r'"id":([0-9])+,', '', form.cleaned_data['recipe'])
+                    re.sub(r'"id":([0-9]+),', '', re.sub(r',(\s)*"recipe":([0-9]+)', '', form.cleaned_data['recipe']))
                 )
 
-                sr = RecipeSerializer(data=data, context={'request': request})
+                sr = RecipeExportSerializer(data=data, context={'request': request})
                 if sr.is_valid():
                     sr.validated_data['created_by'] = request.user
                     recipe = sr.save()
@@ -63,7 +63,8 @@ def import_recipe(request):
                     messages.add_message(
                         request, messages.WARNING, sr.errors
                     )
-            except JSONDecodeError:
+            except JSONDecodeError as e:
+                print(e)
                 messages.add_message(
                     request,
                     messages.ERROR,
@@ -84,7 +85,7 @@ def export_recipe(request):
         if form.is_valid():
             recipe = form.cleaned_data['recipe']
             if recipe.internal:
-                export = RecipeSerializer(recipe).data
+                export = RecipeExportSerializer(recipe).data
 
                 if recipe.image and form.cleaned_data['image']:
                     with open(recipe.image.path, 'rb') as img_f:

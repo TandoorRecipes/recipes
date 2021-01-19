@@ -189,6 +189,17 @@ class StepSerializer(WritableNestedModelSerializer):
         )
 
 
+# used for the import export. temporary workaround until that module is finally fixed
+class StepExportSerializer(WritableNestedModelSerializer):
+    ingredients = IngredientSerializer(many=True)
+
+    class Meta:
+        model = Step
+        fields = (
+            'id', 'name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header'
+        )
+
+
 class NutritionInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = NutritionInformation
@@ -225,6 +236,11 @@ class RecipeSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
+
+
+# used for the import export. temporary workaround until that module is finally fixed
+class RecipeExportSerializer(RecipeSerializer):
+    steps = StepExportSerializer(many=True)
 
 
 class RecipeImageSerializer(WritableNestedModelSerializer):
