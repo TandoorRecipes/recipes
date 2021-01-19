@@ -139,7 +139,7 @@ def find_recipe_json(ld_json, url):
             if k := Keyword.objects.filter(name=kw).first():
                 keywords.append({'id': str(k.id), 'text': str(k).strip()})
             else:
-                keywords.append({'id': "null", 'text': kw.strip()})
+                keywords.append({'id': random.randrange(0, 9999999, 1), 'text': kw.strip()})
 
         ld_json['keywords'] = keywords
     else:
