@@ -21,8 +21,6 @@
 {% block content %}
 
     <div id="app">
-        <HelloWorld msg="Welcome to Your Vue.js App"/>
-
         <div class="row">
             <div class="col-md-4 offset-md-4">
                 <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
@@ -460,6 +458,10 @@
                         this.meal_types_edit = jQuery.extend(true, [], response.data);
                         for (let mte of this.meal_types_edit) {
                             this.$set(mte, 'delete', false)
+                        }
+
+                        if (this.meal_types.length === 0){
+                            this.makeToast(gettext('Information'), gettext('To use the meal plan please first create at least one meal plan type.'), 'warning')
                         }
                     }).catch((err) => {
                         console.log("getPlanTypes error: ", err);
