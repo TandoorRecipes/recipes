@@ -340,8 +340,9 @@
                                                                         class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Enable Amount' %}
                                                                 </button>
                                                                 <button type="button" class="dropdown-item"
-                                                                        @click="copyTemplateReference(index)"><i
-                                                                        class="fas fa-code"></i> {% trans 'Copy Template Reference' %}
+                                                                        @click="copyTemplateReference(index, ingredient)">
+                                                                    <i
+                                                                            class="fas fa-code"></i> {% trans 'Copy Template Reference' %}
                                                                 </button>
                                                             </div>
 
@@ -721,9 +722,14 @@
                 removeNutrition: function () {
                     this.recipe.nutrition = null
                 },
-                copyTemplateReference: function (index) {
+                copyTemplateReference: function (index, ingredient) {
                     const el = document.createElement('textarea');
-                    el.value = `\u007B\u007B ingredients[${index}] \u007D\u007D`;
+
+                    let tag = `\u007B\u007B ingredients[${index}] \u007D\u007D`;
+                    if (ingredient.food !== null) {
+                        tag += `\u007B# ${ingredient.food.name} #\u007D`
+                    }
+                    el.value = tag
                     document.body.appendChild(el);
                     el.select();
                     document.execCommand('copy');
