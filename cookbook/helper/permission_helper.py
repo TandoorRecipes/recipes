@@ -152,7 +152,7 @@ class OwnerRequiredMixin(object):
                 _('You are not logged in and therefore cannot view this page!')
             )
             return HttpResponseRedirect(
-                reverse_lazy('login') + '?next=' + request.path
+                reverse_lazy('account_login') + '?next=' + request.path
             )
         else:
             if not is_object_owner(request.user, self.get_object()):

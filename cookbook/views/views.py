@@ -48,7 +48,7 @@ def index(request):
             page_map.get(request.user.userpreference.default_page)
         )
     except UserPreference.DoesNotExist:
-        return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
 def search(request):
@@ -87,7 +87,7 @@ def search(request):
             {'recipes': table, 'filter': f, 'last_viewed': last_viewed}
         )
     else:
-        return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
 def recipe_view(request, pk, share=None):
@@ -99,7 +99,7 @@ def recipe_view(request, pk, share=None):
             messages.ERROR,
             _('You do not have the required permissions to view this page!')
         )
-        return HttpResponseRedirect(reverse('login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
     comments = Comment.objects.filter(recipe=recipe)
 
@@ -377,7 +377,7 @@ def setup(request):
             messages.ERROR,
             _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.')  # noqa: E501
         )
-        return HttpResponseRedirect(reverse('login'))
+        return HttpResponseRedirect(reverse('account_login'))
 
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
@@ -399,7 +399,7 @@ def setup(request):
                         messages.SUCCESS,
                         _('User has been created, please login!')
                     )
-                    return HttpResponseRedirect(reverse('login'))
+                    return HttpResponseRedirect(reverse('account_login'))
                 except ValidationError as e:
                     for m in e:
                         form.add_error('password', m)
@@ -450,7 +450,7 @@ def signup(request, token):
                         link.used_by = user
                         link.save()
                         user.groups.add(link.group)
-                        return HttpResponseRedirect(reverse('login'))
+                        return HttpResponseRedirect(reverse('account_login'))
                     except ValidationError as e:
                         for m in e:
                             form.add_error('password', m)

@@ -27,6 +27,9 @@ DEMO = bool(int(os.getenv('DEMO', False)))
 
 INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
+# django allauth site id
+SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
+
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
 
@@ -68,6 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'django_tables2',
     'django_filters',
@@ -78,6 +82,10 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'webpack_loader',
     'django_js_reverse',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
     'cookbook.apps.CookbookConfig',
 ]
 
@@ -95,6 +103,7 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 if REVERSE_PROXY_AUTH:
