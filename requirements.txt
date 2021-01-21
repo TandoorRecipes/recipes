@@ -22,7 +22,7 @@ six==1.15.0
 webdavclient3==3.14.5
 whitenoise==5.2.0
 icalendar==4.0.7
-pyyaml==5.4
+pyyaml==5.4.1
 uritemplate==3.0.1
 beautifulsoup4==4.9.3
 microdata==0.7.1
