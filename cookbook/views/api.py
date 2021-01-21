@@ -169,7 +169,7 @@ class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
-    permission_classes = [CustomIsOwner, CustomIsAdmin]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
         self.queryset = super(RecipeBookViewSet, self).get_queryset()
