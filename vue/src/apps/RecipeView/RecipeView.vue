@@ -59,7 +59,7 @@
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </div>
             <div class="my-auto">
-              <b>{{ _('Servings') }}</b>
+              <b><template v-if="recipe.servings_text === ''">{{ _('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b>
             </div>
           </div>
         </div>

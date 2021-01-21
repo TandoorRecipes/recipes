@@ -251,6 +251,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=512, blank=True, null=True)
     servings = models.IntegerField(default=1)
+    servings_text = models.CharField(default='', blank=True, max_length=32)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
     storage = models.ForeignKey(
         Storage, on_delete=models.PROTECT, blank=True, null=True

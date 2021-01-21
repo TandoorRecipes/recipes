@@ -229,7 +229,7 @@ class RecipeSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'nutrition', 'servings', 'file_path'
+            'internal', 'nutrition', 'servings', 'file_path', 'servings_text',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
