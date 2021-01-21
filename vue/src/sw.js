@@ -2,50 +2,43 @@
 import {precacheAndRoute} from 'workbox-precaching';
 import {registerRoute, setCatchHandler} from 'workbox-routing';
 import {CacheFirst, NetworkFirst, StaleWhileRevalidate} from 'workbox-strategies';
+import {ExpirationPlugin} from 'workbox-expiration';
 
 
-const CACHE_NAME = 'offline-html';
-// This assumes /offline.html is a URL for your self-contained
-// (no external images or styles) offline page.
-const FALLBACK_HTML_URL = '/offline/';
-// Populate the cache with the offline HTML page when the
-// service worker is installed.
+const OFFLINE_CACHE_NAME = 'offline-html';
+const OFFLINE_PAGE_URL = '/offline/';
+
 self.addEventListener('install', async (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.add(new Request(FALLBACK_HTML_URL, {cache: "reload"})))
-  );
+    event.waitUntil(
+        caches.open(OFFLINE_CACHE_NAME).then((cache) => cache.add(new Request(OFFLINE_PAGE_URL, {cache: "reload"})))
+    );
 });
 
 // default handler if everything else fails
 setCatchHandler(({event}) => {
-  // The FALLBACK_URL entries must be added to the cache ahead of time, either
-  // via runtime or precaching. If they are precached, then call
-  // `matchPrecache(FALLBACK_URL)` (from the `workbox-precaching` package)
-  // to get the response from the correct cache.
-  //
-  // Use event, request, and url to figure out how to respond.
-  // One approach would be to use request.destination, see
-  // https://medium.com/dev-channel/service-worker-caching-strategies-based-on-request-types-57411dd7652c
-  switch (event.request.destination) {
-    case 'document':
-      // If using precached URLs:
-      // return matchPrecache(FALLBACK_HTML_URL);
-        console.log('Triggered fallback HTML')
-      return caches.match(FALLBACK_HTML_URL);
+    switch (event.request.destination) {
+        case 'document':
+            console.log('Triggered fallback HTML')
+            return caches.match(OFFLINE_PAGE_URL);
 
-    default:
-      // If we don't have a fallback, just return an error response.
-         console.log('Triggered response ERROR')
-      return Response.error();
-  }
+        default:
+            console.log('Triggered response ERROR')
+            return Response.error();
+    }
 });
 
 precacheAndRoute(self.__WB_MANIFEST);
 
 registerRoute(
     ({request}) => request.destination === 'image',
-    new CacheFirst({cacheName: 'images'}),
+    new CacheFirst({
+        cacheName: 'images',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 20,
+            }),
+        ],
+    }),
 );
 
 registerRoute(
@@ -65,14 +58,51 @@ registerRoute(
 registerRoute(
     new RegExp('api/*'),
     new NetworkFirst({
-        cacheName: 'api'
+        cacheName: 'api',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 50
+            }),
+        ],
     })
 )
 
 registerRoute(
-    ({request}) => request.destination === 'document',
+    new RegExp('api/recipe/([0-9]+)'),
     new NetworkFirst({
-        cacheName: 'html'
+        cacheName: 'api-recipe',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 50,
+            }),
+        ],
+    })
+)
+
+const matchHtml = ({url, request, event}) => {
+    if (request.destination === 'document') {
+        if (RegExp('view/recipe/*').test(url)) {
+            return true
+        }
+        if (RegExp('search/*').test(url)) {
+            return true
+        }
+        if (RegExp('plan/*').test(url)) {
+            return true
+        }
+    }
+    return false;
+};
+
+registerRoute(
+    matchHtml,
+    new NetworkFirst({
+        cacheName: 'html',
+        plugins: [
+            new ExpirationPlugin({
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+            }),
+        ],
     })
 )
 

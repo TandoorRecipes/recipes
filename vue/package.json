@@ -12,7 +12,6 @@
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
-    "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-multiselect": "^2.1.6",
     "vue-template-compiler": "^2.6.12",
@@ -31,7 +30,8 @@
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.0.2",
     "workbox-routing": "^6.0.2",
-    "workbox-strategies": "^6.0.2"
+    "workbox-strategies": "^6.0.2",
+    "workbox-expiration": "^6.0.2"
   },
   "eslintConfig": {
     "root": true,

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
 {% load static %}
 {% load i18n %}
 
@@ -15,14 +16,14 @@
         <h1 class="">Offline</h1>
         <br/>
 
-        <span>{% trans 'You are currently offline!' %}</span>
-        <span>{% trans 'This app does not (yet) support offline functionality. Please make sure to re-establish a network connection.' %}</span>
-        <br/>
-        <br/>
-        <i class="fas fa-search fa-8x"></i>
+        <span>{% trans 'You are currently offline!' %}</span> <br/>
+        <span>{% trans 'The recipes listed below are available for offline viewing because you have recently viewed them. Keep in mind that data might be outdated.' %}</span>
         <br/>
         <br/>
 
+        <div id="app">
+            <offline-view recipe_id="5"></offline-view>
+        </div>
 
         <br/>
         <br/>
@@ -32,15 +33,15 @@
 
 {% block script %}
 
-    <script type="application/javascript">
+    <script src="{% url 'javascript-catalog' %}"></script>
 
-        caches.open('html').then(productsRuntimeCache => {
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
 
-            productsRuntimeCache.keys().then(keys => {
-                console.log(keys)
-            });
-
-        });
-    </script>
+    {% render_bundle 'chunk-vendors' %}
+    {% render_bundle 'offline_view' %}
 
 {% endblock %}
