@@ -422,12 +422,11 @@ def signup(request, token):
             valid_until__gte=datetime.today(), used_by=None, uuid=token) \
             .first():
         if request.method == 'POST':
-
-            form = UserCreateForm(request.POST)
+            updated_request = request.POST.copy()
             if link.username != '':
-                data = dict(form.data)
-                data['name'] = link.username
-                form.data = data
+                updated_request.update({'name': link.username})
+
+            form = UserCreateForm(updated_request)
 
             if form.is_valid():
                 if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
