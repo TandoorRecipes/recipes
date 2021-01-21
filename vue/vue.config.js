@@ -32,6 +32,12 @@ module.exports = {
         workboxOptions: {
             swSrc: './src/sw.js',
             swDest: '../../templates/sw.js',
+            manifestTransforms: [
+                originalManifest => {
+                    const result = originalManifest.map(entry => new Object({url: 'static/vue/' + entry.url}))
+                    return {manifest: result, warnings: []};
+                }
+            ],
         }
     },
     chainWebpack: config => {
@@ -47,6 +53,7 @@ module.exports = {
             },
         });
 
+        //TODO somehow remov them as they are also added to the manifest config of the service worker
         /*
         Object.keys(pages).forEach(page => {
             config.plugins.delete(`html-${page}`);
