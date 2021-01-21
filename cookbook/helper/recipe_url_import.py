@@ -217,10 +217,18 @@ def find_recipe_json(ld_json, url):
     else:
         ld_json['prepTime'] = 0
 
+    try:
+        if 'recipeYield' in ld_json:
+            if type(ld_json['recipeYield']) == str:
+                ld_json['servings'] = int(re.findall(r'\b\d+\b', ld_json['recipeYield'])[0])
+    except Exception as e:
+        print(e)
+        ld_json['servings'] = 0
+
     for key in list(ld_json):
         if key not in [
             'prepTime', 'cookTime', 'image', 'recipeInstructions',
-            'keywords', 'name', 'recipeIngredient'
+            'keywords', 'name', 'recipeIngredient', 'servings'
         ]:
             ld_json.pop(key, None)
 

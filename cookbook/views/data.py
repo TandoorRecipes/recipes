@@ -122,6 +122,7 @@ def import_url(request):
             name=data['name'],
             waiting_time=data['cookTime'],
             working_time=data['prepTime'],
+            servings=data['servings'],
             internal=True,
             created_by=request.user,
         )
