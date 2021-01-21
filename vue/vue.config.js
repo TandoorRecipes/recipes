@@ -5,6 +5,10 @@ const pages = {
         entry: './src/apps/RecipeView/main.js',
         chunks: ['chunk-vendors']
     },
+    'offline_view': {
+        entry: './src/apps/OfflineView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {
