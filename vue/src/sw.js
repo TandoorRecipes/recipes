@@ -16,21 +16,15 @@ self.addEventListener('install', async (event) => {
 
 // since the mode is inject manifest this needs to be present but because
 // precacheAndRoute is cache first and i currently dont really know how to
-// do versioning i will only pre cache the offline page and its required assets
+// do versioning i will not use it
 self.__WB_MANIFEST
-
-const OFFLINE_PAGE_REVISION = '1'
-precacheAndRoute([
-    {url: '/offline/', revision: OFFLINE_PAGE_REVISION},
-    {url: '/static/vue/js/offline_view.js', revision: OFFLINE_PAGE_REVISION},
-]);
 
 // default handler if everything else fails
 setCatchHandler(({event}) => {
     switch (event.request.destination) {
         case 'document':
             console.log('Triggered fallback HTML')
-            return caches.match(OFFLINE_PAGE_URL);
+            return caches.open(OFFLINE_CACHE_NAME).then((cache) => cache.match(OFFLINE_PAGE_URL))
         default:
             console.log('Triggered response ERROR')
             return Response.error();
