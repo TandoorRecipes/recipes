@@ -13,7 +13,7 @@
               {{ step.time }} {{ _('min') }}
 
             </small>
-            <small v-if="start_time !== ''">
+            <small v-if="start_time !== ''" class="d-print-none">
               <b-link :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#">
                 {{ moment(start_time).add(step.time_offset, 'minutes').format('HH:mm') }}
               </b-link>
@@ -55,7 +55,7 @@
           </h4>
           <span style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fa fa-stopwatch"></i>
               {{ step.time }} {{ _('min') }}</span>
-          <b-link :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#" v-if="start_time !== ''">
+          <b-link class="d-print-none" :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#" v-if="start_time !== ''">
             {{ moment(start_time).add(step.time_offset, 'minutes').format('HH:mm') }}
           </b-link>
         </div>
