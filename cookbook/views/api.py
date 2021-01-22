@@ -402,7 +402,7 @@ def get_recipe_file(request, recipe_id):
 
 @group_required('user')
 def sync_all(request):
-    if DEMO or True:
+    if DEMO:
         messages.add_message(
             request, messages.ERROR, _('This feature is not available in the demo version!')
         )

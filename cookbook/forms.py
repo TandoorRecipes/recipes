@@ -238,7 +238,7 @@ class StorageForm(forms.ModelForm):
 
     class Meta:
         model = Storage
-        fields = ('name', 'method', 'username', 'password', 'token', 'url')
+        fields = ('name', 'method', 'username', 'password', 'token', 'url', 'path')
 
         help_texts = {
             'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),  # noqa: E501

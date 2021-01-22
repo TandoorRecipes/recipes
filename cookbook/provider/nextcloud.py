@@ -20,6 +20,8 @@ class Nextcloud(Provider):
             'webdav_password': storage.password,
             'webdav_root': '/remote.php/dav/files/' + storage.username
         }
+        if storage.path != '':
+            options['webdav_root'] = storage.path
         return wc.Client(options)
 
     @staticmethod
