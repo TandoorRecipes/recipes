@@ -15,6 +15,11 @@ Lastly you will need to sync with the external path and import recipes you desir
 !!! success
     Currently only Nextcloud and Dropbox are supported. There are plans to add more provider 
 
+!!! danger
+    In order for this application to retrieve data from external providers it needs to store authentication information.
+    Please use read only/separate accounts or app passwords wherever possible.
+    There are better ways to do this but they are currently not implemented
+
 A `Storage Backend` is a remote storage location where files are **read** from.
 To add a new backend click on `Storage Data` and then on `Storage Backends`. 
 There click the plus button.
