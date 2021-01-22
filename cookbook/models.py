@@ -114,7 +114,8 @@ class UserPreference(models.Model):
 class Storage(models.Model):
     DROPBOX = 'DB'
     NEXTCLOUD = 'NEXTCLOUD'
-    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (NEXTCLOUD, 'Nextcloud'))
+    LOCAL = 'LOCAL'
+    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (NEXTCLOUD, 'Nextcloud'), (LOCAL, 'Local'))
 
     name = models.CharField(max_length=128)
     method = models.CharField(

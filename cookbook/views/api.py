@@ -38,6 +38,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              Storage, Sync, SyncLog, Unit, UserPreference,
                              ViewLog, RecipeBookEntry)
 from cookbook.provider.dropbox import Dropbox
+from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
@@ -370,6 +371,8 @@ def get_recipe_provider(recipe):
         return Dropbox
     elif recipe.storage.method == Storage.NEXTCLOUD:
         return Nextcloud
+    elif recipe.storage.method == Storage.LOCAL:
+        return Local
     else:
         raise Exception('Provider not implemented')
 
@@ -394,8 +397,8 @@ def get_external_file_link(request, recipe_id):
 @group_required('user')
 def get_recipe_file(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
-    if not recipe.cors_link:
-        update_recipe_links(recipe)
+    # if not recipe.cors_link:
+    #    update_recipe_links(recipe)
 
     return FileResponse(get_recipe_provider(recipe).get_file(recipe))
 
@@ -418,6 +421,10 @@ def sync_all(request):
                 error = True
         if monitor.storage.method == Storage.NEXTCLOUD:
             ret = Nextcloud.import_all(monitor)
+            if not ret:
+                error = True
+        if monitor.storage.method == Storage.LOCAL:
+            ret = Local.import_all(monitor)
             if not ret:
                 error = True
 

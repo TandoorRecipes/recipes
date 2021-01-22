@@ -12,9 +12,6 @@ Lastly you will need to sync with the external path and import recipes you desir
 
 ## Storage
 
-!!! success
-    Currently only Nextcloud and Dropbox are supported. There are plans to add more provider 
-
 !!! danger
     In order for this application to retrieve data from external providers it needs to store authentication information.
     Please use read only/separate accounts or app passwords wherever possible.
@@ -30,6 +27,24 @@ The basic configuration is the same for all providers.
 |----------|-------|
 | Name     | Your identifier for this storage source, can be everything you want. |
 | Method   | The desired method.  |
+
+!!! success
+    Only the providers listed below are currently implemented. If you need anything else feel free to open
+    an issue or pull request.
+
+### Local
+
+!!! info
+    There is currently no way to upload files trough the webinterface. This is a feature that might be added later.
+
+The local provider does not need any configuration.
+For the monitor you will need to define a valid path on your host system. 
+The Path depends on your setup and can be both relative and absoulte. 
+If you use docker the default directory is `/opt/recipes/`
+
+!!! warning "Volume"
+    By default no data other than the mediafiles and the database is persisted. If you use the local provider
+    make sure to mount the path you choose to monitor to your host system in order to keep it persistent.
 
 ### Dropbox
 
