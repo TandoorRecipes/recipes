@@ -39,8 +39,8 @@ The basic configuration is the same for all providers.
 
 The local provider does not need any configuration.
 For the monitor you will need to define a valid path on your host system. 
-The Path depends on your setup and can be both relative and absoulte. 
-If you use docker the default directory is `/opt/recipes/`
+The Path depends on your setup and can be both relative and absolute. 
+If you use docker the default directory is `/opt/recipes/`.
 
 !!! warning "Volume"
     By default no data other than the mediafiles and the database is persisted. If you use the local provider
