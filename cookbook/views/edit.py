@@ -18,6 +18,7 @@ from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, RecipeImport,
                              Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
+from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 
 
@@ -231,6 +232,8 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
                 Dropbox.rename_file(old_recipe, self.object.name)
             if self.object.storage.method == Storage.NEXTCLOUD:
                 Nextcloud.rename_file(old_recipe, self.object.name)
+            if self.object.storage.method == Storage.LOCAL:
+                Local.rename_file(old_recipe, self.object.name)
 
             self.object.file_path = "%s/%s%s" % (
                 os.path.dirname(self.object.file_path),

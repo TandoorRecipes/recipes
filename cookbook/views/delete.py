@@ -13,6 +13,7 @@ from cookbook.models import (Comment, InviteLink, Keyword, MealPlan, Recipe,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
+from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 
 
@@ -37,6 +38,8 @@ def delete_recipe_source(request, pk):
         Dropbox.delete_file(recipe)
     if recipe.storage.method == Storage.NEXTCLOUD:
         Nextcloud.delete_file(recipe)
+    if recipe.storage.method == Storage.LOCAL:
+        Local.delete_file(recipe)
 
     recipe.storage = None
     recipe.file_path = ''
