@@ -144,20 +144,27 @@ class Sync(models.Model):
         return self.path
 
 
-class Supermarket(models.Model):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-
 class SupermarketCategory(models.Model):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+
+class Supermarket(models.Model):
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    description = models.TextField(blank=True, null=True)
+    categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
+
+    def __str__(self):
+        return self.name
+
+
+class SupermarketCategoryRelation(models.Model):
+    supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE)
+    category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
 
 
 class SyncLog(models.Model):

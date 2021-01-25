@@ -36,7 +36,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry)
+                             ViewLog, RecipeBookEntry, Supermarket)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -51,7 +51,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer)
+                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer)
 from recipes.settings import DEMO
 
 
@@ -139,6 +139,12 @@ class StandardFilterMixin(ViewSetMixin):
             else:
                 queryset = queryset[:int(limit)]
         return queryset
+
+
+class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = Supermarket.objects.all()
+    serializer_class = SupermarketSerializer
+    permission_classes = [CustomIsUser]
 
 
 class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
