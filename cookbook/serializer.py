@@ -140,7 +140,7 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class SupermarketCategorySerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     def create(self, validated_data):
         # since multi select tags dont have id's
@@ -156,7 +156,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, serializers.ModelSerializ
         fields = ('id', 'name')
 
 
-class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(read_only=True)
 
     def create(self, validated_data):
@@ -171,7 +171,6 @@ class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Food
         fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category')
-        read_only_fields = ('id',)
 
 
 class IngredientSerializer(WritableNestedModelSerializer):
@@ -326,8 +325,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
-    food = FoodSerializer(allow_null=True, read_only=True)
-    unit = UnitSerializer(allow_null=True, read_only=True)
+    food = FoodSerializer(allow_null=True)
+    unit = UnitSerializer(allow_null=True)
     amount = CustomDecimalField()
 
     class Meta:
@@ -335,7 +334,6 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked'
         )
-        read_only_fields = ('id',)
 
 
 class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
