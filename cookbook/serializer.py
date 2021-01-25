@@ -11,7 +11,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog)
+                             Unit, UserPreference, ViewLog, SupermarketCategory)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -140,7 +140,14 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class SupermarketCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupermarketCategory
+        fields = ('id', 'name')
+
+
 class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    supermarket_category = SupermarketCategorySerializer()
 
     def create(self, validated_data):
         # since multi select tags dont have id's
@@ -153,7 +160,7 @@ class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'recipe')
+        fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category')
         read_only_fields = ('id',)
 
 
@@ -309,8 +316,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
-    food = FoodSerializer(allow_null=True)
-    unit = UnitSerializer(allow_null=True)
+    food = FoodSerializer(allow_null=True, read_only=True)
+    unit = UnitSerializer(allow_null=True, read_only=True)
     amount = CustomDecimalField()
 
     class Meta:
