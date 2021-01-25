@@ -140,14 +140,24 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class SupermarketCategorySerializer(serializers.ModelSerializer):
+class SupermarketCategorySerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
+        obj, created = SupermarketCategory.objects.get_or_create(**validated_data)
+        return obj
+
+    def update(self, instance, validated_data):
+        return super(SupermarketCategorySerializer, self).update(instance, validated_data)
+
     class Meta:
         model = SupermarketCategory
         fields = ('id', 'name')
 
 
 class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    supermarket_category = SupermarketCategorySerializer()
+    supermarket_category = SupermarketCategorySerializer(read_only=True)
 
     def create(self, validated_data):
         # since multi select tags dont have id's

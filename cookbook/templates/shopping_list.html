@@ -361,7 +361,7 @@
                     this.shopping_list.entries.forEach(element => {
                         let item = {}
                         Object.assign(item, element);
-                        if (entries.filter(item => item.food.id === element.food.id).length > 0) {
+                        if (entries.filter(item => (item.food.id === element.food.id) && (item.unit.id === element.unit.id)).length > 0) {
                             let entry = entries.filter(item => item.food.id === element.food.id)[0]
                             entry.amount += item.amount * this.servings_cache[item.list_recipe]
                             entry.entries.push(item.id)
