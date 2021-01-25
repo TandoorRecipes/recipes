@@ -11,7 +11,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog, SupermarketCategory)
+                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket, SupermarketCategoryRelation)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -138,6 +138,20 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         model = Unit
         fields = ('id', 'name', 'description')
         read_only_fields = ('id',)
+
+
+class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupermarketCategoryRelation
+        fields = "__all__"
+
+
+class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    categories = SupermarketCategoryRelationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Supermarket
+        fields = ('id', 'name', 'categories')
 
 
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):

@@ -5,7 +5,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory)
+                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation)
 
 
 class SpaceAdmin(admin.ModelAdmin):
@@ -42,7 +42,16 @@ class SyncAdmin(admin.ModelAdmin):
 
 admin.site.register(Sync, SyncAdmin)
 
-admin.site.register(Supermarket)
+
+class SupermarketCategoryInline(admin.TabularInline):
+    model = SupermarketCategoryRelation
+
+
+class SupermarketAdmin(admin.ModelAdmin):
+    inlines = (SupermarketCategoryInline,)
+
+
+admin.site.register(Supermarket, SupermarketAdmin)
 admin.site.register(SupermarketCategory)
 
 
