@@ -212,7 +212,7 @@ class KeywordForm(forms.ModelForm):
 class FoodForm(forms.ModelForm):
     class Meta:
         model = Food
-        fields = ('name', 'recipe')
+        fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
         widgets = {'recipe': SelectWidget}
 
 

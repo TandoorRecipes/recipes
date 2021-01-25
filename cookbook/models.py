@@ -144,6 +144,22 @@ class Sync(models.Model):
         return self.path
 
 
+class Supermarket(models.Model):
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class SupermarketCategory(models.Model):
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class SyncLog(models.Model):
     sync = models.ForeignKey(Sync, on_delete=models.CASCADE)
     status = models.CharField(max_length=32)
@@ -169,9 +185,7 @@ class Keyword(models.Model):
 
 
 class Unit(models.Model):
-    name = models.CharField(
-        unique=True, max_length=128, validators=[MinLengthValidator(1)]
-    )
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -179,12 +193,11 @@ class Unit(models.Model):
 
 
 class Food(models.Model):
-    name = models.CharField(
-        unique=True, max_length=128, validators=[MinLengthValidator(1)]
-    )
-    recipe = models.ForeignKey(
-        'Recipe', null=True, blank=True, on_delete=models.SET_NULL
-    )
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+    supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
+    ignore_shopping = models.BooleanField(default=False)
+    description = models.TextField(default='', blank=True)
 
     def __str__(self):
         return self.name

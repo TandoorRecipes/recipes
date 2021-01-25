@@ -5,7 +5,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog)
+                     ViewLog, Supermarket, SupermarketCategory)
 
 
 class SpaceAdmin(admin.ModelAdmin):
@@ -41,6 +41,9 @@ class SyncAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Sync, SyncAdmin)
+
+admin.site.register(Supermarket)
+admin.site.register(SupermarketCategory)
 
 
 class SyncLogAdmin(admin.ModelAdmin):

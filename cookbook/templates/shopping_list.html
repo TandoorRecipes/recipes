@@ -305,7 +305,7 @@
 
 {% endblock %}
 {% block script %}
-    
+
     <script src="{% url 'javascript-catalog' %}"></script>
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
@@ -358,16 +358,22 @@
                 display_entries() {
                     let entries = []
 
-                    //TODO merge multiple ingredients of same unit
-
                     this.shopping_list.entries.forEach(element => {
                         let item = {}
                         Object.assign(item, element);
-                        if (item.list_recipe !== null) {
-                            item.amount = item.amount * this.servings_cache[item.list_recipe]
+                        if (entries.filter(item => item.food.id === element.food.id).length > 0) {
+                            let entry = entries.filter(item => item.food.id === element.food.id)[0]
+                            entry.amount += item.amount * this.servings_cache[item.list_recipe]
+                            entry.entries.push(item.id)
+                        } else {
+                            if (item.list_recipe !== null) {
+                                item.amount = item.amount * this.servings_cache[item.list_recipe]
+                            }
+                            item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
+                            item.entries = [element.id]
+                            entries.push(item)
                         }
-                        item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
-                        entries.push(item)
+
                     });
 
                     return entries
@@ -380,20 +386,6 @@
                     return text
                 }
             },
-            /*
-           watch: {
-               recipe: {
-                   deep: true,
-                   handler() {
-                       this.recipe_changed = this.recipe_changed !== undefined;
-                   }
-               }
-           },
-
-           created() {
-               window.addEventListener('beforeunload', this.warnPageLeave)
-           },
-           */
             mounted: function () {
                 this.loadShoppingList()
 
@@ -430,14 +422,6 @@
                     } = e;
                     this.onLine = type === 'online';
                 },
-                /*
-                warnPageLeave: function (event) {
-                    if (this.recipe_changed) {
-                        event.returnValue = ''
-                        return ''
-                    }
-                },
-                 */
                 makeToast: function (title, message, variant = null) {
                     //TODO remove duplicate function in favor of central one
                     this.$bvToast.toast(message, {
@@ -561,9 +545,8 @@
                     console.log("IMPLEMENT ME", this.display_entries)
                 },
                 entryChecked: function (entry) {
-                    console.log("checked entry: ", entry)
                     this.shopping_list.entries.forEach((item) => {
-                        if (item.id === entry.id) { //TODO unwrap once same entries are merged
+                        if (entry.entries.includes(item.id)) {
                             item.checked = entry.checked
                             this.$http.put("{% url 'api:shoppinglistentry-detail' 123456 %}".replace('123456', item.id), item, {}).then((response) => {
 
@@ -572,7 +555,6 @@
                                 this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                                 this.loading = false
                             })
-
                         }
                     })
                 },
@@ -625,22 +607,25 @@
                         "recipe_name": recipe.name,
                         "servings": servings,
                     }
-
                     this.shopping_list.recipes.push(slr)
 
-                    for (let s of recipe.steps) {
-                        for (let i of s.ingredients) {
-                            if (!i.is_header && i.food !== null) {
-                                this.shopping_list.entries.push({
-                                    'list_recipe': slr.id,
-                                    'food': i.food,
-                                    'unit': i.unit,
-                                    'amount': i.amount,
-                                    'order': 0
-                                })
+                    this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe.id)).then((response) => {
+                        for (let s of response.data.steps) {
+                            for (let i of s.ingredients) {
+                                if (!i.is_header && i.food !== null) {
+                                    this.shopping_list.entries.push({
+                                        'list_recipe': slr.id,
+                                        'food': i.food,
+                                        'unit': i.unit,
+                                        'amount': i.amount,
+                                        'order': 0
+                                    })
+                                }
                             }
                         }
-                    }
+                    }).catch((err) => {
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
                 },
                 removeRecipeFromList: function (slr) {
                     this.shopping_list.entries = this.shopping_list.entries.filter(item => item.list_recipe !== slr.id)
