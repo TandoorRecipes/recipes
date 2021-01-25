@@ -361,8 +361,9 @@
                     this.shopping_list.entries.forEach(element => {
                         let item = {}
                         Object.assign(item, element);
-                        if (entries.filter(item => (item.food.id === element.food.id) && (item.unit.id === element.unit.id)).length > 0) {
-                            let entry = entries.filter(item => item.food.id === element.food.id)[0]
+
+                        let entry = this.findMergeEntry(entries, item)
+                        if (entry !== undefined) {
                             entry.amount += item.amount * this.servings_cache[item.list_recipe]
                             entry.entries.push(item.id)
                         } else {
@@ -373,7 +374,6 @@
                             item.entries = [element.id]
                             entries.push(item)
                         }
-
                     });
 
                     return entries
@@ -416,6 +416,17 @@
                 this.searchUsers('')
             },
             methods: {
+                findMergeEntry: function (entries, entry) {
+                    return entries.find(item => {
+                        if (entry.food.id === item.food.id) {
+                            if (entry.unit === null && item.unit === null) {
+                                return true
+                            } else if (entry.unit.id === item.unit.id) {
+                                return true
+                            }
+                        }
+                    })
+                },
                 updateOnlineStatus(e) {
                     const {
                         type
@@ -612,7 +623,7 @@
                     this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe.id)).then((response) => {
                         for (let s of response.data.steps) {
                             for (let i of s.ingredients) {
-                                if (!i.is_header && i.food !== null) {
+                                if (!i.is_header && i.food !== null && i.food.ignore_shopping === false) {
                                     this.shopping_list.entries.push({
                                         'list_recipe': slr.id,
                                         'food': i.food,
