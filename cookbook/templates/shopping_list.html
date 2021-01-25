@@ -110,21 +110,23 @@
             </div>
 
             <table class="table table-sm table-striped" style="margin-top: 1vh">
+                <tbody>
+                <template v-for="c in display_entries">
 
-                <tbody is="draggable" group="people" :list="display_entries" tag="tbody" :empty-insert-threshold="10"
-                       handle=".handle" @sort="sortEntries()">
 
-                <tr v-for="(element, index) in display_entries" :key="element.id">
-                    <!--<td class="handle"><i class="fas fa-sort"></i></td>-->
-                    <td>[[element.amount]]</td>
-                    <td>[[element.unit.name]]</td>
-                    <td>[[element.food.name]]</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-danger" v-if="element.list_recipe === null"
-                                @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== element.id)">
-                            <i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>
+                    <tr v-for="(element, index) in c.entries" :key="element.id">
+                        <!--<td class="handle"><i class="fas fa-sort"></i></td>-->
+                        <td>[[element.amount]]</td>
+                        <td>[[element.unit.name]]</td>
+                        <td>[[element.food.name]]</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" v-if="element.list_recipe === null"
+                                    @click="shopping_list.entries = shopping_list.entries.filter(item => item.id !== element.id)">
+                                <i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+
+                </template>
                 </tbody>
 
             </table>
@@ -238,27 +240,41 @@
             <div class="row" style="margin-top: 8px">
                 <div class="col col-md-12">
                     <table class="table">
-                        <tr v-for="x in display_entries">
-                            <template v-if="!x.checked">
-                                <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
-                                           @change="entryChecked(x)">
-                                </td>
-                                <td>[[x.amount]]</td>
-                                <td>[[x.unit.name]]</td>
-                                <td>[[x.food.name]]</td>
+                        <template v-for="c in display_entries">
+                            <template v-if="c.entries.filter(item => item.checked === false).length > 0">
+                                <tr>
+                                    <td colspan="4">[[c.name]]</td>
+                                </tr>
+                                <tr v-for="x in c.entries">
+                                    <template v-if="!x.checked">
+                                        <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
+                                                   @change="entryChecked(x)">
+                                        </td>
+                                        <td>[[x.amount]]</td>
+                                        <td>[[x.unit.name]]</td>
+                                        <td>[[x.food.name]]</td>
+                                    </template>
+                                </tr>
                             </template>
+                        </template>
+                        <tr>
+                            <td colspan="4"></td>
                         </tr>
+                        <template v-for="c in display_entries">
 
-                        <tr v-for="x in display_entries" class="text-muted">
-                            <template v-if="x.checked">
-                                <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
-                                           @change="entryChecked(x)">
-                                </td>
-                                <td>[[x.amount]]</td>
-                                <td>[[x.unit.name]]</td>
-                                <td>[[x.food.name]]</td>
-                            </template>
-                        </tr>
+                            <tr v-for="x in c.entries" class="text-muted">
+                                <template v-if="x.checked">
+                                    <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
+                                               @change="entryChecked(x)">
+                                    </td>
+                                    <td>[[x.amount]]</td>
+                                    <td>[[x.unit.name]]</td>
+                                    <td>[[x.food.name]]</td>
+                                </template>
+                            </tr>
+                        </template>
+
+
                     </table>
                 </div>
             </div>
@@ -356,13 +372,27 @@
                     return cache
                 },
                 display_entries() {
-                    let entries = []
+                    let categories = {
+                        no_category: {
+                            name: gettext('Uncategorized'),
+                            entries: []
+                        }
+                    }
+
+                    this.shopping_list.entries.forEach((e) => {
+                        if (e.food.supermarket_category !== null) {
+                            categories[e.food.supermarket_category.id] = {
+                                name: e.food.supermarket_category.name,
+                                entries: []
+                            };
+                        }
+                    })
 
                     this.shopping_list.entries.forEach(element => {
                         let item = {}
                         Object.assign(item, element);
 
-                        let entry = this.findMergeEntry(entries, item)
+                        let entry = this.findMergeEntry(categories, item)
                         if (entry !== undefined) {
                             entry.amount += item.amount * this.servings_cache[item.list_recipe]
                             entry.entries.push(item.id)
@@ -372,17 +402,24 @@
                             }
                             item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
                             item.entries = [element.id]
-                            entries.push(item)
+                            if (item.food.supermarket_category !== null) {
+                                categories[item.food.supermarket_category.id].entries.push(item)
+                            } else {
+                                categories['no_category'].entries.push(item)
+                            }
                         }
                     });
 
-                    return entries
+                    return categories
                 },
                 export_text() {
                     let text = ''
-                    for (let e of this.display_entries.filter(item => item.checked === false)) {
-                        text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
+                    for (let [i, c] of Object.entries(this.display_entries)) {
+                        for (let e of c.entries.filter(item => item.checked === false)) {
+                            text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
+                        }
                     }
+
                     return text
                 }
             },
@@ -416,16 +453,23 @@
                 this.searchUsers('')
             },
             methods: {
-                findMergeEntry: function (entries, entry) {
-                    return entries.find(item => {
-                        if (entry.food.id === item.food.id) {
-                            if (entry.unit === null && item.unit === null) {
-                                return true
-                            } else if (entry.unit.id === item.unit.id) {
-                                return true
+                findMergeEntry: function (categories, entry) {
+                    for (let [i, e] of Object.entries(categories)) {
+                        let found_entry = e.entries.find(item => {
+                            if (entry.food.id === item.food.id) {
+                                if (entry.unit === null && item.unit === null) {
+                                    return true
+                                } else if (entry.unit.id === item.unit.id) {
+                                    return true
+                                }
                             }
+                        })
+
+                        if (found_entry !== undefined) {
+                            return found_entry
                         }
-                    })
+                    }
+                    return undefined
                 },
                 updateOnlineStatus(e) {
                     const {
