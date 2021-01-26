@@ -55,6 +55,31 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
 from recipes.settings import DEMO
 
 
+class StandardFilterMixin(ViewSetMixin):
+
+    def get_queryset(self):
+        queryset = self.queryset
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        updated_at = self.request.query_params.get('updated_at', None)
+        if updated_at is not None:
+            try:
+                queryset = queryset.filter(updated_at__gte=updated_at)
+            except FieldError:
+                pass
+
+        limit = self.request.query_params.get('limit', None)
+        random = self.request.query_params.get('random', False)
+        if limit is not None:
+            if random:
+                queryset = queryset.random(int(limit))
+            else:
+                queryset = queryset[:int(limit)]
+        return queryset
+
+
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     """
     list:
@@ -116,31 +141,6 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
 
-class StandardFilterMixin(ViewSetMixin):
-
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
-
-        updated_at = self.request.query_params.get('updated_at', None)
-        if updated_at is not None:
-            try:
-                queryset = queryset.filter(updated_at__gte=updated_at)
-            except FieldError:
-                pass
-
-        limit = self.request.query_params.get('limit', None)
-        random = self.request.query_params.get('random', False)
-        if limit is not None:
-            if random:
-                queryset = queryset.random(int(limit))
-            else:
-                queryset = queryset[:int(limit)]
-        return queryset
-
-
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Supermarket.objects.all()
     serializer_class = SupermarketSerializer
@@ -188,7 +188,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     queryset = RecipeBookEntry.objects.all()
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [CustomIsOwner, CustomIsAdmin]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
         if self.request.user.is_superuser:
@@ -207,7 +207,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects.all()
     serializer_class = MealPlanSerializer
-    permission_classes = [permissions.IsAuthenticated]  # TODO fix permissions
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
         queryset = MealPlan.objects.filter(
@@ -232,11 +232,10 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = MealType.objects.order_by('order').all()
     serializer_class = MealTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = MealType.objects.order_by('order', 'id') \
-            .filter(created_by=self.request.user).all()
+        queryset = MealType.objects.order_by('order', 'id').filter(created_by=self.request.user).all()
         return queryset
 
 
@@ -317,17 +316,19 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects.all()
     serializer_class = ShoppingListRecipeSerializer
-    permission_classes = [CustomIsUser, ]  # TODO add custom validation
+    permission_classes = [CustomIsOwner, ]
 
-    # TODO custom get qs
+    def get_queryset(self):
+        return self.queryset.filter(shoppinglist__created_by=self.request.user).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects.all()
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [CustomIsOwner, ]  # TODO add custom validation
+    permission_classes = [CustomIsOwner, ]
 
-    # TODO custom get qs
+    def get_queryset(self):
+        return self.queryset.filter(shoppinglist__created_by=self.request.user).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
@@ -352,12 +353,10 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
 class ViewLogViewSet(viewsets.ModelViewSet):
     queryset = ViewLog.objects.all()
     serializer_class = ViewLogSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = ViewLog.objects \
-                       .filter(created_by=self.request.user).all()[:5]
-        return queryset
+        return CookLog.objects.filter(created_by=self.request.user).all()[:5]
 
 
 class CookLogViewSet(viewsets.ModelViewSet):
@@ -366,7 +365,7 @@ class CookLogViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
+        queryset = CookLog.objects.filter(created_by=self.request.user).all()[:5]
         return queryset
 
 
