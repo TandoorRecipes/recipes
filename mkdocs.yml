@@ -30,6 +30,7 @@ nav:
       - Other setups: install/other.md
   - Features:
       - Tempalating: features/templating.md
+      - Shopping: features/shopping.md
       - Storages and Sync: features/external_recipes.md
   - System:
       - Updating: system/updating.md

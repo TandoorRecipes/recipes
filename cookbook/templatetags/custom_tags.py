@@ -85,6 +85,7 @@ def recipe_last(recipe, user):
 def page_help(page_name):
     help_pages = {
         'edit_storage': 'https://vabene1111.github.io/recipes/features/external_recipes/',
+        'view_shopping': 'https://vabene1111.github.io/recipes/features/shopping/',
     }
 
     link = help_pages.get(page_name, '')

@@ -453,7 +453,7 @@
                     });
 
                     let ordered_categories = []
-                    for (let [i,v] of Object.entries(categories)){
+                    for (let [i, v] of Object.entries(categories)) {
                         ordered_categories.push(v)
                     }
 
@@ -509,6 +509,8 @@
 
                 this.searchUsers('')
                 this.searchSupermarket('')
+                this.searchUnits('')
+                this.searchFoods('')
             },
             methods: {
                 findMergeEntry: function (categories, entry) {
