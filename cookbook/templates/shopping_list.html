@@ -109,14 +109,14 @@
                 </div>
             </div>
 
-            <table class="table table-sm table-striped" style="margin-top: 1vh">
+            <table class="table table-sm" style="margin-top: 1vh">
 
                 <template v-for="c in display_categories">
-                    <tbody>
+                    <thead>
                     <tr>
-                        <td colspan="4">[[c.name]]</td>
+                        <th colspan="5">[[c.name]]</th>
                     </tr>
-                    </tbody>
+                    </thead>
                     <tbody is="draggable" :list="c.entries" tag="tbody" group="people" @sort="sortEntries"
                            @change="dragChanged(c, $event)">
                     <tr v-for="(element, index) in c.entries" :key="element.id">
@@ -686,7 +686,7 @@
                             'unit': this.new_entry.unit,
                             'amount': parseFloat(this.new_entry.amount),
                             'order': 0,
-                            'checked': false
+                            'checked': false,
                         })
 
                         this.new_entry = {
@@ -781,7 +781,7 @@
                     })
                 },
                 addFoodType: function (tag, index) { //TODO move to central component
-                    let new_food = {'name': tag}
+                    let new_food = {'name': tag, supermarket_category: null}
                     this.foods.push(new_food)
                     this.new_entry.food = new_food
                 },
