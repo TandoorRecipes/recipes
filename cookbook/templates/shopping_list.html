@@ -568,7 +568,8 @@
                             "shared": [{% for u in request.user.userpreference.plan_share.all %}
                                 {'id': {{ u.pk }}, 'username': '{{ u.get_user_name }}'},
                             {% endfor %}],
-                            "created_by": 1
+                            "created_by": {{ request.user.pk }},
+                            "supermarket": null
                         }
                         this.loading = false
 
@@ -638,25 +639,29 @@
                 },
                 dragChanged: function (category, evt) {
                     if (evt.added !== undefined) {
-                        console.log('element was added to new list', category, evt)
-                        this.shopping_list.entries.forEach(entry => {
-                            if (entry.id === evt.added.element.id) {
-                                if (category.id === -1) {
-                                    entry.food.supermarket_category = null
-                                } else {
-                                    entry.food.supermarket_category = {
-                                        name: category.name,
-                                        id: category.id
+                        if (evt.added.element.id === undefined) {
+                            this.makeToast(gettext('Warning'), gettext('This feature is only available after saving the shopping list'), 'warning')
+                        } else {
+                            this.shopping_list.entries.forEach(entry => {
+                                if (entry.id === evt.added.element.id) {
+                                    if (category.id === -1) {
+                                        entry.food.supermarket_category = null
+                                    } else {
+                                        entry.food.supermarket_category = {
+                                            name: category.name,
+                                            id: category.id
+                                        }
                                     }
-                                }
-                                console.log('UPDATING FOOD OBJECT', entry.food)
-                                this.$http.put(("{% url 'api:food-detail' 123456 %}").replace('123456', entry.food.id), entry.food).then((response) => {
+                                    this.$http.put(("{% url 'api:food-detail' 123456 %}").replace('123456', entry.food.id), entry.food).then((response) => {
 
-                                }).catch((err) => {
-                                    this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
-                                })
-                            }
-                        })
+                                    }).catch((err) => {
+                                        this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
+                                    })
+                                }
+                            })
+                        }
+
+
                     }
                 },
                 entryChecked: function (entry) {
