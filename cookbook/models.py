@@ -162,8 +162,8 @@ class Supermarket(models.Model):
 
 
 class SupermarketCategoryRelation(models.Model):
-    supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE)
-    category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE)
+    supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE, related_name='category_to_supermarket')
+    category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE, related_name='category_to_supermarket')
     order = models.IntegerField(default=0)
 
 
