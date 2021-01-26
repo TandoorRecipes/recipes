@@ -173,7 +173,7 @@ class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
 
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    supermarket_category = SupermarketCategorySerializer(read_only=True)
+    supermarket_category = SupermarketCategorySerializer(allow_null=True)
 
     def create(self, validated_data):
         # since multi select tags dont have id's
