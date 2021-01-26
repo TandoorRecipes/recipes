@@ -140,20 +140,6 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SupermarketCategoryRelation
-        fields = "__all__"
-
-
-class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    categories = SupermarketCategoryRelationSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Supermarket
-        fields = ('id', 'name', 'categories')
-
-
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     def create(self, validated_data):
@@ -168,6 +154,22 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
     class Meta:
         model = SupermarketCategory
         fields = ('id', 'name')
+
+
+class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
+    category = SupermarketCategorySerializer()
+
+    class Meta:
+        model = SupermarketCategoryRelation
+        fields = ('id', 'category', 'supermarket')
+
+
+class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Supermarket
+        fields = ('id', 'name', 'category_to_supermarket')
 
 
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
