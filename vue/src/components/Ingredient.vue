@@ -15,7 +15,7 @@
           <span v-if="ingredient.amount !== 0">{{ calculateAmount(ingredient.amount) }}</span>
         </td>
         <td>
-          <span v-if="ingredient.unit !== null">{{ ingredient.unit.name }}</span>
+          <span v-if="ingredient.unit !== null && !ingredient.no_amount">{{ ingredient.unit.name }}</span>
         </td>
         <td>
           <template v-if="ingredient.food !== null">
