@@ -110,12 +110,15 @@
             </div>
 
             <table class="table table-sm table-striped" style="margin-top: 1vh">
-                <tbody>
-                <template v-for="c in display_entries">
+
+                <template v-for="c in display_categories">
+                    <tbody>
                     <tr>
                         <td colspan="4">[[c.name]]</td>
                     </tr>
-                    
+                    </tbody>
+                    <tbody is="draggable" :list="c.entries" tag="tbody" group="people" @sort="sortEntries"
+                           @change="dragChanged(c, $event)">
                     <tr v-for="(element, index) in c.entries" :key="element.id">
                         <td class="handle"><i class="fas fa-sort"></i></td>
                         <td>[[element.amount]]</td>
@@ -127,9 +130,8 @@
                                 <i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
-
+                    </tbody>
                 </template>
-                </tbody>
 
             </table>
 
@@ -203,7 +205,7 @@
                 </div>
             </div>
 
-             <div class="row">
+            <div class="row">
                 <div class="col" style="margin-top: 1vh">
                     <multiselect
                             v-tabindex
@@ -264,7 +266,7 @@
             <div class="row" style="margin-top: 8px">
                 <div class="col col-md-12">
                     <table class="table">
-                        <template v-for="c in display_entries">
+                        <template v-for="c in display_categories">
                             <template v-if="c.entries.filter(item => item.checked === false).length > 0">
                                 <tr>
                                     <td colspan="4">[[c.name]]</td>
@@ -284,7 +286,7 @@
                         <tr>
                             <td colspan="4"></td>
                         </tr>
-                        <template v-for="c in display_entries">
+                        <template v-for="c in display_categories">
 
                             <tr v-for="x in c.entries" class="text-muted">
                                 <template v-if="x.checked">
@@ -338,7 +340,6 @@
 
 
         </b-modal>
-
 
     </template>
 
@@ -397,10 +398,11 @@
                     })
                     return cache
                 },
-                display_entries() {
+                display_categories() {
                     let categories = {
                         no_category: {
                             name: gettext('Uncategorized'),
+                            id: -1,
                             entries: []
                         }
                     }
@@ -409,10 +411,21 @@
                         if (e.food.supermarket_category !== null) {
                             categories[e.food.supermarket_category.id] = {
                                 name: e.food.supermarket_category.name,
+                                id: e.food.supermarket_category.id,
                                 entries: []
                             };
                         }
                     })
+
+                    if (this.shopping_list.supermarket !== null) {
+                        this.shopping_list.supermarket.category_to_supermarket.forEach(el => {
+                            categories[el.category.id] = {
+                                name: el.category.name,
+                                id: el.category.id,
+                                entries: []
+                            };
+                        })
+                    }
 
                     this.shopping_list.entries.forEach(element => {
                         let item = {}
@@ -440,7 +453,7 @@
                 },
                 export_text() {
                     let text = ''
-                    for (let [i, c] of Object.entries(this.display_entries)) {
+                    for (let [i, c] of Object.entries(this.display_categories)) {
                         for (let e of c.entries.filter(item => item.checked === false)) {
                             text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
                         }
@@ -620,11 +633,31 @@
 
                     })
                 },
-                sortEntries: function () {
-                    this.display_entries.forEach((item, index) => {
+                sortEntries: function (a, b) {
+                    //TODO implement me (might be difficult because of computed drag changed stuff)
+                },
+                dragChanged: function (category, evt) {
+                    if (evt.added !== undefined) {
+                        console.log('element was added to new list', category, evt)
+                        this.shopping_list.entries.forEach(entry => {
+                            if (entry.id === evt.added.element.id) {
+                                if (category.id === -1) {
+                                    entry.food.supermarket_category = null
+                                } else {
+                                    entry.food.supermarket_category = {
+                                        name: category.name,
+                                        id: category.id
+                                    }
+                                }
+                                console.log('UPDATING FOOD OBJECT', entry.food)
+                                this.$http.put(("{% url 'api:food-detail' 123456 %}").replace('123456', entry.food.id), entry.food).then((response) => {
 
-                    })
-                    console.log("IMPLEMENT ME", this.display_entries)
+                                }).catch((err) => {
+                                    this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
+                                })
+                            }
+                        })
+                    }
                 },
                 entryChecked: function (entry) {
                     this.shopping_list.entries.forEach((item) => {
