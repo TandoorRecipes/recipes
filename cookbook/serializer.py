@@ -161,7 +161,7 @@ class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SupermarketCategoryRelation
-        fields = ('id', 'category', 'supermarket')
+        fields = ('id', 'category', 'supermarket', 'order')
 
 
 class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
