@@ -47,7 +47,7 @@ class RecipeFilter(django_filters.FilterSet):
         if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2':  # noqa: E501
             queryset = queryset \
                 .annotate(similarity=TrigramSimilarity('name', value), ) \
-                .filter(Q(similarity__gt=0.1) | Q(name__icontains=value)) \
+                .filter(Q(similarity__gt=0.1) | Q(name__unaccent__icontains=value)) \
                 .order_by('-similarity')
         else:
             queryset = queryset.filter(name__icontains=value)
