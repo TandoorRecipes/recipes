@@ -430,9 +430,8 @@ class ShoppingList(models.Model):
     note = models.TextField(blank=True, null=True)
     recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
     entries = models.ManyToManyField(ShoppingListEntry, blank=True)
-    shared = models.ManyToManyField(
-        User, blank=True, related_name='list_share'
-    )
+    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
+    supermarket = models.ForeignKey(Supermarket, null=True, blank=True, on_delete=models.SET_NULL)
     finished = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

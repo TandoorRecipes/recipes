@@ -112,10 +112,12 @@
             <table class="table table-sm table-striped" style="margin-top: 1vh">
                 <tbody>
                 <template v-for="c in display_entries">
-
-
+                    <tr>
+                        <td colspan="4">[[c.name]]</td>
+                    </tr>
+                    
                     <tr v-for="(element, index) in c.entries" :key="element.id">
-                        <!--<td class="handle"><i class="fas fa-sort"></i></td>-->
+                        <td class="handle"><i class="fas fa-sort"></i></td>
                         <td>[[element.amount]]</td>
                         <td>[[element.unit.name]]</td>
                         <td>[[element.food.name]]</td>
@@ -203,22 +205,22 @@
 
              <div class="row">
                 <div class="col" style="margin-top: 1vh">
-{#                    <multiselect#}
-{#                            v-tabindex#}
-{#                            v-model="shopping_list.shared"#}
-{#                            :options="users"#}
-{#                            :close-on-select="true"#}
-{#                            :clear-on-select="true"#}
-{#                            :allow-empty="true"#}
-{#                            :preserve-search="true"#}
-{#                            placeholder="{% trans 'Select Supermarket' %}"#}
-{#                            select-label="{% trans 'Select' %}"#}
-{#                            label="supermarket"#}
-{#                            track-by="id"#}
-{#                            :multiple="false"#}
-{#                            :loading="supermarket_loading"#}
-{#                            @search-change="searchSupermarket">#}
-{#                    </multiselect>#}
+                    <multiselect
+                            v-tabindex
+                            v-model="shopping_list.supermarket"
+                            :options="supermarkets"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :allow-empty="true"
+                            :preserve-search="true"
+                            placeholder="{% trans 'Select Supermarket' %}"
+                            select-label="{% trans 'Select' %}"
+                            label="name"
+                            track-by="id"
+                            :multiple="false"
+                            :loading="supermarkets_loading"
+                            @search-change="searchSupermarket">
+                    </multiselect>
 
                 </div>
             </div>
@@ -360,7 +362,7 @@
             data: {
                 shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
                 loading: true,
-                edit_mode: false,
+                edit_mode: true,
                 export_text_prefix: '', //TODO add userpreference
                 recipe_query: '',
                 recipes: [],
@@ -374,6 +376,8 @@
                 foods_loading: false,
                 units: [],
                 units_loading: false,
+                supermarkets: [],
+                supermarkets_loading: false,
                 users: [],
                 users_loading: false,
                 onLine: navigator.onLine,
@@ -473,6 +477,7 @@
                 {% endif %}
 
                 this.searchUsers('')
+                this.searchSupermarket('')
             },
             methods: {
                 findMergeEntry: function (categories, entry) {
@@ -756,6 +761,17 @@
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
+                searchSupermarket: function (query) { //TODO move to central component
+                    this.supermarkets_loading = true
+                    this.$http.get("{% url 'api:supermarket-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.supermarkets = response.data
+                        this.supermarkets_loading = false
+                    }).catch((err) => {
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
+                },
+
+
             },
             beforeDestroy() {
                 window.removeEventListener('online', this.updateOnlineStatus);
