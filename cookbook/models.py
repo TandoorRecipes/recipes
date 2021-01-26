@@ -166,6 +166,9 @@ class SupermarketCategoryRelation(models.Model):
     category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE, related_name='category_to_supermarket')
     order = models.IntegerField(default=0)
 
+    class Meta:
+        ordering = ('order',)
+
 
 class SyncLog(models.Model):
     sync = models.ForeignKey(Sync, on_delete=models.CASCADE)

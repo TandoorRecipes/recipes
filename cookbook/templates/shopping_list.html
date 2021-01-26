@@ -403,7 +403,8 @@
                         no_category: {
                             name: gettext('Uncategorized'),
                             id: -1,
-                            entries: []
+                            entries: [],
+                            order: 99999999
                         }
                     }
 
@@ -412,6 +413,7 @@
                             categories[e.food.supermarket_category.id] = {
                                 name: e.food.supermarket_category.name,
                                 id: e.food.supermarket_category.id,
+                                order: 0,
                                 entries: []
                             };
                         }
@@ -422,6 +424,7 @@
                             categories[el.category.id] = {
                                 name: el.category.name,
                                 id: el.category.id,
+                                order: el.order,
                                 entries: []
                             };
                         })
@@ -449,11 +452,26 @@
                         }
                     });
 
-                    return categories
+                    let ordered_categories = []
+                    for (let [i,v] of Object.entries(categories)){
+                        ordered_categories.push(v)
+                    }
+
+                    ordered_categories.sort(function (a, b) {
+                        if (a.order < b.order) {
+                            return -1
+                        } else if (a.order > b.order) {
+                            return 1
+                        } else {
+                            return 0
+                        }
+                    })
+
+                    return ordered_categories
                 },
                 export_text() {
                     let text = ''
-                    for (let [i, c] of Object.entries(this.display_categories)) {
+                    for (let c of this.display_categories) {
                         for (let e of c.entries.filter(item => item.checked === false)) {
                             text += `${this.export_text_prefix}${e.amount} ${e.unit.name} ${e.food.name} \n`
                         }
