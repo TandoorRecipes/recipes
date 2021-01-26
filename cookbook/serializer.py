@@ -362,12 +362,13 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
     recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
     shared = UserNameSerializer(many=True)
+    supermarket = SupermarketSerializer(allow_null=True)
 
     class Meta:
         model = ShoppingList
         fields = (
             'id', 'uuid', 'note', 'recipes', 'entries',
-            'shared', 'finished', 'created_by', 'created_at'
+            'shared', 'finished', 'supermarket', 'created_by', 'created_at'
         )
         read_only_fields = ('id',)
 
