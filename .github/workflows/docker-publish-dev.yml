@@ -18,9 +18,11 @@ jobs:
             VERSION_NUMBER = 'develop'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@2.13
+      - name: Build and publish image
+        uses: ilteoood/docker_buildx@master
         with:
-          name: vabene1111/recipes
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          publish: true
+          imageName: vabene1111/recipes
+          tag: develop
+          dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
+          dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
