@@ -519,7 +519,7 @@
                             if (entry.food.id === item.food.id) {
                                 if (entry.unit === null && item.unit === null) {
                                     return true
-                                } else if (entry.unit.id === item.unit.id) {
+                                } else if (entry.unit !== null && item.unit !== null && entry.unit.id === item.unit.id) {
                                     return true
                                 }
                             }
