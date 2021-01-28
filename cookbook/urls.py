@@ -34,6 +34,7 @@ router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'cook-log', api.CookLogViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
+router.register(r'supermarket', api.SupermarketViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),

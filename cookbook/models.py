@@ -114,7 +114,8 @@ class UserPreference(models.Model):
 class Storage(models.Model):
     DROPBOX = 'DB'
     NEXTCLOUD = 'NEXTCLOUD'
-    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (NEXTCLOUD, 'Nextcloud'))
+    LOCAL = 'LOCAL'
+    STORAGE_TYPES = ((DROPBOX, 'Dropbox'), (NEXTCLOUD, 'Nextcloud'), (LOCAL, 'Local'))
 
     name = models.CharField(max_length=128)
     method = models.CharField(
@@ -124,6 +125,7 @@ class Storage(models.Model):
     password = models.CharField(max_length=128, blank=True, null=True)
     token = models.CharField(max_length=512, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
+    path = models.CharField(blank=True, default='', max_length=256)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -140,6 +142,32 @@ class Sync(models.Model):
 
     def __str__(self):
         return self.path
+
+
+class SupermarketCategory(models.Model):
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Supermarket(models.Model):
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    description = models.TextField(blank=True, null=True)
+    categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
+
+    def __str__(self):
+        return self.name
+
+
+class SupermarketCategoryRelation(models.Model):
+    supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE, related_name='category_to_supermarket')
+    category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE, related_name='category_to_supermarket')
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ('order',)
 
 
 class SyncLog(models.Model):
@@ -167,9 +195,7 @@ class Keyword(models.Model):
 
 
 class Unit(models.Model):
-    name = models.CharField(
-        unique=True, max_length=128, validators=[MinLengthValidator(1)]
-    )
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -177,12 +203,11 @@ class Unit(models.Model):
 
 
 class Food(models.Model):
-    name = models.CharField(
-        unique=True, max_length=128, validators=[MinLengthValidator(1)]
-    )
-    recipe = models.ForeignKey(
-        'Recipe', null=True, blank=True, on_delete=models.SET_NULL
-    )
+    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+    supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
+    ignore_shopping = models.BooleanField(default=False)
+    description = models.TextField(default='', blank=True)
 
     def __str__(self):
         return self.name
@@ -408,9 +433,8 @@ class ShoppingList(models.Model):
     note = models.TextField(blank=True, null=True)
     recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
     entries = models.ManyToManyField(ShoppingListEntry, blank=True)
-    shared = models.ManyToManyField(
-        User, blank=True, related_name='list_share'
-    )
+    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
+    supermarket = models.ForeignKey(Supermarket, null=True, blank=True, on_delete=models.SET_NULL)
     finished = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

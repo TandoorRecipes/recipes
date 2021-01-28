@@ -95,7 +95,7 @@
                             class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
                 </div>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_food' %}active{% endif %}">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_food,edit_storage' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
                 </a>
@@ -121,6 +121,9 @@
 
         <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
+                {% page_help request.resolver_match.url_name as help_button %}
+                {% if help_button %}{{ help_button|safe }}{% endif %}
+
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
