@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import Avg, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -28,6 +28,7 @@ from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
+from recipes.settings import DEMO
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -263,6 +264,10 @@ def shopping_list(request, pk=None):
 
 @group_required('guest')
 def user_settings(request):
+    if DEMO:
+        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
+        return redirect('index')
+
     up = request.user.userpreference
 
     user_name_form = UserNameForm(instance=request.user)

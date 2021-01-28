@@ -11,7 +11,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog)
+                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket, SupermarketCategoryRelation)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -140,7 +140,40 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
+        obj, created = SupermarketCategory.objects.get_or_create(**validated_data)
+        return obj
+
+    def update(self, instance, validated_data):
+        return super(SupermarketCategorySerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = SupermarketCategory
+        fields = ('id', 'name')
+
+
+class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
+    category = SupermarketCategorySerializer()
+
+    class Meta:
+        model = SupermarketCategoryRelation
+        fields = ('id', 'category', 'supermarket', 'order')
+
+
+class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Supermarket
+        fields = ('id', 'name', 'category_to_supermarket')
+
+
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
         # since multi select tags dont have id's
@@ -153,8 +186,7 @@ class FoodSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'recipe')
-        read_only_fields = ('id',)
+        fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category')
 
 
 class IngredientSerializer(WritableNestedModelSerializer):
@@ -310,7 +342,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSerializer(allow_null=True)
-    unit = UnitSerializer(allow_null=True)
+    unit = UnitSerializer(allow_null=True, required=False)
     amount = CustomDecimalField()
 
     class Meta:
@@ -318,7 +350,6 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked'
         )
-        read_only_fields = ('id',)
 
 
 class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
@@ -331,12 +362,13 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
     recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
     shared = UserNameSerializer(many=True)
+    supermarket = SupermarketSerializer(allow_null=True)
 
     class Meta:
         model = ShoppingList
         fields = (
             'id', 'uuid', 'note', 'recipes', 'entries',
-            'shared', 'finished', 'created_by', 'created_at'
+            'shared', 'finished', 'supermarket', 'created_by', 'created_at'
         )
         read_only_fields = ('id',)
 

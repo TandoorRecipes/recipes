@@ -8,6 +8,7 @@ from django import template
 from django.db.models import Avg
 from django.urls import NoReverseMatch, reverse
 from recipes import settings
+from gettext import gettext as _
 
 register = template.Library()
 
@@ -78,6 +79,21 @@ def recipe_last(recipe, user):
         return last.created_at
     else:
         return ''
+
+
+@register.simple_tag
+def page_help(page_name):
+    help_pages = {
+        'edit_storage': 'https://vabene1111.github.io/recipes/features/external_recipes/',
+        'view_shopping': 'https://vabene1111.github.io/recipes/features/shopping/',
+    }
+
+    link = help_pages.get(page_name, '')
+
+    if link != '':
+        return f'<li class="nav-item"><a class="nav-link" target="_blank" rel="nofollow noreferrer" href="{link}"><i class="far fa-question-circle"></i>&zwnj;<span class="d-lg-none"> {_("Help")}</span></a></li>'
+    else:
+        return None
 
 
 @register.simple_tag

@@ -6,7 +6,7 @@ If you like this application and want it to improve, feel free to contribute to 
 
 ## Issues
 The most basic but also very important way of contributing is reporting issues and commenting on ideas and feature requests
-over on the GitHub issues.
+over on the [GitHub issues](https://github.com/vabene1111/recipes/issues).
 
 Without Feedback improvement can't happen, so don't hesitate to say what you want to say.
 
@@ -14,7 +14,10 @@ Without Feedback improvement can't happen, so don't hesitate to say what you wan
 Code contributions are always welcome. There is no special rules for what you need to do, 
 just do your best and we will work together to get your idea and code merged into the project.
 
-### Getting Started
+!!! info
+    The dev setup is a little messy as this application combines the best (at least in my opinion) of django and Vue.js.
+
+### Django
 This application is developed using the Django framework for Python. They have excellent 
 [documentation](https://www.djangoproject.com/start/) on how to get started, so I will only give you the basics here.
 
@@ -28,7 +31,36 @@ This application is developed using the Django framework for Python. They have e
 There is **no** need to set any environment variables. By default, a simple sqlite database is used and all settings are
 populated from default values.
 
-### Contribute Translations
+### Vue.js
+Some of the more complex pages use [Vue.js](https://vuejs.org/) to enhance the frontend. 
+
+In order to work on these pages you will have to install a Javascript package manager of your choice. The following examples use yarn.
+
+Run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server
+and go ahead and test your changes. Before committing please make sure to pack the source using `yarn build`.
+
+### Pre-Commit
+Some checks and scripts can be automatically run using [pre-commit](https://pre-commit.com/).
+
+The scripts are configured in the `pre-commit-config.yaml`. To setup the hooks on your development environment run 
+`pre-commit install`.
+
+To manually test all hooks (and ignore if files have changed) use `pre-commit run --all-files`
+
+
+## Contribute Documentation
+The documentation is build from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
+folder of the GitHub repository. 
+
+!!! warning "Deployment Branch"
+    The documentation is currently build from the `develop` branch of the GitHub repository as it is evolving rapidly.
+    This will likely change in the future to prevent issues with documentation being released before the features.
+
+In order to contribute to the documentation you can fork the repository and edit the markdown files in the browser.
+
+If you want to test the documentation locally run `mkdocs serve` from the project root.
+
+## Contribute Translations
 
 If you know any foreign languages that is not yet translated feel free to contribute translations.
 

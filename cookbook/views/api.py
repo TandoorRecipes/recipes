@@ -36,8 +36,9 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry)
+                             ViewLog, RecipeBookEntry, Supermarket)
 from cookbook.provider.dropbox import Dropbox
+from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
@@ -50,8 +51,33 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer)
+                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer)
 from recipes.settings import DEMO
+
+
+class StandardFilterMixin(ViewSetMixin):
+
+    def get_queryset(self):
+        queryset = self.queryset
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(name__icontains=query)
+
+        updated_at = self.request.query_params.get('updated_at', None)
+        if updated_at is not None:
+            try:
+                queryset = queryset.filter(updated_at__gte=updated_at)
+            except FieldError:
+                pass
+
+        limit = self.request.query_params.get('limit', None)
+        random = self.request.query_params.get('random', False)
+        if limit is not None:
+            if random:
+                queryset = queryset.random(int(limit))
+            else:
+                queryset = queryset[:int(limit)]
+        return queryset
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -115,29 +141,10 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
 
-class StandardFilterMixin(ViewSetMixin):
-
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(name__icontains=query)
-
-        updated_at = self.request.query_params.get('updated_at', None)
-        if updated_at is not None:
-            try:
-                queryset = queryset.filter(updated_at__gte=updated_at)
-            except FieldError:
-                pass
-
-        limit = self.request.query_params.get('limit', None)
-        random = self.request.query_params.get('random', False)
-        if limit is not None:
-            if random:
-                queryset = queryset.random(int(limit))
-            else:
-                queryset = queryset[:int(limit)]
-        return queryset
+class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = Supermarket.objects.all()
+    serializer_class = SupermarketSerializer
+    permission_classes = [CustomIsUser]
 
 
 class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -169,7 +176,7 @@ class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects.all()
     serializer_class = RecipeBookSerializer
-    permission_classes = [CustomIsOwner, CustomIsAdmin]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
         self.queryset = super(RecipeBookViewSet, self).get_queryset()
@@ -181,7 +188,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     queryset = RecipeBookEntry.objects.all()
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [CustomIsOwner, CustomIsAdmin]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
         if self.request.user.is_superuser:
@@ -200,7 +207,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects.all()
     serializer_class = MealPlanSerializer
-    permission_classes = [permissions.IsAuthenticated]  # TODO fix permissions
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
         queryset = MealPlan.objects.filter(
@@ -225,11 +232,10 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = MealType.objects.order_by('order').all()
     serializer_class = MealTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = MealType.objects.order_by('order', 'id') \
-            .filter(created_by=self.request.user).all()
+        queryset = MealType.objects.order_by('order', 'id').filter(created_by=self.request.user).all()
         return queryset
 
 
@@ -310,17 +316,19 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects.all()
     serializer_class = ShoppingListRecipeSerializer
-    permission_classes = [CustomIsUser, ]  # TODO add custom validation
+    permission_classes = [CustomIsOwner, ]
 
-    # TODO custom get qs
+    def get_queryset(self):
+        return self.queryset.filter(shoppinglist__created_by=self.request.user).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects.all()
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [CustomIsOwner, ]  # TODO add custom validation
+    permission_classes = [CustomIsOwner, ]
 
-    # TODO custom get qs
+    def get_queryset(self):
+        return self.queryset.filter(shoppinglist__created_by=self.request.user).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
@@ -345,12 +353,10 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
 class ViewLogViewSet(viewsets.ModelViewSet):
     queryset = ViewLog.objects.all()
     serializer_class = ViewLogSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = ViewLog.objects \
-                       .filter(created_by=self.request.user).all()[:5]
-        return queryset
+        return CookLog.objects.filter(created_by=self.request.user).all()[:5]
 
 
 class CookLogViewSet(viewsets.ModelViewSet):
@@ -359,7 +365,7 @@ class CookLogViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = ViewLog.objects.filter(created_by=self.request.user).all()[:5]
+        queryset = CookLog.objects.filter(created_by=self.request.user).all()[:5]
         return queryset
 
 
@@ -370,6 +376,8 @@ def get_recipe_provider(recipe):
         return Dropbox
     elif recipe.storage.method == Storage.NEXTCLOUD:
         return Nextcloud
+    elif recipe.storage.method == Storage.LOCAL:
+        return Local
     else:
         raise Exception('Provider not implemented')
 
@@ -394,15 +402,15 @@ def get_external_file_link(request, recipe_id):
 @group_required('user')
 def get_recipe_file(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
-    if not recipe.cors_link:
-        update_recipe_links(recipe)
+    # if not recipe.cors_link:
+    #    update_recipe_links(recipe)
 
     return FileResponse(get_recipe_provider(recipe).get_file(recipe))
 
 
 @group_required('user')
 def sync_all(request):
-    if DEMO or True:
+    if DEMO:
         messages.add_message(
             request, messages.ERROR, _('This feature is not available in the demo version!')
         )
@@ -418,6 +426,10 @@ def sync_all(request):
                 error = True
         if monitor.storage.method == Storage.NEXTCLOUD:
             ret = Nextcloud.import_all(monitor)
+            if not ret:
+                error = True
+        if monitor.storage.method == Storage.LOCAL:
+            ret = Local.import_all(monitor)
             if not ret:
                 error = True
 

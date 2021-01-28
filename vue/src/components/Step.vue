@@ -5,7 +5,7 @@
 
     <template v-if="step.type === 'TEXT'">
       <div class="row" v-if="recipe.steps.length > 1">
-        <div class="col col-md4">
+        <div class="col col-md-8">
           <h5 class="text-primary">
             <template v-if="step.name">{{ step.name }}</template>
             <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
@@ -20,7 +20,7 @@
             </small>
           </h5>
         </div>
-        <div class="col col-md-8" style="text-align: right">
+        <div class="col col-md-4" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
                     class="shadow-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
@@ -48,7 +48,7 @@
 
     <template v-if="step.type === 'TIME'">
       <div class="row">
-        <div class="col-10 offset-1" style="text-align: center">
+        <div class="col-md-8 offset-md-2" style="text-align: center">
           <h4 class="text-primary">
             <template v-if="step.name">{{ step.name }}</template>
             <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
@@ -60,7 +60,7 @@
           </b-link>
         </div>
 
-        <div class="col-1" style="text-align: right">
+        <div class="col-md-2" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
                     class="shadow-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
