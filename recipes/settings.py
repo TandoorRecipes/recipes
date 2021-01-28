@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
+import ast
 import os
 import random
 import string
@@ -82,9 +83,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
     'cookbook.apps.CookbookConfig',
 ]
+
+SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
+INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
+
+SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,9 +113,6 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
-
-# disable account creation using allauth
-ACCOUNT_ALLOW_SIGNUPS = bool(int(os.getenv('ACCOUNT_ALLOW_SIGNUPS', False)))
 
 if REVERSE_PROXY_AUTH:
     MIDDLEWARE.append('recipes.middleware.CustomRemoteUser')
