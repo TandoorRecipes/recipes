@@ -26,7 +26,7 @@ class TestViewsApi(TestViews):
         url = reverse('api_get_recipe_file', args=[1])
 
         self.assertEqual(self.anonymous_client.get(url).status_code, 302)
-        self.assertEqual(self.guest_client_1.get(url).status_code, 302)
+        self.assertEqual(self.guest_client_1.get(url).status_code, 200)
 
     def test_sync_permission(self):
         url = reverse('api_sync')
