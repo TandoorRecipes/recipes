@@ -137,11 +137,11 @@
 
 
             <div class="row">
-                <div class="col col-md-3">
+                <div class="col-12 col-lg-3">
                     <input class="form-control" type="number" placeholder="{% trans 'Amount' %}"
                            v-model="new_entry.amount" ref="new_entry_amount">
                 </div>
-                <div class="col col-md-4">
+                <div class="col-12 col-lg-4">
                     <multiselect
                             v-tabindex
                             ref="unit"
@@ -163,7 +163,7 @@
                             @search-change="searchUnits">
                     </multiselect>
                 </div>
-                <div class="col col-md-4">
+                <div class="col-12 col-lg-4">
                     <multiselect
                             v-tabindex
                             ref="food"
@@ -186,7 +186,7 @@
                     </multiselect>
                 </div>
 
-                <div class="col col-md-1 my-auto text-right">
+                <div class="col-12 col-lg-1 my-auto text-right">
                     <button class="btn btn-success btn-lg" @click="addEntry()"><i class="fa fa-plus"></i>
                     </button>
                 </div>

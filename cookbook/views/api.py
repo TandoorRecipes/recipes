@@ -399,7 +399,7 @@ def get_external_file_link(request, recipe_id):
     return HttpResponse(recipe.link)
 
 
-@group_required('user')
+@group_required('guest')
 def get_recipe_file(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
     # if not recipe.cors_link:
@@ -522,6 +522,7 @@ def recipe_from_url(request):
     return get_from_html(response.text, url)
 
 
+@group_required('admin')
 def get_backup(request):
     if not request.user.is_superuser:
         return HttpResponse('', status=403)
