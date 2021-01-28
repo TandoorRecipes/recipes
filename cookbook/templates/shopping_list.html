@@ -278,7 +278,7 @@
                                         </td>
                                         <td>[[x.amount]]</td>
                                         <td>[[x.unit.name]]</td>
-                                        <td>[[x.food.name]]</td>
+                                        <td>[[x.food.name]] <span class="text-muted" v-if="x.recipes.length > 0">([[x.recipes.join(', ')]])</span></td>
                                     </template>
                                 </tr>
                             </template>
@@ -398,6 +398,13 @@
                     })
                     return cache
                 },
+                recipe_cache() {
+                    let cache = {}
+                    this.shopping_list.recipes.forEach((r) => {
+                        cache[r.id] = r.recipe_name;
+                    })
+                    return cache
+                },
                 display_categories() {
                     let categories = {
                         no_category: {
@@ -433,10 +440,16 @@
                     this.shopping_list.entries.forEach(element => {
                         let item = {}
                         Object.assign(item, element);
+                        item.recipes = []
 
                         let entry = this.findMergeEntry(categories, item)
                         if (entry !== undefined) {
                             entry.amount += item.amount * this.servings_cache[item.list_recipe]
+
+                            if (item.list_recipe !== null && entry.recipes.indexOf(this.recipe_cache[item.list_recipe]) === -1) {
+                                entry.recipes.push(this.recipe_cache[item.list_recipe])
+                            }
+
                             entry.entries.push(item.id)
                         } else {
                             if (item.list_recipe !== null) {
@@ -444,6 +457,9 @@
                             }
                             item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
                             item.entries = [element.id]
+                            if (element.list_recipe !== null) {
+                                item.recipes.push(this.recipe_cache[element.list_recipe])
+                            }
                             if (item.food.supermarket_category !== null) {
                                 categories[item.food.supermarket_category.id].entries.push(item)
                             } else {
