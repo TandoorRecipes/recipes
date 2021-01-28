@@ -32,6 +32,20 @@ Please make sure, if you run your image this way, to consult
 the [.env.template](https://raw.githubusercontent.com/vabene1111/recipes/master/.env.template)
 file in the GitHub repository to verify if additional environment variables are required for your setup.
 
+### Versions
+
+There are different versions (tags) released on docker hub. 
+
+- **latest** Default image. The one you should use if you don't know that you need anything else.
+- **beta** Partially stable version that gets updated every now and then. Expect to have some problems.
+- **develop** If you want the most bleeding edge version with potentially many breaking changes feel free to use this version (I don't recommend it!). 
+- **X.Y.Z** each released version has its own image. If you need to revert to an old version or want to make sure you stay on one specific use these tags.
+
+!!! danger "No Downgrading"
+    There is currently no way to migrate back to an older version as there is no mechanism to downgrade the database. 
+    You could probably do it but I cannot help you with that. Choose wisely if you want to use the unstable images.
+    That said **beta** should usually be working if you like frequent updates and new stuff.
+
 ## Docker Compose
 
 The main, and also recommended, installation option is to install this application using Docker Compose.

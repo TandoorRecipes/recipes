@@ -119,7 +119,7 @@ def group_required(*groups_required):
     def in_groups(u):
         return has_group_permission(u, groups_required)
 
-    return user_passes_test(in_groups)
+    return user_passes_test(in_groups, login_url='view_no_group')
 
 
 class GroupRequiredMixin(object):
@@ -138,8 +138,7 @@ class GroupRequiredMixin(object):
             )
             return HttpResponseRedirect(reverse_lazy('index'))
 
-        return super(GroupRequiredMixin, self) \
-            .dispatch(request, *args, **kwargs)
+        return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 
 class OwnerRequiredMixin(object):
