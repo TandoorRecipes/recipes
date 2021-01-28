@@ -235,7 +235,7 @@ class StepExportSerializer(WritableNestedModelSerializer):
 class NutritionInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = NutritionInformation
-        fields = ('carbohydrates', 'fats', 'proteins', 'calories', 'source')
+        fields = ('id', 'carbohydrates', 'fats', 'proteins', 'calories', 'source')
 
 
 class RecipeOverviewSerializer(WritableNestedModelSerializer):
