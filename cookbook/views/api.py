@@ -402,10 +402,10 @@ def get_external_file_link(request, recipe_id):
 @group_required('guest')
 def get_recipe_file(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
-    # if not recipe.cors_link:
-    #    update_recipe_links(recipe)
-
-    return FileResponse(get_recipe_provider(recipe).get_file(recipe))
+    if recipe.storage:
+        return FileResponse(get_recipe_provider(recipe).get_file(recipe))
+    else:
+        return FileResponse()
 
 
 @group_required('user')

@@ -23,7 +23,15 @@ class TestViewsApi(TestViews):
         self.assertEqual(self.superuser_client.get(url).status_code, 200)
 
     def test_file_permission(self):
-        url = reverse('api_get_recipe_file', args=[1])
+        recipe = Recipe.objects.create(
+            internal=False,
+            link='test',
+            working_time=1,
+            waiting_time=1,
+            created_by=auth.get_user(self.user_client_1)
+        )
+
+        url = reverse('api_get_recipe_file', args=[recipe.pk])
 
         self.assertEqual(self.anonymous_client.get(url).status_code, 302)
         self.assertEqual(self.guest_client_1.get(url).status_code, 200)
