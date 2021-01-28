@@ -39,6 +39,7 @@ router.register(r'supermarket', api.SupermarketViewSet)
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
+    path('no-group', views.no_groups, name='view_no_group'),
     path('signup/<slug:token>', views.signup, name='view_signup'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),

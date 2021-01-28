@@ -23,7 +23,7 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
                             UserPreferenceForm)
-from cookbook.helper.permission_helper import group_required, share_link_valid
+from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
@@ -34,8 +34,7 @@ from recipes.version import BUILD_REF, VERSION_NUMBER
 
 def index(request):
     if not request.user.is_authenticated:
-        if (User.objects.count() < 1
-                and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS):  # noqa: E501
+        if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
             return HttpResponseRedirect(reverse_lazy('view_setup'))
         return HttpResponseRedirect(reverse_lazy('view_search'))
     try:
@@ -45,15 +44,13 @@ def index(request):
             UserPreference.BOOKS: reverse_lazy('view_books'),
         }
 
-        return HttpResponseRedirect(
-            page_map.get(request.user.userpreference.default_page)
-        )
+        return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
     except UserPreference.DoesNotExist:
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('view_no_group') + '?next=' + request.path)
 
 
 def search(request):
-    if request.user.is_authenticated:
+    if has_group_permission(request.user, ('guest',)):
         f = RecipeFilter(
             request.GET,
             queryset=Recipe.objects.all().order_by('name')
@@ -88,19 +85,27 @@ def search(request):
             {'recipes': table, 'filter': f, 'last_viewed': last_viewed}
         )
     else:
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('view_no_group') + '?next=' + request.path)
+
+
+def no_groups(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.GET['next'])
+    if request.user.is_authenticated and request.user.groups.count() > 0:
+        return HttpResponseRedirect(reverse('index'))
+    return render(request, 'no_groups_info.html')
 
 
 def recipe_view(request, pk, share=None):
     recipe = get_object_or_404(Recipe, pk=pk)
 
-    if not request.user.is_authenticated and not share_link_valid(recipe, share):
+    if not has_group_permission(request.user, ('guest',)) and not share_link_valid(recipe, share):
         messages.add_message(
             request,
             messages.ERROR,
             _('You do not have the required permissions to view this page!')
         )
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('view_no_group') + '?next=' + request.path)
 
     comments = Comment.objects.filter(recipe=recipe)
 
@@ -195,22 +200,6 @@ def books(request):
         )
 
     return render(request, 'books.html', {'book_list': book_list})
-
-
-def get_start_end_from_week(p_year, p_week):
-    first_day_of_week = datetime.strptime(
-        f'{p_year}-W{int(p_week) - 1}-1', "%Y-W%W-%w"
-    ).date()
-    last_day_of_week = first_day_of_week + timedelta(days=6.9)
-    return first_day_of_week, last_day_of_week
-
-
-def get_days_from_week(start, end):
-    delta = end - start
-    days = []
-    for i in range(delta.days + 1):
-        days.append(start + timedelta(days=i))
-    return days
 
 
 @group_required('user')
@@ -466,7 +455,7 @@ def signup(request, token):
             form.fields['name'].initial = link.username
             form.fields['name'].disabled = True
         return render(
-            request, 'registration/signup.html', {'form': form, 'link': link}
+            request, 'account/signup.html', {'form': form, 'link': link}
         )
 
     messages.add_message(
