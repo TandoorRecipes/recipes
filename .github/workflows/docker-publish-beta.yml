@@ -1,0 +1,26 @@
+name: publish beta image docker
+on:
+  push:
+    branches:
+      - 'beta'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Update version file
+        uses: DamianReeves/write-file-action@v1.0
+        with:
+          path: recipes/version.py
+          contents: |
+            VERSION_NUMBER = 'beta'
+            BUILD_REF = '${{ github.sha }}'
+          write-mode: overwrite
+      - name: Build and publish image
+        uses: ilteoood/docker_buildx@master
+        with:
+          publish: true
+          imageName: vabene1111/recipes
+          tag: beta
+          dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
+          dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
