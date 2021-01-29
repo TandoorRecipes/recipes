@@ -1,7 +1,7 @@
 FROM python:3.8-alpine
 
 
-RUN apt-get -y update && apt-get install -y libzbar-dev
+RUN apk -y update && apk install -y libzbar-dev
 
 RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev libxslt-dev
 
