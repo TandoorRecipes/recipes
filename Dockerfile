@@ -1,6 +1,6 @@
 FROM python:3.8-alpine
 
-RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev python-dev libxml2-dev libxslt1-dev zlib1g-dev libxslt-dev 
+RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev libxslt-dev
 
 
 
