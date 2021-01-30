@@ -15,7 +15,7 @@ COPY . ./
 RUN chmod +x boot.sh
 
 
-RUN apk add --no-cache bash python pkgconfig git gcc openldap libcurl python2-dev gpgme-dev libc-dev && rm -rf /var/cache/apk/*
+RUN apk add --no-cache bash cython3 python2-dev pkgconfig git gcc openldap libcurl gpgme-dev libc-dev && rm -rf /var/cache/apk/*
     
     
 RUN apk add --no-cache --virtual cython3 .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev && \
