@@ -18,7 +18,7 @@ RUN chmod +x boot.sh
 RUN apk add --no-cache bash python2-dev pkgconfig git gcc openldap libcurl gpgme-dev libc-dev && rm -rf /var/cache/apk/*
     
     
-RUN apk add --no-cache --virtual cython3 .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev && \
+RUN apk add --no-cache --virtual cython3 gcc musl-dev postgresql-dev zlib-dev jpeg-dev && \
     python -m venv venv && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
