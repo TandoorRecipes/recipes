@@ -14,7 +14,7 @@ WORKDIR /opt/recipes
 COPY . ./
 RUN chmod +x boot.sh
 
-
+RUN apk add --update --no-cache g++ gcc libxslt-dev
 RUN apk add --no-cache bash python2-dev pkgconfig git gcc openldap libcurl gpgme-dev libc-dev && rm -rf /var/cache/apk/*
     
     
