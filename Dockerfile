@@ -14,6 +14,10 @@ WORKDIR /opt/recipes
 COPY . ./
 RUN chmod +x boot.sh
 
+
+RUN apk add --no-cache bash python pkgconfig git gcc openldap libcurl python2-dev gpgme-dev libc-dev && rm -rf /var/cache/apk/*
+    
+    
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev && \
     python -m venv venv && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
