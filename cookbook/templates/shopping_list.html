@@ -135,6 +135,27 @@
 
             </table>
 
+            <div class="row">
+                <div class="col-12">
+                    <form v-on:submit.prevent="addSimpleEntry()">
+
+                        <label for="id_simple_entry">{% trans 'Add Entry' %}</label>
+                        <div class="input-group">
+
+                            <input id="id_simple_entry" class="form-control" v-model="simple_entry">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+            <br/>
+            <br/>
 
             <div class="row">
                 <div class="col-12 col-lg-3">
@@ -278,7 +299,8 @@
                                         </td>
                                         <td>[[x.amount]]</td>
                                         <td>[[x.unit.name]]</td>
-                                        <td>[[x.food.name]] <span class="text-muted" v-if="x.recipes.length > 0">([[x.recipes.join(', ')]])</span></td>
+                                        <td>[[x.food.name]] <span class="text-muted" v-if="x.recipes.length > 0">([[x.recipes.join(', ')]])</span>
+                                        </td>
                                     </template>
                                 </tr>
                             </template>
@@ -382,6 +404,7 @@
                 users: [],
                 users_loading: false,
                 onLine: navigator.onLine,
+                simple_entry: '',
             },
             directives: {
                 tabindex: {
@@ -444,7 +467,12 @@
 
                         let entry = this.findMergeEntry(categories, item)
                         if (entry !== undefined) {
-                            entry.amount += item.amount * this.servings_cache[item.list_recipe]
+                            let servings = 1
+                            if (item.list_recipe in this.servings_cache) {
+                                servings = this.servings_cache[item.list_recipe]
+                            }
+
+                            entry.amount += item.amount * servings
 
                             if (item.list_recipe !== null && entry.recipes.indexOf(this.recipe_cache[item.list_recipe]) === -1) {
                                 entry.recipes.push(this.recipe_cache[item.list_recipe])
@@ -734,6 +762,28 @@
                         this.$refs.new_entry_amount.focus();
                     } else {
                         this.makeToast(gettext('Error'), gettext('Please enter a valid food'), 'danger')
+                    }
+                },
+                addSimpleEntry: function () {
+                    if (this.simple_entry !== '') {
+
+                        this.$http.post('{% url 'api_ingredient_from_string' %}', {text: this.simple_entry}, {emulateJSON: true}).then((response) => {
+
+                            console.log(response)
+                            this.shopping_list.entries.push({
+                                'list_recipe': null,
+                                'food': {'name': response.body.food, supermarket_category: null},
+                                'unit': {'name': response.body.unit},
+                                'amount': response.body.amount,
+                                'order': 0,
+                                'checked': false,
+                            })
+
+                            this.simple_entry = ''
+                        }).catch((err) => {
+                            console.log(err)
+                            this.makeToast(gettext('Error'), gettext('Something went wrong while trying to add the simple entry.'), 'danger')
+                        })
                     }
                 },
                 getRecipes: function () {
