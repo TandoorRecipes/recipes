@@ -570,7 +570,7 @@
                 findMergeEntry: function (categories, entry) {
                     for (let [i, e] of Object.entries(categories)) {
                         let found_entry = e.entries.find(item => {
-                            if (entry.food.id === item.food.id) {
+                            if (entry.food.id === item.food.id && entry.food.name === item.food.name) {
                                 if (entry.unit === null && item.unit === null) {
                                     return true
                                 } else if (entry.unit !== null && item.unit !== null && entry.unit.id === item.unit.id) {
@@ -780,10 +780,16 @@
                         this.$http.post('{% url 'api_ingredient_from_string' %}', {text: this.simple_entry}, {emulateJSON: true}).then((response) => {
 
                             console.log(response)
+
+                            let unit = null
+                            if (response.body.unit !== '') {
+                                unit = {'name': response.body.unit}
+                            }
+
                             this.shopping_list.entries.push({
                                 'list_recipe': null,
                                 'food': {'name': response.body.food, supermarket_category: null},
-                                'unit': {'name': response.body.unit},
+                                'unit': unit,
                                 'amount': response.body.amount,
                                 'order': 0,
                                 'checked': false,
