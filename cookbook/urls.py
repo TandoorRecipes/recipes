@@ -48,6 +48,7 @@ urlpatterns = [
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
+    path('shopping/latest', views.latest_shopping_list, name='view_shopping_latest'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('test/<int:pk>', views.test, name='view_test'),

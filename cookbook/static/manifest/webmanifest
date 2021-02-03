@@ -35,10 +35,17 @@
     },
     {
       "name": "Shopping",
-      "short_name": "Shopping List",
+      "short_name": "Shopping",
       "description": "View your shopping lists",
       "url": "/list/shopping-list/",
-      "icons": [{ "src": "/static/manifest/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/static/manifest/shopping-cart-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Latest Shopping List",
+      "short_name": "Shopping List",
+      "description": "View the latest shopping list",
+      "url": "/shopping/latest/",
+      "icons": [{ "src": "/static/manifest/shopping-cart-192.png", "sizes": "192x192" }]
     }
   ]
 }

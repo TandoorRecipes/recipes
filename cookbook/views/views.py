@@ -25,7 +25,7 @@ from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             RecipeBook, RecipeBookEntry, ViewLog)
+                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from recipes.settings import DEMO
@@ -233,6 +233,16 @@ def meal_plan_entry(request, pk):
 
 
 @group_required('user')
+def latest_shopping_list(request):
+    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False).order_by('-created_at').first()
+
+    if sl:
+        return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')
+    else:
+        return HttpResponseRedirect(reverse('view_shopping') + '?edit=true')
+
+
+@group_required('user')
 def shopping_list(request, pk=None):
     raw_list = request.GET.getlist('r')
 
@@ -244,11 +254,9 @@ def shopping_list(request, pk=None):
             if recipe := Recipe.objects.filter(pk=int(rid)).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
 
-    return render(
-        request,
-        'shopping_list.html',
-        {'shopping_list_id': pk, 'recipes': recipes}
-    )
+    edit = True if 'edit' in request.GET and request.GET['edit'] == 'true' else False
+
+    return render(request, 'shopping_list.html', {'shopping_list_id': pk, 'recipes': recipes, 'edit': edit})
 
 
 @group_required('guest')

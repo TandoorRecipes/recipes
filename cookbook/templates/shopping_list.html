@@ -394,7 +394,11 @@
             data: {
                 shopping_list_id: {% if shopping_list_id  %}{{ shopping_list_id }}{% else %}null{% endif %},
                 loading: true,
-                edit_mode: false,
+                {% if edit %}
+                    edit_mode: true,
+                {% else %}
+                    edit_mode: false,
+                {% endif %}
                 export_text_prefix: '', //TODO add userpreference
                 recipe_query: '',
                 recipes: [],
