@@ -27,6 +27,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 
+from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
@@ -536,3 +537,18 @@ def get_backup(request):
     response["Content-Disposition"] = f'attachment; filename=backup{date_format(timezone.now(), format="SHORT_DATETIME_FORMAT", use_l10n=True)}.json'  # noqa: E501
 
     return response
+
+
+@group_required('user')
+def ingredient_from_string(request):
+    text = request.POST['text']
+    amount, unit, food, note = parse(text)
+
+    return JsonResponse(
+        {
+            'amount': amount,
+            'unit': unit,
+            'food': food,
+        },
+        status=200
+    )

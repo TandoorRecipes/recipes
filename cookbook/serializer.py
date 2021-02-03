@@ -178,7 +178,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
-        obj, created = Food.objects.get_or_create(**validated_data)
+        obj, created = Food.objects.get_or_create(name=validated_data['name'])
         return obj
 
     def update(self, instance, validated_data):
