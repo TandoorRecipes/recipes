@@ -573,7 +573,7 @@
                             if (entry.food.id === item.food.id && entry.food.name === item.food.name) {
                                 if (entry.unit === null && item.unit === null) {
                                     return true
-                                } else if (entry.unit !== null && item.unit !== null && entry.unit.id === item.unit.id) {
+                                } else if (entry.unit !== null && item.unit !== null && entry.unit.id === item.unit.id && entry.unit.name === item.unit.name) {
                                     return true
                                 }
                             }
