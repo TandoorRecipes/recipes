@@ -15,6 +15,10 @@
     <script src="{% static 'js/Sortable.min.js' %}"></script>
     <script src="{% static 'js/vuedraggable.umd.min.js' %}"></script>
 
+    <script src="{% static 'js/vue-cookies.js' %}"></script>
+
+    <script src="{% static 'js/js.cookie.min.js' %}"></script>
+
     <link rel="stylesheet" href="{% static 'css/pretty-checkbox.min.css' %}">
 {% endblock %}
 
@@ -135,31 +139,33 @@
 
             </table>
 
-            <div class="row">
+            <div class="row" style="text-align: right">
+                <div class="col">
+                    <b-form-checkbox switch v-model="entry_mode_simple"
+                                     @change="$cookies.set('shopping_entry_mode_simple',!entry_mode_simple, -1)">{% trans 'Entry Mode' %}</b-form-checkbox>
+                </div>
+            </div>
+
+            <div class="row" v-if="entry_mode_simple" style="margin-top: 2vh">
                 <div class="col-12">
                     <form v-on:submit.prevent="addSimpleEntry()">
 
                         <label for="id_simple_entry">{% trans 'Add Entry' %}</label>
                         <div class="input-group">
-
                             <input id="id_simple_entry" class="form-control" v-model="simple_entry">
-
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
-
                     </form>
-
                 </div>
             </div>
-            <br/>
-            <br/>
 
-            <div class="row">
+
+            <div class="row" v-if="!entry_mode_simple" style="margin-top: 2vh">
                 <div class="col-12 col-lg-3">
-                    <input class="form-control" type="number" placeholder="{% trans 'Amount' %}"
+                    <input id="id_advanced_entry" class="form-control" type="number" placeholder="{% trans 'Amount' %}"
                            v-model="new_entry.amount" ref="new_entry_amount">
                 </div>
                 <div class="col-12 col-lg-4">
@@ -214,21 +220,10 @@
             </div>
 
             <div class="row">
-                <div class="col" style="text-align: right; margin-top: 1vh">
-
-                    <div class="form-group form-check form-group-lg">
-                        <input class="form-check-input" style="zoom:1.3;" type="checkbox"
-                               v-model="shopping_list.finished" id="id_finished">
-                        <label class="form-check-label" style="zoom:1.3;"
-                               for="id_finished"> {% trans 'Finished' %}</label>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col" style="margin-top: 1vh">
+                    <label for="id_supermarket">{% trans 'Supermarket' %}</label>
                     <multiselect
+                            id="id_supermarket"
                             v-tabindex
                             v-model="shopping_list.supermarket"
                             :options="supermarkets"
@@ -250,9 +245,10 @@
 
             <div class="row">
                 <div class="col" style="margin-top: 1vh">
+                    <label for="id_select_shared">{% trans 'Shared with' %}</label>
                     <multiselect
+                            id="id_select_shared"
                             v-tabindex
-
                             v-model="shopping_list.shared"
                             :options="users"
                             :close-on-select="true"
@@ -267,6 +263,19 @@
                             :loading="users_loading"
                             @search-change="searchUsers">
                     </multiselect>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col" style="text-align: right; margin-top: 1vh">
+
+                    <div class="form-group form-check form-group-lg">
+                        <input class="form-check-input" style="zoom:1.3;" type="checkbox"
+                               v-model="shopping_list.finished" id="id_finished">
+                        <label class="form-check-label" style="zoom:1.3;"
+                               for="id_finished"> {% trans 'Finished' %}</label>
+                    </div>
 
                 </div>
             </div>
@@ -325,9 +334,9 @@
 
                     </table>
                 </div>
+
+
             </div>
-
-
         </div>
 
         <div class="row" style="margin-top: 2vh">
@@ -405,6 +414,7 @@
                 users_loading: false,
                 onLine: navigator.onLine,
                 simple_entry: '',
+                entry_mode_simple: $cookies.isKey('shopping_entry_mode_simple') ? ($cookies.get('shopping_entry_mode_simple') === 'true') : true,
             },
             directives: {
                 tabindex: {
@@ -894,8 +904,6 @@
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
-
-
             },
             beforeDestroy() {
                 window.removeEventListener('online', this.updateOnlineStatus);
