@@ -51,7 +51,8 @@ urlpatterns = [
     path('shopping/latest/', views.latest_shopping_list, name='view_shopping_latest'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
-    path('test/<int:pk>', views.test, name='view_test'),
+    path('test/', views.test, name='view_test'),
+    path('test2/', views.test2, name='view_test2'),
 
     path('import/', import_export.import_recipe, name='view_import'),
     path('export/', import_export.export_recipe, name='view_export'),
