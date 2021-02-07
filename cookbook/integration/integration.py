@@ -26,11 +26,3 @@ class Integration:
                 return img_f
         except:
             return None
-
-    def get_tmp_dir_path(self):
-        path = os.path.join(tempfile.gettempdir(), 'recipe_io', str(self.request.user.pk))
-        os.makedirs(path, exist_ok=True)
-        return path
-
-    def delete_temp_dir_path(self):
-        os.remove(self.get_tmp_dir_path())
