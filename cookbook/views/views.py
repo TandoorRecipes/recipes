@@ -11,7 +11,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import Avg, Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -22,8 +22,9 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm)
+                            UserPreferenceForm, ImportForm, NewImportForm, NewExportForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
+from cookbook.integration.default import Default
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
@@ -485,10 +486,29 @@ def offline(request):
     return render(request, 'offline.html', {})
 
 
-def test(request, pk):
+def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    recipe = Recipe.objects.get(pk=pk)
+    if request.method == "POST":
+        form = NewImportForm(request.POST)
+    else:
+        form = NewImportForm()
 
-    return render(request, 'test.html', {'recipe': recipe})
+    return render(request, 'test.html', {'form': form})
+
+
+def test2(request):
+    if not settings.DEBUG:
+        return HttpResponseRedirect(reverse('index'))
+
+    if request.method == "POST":
+        form = NewExportForm(request.POST)
+        if form.is_valid():
+            integration = Default(request)
+            integration.do_export(form.cleaned_data['recipes'])
+            return render(request, 'test2.html', {'form': form})
+    else:
+        form = NewExportForm()
+
+    return render(request, 'test2.html', {'form': form})

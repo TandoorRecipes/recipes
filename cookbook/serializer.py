@@ -113,7 +113,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
-        obj, created = Keyword.objects.get_or_create(**validated_data)
+        obj, created = Keyword.objects.get_or_create(name=validated_data['name'])
         return obj
 
     class Meta:
@@ -131,7 +131,7 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
-        obj, created = Unit.objects.get_or_create(**validated_data)
+        obj, created = Unit.objects.get_or_create(name=validated_data['name'])
         return obj
 
     class Meta:
@@ -145,7 +145,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
-        obj, created = SupermarketCategory.objects.get_or_create(**validated_data)
+        obj, created = SupermarketCategory.objects.get_or_create(name=validated_data['name'])
         return obj
 
     def update(self, instance, validated_data):
@@ -221,17 +221,6 @@ class StepSerializer(WritableNestedModelSerializer):
         )
 
 
-# used for the import export. temporary workaround until that module is finally fixed
-class StepExportSerializer(WritableNestedModelSerializer):
-    ingredients = IngredientSerializer(many=True)
-
-    class Meta:
-        model = Step
-        fields = (
-            'id', 'name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header'
-        )
-
-
 class NutritionInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = NutritionInformation
@@ -268,11 +257,6 @@ class RecipeSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
-
-
-# used for the import export. temporary workaround until that module is finally fixed
-class RecipeExportSerializer(RecipeSerializer):
-    steps = StepExportSerializer(many=True)
 
 
 class RecipeImageSerializer(WritableNestedModelSerializer):
@@ -403,3 +387,72 @@ class ViewLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ViewLog
         fields = '__all__'
+
+
+# Export/Import Serializers
+
+class KeywordExportSerializer(KeywordSerializer):
+    class Meta:
+        model = Keyword
+        fields = ('name', 'icon', 'description', 'created_at', 'updated_at')
+
+
+class NutritionInformationExportSerializer(NutritionInformationSerializer):
+    class Meta:
+        model = NutritionInformation
+        fields = ('carbohydrates', 'fats', 'proteins', 'calories', 'source')
+
+
+class SupermarketCategoryExportSerializer(SupermarketCategorySerializer):
+    class Meta:
+        model = SupermarketCategory
+        fields = ('name',)
+
+
+class UnitExportSerializer(UnitSerializer):
+    class Meta:
+        model = Unit
+        fields = ('name', 'description')
+
+
+class FoodExportSerializer(FoodSerializer):
+    supermarket_category = SupermarketCategoryExportSerializer(allow_null=True, required=False)
+
+    class Meta:
+        model = Food
+        fields = ('name', 'ignore_shopping', 'supermarket_category')
+
+
+class IngredientExportSerializer(WritableNestedModelSerializer):
+    food = FoodExportSerializer(allow_null=True)
+    unit = UnitExportSerializer(allow_null=True)
+    amount = CustomDecimalField()
+
+    class Meta:
+        model = Ingredient
+        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
+
+
+class StepExportSerializer(WritableNestedModelSerializer):
+    ingredients = IngredientExportSerializer(many=True)
+
+    class Meta:
+        model = Step
+        fields = ('name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
+
+
+class RecipeExportSerializer(WritableNestedModelSerializer):
+    nutrition = NutritionInformationSerializer(allow_null=True, required=False)
+    steps = StepExportSerializer(many=True)
+    keywords = KeywordExportSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'name', 'description', 'keywords', 'steps', 'working_time',
+            'waiting_time', 'internal', 'nutrition', 'servings', 'servings_text',
+        )
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)

@@ -153,6 +153,20 @@ class ImportForm(forms.Form):
     )
 
 
+class ImportExportBase(forms.Form):
+    DEFAULT = 'Default'
+
+    type = forms.ChoiceField(choices=((DEFAULT, _('Default')),))
+
+
+class NewImportForm(ImportExportBase):
+    files = forms.FileField(required=True, widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
+
+class NewExportForm(ImportExportBase):
+    recipes = forms.ModelMultipleChoiceField(queryset=Recipe.objects.filter(internal=True).all(), widget=MultiSelectWidget)
+
+
 class UnitMergeForm(forms.Form):
     prefix = 'unit'
 
