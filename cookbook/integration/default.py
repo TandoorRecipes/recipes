@@ -14,28 +14,27 @@ from cookbook.serializer import RecipeExportSerializer
 class Default(Integration):
 
     def do_export(self, recipes):
-        path = self.get_tmp_dir_path()
-        s = BytesIO()
-        export_zip_obj = ZipFile(s, 'w')
+        export_zip_stream = BytesIO()
+        export_zip_obj = ZipFile(export_zip_stream, 'w')
 
         for r in recipes:
             if r.internal:
-                base_path = os.path.join(path, str(r.pk))
-                os.makedirs(base_path, exist_ok=True)
-                recipe_zip_obj = ZipFile(base_path + '.zip', 'w')
+                recipe_zip_stream = BytesIO()
+                recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
 
-                f = open(os.path.join(path, str(r.pk), 'recipe.json'), "w", encoding="utf-8")
-                f.write(self.get_export(r))
-                recipe_zip_obj.write(f.name, basename(f.name))
+                recipe_json_stream = StringIO()
+                recipe_json_stream.write(self.get_export(r))
+                recipe_zip_obj.writestr('recipe.json', recipe_json_stream.getvalue())
+                recipe_json_stream.close()
+
                 recipe_zip_obj.write(r.image.path, basename(r.image.path))
-                f.close()
 
                 recipe_zip_obj.close()
-                export_zip_obj.write(recipe_zip_obj.filename, basename(recipe_zip_obj.filename))
+                export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
 
         export_zip_obj.close()
 
-        response = HttpResponse(s.getvalue(), content_type='application/force-download')
+        response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
         response['Content-Disposition'] = 'attachment; filename="export.zip"'
         return response
 
