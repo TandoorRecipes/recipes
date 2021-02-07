@@ -506,8 +506,7 @@ def test2(request):
         form = NewExportForm(request.POST)
         if form.is_valid():
             integration = Default(request)
-            integration.do_export(form.cleaned_data['recipes'])
-            return render(request, 'test2.html', {'form': form})
+            return integration.do_export(form.cleaned_data['recipes'])
     else:
         form = NewExportForm()
 
