@@ -1,7 +1,3 @@
-import os
-import tempfile
-
-
 class Integration:
     request = None
 
@@ -11,7 +7,7 @@ class Integration:
     def do_export(self, recipes):
         raise Exception('Method not implemented in storage integration')
 
-    def do_import(self):
+    def do_import(self, files):
         raise Exception('Method not implemented in storage integration')
 
     def get_recipe(self, string):
