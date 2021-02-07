@@ -491,7 +491,10 @@ def test(request):
         return HttpResponseRedirect(reverse('index'))
 
     if request.method == "POST":
-        form = NewImportForm(request.POST)
+        form = NewImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            integration = Default(request)
+            return integration.do_import(request.FILES.getlist('files'))
     else:
         form = NewImportForm()
 

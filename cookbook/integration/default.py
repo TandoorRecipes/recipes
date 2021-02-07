@@ -1,9 +1,12 @@
 import json
 import os
+import uuid
 from io import StringIO, BytesIO
 from os.path import basename
 from zipfile import ZipFile
 
+from PIL import Image
+from django.core.files import File
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 
@@ -38,10 +41,28 @@ class Default(Integration):
         response['Content-Disposition'] = 'attachment; filename="export.zip"'
         return response
 
+    def do_import(self, files):
+        for f in files:
+            zip = ZipFile(f.file)
+            for z in zip.namelist():
+                self.get_recipe_from_zip(ZipFile(BytesIO(zip.read(z))))
+
+    def get_recipe_from_zip(self, recipe_zip):
+        recipe_string = recipe_zip.read('recipe.json').decode("utf-8")
+        recipe = self.get_recipe(recipe_string)
+        for f in recipe_zip.namelist():
+            if '.png' in f:
+                recipe.image = File(BytesIO(recipe_zip.read(f)), name=f'{uuid.uuid4()}_{recipe.pk}.png')
+                recipe.save()
+
     def get_recipe(self, string):
         data = json.loads(string)
+        serialized_recipe = RecipeExportSerializer(data=data, context={'request': self.request})
+        if serialized_recipe.is_valid():
+            recipe = serialized_recipe.save()
+            return recipe
 
-        return RecipeExportSerializer(data=data, context={'request': self.request})
+        return None
 
     def get_export(self, recipe):
         export = RecipeExportSerializer(recipe).data
