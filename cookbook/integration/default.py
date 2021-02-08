@@ -1,14 +1,7 @@
 import json
-import os
-import uuid
-from io import StringIO, BytesIO
-from os.path import basename
+from io import BytesIO
 from zipfile import ZipFile
 
-from PIL import Image
-from django.core.files import File
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
 from rest_framework.renderers import JSONRenderer
 
 from cookbook.integration.integration import Integration
@@ -17,51 +10,16 @@ from cookbook.serializer import RecipeExportSerializer
 
 class Default(Integration):
 
-    def do_export(self, recipes):
-        export_zip_stream = BytesIO()
-        export_zip_obj = ZipFile(export_zip_stream, 'w')
+    def get_recipe_from_file(self, file):
+        recipe_zip = ZipFile(file)
 
-        for r in recipes:
-            if r.internal:
-                recipe_zip_stream = BytesIO()
-                recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
-
-                recipe_json_stream = StringIO()
-                recipe_json_stream.write(self.get_export(r))
-                recipe_zip_obj.writestr('recipe.json', recipe_json_stream.getvalue())
-                recipe_json_stream.close()
-
-                try:
-                    recipe_zip_obj.write(r.image.path, 'image.png')
-                except ValueError:
-                    pass
-
-                recipe_zip_obj.close()
-                export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
-
-        export_zip_obj.close()
-
-        response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="export.zip"'
-        return response
-
-    def do_import(self, files):
-        for f in files:
-            zip = ZipFile(f.file)
-            for z in zip.namelist():
-                self.get_recipe_from_zip(ZipFile(BytesIO(zip.read(z))))
-
-        return HttpResponseRedirect(reverse('view_search') + '?keywords=' + str(self.keyword.pk))
-
-    def get_recipe_from_zip(self, recipe_zip):
         recipe_string = recipe_zip.read('recipe.json').decode("utf-8")
-        recipe = self.get_recipe(recipe_string)
+        recipe = self.decode_recipe(recipe_string)
         if 'image.png' in recipe_zip.namelist():
-            recipe.image = File(BytesIO(recipe_zip.read('image.png')), name=f'{uuid.uuid4()}_{recipe.pk}.png')
-            recipe.save()
-        recipe.keywords.add(self.keyword)
+            self.import_recipe_image(recipe, BytesIO(recipe_zip.read('image.png')))
+        return recipe
 
-    def get_recipe(self, string):
+    def decode_recipe(self, string):
         data = json.loads(string)
         serialized_recipe = RecipeExportSerializer(data=data, context={'request': self.request})
         if serialized_recipe.is_valid():
@@ -70,7 +28,7 @@ class Default(Integration):
 
         return None
 
-    def get_export(self, recipe):
+    def get_file_from_recipe(self, recipe):
         export = RecipeExportSerializer(recipe).data
 
-        return JSONRenderer().render(export).decode("utf-8")
+        return 'recipe.json', JSONRenderer().render(export).decode("utf-8")
