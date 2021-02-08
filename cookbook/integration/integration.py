@@ -16,6 +16,7 @@ from cookbook.models import Keyword
 class Integration:
     request = None
     keyword = None
+    files = None
 
     def __init__(self, request):
         """
@@ -80,6 +81,7 @@ class Integration:
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
         try:
+            self.files = files
             for f in files:
                 if '.zip' in f.name:
                     import_zip = ZipFile(f.file)
@@ -87,6 +89,7 @@ class Integration:
                         if self.import_file_name_filter(z):
                             recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                             recipe.keywords.add(self.keyword)
+                    import_zip.close()
                 else:
                     recipe = self.get_recipe_from_file(f.file)
                     recipe.keywords.add(self.keyword)
