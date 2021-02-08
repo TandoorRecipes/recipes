@@ -31,7 +31,7 @@ def get_from_html(html_text, url):
 
                 if ('@type' in ld_json_item
                         and ld_json_item['@type'] == 'Recipe'):
-                    return find_recipe_json(ld_json_item, url)
+                    return JsonResponse(find_recipe_json(ld_json_item, url))
         except JSONDecodeError:
             return JsonResponse(
                 {
@@ -45,7 +45,7 @@ def get_from_html(html_text, url):
     for i in items:
         md_json = json.loads(i.json())
         if 'schema.org/Recipe' in str(md_json['type']):
-            return find_recipe_json(md_json['properties'], url)
+            return JsonResponse(find_recipe_json(md_json['properties'], url))
 
     return JsonResponse(
         {
@@ -173,7 +173,8 @@ def find_recipe_json(ld_json, url):
     else:
         ld_json['recipeInstructions'] = ''
 
-    ld_json['recipeInstructions'] += '\n\n' + _('Imported from') + ' ' + url
+    if url != '':
+        ld_json['recipeInstructions'] += '\n\n' + _('Imported from') + ' ' + url
 
     if 'image' in ld_json:
         # check if list of images is returned, take first if so
@@ -232,4 +233,4 @@ def find_recipe_json(ld_json, url):
         ]:
             ld_json.pop(key, None)
 
-    return JsonResponse(ld_json)
+    return ld_json

@@ -1,15 +1,21 @@
 import re
 
+from django.contrib import messages
 from django.shortcuts import render
+from django.utils.translation import gettext as _
 
-from cookbook.forms import ExportForm, ExportForm, ImportForm
+from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
 from cookbook.integration.default import Default
+from cookbook.integration.paprika import Paprika
 from cookbook.models import Recipe
 
 
 def get_integration(request, export_type):
-    return Default(request)
+    if export_type == ImportExportBase.DEFAULT:
+        return Default(request)
+    if export_type == ImportExportBase.PAPRIKA:
+        return Paprika(request)
 
 
 @group_required('user')
@@ -17,8 +23,11 @@ def import_recipe(request):
     if request.method == "POST":
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
-            integration = Default(request)
-            return integration.do_import(request.FILES.getlist('files'))
+            try:
+                integration = get_integration(request, form.cleaned_data['type'])
+                return integration.do_import(request.FILES.getlist('files'))
+            except NotImplementedError:
+                messages.add_message(request, messages.ERROR, _('Importing is not implemented for this provider'))
     else:
         form = ImportForm()
 
@@ -30,8 +39,12 @@ def export_recipe(request):
     if request.method == "POST":
         form = ExportForm(request.POST)
         if form.is_valid():
-            integration = Default(request)
-            return integration.do_export(form.cleaned_data['recipes'])
+            try:
+                integration = get_integration(request, form.cleaned_data['type'])
+                return integration.do_export(form.cleaned_data['recipes'])
+            except NotImplementedError:
+                messages.add_message(request, messages.ERROR, _('Exporting is not implemented for this provider'))
+
     else:
         form = ExportForm()
         recipe = request.GET.get('r')

@@ -20,3 +20,12 @@ It is maintained with new fields added and contains all data to transfer your re
 
 It is also one of the few recipe formats that is actually structured in a way that allows for 
 easy machine readability if you want to use the data for any other purpose. 
+
+## Paprika
+Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
+The second one is HTML files containing at least a bit of microdata.
+
+If you want to import your Paprika recipes create a html export. Then import the individual recipes HTML files.
+Due to the lack of structure not all fields can be imported. 
+Even tough images are present in the export they cannot be imported atm. This is technically possible and might be 
+added in the future.

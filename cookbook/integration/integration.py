@@ -2,12 +2,14 @@ import datetime
 import uuid
 
 from io import BytesIO, StringIO
-from zipfile import ZipFile
+from zipfile import ZipFile, BadZipFile
 
+from django.contrib import messages
 from django.core.files import File
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-
+from django.utils.formats import date_format
+from django.utils.translation import gettext as _
 from cookbook.models import Keyword
 
 
@@ -22,8 +24,8 @@ class Integration:
         """
         self.request = request
         self.keyword = Keyword.objects.create(
-            name=f'Import {datetime.datetime.now()}',
-            description=f'Imported by {request.user.get_user_name()} on {datetime.datetime.now()}',
+            name=f'Import {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
+            description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}',
             icon='📥'
         )
 
@@ -67,11 +69,18 @@ class Integration:
         :param files: List of in memory files
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
-        for f in files:
-            import_zip = ZipFile(f.file)
-            for z in import_zip.namelist():
-                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z)))
-                recipe.keywords.add(self.keyword)
+        try:
+            for f in files:
+                if '.zip' in f.name:
+                    import_zip = ZipFile(f.file)
+                    for z in import_zip.namelist():
+                        recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z)))
+                        recipe.keywords.add(self.keyword)
+                else:
+                    recipe = self.get_recipe_from_file(f.file)
+                    recipe.keywords.add(self.keyword)
+        except BadZipFile:
+            messages.add_message(self.request, messages.ERROR, _('Importer expected a .zip file. Did you choose the correct importer type for your data ?'))
 
         return HttpResponseRedirect(reverse('view_search') + '?keywords=' + str(self.keyword.pk))
 
