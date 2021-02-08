@@ -132,9 +132,10 @@ class ShoppingForm(forms.Form):
 
 
 class ImportExportBase(forms.Form):
-    DEFAULT = 'Default'
+    DEFAULT = 'DEFAULT'
+    PAPRIKA = 'PAPRIKA'
 
-    type = forms.ChoiceField(choices=((DEFAULT, _('Default')),))
+    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, _('Paprika')),))
 
 
 class ImportForm(ImportExportBase):
