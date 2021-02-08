@@ -11,26 +11,25 @@ from cookbook.models import Recipe, Step, Food, Unit, Ingredient
 from cookbook.serializer import RecipeExportSerializer
 
 
-class NextcloudCookbook(Integration):
+class Mealie(Integration):
 
     def import_file_name_filter(self, zip_info_object):
         print("testing", zip_info_object.filename)
-        return re.match(r'^Recipes/([A-Za-z\d\s])+/recipe.json$', zip_info_object.filename)
+        return re.match(r'^recipes/([A-Za-z\d-])+.json$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
 
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(), description=recipe_json['description'].strip(),
-            created_by=self.request.user, internal=True,
-            servings=recipe_json['recipeYield'])
+            created_by=self.request.user, internal=True)
 
         # TODO parse times (given in PT2H3M )
 
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
             step = Step.objects.create(
-                instruction=s
+                instruction=s['text']
             )
             if not ingredients_added:
                 ingredients_added = True
@@ -48,7 +47,7 @@ class NextcloudCookbook(Integration):
             if '.zip' in f.name:
                 import_zip = ZipFile(f.file)
                 for z in import_zip.filelist:
-                    if re.match(f'^Recipes/{recipe.name}/full.jpg$', z.filename):
+                    if re.match(f'^images/{recipe_json["slug"]}.jpg$', z.filename):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)))
 
         return recipe

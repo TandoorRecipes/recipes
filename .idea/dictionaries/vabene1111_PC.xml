@@ -5,6 +5,7 @@
       <w>csrftoken</w>
       <w>gunicorn</w>
       <w>ical</w>
+      <w>mealie</w>
       <w>traefik</w>
     </words>
   </dictionary>

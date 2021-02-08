@@ -48,6 +48,14 @@ You will get a `Recipes.zip` file. Simply upload the file and choose the Nextclo
             └── full.jpg
     ```
 
+## Mealie
+Mealie provides structured data similar to nextcloud. 
+
+To migrate your recipes 
+
+1. Go to you Mealie settings and create a new Backup
+2. Download the backup by clicking on it and pressing download (this wasn't working for me, so I had to manually pull it from the server)
+3. Upload the entire `.zip` file to the importer page and import everything
 
 ## Paprika
 Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
