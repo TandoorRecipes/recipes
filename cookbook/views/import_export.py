@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
 from cookbook.integration.default import Default
+from cookbook.integration.mealie import Mealie
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.paprika import Paprika
 from cookbook.models import Recipe
@@ -19,6 +20,8 @@ def get_integration(request, export_type):
         return Paprika(request)
     if export_type == ImportExportBase.NEXTCLOUD:
         return NextcloudCookbook(request)
+    if export_type == ImportExportBase.MEALIE:
+        return Mealie(request)
 
 
 @group_required('user')
