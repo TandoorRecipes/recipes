@@ -21,6 +21,34 @@ It is maintained with new fields added and contains all data to transfer your re
 It is also one of the few recipe formats that is actually structured in a way that allows for 
 easy machine readability if you want to use the data for any other purpose. 
 
+## Nextcloud
+Importing recipes from Nextcloud cookbook is very easy and since Nextcloud Cookbook provides nice, standardized and 
+structured information most of your recipe is going to be intact.
+
+Follow these steps to import your recipes
+
+1. Go to your Nextcloud Webinterface
+2. Open the `Recipes` folder where your recipes are stored
+3. Select the recipes you want to export or use the checkbox at the top of the list to select all of them
+4. Click on the three dot **Actions** and press Download
+
+You will get a `Recipes.zip` file. Simply upload the file and choose the Nextcloud Cookbook type.
+
+!!! warning "Folder Structure"
+    Importing only works if the folder structure is correct. If you do not use the standard path or create the 
+    zip file in any other way make sure the strucutre is as follows
+    ```
+    Recipes.zip/
+    └── Recipes/
+        ├── Recipe1/
+        │   ├── recipe.json
+        │   └── full.jpg
+        └── Recipe2/
+            ├── recipe.json
+            └── full.jpg
+    ```
+
+
 ## Paprika
 Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
 The second one is HTML files containing at least a bit of microdata.
