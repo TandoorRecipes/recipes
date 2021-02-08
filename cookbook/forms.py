@@ -134,8 +134,9 @@ class ShoppingForm(forms.Form):
 class ImportExportBase(forms.Form):
     DEFAULT = 'DEFAULT'
     PAPRIKA = 'PAPRIKA'
+    NEXTCLOUD = 'NEXTCLOUD'
 
-    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, _('Paprika')),))
+    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, _('Paprika')), (NEXTCLOUD, _('Nextcloud Cookbook')),))
 
 
 class ImportForm(ImportExportBase):
