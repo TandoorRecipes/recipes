@@ -42,8 +42,8 @@ and go ahead and test your changes. Before committing please make sure to pack t
 ### Pre-Commit
 Some checks and scripts can be automatically run using [pre-commit](https://pre-commit.com/).
 
-The scripts are configured in the `pre-commit-config.yaml`. To setup the hooks on your development environment run 
-`pre-commit install`.
+The scripts are configured in the `pre-commit-config.yaml`. To setup the hooks on your development environment install 
+pre commit using `pip install pre-commit` and run `pre-commit install` to setup the hooks.
 
 To manually test all hooks (and ignore if files have changed) use `pre-commit run --all-files`
 
