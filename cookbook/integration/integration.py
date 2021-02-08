@@ -16,6 +16,10 @@ class Integration:
     keyword = None
 
     def __init__(self, request):
+        """
+        Integration for importing and exporting recipes
+        :param request: request context of import session (used to link user to created objects)
+        """
         self.request = request
         self.keyword = Keyword.objects.create(
             name=f'Import {datetime.datetime.now()}',
@@ -24,6 +28,11 @@ class Integration:
         )
 
     def do_export(self, recipes):
+        """
+        Perform the export based on a list of recipes
+        :param recipes: list of recipe objects
+        :return: HttpResponse with a ZIP file that is directly downloaded
+        """
         export_zip_stream = BytesIO()
         export_zip_obj = ZipFile(export_zip_stream, 'w')
 
@@ -53,6 +62,11 @@ class Integration:
         return response
 
     def do_import(self, files):
+        """
+        Imports given files
+        :param files: List of in memory files
+        :return: HttpResponseRedirect to the recipe search showing all imported recipes
+        """
         for f in files:
             import_zip = ZipFile(f.file)
             for z in import_zip.namelist():
@@ -63,11 +77,29 @@ class Integration:
 
     @staticmethod
     def import_recipe_image(recipe, image_file):
+        """
+        Adds an image to a recipe naming it correctly
+        :param recipe: Recipe object
+        :param image_file: ByteIO stream containing the image
+        """
         recipe.image = File(image_file, name=f'{uuid.uuid4()}_{recipe.pk}.png')
         recipe.save()
 
     def get_recipe_from_file(self, file):
-        raise Exception('Method not implemented in storage integration')
+        """
+        Takes any file like object and converts it into a recipe
+        :param file: ByteIO or any file like object, depends on provider
+        :return: Recipe object
+        """
+        raise NotImplementedError('Method not implemented in storage integration')
 
     def get_file_from_recipe(self, recipe):
-        raise Exception('Method not implemented in storage integration')
+        """
+        Takes a recipe object and converts it to a string (depending on the format)
+        returns both the filename of the exported file and the file contents
+        :param recipe: Recipe object that should be converted
+        :returns:
+            - name - file name in export
+            - data - string content for file to get created in export zip
+        """
+        raise NotImplementedError('Method not implemented in storage integration')
