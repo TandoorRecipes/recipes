@@ -9,7 +9,7 @@ WORKDIR /opt/recipes
 COPY . ./
 RUN chmod +x boot.sh
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev openssl-dev && \
     python -m venv venv && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
