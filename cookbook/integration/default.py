@@ -7,7 +7,8 @@ from zipfile import ZipFile
 
 from PIL import Image
 from django.core.files import File
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from rest_framework.renderers import JSONRenderer
 
 from cookbook.integration.integration import Integration
@@ -30,7 +31,10 @@ class Default(Integration):
                 recipe_zip_obj.writestr('recipe.json', recipe_json_stream.getvalue())
                 recipe_json_stream.close()
 
-                recipe_zip_obj.write(r.image.path, basename(r.image.path))
+                try:
+                    recipe_zip_obj.write(r.image.path, 'image.png')
+                except ValueError:
+                    pass
 
                 recipe_zip_obj.close()
                 export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
@@ -47,13 +51,15 @@ class Default(Integration):
             for z in zip.namelist():
                 self.get_recipe_from_zip(ZipFile(BytesIO(zip.read(z))))
 
+        return HttpResponseRedirect(reverse('view_search') + '?keywords=' + str(self.keyword.pk))
+
     def get_recipe_from_zip(self, recipe_zip):
         recipe_string = recipe_zip.read('recipe.json').decode("utf-8")
         recipe = self.get_recipe(recipe_string)
-        for f in recipe_zip.namelist():
-            if '.png' in f:
-                recipe.image = File(BytesIO(recipe_zip.read(f)), name=f'{uuid.uuid4()}_{recipe.pk}.png')
-                recipe.save()
+        if 'image.png' in recipe_zip.namelist():
+            recipe.image = File(BytesIO(recipe_zip.read('image.png')), name=f'{uuid.uuid4()}_{recipe.pk}.png')
+            recipe.save()
+        recipe.keywords.add(self.keyword)
 
     def get_recipe(self, string):
         data = json.loads(string)
