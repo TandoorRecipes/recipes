@@ -63,6 +63,16 @@ class Integration:
         response['Content-Disposition'] = 'attachment; filename="export.zip"'
         return response
 
+    def import_file_name_filter(self, zip_info_object):
+        """
+        Since zipfile.namelist() returns all files in all subdirectories this function allows filtering of files
+        If false is returned the file will be ignored
+        By default all files are included
+        :param zip_info_object: ZipInfo object
+        :return: Boolean if object should be included
+        """
+        return True
+
     def do_import(self, files):
         """
         Imports given files
@@ -73,9 +83,10 @@ class Integration:
             for f in files:
                 if '.zip' in f.name:
                     import_zip = ZipFile(f.file)
-                    for z in import_zip.namelist():
-                        recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z)))
-                        recipe.keywords.add(self.keyword)
+                    for z in import_zip.filelist:
+                        if self.import_file_name_filter(z):
+                            recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                            recipe.keywords.add(self.keyword)
                 else:
                     recipe = self.get_recipe_from_file(f.file)
                     recipe.keywords.add(self.keyword)
