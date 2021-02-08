@@ -11,7 +11,7 @@ RUN chmod +x boot.sh
 
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev openssl-dev && \
     python -m venv venv && \
-    python -m pip install --upgrade pip && \
+    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 

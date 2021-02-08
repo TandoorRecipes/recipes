@@ -33,6 +33,7 @@ nav:
       - Shopping: features/shopping.md
       - Authentication: features/authentication.md
       - Storages and Sync: features/external_recipes.md
+      - Import/Export: features/import_export.md
   - System:
       - Updating: system/updating.md
       - Permission System: system/permissions.md
