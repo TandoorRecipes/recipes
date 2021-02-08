@@ -131,39 +131,17 @@ class ShoppingForm(forms.Form):
     )
 
 
-class ExportForm(forms.Form):
-    recipe = forms.ModelChoiceField(
-        queryset=Recipe.objects.filter(internal=True).all(),
-        widget=SelectWidget
-    )
-    image = forms.BooleanField(
-        help_text=_('Export Base64 encoded image?'),
-        required=False
-    )
-    download = forms.BooleanField(
-        help_text=_('Download export directly or show on page?'),
-        required=False
-    )
-
-
-class ImportForm(forms.Form):
-    recipe = forms.CharField(
-        widget=forms.Textarea,
-        help_text=_('Simply paste a JSON export into this textarea and click import.')  # noqa: E501
-    )
-
-
 class ImportExportBase(forms.Form):
     DEFAULT = 'Default'
 
     type = forms.ChoiceField(choices=((DEFAULT, _('Default')),))
 
 
-class NewImportForm(ImportExportBase):
+class ImportForm(ImportExportBase):
     files = forms.FileField(required=True, widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
 
-class NewExportForm(ImportExportBase):
+class ExportForm(ImportExportBase):
     recipes = forms.ModelMultipleChoiceField(queryset=Recipe.objects.filter(internal=True).all(), widget=MultiSelectWidget)
 
 

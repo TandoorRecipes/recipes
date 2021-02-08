@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load i18n %}
 {% load crispy_forms_filters %}
+{% load i18n %}
 {% load static %}
 
 {% block title %}{% trans 'Export Recipes' %}{% endblock %}
@@ -9,8 +9,9 @@
     {{ form.media }}
 {% endblock %}
 
-{% block content %}
 
+{% block content %}
+    <h2>{% trans 'Export' %}</h2>
     <div class="row">
         <div class="col col-md-12">
             <form action="." method="post">
@@ -21,50 +22,4 @@
             </form>
         </div>
     </div>
-
-    {% if export %}
-
-        <br/>
-        <div class="row">
-            <div class="col col-md-12">
-                <label for="id_export">
-                    {% trans 'Exported Recipe' %}</label>
-                <textarea id="id_export" class="form-control" rows="12">
-{{ export }}
-</textarea>
-            </div>
-        </div>
-
-        <br/>
-        <div class="row">
-            <div class="col col-md-12 text-center">
-                <button class="btn btn-success" onclick="copy()" style="width: 15vw" data-toggle="tooltip"
-                        data-placement="right" title="{% trans 'Copy to clipboard' %}" id="id_btn_copy"
-                        onmouseout="resetTooltip()"><i
-                        class="far fa-copy"></i></button>
-            </div>
-        </div>
-
-        <script type="text/javascript">
-            function copy() {
-                let json = $('#id_export');
-
-                json.select();
-
-                $('#id_btn_copy').attr('data-original-title', '{% trans 'Copied!' %}').tooltip('show');
-
-                document.execCommand("copy");
-            }
-
-            function resetTooltip() {
-                setTimeout(function () {
-                    $('#id_btn_copy').attr('data-original-title', '{% trans 'Copy list to clipboard' %}');
-                }, 300);
-            }
-
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
-        </script>
-    {% endif %}
 {% endblock %}

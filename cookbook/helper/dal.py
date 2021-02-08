@@ -13,7 +13,7 @@ class BaseAutocomplete(autocomplete.Select2QuerySetView):
         qs = self.model.objects.all()
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__icontains=self.q)
 
         return qs
 

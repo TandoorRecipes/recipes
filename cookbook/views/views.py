@@ -22,7 +22,7 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, ImportForm, NewImportForm, NewExportForm)
+                            UserPreferenceForm, ImportForm, ImportForm, ExportForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.integration.default import Default
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
@@ -490,27 +490,7 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    if request.method == "POST":
-        form = NewImportForm(request.POST, request.FILES)
-        if form.is_valid():
-            integration = Default(request)
-            return integration.do_import(request.FILES.getlist('files'))
-    else:
-        form = NewImportForm()
-
-    return render(request, 'test.html', {'form': form})
-
 
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
-
-    if request.method == "POST":
-        form = NewExportForm(request.POST)
-        if form.is_valid():
-            integration = Default(request)
-            return integration.do_export(form.cleaned_data['recipes'])
-    else:
-        form = NewExportForm()
-
-    return render(request, 'test2.html', {'form': form})
