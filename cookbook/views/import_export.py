@@ -11,6 +11,7 @@ from cookbook.integration.default import Default
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.paprika import Paprika
+from cookbook.integration.safron import Safron
 from cookbook.models import Recipe
 
 
@@ -25,6 +26,8 @@ def get_integration(request, export_type):
         return Mealie(request)
     if export_type == ImportExportBase.CHOWDOWN:
         return Chowdown(request)
+    if export_type == ImportExportBase.SAFRON:
+        return Safron(request)
 
 
 @group_required('user')

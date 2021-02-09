@@ -75,6 +75,13 @@ Recipes.zip/
         └── ...
 ```
 
+## Safron
+Go to you safron settings page and export your recipes.
+Then simply upload the entire `.zip` file to the importer.
+
+!!! warning "Images"
+    Safron exports do not contain any images. They will be lost during import.
+
 ## Paprika
 Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
 The second one is HTML files containing at least a bit of microdata.
