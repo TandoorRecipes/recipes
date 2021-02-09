@@ -61,7 +61,19 @@ To migrate your recipes
 Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
 The second one is HTML files containing at least a bit of microdata.
 
-If you want to import your Paprika recipes create a html export. Then import the individual recipes HTML files.
-Due to the lack of structure not all fields can be imported. 
-Even tough images are present in the export they cannot be imported atm. This is technically possible and might be 
-added in the future.
+If you want to import your Paprika recipes follow these steps
+
+1. create a html export
+2. Create a `.zip` file from the `Recipes` folder (next to the `index.html`) the structure should look like this
+```
+Recipes.zip/
+    └── Recipes/
+        ├── recipe one.html
+        ├── recipe two.thml
+        └── Images/
+            ├── 5D5E09CD-8F88-4F61-8121-0727DD3E0E89/
+            │   └── 5D5E09CD-8F88-4F61-8121-0727DD3E0E89.jpg
+            └── 7CEE2AC6-DF60-4464-9B61-4F5E347EB90C/
+                └── 7CEE2AC6-DF60-4464-9B61-4F5E347EB90C.jpg
+```
+3. Upload the zip file in the import module and import it

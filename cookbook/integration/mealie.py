@@ -3,18 +3,14 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
-from rest_framework.renderers import JSONRenderer
-
 from cookbook.helper.ingredient_parser import parse
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient
-from cookbook.serializer import RecipeExportSerializer
 
 
 class Mealie(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        print("testing", zip_info_object.filename)
         return re.match(r'^recipes/([A-Za-z\d-])+.json$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):

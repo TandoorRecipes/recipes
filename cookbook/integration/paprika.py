@@ -1,6 +1,10 @@
 import json
+import re
+from io import BytesIO
+from zipfile import ZipFile
 
 import microdata
+from bs4 import BeautifulSoup
 
 from cookbook.helper.recipe_url_import import find_recipe_json
 from cookbook.integration.integration import Integration
@@ -8,6 +12,10 @@ from cookbook.models import Recipe, Step, Food, Ingredient, Unit
 
 
 class Paprika(Integration):
+
+    def import_file_name_filter(self, zip_info_object):
+        print("testing", zip_info_object.filename)
+        return re.match(r'^Recipes/([A-Za-z\s])+.html$', zip_info_object.filename)
 
     def get_file_from_recipe(self, recipe):
         raise NotImplementedError('Method not implemented in storage integration')
@@ -33,4 +41,16 @@ class Paprika(Integration):
                     ))
 
                 recipe.steps.add(step)
+
+                soup = BeautifulSoup(html_text, "html.parser")
+                image = soup.find('img')
+                image_name = image.attrs['src'].strip().replace('Images/', '')
+
+                for f in self.files:
+                    if '.zip' in f.name:
+                        import_zip = ZipFile(f.file)
+                        for z in import_zip.filelist:
+                            if re.match(f'^Recipes/Images/{image_name}$', z.filename):
+                                self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)))
+
                 return recipe
