@@ -190,6 +190,9 @@
                             :hide-selected="true"
                             :preserve-search="true"
                             placeholder="{% trans 'Select one' %}"
+                            tag-placeholder="{% trans 'Add Keyword' %}"
+                            :taggable="true"
+                            @tag="addKeyword"
                             label="text"
                             track-by="id"
                             id="id_keywords"
@@ -356,6 +359,10 @@
                     new_unit.unit = {'id': Math.random() * 1000, 'text': tag}
                     this.units.push(new_unit.unit)
                     this.recipe_data.recipeIngredient[index] = new_unit
+                },
+                addKeyword: function (tag) {
+                    let new_keyword = {'text':tag,'id':null}
+                    this.recipe_data.keywords.push(new_keyword)
                 },
                 openUnitSelect: function (id) {
                     let index = id.replace('unit_', '')
