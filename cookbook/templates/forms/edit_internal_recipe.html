@@ -77,6 +77,9 @@
                         :hide-selected="true"
                         :preserve-search="true"
                         placeholder="{% trans 'Select Keywords' %}"
+                        tag-placeholder="{% trans 'Add Keyword' %}"
+                        :taggable="true"
+                        @tag="addKeyword"
                         label="label"
                         track-by="id"
                         id="id_keywords"
@@ -666,6 +669,10 @@
                     new_unit.unit = {'name': tag}
                     this.units.push(new_unit.unit)
                     this.recipe.steps[step].ingredients[id] = new_unit
+                },
+                addKeyword: function (tag) {
+                    let new_keyword = {'label':tag,'name':tag}
+                    this.recipe.keywords.push(new_keyword)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
