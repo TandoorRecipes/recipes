@@ -22,6 +22,7 @@ class NextcloudCookbook(Integration):
             servings=recipe_json['recipeYield'])
 
         # TODO parse times (given in PT2H3M )
+        # TODO parse keywords
 
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:

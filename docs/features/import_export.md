@@ -7,12 +7,12 @@ integrations to allow you to both import and export your recipes into whatever f
 Feel like there is an important integration missing ? Just take a look at the [integration issues](https://github.com/vabene1111/recipes/issues?q=is%3Aissue+is%3Aopen+label%3Aintegration) or open a new one
 if your favorite one is missing.
 
-!!! warning "WIP"
-    Please note that this feature is relatively new and many integrations are missing.
-    Additionally, many recipe applications provide formats that are not structured in an easily machine-readable way
-    and thus require a lot of work to integrate even tough the module is very versatile.
-    If you are good at writing parsers feel free to add new integrations for your favorite services.
-
+!!! info "Export"
+    I strongly believe in everyone's right to use their data as they please and therefore want to give you 
+    the most possible flexibility with your recipes.
+    That said for most of the people getting this application running with their recipes is the biggest priority.
+    Because of this importing as many formats as possible is prioritized over exporting.
+    Exporter for the different formats will follow over time.
 
 ## Default
 The default integration is the build in (and preferred) way to import and export recipes.
@@ -36,7 +36,7 @@ You will get a `Recipes.zip` file. Simply upload the file and choose the Nextclo
 
 !!! warning "Folder Structure"
     Importing only works if the folder structure is correct. If you do not use the standard path or create the 
-    zip file in any other way make sure the strucutre is as follows
+    zip file in any other way make sure the structure is as follows
     ```
     Recipes.zip/
     └── Recipes/
@@ -56,6 +56,24 @@ To migrate your recipes
 1. Go to you Mealie settings and create a new Backup
 2. Download the backup by clicking on it and pressing download (this wasn't working for me, so I had to manually pull it from the server)
 3. Upload the entire `.zip` file to the importer page and import everything
+
+## Chowdown
+Chowdown stores all your recipes in plain text markdown files in a directory called `_recipes`. 
+Images are saved in a directory called `images`.
+
+In order to import your Chowdown recipes simply create a `.zip` file from those two folders and import them. 
+The folder structure should look as follows
+```
+Recipes.zip/
+    ├── _recipes/
+    │   ├── recipe one.md
+    │   ├── recipe two.md
+    │   └── ...
+    └── images/
+        ├── image-name.jpg
+        ├── second-image-name.jpg
+        └── ...
+```
 
 ## Paprika
 Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
