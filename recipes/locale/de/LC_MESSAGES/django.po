@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-13 23:31+0100\n"
+"POT-Creation-Date: 2021-02-09 18:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,34 +18,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\recipes\settings.py:196
+#: .\recipes\settings.py:214
 msgid "English"
 msgstr "Englisch"
 
-#: .\recipes\settings.py:197
+#: .\recipes\settings.py:215
 msgid "German"
 msgstr "Deutsch"
 
-#: .\recipes\settings.py:198
+#: .\recipes\settings.py:216
 msgid "Dutch"
 msgstr ""
 
-#: .\recipes\settings.py:199
+#: .\recipes\settings.py:217
 msgid "French"
 msgstr ""
 
-#: .\recipes\settings.py:200
+#: .\recipes\settings.py:218
 msgid "Catalan"
 msgstr ""
 
-#: .\recipes\settings.py:201
+#: .\recipes\settings.py:219
 msgid "Spanish"
 msgstr ""
 
-#: .\recipes\settings.py:202
+#: .\recipes\settings.py:220
 msgid "Italian"
 msgstr ""
 
-#: .\recipes\settings.py:203
+#: .\recipes\settings.py:221
 msgid "Latvian"
 msgstr ""
