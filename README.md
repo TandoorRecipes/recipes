@@ -19,8 +19,8 @@
 </p>
 
 <p align="center">
-<a href="https://docs.tandoor.dev/recipes/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
-<a href="https://docs.tandoor.dev/recipes/" target="_blank" rel="noopener noreferrer">Documentation</a> •
+<a href="https://docs.tandoor.dev/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
+<a href="https://docs.tandoor.dev/" target="_blank" rel="noopener noreferrer">Documentation</a> •
 <a href="https://app.tandoor.dev/" target="_blank" rel="noopener noreferrer">Demo</a>
 </p>
 
