@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://app.tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color_1024.png" height="256px" width="256px"></a>
+  <a href="https://app.tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
   <br>
   Tandoor Recipes
   <br>
