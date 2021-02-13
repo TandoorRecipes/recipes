@@ -1,13 +1,25 @@
-# Recipes 
+<p align="center">
+
+<h1>Tandoor</h1>
+
+![Logo](docs/logo_color_1024.png =252x252)
+
 ![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop) 
 ![Stars](https://img.shields.io/github/stars/vabene1111/recipes)
 ![Forks](https://img.shields.io/github/forks/vabene1111/recipes)
 ![Docker Pulls](https://img.shields.io/docker/pulls/vabene1111/recipes)
 
+[Installation Instructions](https://vabene1111.github.io/recipes/install/docker/) - [Documentation](https://vabene1111.github.io/recipes/) - [More (slightly outdated) Screenshots](https://imgur.com/a/V01151p)
+
+</p>
+
+The recipe manager that allows you to manage your ever growing collection of digital recipes.
+
+> This app was formerly known as just Recipes.
+
 Recipes is a Django application to manage, tag and search recipes using either built-in models or 
 external storage providers hosting PDF's, images or other files.
 
-[Installation Instructions](https://vabene1111.github.io/recipes/install/docker/) - [Documentation](https://vabene1111.github.io/recipes/) - [More (slightly outdated) Screenshots](https://imgur.com/a/V01151p)
 
 ![Preview](docs/preview.png)
 
