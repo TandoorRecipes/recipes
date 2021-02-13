@@ -1,7 +1,3 @@
-# Welcome to Recipes Documentation
-
-The recipe manager that allows you to manage your ever growing collection of digital recipes.
-
 ![Preview](preview.png)
 
 !!! info "WIP"
