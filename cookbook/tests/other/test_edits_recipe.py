@@ -33,6 +33,7 @@ class TestEditsRecipe(TestBase):
         expectations = {
             "2¼ l Wasser": (2.25, "l", "Wasser", ""),
             "2¼l Wasser": (2.25, "l", "Wasser", ""),
+            "¼ l Wasser": (0.25, "l", "Wasser", ""),
             "3l Wasser": (3, "l", "Wasser", ""),
             "4 l Wasser": (4, "l", "Wasser", ""),
             "½l Wasser": (0.5, "l", "Wasser", ""),
@@ -43,6 +44,10 @@ class TestEditsRecipe(TestBase):
             "1 Zwiebel(n)": (1, "", "Zwiebel(n)", ""),
             "4 1/2 Zwiebeln": (4.5, "", "Zwiebeln", ""),
             "4 ½ Zwiebeln": (4.5, "", "Zwiebeln", ""),
+            "1/2 EL Mehl": (0.5, "EL", "Mehl", ""),
+            "1/2 Zwiebel": (0.5, "", "Zwiebel", ""),
+            "1/5g Mehl, gesiebt": (0.2, "g", "Mehl", "gesiebt"),
+            "1/2 Zitrone, ausgepresst": (0.5, "", "Zitrone", "ausgepresst"),
             "etwas Mehl": (0, "", "etwas Mehl", ""),
             "Öl zum Anbraten": (0, "", "Öl zum Anbraten", ""),
             "n. B. Knoblauch, zerdrückt": (0, "", "n. B. Knoblauch", "zerdrückt"),
