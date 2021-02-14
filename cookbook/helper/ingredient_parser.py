@@ -28,7 +28,7 @@ def parse_amount(x):
             and (
                     x[end] in string.digits
                     or (
-                            (x[end] == '.' or x[end] == ',')
+                            (x[end] == '.' or x[end] == ',' or x[end] == '/')
                             and end + 1 < len(x)
                             and x[end + 1] in string.digits
                     )
@@ -36,7 +36,10 @@ def parse_amount(x):
     ):
         end += 1
     if end > 0:
-        amount = float(x[:end].replace(',', '.'))
+        if "/" in x[:end]:
+            amount = parse_fraction(x[:end])
+        else:
+            amount = float(x[:end].replace(',', '.'))
     else:
         amount = parse_fraction(x[0])
         end += 1
