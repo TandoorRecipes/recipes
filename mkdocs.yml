@@ -31,7 +31,7 @@ nav:
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:
-      - Tempalating: features/templating.md
+      - Templating: features/templating.md
       - Shopping: features/shopping.md
       - Authentication: features/authentication.md
       - Storages and Sync: features/external_recipes.md
