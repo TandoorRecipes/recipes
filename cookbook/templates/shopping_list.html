@@ -681,7 +681,7 @@
                     Promise.allSettled(recipe_promises).then(() => {
                         console.log("proceeding to update shopping list", this.shopping_list)
 
-                        if (this.shopping_list_id === null) {
+                        if (this.shopping_list.id === undefined) {
                             return this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.makeToast(gettext('Updated'), gettext('Object created successfully!'), 'success')
@@ -697,7 +697,7 @@
                                 this.loading = false
                             })
                         } else {
-                            return this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                            return this.$http.put("{% url 'api:shoppinglist-detail' 123456 %}".replace('123456', this.shopping_list.id), this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.shopping_list = response.body
                                 this.makeToast(gettext('Updated'), gettext('Changes saved successfully!'), 'success')
