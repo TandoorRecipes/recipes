@@ -4,12 +4,12 @@
   "description": "Application to manage, tag and search recipes.",
   "icons": [
     {
-      "src": "/static/manifest/logo_color144.png",
+      "src": "/static/assets/logo_color144.png",
       "type": "image/png",
       "sizes": "144x144"
     },
     {
-      "src": "/static/manifest/logo_color512.png",
+      "src": "/static/assets/logo_color512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
