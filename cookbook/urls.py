@@ -105,8 +105,10 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
 
+
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
+    path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )), name='web_manifest'),
 ]
 
 generic_models = (

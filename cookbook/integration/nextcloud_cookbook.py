@@ -3,18 +3,14 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
-from rest_framework.renderers import JSONRenderer
-
 from cookbook.helper.ingredient_parser import parse
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient
-from cookbook.serializer import RecipeExportSerializer
 
 
 class NextcloudCookbook(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        print("testing", zip_info_object.filename)
         return re.match(r'^Recipes/([A-Za-z\d\s])+/recipe.json$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
@@ -26,6 +22,7 @@ class NextcloudCookbook(Integration):
             servings=recipe_json['recipeYield'])
 
         # TODO parse times (given in PT2H3M )
+        # TODO parse keywords
 
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
@@ -54,6 +51,4 @@ class NextcloudCookbook(Integration):
         return recipe
 
     def get_file_from_recipe(self, recipe):
-        export = RecipeExportSerializer(recipe).data
-
-        return 'recipe.json', JSONRenderer().render(export).decode("utf-8")
+        raise NotImplementedError('Method not implemented in storage integration')

@@ -219,14 +219,15 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = [
-    ('en', _('English')),
-    ('de', _('German')),
-    ('nl', _('Dutch')),
-    ('fr', _('French')),
     ('ca', _('Catalan')),
-    ('es', _('Spanish')),
+    ('cs', _('Czech')),
+    ('nl', _('Dutch')),
+    ('en', _('English')),
+    ('fr', _('French')),
+    ('de', _('German')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
+    ('es', _('Spanish')),
 ]
 
 # Static files (CSS, JavaScript, Images)
