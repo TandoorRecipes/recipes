@@ -9,7 +9,7 @@ from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import management
-from django.core.exceptions import FieldError
+from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -70,6 +70,8 @@ class StandardFilterMixin(ViewSetMixin):
                 queryset = queryset.filter(updated_at__gte=updated_at)
             except FieldError:
                 pass
+            except ValidationError:
+                raise APIException(_('Parameter updated_at incorrectly formatted'))
 
         limit = self.request.query_params.get('limit', None)
         random = self.request.query_params.get('random', False)
