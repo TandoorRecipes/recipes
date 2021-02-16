@@ -2,9 +2,12 @@
   <dictionary name="vabene1111-PC">
     <words>
       <w>autosync</w>
+      <w>chowdown</w>
       <w>csrftoken</w>
       <w>gunicorn</w>
       <w>ical</w>
+      <w>mealie</w>
+      <w>safron</w>
       <w>traefik</w>
     </words>
   </dictionary>
