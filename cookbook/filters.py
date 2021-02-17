@@ -66,6 +66,14 @@ class IngredientFilter(django_filters.FilterSet):
         fields = ['name']
 
 
+class KeywordFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Keyword
+        fields = ['name']
+
+
 class ShoppingListFilter(django_filters.FilterSet):
 
     def __init__(self, data=None, *args, **kwargs):
