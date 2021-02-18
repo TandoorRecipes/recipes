@@ -1,5 +1,4 @@
 import django_tables2 as tables
-from django.db.models.functions import Lower
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django_tables2.utils import A
@@ -60,28 +59,6 @@ class KeywordTable(tables.Table):
         model = Keyword
         template_name = 'generic/table_template.html'
         fields = ('id', 'icon', 'name')
-
-
-class ManageKeywordTable(tables.Table):
-    name = tables.LinkColumn('edit_keyword', args=[
-                             A('id')])
-
-    class Meta:
-        model = Keyword
-        template_name = 'manage/keyword_table.html'
-        fields = ('id',  'name')
-
-    def render_name(self, value, record):
-        if record.icon != None:
-            return format_html("{} {}", record.icon, value)
-        else:
-            return value
-
-    def order_name(self, queryset, is_descending):
-        queryset = queryset.annotate(
-            name_lower=Lower('name')
-        ).order_by(("-" if is_descending else "") + "name_lower")
-        return (queryset, True)
 
 
 class IngredientTable(tables.Table):
