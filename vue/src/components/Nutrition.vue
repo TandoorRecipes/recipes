@@ -15,7 +15,7 @@
             <i class="fas fa-fire fa-fw text-primary"></i> {{ _('Calories') }}
           </div>
           <div class="col-6">
-            {{ calculateAmount(recipe.nutrition.calories) }} kcal
+            <span v-html="calculateAmount(recipe.nutrition.calories)"></span> kcal
           </div>
         </div>
 
@@ -24,8 +24,7 @@
             <i class="fas fa-bread-slice fa-fw text-primary"></i> {{ _('Carbohydrates') }}
           </div>
           <div class="col-6">
-
-            {{ calculateAmount(recipe.nutrition.carbohydrates) }} g
+            <span v-html="calculateAmount(recipe.nutrition.carbohydrates)"></span>  g
           </div>
         </div>
 
@@ -34,7 +33,7 @@
             <i class="fas fa-cheese fa-fw text-primary"></i> {{ _('Fats') }}
           </div>
           <div class="col-6">
-            {{ calculateAmount(recipe.nutrition.fats) }} g
+            <span v-html="calculateAmount(recipe.nutrition.fats)"></span> g
           </div>
         </div>
 
@@ -43,7 +42,7 @@
             <i class="fas fa-drumstick-bite fa-fw text-primary"></i> {{ _('Proteins') }}
           </div>
           <div class="col-6">
-            {{ calculateAmount(recipe.nutrition.proteins) }} g
+            <span v-html="calculateAmount(recipe.nutrition.proteins)"></span> g
           </div>
         </div>
       </div>
