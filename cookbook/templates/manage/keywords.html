@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 {% load i18n %}
 {% load django_tables2 %}
 
@@ -9,25 +8,12 @@
 {% block content %}
 
     <div class="table-container">
-        <h3 style="margin-bottom: 2vh">{% trans 'Manage Keywords' %} 
+        <h3 style="margin-bottom: 2vh">{% trans 'Manage Keywords' %} {% trans 'List' %}
             {% if create_url %}
                 <a href="{% url create_url %}"> <i class="fas fa-plus-circle"></i>
                 </a>
             {% endif %}
         </h3>
-
-        {% if filter %}
-            <br/>
-            <br/>
-            <form action="." method="get">
-                {% csrf_token %}
-                {{ filter.form|crispy }}
-                <button type="submit" class="btn btn-success">{% trans 'Filter' %}</button>
-                <a href="{% url 'manage_keywords' %}" 
-                   class="btn btn-secondary shadow-none">{% trans 'Clear' %}</a>
-            </form>
-        {% endif %}
-        
 
         {% render_table table %}
 
