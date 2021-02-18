@@ -64,9 +64,9 @@ Images are saved in a directory called `images`.
 In order to import your Chowdown recipes simply create a `.zip` file from those two folders and import them. 
 The folder structure should look as follows
 
-!!! warning "_recipes"
-    Make sure to add have the `_` before the `recipes` folder but not the `images` folder. This is because chowdown does it 
-    this way by default.
+!!! info "_recipes"
+    For some reason chowdown uses `_` before the `recipes` folder. To avoid confusion the import supports both
+    `_recipes` and `recipes`
 
 ```
 Recipes.zip/
