@@ -6,7 +6,6 @@ import cookbook.views.import_export
 import cookbook.views.lists
 import cookbook.views.new
 import cookbook.views.views
-import cookbook.views.manage
 
 __all__ = [
     'api',
@@ -15,7 +14,6 @@ __all__ = [
     'edit',
     'import_export',
     'lists',
-    'manage',
     'new',
     'views',
 ]
