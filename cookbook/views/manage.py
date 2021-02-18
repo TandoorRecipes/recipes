@@ -1,4 +1,3 @@
-from cookbook.filters import KeywordFilter
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import Keyword
 from cookbook.tables import ManageKeywordTable
@@ -10,17 +9,11 @@ from django.utils.translation import gettext as _
 
 @group_required('user')
 def keywords(request):
-    f = KeywordFilter(
-        request.GET,
-        queryset=Keyword.objects.all().order_by('pk')
-    )
-
-    table = ManageKeywordTable(f.qs)
+    table = ManageKeywordTable(Keyword.objects.all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(
         request,
         'manage/keywords.html',
-        {'title': _("Keyword"), 'table': table,
-         'create_url': 'new_keyword', 'filter': f}
+        {'title': _("Keyword"), 'table': table, 'create_url': 'new_keyword'}
     )
