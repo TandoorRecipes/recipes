@@ -17,19 +17,16 @@ import string
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
-load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
-SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv(
-    'SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
+SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 DEMO = bool(int(os.getenv('DEMO', False)))
 
-INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(
-    ',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
+INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
@@ -42,11 +39,9 @@ FRACTION_PREF_DEFAULT = bool(int(os.getenv('FRACTION_PREF_DEFAULT', False)))
 STICKY_NAV_PREF_DEFAULT = bool(int(os.getenv('STICKY_NAV_PREF_DEFAULT', True)))
 
 # minimum interval that users can set for automatic sync of shopping lists
-SHOPPING_MIN_AUTOSYNC_INTERVAL = int(
-    os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
+SHOPPING_MIN_AUTOSYNC_INTERVAL = int(os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(
-    ',') if os.getenv('ALLOWED_HOSTS') else ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -91,12 +86,10 @@ INSTALLED_APPS = [
     'cookbook.apps.CookbookConfig',
 ]
 
-SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(
-    ',') if os.getenv('SOCIAL_PROVIDERS') else []
+SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
-SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv(
-    'SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -123,8 +116,7 @@ ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
 if REVERSE_PROXY_AUTH:
     MIDDLEWARE.append('recipes.middleware.CustomRemoteUser')
-    AUTHENTICATION_BACKENDS.append(
-        'django.contrib.auth.backends.RemoteUserBackend')
+    AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -234,8 +226,7 @@ LANGUAGES = [
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 # path for django_js_reverse to generate the javascript file containing all urls. Only done because the default command (collectstatic_js_reverse) fails to update the manifest
-JS_REVERSE_OUTPUT_PATH = os.path.join(
-    BASE_DIR, "cookbook/static/django_js_reverse")
+JS_REVERSE_OUTPUT_PATH = os.path.join(BASE_DIR, "cookbook/static/django_js_reverse")
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
