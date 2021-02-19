@@ -31,3 +31,4 @@ Jinja2==2.11.3
 django-webpack-loader==0.7.0
 django-js-reverse==0.9.1
 django-allauth==0.44.0
+django-scopes==1.2.0
