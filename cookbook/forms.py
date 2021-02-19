@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
+from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
@@ -74,18 +75,13 @@ class UserNameForm(forms.ModelForm):
 
 class ExternalRecipeForm(forms.ModelForm):
     file_path = forms.CharField(disabled=True, required=False)
-    storage = forms.ModelChoiceField(
-        queryset=Storage.objects.all(),
-        disabled=True,
-        required=False
-    )
     file_uid = forms.CharField(disabled=True, required=False)
 
     class Meta:
         model = Recipe
         fields = (
-            'name', 'keywords', 'description', 'servings', 'working_time', 'waiting_time',
-            'file_path', 'storage', 'file_uid'
+            'name', 'description', 'servings', 'working_time', 'waiting_time',
+            'file_path', 'file_uid'
         )
 
         labels = {
@@ -96,39 +92,7 @@ class ExternalRecipeForm(forms.ModelForm):
             'file_path': _('Path'),
             'file_uid': _('Storage UID'),
         }
-        widgets = {'keywords': MultiSelectWidget}
-
-
-class InternalRecipeForm(forms.ModelForm):
-    ingredients = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-    class Meta:
-        model = Recipe
-        fields = (
-            'name', 'image', 'working_time',
-            'waiting_time', 'servings', 'keywords'
-        )
-
-        labels = {
-            'name': _('Name'),
-            'keywords': _('Keywords'),
-            'working_time': _('Preparation time in minutes'),
-            'waiting_time': _('Waiting time (cooking/baking) in minutes'),
-            'servings': _('Number of servings'),
-        }
-        widgets = {'keywords': MultiSelectWidget}
-
-
-class ShoppingForm(forms.Form):
-    recipe = forms.ModelMultipleChoiceField(
-        queryset=Recipe.objects.filter(internal=True).all(),
-        widget=MultiSelectWidget
-    )
-    markdown_format = forms.BooleanField(
-        help_text=_('Include <code>- [ ]</code> in list for easier usage in markdown based documents.'),  # noqa: E501
-        required=False,
-        initial=False
-    )
+        # widgets = {'keywords': MultiSelectWidget}
 
 
 class ImportExportBase(forms.Form):
@@ -150,37 +114,44 @@ class ImportForm(ImportExportBase):
 
 
 class ExportForm(ImportExportBase):
-    recipes = forms.ModelMultipleChoiceField(queryset=Recipe.objects.filter(internal=True).all(), widget=MultiSelectWidget)
+    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=None)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        user = kwargs.pop('user')
+        self.fields['recipes'].queryset = Recipe.objects.filter(internal=True).filter(space=user.userpreference.space).all()
 
 
 class UnitMergeForm(forms.Form):
     prefix = 'unit'
 
-    new_unit = forms.ModelChoiceField(
-        queryset=Unit.objects.all(),
+    new_unit = SafeModelChoiceField(
+        queryset=Unit.objects.none(),
         widget=SelectWidget,
         label=_('New Unit'),
         help_text=_('New unit that other gets replaced by.'),
     )
-    old_unit = forms.ModelChoiceField(
-        queryset=Unit.objects.all(),
+    old_unit = SafeModelChoiceField(
+        queryset=Unit.objects.none(),
         widget=SelectWidget,
         label=_('Old Unit'),
         help_text=_('Unit that should be replaced.'),
     )
 
 
+# todo spaces form here on
+
 class FoodMergeForm(forms.Form):
     prefix = 'food'
 
-    new_food = forms.ModelChoiceField(
-        queryset=Food.objects.all(),
+    new_food = SafeModelChoiceField(
+        queryset=Food.objects.none(),
         widget=SelectWidget,
         label=_('New Food'),
         help_text=_('New food that other gets replaced by.'),
     )
-    old_food = forms.ModelChoiceField(
-        queryset=Food.objects.all(),
+    old_food = SafeModelChoiceField(
+        queryset=Food.objects.none(),
         widget=SelectWidget,
         label=_('Old Food'),
         help_text=_('Food that should be replaced.'),
@@ -214,6 +185,11 @@ class FoodForm(forms.ModelForm):
         model = Food
         fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
         widgets = {'recipe': SelectWidget}
+
+        field_classes = {
+            'recipe': SafeModelChoiceField,
+            'supermarket_category': SafeModelChoiceField,
+        }
 
 
 class StorageForm(forms.ModelForm):
@@ -252,17 +228,25 @@ class RecipeBookEntryForm(forms.ModelForm):
         model = RecipeBookEntry
         fields = ('book',)
 
+        field_classes = {
+            'book': SafeModelChoiceField,
+        }
+
 
 class SyncForm(forms.ModelForm):
     class Meta:
         model = Sync
         fields = ('storage', 'path', 'active')
 
+        field_classes = {
+            'storage': SafeModelChoiceField,
+        }
+
 
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     keywords = forms.ModelMultipleChoiceField(
-        queryset=Keyword.objects.all().order_by('id'),
+        queryset=Keyword.objects.none().order_by('id'),
         required=False,
         widget=MultiSelectWidget
     )
@@ -280,6 +264,9 @@ class ImportRecipeForm(forms.ModelForm):
             'file_uid': _('File ID'),
         }
         widgets = {'keywords': MultiSelectWidget}
+        field_classes = {
+            'keywords': SafeModelChoiceField,
+        }
 
 
 class RecipeBookForm(forms.ModelForm):
@@ -287,6 +274,9 @@ class RecipeBookForm(forms.ModelForm):
         model = RecipeBook
         fields = ('name', 'icon', 'description', 'shared')
         widgets = {'icon': EmojiPickerTextInput, 'shared': MultiSelectWidget}
+        field_classes = {
+            'shared': SafeModelMultipleChoiceField,
+        }
 
 
 class MealPlanForm(forms.ModelForm):
@@ -317,6 +307,11 @@ class MealPlanForm(forms.ModelForm):
             'recipe': SelectWidget,
             'date': DateWidget,
             'shared': MultiSelectWidget
+        }
+        field_classes = {
+            'recipe': SafeModelChoiceField,
+            'meal_type': SafeModelChoiceField,
+            'shared': SafeModelMultipleChoiceField,
         }
 
 
