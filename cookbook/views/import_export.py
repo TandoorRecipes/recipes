@@ -62,7 +62,7 @@ def export_recipe(request):
         recipe = request.GET.get('r')
         if recipe:
             if re.match(r'^([0-9])+$', recipe):
-                if recipe := Recipe.objects.filter(pk=int(recipe)).first():
+                if recipe := Recipe.objects.filter(pk=int(recipe), space=request.space).first():
                     form = ExportForm(initial={'recipes': recipe}, user=request.user)
 
     return render(request, 'export.html', {'form': form})

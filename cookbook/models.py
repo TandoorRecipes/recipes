@@ -9,7 +9,6 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django_random_queryset import RandomManager
 from django_scopes import ScopedManager
 
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
@@ -30,12 +29,26 @@ def get_model_name(model):
     return ('_'.join(re.findall('[A-Z][^A-Z]*', model.__name__))).lower()
 
 
+class PermissionModelMixin:
+    def get_owner(self):
+        if getattr(self, 'created_by', None):
+            return self.created_by
+        if getattr(self, 'user', None):
+            return self.user
+        return None
+
+    def get_space(self):
+        if getattr(self, 'space', None):
+            return self.space
+        raise NotImplementedError('get space for method not implemented and standard fields not available')
+
+
 class Space(models.Model):
     name = models.CharField(max_length=128, default='Default')
     message = models.CharField(max_length=512, default='', blank=True)
 
 
-class UserPreference(models.Model):
+class UserPreference(models.Model, PermissionModelMixin):
     # Themes
     BOOTSTRAP = 'BOOTSTRAP'
     DARKLY = 'DARKLY'
@@ -115,7 +128,7 @@ class UserPreference(models.Model):
         return str(self.user)
 
 
-class Storage(models.Model):
+class Storage(models.Model, PermissionModelMixin):
     DROPBOX = 'DB'
     NEXTCLOUD = 'NEXTCLOUD'
     LOCAL = 'LOCAL'
@@ -139,7 +152,7 @@ class Storage(models.Model):
         return self.name
 
 
-class Sync(models.Model):
+class Sync(models.Model, PermissionModelMixin):
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
     path = models.CharField(max_length=512, default="")
     active = models.BooleanField(default=True)
@@ -154,7 +167,7 @@ class Sync(models.Model):
         return self.path
 
 
-class SupermarketCategory(models.Model):
+class SupermarketCategory(models.Model, PermissionModelMixin):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
@@ -165,7 +178,7 @@ class SupermarketCategory(models.Model):
         return self.name
 
 
-class Supermarket(models.Model):
+class Supermarket(models.Model, PermissionModelMixin):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
@@ -177,18 +190,21 @@ class Supermarket(models.Model):
         return self.name
 
 
-class SupermarketCategoryRelation(models.Model):
+class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
     supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE, related_name='category_to_supermarket')
     category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE, related_name='category_to_supermarket')
     order = models.IntegerField(default=0)
 
     objects = ScopedManager(space='supermarket__space')
 
+    def get_space(self):
+        return self.supermarket.space
+
     class Meta:
         ordering = ('order',)
 
 
-class SyncLog(models.Model):
+class SyncLog(models.Model, PermissionModelMixin):
     sync = models.ForeignKey(Sync, on_delete=models.CASCADE)
     status = models.CharField(max_length=32)
     msg = models.TextField(default="")
@@ -201,7 +217,7 @@ class SyncLog(models.Model):
         return f"{self.created_at}:{self.sync} - {self.status}"
 
 
-class Keyword(models.Model):
+class Keyword(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=64, unique=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
@@ -218,7 +234,7 @@ class Keyword(models.Model):
             return f"{self.name}"
 
 
-class Unit(models.Model):
+class Unit(models.Model, PermissionModelMixin):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
@@ -229,7 +245,7 @@ class Unit(models.Model):
         return self.name
 
 
-class Food(models.Model):
+class Food(models.Model, PermissionModelMixin):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -243,13 +259,9 @@ class Food(models.Model):
         return self.name
 
 
-class Ingredient(models.Model):
-    food = models.ForeignKey(
-        Food, on_delete=models.PROTECT, null=True, blank=True
-    )
-    unit = models.ForeignKey(
-        Unit, on_delete=models.PROTECT, null=True, blank=True
-    )
+class Ingredient(models.Model, PermissionModelMixin):
+    food = models.ForeignKey(Food, on_delete=models.PROTECT, null=True, blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
@@ -258,6 +270,9 @@ class Ingredient(models.Model):
 
     objects = ScopedManager(space='step__recipe__space')
 
+    def get_space(self):
+        return self.step_set.first().recipe_set.first().space
+
     def __str__(self):
         return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
 
@@ -265,7 +280,7 @@ class Ingredient(models.Model):
         ordering = ['order', 'pk']
 
 
-class Step(models.Model):
+class Step(models.Model, PermissionModelMixin):
     TEXT = 'TEXT'
     TIME = 'TIME'
 
@@ -283,6 +298,9 @@ class Step(models.Model):
 
     objects = ScopedManager(space='recipe__space')
 
+    def get_space(self):
+        return self.recipe_set.first().space
+
     def get_instruction_render(self):
         from cookbook.helper.template_helper import render_instructions
         return render_instructions(self)
@@ -291,7 +309,7 @@ class Step(models.Model):
         ordering = ['order', 'pk']
 
 
-class NutritionInformation(models.Model):
+class NutritionInformation(models.Model, PermissionModelMixin):
     fats = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     carbohydrates = models.DecimalField(
         default=0, decimal_places=16, max_digits=32
@@ -304,11 +322,14 @@ class NutritionInformation(models.Model):
 
     objects = ScopedManager(space='recipe__space')
 
+    def get_space(self):
+        return self.recipe_set.first().space
+
     def __str__(self):
         return 'Nutrition'
 
 
-class Recipe(models.Model):
+class Recipe(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=512, blank=True, null=True)
     servings = models.IntegerField(default=1)
@@ -340,7 +361,7 @@ class Recipe(models.Model):
         return self.name
 
 
-class Comment(models.Model):
+class Comment(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     text = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -349,11 +370,14 @@ class Comment(models.Model):
 
     objects = ScopedManager(space='recipe__space')
 
+    def get_space(self):
+        return self.recipe.space
+
     def __str__(self):
         return self.text
 
 
-class RecipeImport(models.Model):
+class RecipeImport(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
     file_uid = models.CharField(max_length=256, default="")
@@ -367,13 +391,11 @@ class RecipeImport(models.Model):
         return self.name
 
 
-class RecipeBook(models.Model):
+class RecipeBook(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
-    shared = models.ManyToManyField(
-        User, blank=True, related_name='shared_with'
-    )
+    shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -383,11 +405,14 @@ class RecipeBook(models.Model):
         return self.name
 
 
-class RecipeBookEntry(models.Model):
+class RecipeBookEntry(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     book = models.ForeignKey(RecipeBook, on_delete=models.CASCADE)
 
     objects = ScopedManager(space='book__space')
+
+    def get_space(self):
+        return self.book.space
 
     def __str__(self):
         return self.recipe.name
@@ -402,7 +427,7 @@ class RecipeBookEntry(models.Model):
         unique_together = (('recipe', 'book'),)
 
 
-class MealType(models.Model):
+class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -414,7 +439,7 @@ class MealType(models.Model):
         return self.name
 
 
-class MealPlan(models.Model):
+class MealPlan(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE, blank=True, null=True
     )
@@ -443,10 +468,8 @@ class MealPlan(models.Model):
         return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
 
 
-class ShoppingListRecipe(models.Model):
-    recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, null=True, blank=True
-    )
+class ShoppingListRecipe(models.Model, PermissionModelMixin):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -462,7 +485,7 @@ class ShoppingListRecipe(models.Model):
             return None
 
 
-class ShoppingListEntry(models.Model):
+class ShoppingListEntry(models.Model, PermissionModelMixin):
     list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
@@ -483,7 +506,7 @@ class ShoppingListEntry(models.Model):
             return None
 
 
-class ShoppingList(models.Model):
+class ShoppingList(models.Model, PermissionModelMixin):
     uuid = models.UUIDField(default=uuid.uuid4)
     note = models.TextField(blank=True, null=True)
     recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
@@ -501,7 +524,7 @@ class ShoppingList(models.Model):
         return f'Shopping list {self.id}'
 
 
-class ShareLink(models.Model):
+class ShareLink(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -518,7 +541,7 @@ def default_valid_until():
     return date.today() + timedelta(days=14)
 
 
-class InviteLink(models.Model):
+class InviteLink(models.Model, PermissionModelMixin):
     uuid = models.UUIDField(default=uuid.uuid4)
     username = models.CharField(blank=True, max_length=64)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
@@ -536,7 +559,7 @@ class InviteLink(models.Model):
         return f'{self.uuid}'
 
 
-class CookLog(models.Model):
+class CookLog(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
@@ -550,7 +573,7 @@ class CookLog(models.Model):
         return self.recipe.name
 
 
-class ViewLog(models.Model):
+class ViewLog(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
