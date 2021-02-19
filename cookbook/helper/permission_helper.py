@@ -1,6 +1,9 @@
 """
 Source: https://djangosnippets.org/snippets/1703/
 """
+from django.views.generic.detail import SingleObjectTemplateResponseMixin
+from django.views.generic.edit import ModelFormMixin
+
 from cookbook.models import ShareLink
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -131,11 +134,11 @@ class GroupRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         if not has_group_permission(request.user, self.groups_required):
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('You do not have the required permissions to view this page!')  # noqa: E501
-            )
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            return HttpResponseRedirect(reverse_lazy('index'))
+
+        if self.get_object().get_space() != request.space:
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse_lazy('index'))
 
         return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
@@ -162,8 +165,11 @@ class OwnerRequiredMixin(object):
                 )
                 return HttpResponseRedirect(reverse('index'))
 
-        return super(OwnerRequiredMixin, self) \
-            .dispatch(request, *args, **kwargs)
+        if self.get_object().get_space() != request.space:
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            return HttpResponseRedirect(reverse_lazy('index'))
+
+        return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 
 # Django Rest Framework Permission classes
