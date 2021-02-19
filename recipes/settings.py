@@ -101,6 +101,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
 
 # Auth related settings
