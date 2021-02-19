@@ -108,7 +108,7 @@ class UserPreference(models.Model):
     shopping_auto_sync = models.IntegerField(default=5)
     sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -132,7 +132,7 @@ class Storage(models.Model):
     path = models.CharField(blank=True, default='', max_length=256)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -147,7 +147,7 @@ class Sync(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -158,7 +158,7 @@ class SupermarketCategory(models.Model):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -170,7 +170,7 @@ class Supermarket(models.Model):
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -194,7 +194,7 @@ class SyncLog(models.Model):
     msg = models.TextField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -208,7 +208,7 @@ class Keyword(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -222,7 +222,7 @@ class Unit(models.Model):
     name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -236,7 +236,7 @@ class Food(models.Model):
     ignore_shopping = models.BooleanField(default=False)
     description = models.TextField(default='', blank=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -333,7 +333,7 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -360,7 +360,7 @@ class RecipeImport(models.Model):
     file_path = models.CharField(max_length=512, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -376,7 +376,7 @@ class RecipeBook(models.Model):
     )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -387,8 +387,7 @@ class RecipeBookEntry(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     book = models.ForeignKey(RecipeBook, on_delete=models.CASCADE)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='book__space')
 
     def __str__(self):
         return self.recipe.name
@@ -408,7 +407,7 @@ class MealType(models.Model):
     order = models.IntegerField(default=0)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -429,7 +428,7 @@ class MealPlan(models.Model):
     note = models.TextField(blank=True)
     date = models.DateField()
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def get_label(self):
@@ -450,7 +449,7 @@ class ShoppingListRecipe(models.Model):
     )
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -471,7 +470,7 @@ class ShoppingListEntry(models.Model):
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -495,7 +494,7 @@ class ShoppingList(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -508,7 +507,7 @@ class ShareLink(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -530,7 +529,7 @@ class InviteLink(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -544,7 +543,7 @@ class CookLog(models.Model):
     rating = models.IntegerField(null=True)
     servings = models.IntegerField(default=0)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -556,7 +555,7 @@ class ViewLog(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, blank=True, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
