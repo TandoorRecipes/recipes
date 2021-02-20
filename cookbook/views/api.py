@@ -312,6 +312,10 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     )
     def image(self, request, pk):
         obj = self.get_object()
+
+        if obj.get_space() != request.space:
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+
         serializer = self.serializer_class(
             obj, data=request.data, partial=True
         )
