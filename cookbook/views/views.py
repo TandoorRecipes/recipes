@@ -129,7 +129,7 @@ def recipe_view(request, pk, share=None):
                 request, messages.SUCCESS, _('Comment saved!')
             )
 
-        bookmark_form = RecipeBookEntryForm(request.POST, prefix='bookmark')
+        bookmark_form = RecipeBookEntryForm(request.POST, prefix='bookmark', space=request.space)
         if bookmark_form.is_valid():
             bookmark = RecipeBookEntry()
             bookmark.recipe = recipe

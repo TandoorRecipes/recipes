@@ -14,6 +14,7 @@ from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
 from cookbook.models import (InviteLink, Keyword, MealPlan, MealType, Recipe,
                              RecipeBook, RecipeImport, ShareLink, Step)
+from cookbook.views.edit import SpaceFormMixing
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
@@ -89,7 +90,7 @@ class StorageCreate(GroupRequiredMixin, CreateView):
 @group_required('user')
 def create_new_external_recipe(request, import_id):
     if request.method == "POST":
-        form = ImportRecipeForm(request.POST)
+        form = ImportRecipeForm(request.POST, space=request.space)
         if form.is_valid():
             new_recipe = get_object_or_404(RecipeImport, pk=import_id, space=request.space)
             recipe = Recipe()
@@ -117,13 +118,13 @@ def create_new_external_recipe(request, import_id):
                 'file_path': new_recipe.file_path,
                 'name': new_recipe.name,
                 'file_uid': new_recipe.file_uid
-            }
+            }, space=request.space
         )
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
 
 
-class RecipeBookCreate(GroupRequiredMixin, CreateView):
+class RecipeBookCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
     groups_required = ['user']
     template_name = "generic/new_template.html"
     model = RecipeBook
@@ -143,7 +144,7 @@ class RecipeBookCreate(GroupRequiredMixin, CreateView):
         return context
 
 
-class MealPlanCreate(GroupRequiredMixin, CreateView):
+class MealPlanCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
     groups_required = ['user']
     template_name = "generic/new_template.html"
     model = MealPlan

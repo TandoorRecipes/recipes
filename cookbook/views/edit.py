@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
+from django.views.generic.edit import FormMixin
 from django_scopes import scopes_disabled
 
 from cookbook.forms import (CommentForm, ExternalRecipeForm, FoodForm,
@@ -51,7 +52,15 @@ def internal_recipe_update(request, pk):
     )
 
 
-class SyncUpdate(GroupRequiredMixin, UpdateView):
+class SpaceFormMixing(FormMixin):
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'space': self.request.space})
+        return kwargs
+
+
+class SyncUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
     groups_required = ['admin']
     template_name = "generic/edit_template.html"
     model = Sync
@@ -85,7 +94,7 @@ class KeywordUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class FoodUpdate(GroupRequiredMixin, UpdateView):
+class FoodUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
     groups_required = ['user']
     template_name = "generic/edit_template.html"
     model = Food
@@ -182,7 +191,7 @@ class ImportUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class RecipeBookUpdate(OwnerRequiredMixin, UpdateView):
+class RecipeBookUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
     template_name = "generic/edit_template.html"
     model = RecipeBook
     form_class = RecipeBookForm
@@ -196,7 +205,7 @@ class RecipeBookUpdate(OwnerRequiredMixin, UpdateView):
         return context
 
 
-class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
+class MealPlanUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
     template_name = "generic/edit_template.html"
     model = MealPlan
     form_class = MealPlanForm
@@ -216,7 +225,7 @@ class MealPlanUpdate(OwnerRequiredMixin, UpdateView):
         return context
 
 
-class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
+class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
     groups_required = ['user']
     model = Recipe
     form_class = ExternalRecipeForm
@@ -226,8 +235,8 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
         self.object = form.save(commit=False)
         old_recipe = Recipe.objects.get(pk=self.object.pk, space=self.request.space)
         if not old_recipe.name == self.object.name:
+            # TODO central location to handle storage type switches
             if self.object.storage.method == Storage.DROPBOX:
-                # TODO central location to handle storage type switches
                 Dropbox.rename_file(old_recipe, self.object.name)
             if self.object.storage.method == Storage.NEXTCLOUD:
                 Nextcloud.rename_file(old_recipe, self.object.name)
@@ -240,24 +249,18 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
                 os.path.splitext(self.object.file_path)[1]
             )
 
-        messages.add_message(
-            self.request, messages.SUCCESS, _('Changes saved!')
-        )
+        messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
         return super(ExternalRecipeUpdate, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(
-            self.request,
-            messages.ERROR,
-            _('Error saving changes!')
-        )
+        messages.add_message(self.request, messages.ERROR, _('Error saving changes!'))
         return super(ExternalRecipeUpdate, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('edit_recipe', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        context = super(ExternalRecipeUpdate, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['title'] = _("Recipe")
         context['view_url'] = reverse('view_recipe', args=[self.object.pk])
         if self.object.storage:
@@ -271,7 +274,7 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView):
 def edit_ingredients(request):
     if request.method == "POST":
         success = False
-        units_form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix)
+        units_form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix, space=request.space)
         if units_form.is_valid():
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
@@ -287,7 +290,7 @@ def edit_ingredients(request):
             else:
                 messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
 
-        food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix)
+        food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix, space=request.space)
         if food_form.is_valid():
             new_food = food_form.cleaned_data['new_food']
             old_food = food_form.cleaned_data['old_food']
@@ -304,10 +307,10 @@ def edit_ingredients(request):
                 messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
 
         if success:
-            units_form = UnitMergeForm()
-            food_form = FoodMergeForm()
+            units_form = UnitMergeForm(space=request.space)
+            food_form = FoodMergeForm(space=request.space)
     else:
-        units_form = UnitMergeForm()
-        food_form = FoodMergeForm()
+        units_form = UnitMergeForm(space=request.space)
+        food_form = FoodMergeForm(space=request.space)
 
     return render(request, 'forms/ingredients.html', {'units_form': units_form, 'food_form': food_form})
