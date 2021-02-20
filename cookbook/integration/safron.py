@@ -41,14 +41,14 @@ class Safron(Integration):
                 ingredient_mode = False
                 direction_mode = True
 
-        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, )
+        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space, )
 
         step = Step.objects.create(instruction='\n'.join(directions))
 
         for ingredient in ingredients:
             amount, unit, ingredient, note = parse(ingredient)
-            f, created = Food.objects.get_or_create(name=ingredient)
-            u, created = Unit.objects.get_or_create(name=unit)
+            f, created = Food.objects.get_or_create(name=ingredient, space=self.request.space)
+            u, created = Unit.objects.get_or_create(name=unit, space=self.request.space)
             step.ingredients.add(Ingredient.objects.create(
                 food=f, unit=u, amount=amount, note=note
             ))
