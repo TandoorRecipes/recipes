@@ -31,7 +31,7 @@ class RecipeDelete(GroupRequiredMixin, DeleteView):
 
 @group_required('user')
 def delete_recipe_source(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk)
+    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
 
     if recipe.storage.method == Storage.DROPBOX:
         # TODO central location to handle storage type switches
@@ -130,24 +130,11 @@ class RecipeBookDelete(OwnerRequiredMixin, DeleteView):
         return context
 
 
-class RecipeBookEntryDelete(GroupRequiredMixin, DeleteView):
+class RecipeBookEntryDelete(OwnerRequiredMixin, DeleteView):
     groups_required = ['user']
     template_name = "generic/delete_template.html"
     model = RecipeBookEntry
     success_url = reverse_lazy('view_books')
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if not (obj.book.created_by == request.user
-                or request.user.is_superuser):
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
-            )
-            return HttpResponseRedirect(reverse('index'))
-        return super(RecipeBookEntryDelete, self) \
-            .dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(RecipeBookEntryDelete, self).get_context_data(**kwargs)

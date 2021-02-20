@@ -27,7 +27,7 @@ class Dropbox(Provider):
         try:
             recipes = r.json()
         except ValueError:
-            log_entry = SyncLog(status='ERROR', msg=str(r), sync=monitor)
+            log_entry = SyncLog(status='ERROR', msg=str(r), sync=monitor, space=monitor.space)
             log_entry.save()
             return r
 
@@ -35,14 +35,14 @@ class Dropbox(Provider):
         # TODO check if has_more is set and import that as well
         for recipe in recipes['entries']:
             path = recipe['path_lower']
-            if not Recipe.objects.filter(file_path__iexact=path).exists() \
-                    and not RecipeImport.objects.filter(file_path=path).exists():  # noqa: E501
+            if not Recipe.objects.filter(file_path__iexact=path, space=monitor.space).exists() and not RecipeImport.objects.filter(file_path=path, space=monitor.space).exists():
                 name = os.path.splitext(recipe['name'])[0]
                 new_recipe = RecipeImport(
                     name=name,
                     file_path=path,
                     storage=monitor.storage,
-                    file_uid=recipe['id']
+                    file_uid=recipe['id'],
+                    space=monitor.space,
                 )
                 new_recipe.save()
                 import_count += 1
@@ -50,7 +50,8 @@ class Dropbox(Provider):
         log_entry = SyncLog(
             status='SUCCESS',
             msg='Imported ' + str(import_count) + ' recipes',
-            sync=monitor
+            sync=monitor,
+            space=monitor.space,
         )
         log_entry.save()
 
@@ -104,9 +105,7 @@ class Dropbox(Provider):
             recipe.link = Dropbox.get_share_link(recipe)
             recipe.save()
 
-        response = requests.get(
-            recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.')
-        )
+        response = requests.get(recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.'))
 
         return io.BytesIO(response.content)
 
