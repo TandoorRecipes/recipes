@@ -25,7 +25,7 @@ class TestEditsRecipe(TestBase):
         for test in test_list:
             with open(test['file'], 'rb') as file:
                 print(f'Testing {test["file"]} expecting length {test["result_length"]}')
-                parsed_content = json.loads(get_from_html(file.read(), 'test_url').content)
+                parsed_content = json.loads(get_from_html(file.read(), 'test_url', None).content)
                 self.assertEqual(len(str(parsed_content)), test['result_length'])
                 file.close()
 

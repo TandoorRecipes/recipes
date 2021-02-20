@@ -18,7 +18,7 @@ class Mealie(Integration):
 
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(), description=recipe_json['description'].strip(),
-            created_by=self.request.user, internal=True)
+            created_by=self.request.user, internal=True, space=self.request.space)
 
         # TODO parse times (given in PT2H3M )
 
@@ -32,8 +32,8 @@ class Mealie(Integration):
 
                 for ingredient in recipe_json['recipeIngredient']:
                     amount, unit, ingredient, note = parse(ingredient)
-                    f, created = Food.objects.get_or_create(name=ingredient)
-                    u, created = Unit.objects.get_or_create(name=unit)
+                    f, created = Food.objects.get_or_create(name=ingredient, space=self.request.space)
+                    u, created = Unit.objects.get_or_create(name=unit, space=self.request.space)
                     step.ingredients.add(Ingredient.objects.create(
                         food=f, unit=u, amount=amount, note=note
                     ))

@@ -12,7 +12,7 @@ from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 
 
-def get_from_html(html_text, url):
+def get_from_html(html_text, url, space):
     soup = BeautifulSoup(html_text, "html.parser")
 
     # first try finding ld+json as its most common
@@ -31,7 +31,7 @@ def get_from_html(html_text, url):
 
                 if ('@type' in ld_json_item
                         and ld_json_item['@type'] == 'Recipe'):
-                    return JsonResponse(find_recipe_json(ld_json_item, url))
+                    return JsonResponse(find_recipe_json(ld_json_item, url, space))
         except JSONDecodeError:
             return JsonResponse(
                 {
@@ -45,7 +45,7 @@ def get_from_html(html_text, url):
     for i in items:
         md_json = json.loads(i.json())
         if 'schema.org/Recipe' in str(md_json['type']):
-            return JsonResponse(find_recipe_json(md_json['properties'], url))
+            return JsonResponse(find_recipe_json(md_json['properties'], url, space))
 
     return JsonResponse(
         {
@@ -55,7 +55,7 @@ def get_from_html(html_text, url):
         status=400)
 
 
-def find_recipe_json(ld_json, url):
+def find_recipe_json(ld_json, url, space):
     if type(ld_json['name']) == list:
         try:
             ld_json['name'] = ld_json['name'][0]
@@ -136,7 +136,7 @@ def find_recipe_json(ld_json, url):
 
         # keywords as list
         for kw in ld_json['keywords']:
-            if k := Keyword.objects.filter(name=kw).first():
+            if k := Keyword.objects.filter(name=kw, space=space).first():
                 keywords.append({'id': str(k.id), 'text': str(k).strip()})
             else:
                 keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw.strip()})

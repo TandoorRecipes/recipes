@@ -40,7 +40,7 @@ class Integration:
         export_zip_obj = ZipFile(export_zip_stream, 'w')
 
         for r in recipes:
-            if r.internal:
+            if r.internal and r.space == self.request.space:
                 recipe_zip_stream = BytesIO()
                 recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
 
