@@ -9,8 +9,8 @@ class ScopeMiddleware:
         if request.user.is_authenticated:
             request.space = request.user.userpreference.space
 
-            #with scopes_disabled():
-            with scope(space=request.space):
+            with scopes_disabled():
+            #with scope(space=request.space):
                 return self.get_response(request)
         else:
             return self.get_response(request)

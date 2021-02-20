@@ -6,7 +6,7 @@ from emoji_picker.widgets import EmojiPickerTextInput
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
-                     UserPreference)
+                     UserPreference, SupermarketCategory, MealType)
 
 
 class SelectWidget(widgets.Select):
@@ -77,11 +77,16 @@ class ExternalRecipeForm(forms.ModelForm):
     file_path = forms.CharField(disabled=True, required=False)
     file_uid = forms.CharField(disabled=True, required=False)
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['keywords'].queryset = Keyword.objects.filter(space=space).all()
+
     class Meta:
         model = Recipe
         fields = (
             'name', 'description', 'servings', 'working_time', 'waiting_time',
-            'file_path', 'file_uid'
+            'file_path', 'file_uid', 'keywords'
         )
 
         labels = {
@@ -92,7 +97,10 @@ class ExternalRecipeForm(forms.ModelForm):
             'file_path': _('Path'),
             'file_uid': _('Storage UID'),
         }
-        # widgets = {'keywords': MultiSelectWidget}
+        widgets = {'keywords': MultiSelectWidget}
+        field_classes = {
+            'keywords': SafeModelMultipleChoiceField,
+        }
 
 
 class ImportExportBase(forms.Form):
@@ -114,12 +122,12 @@ class ImportForm(ImportExportBase):
 
 
 class ExportForm(ImportExportBase):
-    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=None)
+    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none())
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
-        user = kwargs.pop('user')
-        self.fields['recipes'].queryset = Recipe.objects.filter(internal=True).filter(space=user.userpreference.space).all()
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
 
 
 class UnitMergeForm(forms.Form):
@@ -138,8 +146,12 @@ class UnitMergeForm(forms.Form):
         help_text=_('Unit that should be replaced.'),
     )
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['new_unit'].queryset = Unit.objects.filter(space=space).all()
+        self.fields['old_unit'].queryset = Unit.objects.filter(space=space).all()
 
-# todo spaces form here on
 
 class FoodMergeForm(forms.Form):
     prefix = 'food'
@@ -156,6 +168,12 @@ class FoodMergeForm(forms.Form):
         label=_('Old Food'),
         help_text=_('Food that should be replaced.'),
     )
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['new_food'].queryset = Food.objects.filter(space=space).all()
+        self.fields['old_food'].queryset = Food.objects.filter(space=space).all()
 
 
 class CommentForm(forms.ModelForm):
@@ -181,6 +199,13 @@ class KeywordForm(forms.ModelForm):
 
 
 class FoodForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
+        self.fields['supermarket_category'].queryset = SupermarketCategory.objects.filter(space=space).all()
+
     class Meta:
         model = Food
         fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
@@ -198,18 +223,16 @@ class StorageForm(forms.ModelForm):
         required=False
     )
     password = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'autocomplete': 'new-password', 'type': 'password'}
-        ),
+        widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
         required=False,
-        help_text=_('Leave empty for dropbox and enter app password for nextcloud.')  # noqa: E501
+        help_text=_('Leave empty for dropbox and enter app password for nextcloud.')
     )
     token = forms.CharField(
         widget=forms.TextInput(
             attrs={'autocomplete': 'new-password', 'type': 'password'}
         ),
         required=False,
-        help_text=_('Leave empty for nextcloud and enter api token for dropbox.')  # noqa: E501
+        help_text=_('Leave empty for nextcloud and enter api token for dropbox.')
     )
 
     class Meta:
@@ -217,12 +240,17 @@ class StorageForm(forms.ModelForm):
         fields = ('name', 'method', 'username', 'password', 'token', 'url', 'path')
 
         help_texts = {
-            'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),  # noqa: E501
+            'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
         }
 
 
 class RecipeBookEntryForm(forms.ModelForm):
     prefix = 'bookmark'
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['book'].queryset = RecipeBook.objects.filter(space=space).all()
 
     class Meta:
         model = RecipeBookEntry
@@ -234,6 +262,12 @@ class RecipeBookEntryForm(forms.ModelForm):
 
 
 class SyncForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['book'].queryset = Storage.objects.filter(space=space).all()
+
     class Meta:
         model = Sync
         fields = ('storage', 'path', 'active')
@@ -246,13 +280,23 @@ class SyncForm(forms.ModelForm):
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     keywords = forms.ModelMultipleChoiceField(
-        queryset=Keyword.objects.none().order_by('id'),
+        queryset=Keyword.objects.none(),
         required=False,
         widget=MultiSelectWidget
     )
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['keywords'].queryset = Keyword.objects.filter(space=space).all().order_by('id')
+
 
 class ImportRecipeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['keywords'].queryset = Keyword.objects.filter(space=space).all()
+
     class Meta:
         model = Recipe
         fields = ('name', 'keywords', 'file_path', 'file_uid')
@@ -270,6 +314,11 @@ class ImportRecipeForm(forms.ModelForm):
 
 
 class RecipeBookForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
+
     class Meta:
         model = RecipeBook
         fields = ('name', 'icon', 'description', 'shared')
@@ -280,6 +329,12 @@ class RecipeBookForm(forms.ModelForm):
 
 
 class MealPlanForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
+        self.fields['meal_type'].queryset = MealType.objects.filter(space=space).all()
+        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
 
     def clean(self):
         cleaned_data = super(MealPlanForm, self).clean()

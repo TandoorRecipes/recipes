@@ -73,7 +73,7 @@ def batch_import(request):
 @group_required('user')
 def batch_edit(request):
     if request.method == "POST":
-        form = BatchEditForm(request.POST)
+        form = BatchEditForm(request.POST, space=request.space)
         if form.is_valid():
             word = form.cleaned_data['search']
             keywords = form.cleaned_data['keywords']
@@ -100,7 +100,7 @@ def batch_edit(request):
 
             return redirect('data_batch_edit')
     else:
-        form = BatchEditForm()
+        form = BatchEditForm(space=request.space)
 
     return render(request, 'batch/edit.html', {'form': form})
 
