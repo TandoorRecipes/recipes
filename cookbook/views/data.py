@@ -27,10 +27,7 @@ from cookbook.tables import SyncTable
 def sync(request):
     if request.method == "POST":
         if not has_group_permission(request.user, ['admin']):
-            messages.add_message(
-                request, messages.ERROR,
-                _('You do not have the required permissions to view this page!')  # noqa: E501
-            )
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('data_sync'))
         form = SyncForm(request.POST)
         if form.is_valid():
@@ -38,21 +35,16 @@ def sync(request):
             new_path.path = form.cleaned_data['path']
             new_path.storage = form.cleaned_data['storage']
             new_path.last_checked = datetime.now()
+            new_path.space = request.space
             new_path.save()
             return redirect('data_sync')
     else:
         form = SyncForm()
 
-    monitored_paths = SyncTable(Sync.objects.all())
-    RequestConfig(
-        request, paginate={'per_page': 25}
-    ).configure(monitored_paths)
+    monitored_paths = SyncTable(Sync.objects.fitler(space=request.space).all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
 
-    return render(
-        request,
-        'batch/monitor.html',
-        {'form': form, 'monitored_paths': monitored_paths}
-    )
+    return render(request, 'batch/monitor.html', {'form': form, 'monitored_paths': monitored_paths})
 
 
 @group_required('user')
@@ -62,14 +54,15 @@ def sync_wait(request):
 
 @group_required('user')
 def batch_import(request):
-    imports = RecipeImport.objects.all()
+    imports = RecipeImport.objects.filter(space=request.space).all()
     for new_recipe in imports:
         recipe = Recipe(
             name=new_recipe.name,
             file_path=new_recipe.file_path,
             storage=new_recipe.storage,
             file_uid=new_recipe.file_uid,
-            created_by=request.user
+            created_by=request.user,
+            space=request.space
         )
         recipe.save()
         new_recipe.delete()
@@ -85,7 +78,7 @@ def batch_edit(request):
             word = form.cleaned_data['search']
             keywords = form.cleaned_data['keywords']
 
-            recipes = Recipe.objects.filter(name__icontains=word)
+            recipes = Recipe.objects.filter(name__icontains=word, space=request.space)
             count = 0
             for recipe in recipes:
                 edit = False
@@ -125,6 +118,7 @@ def import_url(request):
             servings=data['servings'],
             internal=True,
             created_by=request.user,
+            space=request.space,
         )
 
         step = Step.objects.create(
@@ -134,11 +128,10 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if kw['id'] != "null" \
-                    and (k := Keyword.objects.filter(id=kw['id']).first()):
+            if kw['id'] != "null" and (k := Keyword.objects.filter(id=kw['id'], space=request.space).first()):
                 recipe.keywords.add(k)
             elif data['all_keywords']:
-                k = Keyword.objects.create(name=kw['text'])
+                k = Keyword.objects.create(name=kw['text'], space=request.space)
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
@@ -146,12 +139,12 @@ def import_url(request):
 
             if ing['ingredient']['text'] != '':
                 ingredient.food, f_created = Food.objects.get_or_create(
-                    name=ing['ingredient']['text']
+                    name=ing['ingredient']['text'], space=request.space
                 )
 
             if ing['unit'] and ing['unit']['text'] != '':
                 ingredient.unit, u_created = Unit.objects.get_or_create(
-                    name=ing['unit']['text']
+                    name=ing['unit']['text'], space=request.space
                 )
 
             # TODO properly handle no_amount recipes
@@ -202,16 +195,16 @@ class Object(object):
 @group_required('user')
 def statistics(request):
     counts = Object()
-    counts.recipes = Recipe.objects.count()
-    counts.keywords = Keyword.objects.count()
-    counts.recipe_import = RecipeImport.objects.count()
-    counts.units = Unit.objects.count()
-    counts.ingredients = Food.objects.count()
-    counts.comments = Comment.objects.count()
+    counts.recipes = Recipe.objects.filter(space=request.space).count()
+    counts.keywords = Keyword.objects.filter(space=request.space).count()
+    counts.recipe_import = RecipeImport.objects.filter(space=request.space).count()
+    counts.units = Unit.objects.filter(space=request.space).count()
+    counts.ingredients = Food.objects.filter(space=request.space).count()
+    counts.comments = Comment.objects.filter(recipe__space=request.space).count()
 
-    counts.recipes_internal = Recipe.objects.filter(internal=True).count()
+    counts.recipes_internal = Recipe.objects.filter(internal=True, space=request.space).count()
     counts.recipes_external = counts.recipes - counts.recipes_internal
 
-    counts.recipes_no_keyword = Recipe.objects.filter(keywords=None).count()
+    counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
 
     return render(request, 'stats.html', {'counts': counts})
