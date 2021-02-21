@@ -2,27 +2,29 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django_scopes import scopes_disabled
 
 
 def convert_old_specials(apps, schema_editor):
-    Ingredient = apps.get_model('cookbook', 'Ingredient')
-    Food = apps.get_model('cookbook', 'Food')
-    Unit = apps.get_model('cookbook', 'Unit')
+    with scopes_disabled():
+        Ingredient = apps.get_model('cookbook', 'Ingredient')
+        Food = apps.get_model('cookbook', 'Food')
+        Unit = apps.get_model('cookbook', 'Unit')
 
-    for i in Ingredient.objects.all():
-        if i.amount == 0:
-            i.no_amount = True
-        if i.unit.name == 'Special:Header':
-            i.header = True
-            i.unit = None
-            i.food = None
-        i.save()
+        for i in Ingredient.objects.all():
+            if i.amount == 0:
+                i.no_amount = True
+            if i.unit.name == 'Special:Header':
+                i.header = True
+                i.unit = None
+                i.food = None
+            i.save()
 
-    try:
-        Unit.objects.filter(name='Special:Header').delete()
-        Food.objects.filter(name='Header').delete()
-    except Exception:
-        pass
+        try:
+            Unit.objects.filter(name='Special:Header').delete()
+            Food.objects.filter(name='Header').delete()
+        except Exception:
+            pass
 
 
 class Migration(migrations.Migration):
