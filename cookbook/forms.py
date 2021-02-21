@@ -6,7 +6,7 @@ from emoji_picker.widgets import EmojiPickerTextInput
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
-                     UserPreference, SupermarketCategory, MealType)
+                     UserPreference, SupermarketCategory, MealType, Space)
 
 
 class SelectWidget(widgets.Select):
@@ -371,11 +371,19 @@ class MealPlanForm(forms.ModelForm):
 
 
 class InviteLinkForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['space'].queryset = Space.objects.filter(created_by=user).all()
+
     class Meta:
         model = InviteLink
-        fields = ('username', 'group', 'valid_until')
+        fields = ('username', 'group', 'valid_until', 'space')
         help_texts = {
             'username': _('A username is not required, if left blank the new user can choose one.')  # noqa: E501
+        }
+        field_classes = {
+            'space': SafeModelChoiceField,
         }
 
 

@@ -27,7 +27,8 @@ class Integration:
         self.keyword = Keyword.objects.create(
             name=f'Import {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
             description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}',
-            icon='📥'
+            icon='📥',
+            space=request.space
         )
 
     def do_export(self, recipes):

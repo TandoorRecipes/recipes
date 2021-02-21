@@ -123,9 +123,13 @@ class GroupRequiredMixin(object):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse_lazy('index'))
 
-        if self.get_object().get_space() != request.space:
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-            return HttpResponseRedirect(reverse_lazy('index'))
+        try:
+            obj = self.get_object()
+            if obj.get_space() != request.space:
+                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                return HttpResponseRedirect(reverse_lazy('index'))
+        except AttributeError:
+            pass
 
         return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
 
@@ -141,9 +145,13 @@ class OwnerRequiredMixin(object):
                 messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
                 return HttpResponseRedirect(reverse('index'))
 
-        if self.get_object().get_space() != request.space:
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-            return HttpResponseRedirect(reverse_lazy('index'))
+        try:
+            obj = self.get_object()
+            if obj.get_space() != request.space:
+                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                return HttpResponseRedirect(reverse_lazy('index'))
+        except AttributeError:
+            pass
 
         return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
 

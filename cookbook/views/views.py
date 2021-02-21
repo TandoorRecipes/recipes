@@ -26,7 +26,7 @@ from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList)
+                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from recipes.settings import DEMO
@@ -90,6 +90,10 @@ def no_groups(request):
     if request.user.is_authenticated and request.user.groups.count() > 0:
         return HttpResponseRedirect(reverse('index'))
     return render(request, 'no_groups_info.html')
+
+
+def no_space(request):
+    return render(request, 'no_space_info.html')
 
 
 def recipe_view(request, pk, share=None):
@@ -331,11 +335,8 @@ def system(request):
 
 
 def setup(request):
-    if (User.objects.count() > 0
-            or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS):  # noqa: E501
-        messages.add_message(request, messages.ERROR,
-                             _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.')  # noqa: E501
-                             )
+    if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
+        messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
         return HttpResponseRedirect(reverse('account_login'))
 
     if request.method == 'POST':
@@ -344,20 +345,19 @@ def setup(request):
             if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
                 form.add_error('password', _('Passwords dont match!'))
             else:
-                user = User(
-                    username=form.cleaned_data['name'],
-                    is_superuser=True,
-                    is_staff=True
-                )
+                user = User(username=form.cleaned_data['name'], is_superuser=True, is_staff=True)
                 try:
                     validate_password(form.cleaned_data['password'], user=user)
                     user.set_password(form.cleaned_data['password'])
                     user.save()
-                    messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        _('User has been created, please login!')
-                    )
+                    user.userpreference.space = Space.objects.first()
+                    user.userpreference.save()
+
+                    with scopes_disabled():
+                        for x in Space.objects.all():
+                            x.created_by = user
+                            x.save()
+                    messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
                     return HttpResponseRedirect(reverse('account_login'))
                 except ValidationError as e:
                     for m in e:
@@ -369,60 +369,52 @@ def setup(request):
 
 
 def signup(request, token):
-    try:
-        token = UUID(token, version=4)
-    except ValueError:
-        messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
-        return HttpResponseRedirect(reverse('index'))
+    with scopes_disabled():
+        try:
+            token = UUID(token, version=4)
+        except ValueError:
+            messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
+            return HttpResponseRedirect(reverse('index'))
 
-    if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
-        if request.method == 'POST':
-            updated_request = request.POST.copy()
+        if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
+            if request.method == 'POST':
+                updated_request = request.POST.copy()
+                if link.username != '':
+                    updated_request.update({'name': link.username})
+
+                form = UserCreateForm(updated_request)
+
+                if form.is_valid():
+                    if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
+                        form.add_error('password', _('Passwords dont match!'))
+                    else:
+                        user = User(username=form.cleaned_data['name'], )
+                        try:
+                            validate_password(form.cleaned_data['password'], user=user)
+                            user.set_password(form.cleaned_data['password'])
+                            user.save()
+                            messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+
+                            link.used_by = user
+                            link.save()
+                            user.groups.add(link.group)
+
+                            user.userpreference.space = link.space
+                            user.userpreference.save()
+                            return HttpResponseRedirect(reverse('account_login'))
+                        except ValidationError as e:
+                            for m in e:
+                                form.add_error('password', m)
+            else:
+                form = UserCreateForm()
+
             if link.username != '':
-                updated_request.update({'name': link.username})
+                form.fields['name'].initial = link.username
+                form.fields['name'].disabled = True
+            return render(request, 'account/signup.html', {'form': form, 'link': link})
 
-            form = UserCreateForm(updated_request)
-
-            if form.is_valid():
-                if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
-                    form.add_error('password', _('Passwords dont match!'))
-                else:
-                    user = User(
-                        username=form.cleaned_data['name'],
-                    )
-                    try:
-                        validate_password(
-                            form.cleaned_data['password'], user=user
-                        )
-                        user.set_password(form.cleaned_data['password'])
-                        user.save()
-                        messages.add_message(
-                            request,
-                            messages.SUCCESS,
-                            _('User has been created, please login!')
-                        )
-
-                        link.used_by = user
-                        link.save()
-                        user.groups.add(link.group)
-                        return HttpResponseRedirect(reverse('account_login'))
-                    except ValidationError as e:
-                        for m in e:
-                            form.add_error('password', m)
-        else:
-            form = UserCreateForm()
-
-        if link.username != '':
-            form.fields['name'].initial = link.username
-            form.fields['name'].disabled = True
-        return render(
-            request, 'account/signup.html', {'form': form, 'link': link}
-        )
-
-    messages.add_message(
-        request, messages.ERROR, _('Invite Link not valid or already used!')
-    )
-    return HttpResponseRedirect(reverse('index'))
+        messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
+        return HttpResponseRedirect(reverse('index'))
 
 
 def markdown_info(request):
