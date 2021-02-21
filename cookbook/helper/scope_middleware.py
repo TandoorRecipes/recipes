@@ -28,4 +28,6 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
-            return self.get_response(request)
+            with scopes_disabled():
+                request.space = None
+                return self.get_response(request)
