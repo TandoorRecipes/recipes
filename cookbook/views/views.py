@@ -50,15 +50,12 @@ def index(request):
 
         return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
     except UserPreference.DoesNotExist:
-        return HttpResponseRedirect(reverse('view_no_group') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('view_search'))
 
 
 def search(request):
     if has_group_permission(request.user, ('guest',)):
-        f = RecipeFilter(
-            request.GET,
-            queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name')
-        )
+        f = RecipeFilter(request.GET, queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'))
 
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -82,7 +79,10 @@ def search(request):
 
         return render(request, 'index.html', {'recipes': table, 'filter': f, 'last_viewed': last_viewed})
     else:
-        return HttpResponseRedirect(reverse('view_no_group') + '?next=' + request.path)
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('view_no_group'))
+        else:
+            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
 def no_groups(request):
@@ -93,76 +93,58 @@ def no_space(request):
     return render(request, 'no_space_info.html')
 
 
+def no_perm(request):
+    return render(request, 'no_perm_info.html')
+
+
 def recipe_view(request, pk, share=None):
     with scopes_disabled():
         recipe = get_object_or_404(Recipe, pk=pk)
 
-    if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
-        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-        return HttpResponseRedirect(reverse('view_no_group') + '?next=' + request.path)
+        if not request.user.is_authenticated and not share_link_valid(recipe, share):
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
-    comments = Comment.objects.filter(recipe__space=request.space, recipe=recipe)
+        if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            return HttpResponseRedirect(reverse('index'))
 
-    if request.method == "POST":
-        if not request.user.is_authenticated:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('You do not have the required permissions to perform this action!')  # noqa: E501
-            )
-            return HttpResponseRedirect(
-                reverse(
-                    'view_recipe',
-                    kwargs={'pk': recipe.pk, 'share': share}
-                )
-            )
+        comments = Comment.objects.filter(recipe__space=request.space, recipe=recipe)
 
-        comment_form = CommentForm(request.POST, prefix='comment')
-        if comment_form.is_valid():
-            comment = Comment()
-            comment.recipe = recipe
-            comment.text = comment_form.cleaned_data['text']
-            comment.created_by = request.user
+        if request.method == "POST":
+            if not request.user.is_authenticated:
+                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to perform this action!'))
+                return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': recipe.pk, 'share': share}))
 
-            comment.save()
+            comment_form = CommentForm(request.POST, prefix='comment')
+            if comment_form.is_valid():
+                comment = Comment()
+                comment.recipe = recipe
+                comment.text = comment_form.cleaned_data['text']
+                comment.created_by = request.user
+                comment.save()
 
-            messages.add_message(
-                request, messages.SUCCESS, _('Comment saved!')
-            )
+                messages.add_message(request, messages.SUCCESS, _('Comment saved!'))
 
-        bookmark_form = RecipeBookEntryForm(request.POST, prefix='bookmark', space=request.space)
-        if bookmark_form.is_valid():
-            bookmark = RecipeBookEntry()
-            bookmark.recipe = recipe
-            bookmark.book = bookmark_form.cleaned_data['book']
+        comment_form = CommentForm()
 
-            try:
-                bookmark.save()
-            except IntegrityError as e:
-                if 'UNIQUE constraint' in str(e.args):
-                    messages.add_message(request, messages.ERROR, _('This recipe is already linked to the book!'))
-            else:
-                messages.add_message(request, messages.SUCCESS, _('Bookmark saved!'))
+        user_servings = None
+        if request.user.is_authenticated:
+            user_servings = CookLog.objects.filter(
+                recipe=recipe,
+                created_by=request.user,
+                servings__gt=0,
+                space=request.space,
+            ).all().aggregate(Avg('servings'))['servings__avg']
 
-    comment_form = CommentForm()
+        if not user_servings:
+            user_servings = 0
 
-    user_servings = None
-    if request.user.is_authenticated:
-        user_servings = CookLog.objects.filter(
-            recipe=recipe,
-            created_by=request.user,
-            servings__gt=0,
-            space=request.space,
-        ).all().aggregate(Avg('servings'))['servings__avg']
+        if request.user.is_authenticated:
+            if not ViewLog.objects.filter(recipe=recipe, created_by=request.user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)), space=request.space).exists():
+                ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
 
-    if not user_servings:
-        user_servings = 0
-
-    if request.user.is_authenticated:
-        if not ViewLog.objects.filter(recipe=recipe, created_by=request.user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)), space=request.space).exists():
-            ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-
-    return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'user_servings': user_servings})
+        return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'user_servings': user_servings})
 
 
 @group_required('user')

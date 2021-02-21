@@ -108,7 +108,7 @@ def group_required(*groups_required):
     def in_groups(u):
         return has_group_permission(u, groups_required)
 
-    return user_passes_test(in_groups, login_url='view_no_group')
+    return user_passes_test(in_groups, login_url='view_no_perm')
 
 
 class GroupRequiredMixin(object):

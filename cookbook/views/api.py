@@ -289,13 +289,14 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsShare | CustomIsGuest]
 
     def get_queryset(self):
-        queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        if self.request.space:
+            self.queryset = self.queryset.filter(space=self.request.space)
 
         internal = self.request.query_params.get('internal', None)
         if internal:
-            queryset = queryset.filter(internal=True)
+            self.queryset = self.queryset.filter(internal=True)
 
-        return queryset
+        return self.queryset
 
     # TODO write extensive tests for permissions
 

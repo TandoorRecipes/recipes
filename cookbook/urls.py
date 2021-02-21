@@ -41,6 +41,7 @@ urlpatterns = [
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('no-space', views.no_space, name='view_no_space'),
+    path('no-perm', views.no_perm, name='view_no_perm'),
     path('signup/<slug:token>', views.signup, name='view_signup'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
