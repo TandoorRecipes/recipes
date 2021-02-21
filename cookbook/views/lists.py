@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
-from cookbook.filters import IngredientFilter, ShoppingListFilter
+from cookbook.filters import FoodFilter, ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import (Food, InviteLink, Keyword, RecipeImport,
                              ShoppingList, Storage, SyncLog)
@@ -56,7 +56,7 @@ def recipe_import(request):
 
 @group_required('user')
 def food(request):
-    f = IngredientFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
+    f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
 
     table = IngredientTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)

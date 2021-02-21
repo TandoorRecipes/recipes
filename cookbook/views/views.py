@@ -55,7 +55,7 @@ def index(request):
 
 def search(request):
     if has_group_permission(request.user, ('guest',)):
-        f = RecipeFilter(request.GET, queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'))
+        f = RecipeFilter(request.GET, queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'), space=request.space)
 
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
