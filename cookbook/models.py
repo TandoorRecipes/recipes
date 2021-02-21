@@ -45,7 +45,11 @@ class PermissionModelMixin:
 
 class Space(models.Model):
     name = models.CharField(max_length=128, default='Default')
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     message = models.CharField(max_length=512, default='', blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 class UserPreference(models.Model, PermissionModelMixin):
@@ -121,7 +125,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_auto_sync = models.IntegerField(default=5)
     sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
 
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
     objects = ScopedManager(space='space')
 
     def __str__(self):
@@ -168,7 +172,7 @@ class Sync(models.Model, PermissionModelMixin):
 
 
 class SupermarketCategory(models.Model, PermissionModelMixin):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -177,9 +181,12 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (('space', 'name'),)
+
 
 class Supermarket(models.Model, PermissionModelMixin):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
 
@@ -188,6 +195,9 @@ class Supermarket(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        unique_together = (('space', 'name'),)
 
 
 class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
@@ -218,7 +228,7 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 
 class Keyword(models.Model, PermissionModelMixin):
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -233,9 +243,12 @@ class Keyword(models.Model, PermissionModelMixin):
         else:
             return f"{self.name}"
 
+    class Meta:
+        unique_together = (('space', 'name'),)
+
 
 class Unit(models.Model, PermissionModelMixin):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -244,9 +257,12 @@ class Unit(models.Model, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (('space', 'name'),)
+
 
 class Food(models.Model, PermissionModelMixin):
-    name = models.CharField(unique=True, max_length=128, validators=[MinLengthValidator(1)])
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
     ignore_shopping = models.BooleanField(default=False)
@@ -257,6 +273,9 @@ class Food(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        unique_together = (('space', 'name'),)
 
 
 class Ingredient(models.Model, PermissionModelMixin):

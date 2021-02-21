@@ -212,3 +212,8 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
         context = super(InviteLinkCreate, self).get_context_data(**kwargs)
         context['title'] = _("Invite Link")
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs

@@ -111,17 +111,12 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def create(self, validated_data):
-        # since multi select tags dont have id's
-        # duplicate names might be routed to create
-        obj, created = Keyword.objects.get_or_create(name=validated_data['name'])
+        obj, created = Keyword.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
         return obj
 
     class Meta:
         model = Keyword
-        fields = (
-            'id', 'name', 'icon', 'label', 'description',
-            'created_at', 'updated_at'
-        )
+        fields = ('id', 'name', 'icon', 'label', 'description', 'created_at', 'updated_at')
 
         read_only_fields = ('id',)
 
@@ -129,9 +124,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
-        # since multi select tags dont have id's
-        # duplicate names might be routed to create
-        obj, created = Unit.objects.get_or_create(name=validated_data['name'])
+        obj, created = Unit.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
         return obj
 
     class Meta:
@@ -143,9 +136,7 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     def create(self, validated_data):
-        # since multi select tags dont have id's
-        # duplicate names might be routed to create
-        obj, created = SupermarketCategory.objects.get_or_create(name=validated_data['name'])
+        obj, created = SupermarketCategory.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
         return obj
 
     def update(self, instance, validated_data):
@@ -176,9 +167,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
-        # since multi select tags dont have id's
-        # duplicate names might be routed to create
-        obj, created = Food.objects.get_or_create(name=validated_data['name'])
+        obj, created = Food.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
         return obj
 
     def update(self, instance, validated_data):
@@ -256,6 +245,7 @@ class RecipeSerializer(WritableNestedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
 
@@ -455,4 +445,5 @@ class RecipeExportSerializer(WritableNestedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
         return super().create(validated_data)

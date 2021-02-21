@@ -40,6 +40,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
+    path('no-space', views.no_space, name='view_no_space'),
     path('signup/<slug:token>', views.signup, name='view_signup'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
@@ -104,7 +105,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path('offline/', views.offline, name='view_offline'),
-
 
     path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
     path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )), name='web_manifest'),
