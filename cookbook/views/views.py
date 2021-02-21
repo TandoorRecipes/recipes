@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
@@ -85,10 +86,6 @@ def search(request):
 
 
 def no_groups(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.GET['next'])
-    if request.user.is_authenticated and request.user.groups.count() > 0:
-        return HttpResponseRedirect(reverse('index'))
     return render(request, 'no_groups_info.html')
 
 
@@ -335,37 +332,40 @@ def system(request):
 
 
 def setup(request):
-    if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
-        messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
-        return HttpResponseRedirect(reverse('account_login'))
+    with scopes_disabled():
+        if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
+            messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
+            return HttpResponseRedirect(reverse('account_login'))
 
-    if request.method == 'POST':
-        form = UserCreateForm(request.POST)
-        if form.is_valid():
-            if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
-                form.add_error('password', _('Passwords dont match!'))
-            else:
-                user = User(username=form.cleaned_data['name'], is_superuser=True, is_staff=True)
-                try:
-                    validate_password(form.cleaned_data['password'], user=user)
-                    user.set_password(form.cleaned_data['password'])
-                    user.save()
-                    user.userpreference.space = Space.objects.first()
-                    user.userpreference.save()
+        if request.method == 'POST':
+            form = UserCreateForm(request.POST)
+            if form.is_valid():
+                if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+                    form.add_error('password', _('Passwords dont match!'))
+                else:
+                    user = User(username=form.cleaned_data['name'], is_superuser=True, is_staff=True)
+                    try:
+                        validate_password(form.cleaned_data['password'], user=user)
+                        user.set_password(form.cleaned_data['password'])
+                        user.save()
 
-                    with scopes_disabled():
+                        user.groups.add(Group.objects.get(name='admin'))
+
+                        user.userpreference.space = Space.objects.first()
+                        user.userpreference.save()
+
                         for x in Space.objects.all():
                             x.created_by = user
                             x.save()
-                    messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
-                    return HttpResponseRedirect(reverse('account_login'))
-                except ValidationError as e:
-                    for m in e:
-                        form.add_error('password', m)
-    else:
-        form = UserCreateForm()
+                        messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+                        return HttpResponseRedirect(reverse('account_login'))
+                    except ValidationError as e:
+                        for m in e:
+                            form.add_error('password', m)
+        else:
+            form = UserCreateForm()
 
-    return render(request, 'setup.html', {'form': form})
+        return render(request, 'setup.html', {'form': form})
 
 
 def signup(request, token):

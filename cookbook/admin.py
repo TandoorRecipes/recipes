@@ -22,7 +22,7 @@ admin.site.unregister(Group)
 
 
 class SpaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'message')
+    list_display = ('name', 'created_by', 'message')
 
 
 admin.site.register(Space, SpaceAdmin)
