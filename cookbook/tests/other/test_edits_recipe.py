@@ -11,15 +11,15 @@ class TestEditsRecipe(TestBase):
     def test_ld_json(self):
         test_list = [
             {'file': 'cookbook/tests/resources/websites/ld_json_1.html', 'result_length': 3237},
-            {'file': 'cookbook/tests/resources/websites/ld_json_2.html', 'result_length': 1510},
-            {'file': 'cookbook/tests/resources/websites/ld_json_3.html', 'result_length': 1629},
+            {'file': 'cookbook/tests/resources/websites/ld_json_2.html', 'result_length': 1525},
+            {'file': 'cookbook/tests/resources/websites/ld_json_3.html', 'result_length': 1644},
             {'file': 'cookbook/tests/resources/websites/ld_json_4.html', 'result_length': 1744},
-            {'file': 'cookbook/tests/resources/websites/ld_json_itemList.html', 'result_length': 3206},
+            {'file': 'cookbook/tests/resources/websites/ld_json_itemList.html', 'result_length': 3221},
             {'file': 'cookbook/tests/resources/websites/ld_json_multiple.html', 'result_length': 1621},
-            {'file': 'cookbook/tests/resources/websites/micro_data_1.html', 'result_length': 1079},
-            {'file': 'cookbook/tests/resources/websites/micro_data_2.html', 'result_length': 1438},
-            {'file': 'cookbook/tests/resources/websites/micro_data_3.html', 'result_length': 1148},
-            {'file': 'cookbook/tests/resources/websites/micro_data_4.html', 'result_length': 4396},
+            {'file': 'cookbook/tests/resources/websites/micro_data_1.html', 'result_length': 1094},
+            {'file': 'cookbook/tests/resources/websites/micro_data_2.html', 'result_length': 1453},
+            {'file': 'cookbook/tests/resources/websites/micro_data_3.html', 'result_length': 1163},
+            {'file': 'cookbook/tests/resources/websites/micro_data_4.html', 'result_length': 4411},
         ]
 
         for test in test_list:
