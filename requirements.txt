@@ -4,7 +4,7 @@ Django==3.1.6
 django-annoying==0.10.6
 django-autocomplete-light==3.8.1
 django-cleanup==5.1.0
-django-crispy-forms==1.11.0
+django-crispy-forms==1.11.1
 django-emoji-picker==0.0.6
 django-filter==2.4.0
 django-tables2==2.3.4
