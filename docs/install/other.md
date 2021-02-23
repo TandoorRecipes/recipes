@@ -35,6 +35,7 @@ docker-compose:
     environment:
       # all the other env
       - SCRIPT_NAME=/<sub path>
+      - JS_REVERSE_SCRIPT_PREFIX=/<sub path>/
       - STATIC_URL=/<www path>/static/
       - MEDIA_URL=/<www path>/media/
     labels:
