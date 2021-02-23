@@ -252,7 +252,7 @@ def shopping_list(request, pk=None):
         if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
             rid, multiplier = r.split(',')
             if recipe := Recipe.objects.filter(pk=int(rid)).first():
-                recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
+                recipes.append({'recipe': recipe.id, 'servings': multiplier})
 
     edit = True if 'edit' in request.GET and request.GET['edit'] == 'true' else False
 
