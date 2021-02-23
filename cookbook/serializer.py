@@ -5,6 +5,7 @@ from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import BaseSerializer, Serializer
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              MealPlan, MealType, NutritionInformation, Recipe,
@@ -39,6 +40,12 @@ class CustomDecimalField(serializers.Field):
                 raise ValidationError('A valid number is required')
 
 
+class CreateWithSpaceMixin(Serializer):
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+
 class UserNameSerializer(WritableNestedModelSerializer):
     username = serializers.SerializerMethodField('get_user_label')
 
@@ -61,7 +68,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
 
-class StorageSerializer(serializers.ModelSerializer):
+class StorageSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = Storage
         fields = (
@@ -75,7 +82,7 @@ class StorageSerializer(serializers.ModelSerializer):
         }
 
 
-class SyncSerializer(serializers.ModelSerializer):
+class SyncSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = Sync
         fields = (
@@ -84,7 +91,7 @@ class SyncSerializer(serializers.ModelSerializer):
         )
 
 
-class SyncLogSerializer(serializers.ModelSerializer):
+class SyncLogSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = SyncLog
         fields = ('id', 'sync', 'status', 'msg', 'created_at')
@@ -147,7 +154,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
         fields = ('id', 'name')
 
 
-class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
+class SupermarketCategoryRelationSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     category = SupermarketCategorySerializer()
 
     class Meta:
@@ -155,7 +162,7 @@ class SupermarketCategoryRelationSerializer(serializers.ModelSerializer):
         fields = ('id', 'category', 'supermarket', 'order')
 
 
-class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+class SupermarketSerializer(UniqueFieldsMixin, serializers.ModelSerializer, CreateWithSpaceMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
 
     class Meta:
@@ -255,7 +262,7 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
         fields = ['image', ]
 
 
-class RecipeImportSerializer(serializers.ModelSerializer):
+class RecipeImportSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = RecipeImport
         fields = '__all__'
@@ -267,7 +274,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RecipeBookSerializer(serializers.ModelSerializer):
+class RecipeBookSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = RecipeBook
         fields = '__all__'
@@ -280,13 +287,14 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MealTypeSerializer(serializers.ModelSerializer):
+class MealTypeSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = MealType
-        fields = '__all__'
+        fields = ('name', 'order', 'created_by')
+        read_only_fields = ('space',)
 
 
-class MealPlanSerializer(serializers.ModelSerializer):
+class MealPlanSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
@@ -304,7 +312,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
         )
 
 
-class ShoppingListRecipeSerializer(serializers.ModelSerializer):
+class ShoppingListRecipeSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     servings = CustomDecimalField()
 
@@ -314,7 +322,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class ShoppingListEntrySerializer(WritableNestedModelSerializer):
+class ShoppingListEntrySerializer(WritableNestedModelSerializer, CreateWithSpaceMixin):
     food = FoodSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
     amount = CustomDecimalField()
@@ -332,7 +340,7 @@ class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
         fields = ('id', 'checked')
 
 
-class ShoppingListSerializer(WritableNestedModelSerializer):
+class ShoppingListSerializer(WritableNestedModelSerializer, CreateWithSpaceMixin):
     recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
     shared = UserNameSerializer(many=True)
@@ -356,7 +364,7 @@ class ShoppingListAutoSyncSerializer(WritableNestedModelSerializer):
         read_only_fields = ('id',)
 
 
-class ShareLinkSerializer(serializers.ModelSerializer):
+class ShareLinkSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = ShareLink
         fields = '__all__'
@@ -365,6 +373,7 @@ class ShareLinkSerializer(serializers.ModelSerializer):
 class CookLogSerializer(serializers.ModelSerializer):
     def create(self, validated_data):  # TODO make mixin
         validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     class Meta:
@@ -373,7 +382,7 @@ class CookLogSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by')
 
 
-class ViewLogSerializer(serializers.ModelSerializer):
+class ViewLogSerializer(serializers.ModelSerializer, CreateWithSpaceMixin):
     class Meta:
         model = ViewLog
         fields = '__all__'
