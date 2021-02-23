@@ -211,6 +211,7 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = [
+    ('hy', _('Armenian ')),
     ('ca', _('Catalan')),
     ('cs', _('Czech')),
     ('nl', _('Dutch')),
