@@ -222,6 +222,8 @@ def find_recipe_json(ld_json, url):
         if 'recipeYield' in ld_json:
             if type(ld_json['recipeYield']) == str:
                 ld_json['servings'] = int(re.findall(r'\b\d+\b', ld_json['recipeYield'])[0])
+            elif type(ld_json['recipeYield']) == list:
+                ld_json['servings'] = int(re.findall(r'\b\d+\b', ld_json['recipeYield'][0])[0])
     except Exception as e:
         print(e)
         ld_json['servings'] = 1
