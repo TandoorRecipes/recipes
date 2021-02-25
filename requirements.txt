@@ -12,7 +12,7 @@ djangorestframework==3.12.2
 drf-writable-nested==0.6.2
 gunicorn==20.0.4
 lxml==4.6.2
-Markdown==3.3.3
+Markdown==3.3.4
 Pillow==8.1.0
 psycopg2-binary==2.8.6
 python-dotenv==0.15.0
