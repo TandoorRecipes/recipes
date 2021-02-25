@@ -69,8 +69,10 @@ def find_recipe_json(ld_json, url):
     if 'recipeIngredient' in ld_json:
         # some pages have comma separated ingredients in a single array entry
         if (len(ld_json['recipeIngredient']) == 1
-                and len(ld_json['recipeIngredient'][0]) > 30):
+                and type(ld_json['recipeIngredient']) == list):
             ld_json['recipeIngredient'] = ld_json['recipeIngredient'][0].split(',')  # noqa: E501
+        elif type(ld_json['recipeIngredient']) == str:
+            ld_json['recipeIngredient'] = ld_json['recipeIngredient'].split(',')
 
         for x in ld_json['recipeIngredient']:
             if '\n' in x:
