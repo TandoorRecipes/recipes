@@ -4,7 +4,6 @@ from cookbook.models import Keyword
 from cookbook.tests.views.test_views import TestViews
 from django.urls import reverse
 
-
 class TestApiKeyword(TestViews):
 
     def setUp(self):
@@ -62,6 +61,26 @@ class TestApiKeyword(TestViews):
         response = json.loads(r.content)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(response['name'], 'new')
+
+    def test_keyword_add(self):
+        r = self.user_client_1.post(
+            reverse('api:keyword-list'),
+            {'name': 'test'},
+            content_type='application/json'
+        )
+        response = json.loads(r.content)
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(response['name'], 'test')
+
+    def test_keyword_add_duplicate(self):
+        r = self.user_client_1.post(
+            reverse('api:keyword-list'),
+            {'name': self.keyword_1.name},
+            content_type='application/json'
+        )
+        response = json.loads(r.content)
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(response['name'], self.keyword_1.name)
 
     def test_keyword_delete(self):
         r = self.user_client_1.delete(
