@@ -241,3 +241,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
