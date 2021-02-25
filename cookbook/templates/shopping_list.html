@@ -542,6 +542,7 @@
                 this.loadShoppingList()
 
                 {% if recipes %}
+
                     this.loading = true
                     this.edit_mode = true
                     let loadingRecipes = []
@@ -605,6 +606,7 @@
                     })
                 },
                 loadInitialRecipe: function (recipe, servings) {
+                    servings = 1 //TODO temporary until i can actually fix the servings for this #453
                     return this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe)).then((response) => {
                         this.addRecipeToList(response.data, servings)
                     }).catch((err) => {

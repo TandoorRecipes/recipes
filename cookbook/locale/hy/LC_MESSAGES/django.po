@@ -4,11 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Benjamin Danowski <bjhdanowski@gmail.com>, 2020
-# vabene1111 <vabene1234@googlemail.com>, 2020
-# Aaron Dötsch, 2020
-# Tobias Lindenberg <tobias@lindenberg.pm>, 2021
-# Maximilian J, 2021
+# H K <hkocharyan@ctemplar.com>, 2021
 # 
 #, fuzzy
 msgid ""
@@ -17,12 +13,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-09 18:01+0100\n"
 "PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: Maximilian J, 2021\n"
-"Language-Team: German (https://www.transifex.com/django-recipes/teams/110507/de/)\n"
+"Last-Translator: H K <hkocharyan@ctemplar.com>, 2021\n"
+"Language-Team: Armenian (https://www.transifex.com/django-recipes/teams/110507/hy/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
+"Language: hy\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\cookbook\filters.py:22 .\cookbook\templates\base.html:87
@@ -30,47 +26,49 @@ msgstr ""
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28 .\cookbook\views\lists.py:72
 msgid "Ingredients"
-msgstr "Zutaten"
+msgstr "Բաղադրիչներ"
 
 #: .\cookbook\forms.py:44
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
-"Farbe der oberen Navigationsleiste. Nicht alle Farben passen, daher einfach "
-"mal ausprobieren!"
+"Վերին վահանակի գույնը։ Ոչ բոլոր գույներն են աշխատում բոլոր թեմաների հետ, "
+"պարզապես փորձեք։"
 
 #: .\cookbook\forms.py:45
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr "Standardeinheit für neue Zutaten."
+msgstr "Նոր բաղադրիչ ավելացնելիս չափի լռելյայն միավորը։"
 
 #: .\cookbook\forms.py:46
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
-"Unterstützung für Brüche in Zutaten aktivieren. Dadurch werden Dezimalzahlen"
-" mit Brüchen ersetzt, z.B. 0.5 mit ½."
+"Ակտիվացնել բաղադրիչների քանակի համար կոտորակների աջակցությունը (փոխակերպել "
+"տասնորդականները կոտորակների)"
 
 #: .\cookbook\forms.py:47
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
 msgstr ""
-"Nutzer, mit denen neue Pläne und Einkaufslisten standardmäßig geteilt werden"
-" sollen."
+"Օգտատերեր, ում հետ նոր ստեղծված ճաշացուցակները/գնումների ցուցակները պետք է "
+"կիսվեն լռելյայն"
 
 #: .\cookbook\forms.py:48
 msgid "Show recently viewed recipes on search page."
-msgstr "Zuletzt angeschaute Rezepte bei der Suche anzeigen."
+msgstr "Ցույց տալ վերջերս դիտած բաղադրատոմսերը փնտրման էջում։"
 
 #: .\cookbook\forms.py:49
 msgid "Number of decimals to round ingredients."
-msgstr "Anzahl an Dezimalstellen, auf die gerundet werden soll."
+msgstr "Բաղադրիչների կլորացման համար տասնորդականների քանակը"
 
 #: .\cookbook\forms.py:50
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr "Ob Kommentare unter Rezepten erstellt und angesehen werden können."
+msgstr ""
+"Եթե ցանկանում եք կարողանալ ավելացնել և տեսնել մեկնաբանություններ "
+"բաղադրատոմսերի ներքևում։"
 
 #: .\cookbook\forms.py:52
 msgid ""
@@ -79,136 +77,139 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
-"0 deaktiviert automatische Synchronisation. Wird eine Einkaufsliste "
-"betrachtet, dann wird wird sie gemäß der Einstellung alle paar Sekunden "
-"aktualisiert. Dies ist nützlich, wenn mehrere Personen eine Liste beim "
-"Einkaufen verwenden, benötigt jedoch etwas Datenvolumen."
+"0-ն կանջատի ավտոմատ սինքրոնացումը։ Գնումների ցուցակը թարմացվում է "
+"յուրաքանչյուր սահմանված վարկյանը մեկ, մեկ ուրիշի կատարած փոփոխությունները "
+"սինքրոնացնելու համար։ Հարմար է, երբ մեկից ավել մարդ է կատարում գնումները, "
+"բայց կարող է օգտագործել բջջային ինտերնետ։"
 
 #: .\cookbook\forms.py:55
 msgid "Makes the navbar stick to the top of the page."
-msgstr "Navigationsleiste wird oben angeheftet."
+msgstr "Կցել նավիգացիոն տողը էջի վերևում"
 
 #: .\cookbook\forms.py:71
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Beide Felder sind optional, wenn keins von beiden gegeben ist, wird der "
-"Nutzername angezeigt"
+"Երկու դաշտն էլ կամավոր են։ Դատարկ լինելու դեպքում օգտվողի անունը կցուցադրվի "
+"փոխարենը"
 
 #: .\cookbook\forms.py:92 .\cookbook\forms.py:113 .\cookbook\forms.py:277
 #: .\cookbook\templates\forms\edit_internal_recipe.html:45
 msgid "Name"
-msgstr "Name"
+msgstr "Անվանում"
 
 #: .\cookbook\forms.py:93 .\cookbook\forms.py:114 .\cookbook\forms.py:278
 #: .\cookbook\templates\base.html:94
 #: .\cookbook\templates\forms\edit_internal_recipe.html:71
 #: .\cookbook\templates\stats.html:24 .\cookbook\templates\url_import.html:183
 msgid "Keywords"
-msgstr "Schlagwörter"
+msgstr "Բանալի բառեր"
 
 #: .\cookbook\forms.py:94 .\cookbook\forms.py:115
 msgid "Preparation time in minutes"
-msgstr "Zubereitungszeit in Minuten"
+msgstr "Պատրաստման տևողությունը րոպեներով"
 
 #: .\cookbook\forms.py:95 .\cookbook\forms.py:116
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr "Wartezeit (kochen/backen) in Minuten"
+msgstr "Սպասման տևողությունը (եփել/թխել) րոպեներով"
 
 #: .\cookbook\forms.py:96 .\cookbook\forms.py:279
 msgid "Path"
-msgstr "Pfad"
+msgstr "Ուղի"
 
 #: .\cookbook\forms.py:97
 msgid "Storage UID"
-msgstr "Speicher-ID"
+msgstr "Պահոցի UID"
 
 #: .\cookbook\forms.py:117
 msgid "Number of servings"
-msgstr "Anzahl der Portionen"
+msgstr "Չափաբաժինների քանակը"
 
 #: .\cookbook\forms.py:128
 msgid ""
 "Include <code>- [ ]</code> in list for easier usage in markdown based "
 "documents."
 msgstr ""
-"Füge <code>- [ ]</code> vor den Zutaten ein, um sie besser in einem "
-"Markdown-Dokument zu verwenden."
+"Ներառել <code>- [ ]</code> ցուցակում markdown փաստաթղթերում հեշտ կիրառման "
+"համար։"
 
 #: .\cookbook\forms.py:143
 msgid "Default"
-msgstr "Standard"
+msgstr "Լռելյայն"
 
 #: .\cookbook\forms.py:162
 msgid "New Unit"
-msgstr "Neue Einheit"
+msgstr "Նոր միավոր"
 
 #: .\cookbook\forms.py:163
 msgid "New unit that other gets replaced by."
-msgstr "Neue Einheit, die die alte ersetzt."
+msgstr "Նոր միավոր հները փոխարինելու համար։"
 
 #: .\cookbook\forms.py:168
 msgid "Old Unit"
-msgstr "Alte Einheit"
+msgstr "Հին միավոր"
 
 #: .\cookbook\forms.py:169
 msgid "Unit that should be replaced."
-msgstr "Einheit, die ersetzt werden soll."
+msgstr "Փոխարինման ենթակա միավոր"
 
 #: .\cookbook\forms.py:179
 msgid "New Food"
-msgstr "Neue Zutat"
+msgstr "Նոր սննդամթերք"
 
 #: .\cookbook\forms.py:180
 msgid "New food that other gets replaced by."
-msgstr "Neue Zutat, die die alte ersetzt."
+msgstr "Նոր սննդամթերք, որով փոխարինվում է հինը։"
 
 #: .\cookbook\forms.py:185
 msgid "Old Food"
-msgstr "Alte Zutat"
+msgstr "Հին սննդամթերք"
 
 #: .\cookbook\forms.py:186
 msgid "Food that should be replaced."
-msgstr "Zutat, die ersetzt werden soll."
+msgstr "Փոխարինման ենթակա սննդամթերք։"
 
 #: .\cookbook\forms.py:198
 msgid "Add your comment: "
-msgstr "Schreibe einen Kommentar: "
+msgstr "Ավելացրեք ձեր մեկնաբանությունը՝"
 
 #: .\cookbook\forms.py:229
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr "Für Dropbox leer lassen, bei Nextcloud App-Passwort eingeben."
+msgstr ""
+"Թողնել դատարկ dropbox-ի համար և մուտքագրել ծրագրի գաղտնաբառը nextcloud-ի "
+"համար։"
 
 #: .\cookbook\forms.py:236
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr "Für Nextcloud leer lassen, für Dropbox API-Token eingeben."
+msgstr ""
+"Թողնել դատարկ nextcloud-ի համար և մուտքագրել ծրագրի ժետոնը dropbox-ի համար։"
 
 #: .\cookbook\forms.py:244
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud "
 "(<code>/remote.php/webdav/</code> is added automatically)"
 msgstr ""
-"Für Dropbox leer lassen, für Nextcloud Server-URL angeben "
-"(<code>/remote.php/webdav/</code> wird automatisch hinzugefügt)"
+"Թողնել դատարկ dropbox-ի համար և մուտքագրել միայն հիմքային հղումը nextcloud-ի"
+" համար (<code>/remote.php/webdav/</code> ինքնաբերաբար  ավելացվում է)"
 
 #: .\cookbook\forms.py:263
 msgid "Search String"
-msgstr "Suchwort"
+msgstr "Փնտրել շարքը"
 
 #: .\cookbook\forms.py:280
 msgid "File ID"
-msgstr "Datei-ID"
+msgstr "Ֆայլի ID"
 
 #: .\cookbook\forms.py:299
 msgid "You must provide at least a recipe or a title."
-msgstr "Mindestens ein Rezept oder ein Titel müssen angegeben werden."
+msgstr "Դուք պետք է տրամադրեք առնվազն բաղադրատոմս կամ վերնագիր"
 
 #: .\cookbook\forms.py:312
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
-"Benutzer, mit denen neue Rezepte standardmäßig geteilt werden sollen, können"
-" in den Einstellungen angegeben werden."
+"Դուք կարող եք կարգավորումներում ավելացնել այն օգտատերերին, ում հետ "
+"բաղադրատոմսերը պետք է կիսվեն լռելյայն"
 
 #: .\cookbook\forms.py:313
 #: .\cookbook\templates\forms\edit_internal_recipe.html:377
@@ -216,14 +217,14 @@ msgid ""
 "You can use markdown to format this field. See the <a "
 "href=\"/docs/markdown/\">docs here</a>"
 msgstr ""
-"Markdown kann genutzt werden, um dieses Feld zu formatieren. Siehe <a "
-"href=\"/docs/markdown/\">hier</a> für weitere Information."
+"Դուք կարող եք օգտագործել markdown-ն այս դաշտը ձևավորելու համար. Տեսեք <a "
+"href=\"/docs/markdown/\">փաստաթղթերն այստեղ</a>"
 
 #: .\cookbook\forms.py:328
 msgid "A username is not required, if left blank the new user can choose one."
 msgstr ""
-"Kein Benutzername benötigt. Wenn leer gelassen, kann der neue Benutzer einen"
-" wählen."
+"Օգտատերի անուն պարտադիր չէ, դատարկ թողնելու դեպքում նոր օգտատերը կարող է "
+"անձամբ ընտրել։"
 
 #: .\cookbook\helper\permission_helper.py:137
 #: .\cookbook\helper\permission_helper.py:206
@@ -232,117 +233,115 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:242 .\cookbook\views\data.py:32
 #: .\cookbook\views\views.py:106 .\cookbook\views\views.py:218
 msgid "You do not have the required permissions to view this page!"
-msgstr "Du hast nicht die notwendigen Rechte um diese Seite zu sehen!"
+msgstr "Դուք չունեք անհրաժեշտ թույլտվություն այս էջը դիտելու համար։"
 
 #: .\cookbook\helper\permission_helper.py:151
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Du bist nicht angemeldet, daher kannst du diese Seite nicht sehen!"
+msgstr "Դուք մուտք չեք գործել, հետևաբար չեք կարող տեսնել այս էջը։"
 
 #: .\cookbook\helper\permission_helper.py:161
 #: .\cookbook\helper\permission_helper.py:177
 #: .\cookbook\helper\permission_helper.py:192 .\cookbook\views\delete.py:146
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
-"Du kannst mit diesem Objekt nicht interagieren, da es dir nicht gehört!"
+msgstr "Դուք չեք կարող փոփոխել այս օբյեկտը, որովհետև այն չի պատկանում ձեզ։"
 
 #: .\cookbook\helper\recipe_url_import.py:39
 msgid "The requested site provided malformed data and cannot be read."
-msgstr ""
-"Die angefragte Seite hat ungültige Daten zurückgegeben oder die Daten "
-"konnten nicht verarbeitet werden."
+msgstr "Հարցված կայքը տրամադրեց վատ ձևավորված տվյալներ և չի կարող կարդացվել։"
 
 #: .\cookbook\helper\recipe_url_import.py:53
 msgid ""
 "The requested site does not provide any recognized data format to import the"
 " recipe from."
 msgstr ""
-"Die angefragte Seite stellt keine bekannten Datenformate zur Verfügung."
+"Հարցված կայքը չի տրամադրում որևէ ճանաչելի տվյալ բաղադրատոմսը ներմուծելու "
+"համար։"
 
 #: .\cookbook\helper\recipe_url_import.py:177
 msgid "Imported from"
-msgstr "Importiert von"
+msgstr "Ներմուծվել է՝"
 
 #: .\cookbook\integration\integration.py:97
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
-"Importer erwartet eine .zip Datei. Hast du den richtigen Importer-Typ für "
-"deine Daten ausgewählt?"
+"Ներմուծողն ակնկալում էր .zip ֆայլ։ Արդյո՞ք ձեր ֆայլին համապատասխանող ճիշտ "
+"տեսակի ներմուծող եք ընտրել։"
 
 #: .\cookbook\integration\safron.py:23
 #: .\cookbook\templates\forms\edit_internal_recipe.html:65
 #: .\cookbook\templates\include\log_cooking.html:16
 #: .\cookbook\templates\url_import.html:65
 msgid "Servings"
-msgstr "Portion(en)"
+msgstr "Չափաբաժիններ"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
-msgstr "Wartezeit"
+msgstr "Սպասման տևողություն"
 
 #: .\cookbook\integration\safron.py:27
 #: .\cookbook\templates\forms\edit_internal_recipe.html:59
 msgid "Preparation Time"
-msgstr "Vorbereitungszeit"
+msgstr "Պատրաստման տևողություն"
 
 #: .\cookbook\integration\safron.py:29 .\cookbook\templates\base.html:67
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "Kochbuch"
+msgstr "Խոհարարական գիրք "
 
 #: .\cookbook\integration\safron.py:31
 msgid "Section"
-msgstr "Sektion"
+msgstr "Բաժին"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:12
 msgid "Breakfast"
-msgstr "Frühstück"
+msgstr "Նախաճաշ"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:17
 msgid "Lunch"
-msgstr "Mittagessen"
+msgstr "Ճաշ"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:22
 msgid "Dinner"
-msgstr "Abendessen"
+msgstr "Ընթրիք"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:27
 msgid "Other"
-msgstr "Andere"
+msgstr "Այլ"
 
 #: .\cookbook\models.py:77 .\cookbook\templates\shopping_list.html:48
 msgid "Search"
-msgstr "Suche"
+msgstr "Փնտրել"
 
 #: .\cookbook\models.py:78 .\cookbook\templates\base.html:81
 #: .\cookbook\templates\meal_plan.html:5 .\cookbook\views\delete.py:165
 #: .\cookbook\views\edit.py:216 .\cookbook\views\new.py:189
 msgid "Meal-Plan"
-msgstr "Essensplan"
+msgstr "Ճաշացուցակ"
 
 #: .\cookbook\models.py:79 .\cookbook\templates\base.html:78
 msgid "Books"
-msgstr "Bücher"
+msgstr "Գրքեր"
 
 #: .\cookbook\models.py:86
 msgid "Small"
-msgstr "Klein"
+msgstr "Փոքր"
 
 #: .\cookbook\models.py:86
 msgid "Large"
-msgstr "Groß"
+msgstr "Մեծ"
 
 #: .\cookbook\models.py:242
 #: .\cookbook\templates\forms\edit_internal_recipe.html:198
 msgid "Text"
-msgstr "Text"
+msgstr "Տեքստ"
 
 #: .\cookbook\models.py:242
 #: .\cookbook\templates\forms\edit_internal_recipe.html:199
 msgid "Time"
-msgstr "Zeit"
+msgstr "Ժամանակ"
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\books.html:36
 #: .\cookbook\templates\generic\edit_template.html:6
@@ -351,7 +350,7 @@ msgstr "Zeit"
 #: .\cookbook\templates\recipes_table.html:77
 #: .\cookbook\templates\shopping_list.html:33
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr "Խմբագրել"
 
 #: .\cookbook\tables.py:124 .\cookbook\tables.py:147
 #: .\cookbook\templates\books.html:38
@@ -360,154 +359,156 @@ msgstr "Bearbeiten"
 #: .\cookbook\templates\generic\edit_template.html:27
 #: .\cookbook\templates\meal_plan.html:277
 msgid "Delete"
-msgstr "Löschen"
+msgstr "Ջնջել"
 
 #: .\cookbook\tables.py:144
 msgid "Link"
-msgstr "Link"
+msgstr "Հղում"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr "404 Fehler"
+msgstr "Սխալ 404"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr "Die angeforderte Seite konnte nicht gefunden werden."
+msgstr "Ձեր փնտրած էջը հնարավոր չէ գտնել։"
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr "Zur Hauptseite"
+msgstr "Գնալ տուն"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr "Fehler melden"
+msgstr "Զեկուցել սխալի մասին"
 
 #: .\cookbook\templates\account\login.html:7
 #: .\cookbook\templates\base.html:166
 msgid "Login"
-msgstr "Anmelden"
+msgstr "Մուտք"
 
 #: .\cookbook\templates\account\login.html:13
 #: .\cookbook\templates\account\login.html:28
 msgid "Sign In"
-msgstr "Einloggen"
+msgstr "Մուտք գործել"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Social Login"
-msgstr "Social Login"
+msgstr "Մուտք Սոցիալական էջով"
 
 #: .\cookbook\templates\account\login.html:39
 msgid "You can use any of the following providers to sign in."
-msgstr "Du kannst jeden der folgenden Anbieter zum Einloggen verwenden."
+msgstr ""
+"Դուք կարող եք օգտագործել հետևյալ պրովայդերներից ցանկացածը մուտք գործելու "
+"համար։"
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr "Ausloggen"
+msgstr "Դուրս գալ"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr "Willst du dich wirklich ausloggen?"
+msgstr "Համոզվա՞ծ եք, որ ցանկանում եք դուրս գալ"
 
 #: .\cookbook\templates\account\password_reset.html:5
 #: .\cookbook\templates\account\password_reset_done.html:5
 msgid "Password Reset"
-msgstr "Passwort Reset"
+msgstr "Գաղտնաբառի վերականգնում"
 
 #: .\cookbook\templates\account\password_reset.html:9
 #: .\cookbook\templates\account\password_reset_done.html:9
 msgid "Password reset is not implemented for the time being!"
-msgstr "Passwort-Rücksetzung ist derzeit noch nicht implementiert!"
+msgstr "Գաղտնաբառի վերականգնում առայժմ իրականացված չէ"
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
-msgstr "Registrieren"
+msgstr "Գրանցվել"
 
 #: .\cookbook\templates\account\signup.html:9
 msgid "Create your Account"
-msgstr "Account erstellen"
+msgstr "Ստեղծեք ձեր հաշիվը"
 
 #: .\cookbook\templates\account\signup.html:14
 msgid "Create User"
-msgstr "Nutzer erstellen"
+msgstr "Ստեղծել օգտատեր"
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:156
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr "API-Dokumentation"
+msgstr "API-ի փաստաթղթեր"
 
 #: .\cookbook\templates\base.html:74
 msgid "Utensils"
-msgstr "Utensilien"
+msgstr "Գործիքակազմ"
 
 #: .\cookbook\templates\base.html:84
 msgid "Shopping"
-msgstr "Einkaufsliste"
+msgstr "Գնումներ"
 
 #: .\cookbook\templates\base.html:98 .\cookbook\views\delete.py:84
 #: .\cookbook\views\edit.py:83 .\cookbook\views\lists.py:26
 #: .\cookbook\views\new.py:62
 msgid "Keyword"
-msgstr "Schlagwort"
+msgstr "Բանալի բառ"
 
 #: .\cookbook\templates\base.html:100
 msgid "Batch Edit"
-msgstr "Massenbearbeitung"
+msgstr "Խմբային խմբագրում"
 
 #: .\cookbook\templates\base.html:105
 msgid "Storage Data"
-msgstr "Datenquellen"
+msgstr "Պահոցի տվյալներ"
 
 #: .\cookbook\templates\base.html:109
 msgid "Storage Backends"
-msgstr "Speicherquellen"
+msgstr "Պահոցի բեքենդեր"
 
 #: .\cookbook\templates\base.html:111
 msgid "Configure Sync"
-msgstr "Synchronisation einstellen"
+msgstr "Կարգավորել սինքրոնիզացիան"
 
 #: .\cookbook\templates\base.html:113
 msgid "Discovered Recipes"
-msgstr "Entdeckte Rezepte"
+msgstr "Հայտնաբերված բաղադրատոմսեր"
 
 #: .\cookbook\templates\base.html:115
 msgid "Discovery Log"
-msgstr "Entdeckungsverlauf"
+msgstr "Բացահայտումների մատյան"
 
 #: .\cookbook\templates\base.html:117 .\cookbook\templates\stats.html:10
 msgid "Statistics"
-msgstr "Statistiken"
+msgstr "Վիճակագրություն "
 
 #: .\cookbook\templates\base.html:119
 msgid "Units & Ingredients"
-msgstr "Einheiten & Zutaten"
+msgstr "Միավորներ և բաղադրիչներ"
 
 #: .\cookbook\templates\base.html:121
 msgid "Import Recipe"
-msgstr "Rezept importieren"
+msgstr "Ներմուծել բաղադրատոմս"
 
 #: .\cookbook\templates\base.html:140 .\cookbook\templates\settings.html:6
 #: .\cookbook\templates\settings.html:16
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr "Կարգավորումներ"
 
 #: .\cookbook\templates\base.html:142 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr "Verlauf"
+msgstr "Պատմություն"
 
 #: .\cookbook\templates\base.html:146 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr "System"
+msgstr "Համակարգ"
 
 #: .\cookbook\templates\base.html:148
 msgid "Admin"
-msgstr "Admin"
+msgstr "Ադմինիստրատոր"
 
 #: .\cookbook\templates\base.html:152
 msgid "Markdown Guide"
-msgstr "Markdown-Anleitung"
+msgstr "Markdown-ի ուղեցույց"
 
 #: .\cookbook\templates\base.html:154
 msgid "GitHub"
@@ -515,103 +516,103 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:158
 msgid "API Browser"
-msgstr "API Browser"
+msgstr "API բրաուզեր"
 
 #: .\cookbook\templates\base.html:161
 msgid "Logout"
-msgstr "Abmelden"
+msgstr "Դուրս գալ"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr "Kategorie-Massenbearbeitung"
+msgstr "Կատեգորիաների խմբային խմբագրում"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr "Rezept-Massenbearbeitung"
+msgstr "Բաղադրատոմսերի խմբային խմբագրում"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
-"Ausgewählte Schlagwörter zu allen Rezepten, die das Suchwort enthalten, "
-"hinzufügen"
+"Ավելացնել նշված բանալի բառերը բոլոր բաղադրատոմսերին, որոնք պարունակում են "
+"բառ"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:66
 msgid "Sync"
-msgstr "Synchronisieren"
+msgstr "Սինքրոնիզացնել"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr "Überwachte Ordner verwalten"
+msgstr "Կարգավորել դիտվող թղթապանակները"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
-"Auf dieser Seite kannst du alle Ordner verwalten, die überwacht und "
-"synchronisiert werden sollen."
+"Այս էջում կարող եք կարգավորել այն պահպաման թղթապանակները, որոնք պետք է "
+"վերահսկվեն և սինքրոնիզացվեն։"
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr "Der Pfad muss folgendes Format haben"
+msgstr "Ուղին պետք է լինի հետևյալ ձևաչափով՝"
 
 #: .\cookbook\templates\batch\monitor.html:27
 msgid "Sync Now!"
-msgstr "Jetzt Synchronisieren!"
+msgstr "Սինքրոնիզացնել հիմա։"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr "Rezepte werden importiert"
+msgstr "Բաղադրատոմսերի ներմուծում"
 
 #: .\cookbook\templates\batch\waiting.html:23
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
-"Abhängig von der Anzahl der Rezepte kann dieser Vorgang einige Minuten "
-"dauern, bitte gedulde dich ein wenig."
+"Կախված սինքրոնիզացվող բաղադրատոմսերի քանակից, պրոցեսը կարող է տևել մի քանի "
+"րոպե, խնդրում ենք սպասել։"
 
 #: .\cookbook\templates\books.html:5 .\cookbook\templates\books.html:11
 msgid "Recipe Books"
-msgstr "Rezeptbuch"
+msgstr "Բաղադրատոմսերի գիրք"
 
 #: .\cookbook\templates\books.html:15
 msgid "New Book"
-msgstr "Neues Buch"
+msgstr "Նոր գիրք"
 
 #: .\cookbook\templates\books.html:27 .\cookbook\templates\recipe_view.html:26
 msgid "by"
-msgstr "von"
+msgstr "Հեղինակ"
 
 #: .\cookbook\templates\books.html:34
 msgid "Toggle Recipes"
-msgstr "Rezepte umschalten"
+msgstr "Փոխանջատել Բաղադրատոմսերը"
 
 #: .\cookbook\templates\books.html:54
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipes_table.html:59
 msgid "Last cooked"
-msgstr "Zuletzt gekocht"
+msgstr "Վերջին պատրաստումը"
 
 #: .\cookbook\templates\books.html:71
 msgid "There are no recipes in this book yet."
-msgstr "In diesem Buch sind bisher noch keine Rezepte."
+msgstr "Այս գրքում բաղադրատոմսեր դեռ չկան։"
 
 #: .\cookbook\templates\export.html:6 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr "Rezepte exportieren"
+msgstr "Արտահանել բաղադրատոմսերը"
 
 #: .\cookbook\templates\export.html:14 .\cookbook\templates\export.html:20
 #: .\cookbook\templates\shopping_list.html:345
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr "Exportieren"
+msgstr "Արտահանել"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr "Rezept importieren"
+msgstr "Ներմուծել նոր բաղադրատոմս"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
 #: .\cookbook\templates\forms\edit_internal_recipe.html:389
@@ -624,98 +625,98 @@ msgstr "Rezept importieren"
 #: .\cookbook\templates\settings.html:58 .\cookbook\templates\settings.html:73
 #: .\cookbook\templates\shopping_list.html:347
 msgid "Save"
-msgstr "Speichern"
+msgstr "Պահպանել"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 #: .\cookbook\templates\forms\edit_internal_recipe.html:34
 msgid "Edit Recipe"
-msgstr "Rezept bearbeiten"
+msgstr "Խմբագրել բաղադրատոմսը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:62
 msgid "Waiting Time"
-msgstr "Wartezeit"
+msgstr "Սպասման տևողություն"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:68
 msgid "Servings Text"
-msgstr "Portionen-Text"
+msgstr "Չափաբաժինների տեքստ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:79
 msgid "Select Keywords"
-msgstr "Schlagwörter wählen"
+msgstr "Ընտրել բանալի բառեր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:93
 msgid "Description"
-msgstr "Beschreibung"
+msgstr "Նկարագրություն"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:108
 msgid "Nutrition"
-msgstr "Nährwerte"
+msgstr "Սննդայնություն"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:112
 #: .\cookbook\templates\forms\edit_internal_recipe.html:162
 msgid "Delete Step"
-msgstr "Schritt löschen"
+msgstr "Ջնջել քայլը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:116
 msgid "Calories"
-msgstr "Kalorien"
+msgstr "Կալորիաներ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:119
 msgid "Carbohydrates"
-msgstr "Kohlenhydrate"
+msgstr "Ածխաջրեր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:122
 msgid "Fats"
-msgstr "Fette"
+msgstr "Ճարպեր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:124
 msgid "Proteins"
-msgstr "Proteine"
+msgstr "Սպիտակուցներ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:146
 #: .\cookbook\templates\forms\edit_internal_recipe.html:454
 msgid "Step"
-msgstr "Schritt"
+msgstr "Քայլ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:167
 msgid "Show as header"
-msgstr "Als Überschrift anzeigen"
+msgstr "Ցույց տալ որպես խորագիր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:173
 msgid "Hide as header"
-msgstr "Nicht als Überschrift anzeigen"
+msgstr "Թաքցնել որպես խորագիր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:178
 msgid "Move Up"
-msgstr "Nach oben"
+msgstr "Բարձրացնել"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:183
 msgid "Move Down"
-msgstr "Nach unten"
+msgstr "Իջեցնել"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:192
 msgid "Step Name"
-msgstr "Name des Schritts"
+msgstr "Քայլի անվանում"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:196
 msgid "Step Type"
-msgstr "Art des Schritts"
+msgstr "Քայլի տեսակ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:207
 msgid "Step time in Minutes"
-msgstr "Zeit in Minuten"
+msgstr "Քայլի տևողությունը րոպեներով"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:261
 #: .\cookbook\templates\shopping_list.html:181
 msgid "Select Unit"
-msgstr "Einheit wählen"
+msgstr "Ընտրել միավորը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:262
 #: .\cookbook\templates\forms\edit_internal_recipe.html:286
 #: .\cookbook\templates\shopping_list.html:182
 #: .\cookbook\templates\shopping_list.html:204
 msgid "Create"
-msgstr "Erstellen"
+msgstr "Ստեղծել"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:263
 #: .\cookbook\templates\forms\edit_internal_recipe.html:287
@@ -726,85 +727,85 @@ msgstr "Erstellen"
 #: .\cookbook\templates\url_import.html:105
 #: .\cookbook\templates\url_import.html:137
 msgid "Select"
-msgstr "Auswählen"
+msgstr "Ընտրել"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:285
 #: .\cookbook\templates\shopping_list.html:203
 msgid "Select Food"
-msgstr "Zutat auswählen"
+msgstr "Ընտրել սննդամթերք"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:302
 #: .\cookbook\templates\meal_plan.html:256
 #: .\cookbook\templates\url_import.html:152
 msgid "Note"
-msgstr "Notiz"
+msgstr "Նոթեր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:319
 msgid "Delete Ingredient"
-msgstr "Zutat löschen"
+msgstr "Ջնջել բաղադրիչը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:325
 msgid "Make Header"
-msgstr "Überschrift erstellen"
+msgstr "Ստեղծել Խորագիր"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:331
 msgid "Make Ingredient"
-msgstr "Zutat erstellen"
+msgstr "Ստեղծել բաղդրիչ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:337
 msgid "Disable Amount"
-msgstr "Menge deaktivieren"
+msgstr "Անջատել քանակը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:343
 msgid "Enable Amount"
-msgstr "Menge aktivieren"
+msgstr "Միացնել քանակը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:348
 msgid "Copy Template Reference"
-msgstr "Kopiere Vorlagen-Referenz"
+msgstr "Պատճենել ձևանմուշի հղումը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:374
 #: .\cookbook\templates\url_import.html:177
 msgid "Instructions"
-msgstr "Anleitung"
+msgstr "Հրահանգներ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:387
 #: .\cookbook\templates\forms\edit_internal_recipe.html:418
 msgid "Save & View"
-msgstr "Speichern & Ansehen"
+msgstr "Պահպանել և Դիտել"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:391
 #: .\cookbook\templates\forms\edit_internal_recipe.html:424
 msgid "Add Step"
-msgstr "Schritt hinzufügen"
+msgstr "Ավելացնել քայլ"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:394
 #: .\cookbook\templates\forms\edit_internal_recipe.html:428
 msgid "Add Nutrition"
-msgstr "Nährwerte hinzufügen"
+msgstr "Ավելացնել Սննդայնություն"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:396
 #: .\cookbook\templates\forms\edit_internal_recipe.html:430
 msgid "Remove Nutrition"
-msgstr "Nährwerte entfernen"
+msgstr "Հեռացնել Սննդայնություն"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:398
 #: .\cookbook\templates\forms\edit_internal_recipe.html:433
 msgid "View Recipe"
-msgstr "Rezept ansehen"
+msgstr "Դիտել բաղադրատոմսը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:400
 #: .\cookbook\templates\forms\edit_internal_recipe.html:435
 msgid "Delete Recipe"
-msgstr "Rezept löschen"
+msgstr "Ջնջել բաղադրատոմսը"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:441
 msgid "Steps"
-msgstr "Schritte"
+msgstr "Քայլեր"
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr "Zutaten bearbeiten"
+msgstr "Խմբագրել բաղադրիչները"
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
@@ -815,108 +816,105 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Dieses Formular kann genutzt werden, wenn versehentlich zwei (oder mehr) Einheiten oder Zutaten erstellt wurden, die eigentlich identisch\n"
-"        sein sollen.\n"
-"        Es vereint zwei Zutaten oder Einheiten und aktualisiert alle entsprechenden Rezepte.\n"
+"        Հետևյալ բլանկը կարող է օգտագործվել, եթե երկու (կամ ավելի) միավորներ կամ բաղադրիչներ ստեղծվել են սխալմամբ, սակայն պետք է լինեն  \n"
+"        նույնը։\n"
+"        Սա միավորում է երկու միավորները կամ բաղադրիչները և թարմացնում դրանք օգտագործող բոլոր բաղադրատոմսերը։ \n"
 "    "
 
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\stats.html:26
 msgid "Units"
-msgstr "Einheiten"
+msgstr "Միավորներ"
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
-msgstr ""
-"Bist du dir sicher, dass du diese beiden Einheiten zusammenführen möchtest?"
+msgstr "Համոզվա՞ծ եք, որ ցանկանում եք միավորել այս երկու միավորները։"
 
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr "Zusammenführen"
+msgstr "Միավորել"
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
-msgstr ""
-"Bist du dir sicher, dass du diese beiden Zutaten zusammenführen möchtest?"
+msgstr "Համոզվա՞ծ եք, որ ցանկանում եք միավորել այս երկու բաղադրիչները։"
 
 #: .\cookbook\templates\generic\delete_template.html:18
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr ""
-"Bist du sicher, dass %(title)s: <b>%(object)s</b> gelöscht werden soll?"
+msgstr "Համոզվա՞ծ եք, որ ուզում եք ջնջել %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:21
 msgid "Confirm"
-msgstr "Bestätigen"
+msgstr "Հաստատել"
 
 #: .\cookbook\templates\generic\edit_template.html:30
 msgid "View"
-msgstr "Anschauen"
+msgstr "Դիտել"
 
 #: .\cookbook\templates\generic\edit_template.html:34
 msgid "Delete original file"
-msgstr "Original löschen"
+msgstr "Ջնջել բնօրինակ ֆայլը"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:12
 msgid "List"
-msgstr "Liste"
+msgstr "Ցուցակ"
 
 #: .\cookbook\templates\generic\list_template.html:25
 msgid "Filter"
-msgstr "Filter"
+msgstr "Ֆիլտր"
 
 #: .\cookbook\templates\generic\list_template.html:30
 msgid "Import all"
-msgstr "Alle importieren"
+msgstr "Ներմուծել բոլորը"
 
 #: .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New"
-msgstr "Neu"
+msgstr "Նոր"
 
 #: .\cookbook\templates\generic\table_template.html:76
 #: .\cookbook\templates\recipes_table.html:112
 msgid "previous"
-msgstr "vorherige"
+msgstr "նախորդ"
 
 #: .\cookbook\templates\generic\table_template.html:98
 #: .\cookbook\templates\recipes_table.html:134
 msgid "next"
-msgstr "nächste"
+msgstr "հաջորդ"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr "Anschau-Verlauf"
+msgstr "Դիտումների մատյան"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr "Kochverlauf"
+msgstr "Եփելու մատյան"
 
 #: .\cookbook\templates\import.html:6 .\cookbook\templates\test.html:6
 msgid "Import Recipes"
-msgstr "Rezepte importieren"
+msgstr "Ներմուծել բաղադրատոմսերը"
 
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
 #: .\cookbook\templates\test.html:14 .\cookbook\templates\test.html:20
 #: .\cookbook\templates\url_import.html:211 .\cookbook\views\delete.py:60
 #: .\cookbook\views\edit.py:182
 msgid "Import"
-msgstr "Importieren"
+msgstr "Ներմուծել"
 
 #: .\cookbook\templates\include\log_cooking.html:7
 msgid "Log Recipe Cooking"
-msgstr "Kochen protokollieren"
+msgstr "Գրանցել բաղադրատոմսի օգտագործում"
 
 #: .\cookbook\templates\include\log_cooking.html:13
 msgid "All fields are optional and can be left empty."
-msgstr "Alle Felder sind optional und können leer gelassen werden."
+msgstr "Բոլոր դաշտերը կամավոր են և կարող են դատարկ թողնվել"
 
 #: .\cookbook\templates\include\log_cooking.html:19
 msgid "Rating"
-msgstr "Bewertung"
+msgstr "Վարկանիշ"
 
 #: .\cookbook\templates\include\log_cooking.html:27
 #: .\cookbook\templates\include\recipe_open_modal.html:18
@@ -924,21 +922,21 @@ msgstr "Bewertung"
 #: .\cookbook\templates\meal_plan.html:327
 #: .\cookbook\templates\meal_plan.html:366
 msgid "Close"
-msgstr "Schließen"
+msgstr "Փակել"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:7
 #: .\cookbook\templates\meal_plan.html:247 .\cookbook\views\delete.py:28
 #: .\cookbook\views\edit.py:262 .\cookbook\views\new.py:40
 msgid "Recipe"
-msgstr "Rezept"
+msgstr "Բաղադրատոմս"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
-msgstr "Rezept öffnen"
+msgstr "Բացել բաղադրատոմսը"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr "Sicherheitswarnung"
+msgstr "Անվտանգության զգուշացում"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -950,48 +948,49 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"         <b>Password und Token</b> werden im <b>Klartext</b> in der Datenbank gespeichert.\n"
-"        Dies ist notwendig da Passwort oder Token benötigt werden, um API-Anfragen zu stellen, bringt jedoch auch ein Sicherheitsrisiko mit sich. <br/>\n"
-"        Um das Risiko zu minimieren sollten, wenn möglich, Tokens oder Accounts mit limitiertem Zugriff verwendet werden.\n"
+"        <b>Գաղտնաբառ և ժետոն</b> դաշտերը պահպանվում են որպես <b>հասարակ տեքստ</b> շտեմարանի մեջ։\n"
+"        Սա անհրաժեշտ է, որովհետև դրանք օգտագործվում են API հարցումների համար, բայց դա նաև ավելացնում է ռիսկը, որ \n"
+"        ինչ-որ մեկը կգօողանա դրանք։ <br/>\n"
+"        Վնասը սահմանափակելու համար կարող են կիրառվել սահմանափակ թույլտվությամբ ժետոններ կամ հաշիվներ։\n"
 "    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr "Rezept suchen..."
+msgstr "Փնտրել բաղադրատոմս"
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr "Neues Rezept"
+msgstr "Նոր Բաղադրատոմս"
 
 #: .\cookbook\templates\index.html:47
 msgid "Website Import"
-msgstr "Webseiten-Import"
+msgstr "Ներմուծում վեբկայքից"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr "Erweiterte Suche"
+msgstr "Հավելյալ որոնում"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr "Suche zurücksetzen"
+msgstr "Զրոյացնել որոնումը"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr "Zuletzt angesehen"
+msgstr "Վերջին դիտածը"
 
 #: .\cookbook\templates\index.html:87 .\cookbook\templates\meal_plan.html:178
 #: .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr "Rezepte"
+msgstr "Բաղադրատոմսեր"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr "Einloggen, um Rezepte anzusehen"
+msgstr "Մուտք գործեք բաղադրատոմսերը դիտելու համար"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr "Markdown-Übersicht"
+msgstr "Markdown-ի մասին տեղեկություն"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -1004,57 +1003,62 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Markdown ist eine Schreibweise mit der Text einfach formatiert werden kann. Diese Seite benutzt <a href=\"https\\://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a>, eine Bibliothek, die reinen Text in schönes HTML umwandelt. Die komplette Dokumentation befindet sich <a href=\"https\\://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">hier</a>. Die wichtigsten Formatierungszeichen befinden sich hier auf dieser Seite."
+"        Markdown-ը թեթև markup լեզու է, որը կարող է օգտագործվել պարզ տեքստը ձևավորելու համար։\n"
+"        Այս կայքն օգտագործում է<a href=\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> գրադարանը\n"
+"        ձեր տեքստը գեղեցիկ HTML-ի ձևափոխելու համար։ Markdown-ի ամբողջական ուղեցույցերը կարող եք գտնել\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">այստեղ</a>։\n"
+"        Ոչ լրիվ, բայց հավանաբար բավարար ուղեցույցեր կարող եք գտնել ներքևում։\n"
+"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr "Überschriften"
+msgstr "Խորագրեր"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr "Formatierung"
+msgstr "Ձևավորում"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
-msgstr "Zeilenumbrüche entstehen durch zwei Leerzeichen am ende einer Zeile"
+msgstr "Տողերի տրոհում կարելի է տեղադրել տողի վերջում ավելացնելող երկու բացատ"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line inbetween."
-msgstr "oder durch eine leere Zeile dazwischen."
+msgstr "կամ դատարկ տող թողնելով։"
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr "Dieser Text ist fett"
+msgstr "Այս տեքստը թավ տառատեսակով է"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr "Dieser Text ist kursiv"
+msgstr "Այս տեքստը շեղատառ է"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr "Zitate sind auch möglich"
+msgstr "Blockquote-ներ նույնպես հնարավոր են"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr "Listen"
+msgstr "Ցուցակներ"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
 "Lists can ordered or unorderd. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
-"Liste können sortiert oder unsortiert sein. Es ist <b>wichtig das eine leere"
-" Zeile vor der Liste frei gelassen wird!</b>"
+"Ցուցակները կարող են լինել կարգավորված կամ անկարգավորված։ Շատ<b>կարևոր է "
+"թողնել դատարկ տող ցուցաից առաջ։</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr "Geordnete Liste"
+msgstr "Կարգավորված ցուցակ"
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -1063,12 +1067,12 @@ msgstr "Geordnete Liste"
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr "Ungeordneter Listeneintrag"
+msgstr "չկարգավորված ցուցակի իր"
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr "Ungeordnete Liste"
+msgstr "Չկարգավորված ցուցակ"
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -1077,28 +1081,28 @@ msgstr "Ungeordnete Liste"
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr "Geordneter Listeneintrag"
+msgstr "կարգավորված ցուցակի իր"
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr "Bilder & Links"
+msgstr "Նկարներ և հղումներ"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
-"Links können mit Markdown formatiert werden, aber es ist auch möglich, Links"
-" vollständig ohne Formatierung einzufügen."
+"Հղումները կարող են խմբագրվել Markdown-ի օգնությամբ։ Այս ծրագրում հնարավոր է "
+"անմիջապես տեղադրել հղումներ markdown դաշտում առանց որևէ խմբագրման։"
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr "Dies wird ein Bild werden"
+msgstr "Սա կդառնա նկար"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr "Tabellen"
+msgstr "Աղյուսակներ"
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
@@ -1106,44 +1110,44 @@ msgid ""
 " editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
 "rel=\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
-"Es ist schwierig, Markdown-Tabellen von Hand zu erstellen. Daher bietet es "
-"sich an, Werkzeuge wie <a "
-"href=\"https://www.tablesgenerator.com/markdown_tables\" "
-"target=\"_blank\">dieses hier</a> zu verwenden."
+"Markdown աղյուսակները դժվար է ստեղծել ձեռքով։ Խորհուրդ է տրվում օգտագործել "
+"աղյուսակների խմբագիր, օրինակ <a "
+"href=\"https://www.tablesgenerator.com/markdown_tables\" rel=\"noreferrer "
+"noopener\" target=\"_blank\">այս մեկը։</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr "Tabelle"
+msgstr "Աղյուսակ"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr "Überschrift"
+msgstr "Խորագիր"
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr "Zelle"
+msgstr "Բջիջ"
 
 #: .\cookbook\templates\meal_plan.html:101
 msgid "New Entry"
-msgstr "Neuer Eintrag"
+msgstr "Նոր գրառում"
 
 #: .\cookbook\templates\meal_plan.html:113
 #: .\cookbook\templates\shopping_list.html:52
 msgid "Search Recipe"
-msgstr "Rezept suchen"
+msgstr "Փնտրել բաղադրատոմս"
 
 #: .\cookbook\templates\meal_plan.html:139
 msgid "Title"
-msgstr "Titel"
+msgstr "Վերնագիր"
 
 #: .\cookbook\templates\meal_plan.html:141
 msgid "Note (optional)"
-msgstr "Notiz (optional)"
+msgstr "Նոթեր (կամավոր)"
 
 #: .\cookbook\templates\meal_plan.html:143
 msgid ""
@@ -1151,89 +1155,89 @@ msgid ""
 "href=\"/docs/markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">docs "
 "here</a>"
 msgstr ""
-"Dieses Feld Unterstützt Markdown Formatierung. Siehe <a "
+"Դուք կարող եք օգտագործել markdown-ն այս դաշտը ձևավորելու համար. Տեսեք <a "
 "href=\"/docs/markdown/\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">Dokumentation</a>"
+"noreferrer\">փաստաթղթերն այստեղ</a>"
 
 #: .\cookbook\templates\meal_plan.html:147
 #: .\cookbook\templates\meal_plan.html:251
 msgid "Serving Count"
-msgstr "Anzahl Portionen"
+msgstr "Չափաբաժինների քանակ"
 
 #: .\cookbook\templates\meal_plan.html:153
 msgid "Create only note"
-msgstr "Nur Notiz erstellen"
+msgstr "Ստեղծել միայն նոթեր"
 
 #: .\cookbook\templates\meal_plan.html:168
 #: .\cookbook\templates\shopping_list.html:7
 #: .\cookbook\templates\shopping_list.html:29
 #: .\cookbook\templates\shopping_list.html:693
 msgid "Shopping List"
-msgstr "Einkaufsliste"
+msgstr "Գնումների ցուցակ"
 
 #: .\cookbook\templates\meal_plan.html:172
 msgid "Shopping list currently empty"
-msgstr "Die Einkaufsliste ist aktuell leer"
+msgstr "Գնումների ցուցակը դատարկ է"
 
 #: .\cookbook\templates\meal_plan.html:175
 msgid "Open Shopping List"
-msgstr "Einkaufsliste öffnen"
+msgstr "Բացել գնումների ցուցակը"
 
 #: .\cookbook\templates\meal_plan.html:189
 msgid "Plan"
-msgstr "Plan"
+msgstr "Պլան"
 
 #: .\cookbook\templates\meal_plan.html:196
 msgid "Number of Days"
-msgstr "Anzahl an Tagen"
+msgstr "Օրերի քանակ"
 
 #: .\cookbook\templates\meal_plan.html:206
 msgid "Weekday offset"
-msgstr "Wochentage verschieben"
+msgstr "Աշխատանքային օրերի փոխհատուցում"
 
 #: .\cookbook\templates\meal_plan.html:209
 msgid ""
 "Number of days starting from the first day of the week to offset the default"
 " view."
 msgstr ""
-"Anzahl der Tage von ersten Tag der Woche, die der Plan standardmäßig "
-"verschoben sein soll."
+"Շաբաթվա առաջին օրվանից հաշված օրերի քանակը, որը պետք է փոխհատուցել լռելյայն "
+"էջում"
 
 #: .\cookbook\templates\meal_plan.html:217
 #: .\cookbook\templates\meal_plan.html:294
 msgid "Edit plan types"
-msgstr "Plantypen editieren"
+msgstr "Խմբագրել ճաշացուցակների տեսակները"
 
 #: .\cookbook\templates\meal_plan.html:219
 msgid "Show help"
-msgstr "Hilfe anzeigen"
+msgstr "Ցուցադրել օգնություն"
 
 #: .\cookbook\templates\meal_plan.html:220
 msgid "Week iCal export"
-msgstr "Woche als iCal exportieren"
+msgstr "Շաբաթվա արտահանում iCal ձևաչափով"
 
 #: .\cookbook\templates\meal_plan.html:264
 #: .\cookbook\templates\meal_plan_entry.html:18
 msgid "Created by"
-msgstr "Erstellt von"
+msgstr "Ստեղծող"
 
 #: .\cookbook\templates\meal_plan.html:270
 #: .\cookbook\templates\meal_plan_entry.html:20
 #: .\cookbook\templates\shopping_list.html:248
 msgid "Shared with"
-msgstr "Geteilt mit"
+msgstr "Ու՞մ հետ է կիսվել"
 
 #: .\cookbook\templates\meal_plan.html:280
 msgid "Add to Shopping"
-msgstr "Zur Einkaufsliste hinzufügen"
+msgstr "Ավելացնել գնումներին"
 
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New meal type"
-msgstr "Neue Mahlzeit"
+msgstr "Կերակրի նոր տեսակ"
 
 #: .\cookbook\templates\meal_plan.html:338
 msgid "Meal Plan Help"
-msgstr "Plan-Hilfe"
+msgstr "Ճաշացուցակի Օգնություն"
 
 #: .\cookbook\templates\meal_plan.html:344
 msgid ""
@@ -1258,277 +1262,287 @@ msgid ""
 "                        "
 msgstr ""
 "\n"
-"                            <p>Das Planmodul erlaubt das Planen mithilfe von Rezepten und Notizen.</p>\n"
-"                            <p>Einfach ein Rezept aussuchen und an die Stelle im Plan ziehen, an der es gekocht werden soll. Es kann außerdem eine Notiz und ein Titel hinzugefügt werden. Einen Eintrag nur als Notiz zu erstellen ist durch Eingabe einer Notiz und Schieben des Notiz-Blocks in den Plan möglich.</p>\n"
-"                            <p>Durch Klicken auf ein Rezept öffnet sich die Detailansicht. Da kann das Rezept auch auf die Einkaufsliste hinzugefügt werden. Es können auch alle Rezepte eines Tages auf die Einkaufsliste gesetzt werden, indem der Einkaufswagen im Tabellenkopf angeklickt wird.</p>\n"
-"                            <p>Da Pläne häufig für mehrere Nutzer erstellt werden, können Nutzer in den Einstellungen angegeben werden, mit denen neue Pläne automatisch geteilt werden sollen.\n"
+"                            <p>Ճաշացուցակի մոդուլը թույլ է տալիս պլանավորել ճաշերը բաղադրատոմսերով և նոթերով։</p>\n"
+"                            <p>Պարզապես ընտրեք բաղադրատոմս վերջերս դիտած բաղադրատոմսերի ցուցակից կամ փնտրեք այն բաղադրատոմսը,\n"
+"                                որն ուզում եք և քաշեք ընտրված ճաշացուցակի դիրք։ Դուք կարող եք նաև ավելացնել նոթեր և վերնագիր, ապա\n"
+"                                քաշեք բաղադրատոմսը ձեր ընտրած վերնագրով և նոթերով ցուցակ ստեղծելու համար։ Միայն\n"
+"                                նոթեր ստեղծելը նույնպես հնարավոր է, եթե քաշեք «ստեղծել միայն նոթեր» պատուհանը դեպի ցուցակ։</p>\n"
+"                            <p>Սեղմեք որևէ բաղադրատոմսի վրա մանրամասներով պատուհանը բացելու համար։ Այդտեղից կարող եք այն նաև ավելացնել\n"
+"                                գնումների ցուցակ։ Դուք կարող եք նաև ավելացնել օրվա բոլոր բաղադրատոմսերը գնումների ցուցակ\n"
+"                                սեղմելով գնումների սայլակի նշանի վրա։</p>\n"
+"                            <p>Քանի որ ընդունված է ճաշեր պլանավորել միասին,  դուք կարող եք կարգավորումներում հստակեցնել\n"
+"                                օգտատերերին ում հետ ցանկանում եք կիսվել ձեր ցուցակով։\n"
 "                            </p>\n"
-"                            <p>Die Mahlzeiten, die geplant werden sollen, können bearbeitet werden. Wenn Pläne zwischen Nutzern mit unterschiedlichen Mahlzeiten geteilt werden, erscheinen alle Mahlzeiten. Um Duplikate zu vermeiden (z.B. Mittagessen und Mittag) sollten Mahlzeiten teilender Nutzer gleich benannt werden, dadurch kann das System sie zusammenfassen.</p>\n"
+"                            <p>Դուք կարող եք նաև խմբագրել ճաշերի տեսակը, որը ցանկանում եք պլանավորել։ Եթե կիսվեք ձեր պլանով\n"
+"                                որևէ մեկի հետ, ով\n"
+"                                ունի ուրիշ ճաշեր, նրանց ճաշերի տեսակները նույնպես կհայտնվեն ձեր ցուցակում։ Կրկնօրինակներից (օրինակ ընթրիք և ընթրիքներ)\n"
+"                                խուսաբելու համար\n"
+"                                օգտագործեք միևնույն ճաշի տեսակների անունն այն մարդկանց պես, ում հետ ցանկանում եք կիսվել և դրանք\n"
+"                                կմիավորվեն։</p>\n"
 "                        "
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
-msgstr "Plan-Ansicht"
+msgstr "Ճաշացուցակի Դիտման էջ"
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr "Noch nie gekocht."
+msgstr "Երբեք պատրաստված չէ"
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
-msgstr "Andere Mahlzeiten an diesem Tag"
+msgstr "Նույն օրվա այլ ճաշեր"
 
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr "Offline"
+msgstr "Ցանցից դուրս"
 
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr "Keine Berechtigungen"
+msgstr "Թույլտվություն չկա"
 
 #: .\cookbook\templates\no_groups_info.html:15
 msgid ""
 "You do not have any groups and therefor cannot use this application. Please "
 "contact your administrator."
 msgstr ""
-"Du hast keine Gruppe und kannst daher diese Anwendung nicht nutzen. Bitte "
-"kontaktiere deinen Administrator."
+"Դուք չունեք որևէ խումբ և չեք կարող օգտագործել այս ծրագիրը։ Կապվեք ձեր "
+"ադմինիստրատորի հետ։"
 
 #: .\cookbook\templates\offline.html:19
 msgid "You are currently offline!"
-msgstr "Du bist gerade offline!"
+msgstr "Դուք ցանցից դուրս եք։"
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
 "The recipes listed below are available for offline viewing because you have "
 "recently viewed them. Keep in mind that data might be outdated."
 msgstr ""
-"Die unterhalb aufgelisteten Rezepte sind offline verfügbar, da du sie vor "
-"kurzem angesehen hast. Beachte, dass die Daten veraltetet sein könnten."
+"Ներքևում նշված բաղադրատոմսերը հասանելի են ցանցից դուրս դիտման համար, "
+"որովհետև դուք դիտել եք դրանք վերջերս։ Հիշեք, որ տվյալները կարող են հնացած "
+"լինել։"
 
 #: .\cookbook\templates\recipe_view.html:21 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr "Kommentare"
+msgstr "Մեկնաբանություններ"
 
 #: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:118
 #: .\cookbook\views\edit.py:162
 msgid "Comment"
-msgstr "Kommentar"
+msgstr "Մեկնաբանել"
 
 #: .\cookbook\templates\recipes_table.html:19
 #: .\cookbook\templates\recipes_table.html:23
 #: .\cookbook\templates\url_import.html:50
 msgid "Recipe Image"
-msgstr "Rezeptbild"
+msgstr "Բաղադրատոմսի նկար"
 
 #: .\cookbook\templates\recipes_table.html:46
 #: .\cookbook\templates\url_import.html:55
 msgid "Preparation time ca."
-msgstr "Zubereitungszeit ca."
+msgstr "Պատրաստման տևողություն"
 
 #: .\cookbook\templates\recipes_table.html:52
 #: .\cookbook\templates\url_import.html:60
 msgid "Waiting time ca."
-msgstr "Wartezeit ca."
+msgstr "Սպասման տևողություն"
 
 #: .\cookbook\templates\recipes_table.html:55
 msgid "External"
-msgstr "Extern"
+msgstr "Արտաքին"
 
 #: .\cookbook\templates\recipes_table.html:81
 msgid "Log Cooking"
-msgstr "Kochen protokollieren"
+msgstr "Գրանցել եփել"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr "Rezept-Hauptseite"
+msgstr "Բաղադրատոմսի տուն"
 
 #: .\cookbook\templates\settings.html:22
 msgid "Account"
-msgstr "Account"
+msgstr "Հաշիվ"
 
 #: .\cookbook\templates\settings.html:38
 msgid "Link social account"
-msgstr "Social Account verlinken"
+msgstr "Կցել սոցիալական հաշիվ"
 
 #: .\cookbook\templates\settings.html:42
 msgid "Language"
-msgstr "Sprache"
+msgstr "Լեզու"
 
 #: .\cookbook\templates\settings.html:67
 msgid "Style"
-msgstr "Stil"
+msgstr "Ոճ"
 
 #: .\cookbook\templates\settings.html:79
 msgid "API Token"
-msgstr "API-Token"
+msgstr "API ժետոն"
 
 #: .\cookbook\templates\settings.html:80
 msgid ""
 "You can use both basic authentication and token based authentication to "
 "access the REST API."
 msgstr ""
-"Sowohl Basic Authentication als auch tokenbasierte Authentifizierung können "
-"für die REST-API verwendet werden."
+"Դուք կարող եք օգտագործել ինչպես հասարակ այնպես էլ ժետոնով նույնականացում "
+"REST API-ին հասանելիության համար։"
 
 #: .\cookbook\templates\settings.html:92
 msgid ""
 "Use the token as an Authorization header prefixed by the word token as shown"
 " in the following examples:"
 msgstr ""
-"Nutz den Token als Authorization-Header mit der Präfix \"Token\" wie in "
-"folgendem Beispiel:"
+"Օգտագործեք ժետոնը որպես Թույլտվության խորագիր, նախածանցված բառ ժետոնով, "
+"ինչպես ցույց է տրված հետևյալ օրինակում․"
 
 #: .\cookbook\templates\settings.html:94
 msgid "or"
-msgstr "oder"
+msgstr "կամ"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr "Kochbuch-Setup"
+msgstr "Խոհարարական գրքի կարգավորում"
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
-msgstr "Setup"
+msgstr "Կարգավորում"
 
 #: .\cookbook\templates\setup.html:15
 msgid ""
 "To start using this application you must first create a superuser account."
 msgstr ""
-"Um diese Anwendung zu benutzen, muss zunächst ein Administrator-Account "
-"erstellt werden."
+"Այս ծրագիրն օգտագործելու համար նախ պետք է ստեղծեք սուպեր-օգտատերի հաշիվ"
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser account"
-msgstr "Administrator-Account Erstellen"
+msgstr "Ստեղծել սուպեր-օգտատերի հաշիվ"
 
 #: .\cookbook\templates\shopping_list.html:75
 msgid "Shopping Recipes"
-msgstr "Einkaufs-Rezepte"
+msgstr "Գնումների բաղադրատոմսեր"
 
 #: .\cookbook\templates\shopping_list.html:79
 msgid "No recipes selected"
-msgstr "Keine Rezepte ausgewählt"
+msgstr "Բաղադրատոմս ընտրված չէ"
 
 #: .\cookbook\templates\shopping_list.html:145
 msgid "Entry Mode"
-msgstr "Eintrags-Modus"
+msgstr "Գրառման ռեժիմ"
 
 #: .\cookbook\templates\shopping_list.html:153
 msgid "Add Entry"
-msgstr "Eintrag hinzufügen"
+msgstr "Ավելացնել գրառում"
 
 #: .\cookbook\templates\shopping_list.html:168
 msgid "Amount"
-msgstr "Menge"
+msgstr "Քանակ"
 
 #: .\cookbook\templates\shopping_list.html:224
 msgid "Supermarket"
-msgstr "Supermarkt"
+msgstr "Սուպերմարկետ"
 
 #: .\cookbook\templates\shopping_list.html:234
 msgid "Select Supermarket"
-msgstr "Supermarkt auswählen"
+msgstr "Ընտրել Սուպերմարկետ"
 
 #: .\cookbook\templates\shopping_list.html:258
 msgid "Select User"
-msgstr "Nutzer auswählen"
+msgstr "Ընտրել օգտատեր"
 
 #: .\cookbook\templates\shopping_list.html:277
 msgid "Finished"
-msgstr "Erledigt"
+msgstr "Ավարտված է"
 
 #: .\cookbook\templates\shopping_list.html:290
 msgid "You are offline, shopping list might not syncronize."
-msgstr "Du bist offline, die Einkaufsliste wird ggf. nicht synchronisiert."
+msgstr "Դուք ցանցից դուրս եք, գնումների ցուցակը կարող է չսինքրոնիզացվել։"
 
 #: .\cookbook\templates\shopping_list.html:353
 msgid "Copy/Export"
-msgstr "Kopieren/Exportieren"
+msgstr "Պատճենել/Արտահանել"
 
 #: .\cookbook\templates\shopping_list.html:357
 msgid "List Prefix"
-msgstr "Listenpräfix"
+msgstr "Ցուցակի նախածանց"
 
 #: .\cookbook\templates\shopping_list.html:696
 msgid "There was an error creating a resource!"
-msgstr "Es gab einen Fehler beim Erstellen einer Ressource!"
+msgstr "Ռեսուրսը ստեղծելիս սխալ է գրանցվել"
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
 msgid "Account Connections"
-msgstr "Account-Verbindungen"
+msgstr "Հաշվի կապեր"
 
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
-"Du kannst dich mit den folgenden Drittanbieter-Accounts\n"
-"            anmelden:"
+"Դուք կարող եք մուտք գործել ձեր հաշիվ օգտագործելով հետևյալ երրորդ կողմի\n"
+"           հաշիվները․"
 
 #: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
-msgstr "Entfernen"
+msgstr "Հեռացնել"
 
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid ""
 "You currently have no social network accounts connected to this account."
-msgstr ""
-"Du hast momentan keine Social-Media Accounts mit diesem Account verbunden."
+msgstr "Դուք այս հաշվին կապված սոցիալական հաշիվներ չունեք "
 
 #: .\cookbook\templates\socialaccount\connections.html:47
 msgid "Add a 3rd Party Account"
-msgstr "Fremden Account hinzufügen"
+msgstr "Ավելացնել 3րդ կողմի հաշիվ"
 
 #: .\cookbook\templates\stats.html:4
 msgid "Stats"
-msgstr "Statistiken"
+msgstr "Վիճակագրություն"
 
 #: .\cookbook\templates\stats.html:19
 msgid "Number of objects"
-msgstr "Anzahl an Objekten"
+msgstr "Օբյեկտների քանակը"
 
 #: .\cookbook\templates\stats.html:30
 msgid "Recipe Imports"
-msgstr "Importierte Rezepte"
+msgstr "Բաղադրատոմսի ներմուծումներ"
 
 #: .\cookbook\templates\stats.html:38
 msgid "Objects stats"
-msgstr "Objekt-Statistiken"
+msgstr "Օբյեկտների վիճակագրություն"
 
 #: .\cookbook\templates\stats.html:41
 msgid "Recipes without Keywords"
-msgstr "Rezepte ohne Schlagwort"
+msgstr "Առանց բանալի բառերի բաղադրատոմսեր"
 
 #: .\cookbook\templates\stats.html:43
 msgid "External Recipes"
-msgstr "Externe Rezepte"
+msgstr "Արտաքին բաղադրատոմսեր"
 
 #: .\cookbook\templates\stats.html:45
 msgid "Internal Recipes"
-msgstr "Interne Rezepte"
+msgstr "Ներքին բաղադրատոմսեր"
 
 #: .\cookbook\templates\system.html:21 .\cookbook\views\lists.py:128
 msgid "Invite Links"
-msgstr "Einladungslinks"
+msgstr "Հրավերի հղումներ"
 
 #: .\cookbook\templates\system.html:22
 msgid "Show Links"
-msgstr "Links anzeigen"
+msgstr "Ցուցադրել հղումները"
 
 #: .\cookbook\templates\system.html:27
 msgid "Backup & Restore"
-msgstr "Backup & Wiederherstellung"
+msgstr "Կրկնօրինակում և վերականգնում "
 
 #: .\cookbook\templates\system.html:28
 msgid "Download Backup"
-msgstr "Backup herunterladen"
+msgstr "Ներբեռնել կրկնօրինակը"
 
 #: .\cookbook\templates\system.html:49
 msgid "System Information"
-msgstr "Systeminformation"
+msgstr "Համակարգի տեղեկություն"
 
 #: .\cookbook\templates\system.html:51
 msgid ""
@@ -1539,24 +1553,24 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Django Recipes ist eine kostenlose OpenSource-Anwendung. Der Quellcode befindet sich auf\n"
-"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"        Eine Übersicht über alle Änderungen findet sich <a href=\"https://github.com/vabene1111/recipes/releases\">hier</a>.\n"
+"        Django Բաղադրատոմսերը բաց աղբյուրով անվճար ծրագիր է։ Այն կարող եք գտնել \n"
+"        <a href=\"https://github.com/vabene1111/recipes\">GitHub-ում</a>։\n"
+"        Փոփոխությունների մատյանը կարող եք գտնել <a href=\"https://github.com/vabene1111/recipes/releases\">այստեղ</a>։\n"
 "    "
 
 #: .\cookbook\templates\system.html:65
 msgid "Media Serving"
-msgstr "Medien ausliefern"
+msgstr "Մեդիայի մատուցում"
 
 #: .\cookbook\templates\system.html:66 .\cookbook\templates\system.html:81
 #: .\cookbook\templates\system.html:97
 msgid "Warning"
-msgstr "Warnung"
+msgstr "Զգուշացում"
 
 #: .\cookbook\templates\system.html:66 .\cookbook\templates\system.html:81
 #: .\cookbook\templates\system.html:97 .\cookbook\templates\system.html:112
 msgid "Ok"
-msgstr "Ok"
+msgstr "Լավ է"
 
 #: .\cookbook\templates\system.html:68
 msgid ""
@@ -1566,19 +1580,20 @@ msgid ""
 "            your installation.\n"
 "        "
 msgstr ""
-"Das direkte ausliefern von Mediendateien mit gunicorn/python ist <b>nicht "
-"empfehlenswert</b>! Bitte folge den beschriebenen Schritten <a "
-"href=\"https\\://github.com/vabene1111/recipes/releases/tag/0.8.1\">hier</a>,"
-" um Ihre Installation zu aktualisieren."
+"Մեդիա ֆայլերի մատուցումը gunicorn/python-ի կիրառմամբ <b>խորհուրդ չէ տրվում</b>։\n"
+"           Խնդրում ենք օգտագործել քայլերը նկարագրված\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">այստեղ</a> ձեր տեղադրումը\n"
+"            թարմացնելու համար։\n"
+"        "
 
 #: .\cookbook\templates\system.html:74 .\cookbook\templates\system.html:90
 #: .\cookbook\templates\system.html:105 .\cookbook\templates\system.html:119
 msgid "Everything is fine!"
-msgstr "Alles in Ordnung!"
+msgstr "Ամեն բան նորմալ է։"
 
 #: .\cookbook\templates\system.html:79
 msgid "Secret Key"
-msgstr "Secret Key"
+msgstr "Գաղտնի բանալի"
 
 #: .\cookbook\templates\system.html:83
 msgid ""
@@ -1590,11 +1605,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Du hast keinen <code>SECRET_KEY</code> in deiner <code>.env</code>-Datei konfiguriert. Django verwendet standardmäßig den mit der Installation gelieferten Standardschlüssel, der öffentlich bekannt und unsicher ist! Bitte setze den <code>SECRET_KEY</code> in der Konfigurationsdatei <code>.env</code>."
+"            Դուք չունեք <code>SECRET_KEY</code> մատնանշված ձեր <code>.env</code> ֆայլում. Django-ն օգտագործում է\n"
+"            ստանդարտ բանալի\n"
+"            տրված ծրագրի ներդրման ժամանակ, ինչը հանրային է և ոչ անվտանգ։ Խնդրում ենք մատնանշել\n"
+"            <code>SECRET_KEY</code> բանալի <code>.env</code> Ֆայլում։\n"
+"        "
 
 #: .\cookbook\templates\system.html:95
 msgid "Debug Mode"
-msgstr "Debug-Modus"
+msgstr "Վրիպակների վերացման ռեժիմ"
 
 #: .\cookbook\templates\system.html:99
 msgid ""
@@ -1605,16 +1624,18 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Diese Anwendung läuft noch im Debug-Modus. Dieser wird höchstwahrscheinlich nicht benötigt.\n"
-"Schalte den Debug-Modus aus, indem du <code>DEBUG=0</code> in der Konfigurationsdatei <code>.env</code> einstellst."
+"            Այս ծրագիրը դեռ աշխատում է վրիպակների վերացման ռեժիմում։ Սա հավանաբար անհրաժեշտ չէ։ Անժատեք այս ռեժիմը\n"
+"            սահմանելով\n"
+"            <code>DEBUG=0</code> <code>.env</code> կազմաձևումների ֆայլում։\n"
+"        "
 
 #: .\cookbook\templates\system.html:110
 msgid "Database"
-msgstr "Datenbank"
+msgstr "Շտեմարան"
 
 #: .\cookbook\templates\system.html:112
 msgid "Info"
-msgstr "Info"
+msgstr "Տեղեկություն"
 
 #: .\cookbook\templates\system.html:114
 msgid ""
@@ -1624,38 +1645,39 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Diese Anwendung läuft nicht mit einer Postgres Datenbank. Dies ist in Ordnung, wird aber nicht empfohlen, da einige\n"
-"Funktionen nur mit einer Postgres-Datenbanken funktionieren."
+"            Այս ծրագիրը չի աշխատում Postgres շտեմարան բեքենդով։ Դա նորմալ է, բայց խորհուրդ չի տրվում որովհետև որոշ\n"
+"            հատկություններ աշխատում են միայն postgres շտեմարանների հետ։\n"
+"        "
 
 #: .\cookbook\templates\url_import.html:5
 msgid "URL Import"
-msgstr "URL-Import"
+msgstr "URL ներմուծում"
 
 #: .\cookbook\templates\url_import.html:23
 msgid "Enter website URL"
-msgstr "Webseite-URL eingeben"
+msgstr "Մուտքագրեք վեբկայքի URL-ը"
 
 #: .\cookbook\templates\url_import.html:44
 msgid "Recipe Name"
-msgstr "Rezeptname"
+msgstr "Բաղադրատոմսի անուն"
 
 #: .\cookbook\templates\url_import.html:104
 #: .\cookbook\templates\url_import.html:136
 #: .\cookbook\templates\url_import.html:192
 msgid "Select one"
-msgstr "Auswählen"
+msgstr "Ընտրել մեկը"
 
 #: .\cookbook\templates\url_import.html:203
 msgid "All Keywords"
-msgstr "Alle Schlagwörter"
+msgstr "Բոլոր բանալի բառերը"
 
 #: .\cookbook\templates\url_import.html:206
 msgid "Import all keywords, not only the ones already existing."
-msgstr "Alle Schlagwörter importieren, nicht nur die bereits bestehenden."
+msgstr "Ներմուծել բոլոր բանալի բառերը, ոչ միայն արդեն գոյություն ունեցողները"
 
 #: .\cookbook\templates\url_import.html:233
 msgid "Information"
-msgstr "Information"
+msgstr "Տեղեկություն"
 
 #: .\cookbook\templates\url_import.html:235
 msgid ""
@@ -1665,174 +1687,171 @@ msgid ""
 "                                    it probably has some kind of structured data feel free to post an example in the\n"
 "                                    github issues."
 msgstr ""
-"Nur Webseiten mit ld+json oder microdata können importiert werden. Die "
-"meisten großen Seiten unterstützen diese Formate. Wenn eine Seite nicht "
-"importiert werden kann, sie aber strukturierte Daten aufweist, kann ein "
-"GitHub-Issue geöffnet werden."
+" Ներկայումս միայն ld+json կամ microdata տեղեկություն պարունակող կայքերից կարելի է\n"
+"                                    ներմուծել։ Բաղադրատոմսերի մեծ կայքերը հիմնականում պարունակում են դա։ Եթե ձեր կայքը հնարավոր չէ ներմուծել, բայց\n"
+"                                    կարծում եք\n"
+"                                    այն հավանաբար ունի ինչ-որ տեսակի կառուցվածքավորված տվյալ, կարող եք տեղեկացնել մեզ ստեղծելով\n"
+"                                    github-ի խնդիր։"
 
 #: .\cookbook\templates\url_import.html:243
 msgid "Google ld+json Info"
-msgstr "Google ld+json Informationen"
+msgstr "Google ld+json-ի տեղեկություն"
 
 #: .\cookbook\templates\url_import.html:246
 msgid "GitHub Issues"
-msgstr "GitHub-Issues"
+msgstr "GitHub-ի խնդիրներ"
 
 #: .\cookbook\templates\url_import.html:248
 msgid "Recipe Markup Specification"
-msgstr "Rezept-Markup-Spezifikation"
+msgstr "Բաղադրատոմսի Markup բնութագրեր"
 
 #: .\cookbook\views\api.py:104
 msgid "Parameter filter_list incorrectly formatted"
-msgstr "Der Parameter filter_list ist falsch formatiert"
+msgstr "filter_list պարամետրը սխալ է ձևավորված"
 
 #: .\cookbook\views\api.py:117
 msgid "Preference for given user already exists"
-msgstr "Präferenz für den Benutzer existiert bereits"
+msgstr "Այս օգտատերի նախապատվությունն արդեն գոյություն ունի"
 
 #: .\cookbook\views\api.py:416 .\cookbook\views\views.py:265
 msgid "This feature is not available in the demo version!"
-msgstr "Diese Funktion ist in der Demo-Version nicht verfügbar!"
+msgstr "Այս հատկությունը հասանելի չէ փորձնական տարբերակում։"
 
 #: .\cookbook\views\api.py:439
 msgid "Sync successful!"
-msgstr "Synchronisation erfolgreich!"
+msgstr "Սինքրոնիզացիան հաջողված է"
 
 #: .\cookbook\views\api.py:444
 msgid "Error synchronizing with Storage"
-msgstr "Fehler beim Synchronisieren"
+msgstr "Պահոցի հետ սինքրոնիզացիայի սխալ"
 
 #: .\cookbook\views\api.py:510
 msgid "The requested page could not be found."
-msgstr "Die angefragte Seite konnte nicht gefunden werden."
+msgstr "Պահանջվող էջը չի գտնվել"
 
 #: .\cookbook\views\api.py:519
 msgid ""
 "The requested page refused to provide any information (Status Code 403)."
-msgstr "Die angefragte Seite hat die Anfrage abgelehnt (Status-Code 403)."
+msgstr ""
+"Պահանջվող էջը մերժեց տրամադրել որևէ տեղեկություն (Կարգավիճակի ծածկագիր 403)"
 
 #: .\cookbook\views\data.py:101
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] ""
-"Massenbearbeitung erfolgreich. %(count)d Rezept wurde aktualisiert."
-msgstr[1] ""
-"Massenbearbeitung erfolgreich. %(count)d Rezepte wurden aktualisiert."
+msgstr[0] "Խմբային խմբագրումն ավարտված է։ %(count)d բաղադրատոմս թարմացված է"
+msgstr[1] "Խմբային խմբագրումն ավարտված է։ %(count)d բաղադրատոմս թարմացված է։"
 
 #: .\cookbook\views\delete.py:72
 msgid "Monitor"
-msgstr "Überwachen"
+msgstr "Վերահսկել"
 
 #: .\cookbook\views\delete.py:96 .\cookbook\views\lists.py:109
 #: .\cookbook\views\new.py:83
 msgid "Storage Backend"
-msgstr "Speicherquelle"
+msgstr "Պահոցի բեքենդ"
 
 #: .\cookbook\views\delete.py:106
 msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
-msgstr ""
-"Speicherquelle konnte nicht gelöscht werden, da sie in mindestens einem "
-"Monitor verwendet wird."
+msgstr "Չենք կարող ջնջել պահոցի այս բեքենդը, քանի որ այն օգտագործվում է։"
 
 #: .\cookbook\views\delete.py:129 .\cookbook\views\edit.py:196
 #: .\cookbook\views\new.py:144
 msgid "Recipe Book"
-msgstr "Rezeptbuch"
+msgstr "Բաղադրատոմսի գիրք"
 
 #: .\cookbook\views\delete.py:154
 msgid "Bookmarks"
-msgstr "Lesezeichen"
+msgstr "Էջանիշեր"
 
 #: .\cookbook\views\delete.py:176 .\cookbook\views\new.py:214
 msgid "Invite Link"
-msgstr "Einladungslink"
+msgstr "Հրավերի հղում"
 
 #: .\cookbook\views\edit.py:100
 msgid "Food"
-msgstr "Lebensmittel"
+msgstr "Սննդամթերք"
 
 #: .\cookbook\views\edit.py:110
 msgid "You cannot edit this storage!"
-msgstr "Du kannst diese Speicherquelle nicht bearbeiten!"
+msgstr "Դուք կարող եք խմբագրել այս պահոցը։"
 
 #: .\cookbook\views\edit.py:131
 msgid "Storage saved!"
-msgstr "Speicherquelle gespeichert!"
+msgstr "Պահոցը պահպանված է"
 
 #: .\cookbook\views\edit.py:137
 msgid "There was an error updating this storage backend!"
-msgstr "Es gab einen Fehler beim Aktualisieren dieser Speicherquelle!"
+msgstr "Պահոցի այս բեքեբդի թարմացման ժամանակ սխալ է գրանցվել։"
 
 #: .\cookbook\views\edit.py:148
 msgid "Storage"
-msgstr "Speicher"
+msgstr "Պահոց"
 
 #: .\cookbook\views\edit.py:245
 msgid "Changes saved!"
-msgstr "Änderungen gespeichert!"
+msgstr "Փոփոխությունները պահպանված են"
 
 #: .\cookbook\views\edit.py:253
 msgid "Error saving changes!"
-msgstr "Fehler beim Speichern der Daten!"
+msgstr "Փոփոխությունների պահպանման սխալ"
 
 #: .\cookbook\views\edit.py:289
 msgid "Units merged!"
-msgstr "Einheiten zusammengeführt!"
+msgstr "Միավորները միավորված են"
 
 #: .\cookbook\views\edit.py:295 .\cookbook\views\edit.py:317
 msgid "Cannot merge with the same object!"
-msgstr "Zusammenführen mit selben Objekt nicht möglich!"
+msgstr "Հնարավոր չէ միավորել նույն օբյեկտի հետ"
 
 #: .\cookbook\views\edit.py:311
 msgid "Foods merged!"
-msgstr "Zutaten zusammengeführt!"
+msgstr "Սննդամթերքները միավորված են"
 
 #: .\cookbook\views\import_export.py:42
 msgid "Importing is not implemented for this provider"
-msgstr "Importieren ist für diesen Anbieter noch nicht implementiert"
+msgstr "Ներմուծումն այս պրովայդերի համար իրականացված չէ"
 
 #: .\cookbook\views\import_export.py:58
 msgid "Exporting is not implemented for this provider"
-msgstr "Exportieren ist für diesen Anbieter noch nicht implementiert"
+msgstr "Արտահանումն այս պրովայդերի համար իրականացված չէ"
 
 #: .\cookbook\views\lists.py:42
 msgid "Import Log"
-msgstr "Importverlauf"
+msgstr "Ներմուծման մատյան"
 
 #: .\cookbook\views\lists.py:55
 msgid "Discovery"
-msgstr "Entdecken"
+msgstr "Բացահայտել"
 
 #: .\cookbook\views\lists.py:92
 msgid "Shopping Lists"
-msgstr "Einkaufslisten"
+msgstr "Գնումների ցուցակներ"
 
 #: .\cookbook\views\new.py:107
 msgid "Imported new recipe!"
-msgstr "Neues Rezept importiert!"
+msgstr "Բաղադրատոմսը ներմուծված է"
 
 #: .\cookbook\views\new.py:114
 msgid "There was an error importing this recipe!"
-msgstr "Beim Importieren des Rezeptes ist ein Fehler aufgetreten!"
+msgstr "Այս բաղադրատոմսի ներմուծման ժամանակ սխալ է գրանցվել։"
 
 #: .\cookbook\views\views.py:117
 msgid "You do not have the required permissions to perform this action!"
-msgstr ""
-"Du hast nicht die notwendige Berechtigung, um diese Aktion durchzuführen!"
+msgstr "Դուք չունեք բավարար թույլտվություն այս գործողության համար։"
 
 #: .\cookbook\views\views.py:136
 msgid "Comment saved!"
-msgstr "Kommentar gespeichert!"
+msgstr "Մեկնաբանությունը պահպանված է"
 
 #: .\cookbook\views\views.py:152
 msgid "This recipe is already linked to the book!"
-msgstr "Dieses Rezept ist bereits mit dem Buch verlinkt!"
+msgstr "Բաղադրատոմսն արդեն կապված է գրքին"
 
 #: .\cookbook\views\views.py:158
 msgid "Bookmark saved!"
-msgstr "Lesezeichen gespeichert!"
+msgstr "Էջանիշը պահպանված է"
 
 #: .\cookbook\views\views.py:380
 msgid ""
@@ -1840,21 +1859,22 @@ msgid ""
 "forgotten your superuser credentials please consult the django documentation"
 " on how to reset passwords."
 msgstr ""
-"Die Setup-Seite kann nur für den ersten Nutzer verwendet werden. Zum "
-"Zurücksetzen von Passwörtern bitte der Django-Dokumentation folgen."
+"Կարգավորման էջը կարող է օգտագործվել միայն առաջին օգտագործողին ստեղծելու "
+"համար։ Եթե մոռացել եք ձեր սուպեր-օգտատերի գաղտնաբառը, խնդրում ենք ստուգել "
+"django-ի փաստաթղթերը գաղտնաբառը վերականգնելու ցուցումների համար։"
 
 #: .\cookbook\views\views.py:388 .\cookbook\views\views.py:435
 msgid "Passwords dont match!"
-msgstr "Passwörter stimmen nicht überein!"
+msgstr "Գաղտնաբառերը չեն համընկնում"
 
 #: .\cookbook\views\views.py:402 .\cookbook\views\views.py:449
 msgid "User has been created, please login!"
-msgstr "Benutzer wurde erstellt, bitte einloggen!"
+msgstr "Օգտատերը ստեղծված է, խնդրում ենք մուտք գործել։"
 
 #: .\cookbook\views\views.py:419
 msgid "Malformed Invite Link supplied!"
-msgstr "Fehlerhafter Einladungslink angegeben!"
+msgstr "Հրավերի արատավոր հղում է տրամադրվել։"
 
 #: .\cookbook\views\views.py:470
 msgid "Invite Link not valid or already used!"
-msgstr "Einladungslink ungültig oder bereits genutzt!"
+msgstr "Հրավերի հղումը վավեր չէ, կամ արդեն օգտագործվել է"
