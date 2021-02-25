@@ -4,25 +4,20 @@ import re
 import uuid
 
 import requests
+from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core import management
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect
-from django.utils import timezone
-from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
-from PIL import Image
-from rest_framework import decorators, permissions, viewsets
+from rest_framework import decorators, viewsets
 from rest_framework.exceptions import APIException, PermissionDenied
-from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
-                                   UpdateModelMixin, CreateModelMixin)
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
@@ -59,7 +54,7 @@ from recipes.settings import DEMO
 class StandardFilterMixin(ViewSetMixin):
 
     def get_queryset(self):
-        queryset = self.queryset.filter(userpreference__space=self.request.user.userpreference.space)
+        queryset = self.queryset
         query = self.request.query_params.get('query', None)
         if query is not None:
             queryset = queryset.filter(name__icontains=query)
@@ -77,7 +72,7 @@ class StandardFilterMixin(ViewSetMixin):
         random = self.request.query_params.get('random', False)
         if limit is not None:
             if random:
-                queryset = queryset.random(int(limit))
+                queryset = queryset.order_by("?")[:limit]
             else:
                 queryset = queryset[:int(limit)]
         return queryset
@@ -289,14 +284,13 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsShare | CustomIsGuest]
 
     def get_queryset(self):
-        if self.request.space:
-            self.queryset = self.queryset.filter(space=self.request.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
 
         internal = self.request.query_params.get('internal', None)
         if internal:
             self.queryset = self.queryset.filter(internal=True)
 
-        return self.queryset
+        return super().get_queryset()
 
     # TODO write extensive tests for permissions
 
