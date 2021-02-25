@@ -134,8 +134,7 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if kw['id'] != "null" \
-                    and (k := Keyword.objects.filter(id=kw['id']).first()):
+            if k := Keyword.objects.filter(name=kw['text']).first():
                 recipe.keywords.add(k)
             elif data['all_keywords']:
                 k = Keyword.objects.create(name=kw['text'])
