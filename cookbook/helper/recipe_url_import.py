@@ -53,24 +53,28 @@ def get_from_scraper(scrape, space):
     except (AttributeError, TypeError, SchemaOrgException):
         recipe_json['image'] = ''
 
-    keywords = []
-    try:
-        if scrape.schema.data.get("keywords"):
-            keywords += listify_keywords(scrape.schema.data.get("keywords"))
-        if scrape.schema.data.get('recipeCategory'):
-            keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
-        if scrape.schema.data.get('recipeCuisine'):
-            keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
-        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
-    except AttributeError:
-        recipe_json['keywords'] = keywords
-
-    try:
-        ingredients = []
-        for x in scrape.ingredients():
-            try:
-                amount, unit, ingredient, note = parse_single_ingredient(x)
-                if ingredient:
+        for x in ld_json['recipeIngredient']:
+            if x.replace(' ', '') != '':
+                x = x.replace('&frac12;', "0.5").replace('&frac14;', "0.25").replace('&frac34;', "0.75")
+                try:
+                    amount, unit, ingredient, note = parse_ingredient(x)
+                    if ingredient:
+                        ingredients.append(
+                            {
+                                'amount': amount,
+                                'unit': {
+                                    'text': unit,
+                                    'id': random.randrange(10000, 99999)
+                                },
+                                'ingredient': {
+                                    'text': ingredient,
+                                    'id': random.randrange(10000, 99999)
+                                },
+                                'note': note,
+                                'original': x
+                            }
+                        )
+                except Exception:
                     ingredients.append(
                         {
                             'amount': amount,
