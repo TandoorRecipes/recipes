@@ -84,6 +84,7 @@ def find_recipe_json(ld_json, url):
 
         for x in ld_json['recipeIngredient']:
             if x.replace(' ', '') != '':
+                x = x.replace('&frac12;', "0.5").replace('&frac14;', "0.25").replace('&frac34;', "0.75")
                 try:
                     amount, unit, ingredient, note = parse_ingredient(x)
                     if ingredient:
