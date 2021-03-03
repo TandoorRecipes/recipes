@@ -32,7 +32,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html
+from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -494,6 +494,23 @@ def get_plan_ical(request, from_date, to_date):
     response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'  # noqa: E501
 
     return response
+
+
+@group_required('user')
+def recipe_from_json(request):
+    mjson = request.POST['json']
+
+    md_json = json.loads(mjson)
+    if ('@type' in md_json
+            and md_json['@type'] == 'Recipe'):
+        return JsonResponse(find_recipe_json(md_json, ''))
+    return JsonResponse(
+        {
+            'error': True,
+            'msg': _('Could not parse correctly...')
+        },
+        status=400
+    )
 
 
 @group_required('user')
