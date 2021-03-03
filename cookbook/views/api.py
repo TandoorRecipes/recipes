@@ -34,15 +34,8 @@ from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
-
-                                               group_required, share_link_valid)
-from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_url_import import get_from_scraper
-
                                                group_required)
-from cookbook.helper.recipe_search import search_recipes
-from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper, find_recipe_json
-
+from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -609,14 +602,28 @@ def get_plan_ical(request, from_date, to_date):
 
 
 @group_required('user')
-def recipe_from_source(request):
-    url = request.POST.get('url', None)
-    data = request.POST.get('data', None)
-    mode = request.POST.get('mode', None)
-    auto = request.POST.get('auto', 'true')
+def recipe_from_json(request):
+    mjson = request.POST['json']
 
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
+    md_json = json.loads(mjson)
+    if ('@type' in md_json
+            and md_json['@type'] == 'Recipe'):
+        return JsonResponse(find_recipe_json(md_json, ''))
+    return JsonResponse(
+        {
+            'error': True,
+            'msg': _('Could not parse correctly...')
+        },
+        status=400
+    )
+
+
+@group_required('user')
+def recipe_from_url(request):
+    url = request.POST['url']
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
     }
 
     if (not url and not data) or (mode == 'url' and not url) or (mode == 'source' and not data):

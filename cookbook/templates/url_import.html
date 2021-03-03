@@ -88,6 +88,19 @@
                             id="id_btn_app"><i class="fas fa-file-archive"></i> {% trans 'Import' %} 
                 </button>
             </div>
+        </div>
+        <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group mb-3">
+                        <input class="form-control" v-model="json_data" placeholder="{% trans 'Enter json directly' %}">
+                        <div class="input-group-append">
+                            <button @click="loadRecipeJson()" class="btn btn-primary shadow-none" type="button"
+                                    id="id_btn_search"><i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Import JSON or HTML -->
             <div class=" tab-pane fade show" id="nav-source" role="tabpanel">
@@ -695,9 +708,20 @@
                         this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
-                showRecipe: function() {
-                    this.preview = false
-                    this.recipe_data = this.recipe_json
+                loadRecipeJson: function () {
+                    this.recipe_data = undefined
+                    this.error = undefined
+                    this.loading = true
+                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': this.json_data}, {emulateJSON: true}).then((response) => {
+                        console.log(response.data)
+                        this.recipe_data = response.data;
+                        this.loading = false
+                    }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
                 },
                 importRecipe: function () {
                     if (this.recipe_data.name.length > 128) {
