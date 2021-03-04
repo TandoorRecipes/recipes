@@ -9,7 +9,7 @@ from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import management
-from django.core.exceptions import FieldError
+from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -32,7 +32,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html
+from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -54,6 +54,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer)
 from recipes.settings import DEMO
+from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -496,6 +497,33 @@ def get_plan_ical(request, from_date, to_date):
 
 @group_required('user')
 def recipe_from_url(request):
+    url = request.POST['url']
+
+    try:
+        scrape = scrape_me(url)
+    except WebsiteNotImplementedError:
+        try:
+            scrape = scrape_me(url, wild_mode=True)
+        except NoSchemaFoundInWildMode:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
+                },
+                status=400)
+    except ConnectionError:
+        return JsonResponse(
+            {
+                'error': True,
+                'msg': _('The requested page could not be found.')
+            },
+            status=400
+        )
+    return JsonResponse(get_from_scraper(scrape))
+
+
+@group_required('user')
+def recipe_from_url_old(request):
     url = request.POST['url']
 
     headers = {

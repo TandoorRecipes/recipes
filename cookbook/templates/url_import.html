@@ -45,6 +45,12 @@
                     <input id="id_name" class="form-control" v-model="recipe_data.name">
                 </div>
 
+                <div class="form-group">
+                    <label for="id_description">{% trans 'Recipe Description' %}</label>
+                    <textarea id="id_description" class="form-control" v-model="recipe_data.description"
+                              rows="4"></textarea>
+                </div>
+
                 <div class="row">
                     <div class="col col-md-6" v-if="recipe_data.image !== ''">
                         <img v-bind:src="recipe_data.image" alt="{% trans 'Recipe Image' %}"

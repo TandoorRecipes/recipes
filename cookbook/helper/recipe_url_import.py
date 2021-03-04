@@ -10,6 +10,7 @@ from cookbook.models import Keyword
 from django.http import JsonResponse
 from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
+from recipe_scrapers import _utils
 
 
 def get_from_html(html_text, url):
@@ -69,8 +70,10 @@ def find_recipe_json(ld_json, url):
     if 'recipeIngredient' in ld_json:
         # some pages have comma separated ingredients in a single array entry
         if (len(ld_json['recipeIngredient']) == 1
-                and len(ld_json['recipeIngredient'][0]) > 30):
+                and type(ld_json['recipeIngredient']) == list):
             ld_json['recipeIngredient'] = ld_json['recipeIngredient'][0].split(',')  # noqa: E501
+        elif type(ld_json['recipeIngredient']) == str:
+            ld_json['recipeIngredient'] = ld_json['recipeIngredient'].split(',')
 
         for x in ld_json['recipeIngredient']:
             if '\n' in x:
@@ -122,28 +125,7 @@ def find_recipe_json(ld_json, url):
         ld_json['recipeIngredient'] = []
 
     if 'keywords' in ld_json:
-        keywords = []
-
-        # keywords as string
-        if type(ld_json['keywords']) == str:
-            ld_json['keywords'] = ld_json['keywords'].split(',')
-
-        # keywords as string in list
-        if (type(ld_json['keywords']) == list
-                and len(ld_json['keywords']) == 1
-                and ',' in ld_json['keywords'][0]):
-            ld_json['keywords'] = ld_json['keywords'][0].split(',')
-
-        # keywords as list
-        for kw in ld_json['keywords']:
-            if k := Keyword.objects.filter(name=kw).first():
-                keywords.append({'id': str(k.id), 'text': str(k).strip()})
-            else:
-                keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw.strip()})
-
-        ld_json['keywords'] = keywords
-    else:
-        ld_json['keywords'] = []
+        ld_json['keywords'] = parse_keywords(listify_keywords(ld_json['keywords']))
 
     if 'recipeInstructions' in ld_json:
         instructions = ''
@@ -218,6 +200,7 @@ def find_recipe_json(ld_json, url):
     else:
         ld_json['prepTime'] = 0
 
+    ld_json['servings'] = 1
     try:
         if 'recipeYield' in ld_json:
             if type(ld_json['recipeYield']) == str:
@@ -226,7 +209,6 @@ def find_recipe_json(ld_json, url):
                 ld_json['servings'] = int(re.findall(r'\b\d+\b', ld_json['recipeYield'][0])[0])
     except Exception as e:
         print(e)
-        ld_json['servings'] = 1
 
     for key in list(ld_json):
         if key not in [
@@ -236,3 +218,117 @@ def find_recipe_json(ld_json, url):
             ld_json.pop(key, None)
 
     return ld_json
+
+
+def get_from_scraper(scrape):
+    # converting the scrape_me object to the existing json format based on ld+json
+
+    recipe_json = {}
+    recipe_json['name'] = scrape.title()
+
+    recipe_json['description'] = ''
+    description = scrape.schema.data.get("description")
+    description += "\n\nImported from " + scrape.url
+    recipe_json['description'] = description
+
+    try:
+        servings = scrape.yields()
+        servings = int(re.findall(r'\b\d+\b', servings)[0])
+    except (AttributeError, ValueError):
+        servings = 1
+    recipe_json['servings'] = servings
+
+    recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
+    recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
+    if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
+        try:
+            recipe_json['prepTime'] = scrape.total_time()
+        except AttributeError:
+            pass
+
+    try:
+        recipe_json['image'] = scrape.image()
+    except AttributeError:
+        pass
+
+    keywords = []
+    if scrape.schema.data.get("keywords"):
+        keywords += listify_keywords(scrape.schema.data.get("keywords"))
+    if scrape.schema.data.get('recipeCategory'):
+        keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+    if scrape.schema.data.get('recipeCuisine'):
+        keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+    recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+
+    try:
+        ingredients = []
+        for x in scrape.ingredients():
+            try:
+                amount, unit, ingredient, note = parse_ingredient(x)
+                if ingredient:
+                    ingredients.append(
+                        {
+                            'amount': amount,
+                            'unit': {
+                                'text': unit,
+                                'id': random.randrange(10000, 99999)
+                            },
+                            'ingredient': {
+                                'text': ingredient,
+                                'id': random.randrange(10000, 99999)
+                            },
+                            'note': note,
+                            'original': x
+                        }
+                    )
+            except Exception:
+                ingredients.append(
+                    {
+                        'amount': 0,
+                        'unit': {
+                            'text': '',
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'ingredient': {
+                            'text': x,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'note': '',
+                        'original': x
+                    }
+                )
+        recipe_json['recipeIngredient'] = ingredients
+    except AttributeError:
+        recipe_json['recipeIngredient'] = ingredients
+
+    try:
+        recipe_json['recipeInstructions'] = scrape.instructions()
+    except AttributeError:
+        recipe_json['recipeInstructions'] = ""
+
+    return recipe_json
+
+
+def parse_keywords(keyword_json):
+    keywords = []
+    # keywords as list
+    for kw in keyword_json:
+        if k := Keyword.objects.filter(name=kw).first():
+            keywords.append({'id': str(k.id), 'text': str(k)})
+        else:
+            keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
+
+    return keywords
+
+
+def listify_keywords(keyword_list):
+    # keywords as string
+    if type(keyword_list) == str:
+        keyword_list = keyword_list.split(',')
+
+    # keywords as string in list
+    if (type(keyword_list) == list
+            and len(keyword_list) == 1
+            and ',' in keyword_list[0]):
+        keyword_list = keyword_list[0].split(',')
+    return [x.strip() for x in keyword_list]
