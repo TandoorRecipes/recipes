@@ -232,7 +232,7 @@ def get_from_scraper(scrape):
         recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
         recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
     except AttributeError:
-        recipe_json['description'] = ''
+        description = ''
         recipe_json['prepTime'] = 0
         recipe_json['cookTime'] = 0
 
@@ -242,7 +242,7 @@ def get_from_scraper(scrape):
     try:
         servings = scrape.yields()
         servings = int(re.findall(r'\b\d+\b', servings)[0])
-    except (AttributeError, ValueError):
+    except (AttributeError, ValueError, IndexError):
         servings = 1
     recipe_json['servings'] = servings
 
