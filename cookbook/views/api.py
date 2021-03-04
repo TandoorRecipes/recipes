@@ -71,6 +71,8 @@ class StandardFilterMixin(ViewSetMixin):
                 queryset = queryset.filter(updated_at__gte=updated_at)
             except FieldError:
                 pass
+            except ValidationError:
+                raise APIException(_('Parameter updated_at incorrectly formatted'))
 
         limit = self.request.query_params.get('limit', None)
         random = self.request.query_params.get('random', False)
