@@ -227,11 +227,11 @@ def get_from_scraper(scrape):
     recipe_json['name'] = scrape.title()
 
     
-    if scrape.schema:
+    try:
         description = scrape.schema.data.get("description") or ''
         recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
         recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
-    else:
+    except AttributeError:
         recipe_json['description'] = ''
         recipe_json['prepTime'] = 0
         recipe_json['cookTime'] = 0
@@ -259,7 +259,7 @@ def get_from_scraper(scrape):
         pass
 
     keywords = []
-    if scrape.schema:
+    try:
         if scrape.schema.data.get("keywords"):
             keywords += listify_keywords(scrape.schema.data.get("keywords"))
         if scrape.schema.data.get('recipeCategory'):
@@ -267,7 +267,7 @@ def get_from_scraper(scrape):
         if scrape.schema.data.get('recipeCuisine'):
             keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
-    else:
+    except AttributeError:
         recipe_json['keywords'] = keywords
 
     try:
