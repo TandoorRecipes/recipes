@@ -80,7 +80,7 @@ class TestApiKeyword(TestViews):
         )
         response = json.loads(r.content)
         self.assertEqual(r.status_code, 201)
-        self.assertEqual(response['name'], {self.keyword_1.name})
+        self.assertEqual(response['name'], self.keyword_1.name)
 
     def test_keyword_delete(self):
         r = self.user_client_1.delete(
