@@ -175,6 +175,7 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE') if os.getenv('DB_ENGINE') else 'django.db.backends.sqlite3',
+        'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
         'USER': os.getenv('POSTGRES_USER'),
@@ -211,6 +212,7 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = [
+    ('hy', _('Armenian ')),
     ('ca', _('Catalan')),
     ('cs', _('Czech')),
     ('nl', _('Dutch')),
@@ -227,6 +229,8 @@ LANGUAGES = [
 
 # path for django_js_reverse to generate the javascript file containing all urls. Only done because the default command (collectstatic_js_reverse) fails to update the manifest
 JS_REVERSE_OUTPUT_PATH = os.path.join(BASE_DIR, "cookbook/static/django_js_reverse")
+
+JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', os.getenv('SCRIPT_NAME', ''))
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

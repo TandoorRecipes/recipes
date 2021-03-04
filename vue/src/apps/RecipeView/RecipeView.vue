@@ -24,7 +24,7 @@
       <hr/>
       <div class="row">
         <div class="col col-md-3">
-          <div class="row d-flex" style="padding-left: 16px;height: 100%">
+          <div class="row d-flex" style="padding-left: 16px">
             <div class="my-auto" style="padding-right: 4px">
               <i class="fas fa-user-clock fa-2x text-primary"></i>
             </div>
@@ -36,7 +36,7 @@
         </div>
 
         <div class="col col-md-3">
-          <div class="row d-flex" style="height: 100%">
+          <div class="row d-flex">
             <div class="my-auto" style="padding-right: 4px">
               <i class="far fa-clock fa-2x text-primary"></i>
             </div>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="col col-md-4 col-10">
-          <div class="row d-flex" style="padding-left: 16px;height: 100%">
+          <div class="row d-flex" style="padding-left: 16px">
             <div class="my-auto" style="padding-right: 4px">
               <i class="fas fa-pizza-slice fa-2x text-primary"></i>
             </div>
