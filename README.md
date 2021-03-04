@@ -1,3 +1,44 @@
+iocage setup
+New Jail
+DCHP
+
+ create a dataset in the FreeNAS WebUI where you'll store the app
+mkdir /mnt/myVol/apps/recipes/postgresql/
+
+mount dataset 
+iocage fstab -a postgresql /mnt/Data/apps/postgresql /mnt/postgres/data nullfs rw 0 0
+
+The first thing you need to do is to update and upgrade packages:
+pkg update
+pkg upgrade
+
+*Install Packages*
+pkg install sudo
+pkg install git
+pkg install python38
+
+*Install Pip*
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3.8 get-pip.py
+
+*Upgrading PIP*
+python -m pip install -U pip
+
+*Install PostgreSQL*
+pkg install postgresql12-server
+
+#autostart service with jail
+sysrc postgresql_enable=YES
+
+sudo pip install -r requirements.txt
+
+pip install cryptography-2.8-cp38-cp38-win_amd64 (1)
+
+
+Get the last version from the repository:
+git clone https://github.com/vabene1111/recipes.git -b master
+
+
 <h1 align="center">
   <br>
   <a href="https://app.tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
