@@ -226,8 +226,16 @@ def get_from_scraper(scrape):
     recipe_json = {}
     recipe_json['name'] = scrape.title()
 
-    recipe_json['description'] = ''
-    description = scrape.schema.data.get("description")
+    
+    if scrape.schema:
+        description = scrape.schema.data.get("description") or ''
+        recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
+        recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
+    else:
+        recipe_json['description'] = ''
+        recipe_json['prepTime'] = 0
+        recipe_json['cookTime'] = 0
+
     description += "\n\nImported from " + scrape.url
     recipe_json['description'] = description
 
@@ -238,8 +246,7 @@ def get_from_scraper(scrape):
         servings = 1
     recipe_json['servings'] = servings
 
-    recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
-    recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
+    
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = scrape.total_time()
@@ -252,13 +259,16 @@ def get_from_scraper(scrape):
         pass
 
     keywords = []
-    if scrape.schema.data.get("keywords"):
-        keywords += listify_keywords(scrape.schema.data.get("keywords"))
-    if scrape.schema.data.get('recipeCategory'):
-        keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
-    if scrape.schema.data.get('recipeCuisine'):
-        keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
-    recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+    if scrape.schema:
+        if scrape.schema.data.get("keywords"):
+            keywords += listify_keywords(scrape.schema.data.get("keywords"))
+        if scrape.schema.data.get('recipeCategory'):
+            keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+        if scrape.schema.data.get('recipeCuisine'):
+            keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+    else:
+        recipe_json['keywords'] = keywords
 
     try:
         ingredients = []
