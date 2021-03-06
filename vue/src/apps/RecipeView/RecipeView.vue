@@ -11,14 +11,14 @@
         </div>
       </div>
 
-      <div style="text-align: center">
-        <keywords :recipe="recipe"></keywords>
-      </div>
-
-      <div class="row" style="margin-top: 8px">
+      <div class="my-auto">
         <div class="col-12" style="text-align: center">
           <i>{{ recipe.description }}</i>
         </div>
+      </div>
+
+      <div style="text-align: center">
+        <keywords :recipe="recipe"></keywords>
       </div>
 
       <hr/>
