@@ -11,13 +11,13 @@
                 {% block table %}
                     <table {% render_attrs table.attrs class="table" %}>
                         {% for row in table.paginated_rows %}
-                            <div class="card" style="margin-top: 2px;">
+                            <div class="card" style="margin-top: 1px;">
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
                                         <a href="{% url 'view_recipe' row.cells.id %}">
                                             {% if row.cells.image|length > 1 %}
                                                 <img src=" {{ row.cells.image }}" alt="{% trans 'Recipe Image' %}"
-                                                     class="card-img" style="object-fit: cover;height: 130px">
+                                                     class="card-img" style="object-fit:cover;height: 160px">
                                             {% else %}
                                                 <img src="{% static 'assets/recipe_no_image.svg' %}"
                                                      alt="{% trans 'Recipe Image' %}"
@@ -31,10 +31,15 @@
                                         <div class="card-body">
                                             <div class="d-flex">
                                                 <div class="flex-fill">
-                                                    <h5 class="card-title">{{ row.cells.name }}
+                                                    <h5 class="card-title p-0 m-0">{{ row.cells.name }}
                                                         {% recipe_rating row.record request.user as rating %}
                                                         {{ rating|safe }}
                                                     </h5>
+                                                    {%if row.record.description|length > 0 %}
+                                                        <p class="card-subtitle p-0 m-0 text-muted">
+                                                            {{ row.cells.description }}
+                                                        </p>
+                                                    {% endif %}
                                                     <p class="card-text{% if not row.record.keywords %} d-none d-lg-block{% endif %}">
                                                         {% for x in row.record.keywords.all %}
                                                             <span class="badge badge-pill badge-light">{{ x }}</span>
@@ -80,6 +85,10 @@
                                                                     onclick="openCookLogModal({{ row.record.pk }})"><i
                                                                     class="fas fa-clipboard-list fa-fw"></i> {% trans 'Log Cooking' %}
                                                             </button>
+                                                            <a class="dropdown-item"
+                                                               href="{% url 'delete_recipe' row.record.pk %}"><i
+                                                                    class="fas fa-trash fa-fw"></i> {% trans 'Delete' %}
+                                                            </a>
 
                                                         </div>
                                                     </div>
