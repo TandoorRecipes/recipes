@@ -28,7 +28,8 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
+from cookbook.helper.recipe_url_import import get_from_html
+from cookbook.helper.recipe_raw_import import get_from_raw
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -607,8 +608,19 @@ def recipe_from_url_old(request):
 
 
 @group_required('user')
-def recipe_from_json(request):
-    mjson = request.POST['json']
+def recipe_from_raw(request):
+    raw_text = request.POST['raw_text']
+    recipe_json, recipe_tree = get_from_raw(raw_text)
+    return JsonResponse({
+        'recipe_tree': recipe_tree,
+        'recipe_json': recipe_json
+    })
+
+
+@group_required('admin')
+def get_backup(request):
+    if not request.user.is_superuser:
+        return HttpResponse('', status=403)
 
     md_json = json.loads(mjson)
     for ld_json_item in md_json:
