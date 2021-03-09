@@ -7,7 +7,7 @@
 {% block extra_head %}
 
     {% include 'include/vue_base.html' %}
-
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
     <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/vue-multiselect.min.css' %}">
 
@@ -16,25 +16,23 @@
 {% block content %}
 
     <div id="app">
+        <h2> {% trans 'Import' %} </h2>
+        <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
+            <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url" aria-selected="true">URL</a>
+            <a class="nav-link" href="#nav-ldjson" data-toggle="tab" role="tab" aria-controls="nav-ldjson">ld+json</a>
+            <a class="nav-link disabled" href="#nav-json" data-toggle="tab" role="tab" aria-controls="nav-json">json</a>
+            <a class="nav-link disabled" href="#nav-html" data-toggle="tab" role="tab" aria-controls="nav-html">HTML</a>
+            <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" aria-controls="nav-text">text</a>
+            <a class="nav-link disabled" href="#nav-pdf" data-toggle="tab" role="tab" aria-controls="nav-pdf">PDF</a>
+        </nav>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="input-group mb-3">
-                    <input class="form-control" v-model="remote_url" placeholder="{% trans 'Enter website URL' %}">
-                    <div class="input-group-append">
-                        <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
-                                id="id_btn_search"><i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
+        <div class="tab-content" id="nav-tabContent">
+            <div class="row tab-pane fade show active" id="nav-url" role="tabpanel">
                 <div class="col-md-12">
                     <div class="input-group mb-3">
-                        <input class="form-control" v-model="json_data" placeholder="{% trans 'Enter json directly' %}">
+                        <input class="form-control" v-model="remote_url" placeholder="{% trans 'Enter website URL' %}">
                         <div class="input-group-append">
-                            <button @click="loadRecipeJson()" class="btn btn-primary shadow-none" type="button"
+                            <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
                                     id="id_btn_search"><i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -42,19 +40,34 @@
                 </div>
             </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="input-group mb-3">
-                    <input class="form-control" v-model="json_data" placeholder="{% trans 'Enter json directly' %}">
-                    <div class="input-group-append">
-                        <button @click="loadRecipeJson()" class="btn btn-primary shadow-none" type="button"
-                                id="id_btn_search"><i class="fas fa-search"></i>
-                        </button>
+            <div class="row tab-pane fade show" id="nav-ldjson" role="tabpanel">
+                <div class="col-md-12">
+                    <div class="input-group input-group-lg">
+                        <textarea class="form-control input-group-append" v-model="json_data" rows=10; placeholder="{% trans 'Paste ld+json here' %}">
+                        </textarea>
                     </div>
+                    <br>
+                    <button @click="loadRecipeJson()" class="btn btn-primary shadow-none" type="button"
+                                id="id_btn_json"><i class="fas fa-code"></i> {% trans 'Import' %} 
+                    </button>
                 </div>
             </div>
-        </div>
 
+            <div class="row tab-pane fade show" id="nav-html" role="tabpanel">
+                <div class="col-md-12">
+                    <div class="input-group input-group-lg">
+                        <textarea class="form-control input-group-append" v-model="html_data" rows=10; placeholder="{% trans 'Paste html source here' %}">
+                        </textarea>
+                    </div>
+                    <br>
+                    <button @click="loadRecipeJson()" class="btn btn-primary shadow-none" type="button"
+                                id="id_btn_html"><i class="fas fa-code"></i> {% trans 'Import' %} 
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        
         <br/>
 
         <div v-if="loading" class="text-center">
@@ -303,6 +316,7 @@
             el: '#app',
             data: {
                 remote_url: '',
+                json_data: undefined,
                 keywords: [],
                 keywords_loading: false,
                 units: [],
