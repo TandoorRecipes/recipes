@@ -109,5 +109,10 @@ def export_recipe(request):
 
 
 @group_required('user')
-def import_response(request, pk):
-    return render(request, 'import_response.html', {'pk': pk})
+def import_json(request):
+    if request.method == "POST":
+        return True
+    else:
+        pass
+
+    return render(request, 'import_json.html')
