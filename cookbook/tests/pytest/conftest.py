@@ -1,5 +1,4 @@
 import copy
-import inspect
 import uuid
 
 import pytest
@@ -14,55 +13,112 @@ def enable_db_access_for_all_tests(db):
     pass
 
 
-@pytest.fixture
-def test_password():
-    return 'strong-test-pass'
-
-
-@pytest.fixture
-def create_user(db, django_user_model, test_password):
-    def make_user(**kwargs):
-        kwargs['password'] = test_password
-        if 'username' not in kwargs:
-            kwargs['username'] = str(uuid.uuid4())
-        return django_user_model.objects.create_user(**kwargs)
-
-    return make_user
-
-
-@pytest.fixture
+@pytest.fixture()
 def space_1():
     with scopes_disabled():
         return Space.objects.get_or_create(name='space_1')[0]
 
 
-@pytest.fixture
+@pytest.fixture()
 def space_2():
     with scopes_disabled():
         return Space.objects.get_or_create(name='space_2')[0]
 
 
-@pytest.fixture
-def user_1(client, space_1):
+# ---------------------- USER FIXTURES -----------------------
+# maybe better with factories but this is very explict so ...
+
+def create_user(client, space, **kwargs):
     c = copy.deepcopy(client)
     with scopes_disabled():
-        print(f'creating user 1 with space {space_1}')
-        user = User.objects.create(username='user_1')
-        user.groups.add(Group.objects.get(name='user'))
-        user.userpreference.space = space_1
+        group = kwargs.pop('group', None)
+        username = kwargs.pop('username', uuid.uuid4())
+
+        user = User.objects.create(username=username, **kwargs)
+        if group:
+            user.groups.add(Group.objects.get(name=group))
+
+        user.userpreference.space = space
         user.userpreference.save()
         c.force_login(user)
         return c
 
 
-@pytest.fixture
-def user_2(client, space_2):
-    c = copy.deepcopy(client)
-    with scopes_disabled():
-        print(f'creating user 2 with space {space_2}')
-        user = User.objects.create(username='user_2')
-        user.groups.add(Group.objects.get(name='user'))
-        user.userpreference.space = space_2
-        user.userpreference.save()
-        c.force_login(user)
-        return c
+# anonymous user
+@pytest.fixture()
+def a_u(client):
+    return copy.deepcopy(client)
+
+
+# users without any group
+@pytest.fixture()
+def ng1_s1(client, space_1):
+    return create_user(client, space_1)
+
+
+@pytest.fixture()
+def ng1_s2(client, space_2):
+    return create_user(client, space_2)
+
+
+# guests
+@pytest.fixture()
+def g1_s1(client, space_1):
+    return create_user(client, space_1, group='guest')
+
+
+@pytest.fixture()
+def g2_s1(client, space_1):
+    return create_user(client, space_1, group='guest')
+
+
+@pytest.fixture()
+def g1_s2(client, space_2):
+    return create_user(client, space_2, group='guest')
+
+
+@pytest.fixture()
+def g2_s2(client, space_2):
+    return create_user(client, space_2, group='guest')
+
+
+# users
+@pytest.fixture()
+def u1_s1(client, space_1):
+    return create_user(client, space_1, group='user')
+
+
+@pytest.fixture()
+def u2_s1(client, space_1):
+    return create_user(client, space_1, group='user')
+
+
+@pytest.fixture()
+def u1_s2(client, space_2):
+    return create_user(client, space_2, group='user')
+
+
+@pytest.fixture()
+def u2_s2(client, space_2):
+    return create_user(client, space_2, group='user')
+
+
+# admins
+@pytest.fixture()
+def a1_s1(client, space_1):
+    return create_user(client, space_1, group='admin')
+
+
+@pytest.fixture()
+def a2_s1(client, space_1):
+    return create_user(client, space_1, group='admin')
+
+
+@pytest.fixture()
+def a1_s2(client, space_2):
+    return create_user(client, space_2, group='admin')
+
+
+@pytest.fixture()
+def a2_s2(client, space_2):
+    return create_user(client, space_2, group='admin')
