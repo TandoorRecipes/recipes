@@ -152,7 +152,8 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        return super().get_queryset()
 
 
 class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -169,7 +170,8 @@ class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        return super().get_queryset()
 
 
 class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -178,7 +180,8 @@ class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        return super().get_queryset()
 
 
 class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -187,7 +190,8 @@ class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        return super().get_queryset()
 
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -196,7 +200,8 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space)
+        return super().get_queryset()
 
 
 class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
