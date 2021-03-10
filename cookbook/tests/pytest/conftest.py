@@ -1,4 +1,5 @@
 import copy
+import inspect
 import uuid
 
 import pytest
@@ -6,6 +7,17 @@ from django.contrib.auth.models import User, Group
 from django_scopes import scopes_disabled
 
 from cookbook.models import Space
+
+
+# hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
+# does not work on yield fixtures as only one yield can be used per fixture (i think)
+@pytest.hookimpl(hookwrapper=True)
+def pytest_fixture_setup(fixturedef, request):
+    if inspect.isgeneratorfunction(fixturedef.func):
+        yield
+    else:
+        with scopes_disabled():
+            yield
 
 
 @pytest.fixture(autouse=True)
