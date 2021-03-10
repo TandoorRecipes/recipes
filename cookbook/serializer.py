@@ -382,7 +382,7 @@ class CookLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CookLog
-        fields = '__all__'
+        fields = ('id', 'recipe', 'servings', 'rating', 'created_by', 'created_at')
         read_only_fields = ('id', 'created_by')
 
 

@@ -3,10 +3,11 @@ import inspect
 import uuid
 
 import pytest
+from django.contrib import auth
 from django.contrib.auth.models import User, Group
 from django_scopes import scopes_disabled
 
-from cookbook.models import Space
+from cookbook.models import Space, Recipe
 
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
@@ -35,6 +36,20 @@ def space_1():
 def space_2():
     with scopes_disabled():
         return Space.objects.get_or_create(name='space_2')[0]
+
+
+# ---------------------- OBJECT FIXTURES ---------------------
+
+@pytest.fixture()
+def recipe_1_s1(space_1, u1_s1):
+    return Recipe.objects.create(
+        name='recipe_1_s1',
+        waiting_time=20,
+        working_time=20,
+        servings=4,
+        created_by=auth.get_user(u1_s1),
+        space=space_1
+    )
 
 
 # ---------------------- USER FIXTURES -----------------------
