@@ -59,7 +59,6 @@ urlpatterns = [
     path('test2/', views.test2, name='view_test2'),
 
     path('import/', import_export.import_recipe, name='view_import'),
-    path('import/json/', import_export.import_json, name='view_json_import'),
     path('export/', import_export.export_recipe, name='view_export'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
@@ -94,7 +93,8 @@ urlpatterns = [
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
     path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
     path('api/recipe-from-url/', api.recipe_from_url, name='api_recipe_from_url'),
-    path('api/recipe-from-raw/', api.recipe_from_raw, name='api_recipe_from_raw'),
+    path('api/recipe-from-html/', api.recipe_from_html, name='api_recipe_from_html'),
+    path('api/recipe-from-json/', api.recipe_from_json, name='api_recipe_from_json'),
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
 
