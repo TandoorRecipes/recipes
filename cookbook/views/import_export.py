@@ -101,12 +101,3 @@ def export_recipe(request):
 
     return render(request, 'export.html', {'form': form})
 
-
-@group_required('user')
-def import_json(request):
-    if request.method == "POST":
-        return True
-    else:
-        pass
-
-    return render(request, 'import_json.html')

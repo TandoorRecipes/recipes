@@ -132,6 +132,7 @@ def parse_ingredients(ingredients):
 
     for x in ingredients:
         if x.replace(' ', '') != '':
+            x = x.replace('&frac12;', "0.5").replace('&frac14;', "0.25").replace('&frac34;', "0.75")
             try:
                 amount, unit, ingredient, note = parse_single_ingredient(x)
                 if ingredient:

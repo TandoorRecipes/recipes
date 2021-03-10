@@ -224,10 +224,10 @@ def latest_shopping_list(request):
 
 @group_required('user')
 def shopping_list(request, pk=None):
-    raw_list = request.GET.getlist('r')
+    html_list = request.GET.getlist('r')
 
     recipes = []
-    for r in raw_list:
+    for r in html_list:
         r = r.replace('[', '').replace(']', '')
         if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
             rid, multiplier = r.split(',')
