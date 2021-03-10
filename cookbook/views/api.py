@@ -35,8 +35,8 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html
-from cookbook.helper.recipe_raw_import import get_from_raw
+from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
+from cookbook.helper.recipe_html_import import get_from_html
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -698,9 +698,9 @@ def recipe_from_url(request):
 
 
 @group_required('user')
-def recipe_from_raw(request):
-    raw_text = request.POST['raw_text']
-    recipe_json, recipe_tree = get_from_raw(raw_text)
+def recipe_from_html(request):
+    html_data = request.POST['html_data']
+    recipe_json, recipe_tree = get_from_html(html_data)
     return JsonResponse({
         'recipe_tree': recipe_tree,
         'recipe_json': recipe_json
