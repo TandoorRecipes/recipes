@@ -72,7 +72,7 @@ class StandardFilterMixin(ViewSetMixin):
         random = self.request.query_params.get('random', False)
         if limit is not None:
             if random:
-                queryset = queryset.order_by("?")[:limit]
+                queryset = queryset.order_by("?")[:int(limit)]
             else:
                 queryset = queryset[:int(limit)]
         return queryset
