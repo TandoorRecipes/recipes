@@ -4,20 +4,20 @@ import pytest
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Keyword
+from cookbook.models import Food
 
-LIST_URL = 'api:keyword-list'
-DETAIL_URL = 'api:keyword-detail'
+LIST_URL = 'api:food-list'
+DETAIL_URL = 'api:food-detail'
 
 
 @pytest.fixture()
 def obj_1(space_1):
-    return Keyword.objects.get_or_create(name='test_1', space=space_1)[0]
+    return Food.objects.get_or_create(name='test_1', space=space_1)[0]
 
 
 @pytest.fixture
 def obj_2(space_1):
-    return Keyword.objects.get_or_create(name='test_2', space=space_1)[0]
+    return Food.objects.get_or_create(name='test_2', space=space_1)[0]
 
 
 @pytest.mark.parametrize("arg", [
@@ -146,4 +146,4 @@ def test_delete(u1_s1, u1_s2, obj_1):
 
     assert r.status_code == 204
     with scopes_disabled():
-        assert Keyword.objects.count() == 0
+        assert Food.objects.count() == 0
