@@ -7,7 +7,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User, Group
 from django_scopes import scopes_disabled
 
-from cookbook.models import Space, Recipe
+from cookbook.models import Space, Recipe, Step, Ingredient, Food, Unit
 
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
@@ -40,16 +40,52 @@ def space_2():
 
 # ---------------------- OBJECT FIXTURES ---------------------
 
-@pytest.fixture()
-def recipe_1_s1(space_1, u1_s1):
-    return Recipe.objects.create(
-        name='recipe_1_s1',
+def get_random_recipe(space_1, u1_s1):
+    r = Recipe.objects.create(
+        name=uuid.uuid4(),
         waiting_time=20,
         working_time=20,
         servings=4,
         created_by=auth.get_user(u1_s1),
         space=space_1
     )
+
+    s1 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), )
+    s2 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), )
+
+    r.steps.add(s1)
+    r.steps.add(s2)
+
+    for x in range(5):
+        s1.ingredients.add(
+            Ingredient.objects.create(
+                amount=1,
+                food=Food.objects.create(name=uuid.uuid4(),  space=space_1,),
+                unit=Unit.objects.create(name=uuid.uuid4(),  space=space_1,),
+                note=uuid.uuid4(),
+            )
+        )
+
+        s2.ingredients.add(
+            Ingredient.objects.create(
+                amount=1,
+                food=Food.objects.create(name=uuid.uuid4(),  space=space_1,),
+                unit=Unit.objects.create(name=uuid.uuid4(),  space=space_1,),
+                note=uuid.uuid4(),
+            )
+        )
+
+    return r
+
+
+@pytest.fixture
+def recipe_1_s1(space_1, u1_s1):
+    return get_random_recipe(space_1, u1_s1)
+
+
+@pytest.fixture
+def recipe_2_s1(space_1, u1_s1):
+    return get_random_recipe(space_1, u1_s1)
 
 
 # ---------------------- USER FIXTURES -----------------------
