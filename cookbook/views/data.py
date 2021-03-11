@@ -29,7 +29,7 @@ def sync(request):
         if not has_group_permission(request.user, ['admin']):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('data_sync'))
-        form = SyncForm(request.POST)
+        form = SyncForm(request.POST, space=request.space)
         if form.is_valid():
             new_path = Sync()
             new_path.path = form.cleaned_data['path']
@@ -39,9 +39,9 @@ def sync(request):
             new_path.save()
             return redirect('data_sync')
     else:
-        form = SyncForm()
+        form = SyncForm(space=request.space)
 
-    monitored_paths = SyncTable(Sync.objects.fitler(space=request.space).all())
+    monitored_paths = SyncTable(Sync.objects.filter(space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(monitored_paths)
 
     return render(request, 'batch/monitor.html', {'form': form, 'monitored_paths': monitored_paths})

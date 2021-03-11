@@ -266,7 +266,7 @@ class SyncForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
-        self.fields['book'].queryset = Storage.objects.filter(space=space).all()
+        self.fields['storage'].queryset = Storage.objects.filter(space=space).all()
 
     class Meta:
         model = Sync
