@@ -279,7 +279,7 @@ def edit_ingredients(request):
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
             if new_unit != old_unit:
-                recipe_ingredients = Ingredient.objects.filter(unit=old_unit, space=request.space).all()
+                recipe_ingredients = Ingredient.objects.filter(unit=old_unit, step__recipe__space=request.space).all()
                 for i in recipe_ingredients:
                     i.unit = new_unit
                     i.save()
@@ -295,7 +295,7 @@ def edit_ingredients(request):
             new_food = food_form.cleaned_data['new_food']
             old_food = food_form.cleaned_data['old_food']
             if new_food != old_food:
-                ingredients = Ingredient.objects.filter(food=old_food, space=request.space).all()
+                ingredients = Ingredient.objects.filter(food=old_food, step__recipe__space=request.space).all()
                 for i in ingredients:
                     i.food = new_food
                     i.save()

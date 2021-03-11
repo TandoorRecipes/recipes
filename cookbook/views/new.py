@@ -103,7 +103,8 @@ def create_new_external_recipe(request, import_id):
 
             recipe.save()
 
-            recipe.keywords.set(form.cleaned_data['keywords'])
+            if form.cleaned_data['keywords']:
+                recipe.keywords.set(form.cleaned_data['keywords'])
 
             new_recipe.delete()
 
