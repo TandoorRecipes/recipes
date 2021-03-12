@@ -382,7 +382,11 @@ class ViewLogViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()[:5]
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()
+        if self.request.method == 'GET':
+            return self.queryset[:5]
+        else:
+            return self.queryset
 
 
 class CookLogViewSet(viewsets.ModelViewSet):
