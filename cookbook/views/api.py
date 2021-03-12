@@ -208,7 +208,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space)
+        return self.queryset.filter(book__created_by=self.request.user).filter(book__space=self.request.user.userpreference.space)
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
