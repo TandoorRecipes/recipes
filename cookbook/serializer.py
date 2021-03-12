@@ -287,9 +287,14 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class RecipeBookSerializer(SpacedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
     class Meta:
         model = RecipeBook
-        fields = '__all__'
+        fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by')
         read_only_fields = ['id', 'created_by']
 
 
