@@ -43,7 +43,6 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
 
 
 def test_list_filter(obj_1, obj_2, u1_s1):
-    # verify storage is returned
     r = u1_s1.get(reverse(LIST_URL))
     assert r.status_code == 200
     response = json.loads(r.content)
