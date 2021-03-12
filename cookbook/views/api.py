@@ -97,9 +97,7 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
             if filter_list is not None:
                 queryset = queryset.filter(pk__in=json.loads(filter_list))
         except ValueError:
-            raise APIException(
-                _('Parameter filter_list incorrectly formatted')
-            )
+            raise APIException(_('Parameter filter_list incorrectly formatted'))
 
         return queryset
 
