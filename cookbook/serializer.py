@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotAuthenticated, NotFound
 from rest_framework.serializers import BaseSerializer, Serializer
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
@@ -295,13 +295,20 @@ class RecipeBookSerializer(SpacedModelSerializer):
     class Meta:
         model = RecipeBook
         fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by')
-        read_only_fields = ['id', 'created_by']
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        book = data['book']
+        if book.get_owner() == self.context['request'].user:
+            return data
+        else:
+            raise NotFound(detail=None, code=None)
+
     class Meta:
         model = RecipeBookEntry
-        fields = '__all__'
+        fields = ('id', 'book', 'recipe',)
 
 
 class MealPlanSerializer(SpacedModelSerializer):
