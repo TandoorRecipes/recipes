@@ -47,10 +47,15 @@ class SpacedModelSerializer(serializers.ModelSerializer):
 
 
 class MealTypeSerializer(SpacedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
     class Meta:
         model = MealType
         fields = ('id', 'name', 'order', 'created_by')
-        read_only_fields = ('space',)
+        read_only_fields = ('created_by',)
 
 
 class UserNameSerializer(WritableNestedModelSerializer):
@@ -303,6 +308,10 @@ class MealPlanSerializer(SpacedModelSerializer):
     def get_note_markdown(self, obj):
         return markdown(obj.note)
 
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
     class Meta:
         model = MealPlan
         fields = (
@@ -310,6 +319,7 @@ class MealPlanSerializer(SpacedModelSerializer):
             'date', 'meal_type', 'created_by', 'shared', 'recipe_name',
             'meal_type_name'
         )
+        read_only_fields = ('created_by',)
 
 
 class ShoppingListRecipeSerializer(SpacedModelSerializer):

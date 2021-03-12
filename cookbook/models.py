@@ -459,15 +459,11 @@ class MealType(models.Model, PermissionModelMixin):
 
 
 class MealPlan(models.Model, PermissionModelMixin):
-    recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, blank=True, null=True
-    )
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    shared = models.ManyToManyField(
-        User, blank=True, related_name='plan_share'
-    )
+    shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
     date = models.DateField()
