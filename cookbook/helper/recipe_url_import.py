@@ -2,6 +2,8 @@ import json
 import random
 import re
 from json import JSONDecodeError
+from isodate import parse_duration as iso_parse_duration
+from isodate.isoerror import ISO8601Error
 
 import microdata
 from bs4 import BeautifulSoup
@@ -64,6 +66,8 @@ def find_recipe_json(ld_json, url):
 
     if 'recipeIngredient' in ld_json:
         ld_json['recipeIngredient'] = parse_ingredients(ld_json['recipeIngredient'])
+    else:
+        ld_json['recipeIngredient'] = ""
 
     keywords = []
     if 'keywords' in ld_json:
@@ -71,22 +75,40 @@ def find_recipe_json(ld_json, url):
     if 'recipeCategory' in ld_json:
         keywords += listify_keywords(ld_json['recipeCategory'])
     if 'recipeCuisine' in ld_json:
-        keywords += listify_keywords(ld_json['keywords'])
-    ld_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+        keywords += listify_keywords(ld_json['recipeCuisine'])
+    try:
+        ld_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+    except TypeError:
+        pass
 
     if 'recipeInstructions' in ld_json:
         ld_json['recipeInstructions'] = parse_instructions(ld_json['recipeInstructions'])
+    else:
+        ld_json['recipeInstructions'] = ""
 
     if 'image' in ld_json:
         ld_json['image'] = parse_image(ld_json['image'])
+    else:
+        ld_json['image'] = ""
+
+    if 'description' not in ld_json:
+        ld_json['description'] = ""
 
     if 'cookTime' in ld_json:
         ld_json['cookTime'] = parse_cooktime(ld_json['cookTime'])
+    else:
+        ld_json['cookTime'] = 0
 
     if 'prepTime' in ld_json:
         ld_json['prepTime'] = parse_cooktime(ld_json['prepTime'])
+    else:
+        ld_json['prepTime'] = 0
 
-    ld_json['servings'] = 1
+    if 'servings' in ld_json:
+        if type(ld_json['servings']) == str:
+            ld_json['servings'] = int(re.search(r'\d+', ld_json['servings']).group())
+    else:
+        ld_json['servings'] = 1
     try:
         if 'recipeYield' in ld_json:
             if type(ld_json['recipeYield']) == str:
@@ -117,6 +139,12 @@ def parse_name(name):
 
 def parse_ingredients(ingredients):
     # some pages have comma separated ingredients in a single array entry
+    try:
+        if type(ingredients[0]) == dict:
+            return ingredients
+    except (KeyError, IndexError):
+        pass
+
     if (len(ingredients) == 1 and type(ingredients) == list):
         ingredients = ingredients[0].split(',')
     elif type(ingredients) == str:
@@ -197,50 +225,59 @@ def parse_instructions(instructions):
 
     instructions = re.sub(r'\n\s*\n', '\n\n', instructions)
     instructions = re.sub(' +', ' ', instructions)
-    instructions = instructions.replace('<p>', '')
-    instructions = instructions.replace('</p>', '')
-    return instruction_text
+    instructions = re.sub('</p>', '\n', instructions)
+    instructions = re.sub('<[^<]+?>', '', instructions)
+    return instructions
 
 
 def parse_image(image):
     # check if list of images is returned, take first if so
-    if (type(image)) == list:
-        if type(image[0]) == str:
-            image = image[0]
-        elif 'url' in image[0]:
-            image = image[0]['url']
+    if type(image) == list:
+        for pic in image:
+            if (type(pic) == str) and (pic[:4] == 'http'):
+                image = pic
+            elif 'url' in pic:
+                image = pic['url']
 
     # ignore relative image paths
-    if 'http' not in image:
+    if image[:4] != 'http':
         image = ''
     return image
 
 
 def parse_cooktime(cooktime):
-    try:
-        if (type(cooktime) == list and len(cooktime) > 0):
-            cooktime = cooktime[0]
-        cooktime = round(parse_duration(cooktime).seconds / 60)
-    except TypeError:
-        cooktime = 0
-    if type(cooktime) != int or float:
-        cooktime = 0
+    if type(cooktime) not in [int, float]:
+        try:
+            cooktime = float(re.search(r'\d+', cooktime).group())
+        except (ValueError, AttributeError):
+            try:
+                cooktime = round(iso_parse_duration(cooktime).seconds / 60)
+            except ISO8601Error:
+                try:
+                    if (type(cooktime) == list and len(cooktime) > 0):
+                        cooktime = cooktime[0]
+                    cooktime = round(parse_duration(cooktime).seconds / 60)
+                except AttributeError:
+                    cooktime = 0
+
     return cooktime
 
 
 def parse_preptime(preptime):
-    try:
-        if (type(preptime) == list and len(preptime) > 0):
-            preptime = preptime[0]
-        preptime = round(
-            parse_duration(
-                preptime
-            ).seconds / 60
-        )
-    except TypeError:
-        preptime = 0
-    if type(preptime) != int or float:
-        preptime = 0
+    if type(preptime) not in [int, float]:
+        try:
+            preptime = float(re.search(r'\d+', preptime).group())
+        except ValueError:
+            try:
+                preptime = round(iso_parse_duration(preptime).seconds / 60)
+            except ISO8601Error:
+                try:
+                    if (type(preptime) == list and len(preptime) > 0):
+                        preptime = preptime[0]
+                    preptime = round(parse_duration(preptime).seconds / 60)
+                except AttributeError:
+                    preptime = 0
+
     return preptime
 
 
@@ -258,6 +295,11 @@ def parse_keywords(keyword_json):
 
 def listify_keywords(keyword_list):
     # keywords as string
+    try:
+        if type(keyword_list[0]) == dict:
+            return keyword_list
+    except KeyError:
+        pass
     if type(keyword_list) == str:
         keyword_list = keyword_list.split(',')
 

@@ -29,7 +29,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
-from cookbook.helper.recipe_html_import import get_from_html
+from cookbook.helper.recipe_html_import import get_from_raw
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -610,11 +610,20 @@ def recipe_from_url_old(request):
 @group_required('user')
 def recipe_from_html(request):
     html_data = request.POST['html_data']
-    recipe_json, recipe_tree = get_from_html(html_data)
-    return JsonResponse({
-        'recipe_tree': recipe_tree,
-        'recipe_json': recipe_json
-    })
+    recipe_json, recipe_tree = get_from_raw(html_data)
+    if len(recipe_tree) == 0 and len(recipe_json) == 0:
+        return JsonResponse(
+            {
+                'error': True,
+                'msg': _('The requested page refused to provide any information (Status Code 403).')  # noqa: E501
+            },
+            status=400
+        )
+    else:
+        return JsonResponse({
+            'recipe_tree': recipe_tree,
+            'recipe_json': recipe_json
+        })
 
 
 @group_required('admin')
