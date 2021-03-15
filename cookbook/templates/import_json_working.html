@@ -1,3 +1,4 @@
+<!--I PROBLABLY DON'T NEED THIS??-->
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
 {% load i18n %}
@@ -24,7 +25,7 @@
         <div v-if="!parsed">
             <h2>{% trans 'Import From Source' %}</h2>
             <div class="input-group input-group-lg">
-                <textarea class="form-control" v-model="raw_recipe" rows="12" style="font-size: 12px"></textarea>
+                <textarea class="form-control" v-model="html_recipe" rows="12" style="font-size: 12px"></textarea>
             </div>
             <small class="text-muted">Simply paste a web page source or JSON document into this textarea and click import.</small>
             <br>
@@ -94,7 +95,7 @@
             delimiters: ['[[', ']]'],
             el: '#app',
             data: {
-                raw_recipe: '',
+                html_recipe: '',
                 keywords: [],
                 keywords_loading: false,
                 units: [],
@@ -151,7 +152,7 @@
                     this.error = undefined
                     this.parsed = true
                     this.loading = true
-                    this.$http.post("{% url 'api_recipe_from_raw' %}", {'raw_text': this.raw_recipe}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_html' %}", {'html_text': this.html_recipe}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         this.recipe_data = response.data['recipe_data'];
                         this.recipe_tree = response.data['recipe_tree'];
