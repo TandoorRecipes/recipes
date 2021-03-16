@@ -33,7 +33,6 @@ class Local(Provider):
             status='SUCCESS',
             msg='Imported ' + str(import_count) + ' recipes',
             sync=monitor,
-            space=monitor.space,
         )
         log_entry.save()
 

@@ -129,4 +129,4 @@ def test_delete(u1_s1, u1_s2, obj_1):
 
     assert r.status_code == 204
     with scopes_disabled():
-        assert Food.objects.count() == 0
+        assert MealType.objects.count() == 0

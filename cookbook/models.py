@@ -220,8 +220,7 @@ class SyncLog(models.Model, PermissionModelMixin):
     msg = models.TextField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='sync__space')
 
     def __str__(self):
         return f"{self.created_at}:{self.sync} - {self.status}"

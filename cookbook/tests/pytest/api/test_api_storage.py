@@ -119,4 +119,4 @@ def test_delete(a1_s1, a1_s2, obj_1):
 
     assert r.status_code == 204
     with scopes_disabled():
-        assert RecipeBook.objects.count() == 0
+        assert Storage.objects.count() == 0
