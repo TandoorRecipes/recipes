@@ -16,8 +16,8 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
-from rest_framework import decorators, viewsets
-from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework import decorators, viewsets, status
+from rest_framework.exceptions import APIException, PermissionDenied, NotFound, MethodNotAllowed
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
@@ -97,7 +97,7 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
             if filter_list is not None:
                 queryset = queryset.filter(pk__in=json.loads(filter_list))
         except ValueError:
-            raise APIException(_('Parameter filter_list incorrectly formatted'))
+            raise APIException('Parameter filter_list incorrectly formatted')
 
         return queryset
 
@@ -106,11 +106,6 @@ class UserPreferenceViewSet(viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner, ]
-
-    def perform_create(self, serializer):
-        if UserPreference.objects.filter(user=self.request.user).exists():
-            raise APIException(_('Preference for given user already exists'))
-        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)

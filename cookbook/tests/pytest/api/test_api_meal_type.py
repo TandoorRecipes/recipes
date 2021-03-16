@@ -45,10 +45,10 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],
+    ['g1_s1', 404],
     ['u1_s1', 200],
-    ['a1_s1', 200],
-    ['g1_s2', 403],
+    ['a1_s1', 404],
+    ['g1_s2', 404],
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])

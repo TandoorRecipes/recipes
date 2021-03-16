@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, NotAuthenticated, NotFound
+from rest_framework.exceptions import ValidationError, NotAuthenticated, NotFound, ParseError
+from rest_framework.fields import ModelField
 from rest_framework.serializers import BaseSerializer, Serializer
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
@@ -70,6 +71,12 @@ class UserNameSerializer(WritableNestedModelSerializer):
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        if validated_data['user'] != self.context['request'].user:
+            raise NotFound()
+        return super().create(validated_data)
+
     class Meta:
         model = UserPreference
         fields = (
@@ -77,7 +84,6 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
             'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
             'comments'
         )
-        read_only_fields = ['user']
 
 
 class StorageSerializer(SpacedModelSerializer):
@@ -295,16 +301,16 @@ class RecipeBookSerializer(SpacedModelSerializer):
     class Meta:
         model = RecipeBook
         fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by')
+        read_only_fields = ('created_by',)
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
-    def validate(self, data):
-        book = data['book']
-        if book.get_owner() == self.context['request'].user:
-            return data
-        else:
+    def create(self, validated_data):
+        book = validated_data['book']
+        if not book.get_owner() == self.context['request'].user:
             raise NotFound(detail=None, code=None)
+        return super().create(validated_data)
 
     class Meta:
         model = RecipeBookEntry
