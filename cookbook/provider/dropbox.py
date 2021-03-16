@@ -27,7 +27,7 @@ class Dropbox(Provider):
         try:
             recipes = r.json()
         except ValueError:
-            log_entry = SyncLog(status='ERROR', msg=str(r), sync=monitor, space=monitor.space)
+            log_entry = SyncLog(status='ERROR', msg=str(r), sync=monitor)
             log_entry.save()
             return r
 
@@ -51,7 +51,6 @@ class Dropbox(Provider):
             status='SUCCESS',
             msg='Imported ' + str(import_count) + ' recipes',
             sync=monitor,
-            space=monitor.space,
         )
         log_entry.save()
 

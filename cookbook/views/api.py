@@ -136,7 +136,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        return self.queryset.filter(sync__space=self.request.user.userpreference.space)
 
 
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
