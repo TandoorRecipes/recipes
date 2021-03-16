@@ -87,12 +87,19 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 
 
 class StorageSerializer(SpacedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
     class Meta:
         model = Storage
         fields = (
             'id', 'name', 'method', 'username', 'password',
             'token', 'created_by'
         )
+
+        read_only_fields = ('created_by',)
 
         extra_kwargs = {
             'password': {'write_only': True},
