@@ -99,6 +99,7 @@ def test_add(arg, request, u1_s2):
         content_type='application/json'
     )
     response = json.loads(r.content)
+    print(r.content)
     assert r.status_code == arg[1]
     if r.status_code == 201:
         assert response['name'] == 'test'
