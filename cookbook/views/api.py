@@ -91,7 +91,7 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     http_method_names = ['get']
 
     def get_queryset(self):
-        queryset = self.queryset.filter(userpreference__space=self.request.user.userpreference.space)
+        queryset = self.queryset.filter(userpreference__space=self.request.space)
         try:
             filter_list = self.request.query_params.get('filter_list', None)
             if filter_list is not None:
@@ -118,7 +118,7 @@ class StorageViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        return self.queryset.filter(space=self.request.space)
 
 
 class SyncViewSet(viewsets.ModelViewSet):
@@ -127,7 +127,7 @@ class SyncViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.user.userpreference.space)
+        return self.queryset.filter(space=self.request.space)
 
 
 class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
@@ -136,7 +136,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [CustomIsAdmin, ]
 
     def get_queryset(self):
-        return self.queryset.filter(sync__space=self.request.user.userpreference.space)
+        return self.queryset.filter(sync__space=self.request.space)
 
 
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -145,7 +145,7 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -163,7 +163,7 @@ class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -173,7 +173,7 @@ class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -183,7 +183,7 @@ class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -193,7 +193,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space)
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -203,7 +203,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return self.queryset.filter(book__created_by=self.request.user).filter(book__space=self.request.user.userpreference.space)
+        return self.queryset.filter(book__created_by=self.request.user).filter(book__space=self.request.space)
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
@@ -223,7 +223,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         queryset = self.queryset.filter(
             Q(created_by=self.request.user) |
             Q(shared=self.request.user)
-        ).filter(space=self.request.user.userpreference.space).distinct().all()
+        ).filter(space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', None)
         if from_date is not None:
@@ -245,7 +245,7 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()
+        queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(space=self.request.space).all()
         return queryset
 
 
@@ -255,7 +255,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(step__recipe__space=self.request.user.userpreference.space)
+        return self.queryset.filter(step__recipe__space=self.request.space)
 
 
 class StepViewSet(viewsets.ModelViewSet):
@@ -264,7 +264,7 @@ class StepViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(recipe__space=self.request.user.userpreference.space)
+        return self.queryset.filter(recipe__space=self.request.space)
 
 
 class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -340,7 +340,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner, ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()
+        return self.queryset.filter(shoppinglist__created_by=self.request.user).filter(space=self.request.space).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
@@ -349,7 +349,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner, ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()
+        return self.queryset.filter(shoppinglist__created_by=self.request.user).filter(space=self.request.space).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
@@ -358,9 +358,7 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        return self.queryset.filter(
-            Q(created_by=self.request.user) | Q(shared=self.request.user)
-        ).filter(space=self.request.user.userpreference.space).all()
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
 
     def get_serializer_class(self):
         autosync = self.request.query_params.get('autosync', None)
@@ -375,7 +373,7 @@ class ViewLogViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space).all()
         if self.request.method == 'GET':
             return self.queryset[:5]
         else:
@@ -388,7 +386,7 @@ class CookLogViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.user.userpreference.space).all()
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space).all()
         if self.request.method == 'GET':
             return self.queryset[:5]
         else:

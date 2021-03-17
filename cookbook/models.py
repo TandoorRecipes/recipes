@@ -30,6 +30,14 @@ def get_model_name(model):
 
 
 class PermissionModelMixin:
+
+    @staticmethod
+    def get_space_key():
+        return ('space',)
+
+    def get_space_kwarg(self):
+        return '__'.join(self.get_space_key())
+
     def get_owner(self):
         if getattr(self, 'created_by', None):
             return self.created_by
@@ -38,8 +46,9 @@ class PermissionModelMixin:
         return None
 
     def get_space(self):
-        if getattr(self, 'space', None):
-            return self.space
+        p = '.'.join(self.get_space_key())
+        if getattr(self, p, None):
+            return getattr(self, p)
         raise NotImplementedError('get space for method not implemented and standard fields not available')
 
 
@@ -207,8 +216,9 @@ class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
 
     objects = ScopedManager(space='supermarket__space')
 
-    def get_space(self):
-        return self.supermarket.space
+    @staticmethod
+    def get_space_key():
+        return 'supermarket', 'space'
 
     class Meta:
         ordering = ('order',)
@@ -288,6 +298,10 @@ class Ingredient(models.Model, PermissionModelMixin):
 
     objects = ScopedManager(space='step__recipe__space')
 
+    @staticmethod
+    def get_space_key():
+        return 'step', 'recipe', 'space'
+
     def get_space(self):
         return self.step_set.first().recipe_set.first().space
 
@@ -316,6 +330,10 @@ class Step(models.Model, PermissionModelMixin):
 
     objects = ScopedManager(space='recipe__space')
 
+    @staticmethod
+    def get_space_key():
+        return 'recipe', 'space'
+
     def get_space(self):
         return self.recipe_set.first().space
 
@@ -339,6 +357,10 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     )
 
     objects = ScopedManager(space='recipe__space')
+
+    @staticmethod
+    def get_space_key():
+        return 'recipe', 'space'
 
     def get_space(self):
         return self.recipe_set.first().space
@@ -388,8 +410,9 @@ class Comment(models.Model, PermissionModelMixin):
 
     objects = ScopedManager(space='recipe__space')
 
-    def get_space(self):
-        return self.recipe.space
+    @staticmethod
+    def get_space_key():
+        return 'recipe', 'space'
 
     def __str__(self):
         return self.text
@@ -429,8 +452,9 @@ class RecipeBookEntry(models.Model, PermissionModelMixin):
 
     objects = ScopedManager(space='book__space')
 
-    def get_space(self):
-        return self.book.space
+    @staticmethod
+    def get_space_key():
+        return 'book', 'space'
 
     def __str__(self):
         return self.recipe.name
