@@ -31,3 +31,4 @@ django-webpack-loader==0.7.0
 django-js-reverse==0.9.1
 django-allauth==0.44.0
 django-scopes==1.2.0
+pytest==6.2.2
