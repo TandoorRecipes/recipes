@@ -510,8 +510,14 @@ class ShoppingListRecipe(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
 
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='shoppinglist__space')
+
+    @staticmethod
+    def get_space_key():
+        return 'shoppinglist', 'space'
+
+    def get_space(self):
+        return self.shoppinglist_set.first().space
 
     def __str__(self):
         return f'Shopping list recipe {self.id} - {self.recipe}'
@@ -531,8 +537,14 @@ class ShoppingListEntry(models.Model, PermissionModelMixin):
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
 
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='shoppinglist__space')
+
+    @staticmethod
+    def get_space_key():
+        return 'shoppinglist', 'space'
+
+    def get_space(self):
+        return self.shoppinglist_set.first().space
 
     def __str__(self):
         return f'Shopping list entry {self.id}'

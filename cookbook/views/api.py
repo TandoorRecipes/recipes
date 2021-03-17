@@ -340,7 +340,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner, ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user).filter(space=self.request.space).all()
+        return self.queryset.filter(shoppinglist__created_by=self.request.user, shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
@@ -349,7 +349,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner, ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user).filter(space=self.request.space).all()
+        return self.queryset.filter(shoppinglist__created_by=self.request.user, shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
