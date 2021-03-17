@@ -122,8 +122,8 @@
                     </tr>
                     </thead>
                     <tbody is="draggable" :list="c.entries" tag="tbody" group="people" @sort="sortEntries"
-                           @change="dragChanged(c, $event)">
-                    <tr v-for="(element, index) in c.entries" :key="element.id">
+                           @change="dragChanged(c, $event)" handle=".handle">
+                    <tr v-for="(element, index) in c.entries" :key="element.id" v-bind:class="{ 'text-muted': element.checked }">
                         <td class="handle"><i class="fas fa-sort"></i></td>
                         <td>[[element.amount]]</td>
                         <td>[[element.unit.name]]</td>
@@ -154,7 +154,7 @@
                         <div class="input-group">
                             <input id="id_simple_entry" class="form-control" v-model="simple_entry">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i>
+                                <button class="btn btn-outline-secondary" type="button" @click="addSimpleEntry()"><i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
@@ -349,6 +349,8 @@
             </div>
         </div>
 
+        <br/>
+        <br/>
 
         <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
             <div class="row">
@@ -448,7 +450,7 @@
                             name: gettext('Uncategorized'),
                             id: -1,
                             entries: [],
-                            order: 99999999
+                            order: -1
                         }
                     }
 
