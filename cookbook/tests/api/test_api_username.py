@@ -2,7 +2,6 @@ import json
 
 import pytest
 
-from cookbook.tests.views.test_views import TestViews
 from django.contrib import auth
 from django.urls import reverse
 

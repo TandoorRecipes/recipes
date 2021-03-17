@@ -13,7 +13,7 @@ from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from rest_framework import decorators, viewsets, status
@@ -416,7 +416,7 @@ def update_recipe_links(recipe):
 
 @group_required('user')
 def get_external_file_link(request, recipe_id):
-    recipe = Recipe.objects.filter(space=request.user.userpreference.space).get(id=recipe_id)
+    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if not recipe.link:
         update_recipe_links(recipe)
 
@@ -425,7 +425,7 @@ def get_external_file_link(request, recipe_id):
 
 @group_required('guest')
 def get_recipe_file(request, recipe_id):
-    recipe = Recipe.objects.filter(space=request.user.userpreference.space).get(id=recipe_id)
+    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if recipe.storage:
         return FileResponse(get_recipe_provider(recipe).get_file(recipe))
     else:
