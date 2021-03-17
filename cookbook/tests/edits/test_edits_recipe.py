@@ -1,5 +1,4 @@
-from cookbook.models import Food, Recipe, Storage, Unit
-from cookbook.tests.views.test_views import TestViews
+from cookbook.models import Recipe, Storage
 from django.contrib import auth
 from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed

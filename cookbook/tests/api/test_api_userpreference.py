@@ -1,9 +1,4 @@
-import json
-
 from cookbook.models import UserPreference
-from cookbook.tests.views.test_views import TestViews
-from django.contrib import auth
-from django.urls import reverse
 
 import json
 
@@ -11,8 +6,6 @@ import pytest
 from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
-
-from cookbook.models import RecipeBook, RecipeBookEntry
 
 LIST_URL = 'api:userpreference-list'
 DETAIL_URL = 'api:userpreference-detail'
