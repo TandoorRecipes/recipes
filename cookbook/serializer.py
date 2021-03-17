@@ -41,6 +41,16 @@ class CustomDecimalField(serializers.Field):
                 raise ValidationError('A valid number is required')
 
 
+class SpaceFilterSerializer(serializers.ListSerializer):
+
+    def to_representation(self, data):
+        if self.child.Meta.model == User:
+            data = data.filter(userpreference__space=self.context['request'].space)
+        else:
+            data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
+        return super().to_representation(data)
+
+
 class SpacedModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -54,6 +64,7 @@ class MealTypeSerializer(SpacedModelSerializer):
         return super().create(validated_data)
 
     class Meta:
+        list_serializer_class = SpaceFilterSerializer
         model = MealType
         fields = ('id', 'name', 'order', 'created_by')
         read_only_fields = ('created_by',)
@@ -66,6 +77,7 @@ class UserNameSerializer(WritableNestedModelSerializer):
         return obj.get_user_name()
 
     class Meta:
+        list_serializer_class = SpaceFilterSerializer
         model = User
         fields = ('id', 'username')
 
@@ -129,6 +141,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
         return str(obj)
 
     class Meta:
+        list_serializer_class = SpaceFilterSerializer
         model = Keyword
         fields = (
             'id', 'label',
@@ -383,6 +396,7 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
+        validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
     class Meta:
@@ -391,7 +405,7 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
             'id', 'uuid', 'note', 'recipes', 'entries',
             'shared', 'finished', 'supermarket', 'created_by', 'created_at'
         )
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'created_by',)
 
 
 class ShoppingListAutoSyncSerializer(WritableNestedModelSerializer):
