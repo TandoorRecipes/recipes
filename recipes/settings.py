@@ -101,6 +101,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
 
 # Auth related settings
@@ -240,3 +241,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"

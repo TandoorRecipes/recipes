@@ -27,15 +27,15 @@ class Paprika(Integration):
         for i in items:
             md_json = json.loads(i.json())
             if 'schema.org/Recipe' in str(md_json['type']):
-                recipe_json = find_recipe_json(md_json['properties'], '')
-                recipe = Recipe.objects.create(name=recipe_json['name'].strip(), created_by=self.request.user, internal=True)
+                recipe_json = find_recipe_json(md_json['properties'], '', space=self.request.space)
+                recipe = Recipe.objects.create(name=recipe_json['name'].strip(), created_by=self.request.user, internal=True, space=self.request.space)
                 step = Step.objects.create(
                     instruction=recipe_json['recipeInstructions']
                 )
 
                 for ingredient in recipe_json['recipeIngredient']:
-                    f, created = Food.objects.get_or_create(name=ingredient['ingredient']['text'])
-                    u, created = Unit.objects.get_or_create(name=ingredient['unit']['text'])
+                    f, created = Food.objects.get_or_create(name=ingredient['ingredient']['text'], space=self.request.space)
+                    u, created = Unit.objects.get_or_create(name=ingredient['unit']['text'], space=self.request.space)
                     step.ingredients.add(Ingredient.objects.create(
                         food=f, unit=u, amount=ingredient['amount'], note=ingredient['note']
                     ))
