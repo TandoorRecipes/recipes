@@ -4,25 +4,20 @@ import re
 import uuid
 
 import requests
+from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core import management
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
-from django.shortcuts import redirect
-from django.utils import timezone
-from django.utils.formats import date_format
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
-from PIL import Image
-from rest_framework import decorators, permissions, viewsets
-from rest_framework.exceptions import APIException, PermissionDenied
-from rest_framework.mixins import (ListModelMixin, RetrieveModelMixin,
-                                   UpdateModelMixin, CreateModelMixin)
+from rest_framework import decorators, viewsets, status
+from rest_framework.exceptions import APIException, PermissionDenied, NotFound, MethodNotAllowed
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
@@ -77,7 +72,7 @@ class StandardFilterMixin(ViewSetMixin):
         random = self.request.query_params.get('random', False)
         if limit is not None:
             if random:
-                queryset = queryset.random(int(limit))
+                queryset = queryset.order_by("?")[:int(limit)]
             else:
                 queryset = queryset[:int(limit)]
         return queryset
@@ -90,64 +85,68 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
 
     - **filter_list**: array of user id's to get names for
     """
-    queryset = User.objects.all()
+    queryset = User.objects
     serializer_class = UserNameSerializer
     permission_classes = [CustomIsGuest]
     http_method_names = ['get']
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = self.queryset.filter(userpreference__space=self.request.space)
         try:
             filter_list = self.request.query_params.get('filter_list', None)
             if filter_list is not None:
                 queryset = queryset.filter(pk__in=json.loads(filter_list))
         except ValueError:
-            raise APIException(
-                _('Parameter filter_list incorrectly formatted')
-            )
+            raise APIException('Parameter filter_list incorrectly formatted')
 
         return queryset
 
 
 class UserPreferenceViewSet(viewsets.ModelViewSet):
-    queryset = UserPreference.objects.all()
+    queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner, ]
 
-    def perform_create(self, serializer):
-        if UserPreference.objects.filter(user=self.request.user).exists():
-            raise APIException(_('Preference for given user already exists'))
-        serializer.save(user=self.request.user)
-
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return self.queryset
         return self.queryset.filter(user=self.request.user)
 
 
 class StorageViewSet(viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
-    queryset = Storage.objects.all()
+    queryset = Storage.objects
     serializer_class = StorageSerializer
     permission_classes = [CustomIsAdmin, ]
 
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
 
 class SyncViewSet(viewsets.ModelViewSet):
-    queryset = Sync.objects.all()
+    queryset = Sync.objects
     serializer_class = SyncSerializer
     permission_classes = [CustomIsAdmin, ]
 
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
 
 class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = SyncLog.objects.all()
+    queryset = SyncLog.objects
     serializer_class = SyncLogSerializer
     permission_classes = [CustomIsAdmin, ]
 
+    def get_queryset(self):
+        return self.queryset.filter(sync__space=self.request.space)
+
 
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = Supermarket.objects.all()
+    queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
 
 
 class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -159,44 +158,52 @@ class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
                     in the keyword name (case in-sensitive)
        - **limit**: limits the amount of returned results
        """
-    queryset = Keyword.objects.all()
+    queryset = Keyword.objects
     serializer_class = KeywordSerializer
     permission_classes = [CustomIsUser]
 
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
 
 class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = Unit.objects.all()
+    queryset = Unit.objects
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser]
 
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
 
 class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = Food.objects.all()
+    queryset = Food.objects
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
 
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = RecipeBook.objects.all()
+    queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = super(RecipeBookViewSet, self).get_queryset()
-        if self.request.user.is_superuser:
-            return self.queryset
-        return self.queryset.filter(created_by=self.request.user)
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        return super().get_queryset()
 
 
 class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
-    queryset = RecipeBookEntry.objects.all()
+    queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return self.queryset
-        return self.queryset.filter(created_by=self.request.user)
+        return self.queryset.filter(book__created_by=self.request.user).filter(book__space=self.request.space)
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
@@ -208,15 +215,15 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     - **to_date**: filter upward to (inclusive) certain date
 
     """
-    queryset = MealPlan.objects.all()
+    queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = MealPlan.objects.filter(
+        queryset = self.queryset.filter(
             Q(created_by=self.request.user) |
             Q(shared=self.request.user)
-        ).distinct().all()
+        ).filter(space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', None)
         if from_date is not None:
@@ -233,25 +240,31 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     returns list of meal types created by the
     requesting user ordered by the order field.
     """
-    queryset = MealType.objects.order_by('order').all()
+    queryset = MealType.objects
     serializer_class = MealTypeSerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = MealType.objects.order_by('order', 'id').filter(created_by=self.request.user).all()
+        queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(space=self.request.space).all()
         return queryset
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-    queryset = Ingredient.objects.all()
+    queryset = Ingredient.objects
     serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser]
 
+    def get_queryset(self):
+        return self.queryset.filter(step__recipe__space=self.request.space)
+
 
 class StepViewSet(viewsets.ModelViewSet):
-    queryset = Step.objects.all()
+    queryset = Step.objects
     serializer_class = StepSerializer
     permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        return self.queryset.filter(recipe__space=self.request.space)
 
 
 class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -263,12 +276,13 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
                  in the recipe name (case in-sensitive)
     - **limit**: limits the amount of returned results
     """
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
     permission_classes = [CustomIsShare | CustomIsGuest]
 
     def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
 
         internal = self.request.query_params.get('internal', None)
         if internal:
@@ -291,6 +305,10 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     )
     def image(self, request, pk):
         obj = self.get_object()
+
+        if obj.get_space() != request.space:
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+
         serializer = self.serializer_class(
             obj, data=request.data, partial=True
         )
@@ -317,34 +335,30 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
 
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
-    queryset = ShoppingListRecipe.objects.all()
+    queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
     permission_classes = [CustomIsOwner, ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user).all()
+        return self.queryset.filter(shoppinglist__created_by=self.request.user, shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
-    queryset = ShoppingListEntry.objects.all()
+    queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [CustomIsOwner, ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user).all()
+        return self.queryset.filter(shoppinglist__created_by=self.request.user, shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
-    queryset = ShoppingList.objects.all()
+    queryset = ShoppingList.objects
     serializer_class = ShoppingListSerializer
     permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return self.queryset
-        return self.queryset.filter(
-            Q(created_by=self.request.user) | Q(shared=self.request.user)
-        ).all()
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
 
     def get_serializer_class(self):
         autosync = self.request.query_params.get('autosync', None)
@@ -354,22 +368,29 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
 
 
 class ViewLogViewSet(viewsets.ModelViewSet):
-    queryset = ViewLog.objects.all()
+    queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return CookLog.objects.filter(created_by=self.request.user).all()[:5]
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space).all()
+        if self.request.method == 'GET':
+            return self.queryset[:5]
+        else:
+            return self.queryset
 
 
 class CookLogViewSet(viewsets.ModelViewSet):
-    queryset = CookLog.objects.all()
+    queryset = CookLog.objects
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = CookLog.objects.filter(created_by=self.request.user).all()[:5]
-        return queryset
+        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space).all()
+        if self.request.method == 'GET':
+            return self.queryset[:5]
+        else:
+            return self.queryset
 
 
 # -------------- non django rest api views --------------------
@@ -395,7 +416,7 @@ def update_recipe_links(recipe):
 
 @group_required('user')
 def get_external_file_link(request, recipe_id):
-    recipe = Recipe.objects.get(id=recipe_id)
+    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if not recipe.link:
         update_recipe_links(recipe)
 
@@ -404,7 +425,7 @@ def get_external_file_link(request, recipe_id):
 
 @group_required('guest')
 def get_recipe_file(request, recipe_id):
-    recipe = Recipe.objects.get(id=recipe_id)
+    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if recipe.storage:
         return FileResponse(get_recipe_provider(recipe).get_file(recipe))
     else:
@@ -419,7 +440,7 @@ def sync_all(request):
         )
         return redirect('index')
 
-    monitors = Sync.objects.filter(active=True)
+    monitors = Sync.objects.filter(active=True).filter(space=request.user.userpreference.space)
 
     error = False
     for monitor in monitors:
@@ -471,7 +492,7 @@ def log_cooking(request, recipe_id):
 def get_plan_ical(request, from_date, to_date):
     queryset = MealPlan.objects.filter(
         Q(created_by=request.user) | Q(shared=request.user)
-    ).distinct().all()
+    ).filter(space=request.user.userpreference.space).distinct().all()
 
     if from_date is not None:
         queryset = queryset.filter(date__gte=from_date)
@@ -523,22 +544,6 @@ def recipe_from_url(request):
             status=400
         )
     return get_from_html(response.text, url)
-
-
-@group_required('admin')
-def get_backup(request):
-    if not request.user.is_superuser:
-        return HttpResponse('', status=403)
-
-    buf = io.StringIO()
-    management.call_command(
-        'dumpdata', exclude=['contenttypes', 'auth'], stdout=buf
-    )
-
-    response = FileResponse(buf.getvalue())
-    response["Content-Disposition"] = f'attachment; filename=backup{date_format(timezone.now(), format="SHORT_DATETIME_FORMAT", use_l10n=True)}.json'  # noqa: E501
-
-    return response
 
 
 @group_required('user')

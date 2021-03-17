@@ -47,10 +47,10 @@ class Chowdown(Integration):
             if description_mode and len(line) > 3 and '---' not in line:
                 descriptions.append(line)
 
-        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, )
+        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space)
 
         for k in tags.split(','):
-            keyword, created = Keyword.objects.get_or_create(name=k.strip())
+            keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(
@@ -59,8 +59,8 @@ class Chowdown(Integration):
 
         for ingredient in ingredients:
             amount, unit, ingredient, note = parse(ingredient)
-            f, created = Food.objects.get_or_create(name=ingredient)
-            u, created = Unit.objects.get_or_create(name=unit)
+            f, created = Food.objects.get_or_create(name=ingredient, space=self.request.space)
+            u, created = Unit.objects.get_or_create(name=unit, space=self.request.space)
             step.ingredients.add(Ingredient.objects.create(
                 food=f, unit=u, amount=amount, note=note
             ))

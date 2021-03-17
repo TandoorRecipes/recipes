@@ -49,7 +49,7 @@ def import_recipe(request):
 @group_required('user')
 def export_recipe(request):
     if request.method == "POST":
-        form = ExportForm(request.POST)
+        form = ExportForm(request.POST, space=request.space)
         if form.is_valid():
             try:
                 integration = get_integration(request, form.cleaned_data['type'])
@@ -58,11 +58,11 @@ def export_recipe(request):
                 messages.add_message(request, messages.ERROR, _('Exporting is not implemented for this provider'))
 
     else:
-        form = ExportForm()
+        form = ExportForm(space=request.space)
         recipe = request.GET.get('r')
         if recipe:
             if re.match(r'^([0-9])+$', recipe):
-                if recipe := Recipe.objects.filter(pk=int(recipe)).first():
-                    form = ExportForm(initial={'recipes': recipe})
+                if recipe := Recipe.objects.filter(pk=int(recipe), space=request.space).first():
+                    form = ExportForm(initial={'recipes': recipe}, space=request.space)
 
     return render(request, 'export.html', {'form': form})

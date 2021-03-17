@@ -27,7 +27,8 @@ class Integration:
         self.keyword = Keyword.objects.create(
             name=f'Import {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
             description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}',
-            icon='📥'
+            icon='📥',
+            space=request.space
         )
 
     def do_export(self, recipes):
@@ -40,7 +41,7 @@ class Integration:
         export_zip_obj = ZipFile(export_zip_stream, 'w')
 
         for r in recipes:
-            if r.internal:
+            if r.internal and r.space == self.request.space:
                 recipe_zip_stream = BytesIO()
                 recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
 
