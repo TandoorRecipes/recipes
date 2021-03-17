@@ -47,7 +47,8 @@ def get_random_recipe(space_1, u1_s1):
         working_time=20,
         servings=4,
         created_by=auth.get_user(u1_s1),
-        space=space_1
+        space=space_1,
+        internal=True,
     )
 
     s1 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), )
