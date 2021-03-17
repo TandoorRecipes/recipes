@@ -360,7 +360,7 @@ class MealPlanSerializer(SpacedModelSerializer):
         read_only_fields = ('created_by',)
 
 
-class ShoppingListRecipeSerializer(SpacedModelSerializer):
+class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     servings = CustomDecimalField()
 
@@ -370,7 +370,7 @@ class ShoppingListRecipeSerializer(SpacedModelSerializer):
         read_only_fields = ('id',)
 
 
-class ShoppingListEntrySerializer(SpacedModelSerializer):
+class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
     amount = CustomDecimalField()
