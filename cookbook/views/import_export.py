@@ -1,4 +1,6 @@
 import re
+import threading
+from io import BytesIO
 
 from django.contrib import messages
 from django.shortcuts import render
@@ -37,7 +39,15 @@ def import_recipe(request):
         if form.is_valid():
             try:
                 integration = get_integration(request, form.cleaned_data['type'])
-                return integration.do_import(request.FILES.getlist('files'))
+                files = []
+                for f in request.FILES.getlist('files'):
+                    files.append({'file': BytesIO(f.read()), 'name': f.name})
+                t = threading.Thread(target=integration.do_import, args=[files])
+                t.setDaemon(True)
+                t.start()
+
+                messages.add_message(request, messages.SUCCESS, 'Import started')
+                return render(request, 'import.html', {'form': form})
             except NotImplementedError:
                 messages.add_message(request, messages.ERROR, _('Importing is not implemented for this provider'))
     else:
