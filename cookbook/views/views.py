@@ -94,6 +94,8 @@ def no_space(request):
 
 
 def no_perm(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('index'))
     return render(request, 'no_perm_info.html')
 
 
