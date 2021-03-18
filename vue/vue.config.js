@@ -9,6 +9,10 @@ const pages = {
         entry: './src/apps/OfflineView/main.js',
         chunks: ['chunk-vendors']
     },
+    'import_response_view': {
+        entry: './src/apps/ImportResponseView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {

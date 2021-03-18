@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from recipe_scrapers import _utils
 
 
-def get_from_html(html_text, url):
+def get_from_html(html_text, url, space):
     soup = BeautifulSoup(html_text, "html.parser")
 
     # first try finding ld+json as its most common
@@ -32,7 +32,7 @@ def get_from_html(html_text, url):
 
                 if ('@type' in ld_json_item
                         and ld_json_item['@type'] == 'Recipe'):
-                    return JsonResponse(find_recipe_json(ld_json_item, url))
+                    return JsonResponse(find_recipe_json(ld_json_item, url, space))
         except JSONDecodeError:
             return JsonResponse(
                 {
@@ -46,7 +46,7 @@ def get_from_html(html_text, url):
     for i in items:
         md_json = json.loads(i.json())
         if 'schema.org/Recipe' in str(md_json['type']):
-            return JsonResponse(find_recipe_json(md_json['properties'], url))
+            return JsonResponse(find_recipe_json(md_json['properties'], url, space))
 
     return JsonResponse(
         {
@@ -56,7 +56,7 @@ def get_from_html(html_text, url):
         status=400)
 
 
-def find_recipe_json(ld_json, url):
+def find_recipe_json(ld_json, url, space):
     if type(ld_json['name']) == list:
         try:
             ld_json['name'] = ld_json['name'][0]
@@ -85,6 +85,7 @@ def find_recipe_json(ld_json, url):
 
         for x in ld_json['recipeIngredient']:
             if x.replace(' ', '') != '':
+                x = x.replace('&frac12;', "0.5").replace('&frac14;', "0.25").replace('&frac34;', "0.75")
                 try:
                     amount, unit, ingredient, note = parse_ingredient(x)
                     if ingredient:
