@@ -28,7 +28,7 @@ class Integration:
         self.request = request
         self.keyword = Keyword.objects.create(
             name=f'Import {export_type} {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
-            description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}',
+            description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}',
             icon='📥',
             space=request.space
         )
@@ -85,6 +85,9 @@ class Integration:
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
         with scope(space=self.request.space):
+            self.keyword.name = _('Import') + ' ' + str(il.pk)
+            self.keyword.save()
+
             ignored_recipes = []
             try:
                 self.files = files
