@@ -241,6 +241,20 @@ class SyncLog(models.Model, PermissionModelMixin):
         return f"{self.created_at}:{self.sync} - {self.status}"
 
 
+class ImportLog(models.Model, PermissionModelMixin):
+    type = models.CharField(max_length=32)
+    running = models.BooleanField(default=True)
+    msg = models.TextField(default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.created_at}:{self.type} - {self.msg}"
+
+
 class Keyword(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)

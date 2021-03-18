@@ -40,8 +40,8 @@ class Mealie(Integration):
             recipe.steps.add(step)
 
         for f in self.files:
-            if '.zip' in f.name:
-                import_zip = ZipFile(f.file)
+            if '.zip' in f['name']:
+                import_zip = ZipFile(f['file'])
                 for z in import_zip.filelist:
                     if re.match(f'^images/{recipe_json["slug"]}.jpg$', z.filename):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)))
