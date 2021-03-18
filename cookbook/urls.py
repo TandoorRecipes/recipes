@@ -11,7 +11,7 @@ from cookbook.helper import dal
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
                      Storage, Sync, SyncLog, get_model_name)
-from .views import api, data, delete, edit, import_export, lists, new, views
+from .views import api, data, delete, edit, import_export, lists, new, views, telegram
 
 router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
@@ -99,6 +99,10 @@ urlpatterns = [
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
+
+    path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
+    path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
+    path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/api/', views.api_info, name='docs_api'),

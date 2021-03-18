@@ -6,6 +6,7 @@ import cookbook.views.import_export
 import cookbook.views.lists
 import cookbook.views.new
 import cookbook.views.views
+import cookbook.views.telegram
 
 __all__ = [
     'api',
@@ -16,4 +17,5 @@ __all__ = [
     'lists',
     'new',
     'views',
+    'telegram',
 ]

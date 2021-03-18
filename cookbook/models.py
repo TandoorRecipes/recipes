@@ -617,6 +617,20 @@ class InviteLink(models.Model, PermissionModelMixin):
         return f'{self.uuid}'
 
 
+class TelegramBot(models.Model, PermissionModelMixin):
+    token = models.CharField(max_length=256)
+    name = models.CharField(max_length=128, default='', blank=True)
+    chat_id = models.CharField(max_length=128, default='', blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    webhook_token = models.UUIDField(default=uuid.uuid4)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class CookLog(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
