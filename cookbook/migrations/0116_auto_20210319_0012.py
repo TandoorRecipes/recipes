@@ -19,7 +19,7 @@ def remove_empty_food_unit(apps, schema_editor):
 
             for o in ShoppingListEntry.objects.filter(food=f):
                 o.delete()
-
+            f.delete()
         for u in Unit.objects.filter(name='').all():
             for o in Ingredient.objects.filter(unit=u):
                 o.unit = None
@@ -28,6 +28,7 @@ def remove_empty_food_unit(apps, schema_editor):
             for o in ShoppingListEntry.objects.filter(unit=u):
                 o.unit = None
                 o.save()
+            u.delete()
 
 
 class Migration(migrations.Migration):
