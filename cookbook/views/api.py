@@ -337,19 +337,19 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
-    permission_classes = [CustomIsOwner, ]
+    permission_classes = [CustomIsOwner| CustomIsShared ]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user, shoppinglist__space=self.request.space).all()
+        return self.queryset.filter(Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [CustomIsOwner, ]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        return self.queryset.filter(shoppinglist__created_by=self.request.user, shoppinglist__space=self.request.space).all()
+        return self.queryset.filter(Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):

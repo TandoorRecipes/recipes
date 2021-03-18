@@ -45,6 +45,11 @@ class PermissionModelMixin:
             return self.user
         return None
 
+    def get_shared(self):
+        if getattr(self, 'shared', None):
+            return self.shared.all()
+        return []
+
     def get_space(self):
         p = '.'.join(self.get_space_key())
         if getattr(self, p, None):
@@ -548,6 +553,9 @@ class ShoppingListEntry(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f'Shopping list entry {self.id}'
+
+    def get_shared(self):
+        return self.shoppinglist_set.first().shared.all()
 
     def get_owner(self):
         try:

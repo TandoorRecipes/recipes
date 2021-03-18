@@ -79,7 +79,7 @@ def is_object_shared(user, obj):
     #      share checks for relevant objects
     if not user.is_authenticated:
         return False
-    return user in obj.shared.all()
+    return user in obj.get_shared()
 
 
 def share_link_valid(recipe, share):
