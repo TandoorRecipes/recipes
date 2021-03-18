@@ -113,6 +113,7 @@ def import_url(request):
 
         recipe = Recipe.objects.create(
             name=data['name'],
+            description=data['description'],
             waiting_time=data['cookTime'],
             working_time=data['prepTime'],
             servings=data['servings'],
