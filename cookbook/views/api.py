@@ -32,7 +32,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -47,7 +47,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer)
+                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
 from recipes.settings import DEMO
 
 
@@ -391,6 +391,15 @@ class CookLogViewSet(viewsets.ModelViewSet):
             return self.queryset[:5]
         else:
             return self.queryset
+
+
+class ImportLogViewSet(viewsets.ModelViewSet):
+    queryset = ImportLog.objects
+    serializer_class = ImportLogSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space).all()
 
 
 # -------------- non django rest api views --------------------
