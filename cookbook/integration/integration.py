@@ -84,7 +84,7 @@ class Integration:
         try:
             self.files = files
             for f in files:
-                if '.zip' in f.name:
+                if '.zip' in f.name or '.paprikarecipes' in f.name:
                     import_zip = ZipFile(f.file)
                     for z in import_zip.filelist:
                         if self.import_file_name_filter(z):
