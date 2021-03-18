@@ -7,7 +7,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, ImportLog)
+                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, ImportLog, TelegramBot)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -220,3 +220,10 @@ class ImportLogAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ImportLog, ImportLogAdmin)
+
+
+class TelegramBotAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'created_by',)
+
+
+admin.site.register(TelegramBot, TelegramBotAdmin)

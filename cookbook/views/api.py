@@ -28,7 +28,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper
+from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
