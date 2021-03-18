@@ -10,7 +10,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
-from cookbook.models import Keyword
+from django_scopes import scope
+
+from cookbook.models import Keyword, Recipe
 
 
 class Integration:
@@ -18,16 +20,17 @@ class Integration:
     keyword = None
     files = None
 
-    def __init__(self, request):
+    def __init__(self, request, export_type):
         """
         Integration for importing and exporting recipes
         :param request: request context of import session (used to link user to created objects)
         """
         self.request = request
         self.keyword = Keyword.objects.create(
-            name=f'Import {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
+            name=f'Import {export_type} {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
             description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}',
-            icon='📥'
+            icon='📥',
+            space=request.space
         )
 
     def do_export(self, recipes):
@@ -40,7 +43,7 @@ class Integration:
         export_zip_obj = ZipFile(export_zip_stream, 'w')
 
         for r in recipes:
-            if r.internal:
+            if r.internal and r.space == self.request.space:
                 recipe_zip_stream = BytesIO()
                 recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
 
@@ -74,29 +77,55 @@ class Integration:
         """
         return True
 
-    def do_import(self, files):
+    def do_import(self, files, il):
         """
         Imports given files
         :param files: List of in memory files
+        :param il: Import Log object to refresh while running
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
-        try:
-            self.files = files
-            for f in files:
-                if '.zip' in f.name:
-                    import_zip = ZipFile(f.file)
-                    for z in import_zip.filelist:
-                        if self.import_file_name_filter(z):
-                            recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
-                            recipe.keywords.add(self.keyword)
-                    import_zip.close()
-                else:
-                    recipe = self.get_recipe_from_file(f.file)
-                    recipe.keywords.add(self.keyword)
-        except BadZipFile:
-            messages.add_message(self.request, messages.ERROR, _('Importer expected a .zip file. Did you choose the correct importer type for your data ?'))
+        with scope(space=self.request.space):
+            ignored_recipes = []
+            try:
+                self.files = files
+                for f in files:
+                    if '.zip' in f['name'] or '.paprikarecipes' in f['name']:
+                        import_zip = ZipFile(f['file'])
+                        for z in import_zip.filelist:
+                            if self.import_file_name_filter(z):
+                                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                recipe.keywords.add(self.keyword)
+                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                if duplicate := self.is_duplicate(recipe):
+                                    ignored_recipes.append(duplicate)
+                        import_zip.close()
+                    else:
+                        recipe = self.get_recipe_from_file(f['file'])
+                        recipe.keywords.add(self.keyword)
+                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                        if duplicate := self.is_duplicate(recipe):
+                            ignored_recipes.append(duplicate)
+            except BadZipFile:
+                il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
 
-        return HttpResponseRedirect(reverse('view_search') + '?keywords=' + str(self.keyword.pk))
+            if len(ignored_recipes) > 0:
+                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(ignored_recipes) + '\n\n'
+
+            il.keyword = self.keyword
+            il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'
+            il.running = False
+            il.save()
+
+    def is_duplicate(self, recipe):
+        """
+        Checks if a recipe is already present, if so deletes it
+        :param recipe: Recipe object
+        """
+        if Recipe.objects.filter(space=self.request.space, name=recipe.name).count() > 1:
+            recipe.delete()
+            return recipe.name
+        else:
+            return None
 
     @staticmethod
     def import_recipe_image(recipe, image_file):

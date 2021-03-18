@@ -24,7 +24,7 @@
           <i class="fas fa-shopping-cart fa-fw"></i> {{ _('Add to Shopping') }}
         </a>
 
-        <a class="dropdown-item" :href="`${resolveDjangoUrl('new_meal_plan') }?r=${recipe.id}`"
+        <a class="dropdown-item" :href="`${resolveDjangoUrl('new_meal_plan') }?recipe=${recipe.id}`"
            target="_blank" rel="noopener noreferrer"><i
             class="fas fa-calendar fa-fw"></i> {{ _('Add to Plan') }}
         </a>

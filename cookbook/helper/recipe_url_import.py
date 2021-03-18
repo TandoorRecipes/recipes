@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from recipe_scrapers import _utils
 
 
-def get_from_html(html_text, url):
+def get_from_html(html_text, url, space):
     soup = BeautifulSoup(html_text, "html.parser")
 
     # first try finding ld+json as its most common
@@ -32,7 +32,7 @@ def get_from_html(html_text, url):
 
                 if ('@type' in ld_json_item
                         and ld_json_item['@type'] == 'Recipe'):
-                    return JsonResponse(find_recipe_json(ld_json_item, url))
+                    return JsonResponse(find_recipe_json(ld_json_item, url, space))
         except JSONDecodeError:
             return JsonResponse(
                 {
@@ -46,7 +46,7 @@ def get_from_html(html_text, url):
     for i in items:
         md_json = json.loads(i.json())
         if 'schema.org/Recipe' in str(md_json['type']):
-            return JsonResponse(find_recipe_json(md_json['properties'], url))
+            return JsonResponse(find_recipe_json(md_json['properties'], url, space))
 
     return JsonResponse(
         {
@@ -56,7 +56,7 @@ def get_from_html(html_text, url):
         status=400)
 
 
-def find_recipe_json(ld_json, url):
+def find_recipe_json(ld_json, url, space):
     if type(ld_json['name']) == list:
         try:
             ld_json['name'] = ld_json['name'][0]
@@ -85,6 +85,7 @@ def find_recipe_json(ld_json, url):
 
         for x in ld_json['recipeIngredient']:
             if x.replace(' ', '') != '':
+                x = x.replace('&frac12;', "0.5").replace('&frac14;', "0.25").replace('&frac34;', "0.75")
                 try:
                     amount, unit, ingredient, note = parse_ingredient(x)
                     if ingredient:
@@ -125,7 +126,7 @@ def find_recipe_json(ld_json, url):
         ld_json['recipeIngredient'] = []
 
     if 'keywords' in ld_json:
-        ld_json['keywords'] = parse_keywords(listify_keywords(ld_json['keywords']))
+        ld_json['keywords'] = parse_keywords(listify_keywords(ld_json['keywords']), space)
 
     if 'recipeInstructions' in ld_json:
         instructions = ''
@@ -220,26 +221,31 @@ def find_recipe_json(ld_json, url):
     return ld_json
 
 
-def get_from_scraper(scrape):
+def get_from_scraper(scrape, space):
     # converting the scrape_me object to the existing json format based on ld+json
 
     recipe_json = {}
     recipe_json['name'] = scrape.title()
 
-    recipe_json['description'] = ''
-    description = scrape.schema.data.get("description")
+    try:
+        description = scrape.schema.data.get("description") or ''
+        recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
+        recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
+    except AttributeError:
+        description = ''
+        recipe_json['prepTime'] = 0
+        recipe_json['cookTime'] = 0
+
     description += "\n\nImported from " + scrape.url
     recipe_json['description'] = description
 
     try:
         servings = scrape.yields()
         servings = int(re.findall(r'\b\d+\b', servings)[0])
-    except (AttributeError, ValueError):
+    except (AttributeError, ValueError, IndexError):
         servings = 1
     recipe_json['servings'] = servings
 
-    recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
-    recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = scrape.total_time()
@@ -252,13 +258,16 @@ def get_from_scraper(scrape):
         pass
 
     keywords = []
-    if scrape.schema.data.get("keywords"):
-        keywords += listify_keywords(scrape.schema.data.get("keywords"))
-    if scrape.schema.data.get('recipeCategory'):
-        keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
-    if scrape.schema.data.get('recipeCuisine'):
-        keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
-    recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+    try:
+        if scrape.schema.data.get("keywords"):
+            keywords += listify_keywords(scrape.schema.data.get("keywords"))
+        if scrape.schema.data.get('recipeCategory'):
+            keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+        if scrape.schema.data.get('recipeCuisine'):
+            keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
+    except AttributeError:
+        recipe_json['keywords'] = keywords
 
     try:
         ingredients = []
@@ -309,11 +318,11 @@ def get_from_scraper(scrape):
     return recipe_json
 
 
-def parse_keywords(keyword_json):
+def parse_keywords(keyword_json, space):
     keywords = []
     # keywords as list
     for kw in keyword_json:
-        if k := Keyword.objects.filter(name=kw).first():
+        if k := Keyword.objects.filter(name=kw, space=space).first():
             keywords.append({'id': str(k.id), 'text': str(k)})
         else:
             keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
