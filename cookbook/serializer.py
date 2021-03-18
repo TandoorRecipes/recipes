@@ -13,7 +13,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket, SupermarketCategoryRelation)
+                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket, SupermarketCategoryRelation, ImportLog)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -160,6 +160,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return obj
 
     class Meta:
+        list_serializer_class = SpaceFilterSerializer
         model = Keyword
         fields = ('id', 'name', 'icon', 'label', 'description', 'created_at', 'updated_at')
 
@@ -424,7 +425,7 @@ class ShareLinkSerializer(SpacedModelSerializer):
 
 
 class CookLogSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):  # TODO make mixin
+    def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
@@ -435,10 +436,30 @@ class CookLogSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by')
 
 
-class ViewLogSerializer(SpacedModelSerializer):
+class ViewLogSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = ViewLog
-        fields = '__all__'
+        fields = ('id', 'recipe', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
+
+
+class ImportLogSerializer(serializers.ModelSerializer):
+    keyword = KeywordSerializer(read_only=True)
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = ImportLog
+        fields = ('id', 'type', 'msg', 'running', 'keyword', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
 
 
 # Export/Import Serializers
