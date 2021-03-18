@@ -7,7 +7,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation)
+                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, ImportLog)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -213,3 +213,10 @@ class NutritionInformationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(NutritionInformation, NutritionInformationAdmin)
+
+
+class ImportLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'type', 'running', 'created_by', 'created_at',)
+
+
+admin.site.register(ImportLog, ImportLogAdmin)
