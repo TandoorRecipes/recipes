@@ -122,7 +122,7 @@
           <PdfViewer :recipe="recipe"></PdfViewer>
         </div>
         <div
-            v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg')">
+            v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg') || recipe.file_path.includes('.gif')">
           <ImageViewer :recipe="recipe"></ImageViewer>
         </div>
       </template>
