@@ -27,11 +27,11 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0",
     "webpack-bundle-tracker": "0.4.3",
+    "workbox-expiration": "^6.0.2",
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.0.2",
     "workbox-routing": "^6.0.2",
-    "workbox-strategies": "^6.0.2",
-    "workbox-expiration": "^6.0.2"
+    "workbox-strategies": "^6.0.2"
   },
   "eslintConfig": {
     "root": true,
