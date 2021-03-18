@@ -44,10 +44,11 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if self.child.Meta.model == User:
-            data = data.filter(userpreference__space=self.context['request'].space)
-        else:
-            data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
+        if not data.query.is_sliced:  # if query is sliced it came from api request not nested serializer
+            if self.child.Meta.model == User:
+                data = data.filter(userpreference__space=self.context['request'].space)
+            else:
+                data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
 
 
