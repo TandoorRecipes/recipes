@@ -14,22 +14,22 @@ from cookbook.integration.mealie import Mealie
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.paprika import Paprika
 from cookbook.integration.safron import Safron
-from cookbook.models import Recipe
+from cookbook.models import Recipe, ImportLog
 
 
 def get_integration(request, export_type):
     if export_type == ImportExportBase.DEFAULT:
-        return Default(request)
+        return Default(request, export_type)
     if export_type == ImportExportBase.PAPRIKA:
-        return Paprika(request)
+        return Paprika(request, export_type)
     if export_type == ImportExportBase.NEXTCLOUD:
-        return NextcloudCookbook(request)
+        return NextcloudCookbook(request, export_type)
     if export_type == ImportExportBase.MEALIE:
-        return Mealie(request)
+        return Mealie(request, export_type)
     if export_type == ImportExportBase.CHOWDOWN:
-        return Chowdown(request)
+        return Chowdown(request, export_type)
     if export_type == ImportExportBase.SAFRON:
-        return Safron(request)
+        return Safron(request, export_type)
 
 
 @group_required('user')
@@ -39,10 +39,12 @@ def import_recipe(request):
         if form.is_valid():
             try:
                 integration = get_integration(request, form.cleaned_data['type'])
+
+                il = ImportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
                 files = []
                 for f in request.FILES.getlist('files'):
                     files.append({'file': BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files])
+                t = threading.Thread(target=integration.do_import, args=[files, il])
                 t.setDaemon(True)
                 t.start()
 
