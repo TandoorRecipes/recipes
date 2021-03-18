@@ -1,6 +1,8 @@
 import string
 import unicodedata
 
+from cookbook.models import Unit, Food
+
 
 def parse_fraction(x):
     if len(x) == 1 and 'fraction' in unicodedata.decomposition(x):
@@ -157,3 +159,18 @@ def parse(x):
             except ValueError:
                 ingredient = ' '.join(tokens[1:])
     return amount, unit.strip(), ingredient.strip(), note.strip()
+
+
+# small utility functions to prevent emtpy unit/food creation
+def get_unit(unit, space):
+    if len(unit) > 0:
+        u, created = Unit.objects.get_or_create(name=unit, space=space)
+        return u
+    return None
+
+
+def get_food(food, space):
+    if len(food) > 0:
+        f, created = Food.objects.get_or_create(name=food, space=space)
+        return f
+    return None

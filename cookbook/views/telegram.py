@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from cookbook.helper.ingredient_parser import parse
+from cookbook.helper.ingredient_parser import parse, get_unit, get_food
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry, Food, Unit
 
@@ -50,8 +50,8 @@ def hook(request, token):
                 sl = ShoppingList.objects.create(created_by=tb.created_by, space=tb.space)
 
             amount, unit, ingredient, note = parse(data['message']['text'])
-            f, created = Food.objects.get_or_create(name=ingredient, space=tb.space)
-            u, created = Unit.objects.get_or_create(name=unit, space=tb.space)
+            f = get_food(ingredient, tb.space)
+            u = get_unit(unit, tb.space)
             sl.entries.add(
                 ShoppingListEntry.objects.create(
                     food=f, unit=u, amount=amount
