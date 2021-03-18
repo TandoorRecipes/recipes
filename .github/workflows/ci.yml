@@ -25,4 +25,4 @@ jobs:
         python3 manage.py collectstatic_js_reverse
     - name: Django Testing project
       run: |
-        python3 manage.py test
+        pytest

@@ -1,6 +1,27 @@
-# Welcome to Recipes Documentation
+<h1 align="center">
+  <br>
+  <a href="https://app.tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
+  <br>
+  Tandoor Recipes
+  <br>
+</h1>
 
-The recipe manager that allows you to manage your ever growing collection of digital recipes.
+<h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
+
+<p align="center">
+
+<img src="https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop" >
+<img src="https://img.shields.io/github/stars/vabene1111/recipes" >
+<img src="https://img.shields.io/github/forks/vabene1111/recipes" >
+<img src="https://img.shields.io/docker/pulls/vabene1111/recipes" >
+
+</p>
+
+<p align="center">
+<a href="https://docs.tandoor.dev/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
+<a href="https://docs.tandoor.dev/" target="_blank" rel="noopener noreferrer">Documentation</a> •
+<a href="https://app.tandoor.dev/" target="_blank" rel="noopener noreferrer">Demo</a>
+</p>
 
 ![Preview](preview.png)
 

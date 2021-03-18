@@ -1,11 +1,12 @@
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
+from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
-                     UserPreference)
+                     UserPreference, SupermarketCategory, MealType, Space)
 
 
 class SelectWidget(widgets.Select):
@@ -74,18 +75,18 @@ class UserNameForm(forms.ModelForm):
 
 class ExternalRecipeForm(forms.ModelForm):
     file_path = forms.CharField(disabled=True, required=False)
-    storage = forms.ModelChoiceField(
-        queryset=Storage.objects.all(),
-        disabled=True,
-        required=False
-    )
     file_uid = forms.CharField(disabled=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['keywords'].queryset = Keyword.objects.filter(space=space).all()
 
     class Meta:
         model = Recipe
         fields = (
-            'name', 'keywords', 'description', 'servings', 'working_time', 'waiting_time',
-            'file_path', 'storage', 'file_uid'
+            'name', 'description', 'servings', 'working_time', 'waiting_time',
+            'file_path', 'file_uid', 'keywords'
         )
 
         labels = {
@@ -97,94 +98,82 @@ class ExternalRecipeForm(forms.ModelForm):
             'file_uid': _('Storage UID'),
         }
         widgets = {'keywords': MultiSelectWidget}
-
-
-class InternalRecipeForm(forms.ModelForm):
-    ingredients = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-    class Meta:
-        model = Recipe
-        fields = (
-            'name', 'image', 'working_time',
-            'waiting_time', 'servings', 'keywords'
-        )
-
-        labels = {
-            'name': _('Name'),
-            'keywords': _('Keywords'),
-            'working_time': _('Preparation time in minutes'),
-            'waiting_time': _('Waiting time (cooking/baking) in minutes'),
-            'servings': _('Number of servings'),
+        field_classes = {
+            'keywords': SafeModelMultipleChoiceField,
         }
-        widgets = {'keywords': MultiSelectWidget}
 
 
-class ShoppingForm(forms.Form):
-    recipe = forms.ModelMultipleChoiceField(
-        queryset=Recipe.objects.filter(internal=True).all(),
-        widget=MultiSelectWidget
-    )
-    markdown_format = forms.BooleanField(
-        help_text=_('Include <code>- [ ]</code> in list for easier usage in markdown based documents.'),  # noqa: E501
-        required=False,
-        initial=False
-    )
+class ImportExportBase(forms.Form):
+    DEFAULT = 'DEFAULT'
+    PAPRIKA = 'PAPRIKA'
+    NEXTCLOUD = 'NEXTCLOUD'
+    MEALIE = 'MEALIE'
+    CHOWDOWN = 'CHOWDOWN'
+    SAFRON = 'SAFRON'
+
+    type = forms.ChoiceField(choices=(
+        (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
+        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'),
+    ))
 
 
-class ExportForm(forms.Form):
-    recipe = forms.ModelChoiceField(
-        queryset=Recipe.objects.filter(internal=True).all(),
-        widget=SelectWidget
-    )
-    image = forms.BooleanField(
-        help_text=_('Export Base64 encoded image?'),
-        required=False
-    )
-    download = forms.BooleanField(
-        help_text=_('Download export directly or show on page?'),
-        required=False
-    )
+class ImportForm(ImportExportBase):
+    files = forms.FileField(required=True, widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
 
-class ImportForm(forms.Form):
-    recipe = forms.CharField(
-        widget=forms.Textarea,
-        help_text=_('Simply paste a JSON export into this textarea and click import.')  # noqa: E501
-    )
+class ExportForm(ImportExportBase):
+    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
 
 
 class UnitMergeForm(forms.Form):
     prefix = 'unit'
 
-    new_unit = forms.ModelChoiceField(
-        queryset=Unit.objects.all(),
+    new_unit = SafeModelChoiceField(
+        queryset=Unit.objects.none(),
         widget=SelectWidget,
         label=_('New Unit'),
         help_text=_('New unit that other gets replaced by.'),
     )
-    old_unit = forms.ModelChoiceField(
-        queryset=Unit.objects.all(),
+    old_unit = SafeModelChoiceField(
+        queryset=Unit.objects.none(),
         widget=SelectWidget,
         label=_('Old Unit'),
         help_text=_('Unit that should be replaced.'),
     )
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['new_unit'].queryset = Unit.objects.filter(space=space).all()
+        self.fields['old_unit'].queryset = Unit.objects.filter(space=space).all()
+
 
 class FoodMergeForm(forms.Form):
     prefix = 'food'
 
-    new_food = forms.ModelChoiceField(
-        queryset=Food.objects.all(),
+    new_food = SafeModelChoiceField(
+        queryset=Food.objects.none(),
         widget=SelectWidget,
         label=_('New Food'),
         help_text=_('New food that other gets replaced by.'),
     )
-    old_food = forms.ModelChoiceField(
-        queryset=Food.objects.all(),
+    old_food = SafeModelChoiceField(
+        queryset=Food.objects.none(),
         widget=SelectWidget,
         label=_('Old Food'),
         help_text=_('Food that should be replaced.'),
     )
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['new_food'].queryset = Food.objects.filter(space=space).all()
+        self.fields['old_food'].queryset = Food.objects.filter(space=space).all()
 
 
 class CommentForm(forms.ModelForm):
@@ -210,10 +199,22 @@ class KeywordForm(forms.ModelForm):
 
 
 class FoodForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
+        self.fields['supermarket_category'].queryset = SupermarketCategory.objects.filter(space=space).all()
+
     class Meta:
         model = Food
         fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
         widgets = {'recipe': SelectWidget}
+
+        field_classes = {
+            'recipe': SafeModelChoiceField,
+            'supermarket_category': SafeModelChoiceField,
+        }
 
 
 class StorageForm(forms.ModelForm):
@@ -222,18 +223,16 @@ class StorageForm(forms.ModelForm):
         required=False
     )
     password = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'autocomplete': 'new-password', 'type': 'password'}
-        ),
+        widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
         required=False,
-        help_text=_('Leave empty for dropbox and enter app password for nextcloud.')  # noqa: E501
+        help_text=_('Leave empty for dropbox and enter app password for nextcloud.')
     )
     token = forms.CharField(
         widget=forms.TextInput(
             attrs={'autocomplete': 'new-password', 'type': 'password'}
         ),
         required=False,
-        help_text=_('Leave empty for nextcloud and enter api token for dropbox.')  # noqa: E501
+        help_text=_('Leave empty for nextcloud and enter api token for dropbox.')
     )
 
     class Meta:
@@ -241,34 +240,63 @@ class StorageForm(forms.ModelForm):
         fields = ('name', 'method', 'username', 'password', 'token', 'url', 'path')
 
         help_texts = {
-            'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),  # noqa: E501
+            'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
         }
 
 
 class RecipeBookEntryForm(forms.ModelForm):
     prefix = 'bookmark'
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['book'].queryset = RecipeBook.objects.filter(space=space).all()
+
     class Meta:
         model = RecipeBookEntry
         fields = ('book',)
 
+        field_classes = {
+            'book': SafeModelChoiceField,
+        }
+
 
 class SyncForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['storage'].queryset = Storage.objects.filter(space=space).all()
+
     class Meta:
         model = Sync
         fields = ('storage', 'path', 'active')
+
+        field_classes = {
+            'storage': SafeModelChoiceField,
+        }
 
 
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     keywords = forms.ModelMultipleChoiceField(
-        queryset=Keyword.objects.all().order_by('id'),
+        queryset=Keyword.objects.none(),
         required=False,
         widget=MultiSelectWidget
     )
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['keywords'].queryset = Keyword.objects.filter(space=space).all().order_by('id')
+
 
 class ImportRecipeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['keywords'].queryset = Keyword.objects.filter(space=space).all()
+
     class Meta:
         model = Recipe
         fields = ('name', 'keywords', 'file_path', 'file_uid')
@@ -280,16 +308,33 @@ class ImportRecipeForm(forms.ModelForm):
             'file_uid': _('File ID'),
         }
         widgets = {'keywords': MultiSelectWidget}
+        field_classes = {
+            'keywords': SafeModelChoiceField,
+        }
 
 
 class RecipeBookForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
+
     class Meta:
         model = RecipeBook
         fields = ('name', 'icon', 'description', 'shared')
         widgets = {'icon': EmojiPickerTextInput, 'shared': MultiSelectWidget}
+        field_classes = {
+            'shared': SafeModelMultipleChoiceField,
+        }
 
 
 class MealPlanForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
+        self.fields['meal_type'].queryset = MealType.objects.filter(space=space).all()
+        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
 
     def clean(self):
         cleaned_data = super(MealPlanForm, self).clean()
@@ -318,14 +363,27 @@ class MealPlanForm(forms.ModelForm):
             'date': DateWidget,
             'shared': MultiSelectWidget
         }
+        field_classes = {
+            'recipe': SafeModelChoiceField,
+            'meal_type': SafeModelChoiceField,
+            'shared': SafeModelMultipleChoiceField,
+        }
 
 
 class InviteLinkForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['space'].queryset = Space.objects.filter(created_by=user).all()
+
     class Meta:
         model = InviteLink
-        fields = ('username', 'group', 'valid_until')
+        fields = ('username', 'group', 'valid_until', 'space')
         help_texts = {
             'username': _('A username is not required, if left blank the new user can choose one.')  # noqa: E501
+        }
+        field_classes = {
+            'space': SafeModelChoiceField,
         }
 
 

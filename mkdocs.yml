@@ -1,18 +1,20 @@
-site_name: Recipes
-site_description: Documentation for Recipes
+site_name: Tandoor Recipes
+site_description: Tandoor Recipe Documentation
 site_author: vabene1111
 repo_url: https://github.com/vabene1111/recipes
 edit_uri: https://github.com/vabene1111/recipes/tree/develop/docs
+extra_css:
+  - stylesheets/extra.css
+
 theme:
   name: material
+  repo: fontawesome/brands/github
+  logo: logo_color.svg
+  favicon: logo_color.svg
   palette:
     scheme: slate
-    primary: green
-    accent: deep orange
-    logo: cookbook/static/favicon.png
-    favicon: cookbook/static/favicon.ico
-    icon:
-      repo: fontawesome/brands/github
+
+
 
 markdown_extensions:
   - admonition
@@ -29,10 +31,11 @@ nav:
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:
-      - Tempalating: features/templating.md
+      - Templating: features/templating.md
       - Shopping: features/shopping.md
       - Authentication: features/authentication.md
       - Storages and Sync: features/external_recipes.md
+      - Import/Export: features/import_export.md
   - System:
       - Updating: system/updating.md
       - Permission System: system/permissions.md

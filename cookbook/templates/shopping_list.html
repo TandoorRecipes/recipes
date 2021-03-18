@@ -122,8 +122,9 @@
                     </tr>
                     </thead>
                     <tbody is="draggable" :list="c.entries" tag="tbody" group="people" @sort="sortEntries"
-                           @change="dragChanged(c, $event)">
-                    <tr v-for="(element, index) in c.entries" :key="element.id">
+                           @change="dragChanged(c, $event)" handle=".handle">
+                    <tr v-for="(element, index) in c.entries" :key="element.id"
+                        v-bind:class="{ 'text-muted': element.checked }">
                         <td class="handle"><i class="fas fa-sort"></i></td>
                         <td>[[element.amount]]</td>
                         <td>[[element.unit.name]]</td>
@@ -154,7 +155,8 @@
                         <div class="input-group">
                             <input id="id_simple_entry" class="form-control" v-model="simple_entry">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i>
+                                <button class="btn btn-outline-secondary" type="button" @click="addSimpleEntry()"><i
+                                        class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
@@ -349,6 +351,8 @@
             </div>
         </div>
 
+        <br/>
+        <br/>
 
         <b-modal id="id_modal_export" title="{% trans 'Copy/Export' %}">
             <div class="row">
@@ -418,6 +422,8 @@
                 users_loading: false,
                 onLine: navigator.onLine,
                 simple_entry: '',
+                auto_sync_blocked: false,
+                auto_sync_running: false,
                 entry_mode_simple: $cookies.isKey('shopping_entry_mode_simple') ? ($cookies.get('shopping_entry_mode_simple') === 'true') : true,
             },
             directives: {
@@ -448,7 +454,7 @@
                             name: gettext('Uncategorized'),
                             id: -1,
                             entries: [],
-                            order: 99999999
+                            order: -1
                         }
                     }
 
@@ -542,6 +548,7 @@
                 this.loadShoppingList()
 
                 {% if recipes %}
+
                     this.loading = true
                     this.edit_mode = true
                     let loadingRecipes = []
@@ -556,7 +563,8 @@
 
                 {% if request.user.userpreference.shopping_auto_sync > 0 %}
                     setInterval(() => {
-                        if ((this.shopping_list_id !== null) && !this.edit_mode && window.navigator.onLine) {
+                        if ((this.shopping_list_id !== null) && !this.edit_mode && window.navigator.onLine && !this.auto_sync_blocked && !this.auto_sync_running) {
+                            this.auto_sync_running = true
                             this.loadShoppingList(true)
                         }
                     }, {% widthratio request.user.userpreference.shopping_auto_sync 1 1000 %})
@@ -605,6 +613,7 @@
                     })
                 },
                 loadInitialRecipe: function (recipe, servings) {
+                    servings = 1 //TODO temporary until i can actually fix the servings for this #453
                     return this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe)).then((response) => {
                         this.addRecipeToList(response.data, servings)
                     }).catch((err) => {
@@ -620,16 +629,19 @@
                                 this.shopping_list = response.body
                                 this.loading = false
                             } else {
-                                let check_map = {}
-                                for (let e of response.body.entries) {
-                                    check_map[e.id] = {checked: e.checked}
-                                }
+                                if (!this.auto_sync_blocked) {
+                                    let check_map = {}
+                                    for (let e of response.body.entries) {
+                                        check_map[e.id] = {checked: e.checked}
+                                    }
 
-                                for (let se of this.shopping_list.entries) {
-                                    if (check_map[se.id] !== undefined) {
-                                        se.checked = check_map[se.id].checked
+                                    for (let se of this.shopping_list.entries) {
+                                        if (check_map[se.id] !== undefined) {
+                                            se.checked = check_map[se.id].checked
+                                        }
                                     }
                                 }
+                                this.auto_sync_running = false
                             }
                             if (this.shopping_list.entries.length === 0) {
                                 this.edit_mode = true
@@ -681,7 +693,7 @@
                     Promise.allSettled(recipe_promises).then(() => {
                         console.log("proceeding to update shopping list", this.shopping_list)
 
-                        if (this.shopping_list_id === null) {
+                        if (this.shopping_list.id === undefined) {
                             return this.$http.post("{% url 'api:shoppinglist-list' %}", this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.makeToast(gettext('Updated'), gettext('Object created successfully!'), 'success')
@@ -697,7 +709,7 @@
                                 this.loading = false
                             })
                         } else {
-                            return this.$http.put("{% url 'api:shoppinglist-detail' shopping_list_id %}", this.shopping_list, {}).then((response) => {
+                            return this.$http.put("{% url 'api:shoppinglist-detail' 123456 %}".replace('123456', this.shopping_list.id), this.shopping_list, {}).then((response) => {
                                 console.log(response)
                                 this.shopping_list = response.body
                                 this.makeToast(gettext('Updated'), gettext('Changes saved successfully!'), 'success')
@@ -743,17 +755,23 @@
                     }
                 },
                 entryChecked: function (entry) {
+                    this.auto_sync_blocked = true
+                    let updates = []
                     this.shopping_list.entries.forEach((item) => {
                         if (entry.entries.includes(item.id)) {
                             item.checked = entry.checked
-                            this.$http.put("{% url 'api:shoppinglistentry-detail' 123456 %}".replace('123456', item.id), item, {}).then((response) => {
+                            updates.push(this.$http.put("{% url 'api:shoppinglistentry-detail' 123456 %}".replace('123456', item.id), item, {}).then((response) => {
 
                             }).catch((err) => {
                                 console.log(err)
                                 this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                                 this.loading = false
-                            })
+                            }))
                         }
+                    })
+
+                    Promise.allSettled(updates).then(() => {
+                        this.auto_sync_blocked = false
                     })
                 },
                 addEntry: function () {

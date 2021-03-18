@@ -1,138 +1,121 @@
-from cookbook.tests.views.test_views import TestViews
+import pytest
 from django.urls import reverse
 
 
-class TestViewsGeneral(TestViews):
+def test_index():
+    # TODO add appropriate test
+    pass
 
-    def test_index(self):
-        # TODO add appropriate test
-        pass
 
-    def test_search(self):
-        # TODO add appropriate test
-        pass
+def test_search():
+    # TODO add appropriate test
+    pass
 
-    def test_view(self):
-        # TODO add appropriate test
-        pass
 
-    def test_books(self):
-        url = reverse('view_books')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 302),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
+def test_view():
+    # TODO add appropriate test
+    pass
 
-    def test_plan(self):
-        url = reverse('view_plan')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 302),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
 
-    def test_plan_entry(self):
-        # TODO add appropriate test
-        pass
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_books(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_books')).status_code == arg[1]
 
-    def test_shopping(self):
-        url = reverse('view_shopping')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 302),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
 
-    def test_settings(self):
-        url = reverse('view_settings')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 200),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_plan(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_plan')).status_code == arg[1]
 
-    def test_history(self):
-        url = reverse('view_history')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 200),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
 
-    def test_system(self):
-        url = reverse('view_system')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 302),
-                (self.user_client_1, 302),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
+def test_plan_entry():
+    # TODO add appropriate test
+    pass
 
-    def test_setup(self):
-        url = reverse('view_setup')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 302),
-                (self.user_client_1, 302),
-                (self.admin_client_1, 302),
-                (self.superuser_client, 302)
-            ],
-            url
-        )
 
-    def test_markdown_info(self):
-        url = reverse('docs_markdown')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 200),
-                (self.guest_client_1, 200),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_shopping(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_shopping')).status_code == arg[1]
 
-    def test_api_info(self):
-        url = reverse('docs_api')
-        self.batch_requests(
-            [
-                (self.anonymous_client, 302),
-                (self.guest_client_1, 200),
-                (self.user_client_1, 200),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            url
-        )
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_settings(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_settings')).status_code == arg[1]
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_history(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_history')).status_code == arg[1]
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 302],
+    ['a1_s1', 200],
+])
+def test_system(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_system')).status_code == arg[1]
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 302],
+    ['a1_s1', 302],
+])
+def test_setup(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_setup')).status_code == arg[1]
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 200],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_markdown_doc(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('docs_markdown')).status_code == arg[1]
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_api_info(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('docs_api')).status_code == arg[1]

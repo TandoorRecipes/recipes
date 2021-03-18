@@ -12,7 +12,7 @@
           <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
         </td>
         <td>
-          <span v-if="ingredient.amount !== 0">{{ calculateAmount(ingredient.amount) }}</span>
+          <span v-if="ingredient.amount !== 0" v-html="calculateAmount(ingredient.amount)"></span>
         </td>
         <td>
           <span v-if="ingredient.unit !== null && !ingredient.no_amount">{{ ingredient.unit.name }}</span>

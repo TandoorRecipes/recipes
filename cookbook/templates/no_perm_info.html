@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "No Permission" %}{% endblock %}
+
+
+{% block content %}
+
+    <div style="text-align: center">
+
+        <h1 class="">{% trans 'No Permission' %}</h1>
+        <br/>
+
+        <span>{% trans 'You do not have the required permissions to view this page or perform this action.' %}  {% trans 'Please contact your administrator.' %}</span> <br/>
+
+    </div>
+
+{% endblock %}
+

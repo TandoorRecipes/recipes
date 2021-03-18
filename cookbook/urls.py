@@ -35,11 +35,14 @@ router.register(r'cook-log', api.CookLogViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
+router.register(r'import-log', api.ImportLogViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
+    path('no-space', views.no_space, name='view_no_space'),
+    path('no-perm', views.no_perm, name='view_no_perm'),
     path('signup/<slug:token>', views.signup, name='view_signup'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
@@ -51,9 +54,11 @@ urlpatterns = [
     path('shopping/latest/', views.latest_shopping_list, name='view_shopping_latest'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
-    path('test/<int:pk>', views.test, name='view_test'),
+    path('test/', views.test, name='view_test'),
+    path('test2/', views.test2, name='view_test2'),
 
     path('import/', import_export.import_recipe, name='view_import'),
+    path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
     path('export/', import_export.export_recipe, name='view_export'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
@@ -88,7 +93,7 @@ urlpatterns = [
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
     path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
     path('api/recipe-from-url/', api.recipe_from_url, name='api_recipe_from_url'),
-    path('api/backup/', api.get_backup, name='api_backup'),
+    path('api/recipe-from-json/', api.recipe_from_json, name='api_recipe_from_json'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
@@ -104,8 +109,9 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
 
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
+    path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )), name='web_manifest'),
 ]
 
 generic_models = (

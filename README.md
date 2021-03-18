@@ -1,13 +1,27 @@
-# Recipes 
-![CI](https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop) 
-![Stars](https://img.shields.io/github/stars/vabene1111/recipes)
-![Forks](https://img.shields.io/github/forks/vabene1111/recipes)
-![Docker Pulls](https://img.shields.io/docker/pulls/vabene1111/recipes)
+<h1 align="center">
+  <br>
+  <a href="https://app.tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
+  <br>
+  Tandoor Recipes
+  <br>
+</h1>
 
-Recipes is a Django application to manage, tag and search recipes using either built-in models or 
-external storage providers hosting PDF's, images or other files.
+<h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
 
-[Installation Instructions](https://vabene1111.github.io/recipes/install/docker/) - [Documentation](https://vabene1111.github.io/recipes/) - [More (slightly outdated) Screenshots](https://imgur.com/a/V01151p)
+<p align="center">
+
+<img src="https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=develop" >
+<img src="https://img.shields.io/github/stars/vabene1111/recipes" >
+<img src="https://img.shields.io/github/forks/vabene1111/recipes" >
+<img src="https://img.shields.io/docker/pulls/vabene1111/recipes" >
+
+</p>
+
+<p align="center">
+<a href="https://docs.tandoor.dev/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
+<a href="https://docs.tandoor.dev/" target="_blank" rel="noopener noreferrer">Documentation</a> •
+<a href="https://app.tandoor.dev/" target="_blank" rel="noopener noreferrer">Demo</a>
+</p>
 
 ![Preview](docs/preview.png)
 
@@ -32,14 +46,10 @@ external storage providers hosting PDF's, images or other files.
 This application is meant for people with a collection of recipes they want to share with family and friends or simply
 store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as 
 a public page.
-Documentation can be found [here](https://github.com/vabene1111/recipes/wiki).
+Documentation can be found [here](https://docs.tandoor.dev/).
 
 While this application has been around for a while and is actively used by many (including myself), it is still considered
 **beta** software that has a lot of rough edges and unpolished parts.
-
-## Documentation
-Please refer to the [documentation](https://vabene1111.github.io/recipes/) for everything you need to know.
-
 ## License
 
 Beginning with version 0.10.0 the code in this repository is licensed under the [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3.0.de.html) license with an

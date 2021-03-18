@@ -14,8 +14,10 @@ RUN mkdir /opt/recipes
 WORKDIR /opt/recipes
 
 COPY requirements.txt ./
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev && \
+
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev cargo && \
     python -m venv venv && \
+    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 

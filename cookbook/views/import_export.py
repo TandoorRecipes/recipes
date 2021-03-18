@@ -1,76 +1,58 @@
-import base64
-import json
 import re
-from json import JSONDecodeError
+import threading
+from io import BytesIO
 
 from django.contrib import messages
-from django.core.files.base import ContentFile
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.utils.translation import gettext as _
-from rest_framework.renderers import JSONRenderer
 
-from cookbook.forms import ExportForm, ImportForm
+from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import Recipe
-from cookbook.serializer import RecipeSerializer, RecipeExportSerializer
+from cookbook.integration.chowdown import Chowdown
+from cookbook.integration.default import Default
+from cookbook.integration.mealie import Mealie
+from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
+from cookbook.integration.paprika import Paprika
+from cookbook.integration.safron import Safron
+from cookbook.models import Recipe, ImportLog
+
+
+def get_integration(request, export_type):
+    if export_type == ImportExportBase.DEFAULT:
+        return Default(request, export_type)
+    if export_type == ImportExportBase.PAPRIKA:
+        return Paprika(request, export_type)
+    if export_type == ImportExportBase.NEXTCLOUD:
+        return NextcloudCookbook(request, export_type)
+    if export_type == ImportExportBase.MEALIE:
+        return Mealie(request, export_type)
+    if export_type == ImportExportBase.CHOWDOWN:
+        return Chowdown(request, export_type)
+    if export_type == ImportExportBase.SAFRON:
+        return Safron(request, export_type)
 
 
 @group_required('user')
 def import_recipe(request):
     if request.method == "POST":
-        form = ImportForm(request.POST)
+        form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                data = json.loads(
-                    re.sub(r'"id":([0-9]+),', '', re.sub(r',(\s)*"recipe":([0-9]+)', '', form.cleaned_data['recipe']))
-                )
+                integration = get_integration(request, form.cleaned_data['type'])
 
-                sr = RecipeExportSerializer(data=data, context={'request': request})
-                if sr.is_valid():
-                    sr.validated_data['created_by'] = request.user
-                    recipe = sr.save()
+                il = ImportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
+                files = []
+                for f in request.FILES.getlist('files'):
+                    files.append({'file': BytesIO(f.read()), 'name': f.name})
+                t = threading.Thread(target=integration.do_import, args=[files, il])
+                t.setDaemon(True)
+                t.start()
 
-                    if data['image']:
-                        try:
-                            fmt, img = data['image'].split(';base64,')
-                            ext = fmt.split('/')[-1]
-                            # TODO possible security risk,
-                            #      maybe some checks needed
-                            recipe.image = (ContentFile(
-                                base64.b64decode(img),
-                                name=f'{recipe.pk}.{ext}')
-                            )
-                            recipe.save()
-                        except ValueError:
-                            pass
-
-                    messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        _('Recipe imported successfully!')
-                    )
-                    return HttpResponseRedirect(
-                        reverse_lazy('view_recipe', args=[recipe.pk])
-                    )
-                else:
-                    messages.add_message(
-                        request,
-                        messages.ERROR,
-                        _('Something went wrong during the import!')
-                    )
-                    messages.add_message(
-                        request, messages.WARNING, sr.errors
-                    )
-            except JSONDecodeError as e:
-                print(e)
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    _('Could not parse the supplied JSON!')
-                )
-
+                return HttpResponseRedirect(reverse('view_import_response', args=[il.pk]))
+            except NotImplementedError:
+                messages.add_message(request, messages.ERROR, _('Importing is not implemented for this provider'))
     else:
         form = ImportForm()
 
@@ -79,41 +61,26 @@ def import_recipe(request):
 
 @group_required('user')
 def export_recipe(request):
-    context = {}
     if request.method == "POST":
-        form = ExportForm(request.POST)
+        form = ExportForm(request.POST, space=request.space)
         if form.is_valid():
-            recipe = form.cleaned_data['recipe']
-            if recipe.internal:
-                export = RecipeExportSerializer(recipe).data
+            try:
+                integration = get_integration(request, form.cleaned_data['type'])
+                return integration.do_export(form.cleaned_data['recipes'])
+            except NotImplementedError:
+                messages.add_message(request, messages.ERROR, _('Exporting is not implemented for this provider'))
 
-                if recipe.image and form.cleaned_data['image']:
-                    with open(recipe.image.path, 'rb') as img_f:
-                        export['image'] = f'data:image/png;base64,{base64.b64encode(img_f.read()).decode("utf-8")}'  # noqa: E501
-
-                json_string = JSONRenderer().render(export).decode("utf-8")
-
-                if form.cleaned_data['download']:
-                    response = HttpResponse(
-                        json_string, content_type='text/plain'
-                    )
-                    response['Content-Disposition'] = f'attachment; filename={recipe.name}.json'  # noqa: E501
-                    return response
-
-                context['export'] = re.sub(r'"id":([0-9])+,', '', json_string)
-            else:
-                form.add_error(
-                    'recipe',
-                    _('External recipes cannot be exported, please share the file directly or select an internal recipe.')  # noqa: E501
-                )
     else:
-        form = ExportForm()
+        form = ExportForm(space=request.space)
         recipe = request.GET.get('r')
         if recipe:
             if re.match(r'^([0-9])+$', recipe):
-                if recipe := Recipe.objects.filter(pk=int(recipe)).first():
-                    form = ExportForm(initial={'recipe': recipe})
+                if recipe := Recipe.objects.filter(pk=int(recipe), space=request.space).first():
+                    form = ExportForm(initial={'recipes': recipe}, space=request.space)
 
-    context['form'] = form
+    return render(request, 'export.html', {'form': form})
 
-    return render(request, 'export.html', context)
+
+@group_required('user')
+def import_response(request, pk):
+    return render(request, 'import_response.html', {'pk': pk})

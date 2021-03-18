@@ -1,156 +1,82 @@
-from cookbook.models import Food, Recipe, Storage, Unit
-from cookbook.tests.views.test_views import TestViews
+from cookbook.models import Recipe, Storage
 from django.contrib import auth
 from django.urls import reverse
+from pytest_django.asserts import assertTemplateUsed
 
 
-class TestEditsRecipe(TestViews):
+def test_switch_recipe(u1_s1, recipe_1_s1, space_1):
+    external_recipe = Recipe.objects.create(
+        name='Test',
+        internal=False,
+        created_by=auth.get_user(u1_s1),
+        space=space_1,
+    )
 
-    def test_switch_recipe(self):
-        internal_recipe = Recipe.objects.create(
-            name='Test',
-            internal=True,
-            created_by=auth.get_user(self.user_client_1)
-        )
+    url = reverse('edit_recipe', args=[recipe_1_s1.pk])
+    r = u1_s1.get(url)
+    assert r.status_code == 302
 
-        external_recipe = Recipe.objects.create(
-            name='Test',
-            internal=False,
-            created_by=auth.get_user(self.user_client_1)
-        )
+    r = u1_s1.get(r.url)
+    assertTemplateUsed(r, 'forms/edit_internal_recipe.html')
 
-        url = reverse('edit_recipe', args=[internal_recipe.pk])
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 302)
+    url = reverse('edit_recipe', args=[external_recipe.pk])
+    r = u1_s1.get(url)
+    assert r.status_code == 302
 
-        r = self.user_client_1.get(r.url)
-        self.assertTemplateUsed(r, 'forms/edit_internal_recipe.html')
+    r = u1_s1.get(r.url)
+    assertTemplateUsed(r, 'generic/edit_template.html')
 
-        url = reverse('edit_recipe', args=[external_recipe.pk])
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 302)
 
-        r = self.user_client_1.get(r.url)
-        self.assertTemplateUsed(r, 'generic/edit_template.html')
+def test_convert_recipe(u1_s1, space_1):
+    external_recipe = Recipe.objects.create(
+        name='Test',
+        internal=False,
+        created_by=auth.get_user(u1_s1),
+        space=space_1,
+    )
 
-    def test_convert_recipe(self):
-        url = reverse('edit_convert_recipe', args=[42])
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 404)
+    r = u1_s1.get(reverse('edit_convert_recipe', args=[external_recipe.pk]))
+    assert r.status_code == 302
 
-        external_recipe = Recipe.objects.create(
-            name='Test',
-            internal=False,
-            created_by=auth.get_user(self.user_client_1)
-        )
+    external_recipe.refresh_from_db()
+    assert external_recipe.internal
 
-        url = reverse('edit_convert_recipe', args=[external_recipe.pk])
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 302)
 
-        recipe = Recipe.objects.get(pk=external_recipe.pk)
-        self.assertTrue(recipe.internal)
+def test_external_recipe_update(u1_s1, u1_s2, space_1):
+    storage = Storage.objects.create(
+        name='TestStorage',
+        method=Storage.DROPBOX,
+        created_by=auth.get_user(u1_s1),
+        token='test',
+        username='test',
+        password='test',
+        space=space_1,
+    )
 
-        url = reverse('edit_convert_recipe', args=[recipe.pk])
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 302)
+    recipe = Recipe.objects.create(
+        name='Test',
+        created_by=auth.get_user(u1_s1),
+        storage=storage,
+        space=space_1,
+    )
 
-    def test_internal_recipe_update(self):
-        recipe = Recipe.objects.create(
-            name='Test',
-            created_by=auth.get_user(self.user_client_1)
-        )
+    url = reverse('edit_external_recipe', args=[recipe.pk])
 
-        url = reverse('api:recipe-detail', args=[recipe.pk])
+    r = u1_s1.get(url)
+    assert r.status_code == 200
 
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 200)
+    u1_s2.post(
+        url,
+        {'name': 'Test', 'working_time': 15, 'waiting_time': 15, 'servings': 1, }
+    )
+    recipe.refresh_from_db()
+    assert recipe.working_time == 0
+    assert recipe.waiting_time == 0
 
-        r = self.anonymous_client.get(url)
-        self.assertEqual(r.status_code, 403)
-
-        r = self.user_client_1.put(
-            url,
-            {
-                'name': 'Changed',
-                'working_time': 15,
-                'waiting_time': 15,
-                'keywords': [],
-                'steps': []
-            },
-            content_type='application/json'
-        )
-        self.assertEqual(r.status_code, 200)
-
-        recipe = Recipe.objects.get(pk=recipe.pk)
-        self.assertEqual('Changed', recipe.name)
-
-        Food.objects.create(name='Egg')
-        Unit.objects.create(name='g')
-
-        r = self.user_client_1.put(
-            url,
-            {
-                'name': 'Changed',
-                'working_time': 15,
-                'waiting_time': 15,
-                'keywords': [],
-                'steps': [
-                    {
-                        'ingredients': [
-                            {
-                                'food': {'name': 'test food'},
-                                'unit': {'name': 'test unit'},
-                                'amount': 12, 'note': 'test note'
-                            },
-                            {
-                                'food': {'name': 'test food 2'},
-                                'unit': {'name': 'test unit 2'},
-                                'amount': 42, 'note': 'test note 2'
-                            }
-                        ]
-                    }
-                ]
-            },
-            content_type='application/json'
-        )
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(2, recipe.steps.first().ingredients.count())
-
-        with open('cookbook/tests/resources/image.jpg', 'rb') as file:  # noqa: E501,F841
-            pass  # TODO new image tests
-
-        with open('cookbook/tests/resources/image.png', 'rb') as file:  # noqa:  E501,F841
-            pass  # TODO new image tests
-
-    def test_external_recipe_update(self):
-        storage = Storage.objects.create(
-            name='TestStorage',
-            method=Storage.DROPBOX,
-            created_by=auth.get_user(self.user_client_1),
-            token='test',
-            username='test',
-            password='test',
-        )
-
-        recipe = Recipe.objects.create(
-            name='Test',
-            created_by=auth.get_user(self.user_client_1),
-            storage=storage,
-        )
-
-        url = reverse('edit_external_recipe', args=[recipe.pk])
-
-        r = self.user_client_1.get(url)
-        self.assertEqual(r.status_code, 200)
-
-        r = self.anonymous_client.get(url)
-        self.assertEqual(r.status_code, 302)
-
-        r = self.user_client_1.post(
-            url,
-            {'name': 'Test', 'working_time': 15, 'waiting_time': 15, 'servings': 1, }
-        )
-        recipe.refresh_from_db()
-        self.assertEqual(recipe.working_time, 15)
-        self.assertEqual(recipe.waiting_time, 15)
+    u1_s1.post(
+        url,
+        {'name': 'Test', 'working_time': 15, 'waiting_time': 15, 'servings': 1, }
+    )
+    recipe.refresh_from_db()
+    assert recipe.working_time == 15
+    assert recipe.waiting_time == 15

@@ -78,9 +78,9 @@ export function getUserPreference(pref) {
 import {frac} from "@/utils/fractions";
 
 export function calculateAmount(amount, factor) {
-    if (getUserPreference('user_fractions')) {
+    if (getUserPreference('use_fractions')) {
         let return_string = ''
-        let fraction = frac.cont((amount * factor), 9, true)
+        let fraction = frac((amount * factor), 9, true)
 
         if (fraction[0] > 0) {
             return_string += fraction[0]
