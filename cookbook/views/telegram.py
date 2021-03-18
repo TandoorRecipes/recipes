@@ -35,8 +35,6 @@ def remove_bot(request, pk):
 
 @csrf_exempt
 def hook(request, token):
-    print(request.POST, request.body, token)
-
     tb = get_object_or_404(TelegramBot, webhook_token=token)
 
     data = json.loads(request.body.decode())
@@ -47,16 +45,17 @@ def hook(request, token):
 
     if tb.chat_id == str(data['message']['chat']['id']):
         sl = ShoppingList.objects.filter(Q(created_by=tb.created_by)).filter(finished=False, space=tb.space).order_by('-created_at').first()
-        if sl:
-            print(f'found shopping list {sl} adding {data["message"]["text"]}')
-            amount, unit, ingredient, note = parse(data['message']['text'])
-            f, created = Food.objects.get_or_create(name=ingredient, space=tb.space)
-            u, created = Unit.objects.get_or_create(name=unit, space=tb.space)
-            sl.entries.add(
-                ShoppingListEntry.objects.create(
-                    food=f, unit=u, amount=amount
-                )
+        if not sl:
+            sl = ShoppingList.objects.create(created_by=tb.created_by, space=tb.space)
+
+        amount, unit, ingredient, note = parse(data['message']['text'])
+        f, created = Food.objects.get_or_create(name=ingredient, space=tb.space)
+        u, created = Unit.objects.get_or_create(name=unit, space=tb.space)
+        sl.entries.add(
+            ShoppingListEntry.objects.create(
+                food=f, unit=u, amount=amount
             )
-            return JsonResponse({'data': data['message']['text']})
+        )
+        return JsonResponse({'data': data['message']['text']})
 
     return JsonResponse({})
