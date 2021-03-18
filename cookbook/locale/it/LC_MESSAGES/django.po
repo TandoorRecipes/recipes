@@ -235,11 +235,11 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:242 .\cookbook\views\data.py:32
 #: .\cookbook\views\views.py:106 .\cookbook\views\views.py:218
 msgid "You do not have the required permissions to view this page!"
-msgstr "Non hai i permessi richiesti per visualizzare questa pagina!"
+msgstr "Non hai i permessi necessari per visualizzare questa pagina!"
 
 #: .\cookbook\helper\permission_helper.py:151
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Non sei loggato e quindi non puoi visualizzare questa pagina!"
+msgstr "Non hai fatto l'accesso e quindi non puoi visualizzare questa pagina!"
 
 #: .\cookbook\helper\permission_helper.py:161
 #: .\cookbook\helper\permission_helper.py:177
@@ -282,7 +282,7 @@ msgstr "Porzioni"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
-msgstr "Tempo di attesa"
+msgstr "Tempo di cottura"
 
 #: .\cookbook\integration\safron.py:27
 #: .\cookbook\templates\forms\edit_internal_recipe.html:59
@@ -456,7 +456,7 @@ msgstr "Parola chiave"
 
 #: .\cookbook\templates\base.html:100
 msgid "Batch Edit"
-msgstr "Modifica di massa"
+msgstr "Modifica in blocco"
 
 #: .\cookbook\templates\base.html:105
 msgid "Storage Data"
@@ -526,17 +526,17 @@ msgstr "Logout"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr "Modifica di massa per categoria"
+msgstr "Modifica in blocco per categoria"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr "Modifica di massa per ricette"
+msgstr "Modifica in blocco per ricette"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
-"Aggiungi a tutte le ricette che contengono una determinata stringa le parole"
-" chiave desiderate "
+"Aggiungi le parole chiave che desideri a tutte le ricette che contengono una"
+" determinata stringa"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:66
 msgid "Sync"
@@ -556,7 +556,7 @@ msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr "Il path deve essere nel formato seguente"
+msgstr "Il percorso deve essere nel formato seguente"
 
 #: .\cookbook\templates\batch\monitor.html:27
 msgid "Sync Now!"
@@ -636,7 +636,7 @@ msgstr "Modifica Ricetta"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:62
 msgid "Waiting Time"
-msgstr "Tempo di Attesa"
+msgstr "Tempo di cottura"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:68
 msgid "Servings Text"
@@ -1148,7 +1148,7 @@ msgstr "Titolo"
 
 #: .\cookbook\templates\meal_plan.html:141
 msgid "Note (optional)"
-msgstr "Note (opzionale)"
+msgstr "Nota (opzionale)"
 
 #: .\cookbook\templates\meal_plan.html:143
 msgid ""
@@ -1341,7 +1341,7 @@ msgstr "Tempo di preparazione circa"
 #: .\cookbook\templates\recipes_table.html:52
 #: .\cookbook\templates\url_import.html:60
 msgid "Waiting time ca."
-msgstr "Tempo di attesa circa"
+msgstr "Tempo di cottura circa"
 
 #: .\cookbook\templates\recipes_table.html:55
 msgid "External"
@@ -1726,7 +1726,7 @@ msgid_plural "Batch edit done. %(count)d Recipes where updated."
 msgstr[0] ""
 "Modifica di massa completata. %(count)d ricetta è stata aggiornata."
 msgstr[1] ""
-"Modifica di massa completata. %(count)d ricette sono state aggiornate."
+"Modifica in blocco completata. %(count)d ricette sono state aggiornate."
 
 #: .\cookbook\views\delete.py:72
 msgid "Monitor"
@@ -1829,7 +1829,7 @@ msgstr "Si è verificato un errore durante l'importazione di questa ricetta!"
 
 #: .\cookbook\views\views.py:117
 msgid "You do not have the required permissions to perform this action!"
-msgstr "Non hai i permessi necessari per effettuare questa operazione!"
+msgstr "Non hai i permessi necessari per completare questa operazione!"
 
 #: .\cookbook\views\views.py:136
 msgid "Comment saved!"
