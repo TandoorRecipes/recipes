@@ -552,7 +552,7 @@ def recipe_from_url(request):
             },
             status=400
         )
-    return JsonResponse(get_from_scraper(scrape))
+    return JsonResponse(get_from_scraper(scrape, request.space))
 
 
 @group_required('user')
