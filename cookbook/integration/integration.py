@@ -109,7 +109,7 @@ class Integration:
                 il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
 
             if len(ignored_recipes) > 0:
-                il.msg += _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(ignored_recipes) + '\n'
+                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(ignored_recipes) + '\n\n'
 
             il.keyword = self.keyword
             il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'
