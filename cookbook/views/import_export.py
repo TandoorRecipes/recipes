@@ -3,7 +3,9 @@ import threading
 from io import BytesIO
 
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
@@ -48,8 +50,7 @@ def import_recipe(request):
                 t.setDaemon(True)
                 t.start()
 
-                messages.add_message(request, messages.SUCCESS, 'Import started')
-                return render(request, 'import.html', {'form': form})
+                return HttpResponseRedirect(reverse('view_import_response', args=[il.pk]))
             except NotImplementedError:
                 messages.add_message(request, messages.ERROR, _('Importing is not implemented for this provider'))
     else:
@@ -78,3 +79,8 @@ def export_recipe(request):
                     form = ExportForm(initial={'recipes': recipe}, space=request.space)
 
     return render(request, 'export.html', {'form': form})
+
+
+@group_required('user')
+def import_response(request, pk):
+    return render(request, 'import_response.html', {'pk': pk})
