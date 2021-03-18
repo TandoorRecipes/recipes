@@ -18,6 +18,16 @@ export function apiLoadRecipe(recipe_id) {
     })
 }
 
+export function apiLoadImportLog(id) {
+    let url = resolveDjangoUrl('api:importlog-detail', id)
+
+    return axios.get(url).then((response) => {
+        return response.data
+    }).catch((err) => {
+        handleError(err, 'There was an error loading a resource!', 'danger')
+    })
+}
+
 
 export function apiLogCooking(cook_log) {
     return axios.post(resolveDjangoUrl('api:cooklog-list',), cook_log).then((response) => {

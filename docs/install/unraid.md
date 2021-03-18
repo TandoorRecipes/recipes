@@ -15,7 +15,7 @@ You will first need to install Community Applications (CA) by following the dire
 https://forums.unraid.net/topic/38582-plug-in-community-applications/
 
 After that, you can go to the "Apps" tab in unRAID and search for Recipes and locate the Recipes container and install it. 
-![image](https://user-images.githubusercontent.com/724777/97094837-bc616580-1626-11eb-9ec1-79ff034fe8d4.png)
+![image](https://user-images.githubusercontent.com/724777/111038251-faa0cb00-83f5-11eb-9807-37815de8d795.png)
 
 The default settings should by fine for most users, just be sure to enter a secret key that is randomly generated.
 Then chooose apply.
@@ -24,4 +24,4 @@ Then chooose apply.
 
 After the container installs, click on the Recipes icon and click the WebUI button to launch the web user interface.
 Set the container to auto-start if you wish. 
-![image](https://user-images.githubusercontent.com/724777/97094892-4c9faa80-1627-11eb-9eae-d32d0f35b36f.png)
+![image](https://user-images.githubusercontent.com/724777/111038276-16a46c80-83f6-11eb-866b-b3bc9a2efb87.png)

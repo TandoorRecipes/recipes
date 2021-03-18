@@ -1,7 +1,7 @@
 <template>
 
-  <div>
-    <img :src="pdfUrl" width="100%" height="700px" :alt="_('External Recipe Image')">
+  <div style="text-align: center">
+    <b-img :src="pdfUrl"  :alt="_('External Recipe Image')"></b-img>
   </div>
 
 </template>

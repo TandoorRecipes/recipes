@@ -1,6 +1,6 @@
 import bleach
 import markdown as md
-from bleach_whitelist import markdown_attrs, markdown_tags
+from bleach_allowlist import markdown_attrs, markdown_tags
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import Space, get_model_name
@@ -86,6 +86,8 @@ def page_help(page_name):
     help_pages = {
         'edit_storage': 'https://vabene1111.github.io/recipes/features/external_recipes/',
         'view_shopping': 'https://vabene1111.github.io/recipes/features/shopping/',
+        'view_import': 'https://vabene1111.github.io/recipes/features/import_export/',
+        'view_export': 'https://vabene1111.github.io/recipes/features/import_export/',
     }
 
     link = help_pages.get(page_name, '')

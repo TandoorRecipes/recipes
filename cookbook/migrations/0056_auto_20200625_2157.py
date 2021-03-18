@@ -3,11 +3,14 @@
 from django.db import migrations, models
 import uuid
 
+from django_scopes import scopes_disabled
+
 
 def invalidate_shares(apps, schema_editor):
-    ShareLink = apps.get_model('cookbook', 'ShareLink')
+    with scopes_disabled():
+        ShareLink = apps.get_model('cookbook', 'ShareLink')
 
-    ShareLink.objects.all().delete()
+        ShareLink.objects.all().delete()
 
 
 class Migration(migrations.Migration):

@@ -18,13 +18,13 @@ class Local(Provider):
         import_count = 0
         for file in files:
             path = monitor.path + '/' + file
-            if not Recipe.objects.filter(file_path__iexact=path).exists() \
-                    and not RecipeImport.objects.filter(file_path=path).exists():  # noqa: E501
+            if not Recipe.objects.filter(file_path__iexact=path, space=monitor.space).exists() and not RecipeImport.objects.filter(file_path=path, space=monitor.space).exists():
                 name = os.path.splitext(file)[0]
                 new_recipe = RecipeImport(
                     name=name,
                     file_path=path,
-                    storage=monitor.storage
+                    storage=monitor.storage,
+                    space=monitor.space,
                 )
                 new_recipe.save()
                 import_count += 1
@@ -32,7 +32,7 @@ class Local(Provider):
         log_entry = SyncLog(
             status='SUCCESS',
             msg='Imported ' + str(import_count) + ' recipes',
-            sync=monitor
+            sync=monitor,
         )
         log_entry.save()
 

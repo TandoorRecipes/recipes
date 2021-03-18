@@ -10,10 +10,10 @@ class BaseAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return self.model.objects.none()
 
-        qs = self.model.objects.all()
+        qs = self.model.objects.filter(space=self.request.space).all()
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__icontains=self.q)
 
         return qs
 

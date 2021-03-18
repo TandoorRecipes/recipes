@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
-from cookbook.filters import IngredientFilter, ShoppingListFilter
+from cookbook.filters import FoodFilter, ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import (Food, InviteLink, Keyword, RecipeImport,
                              ShoppingList, Storage, SyncLog)
@@ -17,7 +17,7 @@ from cookbook.tables import (ImportLogTable, IngredientTable, InviteLinkTable,
 
 @group_required('user')
 def keyword(request):
-    table = KeywordTable(Keyword.objects.all())
+    table = KeywordTable(Keyword.objects.filter(space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(
@@ -30,9 +30,7 @@ def keyword(request):
 @group_required('admin')
 def sync_log(request):
     table = ImportLogTable(
-        SyncLog.objects.all().order_by(
-            Lower('created_at').desc()
-        )
+        SyncLog.objects.filter(space=request.space).all().order_by('-created_at')
     )
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
@@ -45,7 +43,7 @@ def sync_log(request):
 
 @group_required('user')
 def recipe_import(request):
-    table = RecipeImportTable(RecipeImport.objects.all())
+    table = RecipeImportTable(RecipeImport.objects.filter(space=request.space).all())
 
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
@@ -58,10 +56,7 @@ def recipe_import(request):
 
 @group_required('user')
 def food(request):
-    f = IngredientFilter(
-        request.GET,
-        queryset=Food.objects.all().order_by('pk')
-    )
+    f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
 
     table = IngredientTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
@@ -75,12 +70,10 @@ def food(request):
 
 @group_required('user')
 def shopping_list(request):
-    f = ShoppingListFilter(
-        request.GET,
-        queryset=ShoppingList.objects.filter(
-            Q(created_by=request.user) |
-            Q(shared=request.user)
-        ).all().order_by('finished', 'created_at'))
+    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(
+        Q(created_by=request.user) |
+        Q(shared=request.user), space=request.space
+    ).all().order_by('finished', 'created_at'))
 
     table = ShoppingListTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
@@ -99,7 +92,7 @@ def shopping_list(request):
 
 @group_required('admin')
 def storage(request):
-    table = StorageTable(Storage.objects.all())
+    table = StorageTable(Storage.objects.filter(space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(
@@ -115,18 +108,11 @@ def storage(request):
 
 @group_required('admin')
 def invite_link(request):
-    table = InviteLinkTable(
-        InviteLink.objects.filter(
-            valid_until__gte=datetime.today(), used_by=None
-        ).all())
+    table = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(
-        request,
-        'generic/list_template.html',
-        {
-            'title': _("Invite Links"),
-            'table': table,
-            'create_url': 'new_invite_link'
-        }
-    )
+    return render(request, 'generic/list_template.html', {
+        'title': _("Invite Links"),
+        'table': table,
+        'create_url': 'new_invite_link'
+    })
