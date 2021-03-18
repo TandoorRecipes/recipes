@@ -1,6 +1,9 @@
 """
 Source: https://djangosnippets.org/snippets/1703/
 """
+from django.views.generic.detail import SingleObjectTemplateResponseMixin
+from django.views.generic.edit import ModelFormMixin
+
 from cookbook.models import ShareLink
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -40,8 +43,7 @@ def has_group_permission(user, groups):
         return False
     groups_allowed = get_allowed_groups(groups)
     if user.is_authenticated:
-        if (user.is_superuser
-                | bool(user.groups.filter(name__in=groups_allowed))):
+        if bool(user.groups.filter(name__in=groups_allowed)):
             return True
     return False
 
@@ -56,19 +58,12 @@ def is_object_owner(user, obj):
     :param obj any object that should be tested
     :return: true if user is owner of object, false otherwise
     """
-    # TODO this could be improved/cleaned up by adding
-    #      get_owner methods to all models that allow owner checks
     if not user.is_authenticated:
         return False
-    if user.is_superuser:
-        return True
-    if owner := getattr(obj, 'created_by', None):
-        return owner == user
-    if owner := getattr(obj, 'user', None):
-        return owner == user
-    if getattr(obj, 'get_owner', None):
+    try:
         return obj.get_owner() == user
-    return False
+    except:
+        return False
 
 
 def is_object_shared(user, obj):
@@ -84,9 +79,7 @@ def is_object_shared(user, obj):
     #      share checks for relevant objects
     if not user.is_authenticated:
         return False
-    if user.is_superuser:
-        return True
-    return user in obj.shared.all()
+    return user in obj.get_shared()
 
 
 def share_link_valid(recipe, share):
@@ -97,11 +90,7 @@ def share_link_valid(recipe, share):
     :return: true if a share link with the given recipe and uuid exists
     """
     try:
-        return (
-            True
-            if ShareLink.objects.filter(recipe=recipe, uuid=share).exists()
-            else False
-        )
+        return True if ShareLink.objects.filter(recipe=recipe, uuid=share).exists() else False
     except ValidationError:
         return False
 
@@ -119,7 +108,7 @@ def group_required(*groups_required):
     def in_groups(u):
         return has_group_permission(u, groups_required)
 
-    return user_passes_test(in_groups, login_url='view_no_group')
+    return user_passes_test(in_groups, login_url='view_no_perm')
 
 
 class GroupRequiredMixin(object):
@@ -131,12 +120,16 @@ class GroupRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         if not has_group_permission(request.user, self.groups_required):
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('You do not have the required permissions to view this page!')  # noqa: E501
-            )
+            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse_lazy('index'))
+
+        try:
+            obj = self.get_object()
+            if obj.get_space() != request.space:
+                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                return HttpResponseRedirect(reverse_lazy('index'))
+        except AttributeError:
+            pass
 
         return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
 
@@ -145,25 +138,22 @@ class OwnerRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('You are not logged in and therefore cannot view this page!')
-            )
-            return HttpResponseRedirect(
-                reverse_lazy('account_login') + '?next=' + request.path
-            )
+            messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
+            return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
         else:
             if not is_object_owner(request.user, self.get_object()):
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
-                )
+                messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
                 return HttpResponseRedirect(reverse('index'))
 
-        return super(OwnerRequiredMixin, self) \
-            .dispatch(request, *args, **kwargs)
+        try:
+            obj = self.get_object()
+            if obj.get_space() != request.space:
+                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                return HttpResponseRedirect(reverse_lazy('index'))
+        except AttributeError:
+            pass
+
+        return super(OwnerRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 
 # Django Rest Framework Permission classes

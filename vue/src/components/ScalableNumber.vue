@@ -1,5 +1,5 @@
 <template>
-  <span>{{ calculateAmount(number) }}</span>
+  <span v-html="calculateAmount(number)"></span>
 
 </template>
 

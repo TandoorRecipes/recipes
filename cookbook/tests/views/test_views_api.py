@@ -1,43 +1,34 @@
+import pytest
+
 from cookbook.models import Recipe
-from cookbook.tests.views.test_views import TestViews
 from django.contrib import auth
 from django.urls import reverse
 
 
-class TestViewsApi(TestViews):
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+    ['g1_s2', 302],
+    ['u1_s2', 404],
+    ['a1_s2', 404],
+])
+def test_external_link_permission(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('api_get_external_file_link', args=[ext_recipe_1_s1.pk])).status_code == arg[1]
 
-    def test_external_link_permission(self):
-        recipe = Recipe.objects.create(
-            internal=False,
-            link='test',
-            working_time=1,
-            waiting_time=1,
-            created_by=auth.get_user(self.user_client_1)
-        )
-        url = reverse('api_get_external_file_link', args=[recipe.pk])
 
-        self.assertEqual(self.anonymous_client.get(url).status_code, 302)
-        self.assertEqual(self.guest_client_1.get(url).status_code, 302)
-        self.assertEqual(self.user_client_1.get(url).status_code, 200)
-        self.assertEqual(self.admin_client_1.get(url).status_code, 200)
-        self.assertEqual(self.superuser_client.get(url).status_code, 200)
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+    ['g1_s2', 404],
+    ['u1_s2', 404],
+    ['a1_s2', 404],
+])
+def test_external_link_permission(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('api_get_recipe_file', args=[ext_recipe_1_s1.pk])).status_code == arg[1]
 
-    def test_file_permission(self):
-        recipe = Recipe.objects.create(
-            internal=False,
-            link='test',
-            working_time=1,
-            waiting_time=1,
-            created_by=auth.get_user(self.user_client_1)
-        )
-
-        url = reverse('api_get_recipe_file', args=[recipe.pk])
-
-        self.assertEqual(self.anonymous_client.get(url).status_code, 302)
-        self.assertEqual(self.guest_client_1.get(url).status_code, 200)
-
-    def test_sync_permission(self):
-        url = reverse('api_sync')
-
-        self.assertEqual(self.anonymous_client.get(url).status_code, 302)
-        self.assertEqual(self.guest_client_1.get(url).status_code, 302)

@@ -1,6 +1,6 @@
 import bleach
 import markdown as md
-from bleach_whitelist import markdown_attrs, markdown_tags
+from bleach_allowlist import markdown_attrs, markdown_tags
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import Space, get_model_name
