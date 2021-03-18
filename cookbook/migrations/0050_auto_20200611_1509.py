@@ -2,22 +2,24 @@
 
 from django.db import migrations
 from django.db.models import Q
+from django_scopes import scopes_disabled
 
 
 def migrate_meal_types(apps, schema_editor):
-    MealPlan = apps.get_model('cookbook', 'MealPlan')
-    MealType = apps.get_model('cookbook', 'MealType')
-    User = apps.get_model('auth', 'User')
+    with scopes_disabled():
+        MealPlan = apps.get_model('cookbook', 'MealPlan')
+        MealType = apps.get_model('cookbook', 'MealType')
+        User = apps.get_model('auth', 'User')
 
-    for u in User.objects.all():
-        for t in MealType.objects.filter(created_by=None).all():
-            user_type = MealType.objects.create(
-                name=t.name,
-                created_by=u,
-            )
-            MealPlan.objects.filter(Q(created_by=u) and Q(meal_type=t)).update(meal_type=user_type)
+        for u in User.objects.all():
+            for t in MealType.objects.filter(created_by=None).all():
+                user_type = MealType.objects.create(
+                    name=t.name,
+                    created_by=u,
+                )
+                MealPlan.objects.filter(Q(created_by=u) and Q(meal_type=t)).update(meal_type=user_type)
 
-    MealType.objects.filter(created_by=None).delete()
+        MealType.objects.filter(created_by=None).delete()
 
 
 class Migration(migrations.Migration):

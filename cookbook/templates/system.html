@@ -22,23 +22,6 @@
             <a href="{% url 'list_invite_link' %}" class="btn btn-success">{% trans 'Show Links' %}</a>
 
         </div>
-        <!--
-        <div class="col-md-6">
-            <h3>{% trans 'Backup & Restore' %}</h3>
-            <a href="{% url 'api_backup' %}" class="btn btn-success">{% trans 'Download Backup' %}</a>
-
-            <br/> <br/>
-            <div class="alert alert-danger" role="alert">
-                ⚠️ Backups simply create a so called fixture. Fixtures are json files containing all your data (WITHOUT
-                MEDIA FILES) <br>
-                They can be imported into django by running <code style="color: white">manage.py loaddata [fixture-name]</code> <br>
-                It is planned to provide a better way of backing up and restoring data but it is not yet implemented.<br><br>
-                ⚠️<b>Please make sure to setup a solid backup strategy on your server to save the Database and the <code style="color: white">mediafiles</code>
-                    directory</b>⚠️
-            </div>
-
-        </div>
-        -->
     </div>
 
     <br/>

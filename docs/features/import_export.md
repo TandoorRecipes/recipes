@@ -1,6 +1,10 @@
 This application features a very versatile import and export feature in order 
 to offer the best experience possible and allow you to freely choose where your data goes.
 
+!!! warning "WIP"
+    The Module is relatively new. There is a know issue with [Timeouts](https://github.com/vabene1111/recipes/issues/417) on large exports.
+    A fix is being developed and will likely be released with the next version.
+
 The Module is build with maximum flexibility and expandability in mind and allows to easily add new
 integrations to allow you to both import and export your recipes into whatever format you desire.
 
@@ -13,6 +17,19 @@ if your favorite one is missing.
     That said for most of the people getting this application running with their recipes is the biggest priority.
     Because of this importing as many formats as possible is prioritized over exporting.
     Exporter for the different formats will follow over time.
+
+Overview of the capabilities of the different integrations.
+
+| Integration | Import | Export | Images |
+| ----------- | ------ | ------ | ------ |
+| Default     | ✔️      | ✔️      | ✔️      |
+| Nextcloud   | ✔️      | ⌚      | ✔️      |
+| Mealie      | ✔️      | ⌚      | ✔️      |
+| Chowdown    | ✔️      | ⌚      | ✔️      |
+| Safron      | ✔️      | ⌚      | ❌      |
+| Paprika     | ✔️      | ⌚      | ✔️      |
+
+✔ = implemented, ❌ = not implemented and not possible, ⌚ = not yet implemented
 
 ## Default
 The default integration is the build in (and preferred) way to import and export recipes.
@@ -88,22 +105,7 @@ Then simply upload the entire `.zip` file to the importer.
     Safron exports do not contain any images. They will be lost during import.
 
 ## Paprika
-Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
-The second one is HTML files containing at least a bit of microdata.
+A Paprika export contains a folder with a html representation of your recipes and a `.paprikarecipes` file.
 
-If you want to import your Paprika recipes follow these steps
-
-1. create a html export
-2. Create a `.zip` file from the `Recipes` folder (next to the `index.html`) the structure should look like this
-```
-Recipes.zip/
-    └── Recipes/
-        ├── recipe one.html
-        ├── recipe two.thml
-        └── Images/
-            ├── 5D5E09CD-8F88-4F61-8121-0727DD3E0E89/
-            │   └── 5D5E09CD-8F88-4F61-8121-0727DD3E0E89.jpg
-            └── 7CEE2AC6-DF60-4464-9B61-4F5E347EB90C/
-                └── 7CEE2AC6-DF60-4464-9B61-4F5E347EB90C.jpg
-```
-3. Upload the zip file in the import module and import it
+The `.paprikarecipes` file is basically just a zip with gzipped contents. Simply upload the whole file and import 
+all your recipes. 

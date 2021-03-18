@@ -1,82 +1,122 @@
 import json
 
-from cookbook.models import Storage, Sync
-from cookbook.tests.views.test_views import TestViews
+import pytest
 from django.contrib import auth
-from django.db.models import ProtectedError
 from django.urls import reverse
+from django_scopes import scopes_disabled
+
+from cookbook.models import RecipeBook, Storage, Sync
+
+LIST_URL = 'api:storage-list'
+DETAIL_URL = 'api:storage-detail'
 
 
-class TestApiStorage(TestViews):
+@pytest.fixture()
+def obj_1(space_1, u1_s1):
+    return Storage.objects.create(name='Test Storage 1', username='test', password='password', token='token', url='url', created_by=auth.get_user(u1_s1), space=space_1, )
 
-    def setUp(self):
-        super(TestApiStorage, self).setUp()
-        self.storage = Storage.objects.create(
-            name='Test Storage',
-            username='test',
-            password='password',
-            token='token',
-            url='url',
-            created_by=auth.get_user(self.admin_client_1)
-        )
 
-    def test_storage_list(self):
-        # verify view permissions are applied accordingly
-        self.batch_requests(
-            [
-                (self.anonymous_client, 403),
-                (self.guest_client_1, 403),
-                (self.user_client_1, 403),
-                (self.admin_client_1, 200),
-                (self.superuser_client, 200)
-            ],
-            reverse('api:storage-list')
-        )
+@pytest.fixture
+def obj_2(space_1, u1_s1):
+    return Storage.objects.create(name='Test Storage 2', username='test', password='password', token='token', url='url', created_by=auth.get_user(u1_s1), space=space_1, )
 
-        # verify storage is returned
-        r = self.admin_client_1.get(reverse('api:storage-list'))
-        self.assertEqual(r.status_code, 200)
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 403],
+    ['a1_s1', 200],
+])
+def test_list_permission(arg, request):
+    c = request.getfixturevalue(arg[0])
+    r = c.get(reverse(LIST_URL))
+    assert r.status_code == arg[1]
+    if r.status_code == 200:
         response = json.loads(r.content)
-        self.assertEqual(len(response), 1)
-        storage_response = response[0]
-        self.assertEqual(storage_response['name'], self.storage.name)
-        self.assertFalse('password' in storage_response)
-        self.assertFalse('token' in storage_response)
+        assert 'password' not in response
+        assert 'token' not in response
 
-    def test_storage_update(self):
-        # can update storage as admin
-        r = self.admin_client_1.patch(
-            reverse(
-                'api:storage-detail',
-                args={self.storage.id}
-            ),
-            {'name': 'new', 'password': 'new_password'},
-            content_type='application/json'
+
+def test_list_space(obj_1, obj_2, a1_s1, a1_s2, space_2):
+    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 2
+    assert len(json.loads(a1_s2.get(reverse(LIST_URL)).content)) == 0
+
+    obj_1.space = space_2
+    obj_1.save()
+
+    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 1
+    assert len(json.loads(a1_s2.get(reverse(LIST_URL)).content)) == 1
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 403],
+    ['a1_s1', 200],
+    ['g1_s2', 403],
+    ['u1_s2', 403],
+    ['a1_s2', 404],
+])
+def test_update(arg, request, obj_1):
+    test_password = '1234'
+
+    c = request.getfixturevalue(arg[0])
+    r = c.patch(
+        reverse(
+            DETAIL_URL,
+            args={obj_1.id}
+        ),
+        {'name': 'new', 'password': test_password},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == arg[1]
+    if r.status_code == 200:
+        assert response['name'] == 'new'
+        obj_1.refresh_from_db()
+        assert obj_1.password == test_password
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 403],
+    ['a1_s1', 201],
+])
+def test_add(arg, request, a1_s2, obj_1):
+    c = request.getfixturevalue(arg[0])
+    r = c.post(
+        reverse(LIST_URL),
+        {'name': 'test', 'method': Storage.DROPBOX},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    print(r.content)
+    assert r.status_code == arg[1]
+    if r.status_code == 201:
+        assert response['name'] == 'test'
+        r = c.get(reverse(DETAIL_URL, args={response['id']}))
+        assert r.status_code == 200
+        r = a1_s2.get(reverse(DETAIL_URL, args={response['id']}))
+        assert r.status_code == 404
+
+
+def test_delete(a1_s1, a1_s2, obj_1):
+    r = a1_s2.delete(
+        reverse(
+            DETAIL_URL,
+            args={obj_1.id}
         )
-        response = json.loads(r.content)
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(response['name'], 'new')
+    )
+    assert r.status_code == 404
 
-        # verify password was updated (write only field)
-        self.storage.refresh_from_db()
-        self.assertEqual(self.storage.password, 'new_password')
-
-    def test_storage_delete(self):
-        # can delete storage as admin
-        r = self.admin_client_1.delete(
-            reverse('api:storage-detail', args={self.storage.id})
+    r = a1_s1.delete(
+        reverse(
+            DETAIL_URL,
+            args={obj_1.id}
         )
-        self.assertEqual(r.status_code, 204)
-        self.assertEqual(Storage.objects.count(), 0)
+    )
 
-        self.storage = Storage.objects.create(
-            created_by=auth.get_user(self.admin_client_1), name='test protect'
-        )
-        Sync.objects.create(storage=self.storage, )
-
-        # test if deleting a storage with existing
-        # sync fails (as sync protects storage)
-        with self.assertRaises(ProtectedError):
-            self.admin_client_1.delete(
-                reverse('api:storage-detail', args={self.storage.id})
-            )
+    assert r.status_code == 204
+    with scopes_disabled():
+        assert Storage.objects.count() == 0

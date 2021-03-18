@@ -1,5 +1,5 @@
 bleach==3.3.0
-bleach-whitelist==0.0.11
+bleach-allowlist==1.0.3
 Django==3.1.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
@@ -13,7 +13,7 @@ drf-writable-nested==0.6.2
 gunicorn==20.0.4
 lxml==4.6.2
 Markdown==3.3.4
-Pillow==8.1.0
+Pillow==8.1.2
 psycopg2-binary==2.8.6
 python-dotenv==0.15.0
 requests==2.25.1
@@ -26,9 +26,11 @@ pyyaml==5.4.1
 uritemplate==3.0.1
 beautifulsoup4==4.9.3
 microdata==0.7.1
-django-random-queryset==0.1.3
 Jinja2==2.11.3
 django-webpack-loader==0.7.0
 django-js-reverse==0.9.1
 django-allauth==0.44.0
 recipe-scrapers==12.2.0
+django-scopes==1.2.0
+pytest==6.2.2
+pytest-django==4.1.0
