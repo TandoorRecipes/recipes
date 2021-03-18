@@ -357,6 +357,14 @@
                     })
                 },
                 importRecipe: function () {
+                    if (this.recipe_data.name.length > 128) {
+                        this.makeToast(gettext('Error'), gettext('Recipe name is longer than 128 characters'), 'danger')
+                        return;
+                    }
+                    if (this.recipe_data.description.length > 512) {
+                        this.makeToast(gettext('Error'), gettext('Recipe description is longer than 512 characters'), 'danger')
+                        return;
+                    }
                     if (this.importing_recipe) {
                         this.makeToast(gettext('Error'), gettext('Already importing the selected recipe, please wait!'), 'danger')
                         return;
