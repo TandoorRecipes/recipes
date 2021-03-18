@@ -27,7 +27,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html
+from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -337,7 +337,7 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
-    permission_classes = [CustomIsOwner| CustomIsShared ]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         return self.queryset.filter(Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(shoppinglist__space=self.request.space).all()
@@ -544,6 +544,23 @@ def recipe_from_url(request):
             status=400
         )
     return get_from_html(response.text, url, request.space)
+
+
+@group_required('user')
+def recipe_from_json(request):
+    mjson = request.POST['json']
+
+    md_json = json.loads(mjson)
+    if ('@type' in md_json
+            and md_json['@type'] == 'Recipe'):
+        return JsonResponse(find_recipe_json(md_json, '', request.space))
+    return JsonResponse(
+        {
+            'error': True,
+            'msg': _('Could not parse correctly...')
+        },
+        status=400
+    )
 
 
 @group_required('user')
