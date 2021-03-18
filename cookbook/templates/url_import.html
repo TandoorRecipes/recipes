@@ -30,6 +30,19 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group mb-3">
+                    <input class="form-control" v-model="json_data" placeholder="{% trans 'Enter json directly' %}">
+                    <div class="input-group-append">
+                        <button @click="loadRecipeJson()" class="btn btn-primary shadow-none" type="button"
+                                id="id_btn_search"><i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <br/>
 
         <div v-if="loading" class="text-center">
@@ -322,6 +335,21 @@
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
+                loadRecipeJson: function () {
+                    this.recipe_data = undefined
+                    this.error = undefined
+                    this.loading = true
+                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': this.json_data}, {emulateJSON: true}).then((response) => {
+                        console.log(response.data)
+                        this.recipe_data = response.data;
+                        this.loading = false
+                    }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
+                },
                 importRecipe: function () {
                     if (this.importing_recipe) {
                         this.makeToast(gettext('Error'), gettext('Already importing the selected recipe, please wait!'), 'danger')
@@ -361,7 +389,7 @@
                     this.recipe_data.recipeIngredient[index] = new_unit
                 },
                 addKeyword: function (tag) {
-                    let new_keyword = {'text':tag,'id':null}
+                    let new_keyword = {'text': tag, 'id': null}
                     this.recipe_data.keywords.push(new_keyword)
                 },
                 openUnitSelect: function (id) {
