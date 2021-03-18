@@ -135,9 +135,12 @@
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header" style="display:flex; justify-content:space-between;">
-                                    {% trans 'Keywords' %}
-                                    <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('keywords')" title="{% trans 'Clear Contents'%}"></i>
+                                <div class="card-header">
+                                    <div class="row" style="display:flex; justify-content:space-between;">
+                                        {% trans 'Keywords' %}
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('keywords')" title="{% trans 'Clear Contents'%}"></i>
+                                    </div>
+                                    <div class="small text-muted">{% trans 'Keywords dragged here will be appended to current list'%}</div>
                                 </div>
                                 <div class="card-body drop-zone"   @drop="replacePreview('keywords', $event)" @dragover.prevent @dragenter.prevent>
                                     <div v-for="kw in recipe_json.keywords">
@@ -193,14 +196,24 @@
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header" style="display:flex; justify-content:space-between;">
-                                    {% trans 'Ingredients' %}
-                                    <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('ingredients')" title="{% trans 'Clear Contents'%}"></i>
+                                <div class="card-header">
+                                    <div class="row" style="display:flex; justify-content:space-between;">
+                                        {% trans 'Ingredients' %}
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('ingredients')" title="{% trans 'Clear Contents'%}"></i>
+                                    </div>
+                                    <div class="small text-muted">{% trans 'Ingredients dragged here will be appended to current list.'%}</div>
                                 </div>
                                 <div class="card-body drop-zone"   @drop="replacePreview('ingredients', $event)" @dragover.prevent @dragenter.prevent>
-                                    <div v-for="i in recipe_json.recipeIngredient">
-                                        <div class="card-text">[[i.amount]] [[i.unit.text]] [[i.ingredient.text]] [[i.note]]</div>
-                                    </div>
+                                    <ul class="list-group list-group">
+                                        <div v-for="i in recipe_json.recipeIngredient">
+                                            <li class="row border" style="border:1px">
+                                                <div class="col-sm-1 border">[[i.amount]]</div>
+                                                <div class="col-sm border">[[i.unit.text]]</div>
+                                                <div class="col-sm border">[[i.ingredient.text]]</div>
+                                                <div class="col-sm border">[[i.note]]</div>
+                                            </li>
+                                        </div>
+                                    </ul>
                                 </div>
                             </div>
 
@@ -633,6 +646,7 @@
                     })
                 },
                 loadRecipeHTML: function () {
+                    // TODO this needs refactored to get HTML elements
                     this.error = undefined
                     this.loading = true
                     this.parsed = false
@@ -851,17 +865,35 @@
                             this.recipe_json.cookTime=v
                             break;
                         case 'ingredients':
-                            let new_ingredient={
-                                unit: {id: Math.random() * 1000, text: ""},
-                                amount: "",
-                                ingredient: {id: Math.random() * 1000, text: v}
+                            this.$http.post('{% url 'api_ingredient_from_string' %}', {text: v}, {emulateJSON: true}).then((response) => {
+                                console.log(response)
+                                let new_ingredient={
+                                unit: {id: Math.random() * 1000, text: response.body.unit},
+                                amount: response.body.amount,
+                                ingredient: {id: Math.random() * 1000, text: response.body.food},
+                                note: response.body.note
                             }
-                            this.recipe_json.recipeIngredient=[new_ingredient]
+                            this.recipe_json.recipeIngredient.push(new_ingredient)
+                            }).catch((err) => {
+                                console.log(err)
+                                this.makeToast(gettext('Error'), gettext('Something went wrong.'), 'danger')
+                            })
+                            
                             break;
                         case 'instructions':
                             this.recipe_json.recipeInstructions=this.recipe_json.recipeInstructions.concat(v)
                             break;
                     }
+                },
+                parseIngredient: function(txt) {
+                    this.$http.post('{% url 'api_ingredient_from_string' %}', {text: txt}, {emulateJSON: true}).then((response) => {
+                            console.log(response)
+                            let ing = [response.body.amount, response.body.unit, response.body.food, response.body.note]
+                            return ing
+                        }).catch((err) => {
+                            console.log(err)
+                            this.makeToast(gettext('Error'), gettext('Something went wrong.'), 'danger')
+                        })
                 }
             }
         });
