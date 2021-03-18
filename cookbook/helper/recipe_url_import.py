@@ -126,7 +126,7 @@ def find_recipe_json(ld_json, url, space):
         ld_json['recipeIngredient'] = []
 
     if 'keywords' in ld_json:
-        ld_json['keywords'] = parse_keywords(listify_keywords(ld_json['keywords']))
+        ld_json['keywords'] = parse_keywords(listify_keywords(ld_json['keywords']), space)
 
     if 'recipeInstructions' in ld_json:
         instructions = ''
@@ -221,13 +221,12 @@ def find_recipe_json(ld_json, url, space):
     return ld_json
 
 
-def get_from_scraper(scrape):
+def get_from_scraper(scrape, space):
     # converting the scrape_me object to the existing json format based on ld+json
 
     recipe_json = {}
     recipe_json['name'] = scrape.title()
 
-    
     try:
         description = scrape.schema.data.get("description") or ''
         recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
@@ -247,7 +246,6 @@ def get_from_scraper(scrape):
         servings = 1
     recipe_json['servings'] = servings
 
-    
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = scrape.total_time()
@@ -267,7 +265,7 @@ def get_from_scraper(scrape):
             keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
         if scrape.schema.data.get('recipeCuisine'):
             keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
-        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
     except AttributeError:
         recipe_json['keywords'] = keywords
 
@@ -320,11 +318,11 @@ def get_from_scraper(scrape):
     return recipe_json
 
 
-def parse_keywords(keyword_json):
+def parse_keywords(keyword_json, space):
     keywords = []
     # keywords as list
     for kw in keyword_json:
-        if k := Keyword.objects.filter(name=kw).first():
+        if k := Keyword.objects.filter(name=kw, space=space).first():
             keywords.append({'id': str(k.id), 'text': str(k)})
         else:
             keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
