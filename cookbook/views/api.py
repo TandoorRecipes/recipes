@@ -543,7 +543,7 @@ def recipe_from_url(request):
             },
             status=400
         )
-    return get_from_html(response.text, url)
+    return get_from_html(response.text, url, request.space)
 
 
 @group_required('user')
