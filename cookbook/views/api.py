@@ -662,6 +662,7 @@ def ingredient_from_string(request):
             'amount': amount,
             'unit': unit,
             'food': food,
+            'note': note
         },
         status=200
     )
