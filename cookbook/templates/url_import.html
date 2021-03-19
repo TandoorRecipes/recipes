@@ -63,7 +63,7 @@
                     <textarea id="id_description" class="form-control" v-model="recipe_data.description"
                               rows="4"></textarea>
                 </div>
-                
+
                 <div class="row">
                     <div class="col col-md-6" v-if="recipe_data.image !== ''">
                         <img v-bind:src="recipe_data.image" alt="{% trans 'Recipe Image' %}"
@@ -302,6 +302,7 @@
                 loading: false,
                 all_keywords: false,
                 importing_recipe: false,
+                json_data: '',
             },
             directives: {
                 tabindex: {
@@ -338,7 +339,13 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                        let msg = gettext('There was an error loading a resource!')
+                        if (err.bodyText.length < 300) {
+                            msg += err.bodyText
+                        } else {
+                            msg += ' ' + err.status + ' ' + err.statusText
+                        }
+                        this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
                 loadRecipeJson: function () {
@@ -353,7 +360,13 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                        let msg = gettext('There was an error loading a resource!')
+                        if (err.bodyText.length < 300) {
+                            msg += err.bodyText
+                        } else {
+                            msg += ' ' + err.status + ' ' + err.statusText
+                        }
+                        this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
                 importRecipe: function () {

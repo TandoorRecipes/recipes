@@ -236,7 +236,6 @@ def get_from_scraper(scrape, space):
         recipe_json['prepTime'] = 0
         recipe_json['cookTime'] = 0
 
-    description += "\n\nImported from " + scrape.url
     recipe_json['description'] = description
 
     try:
@@ -315,6 +314,7 @@ def get_from_scraper(scrape, space):
     except AttributeError:
         recipe_json['recipeInstructions'] = ""
 
+    recipe_json['recipeInstructions'] += "\n\nImported from " + scrape.url
     return recipe_json
 
 
