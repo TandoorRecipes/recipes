@@ -77,7 +77,7 @@ def find_recipe_json(ld_json, url, space):
     if 'recipeCuisine' in ld_json:
         keywords += listify_keywords(ld_json['recipeCuisine'])
     try:
-        ld_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))))
+        ld_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
     except TypeError:
         pass
 
@@ -179,7 +179,7 @@ def get_from_scraper(scrape, space):
         ingredients = []
         for x in scrape.ingredients():
             try:
-                amount, unit, ingredient, note = parse_ingredient(x)
+                amount, unit, ingredient, note = parse_single_ingredient(x)
                 if ingredient:
                     ingredients.append(
                         {
