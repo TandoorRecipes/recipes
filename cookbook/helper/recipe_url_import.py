@@ -214,7 +214,7 @@ def find_recipe_json(ld_json, url, space):
     for key in list(ld_json):
         if key not in [
             'prepTime', 'cookTime', 'image', 'recipeInstructions',
-            'keywords', 'name', 'recipeIngredient', 'servings'
+            'keywords', 'name', 'recipeIngredient', 'servings', 'description'
         ]:
             ld_json.pop(key, None)
 
