@@ -52,7 +52,7 @@
             <div class="row tab-pane fade show" id="nav-ldjson" role="tabpanel">
                 <div class="col-md-12">
                     <div class="input-group input-group-lg">
-                        <textarea class="form-control input-group-append" v-model="json_data" rows=10 placeholder="{% trans 'Paste ld+json here to parse recipe automatically.' %}" style="font-size: 12px">
+                        <textarea class="form-control input-group-append" v-model="raw_data" rows=10 placeholder="{% trans 'Paste ld+json here to parse recipe automatically.' %}" style="font-size: 12px">
                         </textarea>
                     </div>
                     <br>
@@ -66,7 +66,7 @@
             <div class="row tab-pane fade show" id="nav-json" role="tabpanel">
                 <div class="col-md-12">
                     <div class="input-group input-group-lg">
-                        <textarea class="form-control input-group-append" v-model="html_data" rows=10 
+                        <textarea class="form-control input-group-append" v-model="raw_data" rows=10 
                             placeholder="{% trans 'To parse recipe manually:  Paste JSON document here or a web page source that contains one or more JSON elements here.' %}" style="font-size: 12px">
                         </textarea>
                     </div>
@@ -81,7 +81,7 @@
             <div class="row tab-pane fade show" id="nav-html" role="tabpanel">
                 <div class="col-md-12">
                     <div class="input-group input-group-lg">
-                        <textarea class="form-control input-group-append" v-model="html_data" rows=10 placeholder="{% trans 'Paste html source here to parse recipe manually.' %}" style="font-size: 12px">
+                        <textarea class="form-control input-group-append" v-model="raw_data" rows=10 placeholder="{% trans 'Paste html source here to parse recipe manually.' %}" style="font-size: 12px">
                         </textarea>
                     </div>
                     <br>
@@ -100,7 +100,7 @@
             <i class="fas fa-spinner fa-spin fa-8x"></i>
         </div>
         
-        <!-- recipe preview on HTML Import -->
+        <!-- recipe preview before Import -->
         <div class="container-fluid" v-if="parsed" id="manage_tree">
             
             <h2></h2>
@@ -274,7 +274,7 @@
             </div>
         </div>
         
-        <!-- end of recipe preview on HTML Import -->
+        <!-- end of recipe preview before Import -->
 
         <template v-if="recipe_data !== undefined">
 
@@ -286,12 +286,6 @@
                 <div class="form-group">
                     <label for="id_description">{% trans 'Recipe Description' %}</label>
                     <textarea id="id_description" class="form-control" rows="3" v-model="recipe_data.description"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_description">{% trans 'Recipe Description' %}</label>
-                    <textarea id="id_description" class="form-control" v-model="recipe_data.description"
-                              rows="4"></textarea>
                 </div>
 
                 <div class="row">
@@ -521,7 +515,7 @@
             el: '#app',
             data: {
                 remote_url: '',
-                json_data: undefined,
+                raw_data: undefined,
                 keywords: [],
                 keywords_loading: false,
                 units: [],
@@ -536,8 +530,6 @@
                 importing_recipe: false,
                 recipe_json: undefined,
                 recipe_tree: undefined,
-                recipe_tree1: undefined,
-                html_data: undefined,
             },
             directives: {
                 tabindex: {
@@ -587,7 +579,7 @@
                     this.recipe_data = undefined
                     this.error = undefined
                     this.loading = true
-                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': this.json_data}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': this.raw_data}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         this.recipe_data = response.data;
                         this.loading = false
@@ -604,11 +596,13 @@
                         this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
-                loadRecipeJson: function () {
-                    this.recipe_data = undefined
+                loadRecipeHTML: function () {
+                    // TODO this needs refactored to get HTML elements
                     this.error = undefined
                     this.loading = true
-                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': this.json_data}, {emulateJSON: true}).then((response) => {
+                    this.parsed = false
+                    this.recipe_json['@type'] = "Recipe"
+                    this.$http.post("{% url 'api_recipe_from_json' %}", {'html': JSON.stringify(this.raw_data)}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         this.recipe_data = response.data;
                         this.loading = false
@@ -640,10 +634,9 @@
                     this.error = undefined
                     
                     this.loading = true
-                    this.$http.post("{% url 'api_recipe_from_html' %}", {'html_data': this.html_data}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_manual_recipe_from_json' %}", {'data': this.raw_data}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         this.recipe_json = response.data['recipe_json'];
-                        this.recipe_tree1 = JSON.stringify(response.data['recipe_tree'], null, 2);
                         this.recipe_tree = response.data['recipe_tree'];
                         this.loading = false
                         this.parsed = true
@@ -651,23 +644,6 @@
                         this.error = err.data
                         this.loading = false
                         this.parsed = false
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
-                    })
-                },
-                loadRecipeHTML: function () {
-                    // TODO this needs refactored to get HTML elements
-                    this.error = undefined
-                    this.loading = true
-                    this.parsed = false
-                    this.recipe_json['@type'] = "Recipe"
-                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': JSON.stringify(this.recipe_json)}, {emulateJSON: true}).then((response) => {
-                        console.log(response.data)
-                        this.recipe_data = response.data;
-                        this.loading = false
-                    }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
