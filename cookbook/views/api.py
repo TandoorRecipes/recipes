@@ -607,9 +607,17 @@ def recipe_from_json(request):
     mjson = request.POST['json']
 
     md_json = json.loads(mjson)
-    if ('@type' in md_json
-            and md_json['@type'] == 'Recipe'):
-        return JsonResponse(find_recipe_json(md_json, ''))
+    for ld_json_item in md_json:
+        # recipes type might be wrapped in @graph type
+        if '@graph' in ld_json_item:
+            for x in md_json['@graph']:
+                if '@type' in x and x['@type'] == 'Recipe':
+                    md_json = x
+
+        if ('@type' in md_json
+                and md_json['@type'] == 'Recipe'):
+            return JsonResponse(find_recipe_json(md_json, '', request.space))
+
     return JsonResponse(
         {
             'error': True,
@@ -698,14 +706,14 @@ def recipe_from_url(request):
 
 
 @group_required('user')
-def recipe_from_html(request):
-    html_data = request.POST['html_data']
-    recipe_json, recipe_tree = get_from_raw(html_data)
+def manual_recipe_from_json(request):
+    json_data = request.POST['data']
+    recipe_json, recipe_tree = get_from_raw(json_data)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse(
             {
                 'error': True,
-                'msg': _('The requested page refused to provide any information (Status Code 403).')  # noqa: E501
+                'msg': _('No useable data could be found.')  # noqa: E501
             },
             status=400
         )

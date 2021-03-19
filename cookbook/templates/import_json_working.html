@@ -152,7 +152,7 @@
                     this.error = undefined
                     this.parsed = true
                     this.loading = true
-                    this.$http.post("{% url 'api_recipe_from_html' %}", {'html_text': this.html_recipe}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_manual_recipe_from_json' %}", {'html_text': this.html_recipe}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         this.recipe_data = response.data['recipe_data'];
                         this.recipe_tree = response.data['recipe_tree'];
