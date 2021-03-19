@@ -10,7 +10,7 @@ from cookbook.helper import recipe_url_import as helper
 # %%
 
 # %%
-def get_from_raw(text):
+def get_from_raw(text, space):
     def build_node(k, v):
         if isinstance(v, dict):
             node = {
@@ -85,8 +85,11 @@ def get_from_raw(text):
     for el in parse_list:
 
         if isinstance(el, Tag):
-            el = json.loads(el.string)
-            
+            try:
+                el = json.loads(el.string)
+            except TypeError:
+                continue
+
         for k, v in el.items():
             if isinstance(v, dict):
                 node = {
@@ -106,9 +109,12 @@ def get_from_raw(text):
                     'value': str(v)
                 }
             temp_tree.append(node)
-        if ('@type' in el and el['@type'] == 'Recipe'):
-            recipe_json = helper.find_recipe_json(el, None)
-            recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
+        # recipes type might be wrapped in @graph type
+        if '@graph' in el:
+            for x in el['@graph']:
+                if '@type' in x and x['@type'] == 'Recipe':
+                    recipe_json = helper.find_recipe_json(x, None, space)
+                    recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
 

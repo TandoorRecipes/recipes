@@ -618,7 +618,7 @@ def recipe_from_url_old(request):
 @group_required('user')
 def manual_recipe_from_json(request):
     json_data = request.POST['data']
-    recipe_json, recipe_tree = get_from_raw(json_data)
+    recipe_json, recipe_tree = get_from_raw(json_data, request.space)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse(
             {

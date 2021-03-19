@@ -85,7 +85,7 @@
                         </textarea>
                     </div>
                     <br>
-                    <button @click="loadPreviewHTML()" class="btn btn-primary shadow-none" type="button"
+                    <button @click="loadPreviewRaw()" class="btn btn-primary shadow-none" type="button"
                                 id="id_btn_HTML"><i class="fas fa-code"></i> {% trans 'Preview Import' %} 
                     </button>
                 </div>
@@ -136,7 +136,7 @@
 
                             <div class="card mb-2">
                                 <div class="card-header">
-                                    <div class="row" style="display:flex; justify-content:space-between;">
+                                    <div class="row px-3" style="justify-content:space-between;">
                                         {% trans 'Keywords' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('keywords')" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
@@ -197,7 +197,7 @@
 
                             <div class="card mb-2">
                                 <div class="card-header">
-                                    <div class="row" style="display:flex; justify-content:space-between;">
+                                    <div class="row px-3" style="display:flex; justify-content:space-between;">
                                         {% trans 'Ingredients' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('ingredients')" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
@@ -206,7 +206,7 @@
                                 <div class="card-body drop-zone"   @drop="replacePreview('ingredients', $event)" @dragover.prevent @dragenter.prevent>
                                     <ul class="list-group list-group">
                                         <div v-for="i in recipe_json.recipeIngredient">
-                                            <li class="row border" style="border:1px">
+                                            <li class="row border-light" >
                                                 <div class="col-sm-1 border">[[i.amount]]</div>
                                                 <div class="col-sm border">[[i.unit.text]]</div>
                                                 <div class="col-sm border">[[i.ingredient.text]]</div>
@@ -218,10 +218,13 @@
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header" style="display:flex; justify-content:space-between;">
+                                <div class="card-header">
+                                    <div class="row px-3" style="justify-content:space-between;">    
                                         {% trans 'Instructions' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('instructions')" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
+                                    <div class="small text-muted">{% trans 'Recipe instructions dragged here will be appended to current instructions.'%}</div>
+                                </div>
                                 <div class="card-body drop-zone"   @drop="replacePreview('instructions', $event)" @dragover.prevent @dragenter.prevent>
                                     <div class="card-text">[[recipe_json.recipeInstructions]]</div>
                                 </div>
@@ -229,7 +232,7 @@
                         </div>
                     </div>
                     <br/>
-                    <button @click="loadRecipeHTML()" class="btn btn-primary shadow-none" type="button"
+                    <button @click="loadRecipeRaw()" class="btn btn-primary shadow-none" type="button"
                                 id="id_btn_json"><i class="fas fa-code"></i> {% trans 'Import' %} 
                     </button>
                 </div>
@@ -596,13 +599,12 @@
                         this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
-                loadRecipeHTML: function () {
-                    // TODO this needs refactored to get HTML elements
+                loadRecipeRaw: function () {
                     this.error = undefined
                     this.loading = true
                     this.parsed = false
                     this.recipe_json['@type'] = "Recipe"
-                    this.$http.post("{% url 'api_recipe_from_json' %}", {'html': JSON.stringify(this.raw_data)}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_json' %}", {'json': JSON.stringify(this.recipe_json)}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         this.recipe_data = response.data;
                         this.loading = false
