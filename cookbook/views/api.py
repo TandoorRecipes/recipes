@@ -589,9 +589,17 @@ def recipe_from_json(request):
     mjson = request.POST['json']
 
     md_json = json.loads(mjson)
-    if ('@type' in md_json
-            and md_json['@type'] == 'Recipe'):
-        return JsonResponse(find_recipe_json(md_json, '', request.space))
+    for ld_json_item in md_json:
+        # recipes type might be wrapped in @graph type
+        if '@graph' in ld_json_item:
+            for x in md_json['@graph']:
+                if '@type' in x and x['@type'] == 'Recipe':
+                    md_json = x
+
+        if ('@type' in md_json
+                and md_json['@type'] == 'Recipe'):
+            return JsonResponse(find_recipe_json(md_json, '', request.space))
+
     return JsonResponse(
         {
             'error': True,
