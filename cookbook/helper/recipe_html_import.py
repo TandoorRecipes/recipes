@@ -7,10 +7,7 @@ from bs4.element import Tag
 from cookbook.helper import recipe_url_import as helper
 
 
-# %%
-
-# %%
-def get_from_raw(text, space):
+def get_recipe_from_source(text, space):
     def build_node(k, v):
         if isinstance(v, dict):
             node = {
@@ -113,17 +110,20 @@ def get_from_raw(text, space):
         if '@graph' in el:
             for x in el['@graph']:
                 if '@type' in x and x['@type'] == 'Recipe':
-                    recipe_json = helper.find_recipe_json(x, None, space)
-                    recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
+                    el = x
+
+        if '@type' in el and el['@type'] == 'Recipe':
+            recipe_json = helper.find_recipe_json(el, None, space)
+            recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
 
         temp_tree = []
 
-    # overide keyword structure from dict to list
-    kws = []
-    for kw in recipe_json['keywords']:
-        kws.append(kw['text'])
-    recipe_json['keywords'] = kws
-
     return recipe_json, recipe_tree
+
+
+def get_from_html(text, space):
+    for s in soup.strings:
+        if ((s.parent.name not in INVISIBLE_ELEMS) and (len(s.strip()) > 0)):
+            print(s.parent.name, s, len(s))

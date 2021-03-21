@@ -14,8 +14,8 @@ from recipe_scrapers._schemaorg import SchemaOrgException
 from recipe_scrapers._utils import get_minutes
 
 
-def get_from_scraper(scrape, space):
-    # converting the scrape_me object to the existing json format based on ld+json
+def get_from_html_old(html_text, url, space):
+    soup = BeautifulSoup(html_text, "html.parser")
 
     # first try finding ld+json as its most common
     for ld in soup.find_all('script', type='application/ld+json'):
