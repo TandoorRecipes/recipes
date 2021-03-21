@@ -35,8 +35,8 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
-from cookbook.helper.recipe_url_import import get_from_html, find_recipe_json
-from cookbook.helper.recipe_html_import import get_from_raw
+from cookbook.helper.recipe_html_import import get_recipe_from_source
+from cookbook.helper.recipe_url_import import get_from_scraper, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -706,9 +706,11 @@ def recipe_from_url(request):
 
 
 @group_required('user')
-def manual_recipe_from_json(request):
+def recipe_from_source(request):
     json_data = request.POST['data']
-    recipe_json, recipe_tree = get_from_raw(json_data, request.space)
+    auto = request.POST['auto']
+
+    recipe_json, recipe_tree = get_recipe_from_source(json_data, request.space)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse(
             {
@@ -718,10 +720,18 @@ def manual_recipe_from_json(request):
             status=400
         )
     else:
-        return JsonResponse({
-            'recipe_tree': recipe_tree,
-            'recipe_json': recipe_json
-        })
+        if auto == "true":
+            return JsonResponse({'recipe_json': recipe_json})
+        else: 
+            # overide keyword structure from dict to list
+            kws = []
+            for kw in recipe_json['keywords']:
+                kws.append(kw['text'])
+            recipe_json['keywords'] = kws
+            return JsonResponse({
+                'recipe_tree': recipe_tree,
+                'recipe_json': recipe_json
+            })
 
 
 @group_required('admin')
