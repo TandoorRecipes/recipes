@@ -25,6 +25,7 @@
         <h2> {% trans 'Import' %} </h2>
         <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
             <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url" aria-selected="true">URL</a>
+            <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" aria-controls="nav-app">App</a>
             <a class="nav-link" href="#nav-source" data-toggle="tab" role="tab" aria-controls="nav-source">Source</a>
             <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" aria-controls="nav-text">Text</a>
             <a class="nav-link disabled" href="#nav-file" data-toggle="tab" role="tab" aria-controls="nav-file">File</a>
@@ -50,6 +51,30 @@
                             id="id_btn_search"><i class="fas fa-search"></i>
                     </button>
                 </div>
+                </div>
+            </div>
+
+            <!-- Import from Recipe Application -->
+            <div class=" tab-pane fade show" id="nav-app" role="tabpanel">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-info btn-sm active" @click="recipe_app='tandoor'">
+                    <input type="radio" name="auto" id="auto" autocomplete="off" checked> Tandoor
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='paprika'">
+                    <input type="radio" name="auto" id="manual" autocomplete="off"> Paprika
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='nextcloud'">
+                    <input type="radio" name="auto" id="manual" autocomplete="off"> Nextcloud Cookbook
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='mealie'">
+                    <input type="radio" name="auto" id="manual" autocomplete="off"> Mealie
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='chowdown'">
+                    <input type="radio" name="auto" id="manual" autocomplete="off"> Chowdown
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='safron'">
+                    <input type="radio" name="auto" id="manual" autocomplete="off"> Safron
+                    </label>
                 </div>
             </div>
 
@@ -516,7 +541,8 @@
                 importing_recipe: false,
                 recipe_json: undefined,
                 recipe_tree: undefined,
-                automatic: true
+                automatic: true,
+                recipe_app: 'tandoor'
             },
             directives: {
                 tabindex: {
