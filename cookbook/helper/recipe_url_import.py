@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from recipe_scrapers import _utils
 
 
-def get_from_html(html_text, url, space):
+def get_from_html_old(html_text, url, space):
     soup = BeautifulSoup(html_text, "html.parser")
 
     # first try finding ld+json as its most common
