@@ -132,7 +132,7 @@ def import_url(request):
             if k := Keyword.objects.filter(name=kw['text'], space=request.space).first():
                 recipe.keywords.add(k)
             elif data['all_keywords']:
-                k = Keyword.objects.create(name=kw['text'])
+                k = Keyword.objects.create(name=kw['text'], space=request.space)
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
