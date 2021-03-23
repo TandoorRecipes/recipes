@@ -274,7 +274,7 @@
                 <!-- start of source data -->
                 <div class="col" style="max-width:50%">
                     <div class="card card-border-primary">
-                        <div class="card-header"> 
+                        <div class="card-header">
                             <h3>{% trans 'Discovered Attributes' %}</h3>
                             <div class='small text-muted'>
                                 {% trans 'Drag recipe attributes from below into the appropriate box on the left. Click any node to display its full properties.' %} 
@@ -291,20 +291,26 @@
                             <input type="radio" autocomplete="off"> images
                             </label>
                         </div>
+                        <i :class="[show_blank ? 'fa-chevron-up' : 'fa-chevron-down', 'fas']" 
+                                    style="cursor:pointer;" 
+                                    @click="show_blank=!show_blank"
+                                    title="{% trans 'Show Blank Field' %}"></i>
                         <div class="card-body p-1">
                             <div class="card card-border-primary" v-if="show_blank">
                                 <div class="card-header">
                                     <div class="row px-3" style="justify-content:space-between;">
                                         {% trans 'Blank Field' %}
-                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="blank_field=''" title="{% trans 'Clear Contents'%}"></i>
+                                        <i class="fas fa-eraser justify-content-end"  style="cursor:pointer;" @click="blank_field=''" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Items dragged to Blank Field will be appended.'%}</div>
                                 </div>
                                 <div class="card-body drop-zone"  
-                                    v-model: blank_field
-                                    @drop="replacePreview()" 
+                                    @drop="replacePreview('blank', $event)" 
                                     @dragover.prevent 
-                                    @dragenter.prevent>
+                                    @dragenter.prevent
+                                    draggable
+                                    @dragstart="htmlDragStart($event)">
+                                    [[blank_field]]
                                 </div>
                             </div>
                             <!-- start of json data -->
