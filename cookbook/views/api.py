@@ -708,43 +708,6 @@ def recipe_from_source(request):
         )
 
 
-@group_required('user')
-def recipe_from_source(request, url=None, url_text=None):
-    if url_text:
-        json_data = url_text
-    else:
-        json_data = request.POST['data']
-    if 'auto' in request.POST:
-        auto = request.POST['auto']
-    else:
-        auto = 'true'
-
-    recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(json_data, url, request.space)
-    if len(recipe_tree) == 0 and len(recipe_json) == 0:
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('No useable data could be found.')  # noqa: E501
-            },
-            status=400
-        )
-    else:
-        if auto == "true":
-            return JsonResponse({'recipe_json': recipe_json})
-        else:
-            # overide keyword structure from dict to list
-            kws = []
-            for kw in recipe_json['keywords']:
-                kws.append(kw['text'])
-            recipe_json['keywords'] = kws
-            return JsonResponse({
-                'recipe_tree': recipe_tree,
-                'recipe_json': recipe_json,
-                'recipe_html': recipe_html,
-                'images': images,
-            })
-
-
 @group_required('admin')
 def get_backup(request):
     if not request.user.is_superuser:
