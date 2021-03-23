@@ -37,11 +37,11 @@
             <div class="tab-pane fade show active" id="nav-url" role="tabpanel">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="automatic=true">
-                    <input type="radio" name="auto" id="auto" autocomplete="off" checked> Automatic
+                    <input type="radio"  autocomplete="off" checked> Automatic
                     </label>
 
-                    <label class="btn btn-outline-info btn-sm disabled" @click="automatic=false">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Manual
+                    <label class="btn btn-outline-info btn-sm" @click="automatic=false">
+                    <input type="radio" autocomplete="off"> Manual
                     </label>
                 </div>
                 <div class="input-group my-2">
@@ -58,22 +58,22 @@
             <div class=" tab-pane fade show" id="nav-app" role="tabpanel">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="recipe_app='DEFAULT'">
-                    <input type="radio" name="auto" id="auto" autocomplete="off" checked> Tandoor
+                    <input type="radio" autocomplete="off" checked> Tandoor
                     </label>
                     <label class="btn btn-outline-info btn-sm" @click="recipe_app='PAPRIKA'">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Paprika
+                    <input type="radio" autocomplete="off"> Paprika
                     </label>
                     <label class="btn btn-outline-info btn-sm" @click="recipe_app='NEXTCLOUD'">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Nextcloud Cookbook
+                    <input type="radio" autocomplete="off"> Nextcloud Cookbook
                     </label>
                     <label class="btn btn-outline-info btn-sm" @click="recipe_app='MEALIE'">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Mealie
+                    <input type="radio" autocomplete="off"> Mealie
                     </label>
                     <label class="btn btn-outline-info btn-sm" @click="recipe_app='CHOWDOWN'">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Chowdown
+                    <input type="radio" autocomplete="off"> Chowdown
                     </label>
                     <label class="btn btn-outline-info btn-sm" @click="recipe_app='SAFRON'">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Safron
+                    <input type="radio" autocomplete="off"> Safron
                     </label>
                 </div>
                 <b-form-file
@@ -93,18 +93,18 @@
             <div class=" tab-pane fade show" id="nav-source" role="tabpanel">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="automatic=true">
-                    <input type="radio" name="auto" id="auto" autocomplete="off" checked> Automatic
+                    <input type="radio" autocomplete="off" checked> Automatic
                     </label>
 
                     <label class="btn btn-outline-info btn-sm" @click="automatic=false">
-                    <input type="radio" name="auto" id="manual" autocomplete="off"> Manual
+                    <input type="radio" autocomplete="off"> Manual
                     </label>
                 </div>
                 <div class="input-group my-2">
                     <textarea class="form-control input-group-append" v-model="source_data" rows=10 placeholder="{% trans 'Paste json or html source here to load recipe.' %}" style="font-size: 12px">
                     </textarea>
                 </div>
-                <button @click="importAppRecipe()" class="btn btn-primary shadow-none" type="button"
+                <button @click="loadSource()" class="btn btn-primary shadow-none" type="button"
                             id="id_btn_app"><i class="fas fa-code"></i> {% trans 'Import' %} 
                 </button>
             </div>
@@ -121,6 +121,7 @@
         <div class="container-fluid" v-if="preview" id="manage_tree">
             <div class="row">
                 <div class="col" style="max-width:50%">
+                    <!-- start of preview card -->
                     <div class="card card-border-primary" >
                         <div class="card-header">
                             <h3>{% trans 'Preview Recipe Data' %}</h3>
@@ -129,10 +130,12 @@
                         <div class="card-body p-2">
 
                             <div class="card mb-2">
-                                <div class="card-header" style="display:flex; justify-content:space-between;">
-                                    {% trans 'Name' %}
-                                    <!-- this and subsequent delete commands should be fixed to identify which model attribute the element is referring to -->
-                                    <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('name')" title="{% trans 'Clear Contents'%}"></i>
+                                <div class="card-header">
+                                    <div class="row px-3" style="justify-content:space-between;">
+                                        {% trans 'Name' %}
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.name=''" title="{% trans 'Clear Contents'%}"></i>
+                                    </div>
+                                    <div class="small text-muted">{% trans 'Text dragged here will be appended to the name.'%}</div>
                                 </div>
                                 
                                 <div class="card-body drop-zone" @drop="replacePreview('name', $event)" @dragover.prevent @dragenter.prevent>
@@ -141,9 +144,12 @@
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header" style="display:flex; justify-content:space-between;">
-                                    {% trans 'Description' %}
-                                    <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('description')" title="{% trans 'Clear Contents'%}"></i>
+                                <div class="card-header">
+                                    <div class="row px-3" style="justify-content:space-between;">
+                                        {% trans 'Description' %}
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.description=''" title="{% trans 'Clear Contents'%}"></i>
+                                    </div>
+                                    <div class="small text-muted">{% trans 'Text dragged here will be appended to the description.'%}</div>
                                 </div>
                                 <div class="card-body drop-zone" @drop="replacePreview('description', $event)" @dragover.prevent @dragenter.prevent>
                                     <div class="card-text">[[recipe_json.description]]</div>
@@ -154,7 +160,7 @@
                                 <div class="card-header">
                                     <div class="row px-3" style="justify-content:space-between;">
                                         {% trans 'Keywords' %}
-                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('keywords')" title="{% trans 'Clear Contents'%}"></i>
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.keywords=[]" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Keywords dragged here will be appended to current list'%}</div>
                                 </div>
@@ -168,7 +174,7 @@
                             <div class="card mb-2">
                                 <div class="card-header" style="display:flex; justify-content:space-between;">
                                     {% trans 'Image' %}
-                                    <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('image')" title="{% trans 'Clear Contents'%}"></i>
+                                    <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.image=''" title="{% trans 'Clear Contents'%}"></i>
                                 </div>
                                 <div class="card-body m-0 p-0 drop-zone"   @drop="replacePreview('image', $event)" @dragover.prevent @dragenter.prevent>
                                     <img class="card-img" v-bind:src="[[recipe_json.image]]" alt="Recipe Image">
@@ -180,7 +186,7 @@
                                     <div class="card" >
                                         <div class="card-header p-1" style="display:flex; justify-content:space-between;">
                                             {% trans 'Servings' %}
-                                            <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('servings')" title="{% trans 'Clear Contents'%}"></i>
+                                            <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.servings=''" title="{% trans 'Clear Contents'%}"></i>
                                         </div>
                                         <div class="card-body p-2 drop-zone"   @drop="replacePreview('servings', $event)" @dragover.prevent @dragenter.prevent>
                                             <div class="card-text">[[recipe_json.servings]]</div>
@@ -191,7 +197,7 @@
                                     <div class="card">
                                         <div class="card-header p-1" style="display:flex; justify-content:space-between;">
                                             {% trans 'Prep Time' %}
-                                            <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('prepTime')" title="{% trans 'Clear Contents'%}"></i>
+                                            <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.prepTime=''" title="{% trans 'Clear Contents'%}"></i>
                                         </div>
                                         <div class="card-body p-2 drop-zone"   @drop="replacePreview('prepTime', $event)" @dragover.prevent @dragenter.prevent>
                                             <div class="card-text">[[recipe_json.prepTime]]</div>
@@ -202,7 +208,7 @@
                                     <div class="card">
                                         <div class="card-header p-1" style="display:flex; justify-content:space-between;">
                                             {% trans 'Cook Time' %}
-                                            <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('cookTime')" title="{% trans 'Clear Contents'%}"></i>
+                                            <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.cookTime=''" title="{% trans 'Clear Contents'%}"></i>
                                         </div>
                                         <div class="card-body p-2 drop-zone"   @drop="replacePreview('cookTime', $event)" @dragover.prevent @dragenter.prevent>
                                             <div class="card-text">[[recipe_json.cookTime]]</div>
@@ -215,7 +221,7 @@
                                 <div class="card-header">
                                     <div class="row px-3" style="display:flex; justify-content:space-between;">
                                         {% trans 'Ingredients' %}
-                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('ingredients')" title="{% trans 'Clear Contents'%}"></i>
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.recipeIngredient=[]" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Ingredients dragged here will be appended to current list.'%}</div>
                                 </div>
@@ -237,7 +243,7 @@
                                 <div class="card-header">
                                     <div class="row px-3" style="justify-content:space-between;">    
                                         {% trans 'Instructions' %}
-                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="deletePreview('instructions')" title="{% trans 'Clear Contents'%}"></i>
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.recipeInstructions=''" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Recipe instructions dragged here will be appended to current instructions.'%}</div>
                                 </div>
@@ -254,7 +260,7 @@
                     </button>
                 </div>
                 
-                <!-- start of json tree -->
+                <!-- start of source data -->
                 <div class="col" style="max-width:50%">
                     <div class="card card-border-primary">
                         <div class="card-header"> 
@@ -263,9 +269,35 @@
                                 {% trans 'Drag recipe attributes from below into the appropriate box on the left. Click any node to display its full properties.' %} 
                             </div>
                         </div>
-                        
-                        <div class="card-body">
-                            <v-jstree :data="recipe_tree"
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-info btn-sm active" @click="preview_type='json'">
+                            <input type="radio" autocomplete="off" checked> json
+                            </label>
+                            <label class="btn btn-outline-info btn-sm" @click="preview_type='html'">
+                            <input type="radio" autocomplete="off"> html
+                            </label>
+                            <label class="btn btn-outline-info btn-sm" @click="preview_type='image'">
+                            <input type="radio" autocomplete="off"> images
+                            </label>
+                        </div>
+                        <div class="card-body p-1">
+                            <div class="card card-border-primary" v-if="show_blank">
+                                <div class="card-header">
+                                    <div class="row px-3" style="justify-content:space-between;">
+                                        {% trans 'Blank Field' %}
+                                        <i class="fas fa-eraser"  style="cursor:pointer;" @click="blank_field=''" title="{% trans 'Clear Contents'%}"></i>
+                                    </div>
+                                    <div class="small text-muted">{% trans 'Items dragged to Blank Field will be appended.'%}</div>
+                                </div>
+                                <div class="card-body drop-zone"  
+                                    v-model: blank_field
+                                    @drop="replacePreview()" 
+                                    @dragover.prevent 
+                                    @dragenter.prevent>
+                                </div>
+                            </div>
+                            <!-- start of json data -->
+                            <v-jstree v-if="preview_type=='json'" :data="recipe_tree"
                                     text-field-name="name"
                                     collapse:true
                                     draggable
@@ -289,6 +321,30 @@
                                 
                                 </template>
                             </v-jstree>
+                            <!-- start of html data -->
+                            <div v-if="preview_type=='html'">
+                                <ul class="list-group list-group-flush" v-for="(txt, key) in recipe_html">
+                                        <div class="list-group-item bg-light m-0 small"  
+                                            draggable 
+                                            @dragstart="htmlDragStart($event)"
+                                            style="display:flex; justify-content:space-between;"> 
+                                        [[txt]] 
+                                        <i class="fas fa-minus-square"  style="cursor:pointer; color:red" @click="$delete(recipe_html, key)" title="{% trans 'Delete Text'%}"></i>
+                                        </div>
+                                </ul>
+                            </div>
+                            <!-- start of images -->
+                            <div v-if="preview_type=='image'">
+                                <ul class="list-group list-group-flush" v-for="(img, key) in images">
+                                        <div class="list-group-item bg-light m-0 small"  
+                                            draggable 
+                                            @dragstart="imageDragStart($event)"
+                                            style="display:flex; justify-content:space-between;"> 
+                                        <img class="card-img" v-bind:src=[[img]] alt="Image">
+                                        <i class="fas fa-minus-square"  style="cursor:pointer; color:red" @click="$delete(images, key)" title="{% trans 'Delete image'%}"></i>
+                                        </div>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -547,13 +603,18 @@
                 error: undefined,
                 loading: false,
                 preview: false,
+                preview_type: 'json',
                 all_keywords: false,
                 importing_recipe: false,
                 recipe_json: undefined,
                 recipe_tree: undefined,
+                recipe_html: undefined,
                 automatic: true,
+                show_blank: false,
+                blank_field: '',
                 recipe_app: 'DEFAULT',
-                recipe_files: []
+                recipe_files: [],
+                images: [],
             },
             directives: {
                 tabindex: {
@@ -585,19 +646,19 @@
                     this.images = []
                     this.error = undefined
                     this.loading = true
+                    this.preview = false
                     if (this.automatic) {
                         console.log('true')
                     }
-                    this.$http.post("{% url 'api_recipe_from_url' %}", {'url': this.remote_url}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_url' %}", {'url': this.remote_url, 'auto':this.automatic}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
-                        this.recipe_json = response.data['recipe_json'];
-                        this.recipe_tree = response.data['recipe_tree'];
-                        this.recipe_html = response.data['recipe_html'];
-                        this.images = response.data['images'];
                         if (this.automatic) {
-                            this.recipe_data = this.recipe_json;
-                            this.preview = false
+                            this.recipe_data = response.data;
                         } else {
+                            this.recipe_json = response.data['recipe_json'];
+                            this.recipe_tree = response.data['recipe_tree'];
+                            this.recipe_html = response.data['recipe_html'];
+                            this.images = response.data['images'];
                             this.preview = true
                         }
                         this.loading = false
@@ -618,8 +679,10 @@
                     this.recipe_data = undefined
                     this.recipe_json = undefined
                     this.recipe_tree = undefined
+                    this.images = []
                     this.error = undefined
                     this.loading = true
+                    this.preview = false
                     this.$http.post("{% url 'api_recipe_from_source' %}", {'data': this.source_data, 'auto':this.automatic}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         if (this.automatic) {
@@ -628,6 +691,7 @@
                         } else {
                             this.recipe_json = response.data['recipe_json'];
                             this.recipe_tree = response.data['recipe_tree'];
+                            this.recipe_html = response.data['recipe_html'];
                             this.preview = true
                         }
                         this.loading = false
@@ -680,6 +744,7 @@
                 },
                 importAppRecipe: function() {
                     this.error = undefined
+                    this.preview = false
                     this.loading = true
                     let formData = new FormData();
                     let files = []
@@ -787,37 +852,6 @@
                     var index = node.parentItem.indexOf(item)
                     node.parentItem.splice(index, 1)
                 },
-                deletePreview: function(field) {
-                    switch (field) {
-                        case 'name':
-                            this.recipe_json.name=""
-                            break;
-                        case 'description':
-                            this.recipe_json.description=""
-                            break;
-                        case 'image':
-                            this.recipe_json.image=""
-                            break;
-                        case 'keywords':
-                            this.recipe_json.keywords=[]
-                            break;
-                        case 'servings':
-                            this.recipe_json.servings=""
-                            break;
-                        case 'prepTime':
-                            this.recipe_json.prepTime=""
-                            break;
-                        case 'cookTime':
-                            this.recipe_json.cookTime=""
-                            break;
-                        case 'ingredients':
-                            this.recipe_json.recipeIngredient=[]
-                            break;
-                        case 'instructions':
-                            this.recipe_json.recipeInstructions=""
-                            break;
-                    }
-                },
                 itemClick: function (node, item, e) {
                     this.makeToast(gettext('Details'), node.model.value, 'info')
                 },
@@ -828,6 +862,14 @@
                     e.dataTransfer.setData('value', node.model.value)
                     
                 },
+                htmlDragStart: function (e) {
+                    console.log(e.target.innerText)
+                    e.dataTransfer.setData('value', e.target.innerText)
+                },
+                imageDragStart: function (e) {
+                    console.log(e.target.src)
+                    e.dataTransfer.setData('value', e.target.src)
+                },
                 replacePreview: function(field, e) {
                     v = e.dataTransfer.getData('value')
                     if (e.dataTransfer.getData('hasChildren')) {
@@ -836,10 +878,10 @@
                     }
                     switch (field) {
                         case 'name':
-                            this.recipe_json.name=v
+                            this.recipe_json.name = [this.recipe_json.name, v].filter(Boolean).join(" ");
                             break;
                         case 'description':
-                            this.recipe_json.description=v
+                            this.recipe_json.description = [this.recipe_json.description, v].filter(Boolean).join(" ");
                             break;
                         case 'image':
                             this.recipe_json.image=v
@@ -870,10 +912,12 @@
                                 console.log(err)
                                 this.makeToast(gettext('Error'), gettext('Something went wrong.'), 'danger')
                             })
-                            
                             break;
                         case 'instructions':
-                            this.recipe_json.recipeInstructions=this.recipe_json.recipeInstructions.concat(v)
+                            this.recipe_json.recipeInstructions = [this.recipe_json.recipeInstructions, v].filter(Boolean).join("\n\n");
+                            break;
+                        case 'blank':
+                            this.blank_field = [this.blank_field, v].filter(Boolean).join(" ");
                             break;
                     }
                 },

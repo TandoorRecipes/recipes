@@ -9,9 +9,8 @@ from bs4 import BeautifulSoup
 from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
 from cookbook.models import Keyword
 from django.utils.dateparse import parse_duration
-from html import unescape
-from recipe_scrapers._schemaorg import SchemaOrgException
-from recipe_scrapers._utils import get_minutes
+from django.utils.translation import gettext as _
+from recipe_scrapers._utils import get_minutes, normalize_string
 
 
 def get_from_html_old(html_text, url, space):
@@ -109,7 +108,9 @@ def find_recipe_json(ld_json, url, space):
     else:
         ld_json['image'] = ""
 
-    if 'description' not in ld_json:
+    if 'description' in ld_json:
+        ld_json['description'] = normalize_string(ld_json['description'] )
+    else:
         ld_json['description'] = ""
 
     if 'cookTime' in ld_json:
@@ -123,18 +124,11 @@ def find_recipe_json(ld_json, url, space):
         ld_json['prepTime'] = 0
 
     if 'servings' in ld_json:
-        if type(ld_json['servings']) == str:
-            ld_json['servings'] = int(re.search(r'\d+', ld_json['servings']).group())
+        ld_json['servings'] = parse_servings(ld_json['servings'])
+    elif 'recipeYield' in ld_json:
+        ld_json['servings'] = parse_servings(ld_json['recipeYield'])
     else:
         ld_json['servings'] = 1
-    try:
-        if 'recipeYield' in ld_json:
-            if type(ld_json['recipeYield']) == str:
-                ld_json['servings'] = int(re.findall(r'\b\d+\b', ld_json['recipeYield'])[0])
-            elif type(ld_json['recipeYield']) == list:
-                ld_json['servings'] = int(re.findall(r'\b\d+\b', ld_json['recipeYield'][0])[0])
-    except Exception as e:
-        print(e)
 
     for key in list(ld_json):
         if key not in [
@@ -154,14 +148,14 @@ def get_from_scraper(scrape, space):
 
     try:
         description = scrape.schema.data.get("description") or ''
-        recipe_json['prepTime'] = _utils.get_minutes(scrape.schema.data.get("prepTime")) or 0
-        recipe_json['cookTime'] = _utils.get_minutes(scrape.schema.data.get("cookTime")) or 0
+        recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+        recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
     except AttributeError:
         description = ''
         recipe_json['prepTime'] = 0
         recipe_json['cookTime'] = 0
 
-    recipe_json['description'] = description
+    recipe_json['description'] = normalize_string(description)
 
     try:
         servings = scrape.yields()
@@ -249,7 +243,7 @@ def parse_name(name):
             name = name[0]
         except Exception:
             name = 'ERROR'
-    return name
+    return normalize_string(name)
 
 
 def parse_ingredients(ingredients):
@@ -342,7 +336,7 @@ def parse_instructions(instructions):
     instructions = re.sub(' +', ' ', instructions)
     instructions = re.sub('</p>', '\n', instructions)
     instructions = re.sub('<[^<]+?>', '', instructions)
-    return instructions
+    return normalize_string(instructions)
 
 
 def parse_image(image):
@@ -359,6 +353,19 @@ def parse_image(image):
         image = ''
     return image
 
+
+def parse_servings(servings):
+    if type(servings) == str:
+        try:
+            servings = int(re.search(r'\d+', servings).group())
+        except AttributeError:
+            servings = 1
+    elif type(servings) == list:
+        try:
+            servings = int(re.findall(r'\b\d+\b', servings[0])[0])
+        except KeyError:
+            servings = 1
+    return servings
 
 def parse_cooktime(cooktime):
     if type(cooktime) not in [int, float]:
@@ -400,6 +407,7 @@ def parse_keywords(keyword_json, space):
     keywords = []
     # keywords as list
     for kw in keyword_json:
+        kw = normalize_string(kw)
         if k := Keyword.objects.filter(name=kw, space=space).first():
             keywords.append({'id': str(k.id), 'text': str(k)})
         else:
@@ -413,7 +421,7 @@ def listify_keywords(keyword_list):
     try:
         if type(keyword_list[0]) == dict:
             return keyword_list
-    except KeyError:
+    except (KeyError, IndexError):
         pass
     if type(keyword_list) == str:
         keyword_list = keyword_list.split(',')
