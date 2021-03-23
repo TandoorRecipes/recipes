@@ -61,6 +61,7 @@ class Space(models.Model):
     name = models.CharField(max_length=128, default='Default')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     message = models.CharField(max_length=512, default='', blank=True)
+    max_recipes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
