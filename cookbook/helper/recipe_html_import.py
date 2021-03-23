@@ -88,7 +88,6 @@ def get_recipe_from_source(text, url, space):
         if 'url' in parse_list[0]:
             url = parse_list[0]['url']
 
-
     # first try finding ld+json as its most common
     for el in parse_list:
 
@@ -136,7 +135,7 @@ def get_from_html(soup):
             html.append(s)
     return html
 
-# todo - look for site info in the soup
+
 def get_images_from_source(soup, url):
     sources = ['src', 'srcset', 'data-src']
     images = []
@@ -164,6 +163,7 @@ def get_images_from_source(soup, url):
             if 'http' in u:
                 images.append(u)
     return images
+
 
 def remove_graph(el):
     # recipes type might be wrapped in @graph type
