@@ -130,61 +130,68 @@
                         <div class="card-body p-2">
 
                             <div class="card mb-2">
-                                <div class="card-header">
+                                <div class="card-header" v-b-toggle.collapse-name>
                                     <div class="row px-3" style="justify-content:space-between;">
                                         {% trans 'Name' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.name=''" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Text dragged here will be appended to the name.'%}</div>
                                 </div>
-                                
-                                <div class="card-body drop-zone" @drop="replacePreview('name', $event)" @dragover.prevent @dragenter.prevent>
-                                    <div class="card-text">[[recipe_json.name]]</div>
-                                </div>
+                                <b-collapse id="collapse-name" visible class="mt-2">
+                                    <div class="card-body drop-zone" @drop="replacePreview('name', $event)" @dragover.prevent @dragenter.prevent>
+                                        <div class="card-text">[[recipe_json.name]]</div>
+                                    </div>
+                                </b-collapse>
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header">
+                                <div class="card-header" v-b-toggle.collapse-description>
                                     <div class="row px-3" style="justify-content:space-between;">
                                         {% trans 'Description' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.description=''" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Text dragged here will be appended to the description.'%}</div>
                                 </div>
-                                <div class="card-body drop-zone" @drop="replacePreview('description', $event)" @dragover.prevent @dragenter.prevent>
-                                    <div class="card-text">[[recipe_json.description]]</div>
-                                </div>
+                                <b-collapse id="collapse-description" visible class="mt-2">
+                                    <div class="card-body drop-zone" @drop="replacePreview('description', $event)" @dragover.prevent @dragenter.prevent>
+                                        <div class="card-text">[[recipe_json.description]]</div>
+                                    </div>
+                                </b-collapse>
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header">
+                                <div class="card-header" v-b-toggle.collapse-kw>
                                     <div class="row px-3" style="justify-content:space-between;">
                                         {% trans 'Keywords' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.keywords=[]" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Keywords dragged here will be appended to current list'%}</div>
                                 </div>
-                                <div class="card-body drop-zone"   @drop="replacePreview('keywords', $event)" @dragover.prevent @dragenter.prevent>
-                                    <div v-for="kw in recipe_json.keywords">
-                                        <div class="card-text">[[kw]] </div>
+                                <b-collapse id="collapse-kw" visible class="mt-2">
+                                    <div class="card-body drop-zone"   @drop="replacePreview('keywords', $event)" @dragover.prevent @dragenter.prevent>
+                                        <div v-for="kw in recipe_json.keywords">
+                                            <div class="card-text">[[kw]] </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </b-collapse>
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header" style="display:flex; justify-content:space-between;">
+                                <div class="card-header" v-b-toggle.collapse-image style="display:flex; justify-content:space-between;">
                                     {% trans 'Image' %}
                                     <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.image=''" title="{% trans 'Clear Contents'%}"></i>
                                 </div>
-                                <div class="card-body m-0 p-0 drop-zone"   @drop="replacePreview('image', $event)" @dragover.prevent @dragenter.prevent>
-                                    <img class="card-img" v-bind:src="[[recipe_json.image]]" alt="Recipe Image">
-                                </div>
+                                <b-collapse id="collapse-image" visible class="mt-2">
+                                    <div class="card-body m-0 p-0 drop-zone"   @drop="replacePreview('image', $event)" @dragover.prevent @dragenter.prevent>
+                                        <img class="card-img" v-bind:src="[[recipe_json.image]]" alt="Recipe Image">
+                                    </div>
+                                </b-collapse>
                             </div>
 
                             <div class = "row mb-2">
                                 <div class="col">
-                                    <div class="card" >
-                                        <div class="card-header p-1" style="display:flex; justify-content:space-between;">
+                                    <div class="card">
+                                        <div class="card-header p-1"  style="display:flex; justify-content:space-between;">
                                             {% trans 'Servings' %}
                                             <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.servings=''" title="{% trans 'Clear Contents'%}"></i>
                                         </div>
@@ -218,38 +225,42 @@
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header">
+                                <div class="card-header" v-b-toggle.collapse-ing>
                                     <div class="row px-3" style="display:flex; justify-content:space-between;">
                                         {% trans 'Ingredients' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.recipeIngredient=[]" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Ingredients dragged here will be appended to current list.'%}</div>
                                 </div>
-                                <div class="card-body drop-zone"   @drop="replacePreview('ingredients', $event)" @dragover.prevent @dragenter.prevent>
-                                    <ul class="list-group list-group">
-                                        <div v-for="i in recipe_json.recipeIngredient">
-                                            <li class="row border-light" >
-                                                <div class="col-sm-1 border">[[i.amount]]</div>
-                                                <div class="col-sm border">[[i.unit.text]]</div>
-                                                <div class="col-sm border">[[i.ingredient.text]]</div>
-                                                <div class="col-sm border">[[i.note]]</div>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
+                                <b-collapse id="collapse-ing" visible class="mt-2">
+                                    <div class="card-body drop-zone"   @drop="replacePreview('ingredients', $event)" @dragover.prevent @dragenter.prevent>
+                                        <ul class="list-group list-group">
+                                            <div v-for="i in recipe_json.recipeIngredient">
+                                                <li class="row border-light" >
+                                                    <div class="col-sm-1 border">[[i.amount]]</div>
+                                                    <div class="col-sm border">[[i.unit.text]]</div>
+                                                    <div class="col-sm border">[[i.ingredient.text]]</div>
+                                                    <div class="col-sm border">[[i.note]]</div>
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </b-collapse>
                             </div>
 
                             <div class="card mb-2">
-                                <div class="card-header">
+                                <div class="card-header" v-b-toggle.collapse-instructions>
                                     <div class="row px-3" style="justify-content:space-between;">    
                                         {% trans 'Instructions' %}
                                         <i class="fas fa-eraser"  style="cursor:pointer;" @click="recipe_json.recipeInstructions=''" title="{% trans 'Clear Contents'%}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Recipe instructions dragged here will be appended to current instructions.'%}</div>
                                 </div>
-                                <div class="card-body drop-zone"   @drop="replacePreview('instructions', $event)" @dragover.prevent @dragenter.prevent>
-                                    <div class="card-text">[[recipe_json.recipeInstructions]]</div>
-                                </div>
+                                <b-collapse id="collapse-instructions" visible class="mt-2">
+                                    <div class="card-body drop-zone"   @drop="replacePreview('instructions', $event)" @dragover.prevent @dragenter.prevent>
+                                        <div class="card-text">[[recipe_json.recipeInstructions]]</div>
+                                    </div>
+                                </b-collapse>
                             </div>
                         </div>
                     </div>
