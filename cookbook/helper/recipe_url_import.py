@@ -347,6 +347,9 @@ def parse_image(image):
                 image = pic
             elif 'url' in pic:
                 image = pic['url']
+    elif type(image) == dict:
+        if 'url' in image:
+            image = image['url']
 
     # ignore relative image paths
     if image[:4] != 'http':
