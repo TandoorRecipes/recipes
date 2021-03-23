@@ -628,11 +628,14 @@ def recipe_from_json(request):
 
 
 @group_required('user')
-def recipe_from_url(request):
-    url = request.POST['url']
+def recipe_from_source(request):
+    url = request.POST.get('url', None)
+    data = request.POST.get('data', None)
+    mode = request.POST.get('mode', None)
+    auto = request.POST.get('auto', 'true')
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
     }
 
     if (not url and not data) or (mode == 'url' and not url) or (mode == 'source' and not data):
@@ -706,11 +709,17 @@ def recipe_from_url(request):
 
 
 @group_required('user')
-def recipe_from_source(request):
-    json_data = request.POST['data']
-    auto = request.POST['auto']
+def recipe_from_source(request, url=None, url_text=None):
+    if url_text:
+        json_data = url_text
+    else:
+        json_data = request.POST['data']
+    if 'auto' in request.POST:
+        auto = request.POST['auto']
+    else:
+        auto = 'true'
 
-    recipe_json, recipe_tree = get_recipe_from_source(json_data, request.space)
+    recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(json_data, url, request.space)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse(
             {
@@ -722,7 +731,7 @@ def recipe_from_source(request):
     else:
         if auto == "true":
             return JsonResponse({'recipe_json': recipe_json})
-        else: 
+        else:
             # overide keyword structure from dict to list
             kws = []
             for kw in recipe_json['keywords']:
@@ -730,7 +739,9 @@ def recipe_from_source(request):
             recipe_json['keywords'] = kws
             return JsonResponse({
                 'recipe_tree': recipe_tree,
-                'recipe_json': recipe_json
+                'recipe_json': recipe_json,
+                'recipe_html': recipe_html,
+                'images': images,
             })
 
 
