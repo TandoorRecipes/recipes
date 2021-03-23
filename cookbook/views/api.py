@@ -562,6 +562,35 @@ def recipe_from_json(request):
 @group_required('user')
 def recipe_from_url(request):
     url = request.POST['url']
+    if 'auto' in request.POST:
+        auto = request.POST['auto']
+    else:
+        auto = 'true'
+
+    if auto == 'false':
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
+        }
+        try:
+            response = requests.get(url, headers=headers)
+        except requests.exceptions.ConnectionError:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested page could not be found.')
+                },
+                status=400
+            )
+
+        if response.status_code == 403:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested page refused to provide any information (Status Code 403).')  # noqa: E501
+                },
+                status=400
+            )
+        return recipe_from_source(request, url=url, url_text=response.text)
 
     try:
         scrape = scrape_me(url)
@@ -583,44 +612,29 @@ def recipe_from_url(request):
             },
             status=400
         )
-    return JsonResponse(get_from_scraper(scrape, request.space))
-
-
-@group_required('user')
-def recipe_from_url_old(request):
-    url = request.POST['url']
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
-    }
-    try:
-        response = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
+    if len(scrape.schema.data) == 0:
         return JsonResponse(
             {
                 'error': True,
-                'msg': _('The requested page could not be found.')
+                'msg': _('The requested site does not provide any recognized data format to import the recipe from.')  # noqa: E501
             },
-            status=400
-        )
-
-    if response.status_code == 403:
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('The requested page refused to provide any information (Status Code 403).')  # noqa: E501
-            },
-            status=400
-        )
-    return get_from_html(response.text, url, request.space)
+            status=400)
+    else:
+        return JsonResponse(get_from_scraper(scrape, request.space))
 
 
 @group_required('user')
-def recipe_from_source(request):
-    json_data = request.POST['data']
-    auto = request.POST['auto']
+def recipe_from_source(request, url=None, url_text=None):
+    if url_text:
+        json_data = url_text
+    else:
+        json_data = request.POST['data']
+    if 'auto' in request.POST:
+        auto = request.POST['auto']
+    else:
+        auto = 'true'
 
-    recipe_json, recipe_tree = get_recipe_from_source(json_data, request.space)
+    recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(json_data, url, request.space)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse(
             {
@@ -632,7 +646,7 @@ def recipe_from_source(request):
     else:
         if auto == "true":
             return JsonResponse({'recipe_json': recipe_json})
-        else: 
+        else:
             # overide keyword structure from dict to list
             kws = []
             for kw in recipe_json['keywords']:
@@ -640,7 +654,9 @@ def recipe_from_source(request):
             recipe_json['keywords'] = kws
             return JsonResponse({
                 'recipe_tree': recipe_tree,
-                'recipe_json': recipe_json
+                'recipe_json': recipe_json,
+                'recipe_html': recipe_html,
+                'images': images,
             })
 
 
