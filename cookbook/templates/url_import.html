@@ -23,7 +23,7 @@
 {% block content %}
     <div id="app">
         <div class="row px-3" style="justify-content:space-between;">
-            <h2> {% trans 'Import' %} </h2> <!--{{ request.get_host }}{% url 'data_import_url' %} -->
+            <h2> {% trans 'Import' %}</h2>
             <a class="btn btn-outline-info btn-sm" 
                 style="height:50%"
                 href="{% bookmarklet request.get_host request.is_secure %}" 
@@ -605,7 +605,6 @@
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
-
         Vue.component('vue-multiselect', window.VueMultiselect.default)
 
         let app = new Vue({
@@ -626,13 +625,13 @@
                 recipe_data: undefined,
                 error: undefined,
                 loading: false,
-                preview: false,
+                preview: {{preview}},
                 preview_type: 'json',
                 all_keywords: false,
                 importing_recipe: false,
-                recipe_json: undefined,
-                recipe_tree: undefined,
-                recipe_html: undefined,
+                recipe_json: {{recipe_json|safe}},
+                recipe_tree: {{recipe_tree|safe}},
+                recipe_html: {{recipe_html|safe}},
                 automatic: true,
                 show_blank: false,
                 blank_field: '',
