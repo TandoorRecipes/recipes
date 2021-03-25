@@ -72,6 +72,7 @@ def get_recipe_from_source(text, url, space):
     html_data = []
     images = []
 
+    text = normalize_string(text)
     try:
         parse_list.append(remove_graph(json.loads(text)))
     except JSONDecodeError:
@@ -83,13 +84,12 @@ def get_recipe_from_source(text, url, space):
         for el in soup.find_all(type='application/json'):
             parse_list.append(remove_graph(el))
 
-    # if a url was not provided, try to find one in the first document
-    if not url:
-        if 'url' in parse_list[0]:
-            url = parse_list[0]['url']
-
     # first try finding ld+json as its most common
     for el in parse_list:
+        # if a url was not provided, try to find one in the first document
+        if not url:
+            if 'url' in el:
+                url = el['url']
 
         if isinstance(el, Tag):
             try:

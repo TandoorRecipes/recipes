@@ -12,9 +12,11 @@ from django.contrib.auth.models import User
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
-from django.http import FileResponse, HttpResponse, JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.http import FileResponse, HttpResponse, JsonResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.decorators.csrf import csrf_exempt
 from icalendar import Calendar, Event
 
 from rest_framework import decorators, viewsets
@@ -36,7 +38,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_url_import import get_from_scraper, find_recipe_json
+from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
@@ -728,3 +730,13 @@ def ingredient_from_string(request):
         },
         status=200
     )
+
+
+@group_required('user')
+@csrf_exempt
+def bookmarklet(request):
+    if request.method == "POST":
+        if 'recipe' in request.POST:
+            recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(request.POST['recipe'], request.POST['url'], request.space)
+        return render(request, 'url_import.html', {'recipe_json': recipe_json, 'recipe_tree': recipe_tree, 'recipe_html': recipe_html, 'preview': 'true'})
+    return HttpResponseRedirect(reverse('view_search'))
