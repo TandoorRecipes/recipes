@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load custom_tags %}
 
 {% block title %}{% trans 'URL Import' %}{% endblock %}
 
@@ -20,9 +21,15 @@
 {% endblock %}
 
 {% block content %}
-
     <div id="app">
-        <h2> {% trans 'Import' %} </h2>
+        <div class="row px-3" style="justify-content:space-between;">
+            <h2> {% trans 'Import' %} </h2> <!--{{ request.get_host }}{% url 'data_import_url' %} -->
+            <a class="btn btn-outline-info btn-sm" 
+                style="height:50%"
+                href="{% bookmarklet request.get_host request.is_secure %}" 
+                title="{% trans 'Drag me to your bookmarks to import recipes from anywhere' %}">
+            <img src="{% static 'assets/favicon-16x16.png' %}">{% trans 'Bookmark Me!' %} </a>
+        </div>
         <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
             <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url" aria-selected="true">URL</a>
             <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" aria-controls="nav-app">App</a>
