@@ -122,7 +122,7 @@ def bookmarklet(host, secure):
         if(window.bookmarkletTandoor!==undefined){ \
             bookmarkletTandoor(); \
         } else { \
-            localStorage.setItem('importURL', '"+ prefix + host + reverse('api_bookmarklet') +"'); \
+            localStorage.setItem('importURL', '" + prefix + host + reverse('api_bookmarklet') + "'); \
             document.body.appendChild(document.createElement(\'script\')).src=\'"  \
             + prefix + host + static('js/bookmarklet.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();"
