@@ -1,4 +1,5 @@
 import bleach
+import re
 import markdown as md
 from bleach_allowlist import markdown_attrs, markdown_tags
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
@@ -6,6 +7,7 @@ from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import Space, get_model_name
 from django import template
 from django.db.models import Avg
+from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
 from recipes import settings
 from gettext import gettext as _
@@ -106,3 +108,23 @@ def message_of_the_day():
 @register.simple_tag
 def is_debug():
     return settings.DEBUG
+
+
+@register.simple_tag
+def bookmarklet(host, secure):
+    if secure:
+        prefix = "https://"
+    else:
+        prefix = "http://"
+
+    bookmark = "javascript: \
+    (function(){ \
+        if(window.bookmarkletTandoor!==undefined){ \
+            bookmarkletTandoor(); \
+        } else { \
+            localStorage.setItem('importURL', '"+ prefix + host + reverse('api_bookmarklet') +"'); \
+            document.body.appendChild(document.createElement(\'script\')).src=\'"  \
+            + prefix + host + static('js/bookmarklet.js') + "? \
+            r=\'+Math.floor(Math.random()*999999999);}})();"
+
+    return re.sub(r"[\n\t]*", "", bookmark)
