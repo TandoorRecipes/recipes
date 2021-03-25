@@ -18,19 +18,28 @@
     }
     function initBookmarklet() {
         (window.bookmarkletTandoor = function() {
-            r = confirm('Click OK to import recipe automatically, click Cancel to import the recipe manually.'); 
-            if (r) {
-                auto=true
-            } else {
-                auto=false
-            }
+            var recipe = document.documentElement.innerHTML
+            var form = document.createElement("form");
+            var windowName = "ImportRecipe"
+            form.setAttribute("method", "post");
+            form.setAttribute("action", localStorage.getItem('importURL'));
+            form.setAttribute("target",'importRecipe');  
+            var params = { 'recipe' : recipe,'url': window.location}; 
             
-            var newIframe = document.createElement('iframe');
-            newIframe.width = '200';newIframe.height = '200';
-            newIframe.src = localStorage.getItem('importURL'); 
-            document.body.appendChild(newIframe);
-
-
+            for (var i in params) {
+                if (params.hasOwnProperty(i)) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = i;
+                    input.value = params[i];
+                    form.appendChild(input);
+                }
+                }              
+                document.body.appendChild(form);                       
+                window.open('', windowName);
+                form.target = windowName;
+                form.submit();                 
+                document.body.removeChild(form);  
             }
         )();
     }

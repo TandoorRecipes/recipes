@@ -191,7 +191,7 @@ def import_url(request):
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
 
-    return render(request, 'url_import.html', {})
+    return render(request, 'url_import.html', {'recipe_json': 'undefined', 'recipe_tree': 'undefined', 'recipe_html': 'undefined', 'preview': 'false'})
 
 
 class Object(object):
