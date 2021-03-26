@@ -671,3 +671,13 @@ class ImportLog(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f"{self.created_at}:{self.type}"
+
+
+class BookmarkletImport(models.Model, PermissionModelMixin):
+    html = models.TextField()
+    url = models.CharField(max_length=128, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
