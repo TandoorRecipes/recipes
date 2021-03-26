@@ -36,7 +36,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -51,7 +51,9 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
+                                 ViewLogSerializer, CookLogSerializer, 
+                                 RecipeBookEntrySerializer, RecipeOverviewSerializer, 
+                                 SupermarketSerializer, ImportLogSerializer, BookmarkletImportSerializer)
 from recipes.settings import DEMO
 from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
 
@@ -412,6 +414,15 @@ class ImportLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
+class BookmarkletImportViewSet(viewsets.ModelViewSet):
+    queryset = BookmarkletImport.objects
+    serializer_class = BookmarkletImportSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space).all()
+
+
 # -------------- non django rest api views --------------------
 
 def get_recipe_provider(recipe):
@@ -657,13 +668,3 @@ def ingredient_from_string(request):
         },
         status=200
     )
-
-
-@group_required('user')
-@csrf_exempt
-def bookmarklet(request):
-    if request.method == "POST":
-        if 'recipe' in request.POST:
-            recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(request.POST['recipe'], request.POST['url'], request.space)
-        return render(request, 'url_import.html', {'recipe_json': recipe_json, 'recipe_tree': recipe_tree, 'recipe_html': recipe_html, 'preview': 'true'})
-    return HttpResponseRedirect(reverse('view_search'))

@@ -14,7 +14,8 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket, SupermarketCategoryRelation, ImportLog)
+                             Unit, UserPreference, ViewLog, SupermarketCategory,
+                             Supermarket, SupermarketCategoryRelation, ImportLog, BookmarkletImport)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -465,6 +466,17 @@ class ImportLogSerializer(serializers.ModelSerializer):
         fields = ('id', 'type', 'msg', 'running', 'keyword', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
 
+
+class BookmarkletImportSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = BookmarkletImport
+        fields = ('id', 'url', 'html', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
 
 # Export/Import Serializers
 

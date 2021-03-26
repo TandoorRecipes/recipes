@@ -36,6 +36,7 @@ router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
+router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -96,7 +97,6 @@ urlpatterns = [
     path('api/recipe-from-source/', api.recipe_from_source, name='api_recipe_from_source'),
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
-    path('api/bookmarklet/', api.bookmarklet, name='api_bookmarklet'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
