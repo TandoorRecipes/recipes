@@ -7,7 +7,8 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, ImportLog, TelegramBot)
+                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, 
+                     ImportLog, TelegramBot, BookmarkletImport)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -221,6 +222,12 @@ class ImportLogAdmin(admin.ModelAdmin):
 
 admin.site.register(ImportLog, ImportLogAdmin)
 
+
+class BookmarkletImportAdmin(admin.ModelAdmin):
+    list_display = ('id', 'url', 'created_by', 'created_at',)
+
+
+admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
 
 class TelegramBotAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'created_by',)
