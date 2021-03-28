@@ -77,9 +77,10 @@ class Integration:
         """
         return True
 
-    def do_import(self, files, il):
+    def do_import(self, files, il, import_duplicates):
         """
         Imports given files
+        :param import_duplicates: if true duplicates are imported as well
         :param files: List of in memory files
         :param il: Import Log object to refresh while running
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
@@ -99,15 +100,17 @@ class Integration:
                                 recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                                 recipe.keywords.add(self.keyword)
                                 il.msg += f'{recipe.pk} - {recipe.name} \n'
-                                if duplicate := self.is_duplicate(recipe):
-                                    ignored_recipes.append(duplicate)
+                                if not import_duplicates:
+                                    if duplicate := self.is_duplicate(recipe):
+                                        ignored_recipes.append(duplicate)
                         import_zip.close()
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
                         recipe.keywords.add(self.keyword)
                         il.msg += f'{recipe.pk} - {recipe.name} \n'
-                        if duplicate := self.is_duplicate(recipe):
-                            ignored_recipes.append(duplicate)
+                        if not import_duplicates:
+                            if duplicate := self.is_duplicate(recipe):
+                                ignored_recipes.append(duplicate)
             except BadZipFile:
                 il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
 

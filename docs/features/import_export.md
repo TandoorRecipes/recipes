@@ -29,6 +29,7 @@ Overview of the capabilities of the different integrations.
 | Safron      | ✔️      | ⌚      | ❌      |
 | Paprika     | ✔️      | ⌚      | ✔️      |
 | ChefTap     | ✔️      | ❌      | ❌️      |
+| Pepperplate     | ✔️      | ⌚      | ❌️      |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -110,6 +111,13 @@ A Paprika export contains a folder with a html representation of your recipes an
 
 The `.paprikarecipes` file is basically just a zip with gzipped contents. Simply upload the whole file and import 
 all your recipes. 
+
+## Pepperplate
+Pepperplate provides a `.zip` files contain all your recipes as `.txt` files. These files are well-structured and allow
+the import of all data without loosing anything.
+
+Simply export the recipes from Pepperplate and upload the zip to Tandoor. Images are not included in the export and 
+thus cannot be imported.
 
 ## ChefTap
 ChefTaps allows you to export your recipes from the app (I think). The export is a zip file containing a folder called
