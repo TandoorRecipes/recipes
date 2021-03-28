@@ -483,7 +483,7 @@ class BookmarkletImportSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')
-        read_only_fields = ('created_by',)
+        read_only_fields = ('created_by', 'space')
 
 # Export/Import Serializers
 
