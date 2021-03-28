@@ -32,6 +32,7 @@ Overview of the capabilities of the different integrations.
 | Pepperplate     | ✔️      | ⌚      | ❌      |
 | RecipeSage     | ✔️      | ✔️      | ✔️      |
 | Domestica     | ✔️      | ⌚      | ✔️      |
+| MealMaster     | ✔️      | ❌      |  ❌        |
 | RezKonv     | ✔️      | ❌      |  ❌        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
@@ -146,7 +147,17 @@ or is worse than this feel free to provide me with more example data and I can t
 
 As ChefTap cannot import these files anyway there won't be an exporter implemented in Tandoor.
 
+## MealMaster
+Meal master can be imported by uploading one or more meal master files. 
+The files should either be `.txt`, `.MMF` or `.MM` files. 
+
+The MealMaster spec allow for many variations. Currently, only the on column format for ingredients is supported.
+Second line notes to ingredients are currently also not imported as a note but simply put into the instructions.
+If you have MealMaster recipes that cannot be imported feel free to raise an issue.
+
 ## RezKonv
 The RezKonv format is primarily used in the german recipe manager RezKonv Suite. 
 To migrate from RezKonv Suite to Tandoor select `Export > Gesamtes Kochbuch exportieren` (the last option in the export menu).
 The generated file can simply be imported into Tandoor.
+
+As i only had limited sample data feel free to open an issue if your RezKonv export cannot be imported.
