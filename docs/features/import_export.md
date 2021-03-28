@@ -121,7 +121,7 @@ thus cannot be imported.
 
 ## ChefTap
 ChefTaps allows you to export your recipes from the app (I think). The export is a zip file containing a folder called
-`recipes` which in turn contains `.txt` files with your recipes.
+`cheftap_export` which in turn contains `.txt` files with your recipes.
 
 This format is basically completely unstructured and every export looks different. This makes importing it very hard
 and leads to suboptimal results. Images are also not supported as they are not included in the export (at least 
