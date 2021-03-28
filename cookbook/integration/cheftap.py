@@ -13,9 +13,6 @@ class ChefTap(Integration):
         print("testing", zip_info_object.filename)
         return re.match(r'^recipes/([A-Za-z\d\w\s-])+.txt$', zip_info_object.filename)
 
-    def is_duplicate(self, recipe):
-        return None
-
     def get_recipe_from_file(self, file):
         source_url = ''
 
@@ -45,6 +42,7 @@ class ChefTap(Integration):
 
         if source_url != '':
             step.instruction += '\n' + source_url
+            step.save()
 
         for ingredient in ingredients:
             amount, unit, ingredient, note = parse(ingredient)
