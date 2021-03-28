@@ -51,8 +51,8 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, 
-                                 RecipeBookEntrySerializer, RecipeOverviewSerializer, 
+                                 ViewLogSerializer, CookLogSerializer,
+                                 RecipeBookEntrySerializer, RecipeOverviewSerializer,
                                  SupermarketSerializer, ImportLogSerializer, BookmarkletImportSerializer)
 from recipes.settings import DEMO
 from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
