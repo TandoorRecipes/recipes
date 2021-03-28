@@ -13,8 +13,8 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
     <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
-    <link rel="icon" type="image/png" href="{% static 'assets/.svg' %}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16" >
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16">
 
     <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#161616">
     <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}" sizes="180x180">
@@ -24,10 +24,9 @@
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
 
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#161616">
-<meta name="msapplication-TileColor" content="#161616">
-<meta name="theme-color" content="#ffffff">
-
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#161616">
+    <meta name="msapplication-TileColor" content="#161616">
+    <meta name="theme-color" content="#ffffff">
 
 
     <!-- Bootstrap 4 -->
@@ -168,7 +167,8 @@
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_login' %}">{% trans 'Login' %} <i class="fas fa-sign-in-alt"></i></a>
+                    <a class="nav-link" href="{% url 'account_login' %}">{% trans 'Login' %} <i
+                            class="fas fa-sign-in-alt"></i></a>
                 </li>
             {% endif %}
         </ul>
@@ -228,7 +228,7 @@
 <script type="application/javascript">
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{% url 'service_worker' %}", { scope: '/' }).then(function (reg) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: '/'}).then(function (reg) {
 
             }).catch(function (err) {
                 console.warn('Error whilst registering service worker', err);
