@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
+from cookbook.integration.Pepperplate import Pepperplate
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.default import Default
@@ -35,6 +36,8 @@ def get_integration(request, export_type):
         return Safron(request, export_type)
     if export_type == ImportExportBase.CHEFTAP:
         return ChefTap(request, export_type)
+    if export_type == ImportExportBase.PEPPERPLATE:
+        return Pepperplate(request, export_type)
 
 
 @group_required('user')
@@ -49,7 +52,7 @@ def import_recipe(request):
                 files = []
                 for f in request.FILES.getlist('files'):
                     files.append({'file': BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files, il])
+                t = threading.Thread(target=integration.do_import, args=[files, il, form['duplicates']])
                 t.setDaemon(True)
                 t.start()
 
