@@ -1,4 +1,5 @@
 import base64
+import json
 from io import BytesIO
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
@@ -49,3 +50,6 @@ class Domestica(Integration):
 
     def get_file_from_recipe(self, recipe):
         raise NotImplementedError('Method not implemented in storage integration')
+
+    def split_recipe_file(self, file):
+        return json.loads(file.read().decode("utf-8"))

@@ -42,7 +42,7 @@ class Integration:
         :return: HttpResponse with a ZIP file that is directly downloaded
         """
 
-        #TODO this is temporary, find a better solution for different export formats when doing other exporters
+        # TODO this is temporary, find a better solution for different export formats when doing other exporters
         if self.export_type != ImportExportBase.RECIPESAGE:
             export_zip_stream = BytesIO()
             export_zip_obj = ZipFile(export_zip_stream, 'w')
@@ -115,9 +115,9 @@ class Integration:
                                 self.handle_duplicates(recipe, import_duplicates)
 
                         import_zip.close()
-                    elif '.json' in f['name']:
-                        json_data = json.loads(f['file'].read().decode("utf-8"))
-                        for d in json_data:
+                    elif '.json' in f['name'] or '.txt' in f['name']:
+                        data_list = self.split_recipe_file(f['file'])
+                        for d in data_list:
                             recipe = self.get_recipe_from_file(d)
                             recipe.keywords.add(self.keyword)
                             il.msg += f'{recipe.pk} - {recipe.name} \n'
@@ -164,7 +164,15 @@ class Integration:
         :param file: ByteIO or any file like object, depends on provider
         :return: Recipe object
         """
-        raise NotImplementedError('Method not implemented in storage integration')
+        raise NotImplementedError('Method not implemented in integration')
+
+    def split_recipe_file(self, file):
+        """
+        Takes a file that contains multiple recipes and splits it into a list of strings of various formats (e.g. json, text, ..)
+        :param file: ByteIO or any file like object, depends on provider
+        :return: list of strings
+        """
+        raise NotImplementedError('Method not implemented in integration')
 
     def get_file_from_recipe(self, recipe):
         """
@@ -175,4 +183,4 @@ class Integration:
             - name - file name in export
             - data - string content for file to get created in export zip
         """
-        raise NotImplementedError('Method not implemented in storage integration')
+        raise NotImplementedError('Method not implemented in integration')
