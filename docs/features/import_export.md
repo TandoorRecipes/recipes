@@ -30,7 +30,7 @@ Overview of the capabilities of the different integrations.
 | Paprika     | ✔️      | ⌚      | ✔️      |
 | ChefTap     | ✔️      | ❌      | ❌️      |
 | Pepperplate     | ✔️      | ⌚      | ❌️      |
-| RecipeSage     | ✔️      | ⌚      | ✔️      |
+| RecipeSage     | ✔️      | ✔️      | ✔️      |
 | Domestica     | ✔️      | ⌚      | ✔️      |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
@@ -45,6 +45,9 @@ easy machine readability if you want to use the data for any other purpose.
 ## RecipeSage
 Go to Settings > Export Recipe Data and select `EXPORT AS JSON-LD (BEST)`. Then simply upload the exported file 
 to Tandoor.
+
+The RecipeSage integration also allows exporting. To migrate from Tandoor to RecipeSage simply export with Recipe Sage 
+selected and import the json file in RecipeSage. Images are currently not supported for exporting.
 
 ## Domestica
 Go to Import/Export and select `Export Recipes`. Then simply upload the exported file 

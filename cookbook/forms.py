@@ -120,16 +120,16 @@ class ImportExportBase(forms.Form):
         (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
         (PEPPERPLATE, 'Pepperplate'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
     ))
-    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'), required=False)
 
 
 class ImportForm(ImportExportBase):
     files = forms.FileField(required=True, widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'), required=False)
 
 
 class ExportForm(ImportExportBase):
     recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none())
-    all = forms.BooleanField()
+    all = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')

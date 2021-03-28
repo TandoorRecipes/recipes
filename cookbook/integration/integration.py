@@ -1,18 +1,16 @@
 import datetime
 import json
 import uuid
-
 from io import BytesIO, StringIO
 from zipfile import ZipFile, BadZipFile
 
-from django.contrib import messages
 from django.core.files import File
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.http import HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django_scopes import scope
 
+from cookbook.forms import ImportExportBase
 from cookbook.models import Keyword, Recipe
 
 
@@ -20,6 +18,7 @@ class Integration:
     request = None
     keyword = None
     files = None
+    export_type = None
     ignored_recipes = []
 
     def __init__(self, request, export_type):
@@ -28,6 +27,7 @@ class Integration:
         :param request: request context of import session (used to link user to created objects)
         """
         self.request = request
+        self.export_type = export_type
         self.keyword = Keyword.objects.create(
             name=f'Import {export_type} {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
             description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}',
@@ -41,33 +41,44 @@ class Integration:
         :param recipes: list of recipe objects
         :return: HttpResponse with a ZIP file that is directly downloaded
         """
-        export_zip_stream = BytesIO()
-        export_zip_obj = ZipFile(export_zip_stream, 'w')
 
-        for r in recipes:
-            if r.internal and r.space == self.request.space:
-                recipe_zip_stream = BytesIO()
-                recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
+        #TODO this is temporary, find a better solution for different export formats when doing other exporters
+        if self.export_type != ImportExportBase.RECIPESAGE:
+            export_zip_stream = BytesIO()
+            export_zip_obj = ZipFile(export_zip_stream, 'w')
 
-                recipe_stream = StringIO()
-                filename, data = self.get_file_from_recipe(r)
-                recipe_stream.write(data)
-                recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
-                recipe_stream.close()
+            for r in recipes:
+                if r.internal and r.space == self.request.space:
+                    recipe_zip_stream = BytesIO()
+                    recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
 
-                try:
-                    recipe_zip_obj.write(r.image.path, 'image.png')
-                except ValueError:
-                    pass
+                    recipe_stream = StringIO()
+                    filename, data = self.get_file_from_recipe(r)
+                    recipe_stream.write(data)
+                    recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
+                    recipe_stream.close()
 
-                recipe_zip_obj.close()
-                export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
+                    try:
+                        recipe_zip_obj.write(r.image.path, 'image.png')
+                    except ValueError:
+                        pass
 
-        export_zip_obj.close()
+                    recipe_zip_obj.close()
+                    export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
 
-        response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="export.zip"'
-        return response
+            export_zip_obj.close()
+
+            response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="export.zip"'
+            return response
+        else:
+            json_list = []
+            for r in recipes:
+                json_list.append(self.get_file_from_recipe(r))
+
+            response = HttpResponse(json.dumps(json_list), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="recipes.json"'
+            return response
 
     def import_file_name_filter(self, zip_info_object):
         """
