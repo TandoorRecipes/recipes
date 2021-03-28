@@ -1,4 +1,5 @@
 import datetime
+import json
 import uuid
 
 from io import BytesIO, StringIO
@@ -19,6 +20,7 @@ class Integration:
     request = None
     keyword = None
     files = None
+    ignored_recipes = []
 
     def __init__(self, request, export_type):
         """
@@ -89,7 +91,6 @@ class Integration:
             self.keyword.name = _('Import') + ' ' + str(il.pk)
             self.keyword.save()
 
-            ignored_recipes = []
             try:
                 self.files = files
                 for f in files:
@@ -100,38 +101,41 @@ class Integration:
                                 recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                                 recipe.keywords.add(self.keyword)
                                 il.msg += f'{recipe.pk} - {recipe.name} \n'
-                                if not import_duplicates:
-                                    if duplicate := self.is_duplicate(recipe):
-                                        ignored_recipes.append(duplicate)
+                                self.handle_duplicates(recipe, import_duplicates)
+
                         import_zip.close()
+                    elif '.json' in f['name']:
+                        json_data = json.loads(f['file'].read().decode("utf-8"))
+                        for d in json_data:
+                            recipe = self.get_recipe_from_file(d)
+                            recipe.keywords.add(self.keyword)
+                            il.msg += f'{recipe.pk} - {recipe.name} \n'
+                            self.handle_duplicates(recipe, import_duplicates)
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
                         recipe.keywords.add(self.keyword)
                         il.msg += f'{recipe.pk} - {recipe.name} \n'
-                        if not import_duplicates:
-                            if duplicate := self.is_duplicate(recipe):
-                                ignored_recipes.append(duplicate)
+                        self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
                 il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
 
-            if len(ignored_recipes) > 0:
-                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(ignored_recipes) + '\n\n'
+            if len(self.ignored_recipes) > 0:
+                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(self.ignored_recipes) + '\n\n'
 
             il.keyword = self.keyword
             il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'
             il.running = False
             il.save()
 
-    def is_duplicate(self, recipe):
+    def handle_duplicates(self, recipe, import_duplicates):
         """
         Checks if a recipe is already present, if so deletes it
         :param recipe: Recipe object
+        :param import_duplicates: if duplicates should be imported
         """
-        if Recipe.objects.filter(space=self.request.space, name=recipe.name).count() > 1:
+        if Recipe.objects.filter(space=self.request.space, name=recipe.name).count() > 1 and not import_duplicates:
             recipe.delete()
-            return recipe.name
-        else:
-            return None
+            self.ignored_recipes.append(recipe.name)
 
     @staticmethod
     def import_recipe_image(recipe, image_file):

@@ -112,13 +112,15 @@ class ImportExportBase(forms.Form):
     SAFRON = 'SAFRON'
     CHEFTAP = 'CHEFTAP'
     PEPPERPLATE = 'PEPPERPLATE'
+    RECIPESAGE = 'RECIPESAGE'
+    DOMESTICA = 'DOMESTICA'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
         (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
-        (PEPPERPLATE, 'Pepperplate'),
+        (PEPPERPLATE, 'Pepperplate'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
     ))
-    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'))
+    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'), required=False)
 
 
 class ImportForm(ImportExportBase):

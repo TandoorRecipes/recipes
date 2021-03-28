@@ -1,17 +1,11 @@
 import base64
+import gzip
 import json
-import re
 from io import BytesIO
-from zipfile import ZipFile
-
-import microdata
-from bs4 import BeautifulSoup
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
-from cookbook.helper.recipe_url_import import find_recipe_json
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Ingredient, Unit
-import gzip
+from cookbook.models import Recipe, Step, Ingredient
 
 
 class Paprika(Integration):
