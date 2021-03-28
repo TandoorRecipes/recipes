@@ -2,6 +2,7 @@ import base64
 from io import BytesIO
 
 import requests
+from rest_framework.renderers import JSONRenderer
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
@@ -58,4 +59,31 @@ class RecipeSage(Integration):
         return recipe
 
     def get_file_from_recipe(self, recipe):
-        raise NotImplementedError('Method not implemented in storage integration')
+        data = {
+            '@context': 'http://schema.org',
+            '@type': 'Recipe',
+            'creditText': '',
+            'isBasedOn': '',
+            'name': recipe.name,
+            'description': recipe.description,
+            'prepTime': str(recipe.working_time),
+            'totalTime': str(recipe.waiting_time + recipe.working_time),
+            'recipeYield': str(recipe.servings),
+            'image': [],
+            'recipeCategory': [],
+            'comment': [],
+            'recipeIngredient': [],
+            'recipeInstructions': [],
+        }
+
+        for s in recipe.steps.all():
+            if s.type != Step.TIME:
+                data['recipeInstructions'].append({
+                    '@type': 'HowToStep',
+                    'text': s.instruction
+                })
+
+                for i in s.ingredients.all():
+                    data['recipeIngredient'].append(f'{float(i.amount)} {i.unit} {i.food}')
+
+        return data

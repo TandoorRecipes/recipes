@@ -78,7 +78,7 @@ def export_recipe(request):
         if form.is_valid():
             try:
                 recipes = form.cleaned_data['recipes']
-                if form['all']:
+                if form.cleaned_data['all']:
                     recipes = Recipe.objects.filter(space=request.space, internal=True).all()
                 integration = get_integration(request, form.cleaned_data['type'])
                 return integration.do_export(recipes)
