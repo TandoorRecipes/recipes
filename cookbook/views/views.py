@@ -90,6 +90,11 @@ def no_groups(request):
 
 
 def no_space(request):
+    if settings.SOCIAL_DEFAULT_ACCESS:
+        request.user.userpreference.space = Space.objects.first()
+        request.user.userpreference.save()
+        request.user.groups.add(Group.objects.get(name=settings.SOCIAL_DEFAULT_GROUP))
+        return HttpResponseRedirect(reverse('index'))
     return render(request, 'no_space_info.html')
 
 
