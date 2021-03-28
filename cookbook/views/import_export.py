@@ -68,8 +68,11 @@ def export_recipe(request):
         form = ExportForm(request.POST, space=request.space)
         if form.is_valid():
             try:
+                recipes = form.cleaned_data['recipes']
+                if form['all']:
+                    recipes = Recipe.objects.filter(space=request.space, internal=True).all()
                 integration = get_integration(request, form.cleaned_data['type'])
-                return integration.do_export(form.cleaned_data['recipes'])
+                return integration.do_export(recipes)
             except NotImplementedError:
                 messages.add_message(request, messages.ERROR, _('Exporting is not implemented for this provider'))
 
