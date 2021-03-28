@@ -28,10 +28,11 @@ Overview of the capabilities of the different integrations.
 | Chowdown    | ✔️      | ⌚      | ✔️      |
 | Safron      | ✔️      | ⌚      | ❌      |
 | Paprika     | ✔️      | ⌚      | ✔️      |
-| ChefTap     | ✔️      | ❌      | ❌️      |
-| Pepperplate     | ✔️      | ⌚      | ❌️      |
+| ChefTap     | ✔️      | ❌      |  ❌     |
+| Pepperplate     | ✔️      | ⌚      | ❌      |
 | RecipeSage     | ✔️      | ✔️      | ✔️      |
 | Domestica     | ✔️      | ⌚      | ✔️      |
+| RezKonv     | ✔️      | ❌      |  ❌        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -144,3 +145,8 @@ Usually the import should recognize all ingredients and put everything else into
 or is worse than this feel free to provide me with more example data and I can try to improve the importer.
 
 As ChefTap cannot import these files anyway there won't be an exporter implemented in Tandoor.
+
+## RezKonv
+The RezKonv format is primarily used in the german recipe manager RezKonv Suite. 
+To migrate from RezKonv Suite to Tandoor select `Export > Gesamtes Kochbuch exportieren` (the last option in the export menu).
+The generated file can simply be imported into Tandoor.
