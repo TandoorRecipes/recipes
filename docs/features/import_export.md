@@ -28,8 +28,9 @@ Overview of the capabilities of the different integrations.
 | Chowdown    | ✔️      | ⌚      | ✔️      |
 | Safron      | ✔️      | ⌚      | ❌      |
 | Paprika     | ✔️      | ⌚      | ✔️      |
+| ChefTap     | ✔️      | ❌      | ❌️      |
 
-✔ = implemented, ❌ = not implemented and not possible, ⌚ = not yet implemented
+✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
 ## Default
 The default integration is the build in (and preferred) way to import and export recipes.
@@ -109,3 +110,16 @@ A Paprika export contains a folder with a html representation of your recipes an
 
 The `.paprikarecipes` file is basically just a zip with gzipped contents. Simply upload the whole file and import 
 all your recipes. 
+
+## ChefTap
+ChefTaps allows you to export your recipes from the app (I think). The export is a zip file containing a folder called
+`recipes` which in turn contains `.txt` files with your recipes.
+
+This format is basically completely unstructured and every export looks different. This makes importing it very hard
+and leads to suboptimal results. Images are also not supported as they are not included in the export (at least 
+the tests I had).
+
+Usually the import should recognize all ingredients and put everything else into the instructions. If you import fails
+or is worse than this feel free to provide me with more example data and I can try to improve the importer.
+
+As ChefTap cannot import these files anyway there won't be an exporter implemented in Tandoor.

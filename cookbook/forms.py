@@ -110,10 +110,11 @@ class ImportExportBase(forms.Form):
     MEALIE = 'MEALIE'
     CHOWDOWN = 'CHOWDOWN'
     SAFRON = 'SAFRON'
+    CHEFTAP = 'CHEFTAP'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
-        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'),
+        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
     ))
 
 
