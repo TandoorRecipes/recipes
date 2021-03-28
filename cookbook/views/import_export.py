@@ -19,6 +19,7 @@ from cookbook.integration.mealie import Mealie
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.paprika import Paprika
 from cookbook.integration.recipesage import RecipeSage
+from cookbook.integration.rezkonv import RezKonv
 from cookbook.integration.safron import Safron
 from cookbook.models import Recipe, ImportLog
 
@@ -44,6 +45,8 @@ def get_integration(request, export_type):
         return Domestica(request, export_type)
     if export_type == ImportExportBase.RECIPESAGE:
         return RecipeSage(request, export_type)
+    if export_type == ImportExportBase.REZKONV:
+        return RezKonv(request, export_type)
 
 
 @group_required('user')
