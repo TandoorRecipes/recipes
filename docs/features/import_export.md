@@ -30,6 +30,8 @@ Overview of the capabilities of the different integrations.
 | Paprika     | ✔️      | ⌚      | ✔️      |
 | ChefTap     | ✔️      | ❌      | ❌️      |
 | Pepperplate     | ✔️      | ⌚      | ❌️      |
+| RecipeSage     | ✔️      | ⌚      | ✔️      |
+| Domestica     | ✔️      | ⌚      | ✔️      |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -39,6 +41,14 @@ It is maintained with new fields added and contains all data to transfer your re
 
 It is also one of the few recipe formats that is actually structured in a way that allows for 
 easy machine readability if you want to use the data for any other purpose. 
+
+## RecipeSage
+Go to Settings > Export Recipe Data and select `EXPORT AS JSON-LD (BEST)`. Then simply upload the exported file 
+to Tandoor.
+
+## Domestica
+Go to Import/Export and select `Export Recipes`. Then simply upload the exported file 
+to Tandoor.
 
 ## Nextcloud
 Importing recipes from Nextcloud cookbook is very easy and since Nextcloud Cookbook provides nice, standardized and 

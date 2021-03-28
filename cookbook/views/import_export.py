@@ -14,9 +14,11 @@ from cookbook.integration.Pepperplate import Pepperplate
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.default import Default
+from cookbook.integration.domestica import Domestica
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.paprika import Paprika
+from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.safron import Safron
 from cookbook.models import Recipe, ImportLog
 
@@ -38,6 +40,10 @@ def get_integration(request, export_type):
         return ChefTap(request, export_type)
     if export_type == ImportExportBase.PEPPERPLATE:
         return Pepperplate(request, export_type)
+    if export_type == ImportExportBase.DOMESTICA:
+        return Domestica(request, export_type)
+    if export_type == ImportExportBase.RECIPESAGE:
+        return RecipeSage(request, export_type)
 
 
 @group_required('user')
