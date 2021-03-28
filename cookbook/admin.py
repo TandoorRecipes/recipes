@@ -7,7 +7,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, 
+                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
                      ImportLog, TelegramBot, BookmarkletImport)
 
 
@@ -228,6 +228,7 @@ class BookmarkletImportAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
+
 
 class TelegramBotAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'created_by',)

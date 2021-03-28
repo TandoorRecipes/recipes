@@ -94,8 +94,8 @@ def batch_edit(request):
                 'Batch edit done. %(count)d recipe was updated.',
                 'Batch edit done. %(count)d Recipes where updated.',
                 count) % {
-                      'count': count,
-                  }
+                        'count': count,
+                        }
             messages.add_message(request, messages.SUCCESS, msg)
 
             return redirect('data_batch_edit')

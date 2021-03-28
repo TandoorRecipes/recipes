@@ -18,28 +18,30 @@
     }
     function initBookmarklet() {
         (window.bookmarkletTandoor = function() {
-            var recipe = document.documentElement.innerHTML
-            var form = document.createElement("form");
-            var windowName = "ImportRecipe"
-            form.setAttribute("method", "post");
-            form.setAttribute("action", localStorage.getItem('importURL'));
-            form.setAttribute("target",'importRecipe');  
-            var params = { 'recipe' : recipe,'url': window.location}; 
+            let recipe = document.documentElement.innerHTML
+            let windowName = "ImportRecipe"
+            let url = localStorage.getItem('importURL')
+            let redirect = localStorage.getItem('redirectURL')
+            let token = localStorage.getItem('token')
+            let params = { 'html' : recipe,'url': window.location.href}; 
+            console.log(window.location.href)
             
-            for (var i in params) {
-                if (params.hasOwnProperty(i)) {
-                    var input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = i;
-                    input.value = params[i];
-                    form.appendChild(input);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', 'Token ' + token);
+
+            // listen for `onload` event
+            xhr.onload = () => {
+                // process response
+                if (xhr.readyState == 4 && xhr.status == 201) {
+                    // parse JSON data
+                    console.log(JSON.parse(xhr.response));
+                } else {
+                    console.error('Error!');
                 }
-                }              
-                document.body.appendChild(form);                       
-                window.open('', windowName);
-                form.target = windowName;
-                form.submit();                 
-                document.body.removeChild(form);  
+            };
+            xhr.send(JSON.stringify(params));
             }
         )();
     }
