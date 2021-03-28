@@ -1,4 +1,5 @@
 import base64
+import json
 from io import BytesIO
 
 import requests
@@ -87,3 +88,6 @@ class RecipeSage(Integration):
                     data['recipeIngredient'].append(f'{float(i.amount)} {i.unit} {i.food}')
 
         return data
+
+    def split_recipe_file(self, file):
+        return json.loads(file.read().decode("utf-8"))
