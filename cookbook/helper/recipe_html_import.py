@@ -118,7 +118,7 @@ def get_recipe_from_source(text, url, space):
             temp_tree.append(node)
 
         if '@type' in el and el['@type'] == 'Recipe':
-            recipe_json = helper.find_recipe_json(el, None, space)
+            recipe_json = helper.find_recipe_json(el, url, space)
             recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
