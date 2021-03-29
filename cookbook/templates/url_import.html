@@ -41,7 +41,7 @@
         
         <div class="tab-content" id="nav-tabContent">
             <!-- Import URL -->
-            <div class="tab-pane fade show active" role="tabpanel">
+            <div class="tab-pane fade show active" id="nav-url" role="tabpanel">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="automatic=true">
                     <input type="radio"  autocomplete="off" checked> Automatic
@@ -747,7 +747,7 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading bookmarklet!') + err.bodyText, 'danger')
+                        this.makeToast(gettext('Error'), gettext('Bookmarklet not found!') , 'danger')
                     })
                 },
                 deleteBookmarklet: function(id_bkmk) {
