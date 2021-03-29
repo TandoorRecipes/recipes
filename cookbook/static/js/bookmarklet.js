@@ -24,7 +24,6 @@
             let redirect = localStorage.getItem('redirectURL')
             let token = localStorage.getItem('token')
             let params = { 'html' : recipe,'url': window.location.href}; 
-            console.log(window.location.href)
             
             const xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
@@ -36,7 +35,6 @@
                 // process response
                 if (xhr.readyState == 4 && xhr.status == 201) {
                     // parse JSON data
-                    console.log(JSON.parse(xhr.response));
                     window.open(redirect.concat('?id=', JSON.parse(xhr.response).id) )
                 } else {
                     console.error('Error!');
