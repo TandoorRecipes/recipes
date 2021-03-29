@@ -37,6 +37,7 @@
                 if (xhr.readyState == 4 && xhr.status == 201) {
                     // parse JSON data
                     console.log(JSON.parse(xhr.response));
+                    window.open(redirect.concat('?id=', JSON.parse(xhr.response).id) )
                 } else {
                     console.error('Error!');
                 }
