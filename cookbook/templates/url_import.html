@@ -750,6 +750,15 @@
                         this.makeToast(gettext('Error'), gettext('There was an error loading bookmarklet!') + err.bodyText, 'danger')
                     })
                 },
+                deleteBookmarklet: function(id_bkmk) {
+                    this.error = undefined
+                    this.$http.delete("{% url 'api:bookmarkletimport-list' %}" + id_bkmk +"/").then((response) => {
+                    }).catch((err) => {
+                        this.error = err.data
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error deleting bookmarklet!') + err.bodyText, 'danger')
+                    })
+                },
                 loadRecipeManual: function () {
                     this.error = undefined
                     this.preview = false
@@ -783,6 +792,12 @@
                     this.importing_recipe = true
                     this.$set(this.recipe_data, 'all_keywords', this.all_keywords)
                     this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
+                        let uri = window.location.search.substring(1); 
+                        let params = new URLSearchParams(uri);
+                        q = params.get("id")
+                        if (q) {
+                            this.deleteBookmarklet(q)
+                        }
                         window.location.href = response.data
                     }).catch((err) => {
                         this.importing_recipe = false
