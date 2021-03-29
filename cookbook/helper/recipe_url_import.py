@@ -103,6 +103,9 @@ def find_recipe_json(ld_json, url, space):
     else:
         ld_json['recipeInstructions'] = ""
 
+    if url:
+        ld_json['recipeInstructions'] += "\nImported from " + url
+
     if 'image' in ld_json:
         ld_json['image'] = parse_image(ld_json['image'])
     else:
