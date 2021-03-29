@@ -30,18 +30,18 @@
                 title="{% trans 'Drag me to your bookmarks to import recipes from anywhere' %}">
             <img src="{% static 'assets/favicon-16x16.png' %}">{% trans 'Bookmark Me!' %} </a>
         </div>
-        <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
-            <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url" aria-selected="true">URL</a>
-            <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" aria-controls="nav-app">App</a>
-            <a class="nav-link" href="#nav-source" data-toggle="tab" role="tab" aria-controls="nav-source">Source</a>
-            <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" aria-controls="nav-text">Text</a>
-            <a class="nav-link disabled" href="#nav-file" data-toggle="tab" role="tab" aria-controls="nav-file">File</a>
+        <nav class="nav nav-pills flex-sm-row" id="nav-tabs" style="margin-bottom:10px">
+            <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" >URL</a>
+            <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" >App</a>
+            <a class="nav-link" href="#nav-source" data-toggle="tab" role="tab" >Source</a>
+            <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" >Text</a>
+            <a class="nav-link disabled" href="#nav-file" data-toggle="tab" role="tab" >File</a>
         </nav>
 
         
         <div class="tab-content" id="nav-tabContent">
             <!-- Import URL -->
-            <div class="tab-pane fade show active" id="nav-url" role="tabpanel">
+            <div class="tab-pane fade show active" role="tabpanel">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="automatic=true">
                     <input type="radio"  autocomplete="off" checked> Automatic
@@ -625,13 +625,13 @@
                 recipe_data: undefined,
                 error: undefined,
                 loading: false,
-                preview: {{preview}},
+                preview: undefined,
                 preview_type: 'json',
                 all_keywords: false,
                 importing_recipe: false,
-                recipe_json: {{recipe_json|safe}},
-                recipe_tree: {{recipe_tree|safe}},
-                recipe_html: {{recipe_html|safe}},
+                recipe_json: undefined,
+                recipe_tree: undefined,
+                recipe_html: undefined,
                 automatic: true,
                 show_blank: false,
                 blank_field: '',
@@ -650,7 +650,12 @@
                 this.searchKeywords('')
                 this.searchUnits('')
                 this.searchIngredients('')
-
+                let uri = window.location.search.substring(1); 
+                let params = new URLSearchParams(uri);
+                q = params.get("id")
+                if (q) {
+                    this.loadBookmarklet(q)
+                }
             },
             methods: {
                 makeToast: function (title, message, variant = null) {
@@ -706,7 +711,7 @@
                     this.error = undefined
                     this.loading = true
                     this.preview = false
-                    this.$http.post("{% url 'api_recipe_from_source' %}", {'data': this.source_data, 'auto':this.automatic}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_source' %}", {'data': this.source_data, 'url': this.remote_url, 'auto':this.automatic}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
                         if (this.automatic) {
                             this.recipe_data = response.data['recipe_json'];
@@ -723,6 +728,26 @@
                         this.loading = false
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
+                },
+                loadBookmarklet: function(id_bkmk) {
+                    let uri = window.location.search.substring(1); 
+                    let params = new URLSearchParams(uri);
+                    q = params.get("id")
+                    console.log(q)
+                    this.error = undefined
+                    this.loading = true
+                    this.$http.get("{% url 'api:bookmarkletimport-list' %}?id=" + id_bkmk ).then((response) => {
+                        console.log(response.data)
+                        this.automatic = false
+                        this.source_data = response.data[0]['html']
+                        this.remote_url = response.data[0]['url']
+                        this.loadSource()
+                    }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading bookmarklet!') + err.bodyText, 'danger')
                     })
                 },
                 loadRecipeManual: function () {
@@ -926,7 +951,7 @@
                                 console.log(response)
                                 let new_ingredient={
                                 unit: {id: Math.random() * 1000, text: response.body.unit},
-                                amount: response.body.amount,
+                                amount: String(response.body.amount),
                                 ingredient: {id: Math.random() * 1000, text: response.body.food},
                                 note: response.body.note
                             }

@@ -188,8 +188,13 @@ def import_url(request):
                 pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
+    
+    if 'id' in request.GET:
+        context = {'bookmarklet': 25}
+    else:
+        context = {}
 
-    return render(request, 'url_import.html', {})
+    return render(request, 'url_import.html', context)
 
 
 class Object(object):
