@@ -467,10 +467,13 @@ class ImportLogSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_by',)
 
 
+# CORS, REST and Scopes aren't currently working
+# Scopes are evaluating before REST has authenticated the user assiging a None space
+# I've made the change below to fix the bookmarklet, other serializers likely need a similar/better fix
 class BookmarkletImportSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
