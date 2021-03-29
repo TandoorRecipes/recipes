@@ -621,6 +621,8 @@ def recipe_from_source(request, url=None, url_text=None):
         auto = request.POST['auto']
     else:
         auto = 'true'
+    if 'url' in request.POST:
+        url = request.POST['url']
 
     recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(json_data, url, request.space)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
