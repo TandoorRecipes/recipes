@@ -8,7 +8,7 @@ django-crispy-forms==1.11.2
 django-emoji-picker==0.0.6
 django-filter==2.4.0
 django-tables2==2.3.4
-djangorestframework==3.12.3
+djangorestframework==3.12.4
 drf-writable-nested==0.6.2
 gunicorn==20.0.4
 lxml==4.6.3
