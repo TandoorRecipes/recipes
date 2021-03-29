@@ -953,7 +953,8 @@
                                 unit: {id: Math.random() * 1000, text: response.body.unit},
                                 amount: String(response.body.amount),
                                 ingredient: {id: Math.random() * 1000, text: response.body.food},
-                                note: response.body.note
+                                note: response.body.note,
+                                original: v
                             }
                             this.recipe_json.recipeIngredient.push(new_ingredient)
                             }).catch((err) => {
