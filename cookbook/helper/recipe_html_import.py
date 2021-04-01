@@ -1,3 +1,4 @@
+#%%
 import json
 import re
 
@@ -72,7 +73,6 @@ def get_recipe_from_source(text, url, space):
                 'cookTime': ''
                 }
     recipe_tree = []
-    temp_tree = []
     parse_list = []
     html_data = []
     images = []
@@ -80,8 +80,11 @@ def get_recipe_from_source(text, url, space):
     text = normalize_string(text)
     try:
         parse_list.append(remove_graph(json.loads(text)))
+        scrape = text_scraper("<script type='application/ld+json'>"+text+"</script>")
+        
     except JSONDecodeError:
         soup = BeautifulSoup(text, "html.parser")
+        scrape = text_scraper(text)
         html_data = get_from_html(soup)
         images += get_images_from_source(soup, url)
         for el in soup.find_all('script', type='application/ld+json'):
@@ -89,13 +92,14 @@ def get_recipe_from_source(text, url, space):
         for el in soup.find_all(type='application/json'):
             parse_list.append(remove_graph(el))
 
-    # first try finding ld+json as its most common
-    for el in parse_list:
-        # if a url was not provided, try to find one in the first document
-        if not url:
-            if 'url' in el:
-                url = el['url']
+    # if a url was not provided, try to find one in the first document
+    if not url:
+        if 'url' in parse_list[0]:
+            url = parse_list[0]['url']
+    recipe_json = helper.get_from_scraper(scrape, url, space)
 
+    for el in parse_list:
+        temp_tree = []
         if isinstance(el, Tag):
             try:
                 el = json.loads(el.string)
@@ -123,11 +127,10 @@ def get_recipe_from_source(text, url, space):
             temp_tree.append(node)
 
         if '@type' in el and el['@type'] == 'Recipe':
-            recipe_json = helper.find_recipe_json(el, url, space)
             recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
-        temp_tree = []
+        
 
     return recipe_json, recipe_tree, html_data, images
 
@@ -195,7 +198,7 @@ def text_scraper(text, url=None):
         
         @classmethod
         def generate(cls, page_data, url, **options):
-            return cls.TextScraper(page_data, url, **options)
+            return cls(page_data, url, **options)
 
     return TextScraper.generate(text, url)
 
