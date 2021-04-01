@@ -15,48 +15,6 @@ from django.utils.translation import gettext as _
 from recipe_scrapers._utils import get_minutes, normalize_string
 
 
-def get_from_html_old(html_text, url, space):
-    soup = BeautifulSoup(html_text, "html.parser")
-
-    # first try finding ld+json as its most common
-    for ld in soup.find_all('script', type='application/ld+json'):
-        try:
-            ld_json = json.loads(ld.string.replace('\n', ''))
-            if type(ld_json) != list:
-                ld_json = [ld_json]
-
-            for ld_json_item in ld_json:
-                # recipes type might be wrapped in @graph type
-                if '@graph' in ld_json_item:
-                    for x in ld_json_item['@graph']:
-                        if '@type' in x and x['@type'] == 'Recipe':
-                            ld_json_item = x
-
-                if ('@type' in ld_json_item and ld_json_item['@type'] == 'Recipe'):
-                    return JsonResponse(find_recipe_json(ld_json_item, url, space))
-        except JSONDecodeError:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
-                },
-                status=400)
-
-    # now try to find microdata
-    items = microdata.get_items(html_text)
-    for i in items:
-        md_json = json.loads(i.json())
-        if 'schema.org/Recipe' in str(md_json['type']):
-            return JsonResponse(find_recipe_json(md_json['properties'], url, space))
-
-    return JsonResponse(
-        {
-            'error': True,
-            'msg': _('The requested site does not provide any recognized data format to import the recipe from.')  # noqa: E501
-        },
-        status=400)
-
-
 def find_recipe_json(ld_json, url, space):
     ld_json['name'] = parse_name(ld_json['name'])
 
