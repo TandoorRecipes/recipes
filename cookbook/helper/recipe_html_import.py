@@ -1,12 +1,17 @@
 import json
 import re
-from json.decoder import JSONDecodeError
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from cookbook.helper import recipe_url_import as helper
+from recipe_scrapers import SCRAPERS, get_domain, _exception_handling
 from recipe_scrapers._utils import get_host_name, normalize_string
+from recipe_scrapers._factory import SchemaScraperFactory
+from recipe_scrapers._schemaorg import SchemaOrg
 
+from bs4 import BeautifulSoup
+from json import JSONDecodeError
+from json.decoder import JSONDecodeError
 
 def get_recipe_from_source(text, url, space):
     def build_node(k, v):
@@ -163,6 +168,36 @@ def get_images_from_source(soup, url):
             if 'http' in u:
                 images.append(u)
     return images
+
+
+def text_scraper(text, url=None):
+    domain = get_domain(url)
+    if domain in SCRAPERS:
+        scraper_class = SCRAPERS[domain]
+    else:
+        scraper_class = SchemaScraperFactory
+    
+    class TextScraper(scraper_class):
+        def __init__(
+            self,
+            page_data,
+            url=None
+        ):
+            self.wild_mode = False
+            self.exception_handling = _exception_handling
+            self.meta_http_equiv = False
+            self.soup = BeautifulSoup(page_data, "html.parser")
+            self.url = url
+            try:
+                self.schema = SchemaOrg(page_data)
+            except JSONDecodeError:
+                pass
+        
+        @classmethod
+        def generate(cls, page_data, url, **options):
+            return cls.TextScraper(page_data, url, **options)
+
+    return TextScraper.generate(text, url)
 
 
 def remove_graph(el):
