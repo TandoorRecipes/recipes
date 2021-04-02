@@ -1,19 +1,16 @@
 from bs4 import BeautifulSoup
-from json import JSONDecodeError
-from recipe_scrapers import SCRAPERS, get_host_name
+from recipe_scrapers import SCRAPERS, get_domain, _exception_handling
 from recipe_scrapers._factory import SchemaScraperFactory
 from recipe_scrapers._schemaorg import SchemaOrg
 
 from .cooksillustrated import CooksIllustrated
 
 CUSTOM_SCRAPERS = {
-    CooksIllustrated.host(site="cooksillustrated"): CooksIllustrated,
-    CooksIllustrated.host(site="americastestkitchen"): CooksIllustrated,
-    CooksIllustrated.host(site="cookscountry"): CooksIllustrated,
+    CooksIllustrated.host(): CooksIllustrated,
 }
-SCRAPERS.update(CUSTOM_SCRAPERS)
 
-
+SCRAPERS = SCRAPERS.update(CUSTOM_SCRAPERS)
+#%%
 def text_scraper(text, url=None):
     domain = None
     if url:
@@ -22,7 +19,7 @@ def text_scraper(text, url=None):
         scraper_class = SCRAPERS[domain]
     else:
         scraper_class = SchemaScraperFactory.SchemaScraper
-
+    
     class TextScraper(scraper_class):
         def __init__(
                 self,
@@ -34,10 +31,11 @@ def text_scraper(text, url=None):
             self.meta_http_equiv = False
             self.soup = BeautifulSoup(page_data, "html.parser")
             self.url = url
-            self.recipe = None
             try:
                 self.schema = SchemaOrg(page_data)
             except JSONDecodeError:
                 pass
 
     return TextScraper(text, url)
+
+# %%
