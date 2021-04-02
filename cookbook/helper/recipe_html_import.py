@@ -1,14 +1,12 @@
-#%%
 import json
 import re
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from cookbook.helper import recipe_url_import as helper
-from recipe_scrapers import SCRAPERS, get_domain, _exception_handling
+from cookbook.helper.scrapers.scrapers import text_scraper
 from recipe_scrapers._utils import get_host_name, normalize_string
-from recipe_scrapers._factory import SchemaScraperFactory
-from recipe_scrapers._schemaorg import SchemaOrg
+
 
 from bs4 import BeautifulSoup
 from json import JSONDecodeError
@@ -93,10 +91,12 @@ def get_recipe_from_source(text, url, space):
             parse_list.append(remove_graph(el))
 
     # if a url was not provided, try to find one in the first document
-    if not url:
+    if not url and len(parse_list) > 0:
         if 'url' in parse_list[0]:
             url = parse_list[0]['url']
-    recipe_json = helper.get_from_scraper(scrape, url, space)
+    
+
+    recipe_json = helper.get_from_scraper(scrape, space)
 
     for el in parse_list:
         temp_tree = []
@@ -171,36 +171,6 @@ def get_images_from_source(soup, url):
             if 'http' in u:
                 images.append(u)
     return images
-
-
-def text_scraper(text, url=None):
-    domain = get_domain(url)
-    if domain in SCRAPERS:
-        scraper_class = SCRAPERS[domain]
-    else:
-        scraper_class = SchemaScraperFactory
-    
-    class TextScraper(scraper_class):
-        def __init__(
-            self,
-            page_data,
-            url=None
-        ):
-            self.wild_mode = False
-            self.exception_handling = _exception_handling
-            self.meta_http_equiv = False
-            self.soup = BeautifulSoup(page_data, "html.parser")
-            self.url = url
-            try:
-                self.schema = SchemaOrg(page_data)
-            except JSONDecodeError:
-                pass
-        
-        @classmethod
-        def generate(cls, page_data, url, **options):
-            return cls(page_data, url, **options)
-
-    return TextScraper.generate(text, url)
 
 
 def remove_graph(el):
