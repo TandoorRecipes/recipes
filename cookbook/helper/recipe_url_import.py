@@ -174,7 +174,8 @@ def get_from_scraper(scrape, space):
     except AttributeError:
         recipe_json['recipeInstructions'] = ""
 
-    recipe_json['recipeInstructions'] += "\n\nImported from " + scrape.url
+    if scrape.url:
+        recipe_json['recipeInstructions'] += "\n\nImported from " + scrape.url
     return recipe_json
 
 
