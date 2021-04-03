@@ -4,12 +4,8 @@ from recipe_scrapers._abstract import AbstractScraper
 
 class CooksIllustrated(AbstractScraper):
     @classmethod
-    def host(cls, site='cooksillustrated'):
-        return {
-            'cooksillustrated': f"{site}.com",
-            'americastestkitchen': f"{site}.com",
-            'cookscountry': f"{site}.com",
-        }.get(site)
+    def host(cls):
+        return "cooksillustrated.com"
 
     def title(self):
         return self.schema.title()
@@ -35,10 +31,10 @@ class CooksIllustrated(AbstractScraper):
             ingredients += group['fields']['recipeIngredientItems']
         return [
             "{} {} {}{}".format(
-                i['fields']['qty'] or '',
-                i['fields']['measurement'] or '',
-                i['fields']['ingredient']['fields']['title'] or '',
-                i['fields']['postText'] or ''
+                i['fields']['qty'],
+                i['fields']['measurement'],
+                i['fields']['ingredient']['fields']['title'],
+                i['fields']['postText']
             )
             for i in ingredients
         ]
@@ -46,17 +42,11 @@ class CooksIllustrated(AbstractScraper):
     def instructions(self):
         if not self.recipe:
             self.get_recipe()
-        if self.recipe.get('headnote', False):
-            i = ['Note: ' + self.recipe.get('headnote', '')]
-        else:
-            i = []
-        return "\n".join(
-            i
-            + [self.recipe.get('whyThisWorks', '')]
-            + [
-                instruction['fields']['content']
-                for instruction in self.recipe['instructions']
-            ]
+        return "\n".join([self.recipe['whyThisWorks']] +
+                    [
+                        instruction['fields']['content']
+                        for instruction in self.recipe['instructions']
+                    ]
         )
 
     def nutrients(self):
