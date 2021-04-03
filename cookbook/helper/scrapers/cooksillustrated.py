@@ -4,8 +4,12 @@ from recipe_scrapers._abstract import AbstractScraper
 
 class CooksIllustrated(AbstractScraper):
     @classmethod
-    def host(cls):
-        return "cooksillustrated.com"
+    def host(cls, site='cooksillustrated'):
+        return {
+            'cooksillustrated': f"{site}.com",
+            'americastestkitchen': f"{site}.com",
+            'cookscountry': f"{site}.com",
+        }.get(site)
 
     def title(self):
         return self.schema.title()
@@ -31,10 +35,10 @@ class CooksIllustrated(AbstractScraper):
             ingredients += group['fields']['recipeIngredientItems']
         return [
             "{} {} {}{}".format(
-                i['fields']['qty'],
-                i['fields']['measurement'],
-                i['fields']['ingredient']['fields']['title'],
-                i['fields']['postText']
+                i['fields']['qty'] or '',
+                i['fields']['measurement'] or '',
+                i['fields']['ingredient']['fields']['title'] or '',
+                i['fields']['postText'] or ''
             )
             for i in ingredients
         ]
@@ -53,6 +57,7 @@ class CooksIllustrated(AbstractScraper):
         raise NotImplementedError("This should be implemented.")
 
     def get_recipe(self):
+        # TODO add missing data to schema.data
         j = json.loads(self.soup.find(type='application/json').string)
         name = list(j['props']['initialState']['content']['documents'])[0]
         self.recipe = j['props']['initialState']['content']['documents'][name]
