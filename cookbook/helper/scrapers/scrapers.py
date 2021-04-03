@@ -7,7 +7,9 @@ from recipe_scrapers._schemaorg import SchemaOrg
 from .cooksillustrated import CooksIllustrated
 
 CUSTOM_SCRAPERS = {
-    CooksIllustrated.host(): CooksIllustrated,
+    CooksIllustrated.host(site="cooksillustrated"): CooksIllustrated,
+    CooksIllustrated.host(site="americastestkitchen"): CooksIllustrated,
+    CooksIllustrated.host(site="cookscountry"): CooksIllustrated,
 }
 SCRAPERS.update(CUSTOM_SCRAPERS)
 
