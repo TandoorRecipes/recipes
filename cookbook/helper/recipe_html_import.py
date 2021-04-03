@@ -5,12 +5,9 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.scrapers.scrapers import text_scraper
+from json import JSONDecodeError
 from recipe_scrapers._utils import get_host_name, normalize_string
 
-
-from bs4 import BeautifulSoup
-from json import JSONDecodeError
-from json.decoder import JSONDecodeError
 
 def get_recipe_from_source(text, url, space):
     def build_node(k, v):
@@ -78,11 +75,9 @@ def get_recipe_from_source(text, url, space):
     text = normalize_string(text)
     try:
         parse_list.append(remove_graph(json.loads(text)))
-        scrape = text_scraper("<script type='application/ld+json'>"+text+"</script>")
-        
+
     except JSONDecodeError:
         soup = BeautifulSoup(text, "html.parser")
-        scrape = text_scraper(text)
         html_data = get_from_html(soup)
         images += get_images_from_source(soup, url)
         for el in soup.find_all('script', type='application/ld+json'):
@@ -94,7 +89,11 @@ def get_recipe_from_source(text, url, space):
     if not url and len(parse_list) > 0:
         if 'url' in parse_list[0]:
             url = parse_list[0]['url']
-    
+
+    if type(text) == dict:
+        scrape = text_scraper("<script type='application/ld+json'>" + text + "</script>", url=url)
+    elif type(text) == str:
+        scrape = text_scraper(text, url=url)
 
     recipe_json = helper.get_from_scraper(scrape, space)
 
@@ -130,7 +129,6 @@ def get_recipe_from_source(text, url, space):
             recipe_tree += [{'name': 'ld+json', 'children': temp_tree}]
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
-        
 
     return recipe_json, recipe_tree, html_data, images
 

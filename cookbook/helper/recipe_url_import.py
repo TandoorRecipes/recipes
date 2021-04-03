@@ -1,84 +1,12 @@
-import json
 import random
 import re
-from json import JSONDecodeError
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
 
-import microdata
-from bs4 import BeautifulSoup
 from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
 from cookbook.models import Keyword
-from django.http import JsonResponse
 from django.utils.dateparse import parse_duration
-from django.utils.translation import gettext as _
 from recipe_scrapers._utils import get_minutes, normalize_string
-
-
-# def find_recipe_json(ld_json, url, space):
-#     ld_json['name'] = parse_name(ld_json['name'])
-
-#     # some sites use ingredients instead of recipeIngredients
-#     if 'recipeIngredient' not in ld_json and 'ingredients' in ld_json:
-#         ld_json['recipeIngredient'] = ld_json['ingredients']
-
-#     if 'recipeIngredient' in ld_json:
-#         ld_json['recipeIngredient'] = parse_ingredients(ld_json['recipeIngredient'])
-#     else:
-#         ld_json['recipeIngredient'] = ""
-
-#     keywords = []
-#     if 'keywords' in ld_json:
-#         keywords += listify_keywords(ld_json['keywords'])
-#     if 'recipeCategory' in ld_json:
-#         keywords += listify_keywords(ld_json['recipeCategory'])
-#     if 'recipeCuisine' in ld_json:
-#         keywords += listify_keywords(ld_json['recipeCuisine'])
-#     try:
-#         ld_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
-#     except TypeError:
-#         pass
-
-#     if 'recipeInstructions' in ld_json:
-#         ld_json['recipeInstructions'] = parse_instructions(ld_json['recipeInstructions'])
-#     else:
-#         ld_json['recipeInstructions'] = ""
-
-#     if 'image' in ld_json:
-#         ld_json['image'] = parse_image(ld_json['image'])
-#     else:
-#         ld_json['image'] = ""
-
-#     if 'description' in ld_json:
-#         ld_json['description'] = normalize_string(ld_json['description'])
-#     else:
-#         ld_json['description'] = ""
-
-#     if 'cookTime' in ld_json:
-#         ld_json['cookTime'] = parse_cooktime(ld_json['cookTime'])
-#     else:
-#         ld_json['cookTime'] = 0
-
-#     if 'prepTime' in ld_json:
-#         ld_json['prepTime'] = parse_cooktime(ld_json['prepTime'])
-#     else:
-#         ld_json['prepTime'] = 0
-
-#     if 'servings' in ld_json:
-#         ld_json['servings'] = parse_servings(ld_json['servings'])
-#     elif 'recipeYield' in ld_json:
-#         ld_json['servings'] = parse_servings(ld_json['recipeYield'])
-#     else:
-#         ld_json['servings'] = 1
-
-#     for key in list(ld_json):
-#         if key not in [
-#             'prepTime', 'cookTime', 'image', 'recipeInstructions',
-#             'keywords', 'name', 'recipeIngredient', 'servings', 'description'
-#         ]:
-#             ld_json.pop(key, None)
-
-#     return ld_json
 
 
 def get_from_scraper(scrape, space):
@@ -89,12 +17,9 @@ def get_from_scraper(scrape, space):
 
     try:
         description = scrape.schema.data.get("description") or ''
-        recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
-        recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+
     except AttributeError:
         description = ''
-        recipe_json['prepTime'] = 0
-        recipe_json['cookTime'] = 0
 
     recipe_json['description'] = normalize_string(description)
 
@@ -105,9 +30,11 @@ def get_from_scraper(scrape, space):
         servings = 1
     recipe_json['servings'] = servings
 
+    recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+    recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
-            recipe_json['prepTime'] = scrape.total_time()
+            recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
         except AttributeError:
             pass
 
