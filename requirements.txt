@@ -32,5 +32,5 @@ django-js-reverse==0.9.1
 django-allauth==0.44.0
 recipe-scrapers==12.2.2
 django-scopes==1.2.0
-pytest==6.2.2
+pytest==6.2.3
 pytest-django==4.1.0
