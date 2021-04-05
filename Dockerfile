@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.9-alpine3.12
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev libxslt-dev py-cryptography
