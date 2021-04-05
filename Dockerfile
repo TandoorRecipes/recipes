@@ -1,7 +1,7 @@
 FROM python:3.8-alpine
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev libxslt-dev
+RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libxml2-dev libxslt-dev py-cryptography
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
