@@ -102,6 +102,7 @@ def get_from_scraper(scrape, space):
         recipe_json['recipeInstructions'] = ""
 
     if scrape.url:
+        recipe_json['url'] = scrape.url
         recipe_json['recipeInstructions'] += "\n\nImported from " + scrape.url
     return recipe_json
 
