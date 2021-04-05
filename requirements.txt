@@ -1,6 +1,5 @@
-bleach==3.3.0
-bleach-allowlist==1.0.3
 Django==3.1.7
+cryptography==3.4.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
 django-cleanup==5.1.0
@@ -10,6 +9,8 @@ django-filter==2.4.0
 django-tables2==2.3.4
 djangorestframework==3.12.4
 drf-writable-nested==0.6.2
+bleach==3.3.0
+bleach-allowlist==1.0.3
 gunicorn==20.1.0
 lxml==4.6.3
 Markdown==3.3.4
