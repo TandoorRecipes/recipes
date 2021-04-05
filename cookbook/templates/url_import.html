@@ -22,20 +22,13 @@
 
 {% block content %}
     <div id="app">
-        <div class="row px-3" style="justify-content:space-between;">
-            <h2> {% trans 'Import' %}</h2>
-            <a class="btn btn-outline-info btn-sm" 
-                style="height:50%"
-                href="{% bookmarklet request %}" 
-                title="{% trans 'Drag me to your bookmarks to import recipes from anywhere' %}">
-            <img src="{% static 'assets/favicon-16x16.png' %}">{% trans 'Bookmark Me!' %} </a>
-        </div>
-        <nav class="nav nav-pills flex-sm-row" id="nav-tabs" style="margin-bottom:10px">
-            <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" >URL</a>
-            <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" >App</a>
-            <a class="nav-link" href="#nav-source" data-toggle="tab" role="tab" >Source</a>
-            <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" >Text</a>
-            <a class="nav-link disabled" href="#nav-file" data-toggle="tab" role="tab" >File</a>
+        <h2> {% trans 'Import' %} </h2>
+        <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
+            <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url" aria-selected="true" @click="mode='url'">URL</a>
+            <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" aria-controls="nav-app" @click="mode='app'">App</a>
+            <a class="nav-link" href="#nav-source" data-toggle="tab" role="tab" aria-controls="nav-source" @click="mode='source'">Source</a>
+            <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" aria-controls="nav-text" @click="mode='text'">Text</a>
+            <a class="nav-link disabled" href="#nav-file" data-toggle="tab" role="tab" aria-controls="nav-file" @click="mode='file'">File</a>
         </nav>
 
         
@@ -111,7 +104,7 @@
                     <textarea class="form-control input-group-append" v-model="source_data" rows=10 placeholder="{% trans 'Paste json or html source here to load recipe.' %}" style="font-size: 12px">
                     </textarea>
                 </div>
-                <button @click="loadSource()" class="btn btn-primary shadow-none" type="button"
+                <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
                             id="id_btn_app"><i class="fas fa-code"></i> {% trans 'Import' %} 
                 </button>
             </div>
@@ -177,7 +170,7 @@
                                 <b-collapse id="collapse-kw" visible class="mt-2">
                                     <div class="card-body drop-zone"   @drop="replacePreview('keywords', $event)" @dragover.prevent @dragenter.prevent>
                                         <div v-for="kw in recipe_json.keywords">
-                                            <div class="card-text">[[kw]] </div>
+                                            <div class="card-text">[[kw.text]] </div>
                                         </div>
                                     </div>
                                 </b-collapse>
@@ -273,7 +266,7 @@
                     </div>
                     <br/>
                     <!-- end of preview card -->
-                    <button @click="loadRecipeManual()" class="btn btn-primary shadow-none" type="button"
+                    <button @click="showRecipe()" class="btn btn-primary shadow-none" type="button"
                                 id="id_btn_json"><i class="fas fa-code"></i> {% trans 'Import' %} 
                     </button>
                 </div>
@@ -638,6 +631,7 @@
                 recipe_app: 'DEFAULT',
                 recipe_files: [],
                 images: [],
+                mode: 'url'
             },
             directives: {
                 tabindex: {
@@ -675,51 +669,20 @@
                     this.error = undefined
                     this.loading = true
                     this.preview = false
-                    if (this.automatic) {
-                        console.log('true')
-                    }
-                    this.$http.post("{% url 'api_recipe_from_url' %}", {'url': this.remote_url, 'auto':this.automatic}, {emulateJSON: true}).then((response) => {
+                    this.$http.post("{% url 'api_recipe_from_source' %}", {
+                                'url': this.remote_url, 
+                                'data': this.source_data, 
+                                'auto':this.automatic, 
+                                'mode':this.mode}, {emulateJSON: true}).then((response) => {
                         console.log(response.data)
+                        this.recipe_json = response.data['recipe_json'];
+                        this.recipe_tree = response.data['recipe_tree'];
+                        this.recipe_html = response.data['recipe_html'];
+                        this.images = response.data['images'];
                         if (this.automatic) {
-                            this.recipe_data = response.data;
-                        } else {
-                            this.recipe_json = response.data['recipe_json'];
-                            this.recipe_tree = response.data['recipe_tree'];
-                            this.recipe_html = response.data['recipe_html'];
-                            this.images = response.data['images'];
-                            this.preview = true
-                        }
-                        this.loading = false
-                    }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
-                        console.log(err)
-                        let msg = gettext('There was an error loading a resource!')
-                        if (err.bodyText.length < 300) {
-                            msg += err.bodyText
-                        } else {
-                            msg += ' ' + err.status + ' ' + err.statusText
-                        }
-                        this.makeToast(gettext('Error'), msg, 'danger')
-                    })
-                },
-                loadSource: function() {
-                    this.recipe_data = undefined
-                    this.recipe_json = undefined
-                    this.recipe_tree = undefined
-                    this.images = []
-                    this.error = undefined
-                    this.loading = true
-                    this.preview = false
-                    this.$http.post("{% url 'api_recipe_from_source' %}", {'data': this.source_data, 'url': this.remote_url, 'auto':this.automatic}, {emulateJSON: true}).then((response) => {
-                        console.log(response.data)
-                        if (this.automatic) {
-                            this.recipe_data = response.data['recipe_json'];
+                            this.recipe_data = this.recipe_json;
                             this.preview = false
                         } else {
-                            this.recipe_json = response.data['recipe_json'];
-                            this.recipe_tree = response.data['recipe_tree'];
-                            this.recipe_html = response.data['recipe_html'];
                             this.preview = true
                         }
                         this.loading = false
@@ -736,51 +699,9 @@
                         this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
-                loadBookmarklet: function(id_bkmk) {
-                    let uri = window.location.search.substring(1); 
-                    let params = new URLSearchParams(uri);
-                    q = params.get("id")
-                    console.log(q)
-                    this.error = undefined
-                    this.loading = true
-                    this.$http.get("{% url 'api:bookmarkletimport-list' %}?id=" + id_bkmk ).then((response) => {
-                        console.log(response.data)
-                        this.automatic = false
-                        this.source_data = response.data[0]['html']
-                        this.remote_url = response.data[0]['url']
-                        this.loadSource()
-                    }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('Bookmarklet not found!') , 'danger')
-                    })
-                },
-                deleteBookmarklet: function(id_bkmk) {
-                    this.error = undefined
-                    this.$http.delete("{% url 'api:bookmarkletimport-list' %}" + id_bkmk +"/").then((response) => {
-                    }).catch((err) => {
-                        this.error = err.data
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error deleting bookmarklet!') + err.bodyText, 'danger')
-                    })
-                },
-                loadRecipeManual: function () {
-                    this.error = undefined
+                showRecipe: function() {
                     this.preview = false
-                    this.loading = true
-                    this.recipe_json['@type'] = "Recipe"
-                    this.$http.post("{% url 'api_recipe_from_source' %}", {'data': JSON.stringify(this.recipe_json), 'auto':'true'}, {emulateJSON: true}).then((response) => {
-                        console.log(response.data)
-                        this.recipe_data = response.data['recipe_json'];
-                        this.loading = false
-                        this.preview = false
-                    }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
-                    })
+                    this.recipe_data = this.recipe_json
                 },
                 importRecipe: function () {
                     if (this.recipe_data.name.length > 128) {
@@ -955,7 +876,8 @@
                             this.recipe_json.image=v
                             break;
                         case 'keywords':
-                            this.recipe_json.keywords.push(v)
+                            let new_keyword = {'text': v, 'id': null}
+                            this.recipe_json.keywords.push(new_keyword)
                             break;
                         case 'servings':
                             this.recipe_json.servings=v
