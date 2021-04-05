@@ -47,12 +47,13 @@ class RezKonv(Integration):
         )
 
         for ingredient in ingredients:
-            amount, unit, ingredient, note = parse(ingredient)
-            f = get_food(ingredient, self.request.space)
-            u = get_unit(unit, self.request.space)
-            step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note
-            ))
+            if len(ingredient.strip()) > 0:
+                amount, unit, ingredient, note = parse(ingredient)
+                f = get_food(ingredient, self.request.space)
+                u = get_unit(unit, self.request.space)
+                step.ingredients.add(Ingredient.objects.create(
+                    food=f, unit=u, amount=amount, note=note
+                ))
         recipe.steps.add(step)
 
         return recipe

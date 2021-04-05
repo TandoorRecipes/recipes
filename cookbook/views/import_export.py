@@ -64,7 +64,7 @@ def import_recipe(request):
                 files = []
                 for f in request.FILES.getlist('files'):
                     files.append({'file': BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files, il, form['duplicates']])
+                t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
                 t.setDaemon(True)
                 t.start()
 

@@ -35,12 +35,13 @@ class Domestica(Integration):
             step.instruction += '\n' + file['source']
 
         for ingredient in file['ingredients'].split('\n'):
-            amount, unit, ingredient, note = parse(ingredient)
-            f = get_food(ingredient, self.request.space)
-            u = get_unit(unit, self.request.space)
-            step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note
-            ))
+            if len(ingredient.strip()) > 0:
+                amount, unit, ingredient, note = parse(ingredient)
+                f = get_food(ingredient, self.request.space)
+                u = get_unit(unit, self.request.space)
+                step.ingredients.add(Ingredient.objects.create(
+                    food=f, unit=u, amount=amount, note=note
+                ))
         recipe.steps.add(step)
 
         if file['image'] != '':
