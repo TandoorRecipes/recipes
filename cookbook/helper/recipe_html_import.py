@@ -58,6 +58,7 @@ def get_recipe_from_source(text, url, space):
 
     recipe_json = {
                 'name': '',
+                'url': '',
                 'description': '',
                 'image': '',
                 'keywords': [],
