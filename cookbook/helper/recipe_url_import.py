@@ -39,8 +39,9 @@ def get_from_scraper(scrape, space):
             pass
 
     try:
-        recipe_json['image'] = scrape.image()
-    except AttributeError:
+        recipe_json['image'] = parse_image(scrape.image())
+    except (AttributeError, TypeError):
+        recipe_json['image'] = ''
         pass
 
     keywords = []
@@ -283,7 +284,8 @@ def parse_keywords(keyword_json, space):
     for kw in keyword_json:
         kw = normalize_string(kw)
         if k := Keyword.objects.filter(name=kw, space=space).first():
-            keywords.append({'id': str(k.id), 'text': str(k)})
+            if len (k['text']) > 0:
+                keywords.append({'id': str(k.id), 'text': str(k)})
         else:
             keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
 

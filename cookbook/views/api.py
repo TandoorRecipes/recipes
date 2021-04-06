@@ -615,31 +615,6 @@ def get_plan_ical(request, from_date, to_date):
 
 
 @group_required('user')
-def recipe_from_json(request):
-    mjson = request.POST['json']
-
-    md_json = json.loads(mjson)
-    for ld_json_item in md_json:
-        # recipes type might be wrapped in @graph type
-        if '@graph' in ld_json_item:
-            for x in md_json['@graph']:
-                if '@type' in x and x['@type'] == 'Recipe':
-                    md_json = x
-
-        if ('@type' in md_json
-                and md_json['@type'] == 'Recipe'):
-            return JsonResponse(find_recipe_json(md_json, '', request.space))
-
-    return JsonResponse(
-        {
-            'error': True,
-            'msg': _('Could not parse correctly...')
-        },
-        status=400
-    )
-
-
-@group_required('user')
 def recipe_from_source(request):
     url = request.POST.get('url', None)
     data = request.POST.get('data', None)
