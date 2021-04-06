@@ -55,7 +55,6 @@ class CooksIllustrated(AbstractScraper):
         raise NotImplementedError("This should be implemented.")
 
     def get_recipe(self):
-        # TODO add missing data to schema.data
         j = json.loads(self.soup.find(type='application/json').string)
         name = list(j['props']['initialState']['content']['documents'])[0]
         self.recipe = j['props']['initialState']['content']['documents'][name]

@@ -82,7 +82,12 @@ def get_recipe_from_source(text, url, space):
         html_data = get_from_html(soup)
         images += get_images_from_source(soup, url)
         for el in soup.find_all('script', type='application/ld+json'):
-            parse_list.append(remove_graph(el))
+            el = remove_graph(el)
+            if type(el) == list:
+                for l in el:
+                    parse_list.append(l)
+            else:
+                parse_list.append(el)
         for el in soup.find_all(type='application/json'):
             parse_list.append(remove_graph(el))
 

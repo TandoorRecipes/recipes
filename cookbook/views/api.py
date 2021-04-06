@@ -593,7 +593,7 @@ def recipe_from_source(request):
                     },
                     status=400)
             else:
-                return JsonResponse(get_from_scraper(scrape, request.space))
+                return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
         else:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
