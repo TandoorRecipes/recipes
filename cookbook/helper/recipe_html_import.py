@@ -76,6 +76,9 @@ def get_recipe_from_source(text, url, space):
     text = normalize_string(text)
     try:
         parse_list.append(remove_graph(json.loads(text)))
+        if not url and 'url' in parse_list[0]:
+            url = parse_list[0]['url']
+        scrape = text_scraper("<script type='application/ld+json'>" + text + "</script>", url=url)
 
     except JSONDecodeError:
         soup = BeautifulSoup(text, "html.parser")
@@ -83,6 +86,8 @@ def get_recipe_from_source(text, url, space):
         images += get_images_from_source(soup, url)
         for el in soup.find_all('script', type='application/ld+json'):
             el = remove_graph(el)
+            if not url and 'url' in el:
+                url = el['url']
             if type(el) == list:
                 for le in el:
                     parse_list.append(le)
@@ -95,15 +100,6 @@ def get_recipe_from_source(text, url, space):
                     parse_list.append(le)
             elif type(el) == dict:
                 parse_list.append(el)
-
-    # if a url was not provided, try to find one in the first document
-    if not url and len(parse_list) > 0:
-        if 'url' in parse_list[0]:
-            url = parse_list[0]['url']
-
-    if type(text) == dict:
-        scrape = text_scraper("<script type='application/ld+json'>" + text + "</script>", url=url)
-    elif type(text) == str:
         scrape = text_scraper(text, url=url)
 
     recipe_json = helper.get_from_scraper(scrape, space)
