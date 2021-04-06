@@ -84,12 +84,17 @@ def get_recipe_from_source(text, url, space):
         for el in soup.find_all('script', type='application/ld+json'):
             el = remove_graph(el)
             if type(el) == list:
-                for l in el:
-                    parse_list.append(l)
-            else:
+                for le in el:
+                    parse_list.append(le)
+            elif type(el) == dict:
                 parse_list.append(el)
         for el in soup.find_all(type='application/json'):
-            parse_list.append(remove_graph(el))
+            el = remove_graph(el)
+            if type(el) == list:
+                for le in el:
+                    parse_list.append(le)
+            elif type(el) == dict:
+                parse_list.append(el)
 
     # if a url was not provided, try to find one in the first document
     if not url and len(parse_list) > 0:
@@ -182,10 +187,10 @@ def remove_graph(el):
     if isinstance(el, Tag):
         try:
             el = json.loads(el.string)
+            if '@graph' in el:
+                for x in el['@graph']:
+                    if '@type' in x and x['@type'] == 'Recipe':
+                        el = x
         except TypeError:
             pass
-    if '@graph' in el:
-        for x in el['@graph']:
-            if '@type' in x and x['@type'] == 'Recipe':
-                el = x
     return el
