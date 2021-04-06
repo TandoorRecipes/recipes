@@ -39,10 +39,9 @@ def get_from_scraper(scrape, space):
             pass
 
     try:
-        recipe_json['image'] = parse_image(scrape.image())
+        recipe_json['image'] = parse_image(scrape.image()) or ''
     except (AttributeError, TypeError):
         recipe_json['image'] = ''
-        pass
 
     keywords = []
     try:
@@ -283,11 +282,11 @@ def parse_keywords(keyword_json, space):
     # keywords as list
     for kw in keyword_json:
         kw = normalize_string(kw)
-        if k := Keyword.objects.filter(name=kw, space=space).first():
-            if len(k) != 0:
+        if len(kw) != 0:
+            if k := Keyword.objects.filter(name=kw, space=space).first():
                 keywords.append({'id': str(k.id), 'text': str(k)})
-        else:
-            keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
+            else:
+                keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
 
     return keywords
 
