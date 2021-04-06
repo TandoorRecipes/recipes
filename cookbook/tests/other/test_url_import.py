@@ -1,9 +1,31 @@
 import json
+import pytest
+from django.urls import reverse
 
-from django_scopes import scopes_disabled
+from ._recipes import (AMERICAS_TEST_KITCHEN)
 
-from cookbook.helper.recipe_url_import import get_from_html
 
+IMPORT_SOURCE_URL = 'data_import_source'
+# These were chosen arbitrarily from:
+# Top 10 recipe websites listed here https://www.similarweb.com/top-websites/category/food-and-drink/cooking-and-recipes/
+# plus the test that previously existed
+# custom scraper that was created
+# TODO thoughtfully add recipes that test specific scenerios
+
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 404],
+    ['u1_s1', 200],
+    ['a1_s1', 404],
+    ['g1_s2', 404],
+    ['u1_s2', 404],
+    ['a1_s2', 404],
+])
+def test_import_permission(arg, request):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse(IMPORT_SOURCE_URL)).status_code == arg[1]
 # TODO this test is really bad, need to find a better solution, also pytest does not like those paths
 # def test_ld_json():
 #     with scopes_disabled():
