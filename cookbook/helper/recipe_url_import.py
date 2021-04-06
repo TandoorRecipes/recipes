@@ -97,7 +97,7 @@ def get_from_scraper(scrape, space):
         recipe_json['recipeIngredient'] = ingredients
 
     try:
-        recipe_json['recipeInstructions'] = scrape.instructions()
+        recipe_json['recipeInstructions'] = parse_instructions(scrape.instructions())
     except AttributeError:
         recipe_json['recipeInstructions'] = ""
 
