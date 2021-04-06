@@ -128,8 +128,10 @@ ALLRECIPES = {
 }
 
 AMERICAS_TEST_KITCHEN = {
-    "file": ['americastestkitchen.html'],
-    'url': 'http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes',
+    "file": [
+        'americastestkitchen.html',
+        'cookscountry.html'
+    ],
     "name": "Pasta with Chicken, Broccoli, and Sun-dried Tomatoes",
     "description": "This restaurant-chain classic can be as off-putting as a bad horror movie: drab colors, tough meat, and a main character—the pasta—with no bite.",
     "servings": 4,
@@ -138,12 +140,13 @@ AMERICAS_TEST_KITCHEN = {
     "image": "https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_150/33255_sfs-pasta-with-chicken-broccoli-sun-dried-tomatoes-15",
     "keywords": [
         {
+            "id": "21",
             "text": "main courses"
         }
     ],
     "recipeIngredient": [
         {
-            "amount": 4.0,
+            "amount": 4,
             "unit": {
                 "text": "tablespoons"
             },
@@ -154,7 +157,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "4 tablespoons unsalted butter"
         },
         {
-            "amount": 1.0,
+            "amount": 1,
             "unit": {
                 "text": "pound"
             },
@@ -165,7 +168,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1 pound boneless, skinless chicken breast, trimmed of fat and cut crosswise into 1/4-inch slices"
         },
         {
-            "amount": 1.0,
+            "amount": 1,
             "unit": {
                 "text": "small"
             },
@@ -187,7 +190,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "  Table salt"
         },
         {
-            "amount": 6.0,
+            "amount": 6,
             "unit": {
                 "text": "medium"
             },
@@ -209,7 +212,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1/4 teaspoon red pepper flakes"
         },
         {
-            "amount": 2.0,
+            "amount": 2,
             "unit": {
                 "text": "teaspoons"
             },
@@ -220,7 +223,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 teaspoons chopped fresh thyme leaves"
         },
         {
-            "amount": 2.0,
+            "amount": 2,
             "unit": {
                 "text": "teaspoons"
             },
@@ -231,7 +234,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 teaspoons all-purpose flour"
         },
         {
-            "amount": 1.0,
+            "amount": 1,
             "unit": {
                 "text": "cup"
             },
@@ -242,7 +245,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1 cup dry white wine"
         },
         {
-            "amount": 2.0,
+            "amount": 2,
             "unit": {
                 "text": "cups"
             },
@@ -253,7 +256,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 cups low-sodium chicken broth"
         },
         {
-            "amount": 1.0,
+            "amount": 1,
             "unit": {
                 "text": "bunch"
             },
@@ -275,7 +278,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1/2 pound penne pasta, ziti, cavatappi, or campanelle"
         },
         {
-            "amount": 2.0,
+            "amount": 2,
             "unit": {
                 "text": "ounces"
             },
@@ -286,7 +289,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 ounces grated Asiago cheese(1 cup), plus extra for serving"
         },
         {
-            "amount": 1.0,
+            "amount": 1,
             "unit": {
                 "text": "jar"
             },
@@ -297,7 +300,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1 jar oil-packed sun-dried tomato(7 to 8 1/2 ounces), rinsed, patted dry, and cut into 1/4-inch strips (about 1 cup)"
         },
         {
-            "amount": 1.0,
+            "amount": 1,
             "unit": {
                 "text": "tablespoon"
             },
@@ -319,7 +322,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "  Ground black pepper"
         }
     ],
-    "recipeInstructions": "<p>Lightly browning chicken breast strips in butter started building flavor into our pasta with chicken recipe. We kept the chicken tender and added more flavor by letting the strips finish cooking in the sauce, and we kept the broccoli fresh and crisp by blanching it in the boiling pasta water and then putting it aside until the dish was assembled. But our real breakthrough in developing this pasta and chicken recipe was to eliminate the cream typically used in this dish and to create instead a broth-based sauce, which we rounded out with a few tablespoons of butter, a handful of Asiago cheese, and some sun-dried tomatoes.</p>\nBring 4 quarts water to rolling boil, covered, in stockpot.\nMeanwhile, heat 1 tablespoon butter in 12-inch nonstick skillet over high heat until just beginning to brown, about 1 minute. Add chicken in single layer; cook for 1 minute without stirring, then stir chicken and continue to cook until most, but not all, of pink color has disappeared and chicken is lightly browned around the edges, about 2 minutes longer. Transfer chicken to clean bowl; set aside.\nReturn skillet to high heat and add 1 tablespoon butter; add onion and 1/4 teaspoon salt and cook, stirring occasionally, until browned about edges, 2 to 3 minutes. Stir in garlic, red pepper flakes, thyme, and flour; cook, stirring constantly, until fragrant, about 30 seconds. Add wine and chicken broth; bring to simmer, then reduce heat to medium and continue to simmer, stirring occasionally, until sauce has thickened slightly and reduced to 1 1/4 cups, about 15 minutes.\nWhile sauce simmers, add 1 tablespoon salt and broccoli to boiling water; cook until broccoli is tender but still crisp at center, about 2 minutes. Using slotted spoon, transfer broccoli to large paper towel-lined plate. Return water to boil; stir in pasta and cook until al dente. Drain, reserving 1/2 cup pasta cooking water; return pasta to pot.\nStir remaining 2 tablespoons butter, Asiago, sun-dried tomatoes, parsley, and chicken into sauce in skillet; cook until chicken is hot and cooked through, about 1 minute. Off heat, season to taste with pepper. Pour chicken/sauce mixture over pasta and add broccoli; toss gently to combine, adding pasta cooking water as needed to adjust sauce consistency. Serve immediately, passing additional Asiago and the lemon wedges (if using) separately.\n\nImported from http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes"
+    "recipeInstructions": "<p>Lightly browning chicken breast strips in butter started building flavor into our pasta with chicken recipe. We kept the chicken tender and added more flavor by letting the strips finish cooking in the sauce, and we kept the broccoli fresh and crisp by blanching it in the boiling pasta water and then putting it aside until the dish was assembled. But our real breakthrough in developing this pasta and chicken recipe was to eliminate the cream typically used in this dish and to create instead a broth-based sauce, which we rounded out with a few tablespoons of butter, a handful of Asiago cheese, and some sun-dried tomatoes.</p>\nBring 4 quarts water to rolling boil, covered, in stockpot.\nMeanwhile, heat 1 tablespoon butter in 12-inch nonstick skillet over high heat until just beginning to brown, about 1 minute. Add chicken in single layer; cook for 1 minute without stirring, then stir chicken and continue to cook until most, but not all, of pink color has disappeared and chicken is lightly browned around the edges, about 2 minutes longer. Transfer chicken to clean bowl; set aside.\nReturn skillet to high heat and add 1 tablespoon butter; add onion and 1/4 teaspoon salt and cook, stirring occasionally, until browned about edges, 2 to 3 minutes. Stir in garlic, red pepper flakes, thyme, and flour; cook, stirring constantly, until fragrant, about 30 seconds. Add wine and chicken broth; bring to simmer, then reduce heat to medium and continue to simmer, stirring occasionally, until sauce has thickened slightly and reduced to 1 1/4 cups, about 15 minutes.\nWhile sauce simmers, add 1 tablespoon salt and broccoli to boiling water; cook until broccoli is tender but still crisp at center, about 2 minutes. Using slotted spoon, transfer broccoli to large paper towel-lined plate. Return water to boil; stir in pasta and cook until al dente. Drain, reserving 1/2 cup pasta cooking water; return pasta to pot.\nStir remaining 2 tablespoons butter, Asiago, sun-dried tomatoes, parsley, and chicken into sauce in skillet; cook until chicken is hot and cooked through, about 1 minute. Off heat, season to taste with pepper. Pour chicken/sauce mixture over pasta and add broccoli; toss gently to combine, adding pasta cooking water as needed to adjust sauce consistency. Serve immediately, passing additional Asiago and the lemon wedges (if using) separately.\n\nImported from http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes?extcode=MCSAD10L0&ref=new_search_experience_1"
 }
 
 CHEF_KOCH = {
