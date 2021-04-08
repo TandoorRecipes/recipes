@@ -50,8 +50,9 @@
 
       </template>
     </template>
-
   </div>
+
+
 </template>
 
 <script>
@@ -62,8 +63,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {GettextMixin, ResolveUrlMixin, ToastMixin} from "@/utils/utils";
 
-import {apiLoadImportLog} from "@/utils/api";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+import {ApiApiFactory} from "@/utils/openapi/api.ts";
 
 Vue.use(BootstrapVue)
 
@@ -95,8 +97,10 @@ export default {
   },
   methods: {
     refreshData: function () {
-      apiLoadImportLog(this.import_id).then(data => {
-        this.import_info = data
+      let apiClient = new ApiApiFactory()
+
+      apiClient.retrieveImportLog(this.import_id).then(result => {
+        this.import_info = result.data
       })
     }
   }

@@ -39,6 +39,16 @@ In order to work on these pages you will have to install a Javascript package ma
 Run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server
 and go ahead and test your changes. Before committing please make sure to pack the source using `yarn build`.
 
+#### API Client
+The API Client is generated automatically from the openapi interface provided by the django rest framework.
+For this [openapi-generator](https://github.com/OpenAPITools/openapi-generator) is used.
+
+Install it using your desired setup method (for example using `npm install @openapitools/openapi-generator-cli -g`).
+
+Navigate to `vue/src/utils/openapi`.
+
+Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/` (replace your dev server url if required)
+
 ### Pre-Commit
 Some checks and scripts can be automatically run using [pre-commit](https://pre-commit.com/).
 

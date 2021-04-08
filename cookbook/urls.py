@@ -3,7 +3,7 @@ from pydoc import locate
 from django.urls import include, path
 from django.views.generic import TemplateView
 from recipes.version import VERSION_NUMBER
-from rest_framework import routers
+from rest_framework import routers, permissions
 from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
@@ -107,7 +107,7 @@ urlpatterns = [
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/api/', views.api_info, name='docs_api'),
 
-    path('openapi', get_schema_view(title="Django Recipes", version=VERSION_NUMBER), name='openapi-schema'),
+    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True, permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
 
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
