@@ -363,9 +363,12 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
 
     def get_serializer_class(self):
-        autosync = self.request.query_params.get('autosync', None)
-        if autosync:
-            return ShoppingListAutoSyncSerializer
+        try:
+            autosync = self.request.query_params.get('autosync', False)
+            if autosync:
+                return ShoppingListAutoSyncSerializer
+        except AttributeError:  # Needed for the openapi schema to determine a serializer without a request
+            pass
         return self.serializer_class
 
 
