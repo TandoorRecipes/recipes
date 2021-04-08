@@ -11,7 +11,7 @@ class ChefTap(Integration):
 
     def import_file_name_filter(self, zip_info_object):
         print("testing", zip_info_object.filename)
-        return re.match(r'^cheftap_export/([A-Za-z\d\w\s-])+.txt$', zip_info_object.filename)
+        return re.match(r'^cheftap_export/([A-Za-z\d\w\s-])+.txt$', zip_info_object.filename) or re.match(r'^([A-Za-z\d\w\s-])+.txt$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
         source_url = ''
