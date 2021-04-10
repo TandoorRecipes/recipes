@@ -41,7 +41,7 @@ export function apiLoadCookBooks(query) {
     return axios.get(resolveDjangoUrl('api:recipebook-list') + '?query=' + query).then((response) => {
         return response.data
     }).catch((err) => {
-        handleError(err, 'There was an error creating a resource!', 'danger')
+        //handleError(err, 'There was an error loading a resource!', 'danger')
     })
 }
 
