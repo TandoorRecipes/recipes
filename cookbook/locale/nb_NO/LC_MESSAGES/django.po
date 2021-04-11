@@ -8,21 +8,23 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-04-11 15:23+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.3\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:91
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28 .\cookbook\views\lists.py:67
 msgid "Ingredients"
-msgstr ""
+msgstr "Ingredienser"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -48,11 +50,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:49
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Vis nylig viste oppskrifter på søkesiden."
 
 #: .\cookbook\forms.py:50
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "Antall desimaler ingredienser skal avrundes til."
 
 #: .\cookbook\forms.py:51
 msgid "If you want to be able to create and see comments underneath recipes."
@@ -79,7 +81,7 @@ msgstr ""
 #: .\cookbook\forms.py:93 .\cookbook\forms.py:315
 #: .\cookbook\templates\forms\edit_internal_recipe.html:45
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #: .\cookbook\forms.py:94 .\cookbook\forms.py:316
 #: .\cookbook\templates\base.html:98
@@ -106,7 +108,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:121
 msgid "Default"
-msgstr ""
+msgstr "Forvalg"
 
 #: .\cookbook\forms.py:130
 msgid ""
@@ -116,7 +118,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:149
 msgid "New Unit"
-msgstr ""
+msgstr "Ny enhet"
 
 #: .\cookbook\forms.py:150
 msgid "New unit that other gets replaced by."
@@ -124,11 +126,12 @@ msgstr ""
 
 #: .\cookbook\forms.py:155
 msgid "Old Unit"
-msgstr ""
+msgstr "Gammel enhet"
 
 #: .\cookbook\forms.py:156
+#, fuzzy
 msgid "Unit that should be replaced."
-msgstr ""
+msgstr "Enhet som skal erstattes."
 
 #: .\cookbook\forms.py:172
 msgid "New Food"
@@ -148,7 +151,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:197
 msgid "Add your comment: "
-msgstr ""
+msgstr "Legg til din kommentar: "
 
 #: .\cookbook\forms.py:238
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -166,11 +169,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:291
 msgid "Search String"
-msgstr ""
+msgstr "Søkestreng"
 
 #: .\cookbook\forms.py:318
 msgid "File ID"
-msgstr ""
+msgstr "Fil-ID"
 
 #: .\cookbook\forms.py:354
 msgid "You must provide at least a recipe or a title."
@@ -201,11 +204,12 @@ msgstr ""
 #: .\cookbook\views\views.py:112 .\cookbook\views\views.py:116
 #: .\cookbook\views\views.py:184
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "Du har ikke påkrevd tilgang for å vise denne siden."
 
 #: .\cookbook\helper\permission_helper.py:141
+#, fuzzy
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Du er ikke innlogget og kan derfor ikke vise siden."
 
 #: .\cookbook\helper\permission_helper.py:145
 #: .\cookbook\helper\permission_helper.py:167
@@ -288,31 +292,31 @@ msgstr ""
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr ""
+msgstr "Kokebok"
 
 #: .\cookbook\integration\safron.py:31
 msgid "Section"
-msgstr ""
+msgstr "Del"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "Frokost"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "Lunsj"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "Middag"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr ""
+msgstr "Annet"
 
 #: .\cookbook\models.py:110 .\cookbook\templates\shopping_list.html:48
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #: .\cookbook\models.py:111 .\cookbook\templates\base.html:85
 #: .\cookbook\templates\meal_plan.html:5 .\cookbook\views\delete.py:152
@@ -322,7 +326,7 @@ msgstr ""
 
 #: .\cookbook\models.py:112 .\cookbook\templates\base.html:82
 msgid "Books"
-msgstr ""
+msgstr "Bøker"
 
 #: .\cookbook\models.py:119
 msgid "Small"
@@ -335,12 +339,12 @@ msgstr ""
 #: .\cookbook\models.py:327
 #: .\cookbook\templates\forms\edit_internal_recipe.html:198
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
 #: .\cookbook\models.py:327
 #: .\cookbook\templates\forms\edit_internal_recipe.html:199
 msgid "Time"
-msgstr ""
+msgstr "Tid"
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\books.html:36
 #: .\cookbook\templates\generic\edit_template.html:6
@@ -349,7 +353,7 @@ msgstr ""
 #: .\cookbook\templates\recipes_table.html:82
 #: .\cookbook\templates\shopping_list.html:33
 msgid "Edit"
-msgstr ""
+msgstr "Rediger"
 
 #: .\cookbook\tables.py:124 .\cookbook\tables.py:147
 #: .\cookbook\templates\books.html:38
@@ -359,19 +363,19 @@ msgstr ""
 #: .\cookbook\templates\meal_plan.html:277
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #: .\cookbook\tables.py:144
 msgid "Link"
-msgstr ""
+msgstr "Lenke"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "404-feil"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr ""
+msgstr "Finner ikke siden du leter etter."
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
@@ -379,7 +383,7 @@ msgstr ""
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "Rapporter en feil"
 
 #: .\cookbook\templates\account\login.html:7
 #: .\cookbook\templates\base.html:170
@@ -393,7 +397,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Social Login"
-msgstr ""
+msgstr "Sosial innlogging"
 
 #: .\cookbook\templates\account\login.html:39
 msgid "You can use any of the following providers to sign in."
@@ -403,11 +407,11 @@ msgstr ""
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "Logg ut"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Er du sikker på at du vil logge ut?"
 
 #: .\cookbook\templates\account\password_reset.html:5
 #: .\cookbook\templates\account\password_reset_done.html:5
@@ -425,16 +429,16 @@ msgstr ""
 
 #: .\cookbook\templates\account\signup.html:9
 msgid "Create your Account"
-msgstr ""
+msgstr "Opprett din konto"
 
 #: .\cookbook\templates\account\signup.html:14
 msgid "Create User"
-msgstr ""
+msgstr "Opprett bruker"
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:160
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr ""
+msgstr "API-dokumentasjon"
 
 #: .\cookbook\templates\base.html:78
 msgid "Utensils"
@@ -448,7 +452,7 @@ msgstr ""
 #: .\cookbook\views\edit.py:93 .\cookbook\views\lists.py:26
 #: .\cookbook\views\new.py:66
 msgid "Keyword"
-msgstr ""
+msgstr "Nøkkelord"
 
 #: .\cookbook\templates\base.html:104
 msgid "Batch Edit"
@@ -476,7 +480,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:121 .\cookbook\templates\stats.html:10
 msgid "Statistics"
-msgstr ""
+msgstr "Statistikk"
 
 #: .\cookbook\templates\base.html:123
 msgid "Units & Ingredients"
@@ -484,41 +488,42 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:125
 msgid "Import Recipe"
-msgstr ""
+msgstr "Importer oppskrift"
 
 #: .\cookbook\templates\base.html:144 .\cookbook\templates\settings.html:6
 #: .\cookbook\templates\settings.html:16
 msgid "Settings"
-msgstr ""
+msgstr "Innstillinger"
 
 #: .\cookbook\templates\base.html:146 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr ""
+msgstr "Historikk"
 
 #: .\cookbook\templates\base.html:150 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr ""
+msgstr "System"
 
 #: .\cookbook\templates\base.html:152
 msgid "Admin"
-msgstr ""
+msgstr "Administrasjon"
 
 #: .\cookbook\templates\base.html:156
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Markdown-guide"
 
 #: .\cookbook\templates\base.html:158
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:162
 msgid "API Browser"
-msgstr ""
+msgstr "API-utforsker"
 
 #: .\cookbook\templates\base.html:165
+#, fuzzy
 msgid "Logout"
-msgstr ""
+msgstr "Logg ut"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -571,11 +576,11 @@ msgstr ""
 
 #: .\cookbook\templates\books.html:15
 msgid "New Book"
-msgstr ""
+msgstr "Ny bok"
 
 #: .\cookbook\templates\books.html:27 .\cookbook\templates\recipe_view.html:26
 msgid "by"
-msgstr ""
+msgstr "av"
 
 #: .\cookbook\templates\books.html:34
 msgid "Toggle Recipes"
@@ -617,16 +622,16 @@ msgstr ""
 #: .\cookbook\templates\settings.html:58 .\cookbook\templates\settings.html:73
 #: .\cookbook\templates\shopping_list.html:349
 msgid "Save"
-msgstr ""
+msgstr "Lagre"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 #: .\cookbook\templates\forms\edit_internal_recipe.html:34
 msgid "Edit Recipe"
-msgstr ""
+msgstr "Rediger oppskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:52
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:72
 msgid "Waiting Time"
@@ -656,19 +661,19 @@ msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:116
 msgid "Calories"
-msgstr ""
+msgstr "Kalorier"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:119
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Karbohydrater"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:122
 msgid "Fats"
-msgstr ""
+msgstr "Fett"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:124
 msgid "Proteins"
-msgstr ""
+msgstr "Proteiner"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:146
 #: .\cookbook\templates\forms\edit_internal_recipe.html:454
@@ -685,11 +690,11 @@ msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:178
 msgid "Move Up"
-msgstr ""
+msgstr "Flytt oppover"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:183
 msgid "Move Down"
-msgstr ""
+msgstr "Flytt nedover"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:192
 msgid "Step Name"
@@ -706,14 +711,14 @@ msgstr ""
 #: .\cookbook\templates\forms\edit_internal_recipe.html:261
 #: .\cookbook\templates\shopping_list.html:183
 msgid "Select Unit"
-msgstr ""
+msgstr "Velg enhet"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:262
 #: .\cookbook\templates\forms\edit_internal_recipe.html:286
 #: .\cookbook\templates\shopping_list.html:184
 #: .\cookbook\templates\shopping_list.html:206
 msgid "Create"
-msgstr ""
+msgstr "Opprett"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:263
 #: .\cookbook\templates\forms\edit_internal_recipe.html:287
@@ -724,12 +729,12 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:124
 #: .\cookbook\templates\url_import.html:156
 msgid "Select"
-msgstr ""
+msgstr "Velg"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:285
 #: .\cookbook\templates\shopping_list.html:205
 msgid "Select Food"
-msgstr ""
+msgstr "Velg mat"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:302
 #: .\cookbook\templates\meal_plan.html:256
@@ -739,7 +744,7 @@ msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:319
 msgid "Delete Ingredient"
-msgstr ""
+msgstr "Slett ingrediens"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:325
 msgid "Make Header"
@@ -747,7 +752,7 @@ msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:331
 msgid "Make Ingredient"
-msgstr ""
+msgstr "Opprett ingrediens"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:337
 msgid "Disable Amount"
@@ -764,12 +769,13 @@ msgstr ""
 #: .\cookbook\templates\forms\edit_internal_recipe.html:374
 #: .\cookbook\templates\url_import.html:196
 msgid "Instructions"
-msgstr ""
+msgstr "Instruksjoner"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:387
 #: .\cookbook\templates\forms\edit_internal_recipe.html:418
+#, fuzzy
 msgid "Save & View"
-msgstr ""
+msgstr "Lagre og vis"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:391
 #: .\cookbook\templates\forms\edit_internal_recipe.html:424
@@ -794,7 +800,7 @@ msgstr ""
 #: .\cookbook\templates\forms\edit_internal_recipe.html:400
 #: .\cookbook\templates\forms\edit_internal_recipe.html:435
 msgid "Delete Recipe"
-msgstr ""
+msgstr "Slett oppskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:441
 msgid "Steps"
@@ -827,7 +833,7 @@ msgstr ""
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr ""
+msgstr "Flett"
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
@@ -867,21 +873,21 @@ msgstr ""
 #: .\cookbook\templates\generic\new_template.html:14
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New"
-msgstr ""
+msgstr "Ny"
 
 #: .\cookbook\templates\generic\table_template.html:76
 #: .\cookbook\templates\recipes_table.html:121
 msgid "previous"
-msgstr ""
+msgstr "forrige"
 
 #: .\cookbook\templates\generic\table_template.html:98
 #: .\cookbook\templates\recipes_table.html:143
 msgid "next"
-msgstr ""
+msgstr "neste"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Vis logg"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
@@ -901,7 +907,7 @@ msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:19
 msgid "Rating"
-msgstr ""
+msgstr "Vurdering"
 
 #: .\cookbook\templates\include\log_cooking.html:27
 #: .\cookbook\templates\include\recipe_open_modal.html:18
@@ -909,21 +915,21 @@ msgstr ""
 #: .\cookbook\templates\meal_plan.html:327
 #: .\cookbook\templates\meal_plan.html:366
 msgid "Close"
-msgstr ""
+msgstr "Lukk"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:7
 #: .\cookbook\templates\meal_plan.html:247 .\cookbook\views\delete.py:28
 #: .\cookbook\views\edit.py:264 .\cookbook\views\new.py:40
 msgid "Recipe"
-msgstr ""
+msgstr "Oppskrift"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
-msgstr ""
+msgstr "Åpne oppskrift"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Sikkerhetsadvarsel"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1258,7 +1264,7 @@ msgstr ""
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr ""
+msgstr "Ingen tilganger."
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
@@ -1292,11 +1298,12 @@ msgstr ""
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr ""
+msgstr "Frakoblet."
 
 #: .\cookbook\templates\offline.html:19
+#, fuzzy
 msgid "You are currently offline!"
-msgstr ""
+msgstr "Du er ikke tilkoblet Internett."
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
@@ -1306,7 +1313,7 @@ msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:21 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "Kommentarer"
 
 #: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:118
 #: .\cookbook\views\edit.py:170
@@ -1343,7 +1350,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:22
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #: .\cookbook\templates\settings.html:38
 msgid "Link social account"
@@ -1351,15 +1358,15 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:42
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: .\cookbook\templates\settings.html:67
 msgid "Style"
-msgstr ""
+msgstr "Stil"
 
 #: .\cookbook\templates\settings.html:79
 msgid "API Token"
-msgstr ""
+msgstr "API-symbol"
 
 #: .\cookbook\templates\settings.html:80
 msgid ""
@@ -1379,11 +1386,12 @@ msgstr ""
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr ""
+msgstr "Kokeboksoppsett"
 
 #: .\cookbook\templates\setup.html:14
+#, fuzzy
 msgid "Setup"
-msgstr ""
+msgstr "Sett opp"
 
 #: .\cookbook\templates\setup.html:15
 msgid ""
@@ -1392,7 +1400,7 @@ msgstr ""
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser account"
-msgstr ""
+msgstr "Opprett superbruker-konto"
 
 #: .\cookbook\templates\shopping_list.html:75
 msgid "Shopping Recipes"
@@ -1404,31 +1412,31 @@ msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:146
 msgid "Entry Mode"
-msgstr ""
+msgstr "Oppføringsmodus"
 
 #: .\cookbook\templates\shopping_list.html:154
 msgid "Add Entry"
-msgstr ""
+msgstr "Legg til oppføring"
 
 #: .\cookbook\templates\shopping_list.html:170
 msgid "Amount"
-msgstr ""
+msgstr "Mengde"
 
 #: .\cookbook\templates\shopping_list.html:226
 msgid "Supermarket"
-msgstr ""
+msgstr "Matbutikk"
 
 #: .\cookbook\templates\shopping_list.html:236
 msgid "Select Supermarket"
-msgstr ""
+msgstr "Velg matbutikk"
 
 #: .\cookbook\templates\shopping_list.html:260
 msgid "Select User"
-msgstr ""
+msgstr "Velg bruker"
 
 #: .\cookbook\templates\shopping_list.html:279
 msgid "Finished"
-msgstr ""
+msgstr "Fullført"
 
 #: .\cookbook\templates\shopping_list.html:292
 msgid "You are offline, shopping list might not syncronize."
@@ -1459,7 +1467,7 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid ""
@@ -1532,8 +1540,9 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80 .\cookbook\templates\system.html:95
+#, fuzzy
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: .\cookbook\templates\system.html:51
 msgid ""
@@ -1569,7 +1578,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:78
 msgid "Debug Mode"
-msgstr ""
+msgstr "Avlusingsmodus"
 
 #: .\cookbook\templates\system.html:82
 msgid ""
@@ -1584,11 +1593,11 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:93
 msgid "Database"
-msgstr ""
+msgstr "Database"
 
 #: .\cookbook\templates\system.html:95
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: .\cookbook\templates\system.html:97
 msgid ""
