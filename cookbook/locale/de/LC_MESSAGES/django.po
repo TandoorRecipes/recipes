@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2021-04-11 13:40+0000\n"
+"PO-Revision-Date: 2021-04-11 15:23+0000\n"
 "Last-Translator: vabene1111 <vabene1234@googlemail.com>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
@@ -1375,19 +1375,16 @@ msgstr "Bitte kontaktiere einen Administrator."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
-#, fuzzy
-#| msgid "No Permissions"
 msgid "No Permission"
-msgstr "Keine Berechtigungen"
+msgstr "Keine Berechtigung"
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to perform this action!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
 msgstr ""
-"Du hast nicht die notwendige Berechtigung, um diese Aktion durchzuführen!"
+"Du hast nicht die notwendige Berechtigung, um diese Seite anzusehen oder "
+"diese Aktion durchzuführen!"
 
 #: .\cookbook\templates\no_space_info.html:5
 #: .\cookbook\templates\no_space_info.html:12
