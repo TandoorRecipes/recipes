@@ -1,6 +1,6 @@
 {
     "Import": "Import",
-    "import-running": "Import läuft, bitte warten!",
+    "import_running": "Import läuft, bitte warten!",
     "Import_finished": "Import fertig",
     "View_Recipes": "Rezepte Ansehen",
     "Information": "Information"

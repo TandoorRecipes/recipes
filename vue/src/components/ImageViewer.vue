@@ -1,21 +1,18 @@
 <template>
 
   <div style="text-align: center">
-    <b-img :src="pdfUrl"  :alt="_('External Recipe Image')"></b-img>
+    <b-img :src="pdfUrl"  :alt="$t('External_Recipe_Image')"></b-img>
   </div>
 
 </template>
 
 <script>
 
-import {GettextMixin, resolveDjangoUrl} from "@/utils/utils";
+import {resolveDjangoUrl} from "@/utils/utils";
 
 
 export default {
   name: 'ImageViewer',
-  mixins: [
-    GettextMixin,
-  ],
   props: {
     recipe: Object,
   },

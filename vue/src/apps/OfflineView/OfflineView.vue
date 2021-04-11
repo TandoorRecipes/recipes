@@ -2,7 +2,7 @@
   <div id="app">
 
     <label>
-      {{ _('Search') }}
+      {{ $t('Search') }}
       <input type="text" v-model="filter" class="form-control">
     </label>
 
@@ -13,9 +13,7 @@
             <span class="text-muted">{{ formatDateTime(r.updated_at) }}</span>
             {{ r.description }}
           </b-card-text>
-
-
-          <b-button :href="resolveDjangoUrl('view_recipe', r.id)" variant="primary">{{ _('Open') }}</b-button>
+          <b-button :href="resolveDjangoUrl('view_recipe', r.id)" variant="primary">{{ $t('Open') }}</b-button>
         </b-card>
       </div>
     </div>
@@ -27,7 +25,7 @@ import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import {GettextMixin, ResolveUrlMixin} from "@/utils/utils";
+import {ResolveUrlMixin} from "@/utils/utils";
 import moment from "moment";
 
 Vue.use(BootstrapVue)
@@ -37,7 +35,6 @@ export default {
   name: 'OfflineView',
   mixins: [
     ResolveUrlMixin,
-    GettextMixin
   ],
   computed: {
     filtered_recipes: function () {
