@@ -3,7 +3,7 @@
 
     <div class="row">
       <div class="col col-md-12">
-        <h2>{{ _('Import') }}</h2>
+        <h2>{{ $t('Import') }}</h2>
       </div>
 
     </div>
@@ -23,15 +23,15 @@
         <loading-spinner></loading-spinner>
         <br/>
         <br/>
-        <h5 style="text-align: center">{{ _('Import running, please wait!') }}</h5>
+        <h5 style="text-align: center">{{ $t('import-running') }}</h5>
 
       </template>
       <template v-else>
         <div class="row">
           <div class="col col-md-12">
-            <span>{{ _('Import finished') }}! </span>
+            <span>{{ $t('Import_finished') }}! </span>
             <a :href="`${resolveDjangoUrl('view_search') }?keywords=${import_info.keyword.id}`"
-               v-if="import_info.keyword !== null">{{ _('View Recipes') }}</a>
+               v-if="import_info.keyword !== null">{{ $t('View_Recipes') }}</a>
 
           </div>
         </div>
@@ -40,7 +40,7 @@
 
         <div class="row">
           <div class="col col-md-12">
-            <label for="id_textarea">{{ _('Information') }}</label>
+            <label for="id_textarea">{{ $t('Information') }}</label>
             <textarea id="id_textarea" class="form-control" style="height: 50vh" v-html="import_info.msg"
                       disabled></textarea>
 
@@ -61,7 +61,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {GettextMixin, ResolveUrlMixin, ToastMixin} from "@/utils/utils";
+import {ResolveUrlMixin, ToastMixin} from "@/utils/utils";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -72,7 +72,6 @@ Vue.use(BootstrapVue)
 export default {
   name: 'ImportResponseView',
   mixins: [
-    GettextMixin,
     ResolveUrlMixin,
     ToastMixin,
   ],
