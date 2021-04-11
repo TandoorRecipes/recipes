@@ -1,7 +1,7 @@
 {
-    "Import": "",
-    "import-running": "",
-    "Import_finished": "",
-    "View_Recipes": "",
-    "Information": ""
+    "Import": "Import",
+    "import-running": "Import läuft, bitte warten!",
+    "Import_finished": "Import fertig",
+    "View_Recipes": "Rezepte Ansehen",
+    "Information": "Informationen"
 }
