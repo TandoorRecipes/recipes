@@ -29,8 +29,8 @@
               <i class="fas fa-user-clock fa-2x text-primary"></i>
             </div>
             <div class="my-auto" style="padding-right: 4px">
-              <span class="text-primary"><b>{{ _('Preparation') }}</b></span><br/>
-              {{ recipe.working_time }} {{ _('min') }}
+              <span class="text-primary"><b>{{ $t('Preparation') }}</b></span><br/>
+              {{ recipe.working_time }} {{ $t('min') }}
             </div>
           </div>
         </div>
@@ -41,8 +41,8 @@
               <i class="far fa-clock fa-2x text-primary"></i>
             </div>
             <div class="my-auto" style="padding-right: 4px">
-              <span class="text-primary"><b>{{ _('Waiting') }}</b></span><br/>
-              {{ recipe.waiting_time }} {{ _('min') }}
+              <span class="text-primary"><b>{{ $t('Waiting') }}</b></span><br/>
+              {{ recipe.waiting_time }} {{ $t('min') }}
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </div>
             <div class="my-auto">
-              <b><template v-if="recipe.servings_text === ''">{{ _('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b>
+              <b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
             <div class="card-body">
               <div class="row">
                 <div class="col col-md-8">
-                  <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ _('Ingredients') }}</h4>
+                  <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t('Ingredients') }}</h4>
                 </div>
               </div>
               <br/>
@@ -103,7 +103,7 @@
             <div class="col-12">
 
               <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh;"
-                   :alt="_( 'Recipe Image')" v-if="recipe.image !== null">
+                   :alt="$t( 'Recipe_Image')" v-if="recipe.image !== null">
             </div>
           </div>
 
@@ -148,7 +148,7 @@ import {apiLoadRecipe} from "@/utils/api";
 
 import Step from "@/components/Step";
 import RecipeContextMenu from "@/components/RecipeContextMenu";
-import {GettextMixin, ResolveUrlMixin, ToastMixin} from "@/utils/utils";
+import {ResolveUrlMixin, ToastMixin} from "@/utils/utils";
 import Ingredient from "@/components/Ingredient";
 
 import PdfViewer from "@/components/PdfViewer";
@@ -167,7 +167,6 @@ Vue.use(BootstrapVue)
 export default {
   name: 'RecipeView',
   mixins: [
-    GettextMixin,
     ResolveUrlMixin,
     ToastMixin,
   ],

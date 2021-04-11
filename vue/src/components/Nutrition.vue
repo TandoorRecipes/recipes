@@ -6,13 +6,13 @@
       <div class="card-body">
         <div class="row">
           <div class="col-12">
-            <h4 class="card-title"><i class="fas fa-carrot"></i> {{ _('Nutrition') }}</h4>
+            <h4 class="card-title"><i class="fas fa-carrot"></i> {{ $t('Nutrition') }}</h4>
           </div>
         </div>
 
         <div class="row">
           <div class="col-6">
-            <i class="fas fa-fire fa-fw text-primary"></i> {{ _('Calories') }}
+            <i class="fas fa-fire fa-fw text-primary"></i> {{ $t('Calories') }}
           </div>
           <div class="col-6">
             <span v-html="calculateAmount(recipe.nutrition.calories)"></span> kcal
@@ -21,7 +21,7 @@
 
         <div class="row">
           <div class="col-6">
-            <i class="fas fa-bread-slice fa-fw text-primary"></i> {{ _('Carbohydrates') }}
+            <i class="fas fa-bread-slice fa-fw text-primary"></i> {{ $t('Carbohydrates') }}
           </div>
           <div class="col-6">
             <span v-html="calculateAmount(recipe.nutrition.carbohydrates)"></span>  g
@@ -30,7 +30,7 @@
 
         <div class="row">
           <div class="col-6">
-            <i class="fas fa-cheese fa-fw text-primary"></i> {{ _('Fats') }}
+            <i class="fas fa-cheese fa-fw text-primary"></i> {{ $t('Fats') }}
           </div>
           <div class="col-6">
             <span v-html="calculateAmount(recipe.nutrition.fats)"></span> g
@@ -39,7 +39,7 @@
 
         <div class="row">
           <div class="col-6">
-            <i class="fas fa-drumstick-bite fa-fw text-primary"></i> {{ _('Proteins') }}
+            <i class="fas fa-drumstick-bite fa-fw text-primary"></i> {{ $t('Proteins') }}
           </div>
           <div class="col-6">
             <span v-html="calculateAmount(recipe.nutrition.proteins)"></span> g
@@ -54,14 +54,10 @@
 
 <script>
 
-import {GettextMixin} from "@/utils/utils";
 import {calculateAmount} from "@/utils/utils";
 
 export default {
   name: 'Nutrition',
-  mixins: [
-    GettextMixin,
-  ],
   props: {
     recipe: Object,
     ingredient_factor: Number,

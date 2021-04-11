@@ -1,21 +1,21 @@
 <template>
 
   <div>
-    <b-modal class="modal" id="id_modal_cook_log" :title="_('Log Recipe Cooking')" :ok-title="_('Save')"
-             :cancel-title="_('Close')" @ok="logCook()">
+    <b-modal class="modal" id="id_modal_cook_log" :title="$t('Log_Recipe_Cooking')" :ok-title="$t('Save')"
+             :cancel-title="$t('Close')" @ok="logCook()">
 
-      <p>{{ _('All fields are optional and can be left empty.') }}</p>
+      <p>{{ $t('all_fields_optional') }}</p>
       <form>
 
-        <label for="id_log_servings">{{ _('Servings') }}</label>
+        <label for="id_log_servings">{{ $t('Servings') }}</label>
         <input class="form-control" type="number" id="id_log_servings" v-model="logObject.servings">
 
-        <label style="margin-top: 2vh">{{ _('Rating') }} - <span
+        <label style="margin-top: 2vh">{{ $t('Rating') }} - <span
             id="id_rating_show">{{ logObject.rating }}/5</span></label>
 
         <b-form-rating v-model="logObject.rating"></b-form-rating>
 
-        <label for="id_date" style="margin-top: 2vh">{{ _('Date') }}</label>
+        <label for="id_date" style="margin-top: 2vh">{{ $t('Date') }}</label>
         <input type="datetime-local" id="id_date" class="form-control" v-model="logObject.created_at">
       </form>
     </b-modal>
@@ -23,8 +23,6 @@
 </template>
 
 <script>
-
-import {GettextMixin} from "@/utils/utils";
 
 import moment from 'moment'
 
@@ -38,9 +36,6 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'CookLog',
-  mixins: [
-    GettextMixin,
-  ],
   props: {
     recipe: Object,
   },
