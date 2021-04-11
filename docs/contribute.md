@@ -74,15 +74,20 @@ If you want to test the documentation locally run `mkdocs serve` from the projec
 
 If you know any foreign languages that is not yet translated feel free to contribute translations.
 
-There is a [transifex project](https://www.transifex.com/django-recipes/django-cookbook/) project where you can get started. 
-If you want to contribute a new language or help maintain an already existing one feel free to create a transifex 
-account (using the link above) and request to join the project.
+Translations are managed on [translate.tandoor.dev](https://translate.tandoor.dev/), a self hosted instance of [Weblate](https://weblate.org/de/).
 
-!!! warning "Transifex Requests"
-    The Team management, language creation and communication on transifex is very difficult for some reason.
-    Because of this please have some patience when approving your requests or adding you to a team takes a while.
-    Please also not that if you request a language you are not automatically in its translation team and you will
-    need to make **an additional request** after I have accepted the language.
+!!! info "Weblate functionality"
+    Translations have only recently been migrated to weblate so I do not 100% understand each feature.
+    Please feel free to contact me if you need any help getting started.
+
+You can simply register an account and then follow these steps to add translations:
+
+1. After registering you are asked to select your languages. This is optional but allows weblate to only show you relevant translations
+2. In the navigation click on `Projects` and then `Browse all projects`
+3. Select Tandoor and on the top right hand corner select `Watch project Tandoor` (click on `Not watching`)
+4. Go back to the dashboard. It now shows you the relevant translations for your languages. Click the pencil icon to get started.
+
+![2021-04-11_16-03](https://user-images.githubusercontent.com/6819595/114307359-926e0380-9adf-11eb-9a2b-febba56e4d8c.gif)
 
 It is also possible to provide the translations directly by creating a new language 
 using `manage.py makemessages -l <language_code> -i venv`. Once finished, simply open a PR with the changed files. 
