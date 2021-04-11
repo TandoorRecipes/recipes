@@ -29,7 +29,6 @@ DEMO = bool(int(os.getenv('DEMO', False)))
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
 
-
 INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
 # allow djangos wsgi server to server mediafiles
@@ -75,6 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'django_tables2',
     'django_filters',
     'crispy_forms',
@@ -93,7 +93,8 @@ INSTALLED_APPS = [
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
-SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
+    os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
