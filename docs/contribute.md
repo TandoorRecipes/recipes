@@ -87,6 +87,8 @@ You can simply register an account and then follow these steps to add translatio
 3. Select Tandoor and on the top right hand corner select `Watch project Tandoor` (click on `Not watching`)
 4. Go back to the dashboard. It now shows you the relevant translations for your languages. Click the pencil icon to get started.
 
+There is also [a lot of documentation](https://docs.weblate.org/en/latest/user/translating.html) available from Weblate directly.
+
 ![2021-04-11_16-03](https://user-images.githubusercontent.com/6819595/114307359-926e0380-9adf-11eb-9a2b-febba56e4d8c.gif)
 
 It is also possible to provide the translations directly by creating a new language 
