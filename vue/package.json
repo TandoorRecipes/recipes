@@ -14,12 +14,14 @@
     "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
+    "vue-i18n": "^8.24.3",
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "^2.6.12",
     "vuex": "^3.6.0"
   },
   "devDependencies": {
+    "@kazupon/vue-i18n-loader": "^0.5.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -33,6 +35,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0",
     "typescript": "~4.1.5",
+    "vue-cli-plugin-i18n": "^2.1.0",
     "webpack-bundle-tracker": "0.4.3",
     "workbox-expiration": "^6.0.2",
     "workbox-navigation-preload": "^6.0.2",
