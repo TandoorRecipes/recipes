@@ -3,5 +3,21 @@
     "import_running": "Import läuft, bitte warten!",
     "Import_finished": "Import fertig",
     "View_Recipes": "Rezepte Ansehen",
-    "Information": "Information"
+    "Information": "Information",
+    "all_fields_optional": "Alle Felder sind optional und können leer gelassen werden.",
+    "convert_internal": "Zu internem Rezept wandeln",
+    "Log_Recipe_Cooking": "Kochen protokollieren",
+    "External_Recipe_Image": "Externes Rezept Bild",
+    "Add_to_Book": "Zu Buch hinzufügen",
+    "Add_to_Shopping": "Zu Einkaufsliste hinzufügen",
+    "Add_to_Plan": "Zu Plan hinzufügen",
+    "Step_start_time": "Schritt Startzeit",
+    "Select_Book": "Buch wählen",
+    "Recipe_Image": "Rezept Bild",
+    "Log_Cooking": "Kochen protokollieren",
+    "Proteins": "Proteine",
+    "Fats": "Fette",
+    "Carbohydrates": "Kohlenhydrate",
+    "Calories": "Kalorien",
+    "Nutrition": "Nährwerte"
 }
