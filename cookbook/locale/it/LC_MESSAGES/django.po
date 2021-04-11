@@ -7,21 +7,21 @@
 # Alessandro Spallina <alessandrospallina1@gmail.com>, 2020
 # Oliver Thomas Cervera <cervera93-10@yahoo.it>, 2021
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: Oliver Thomas Cervera <cervera93-10@yahoo.it>, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/django-recipes/"
-"teams/110507/it/)\n"
+"PO-Revision-Date: 2021-04-11 15:23+0000\n"
+"Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
+"Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.3\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:91
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
@@ -136,6 +136,8 @@ msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Per prevenire duplicati, vengono ignorate le ricette che hanno lo stesso "
+"nome di quelle esistenti. Metti la spunta per importare tutto."
 
 #: .\cookbook\forms.py:149
 msgid "New Unit"
@@ -266,7 +268,7 @@ msgstr "Importato da"
 #: .\cookbook\helper\template_helper.py:60
 #: .\cookbook\helper\template_helper.py:62
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Impossibile elaborare il codice del template."
 
 #: .\cookbook\integration\integration.py:102
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
@@ -287,29 +289,24 @@ msgstr ""
 
 #: .\cookbook\integration\integration.py:134
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Le seguenti ricette sono state ignorate perché già esistenti:"
 
 #: .\cookbook\integration\integration.py:137
-#, fuzzy, python-format
-#| msgid "Imported new recipe!"
+#, python-format
 msgid "Imported %s recipes."
-msgstr "La nuova ricetta è stata importata!"
+msgstr "Importate %s ricette."
 
 #: .\cookbook\integration\paprika.py:44
-#, fuzzy
-#| msgid "Note"
 msgid "Notes"
-msgstr "Nota"
+msgstr "Note"
 
 #: .\cookbook\integration\paprika.py:47
-#, fuzzy
-#| msgid "Information"
 msgid "Nutritional Information"
-msgstr "Info"
+msgstr "Informazioni nutrizionali"
 
 #: .\cookbook\integration\paprika.py:50
 msgid "Source"
-msgstr ""
+msgstr "Fonte"
 
 #: .\cookbook\integration\safron.py:23
 #: .\cookbook\templates\forms\edit_internal_recipe.html:75
@@ -691,10 +688,8 @@ msgstr "Seleziona parole chiave"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:90
 #: .\cookbook\templates\url_import.html:212
-#, fuzzy
-#| msgid "All Keywords"
 msgid "Add Keyword"
-msgstr "Tutte le parole chiave"
+msgstr "Aggiungi parole chiave"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:108
 msgid "Nutrition"
@@ -1171,7 +1166,7 @@ msgid ""
 msgstr ""
 "Le tabelle in markdown sono difficili da creare a mano. Si raccomanda "
 "l'utilizzo di un editor di come <a href=\"https://www.tablesgenerator.com/"
-"markdown_tables\" target=\"_blank\">questo</a>."
+"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">questo</a>."
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1374,44 +1369,37 @@ msgid "No Permissions"
 msgstr "Nessun permesso"
 
 #: .\cookbook\templates\no_groups_info.html:17
-#, fuzzy
-#| msgid ""
-#| "You do not have any groups and therefor cannot use this application. "
-#| "Please contact your administrator."
 msgid "You do not have any groups and therefor cannot use this application."
 msgstr ""
-"Non fai parte di un gruppo e questo non ti consente di usare l'applicazione. "
-"Contatta il tuo amministratore."
+"Non fai parte di un gruppo e questo non ti consente di usare l'applicazione."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 #: .\cookbook\templates\no_space_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Contatta il tuo amministratore."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
-#, fuzzy
-#| msgid "No Permissions"
 msgid "No Permission"
 msgstr "Nessun permesso"
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to perform this action!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
-msgstr "Non hai i permessi necessari per completare questa operazione!"
+msgstr ""
+"Non hai i permessi necessari per visualizzare questa pagina o completare "
+"l'operazione!"
 
 #: .\cookbook\templates\no_space_info.html:5
 #: .\cookbook\templates\no_space_info.html:12
 msgid "No Space"
-msgstr ""
+msgstr "Nessuno spazio"
 
 #: .\cookbook\templates\no_space_info.html:15
 msgid "You are not a member of any space."
-msgstr ""
+msgstr "Non sei membro di uno spazio."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
@@ -1765,17 +1753,15 @@ msgstr "Inserisci l'indirizzo del sito web"
 
 #: .\cookbook\templates\url_import.html:36
 msgid "Enter json directly"
-msgstr ""
+msgstr "Inserisci direttamente il json"
 
 #: .\cookbook\templates\url_import.html:57
 msgid "Recipe Name"
 msgstr "Nome Ricetta"
 
 #: .\cookbook\templates\url_import.html:62
-#, fuzzy
-#| msgid "Description"
 msgid "Recipe Description"
-msgstr "Descrizione"
+msgstr "Descrizione ricetta"
 
 #: .\cookbook\templates\url_import.html:123
 #: .\cookbook\templates\url_import.html:155
@@ -1824,10 +1810,8 @@ msgid "Recipe Markup Specification"
 msgstr "Specifica di Markup della ricetta"
 
 #: .\cookbook\views\api.py:71
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "Il parametro filter_list non è formattato correttamente"
+msgstr "Il parametro updated_at non è formattato correttamente"
 
 #: .\cookbook\views\api.py:455 .\cookbook\views\views.py:226
 msgid "This feature is not available in the demo version!"
@@ -1853,7 +1837,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:611
 msgid "Could not parse correctly..."
-msgstr ""
+msgstr "Impossibile elaborare correttamente..."
 
 #: .\cookbook\views\data.py:94
 #, python-format
