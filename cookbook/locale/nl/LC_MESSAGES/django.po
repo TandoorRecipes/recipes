@@ -107,7 +107,7 @@ msgstr "Naam"
 #: .\cookbook\templates\forms\edit_internal_recipe.html:71
 #: .\cookbook\templates\stats.html:24 .\cookbook\templates\url_import.html:183
 msgid "Keywords"
-msgstr "Sleutelwoorden"
+msgstr "Etiketten"
 
 #: .\cookbook\forms.py:94 .\cookbook\forms.py:115
 msgid "Preparation time in minutes"
@@ -450,7 +450,7 @@ msgstr "Winkelen"
 #: .\cookbook\views\edit.py:83 .\cookbook\views\lists.py:26
 #: .\cookbook\views\new.py:62
 msgid "Keyword"
-msgstr "Sleutelwoord"
+msgstr "Etiket"
 
 #: .\cookbook\templates\base.html:100
 msgid "Batch Edit"
@@ -504,7 +504,7 @@ msgstr "Systeem"
 
 #: .\cookbook\templates\base.html:148
 msgid "Admin"
-msgstr "Admin"
+msgstr "Beheer"
 
 #: .\cookbook\templates\base.html:152
 msgid "Markdown Guide"
@@ -533,7 +533,7 @@ msgstr "Batch bewerking toepassen op recepten"
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
-"Voeg het gespecificeerde sleutelwoord toe aan alle recepten die een woord "
+"Voeg de gespecificeerde etiketten toe aan alle recepten die een woord "
 "bevatten."
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:66
@@ -642,7 +642,7 @@ msgstr "Porties tekst"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:79
 msgid "Select Keywords"
-msgstr "Selecteer sleutelwoorden"
+msgstr "Selecteer etiketten"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:93
 msgid "Description"
@@ -1501,7 +1501,7 @@ msgstr "Object statistieken"
 
 #: .\cookbook\templates\stats.html:41
 msgid "Recipes without Keywords"
-msgstr "Recepten zonder sleutelwoorden"
+msgstr "Recepten zonder etiketten"
 
 #: .\cookbook\templates\stats.html:43
 msgid "External Recipes"
@@ -1644,11 +1644,11 @@ msgstr "Selecteer één"
 
 #: .\cookbook\templates\url_import.html:203
 msgid "All Keywords"
-msgstr "Alle sleutelwoorden"
+msgstr "Alle etiketten"
 
 #: .\cookbook\templates\url_import.html:206
 msgid "Import all keywords, not only the ones already existing."
-msgstr "Importeer alle sleutelwoorden, niet alleen de bestaande."
+msgstr "Importeer alle etiketten, niet alleen de bestaande."
 
 #: .\cookbook\templates\url_import.html:233
 msgid "Information"
