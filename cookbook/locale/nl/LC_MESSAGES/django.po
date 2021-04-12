@@ -8,21 +8,21 @@
 # Frank Engbers <ikbenfrank@gmail.com>, 2020
 # kampsj <jkamps@gmail.com>, 2021
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: kampsj <jkamps@gmail.com>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/django-recipes/teams/110507/"
-"nl/)\n"
+"PO-Revision-Date: 2021-04-12 20:22+0000\n"
+"Last-Translator: Jesse <jesse.kamps@pm.me>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.3\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:91
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
@@ -37,7 +37,7 @@ msgid ""
 "try them out!"
 msgstr ""
 "De kleur van de bovenste navigatie balk. Niet alle kleuren werken met alle "
-"thema's, u dient ze dus simpelweg uit te proberen."
+"thema's, je dient ze dus simpelweg uit te proberen!"
 
 #: .\cookbook\forms.py:46
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
@@ -135,6 +135,8 @@ msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Om dubbelingen te voorkomen worden recepten met dezelfde naam als een "
+"bestaand recept genegeerd. Vink aan om alles te importeren."
 
 #: .\cookbook\forms.py:149
 msgid "New Unit"
@@ -170,7 +172,7 @@ msgstr "Te vervangen Ingrediënt."
 
 #: .\cookbook\forms.py:197
 msgid "Add your comment: "
-msgstr "Voeg een opmerking toe:"
+msgstr "Voeg een opmerking toe: "
 
 #: .\cookbook\forms.py:238
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -213,7 +215,7 @@ msgid ""
 "\">docs here</a>"
 msgstr ""
 "Je kunt markdown gebruiken om dit veld te op te maken. Bekijk de <a href=\"/"
-"docs/markdown/\">documentatie hier</a>."
+"docs/markdown/\">documentatie hier</a>"
 
 #: .\cookbook\forms.py:393
 msgid "A username is not required, if left blank the new user can choose one."
@@ -265,7 +267,7 @@ msgstr "Geïmporteerd van"
 #: .\cookbook\helper\template_helper.py:60
 #: .\cookbook\helper\template_helper.py:62
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Sjablooncode kon niet verwerkt worden."
 
 #: .\cookbook\integration\integration.py:102
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
@@ -285,29 +287,24 @@ msgstr ""
 
 #: .\cookbook\integration\integration.py:134
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "De volgende recepten zijn genegeerd omdat ze al bestonden:"
 
 #: .\cookbook\integration\integration.py:137
-#, fuzzy, python-format
-#| msgid "Imported new recipe!"
+#, python-format
 msgid "Imported %s recipes."
-msgstr "Nieuw recept geïmporteerd!"
+msgstr "%s recepten geïmporteerd."
 
 #: .\cookbook\integration\paprika.py:44
-#, fuzzy
-#| msgid "Note"
 msgid "Notes"
-msgstr "Notitie"
+msgstr "Notities"
 
 #: .\cookbook\integration\paprika.py:47
-#, fuzzy
-#| msgid "Information"
 msgid "Nutritional Information"
-msgstr "Informatie"
+msgstr "Voedingswaarde"
 
 #: .\cookbook\integration\paprika.py:50
 msgid "Source"
-msgstr ""
+msgstr "Bron"
 
 #: .\cookbook\integration\safron.py:23
 #: .\cookbook\templates\forms\edit_internal_recipe.html:75
@@ -573,7 +570,7 @@ msgstr "Batch bewerking toepassen op recepten"
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
 "Voeg de gespecificeerde etiketten toe aan alle recepten die een woord "
-"bevatten."
+"bevatten"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:76
 msgid "Sync"
@@ -689,10 +686,8 @@ msgstr "Selecteer etiketten"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:90
 #: .\cookbook\templates\url_import.html:212
-#, fuzzy
-#| msgid "All Keywords"
 msgid "Add Keyword"
-msgstr "Alle etiketten"
+msgstr "Voeg Etiket toe"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:108
 msgid "Nutrition"
@@ -864,10 +859,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Het volgende formulier kan worden gebruikt wanneer per ongeluk twee (of "
-"meer) eenheden of ingrediënten zijn gecreëerd dat eigenlijk hetzelfde zijn.\n"
-"Het doet de twee eenheden of ingrediënten samenvoegen en alle bijbehorende "
-"recepten updaten."
+"        Het volgende formulier kan worden gebruikt wanneer per ongeluk twee ("
+"of meer) eenheden of ingrediënten zijn gemaakt die eigenlijk hetzelfde zijn."
+"\n"
+" Het voegt de twee eenheden of ingrediënten samen en past alle bijbehorende "
+"recepten aan.\n"
+"    "
 
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\stats.html:26
@@ -890,7 +887,7 @@ msgstr "Weet je zeker dat je deze ingrediënten wil samenvoegen?"
 #: .\cookbook\templates\generic\delete_template.html:18
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "Weet je zeker dat je %(title)s: <b>%(object)s</b> wil verwijderen?"
+msgstr "Weet je zeker dat je %(title)s: <b>%(object)s</b> wil verwijderen "
 
 #: .\cookbook\templates\generic\delete_template.html:21
 msgid "Confirm"
@@ -992,12 +989,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Het <b>wachtwoord en token</b> veld worden als <b>plain text</b> in de "
-"database opgeslagen.\n"
-"Dit is benodigd omdat deze benodigd zijn voor de API requests, Echter "
-"verhoogd dit ook het risico van diefstal.<br/>\n"
-"Om mogelijke schade te beperken kunt u gebruik maken van account met "
-"gelimiteerde toegang."
+"        Het <b>wachtwoord en token</b> veld worden als <b>plain text</b> in "
+"de database opgeslagen.\n"
+" Dit is nodig omdat deze benodigd zijn voor de API requests, Echter verhoogt "
+"dit ook het risico van diefstal.<br/>\n"
+" Om mogelijke schade te beperken kun je gebruik maken van account met "
+"gelimiteerde toegang.\n"
+"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
@@ -1053,14 +1051,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Markdown is een lichtgewicht opmaak taal die gebruikt kan worden om tekst "
-"eenvoudig op te maken.\n"
-"Deze site gebruikt de <a href=\"https://python-markdown.github.io/\" target="
+"        Markdown is een lichtgewicht opmaak taal die gebruikt kan worden om "
+"tekst eenvoudig op te maken.\n"
+" Deze site gebruikt de <a href=\"https://python-markdown.github.io/\" target="
 "\"_blank\">Python Markdown</a> bibliotheek\n"
-"om je tekst in mooi uitziende HTML om te zetten. De volledige documentatie "
-"kan <a href=\"https://daringfireball.net/projects/markdown/syntax\" target="
+" om je tekst in mooi uitziende HTML om te zetten. De volledige documentatie "
+"kan \n"
+" <a href=\"https://daringfireball.net/projects/markdown/syntax\" target="
 "\"_blank\">hier</a>gevonden worden.\n"
-"Onvolledige, maar waarschijnlijk voldoende, informatie staat hieronder."
+" Onvolledige, maar waarschijnlijk voldoende, informatie staat hieronder.\n"
+"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
@@ -1074,13 +1074,12 @@ msgstr "Formattering"
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
 msgstr ""
-"Enters worden toegevoegd door aan het einde van een regel twee spaties toe "
-"te voegen."
+"Regeleindes worden toegevoegd door een regel te eindigen met twee spaties"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line inbetween."
-msgstr "of door een witregel te gebruiken"
+msgstr "of door een witregel te gebruiken."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
@@ -1090,7 +1089,7 @@ msgstr "Deze tekst is dikgedrukt"
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr "Deze tekst is cursief."
+msgstr "Deze tekst is cursief"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
@@ -1146,8 +1145,8 @@ msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
-"Links kunnen opgemaakt worden met Markdown \n"
-"De applicatie laat het ook toe om links direct te plakken  zonder opmaak."
+"Links kunnen opgemaakt worden met Markdown. De applicatie laat het ook toe "
+"om links direct te plakken zonder opmaak."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
@@ -1327,27 +1326,28 @@ msgid ""
 "                        "
 msgstr ""
 "\n"
-"<p>De maaltijdplan module maakt plannen van maaltijden met recepten en "
-"notities mogelijk.</p>\n"
-"<p>Selecteer een recept van de lijst recent bekeken recepten of zoek naar\n"
-"het gewenste recept en sleep het naar de juiste positie in het maaltijdplan. "
-"Je kan ook eerst een notitie en titel toevoegen en dan het recept naar de "
-"juiste positie slepen om een unieke maaltijdplan inschrijving te maken.\n"
-"Alleen notities aanmaken is mogelijk door het Maak notitie vlak in het "
+"                            <p>De maaltijdplan module maakt plannen van "
+"maaltijden met recepten en notities mogelijk.</p>\n"
+" <p>Selecteer een recept van de lijst recent bekeken recepten of zoek naar\n"
+" het gewenste recept en sleep het naar de juiste positie in het "
+"maaltijdplan. Je kan ook eerst een notitie en titel toevoegen en dan het "
+"recept naar de juiste positie slepen om een unieke maaltijdplan inschrijving "
+"te maken.\n"
+" Alleen notities aanmaken is mogelijk door het Maak notitie vlak in het "
 "maaltijdplan te slepen.</p>\n"
-"<p>Klik op een recept om de gedetailleerde weergave te openen. Daar kan je "
+" <p>Klik op een recept om de gedetailleerde weergave te openen. Daar kan je "
 "het ook toevoegen aan je boodschappenlijst.\n"
-"Je kan ook alle recepten van een dag aan je boodschappenlijst toevoegen door "
-"op het winkelwagentje boven aan de tabel te klikken.</p>\n"
-"<p>Omdat maaltijden samen gepland kunnen worden kan je in de instellingen "
-"kiezen met welke gebruikers je je maaltijd plan wil delen.\n"
-"</p>\n"
-"<p>Je kan ook het type maaltijd dat je wil plannen bewerken. Als je een "
+" Je kan ook alle recepten van een dag aan je boodschappenlijst toevoegen "
+"door op het winkelwagentje boven aan de tabel te klikken.</p>\n"
+" <p>Omdat maaltijden samen gepland kunnen worden kan je in de instellingen "
+"kiezen met welke gebruikers je het maaltijd plan wil delen.</p>\n"
+" <p>Je kan ook het type maaltijd dat je wil plannen bewerken. Als je een "
 "maaltijdplan deelt met iemand met andere maaltijden, dan zullen hun "
 "maaltijdtypes ook in jouw lijst verschijnen. Geef, om dubbelingen (zoals "
 "Overig en Anders) te voorkomen, je maaltijdtypes daarom dezelfde naam als de "
 "gebruikers waarmee je maaltijdplannen deelt. In dat geval worden de "
-"maaltijden samengevoegd.</p>"
+"maaltijden samengevoegd.</p>\n"
+"                        "
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
@@ -1367,44 +1367,36 @@ msgid "No Permissions"
 msgstr "Geen rechten"
 
 #: .\cookbook\templates\no_groups_info.html:17
-#, fuzzy
-#| msgid ""
-#| "You do not have any groups and therefor cannot use this application. "
-#| "Please contact your administrator."
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr ""
-"Je hebt geen groepen en kan daarom deze applicatie niet gebruiken. Neem "
-"contact op met je beheerder."
+msgstr "Je hebt geen groepen en kan daarom deze applicatie niet gebruiken."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 #: .\cookbook\templates\no_space_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Neem contact op met je beheerder."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
-#, fuzzy
-#| msgid "No Permissions"
 msgid "No Permission"
 msgstr "Geen rechten"
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to perform this action!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
-msgstr "Je beschikt niet over de juiste rechten om deze actie uit te voeren!"
+msgstr ""
+"Je beschikt niet over de juiste rechten om deze pagina te bekijken of deze "
+"actie uit te voeren."
 
 #: .\cookbook\templates\no_space_info.html:5
 #: .\cookbook\templates\no_space_info.html:12
 msgid "No Space"
-msgstr ""
+msgstr "Geen ruimte"
 
 #: .\cookbook\templates\no_space_info.html:15
 msgid "You are not a member of any space."
-msgstr ""
+msgstr "Je bent geen lid van een ruimte."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
@@ -1445,7 +1437,7 @@ msgstr "Geschatte voorbereidingstijd"
 #: .\cookbook\templates\recipes_table.html:57
 #: .\cookbook\templates\url_import.html:79
 msgid "Waiting time ca."
-msgstr "Geschatte wachttijd "
+msgstr "Geschatte wachttijd"
 
 #: .\cookbook\templates\recipes_table.html:60
 msgid "External"
@@ -1579,7 +1571,8 @@ msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
-"Je kan inloggen met een account van een van de onderstaande derde partijen:"
+"Je kan inloggen met een account van een van de onderstaande derde \n"
+"partijen:"
 
 #: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
@@ -1646,11 +1639,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Django Recipes is een open source gratis software applicatie. Het kan "
-"gevonden worden op\n"
-"<a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"Wijzigingenoverzichten kunnen <a href=\"https://github.com/vabene1111/"
-"recipes/releases\">hier</a> gevonden worden."
+"        Django Recipes is een open source gratis software applicatie. Het "
+"kan gevonden worden op\n"
+" <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+" Wijzigingenoverzichten kunnen <a href=\"https://github.com/vabene1111/"
+"recipes/releases\">hier</a> gevonden worden.\n"
+"    "
 
 #: .\cookbook\templates\system.html:48
 msgid "Media Serving"
@@ -1677,8 +1671,9 @@ msgid ""
 msgstr ""
 "Mediabestanden rechtstreeks aanbieden met gunicorn/python is <b>niet "
 "aanbevolen</b>!\n"
-"Volg de stappen zoals <a href=\"https://github.com/vabene1111/recipes/"
-"releases/tag/0.8.1\">hier</a> beschreven om je installatie te updaten."
+" Volg de stappen zoals <a href=\"https://github.com/vabene1111/recipes/"
+"releases/tag/0.8.1\">hier</a> beschreven om je installatie te updaten.\n"
+"        "
 
 #: .\cookbook\templates\system.html:57 .\cookbook\templates\system.html:73
 #: .\cookbook\templates\system.html:88 .\cookbook\templates\system.html:102
@@ -1702,10 +1697,12 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Je hebt geen <code>SECRET_KEY</code> geconfigureerd in je .env bestand.\n"
-"Django is overgegaan naar de standaard sleutel die openbaar en onveilig is! "
+"            Je hebt geen <code>SECRET_KEY</code> geconfigureerd in je<code>."
+"env</code> bestand.\n"
+" Django is overgegaan naar de standaard sleutel die openbaar en onveilig is! "
 "Stel alsjeblieft <code>SECRET_KEY</code>in in het <code>.env</code> "
-"configuratiebestand."
+"configuratiebestand.\n"
+"        "
 
 #: .\cookbook\templates\system.html:78
 msgid "Debug Mode"
@@ -1722,9 +1719,12 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Deze applicatie draait in debug modus. Dit is waarschijnlijk niet nodig. "
-"Schakel debug modus uit door de instelling <code>DEBUG=0</code> in het "
-"<code>.env</code>configuratiebestand aan te passen."
+"            Deze applicatie draait in debug modus. Dit is waarschijnlijk "
+"niet nodig. Schakel debug modus uit door de \n"
+" instelling\n"
+" <code>DEBUG=0</code> in het <code>.env</code>configuratiebestand aan te "
+"passen.\n"
+"        "
 
 #: .\cookbook\templates\system.html:93
 msgid "Database"
@@ -1743,9 +1743,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Deze applicatie draait niet met een Postgres database als backend. Dit is ok "
-"maar wordt niet aanbevolen omdat sommige functies alleen werken met Postgres "
-"databases."
+"            Deze applicatie draait niet met een Postgres database als "
+"backend. Dit is ok maar wordt niet aanbevolen omdat sommige functies \n"
+" alleen werken met Postgres databases.\n"
+"        "
 
 #: .\cookbook\templates\url_import.html:5
 msgid "URL Import"
@@ -1757,17 +1758,15 @@ msgstr "Vul website URL in"
 
 #: .\cookbook\templates\url_import.html:36
 msgid "Enter json directly"
-msgstr ""
+msgstr "Geef json direct op"
 
 #: .\cookbook\templates\url_import.html:57
 msgid "Recipe Name"
 msgstr "Naam Recept"
 
 #: .\cookbook\templates\url_import.html:62
-#, fuzzy
-#| msgid "Description"
 msgid "Recipe Description"
-msgstr "Beschrijving"
+msgstr "Beschrijving recept"
 
 #: .\cookbook\templates\url_import.html:123
 #: .\cookbook\templates\url_import.html:155
@@ -1797,11 +1796,13 @@ msgid ""
 "data feel free to post an example in the\n"
 "                                    github issues."
 msgstr ""
-"Alleen websites die Id+json of microdata informatie bevatten kunnen op dit "
-"moment geïmporteerd worden. De meeste grote recepten websites ondersteunen "
-"dit. Als jouw website niet geïmporteerd kan worden maar je denkt dat het "
-"waarschijnlijk gestructureerde data bevat, voel je dan vrij om een foorbeeld "
-"te posten in de GitHub issues."
+" Alleen websites die Id+json of microdata informatie bevatten kunnen op dit "
+"moment geïmporteerd worden. \n"
+" De meeste grote recepten websites ondersteunen dit. Als jouw website niet "
+"geïmporteerd kan worden maar \n"
+" je denkt dat het waarschijnlijk gestructureerde data bevat, voel je dan "
+"vrij om een voorbeeld te posten in \n"
+" de GitHub issues."
 
 #: .\cookbook\templates\url_import.html:265
 msgid "Google ld+json Info"
@@ -1816,10 +1817,8 @@ msgid "Recipe Markup Specification"
 msgstr "Recept opmaak specificatie"
 
 #: .\cookbook\views\api.py:71
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "Parameter filter_list is onjuist geformateerd"
+msgstr "Parameter updatet_at is onjuist geformateerd"
 
 #: .\cookbook\views\api.py:455 .\cookbook\views\views.py:226
 msgid "This feature is not available in the demo version!"
@@ -1831,7 +1830,7 @@ msgstr "Synchronisatie succesvol!"
 
 #: .\cookbook\views\api.py:483
 msgid "Error synchronizing with Storage"
-msgstr "Er is een fout opgetreden bij het synchroniseren met Opslag."
+msgstr "Er is een fout opgetreden bij het synchroniseren met Opslag"
 
 #: .\cookbook\views\api.py:556 .\cookbook\views\api.py:576
 msgid "The requested page could not be found."
@@ -1845,7 +1844,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:611
 msgid "Could not parse correctly..."
-msgstr ""
+msgstr "Kon niet goed verwerken.."
 
 #: .\cookbook\views\data.py:94
 #, python-format
@@ -1966,7 +1965,7 @@ msgid ""
 "on how to reset passwords."
 msgstr ""
 "De setup pagina kan alleen gebruikt worden om de eerste gebruiker aan te "
-"maken! Indien je je superuser inloggegevens bent vergeten zal je de django "
+"maken! Indien je de superuser inloggegevens bent vergeten zal je de django "
 "documentatie raad moeten plegen voor een methode om je wachtwoord te "
 "resetten."
 
