@@ -1,6 +1,9 @@
+from django.conf import settings
 from django.contrib import admin
+from django.contrib.postgres.search import SearchVector
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
+from django_scopes import scopes_disabled
 
 from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      MealPlan, MealType, NutritionInformation, Recipe,
@@ -91,6 +94,15 @@ class StepAdmin(admin.ModelAdmin):
 admin.site.register(Step, StepAdmin)
 
 
+@admin.action(description='Rebuild index for selected recipes')
+def rebuild_index(modeladmin, request, queryset):
+    with scopes_disabled():
+        search_vector = (
+            SearchVector('name', weight='A')
+            + SearchVector('description', weight='B'))
+        queryset.update(search_vector=search_vector)
+
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage')
     search_fields = ('name', 'created_by__username')
@@ -100,6 +112,9 @@ class RecipeAdmin(admin.ModelAdmin):
     @staticmethod
     def created_by(obj):
         return obj.created_by.get_user_name()
+
+    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        actions = [rebuild_index]
 
 
 admin.site.register(Recipe, RecipeAdmin)
