@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('cookbook', '0117_space_max_recipes'),
+        ('cookbook', '0119_auto_20210411_2101'),
     ]
 
     operations = [
