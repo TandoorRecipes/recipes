@@ -6,20 +6,21 @@
 # Translators:
 # H K <hkocharyan@ctemplar.com>, 2021
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-09 18:01+0100\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: H K <hkocharyan@ctemplar.com>, 2021\n"
-"Language-Team: Armenian (https://www.transifex.com/django-recipes/teams/110507/hy/)\n"
+"PO-Revision-Date: 2021-04-12 20:22+0000\n"
+"Last-Translator: Hrachya Kocharyan <hkocharyan@ctemplar.com>\n"
+"Language-Team: Armenian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/hy/>\n"
+"Language: hy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hy\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 4.5.3\n"
 
 #: .\cookbook\filters.py:22 .\cookbook\templates\base.html:87
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
@@ -54,7 +55,7 @@ msgid ""
 "shared by default."
 msgstr ""
 "Օգտատերեր, ում հետ նոր ստեղծված ճաշացուցակները/գնումների ցուցակները պետք է "
-"կիսվեն լռելյայն"
+"կիսվեն լռելյայն:"
 
 #: .\cookbook\forms.py:48
 msgid "Show recently viewed recipes on search page."
@@ -62,7 +63,7 @@ msgstr "Ցույց տալ վերջերս դիտած բաղադրատոմսերը
 
 #: .\cookbook\forms.py:49
 msgid "Number of decimals to round ingredients."
-msgstr "Բաղադրիչների կլորացման համար տասնորդականների քանակը"
+msgstr "Բաղադրիչների կլորացման համար տասնորդականների քանակը:"
 
 #: .\cookbook\forms.py:50
 msgid "If you want to be able to create and see comments underneath recipes."
@@ -84,7 +85,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:55
 msgid "Makes the navbar stick to the top of the page."
-msgstr "Կցել նավիգացիոն տողը էջի վերևում"
+msgstr "Կցել նավիգացիոն տողը էջի վերևում:"
 
 #: .\cookbook\forms.py:71
 msgid ""
@@ -152,7 +153,7 @@ msgstr "Հին միավոր"
 
 #: .\cookbook\forms.py:169
 msgid "Unit that should be replaced."
-msgstr "Փոխարինման ենթակա միավոր"
+msgstr "Փոխարինման ենթակա միավոր:"
 
 #: .\cookbook\forms.py:179
 msgid "New Food"
@@ -172,7 +173,7 @@ msgstr "Փոխարինման ենթակա սննդամթերք։"
 
 #: .\cookbook\forms.py:198
 msgid "Add your comment: "
-msgstr "Ավելացրեք ձեր մեկնաբանությունը՝"
+msgstr "Ավելացրեք ձեր մեկնաբանությունը՝ "
 
 #: .\cookbook\forms.py:229
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -190,8 +191,8 @@ msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud "
 "(<code>/remote.php/webdav/</code> is added automatically)"
 msgstr ""
-"Թողնել դատարկ dropbox-ի համար և մուտքագրել միայն հիմքային հղումը nextcloud-ի"
-" համար (<code>/remote.php/webdav/</code> ինքնաբերաբար  ավելացվում է)"
+"Թողնել դատարկ dropbox-ի համար և մուտքագրել միայն հիմքային հղումը nextcloud-ի "
+"համար (<code>/remote.php/webdav/</code> ինքնաբերաբար ավելացվում է)"
 
 #: .\cookbook\forms.py:263
 msgid "Search String"
@@ -203,13 +204,13 @@ msgstr "Ֆայլի ID"
 
 #: .\cookbook\forms.py:299
 msgid "You must provide at least a recipe or a title."
-msgstr "Դուք պետք է տրամադրեք առնվազն բաղադրատոմս կամ վերնագիր"
+msgstr "Դուք պետք է տրամադրեք առնվազն բաղադրատոմս կամ վերնագիր:"
 
 #: .\cookbook\forms.py:312
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
 "Դուք կարող եք կարգավորումներում ավելացնել այն օգտատերերին, ում հետ "
-"բաղադրատոմսերը պետք է կիսվեն լռելյայն"
+"բաղադրատոմսերը պետք է կիսվեն լռելյայն:"
 
 #: .\cookbook\forms.py:313
 #: .\cookbook\templates\forms\edit_internal_recipe.html:377
@@ -289,7 +290,7 @@ msgstr "Պատրաստման տևողություն"
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "Խոհարարական գիրք "
+msgstr "Խոհարարական գիրք"
 
 #: .\cookbook\integration\safron.py:31
 msgid "Section"
@@ -409,7 +410,7 @@ msgstr "Դուրս գալ"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr "Համոզվա՞ծ եք, որ ցանկանում եք դուրս գալ"
+msgstr "Համոզվա՞ծ եք, որ ցանկանում եք դուրս գալ:"
 
 #: .\cookbook\templates\account\password_reset.html:5
 #: .\cookbook\templates\account\password_reset_done.html:5
@@ -419,7 +420,7 @@ msgstr "Գաղտնաբառի վերականգնում"
 #: .\cookbook\templates\account\password_reset.html:9
 #: .\cookbook\templates\account\password_reset_done.html:9
 msgid "Password reset is not implemented for the time being!"
-msgstr "Գաղտնաբառի վերականգնում առայժմ իրականացված չէ"
+msgstr "Գաղտնաբառի վերականգնում առայժմ իրականացված չէ:"
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
@@ -478,7 +479,7 @@ msgstr "Բացահայտումների մատյան"
 
 #: .\cookbook\templates\base.html:117 .\cookbook\templates\stats.html:10
 msgid "Statistics"
-msgstr "Վիճակագրություն "
+msgstr "Վիճակագրություն"
 
 #: .\cookbook\templates\base.html:119
 msgid "Units & Ingredients"
@@ -910,7 +911,7 @@ msgstr "Գրանցել բաղադրատոմսի օգտագործում"
 
 #: .\cookbook\templates\include\log_cooking.html:13
 msgid "All fields are optional and can be left empty."
-msgstr "Բոլոր դաշտերը կամավոր են և կարող են դատարկ թողնվել"
+msgstr "Բոլոր դաշտերը կամավոր են և կարող են դատարկ թողնվել:"
 
 #: .\cookbook\templates\include\log_cooking.html:19
 msgid "Rating"
@@ -1201,7 +1202,7 @@ msgid ""
 " view."
 msgstr ""
 "Շաբաթվա առաջին օրվանից հաշված օրերի քանակը, որը պետք է փոխհատուցել լռելյայն "
-"էջում"
+"էջում:"
 
 #: .\cookbook\templates\meal_plan.html:217
 #: .\cookbook\templates\meal_plan.html:294
@@ -1287,7 +1288,7 @@ msgstr "Ճաշացուցակի Դիտման էջ"
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr "Երբեք պատրաստված չէ"
+msgstr "Երբեք պատրաստված չէ:"
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
@@ -1412,7 +1413,7 @@ msgstr "Կարգավորում"
 msgid ""
 "To start using this application you must first create a superuser account."
 msgstr ""
-"Այս ծրագիրն օգտագործելու համար նախ պետք է ստեղծեք սուպեր-օգտատերի հաշիվ"
+"Այս ծրագիրն օգտագործելու համար նախ պետք է ստեղծեք սուպեր-օգտատերի հաշիվ:"
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser account"
@@ -1468,7 +1469,7 @@ msgstr "Ցուցակի նախածանց"
 
 #: .\cookbook\templates\shopping_list.html:696
 msgid "There was an error creating a resource!"
-msgstr "Ռեսուրսը ստեղծելիս սխալ է գրանցվել"
+msgstr "Ռեսուրսը ստեղծելիս սխալ է գրանցվել:"
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
@@ -1490,7 +1491,7 @@ msgstr "Հեռացնել"
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid ""
 "You currently have no social network accounts connected to this account."
-msgstr "Դուք այս հաշվին կապված սոցիալական հաշիվներ չունեք "
+msgstr "Դուք այս հաշվին կապված սոցիալական հաշիվներ չունեք:"
 
 #: .\cookbook\templates\socialaccount\connections.html:47
 msgid "Add a 3rd Party Account"
@@ -1534,7 +1535,7 @@ msgstr "Ցուցադրել հղումները"
 
 #: .\cookbook\templates\system.html:27
 msgid "Backup & Restore"
-msgstr "Կրկնօրինակում և վերականգնում "
+msgstr "Կրկնօրինակում և վերականգնում"
 
 #: .\cookbook\templates\system.html:28
 msgid "Download Backup"
@@ -1673,7 +1674,7 @@ msgstr "Բոլոր բանալի բառերը"
 
 #: .\cookbook\templates\url_import.html:206
 msgid "Import all keywords, not only the ones already existing."
-msgstr "Ներմուծել բոլոր բանալի բառերը, ոչ միայն արդեն գոյություն ունեցողները"
+msgstr "Ներմուծել բոլոր բանալի բառերը, ոչ միայն արդեն գոյություն ունեցողները:"
 
 #: .\cookbook\templates\url_import.html:233
 msgid "Information"
@@ -1719,7 +1720,7 @@ msgstr "Այս հատկությունը հասանելի չէ փորձնական
 
 #: .\cookbook\views\api.py:439
 msgid "Sync successful!"
-msgstr "Սինքրոնիզացիան հաջողված է"
+msgstr "Սինքրոնիզացիան հաջողված է:"
 
 #: .\cookbook\views\api.py:444
 msgid "Error synchronizing with Storage"
@@ -1727,20 +1728,20 @@ msgstr "Պահոցի հետ սինքրոնիզացիայի սխալ"
 
 #: .\cookbook\views\api.py:510
 msgid "The requested page could not be found."
-msgstr "Պահանջվող էջը չի գտնվել"
+msgstr "Պահանջվող էջը չի գտնվել:"
 
 #: .\cookbook\views\api.py:519
 msgid ""
 "The requested page refused to provide any information (Status Code 403)."
 msgstr ""
-"Պահանջվող էջը մերժեց տրամադրել որևէ տեղեկություն (Կարգավիճակի ծածկագիր 403)"
+"Պահանջվող էջը մերժեց տրամադրել որևէ տեղեկություն (Կարգավիճակի ծածկագիր 403):"
 
 #: .\cookbook\views\data.py:101
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] "Խմբային խմբագրումն ավարտված է։ %(count)d բաղադրատոմս թարմացված է"
-msgstr[1] "Խմբային խմբագրումն ավարտված է։ %(count)d բաղադրատոմս թարմացված է։"
+msgstr[0] "Խմբային խմբագրումն ավարտված է։ %(count)d բաղադրատոմս թարմացված է:"
+msgstr[1] "Խմբային խմբագրումն ավարտված է։ %(count)d բաղադրատոմսեր թարմացված են։"
 
 #: .\cookbook\views\delete.py:72
 msgid "Monitor"
@@ -1779,7 +1780,7 @@ msgstr "Դուք կարող եք խմբագրել այս պահոցը։"
 
 #: .\cookbook\views\edit.py:131
 msgid "Storage saved!"
-msgstr "Պահոցը պահպանված է"
+msgstr "Պահոցը պահպանված է։"
 
 #: .\cookbook\views\edit.py:137
 msgid "There was an error updating this storage backend!"
@@ -1791,23 +1792,23 @@ msgstr "Պահոց"
 
 #: .\cookbook\views\edit.py:245
 msgid "Changes saved!"
-msgstr "Փոփոխությունները պահպանված են"
+msgstr "Փոփոխությունները պահպանված են:"
 
 #: .\cookbook\views\edit.py:253
 msgid "Error saving changes!"
-msgstr "Փոփոխությունների պահպանման սխալ"
+msgstr "Փոփոխությունների պահպանման սխալ:"
 
 #: .\cookbook\views\edit.py:289
 msgid "Units merged!"
-msgstr "Միավորները միավորված են"
+msgstr "Միավորները միավորված են:"
 
 #: .\cookbook\views\edit.py:295 .\cookbook\views\edit.py:317
 msgid "Cannot merge with the same object!"
-msgstr "Հնարավոր չէ միավորել նույն օբյեկտի հետ"
+msgstr "Հնարավոր չէ միավորել նույն օբյեկտի հետ:"
 
 #: .\cookbook\views\edit.py:311
 msgid "Foods merged!"
-msgstr "Սննդամթերքները միավորված են"
+msgstr "Սննդամթերքները միավորված են:"
 
 #: .\cookbook\views\import_export.py:42
 msgid "Importing is not implemented for this provider"
@@ -1831,7 +1832,7 @@ msgstr "Գնումների ցուցակներ"
 
 #: .\cookbook\views\new.py:107
 msgid "Imported new recipe!"
-msgstr "Բաղադրատոմսը ներմուծված է"
+msgstr "Բաղադրատոմսը ներմուծված է:"
 
 #: .\cookbook\views\new.py:114
 msgid "There was an error importing this recipe!"
@@ -1843,15 +1844,15 @@ msgstr "Դուք չունեք բավարար թույլտվություն այս
 
 #: .\cookbook\views\views.py:136
 msgid "Comment saved!"
-msgstr "Մեկնաբանությունը պահպանված է"
+msgstr "Մեկնաբանությունը պահպանված է:"
 
 #: .\cookbook\views\views.py:152
 msgid "This recipe is already linked to the book!"
-msgstr "Բաղադրատոմսն արդեն կապված է գրքին"
+msgstr "Բաղադրատոմսն արդեն կապված է գրքին:"
 
 #: .\cookbook\views\views.py:158
 msgid "Bookmark saved!"
-msgstr "Էջանիշը պահպանված է"
+msgstr "Էջանիշը պահպանված է:"
 
 #: .\cookbook\views\views.py:380
 msgid ""
@@ -1865,7 +1866,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:388 .\cookbook\views\views.py:435
 msgid "Passwords dont match!"
-msgstr "Գաղտնաբառերը չեն համընկնում"
+msgstr "Գաղտնաբառերը չեն համընկնում:"
 
 #: .\cookbook\views\views.py:402 .\cookbook\views\views.py:449
 msgid "User has been created, please login!"
@@ -1877,4 +1878,4 @@ msgstr "Հրավերի արատավոր հղում է տրամադրվել։"
 
 #: .\cookbook\views\views.py:470
 msgid "Invite Link not valid or already used!"
-msgstr "Հրավերի հղումը վավեր չէ, կամ արդեն օգտագործվել է"
+msgstr "Հրավերի հղումը վավեր չէ, կամ արդեն օգտագործվել է:"
