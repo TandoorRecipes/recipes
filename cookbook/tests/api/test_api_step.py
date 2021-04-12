@@ -4,7 +4,7 @@ import pytest
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient, Step
+from cookbook.models import Step
 
 LIST_URL = 'api:step-list'
 DETAIL_URL = 'api:step-detail'
