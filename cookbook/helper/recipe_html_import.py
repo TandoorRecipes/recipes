@@ -73,7 +73,7 @@ def get_recipe_from_source(text, url, space):
     html_data = []
     images = []
 
-    text = normalize_string(text)
+    # text = normalize_string(text)
     try:
         parse_list.append(remove_graph(json.loads(text)))
         if not url and 'url' in parse_list[0]:
