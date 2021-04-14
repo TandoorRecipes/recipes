@@ -21,7 +21,7 @@ def get_from_scraper(scrape, space):
     except AttributeError:
         description = ''
 
-    recipe_json['description'] = normalize_string(description)
+    recipe_json['description'] = parse_description(description)
 
     try:
         servings = scrape.yields()
@@ -179,6 +179,14 @@ def parse_ingredients(ingredients):
         else:
             ingredients = []
     return ingredients
+
+
+def parse_description(description):
+    description = re.sub(r'\n\s*\n', '\n\n', description)
+    description = re.sub(' +', ' ', description)
+    description = re.sub('</p>', '\n', description)
+    description = re.sub('<[^<]+?>', '', description)
+    return normalize_string(description)
 
 
 def parse_instructions(instructions):
