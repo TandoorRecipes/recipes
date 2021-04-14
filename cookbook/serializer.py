@@ -14,8 +14,8 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog, SupermarketCategory,
-                             Supermarket, SupermarketCategoryRelation, ImportLog, BookmarkletImport)
+                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket,
+                             SupermarketCategoryRelation, ImportLog, BookmarkletImport)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -487,6 +487,7 @@ class BookmarkletImportSerializer(serializers.ModelSerializer):
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')
         read_only_fields = ('created_by', 'space')
+
 
 # Export/Import Serializers
 

@@ -16,7 +16,6 @@ from django.http import FileResponse, HttpResponse, JsonResponse, HttpResponseRe
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
 from icalendar import Calendar, Event
 
 from rest_framework import decorators, viewsets
@@ -36,7 +35,7 @@ from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
-                                               group_required)
+                                               group_required, share_link_valid)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
@@ -58,9 +57,9 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer,
-                                 RecipeBookEntrySerializer, RecipeOverviewSerializer,
-                                 SupermarketSerializer, ImportLogSerializer, BookmarkletImportSerializer)
+                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
+                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
+                                 BookmarkletImportSerializer)
 from recipes.settings import DEMO
 
 

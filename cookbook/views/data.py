@@ -94,7 +94,9 @@ def batch_edit(request):
             msg = ngettext(
                 'Batch edit done. %(count)d recipe was updated.',
                 'Batch edit done. %(count)d Recipes where updated.',
-                count) % {'count': count, }
+                count) % {
+                      'count': count,
+                  }
             messages.add_message(request, messages.SUCCESS, msg)
 
             return redirect('data_batch_edit')
@@ -188,14 +190,13 @@ def import_url(request):
                 pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
-    
+
     if 'id' in request.GET:
-        context = {'bookmarklet': 25}
+        context = {'bookmarklet': request.GET.get('id', '')}
     else:
         context = {}
 
     return render(request, 'url_import.html', context)
-
 
 class Object(object):
     pass

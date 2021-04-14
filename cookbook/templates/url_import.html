@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
-{% load custom_tags %}
 
 {% block title %}{% trans 'URL Import' %}{% endblock %}
 
@@ -21,15 +20,9 @@
 {% endblock %}
 
 {% block content %}
+
     <div id="app">
-        <div class="row px-3" style="justify-content:space-between;">
-            <h2> {% trans 'Import' %}</h2>
-            <a class="btn btn-outline-info btn-sm" 
-                style="height:50%"
-                href="{% bookmarklet request %}" 
-                title="{% trans 'Drag me to your bookmarks to import recipes from anywhere' %}">
-            <img src="{% static 'assets/favicon-16x16.png' %}">{% trans 'Bookmark Me!' %} </a>
-        </div>
+        <h2> {% trans 'Import' %} </h2>
         <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
             <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url" aria-selected="true" @click="mode='url'">URL</a>
             <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" aria-controls="nav-app" @click="mode='app'">App</a>
@@ -605,6 +598,7 @@
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
+
         Vue.component('vue-multiselect', window.VueMultiselect.default)
 
         let app = new Vue({
@@ -625,7 +619,7 @@
                 recipe_data: undefined,
                 error: undefined,
                 loading: false,
-                preview: undefined,
+                preview: false,
                 preview_type: 'json',
                 all_keywords: false,
                 importing_recipe: false,
@@ -718,6 +712,35 @@
                         this.loading = false
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('Bookmarklet not found!') , 'danger')
+                    })
+                },
+                deleteBookmarklet: function(id_bkmk) {
+                    this.error = undefined
+                    this.$http.delete("{% url 'api:bookmarkletimport-list' %}" + id_bkmk +"/").then((response) => {
+                    }).catch((err) => {
+                        this.error = err.data
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error deleting bookmarklet!') + err.bodyText, 'danger')
+                    })
+                },
+                loadBookmarklet: function(id_bkmk) {
+                    let uri = window.location.search.substring(1); 
+                    let params = new URLSearchParams(uri);
+                    q = params.get("id")
+                    console.log(q)
+                    this.error = undefined
+                    this.loading = true
+                    this.$http.get("{% url 'api:bookmarkletimport-list' %}?id=" + id_bkmk ).then((response) => {
+                        console.log(response.data)
+                        this.automatic = false
+                        this.source_data = response.data[0]['html']
+                        this.remote_url = response.data[0]['url']
+                        this.loadRecipe()
+                    }).catch((err) => {
+                        this.error = err.data
+                        this.loading = false
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading bookmarklet!') + err.bodyText, 'danger')
                     })
                 },
                 deleteBookmarklet: function(id_bkmk) {
