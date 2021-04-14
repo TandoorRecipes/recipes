@@ -183,9 +183,9 @@ def import_url(request):
                 pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
-    
-    if 'id' in request.GET:
-        context = {'bookmarklet': 25}
+
+    elif 'id' in request.GET:
+        context = {'bookmarklet': request.GET.get('id')}
     else:
         context = {}
 
