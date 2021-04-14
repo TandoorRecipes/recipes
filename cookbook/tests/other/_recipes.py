@@ -1705,7 +1705,7 @@ MADAME_DESSERT = {
     "servings": 6,
     "prepTime": 0,
     "cookTime": 20,
-    "image": "https://madamedessert.de/wp-content/uploads/2020/02/Madame-Dessert_Schokopudding-Schokoladenpudding-mit-echter-Schokolade-0238-scaled.jpg",
+    "image": "https://assets.madamedessert.de/wp-content/uploads/2020/02/25163328/Madame-Dessert_Schokopudding-Schokoladenpudding-mit-echter-Schokolade-0238-scaled.jpg",
     "keywords": [
         {
             "id": 7588432,
@@ -1795,7 +1795,7 @@ MADAME_DESSERT = {
             "original": "1 TL Vanilleextrakt"
         },
         {
-            "amount": 125,
+            "amount": 150,
             "unit": {
                 "text": "g",
                 "id": 24254
@@ -1805,7 +1805,7 @@ MADAME_DESSERT = {
                 "id": 42645
             },
             "note": "",
-            "original": "125 g Zucker"
+            "original": "150 g Zucker"
         },
         {
             "amount": 30,

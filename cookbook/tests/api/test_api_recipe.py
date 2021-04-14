@@ -76,8 +76,7 @@ def test_add(arg, request, u1_s2):
     print(r.content)
     assert r.status_code == arg[1]
     if r.status_code == 201:
-        # changed to name - when multiple tests run DB isn't cleared between tests
-        assert response['name'] == 'test'
+        assert response['id'] == 1
         r = c.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 200
         r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))

@@ -223,15 +223,15 @@ class ImportLogAdmin(admin.ModelAdmin):
 admin.site.register(ImportLog, ImportLogAdmin)
 
 
-class BookmarkletImportAdmin(admin.ModelAdmin):
-    list_display = ('id', 'url', 'created_by', 'created_at',)
-
-
-admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
-
-
 class TelegramBotAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'created_by',)
 
 
 admin.site.register(TelegramBot, TelegramBotAdmin)
+
+
+class BookmarkletImportAdmin(admin.ModelAdmin):
+    list_display = ('id', 'url', 'created_by', 'created_at',)
+
+
+admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
