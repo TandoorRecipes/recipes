@@ -1,6 +1,10 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
 const pages = {
+    'recipe_search_view': {
+        entry: './src/apps/RecipeSearchView/main.js',
+        chunks: ['chunk-vendors']
+    },
     'recipe_view': {
         entry: './src/apps/RecipeView/main.js',
         chunks: ['chunk-vendors']
