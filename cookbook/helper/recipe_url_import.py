@@ -13,7 +13,10 @@ def get_from_scraper(scrape, space):
     # converting the scrape_me object to the existing json format based on ld+json
 
     recipe_json = {}
-    recipe_json['name'] = scrape.title()
+    try:
+        recipe_json['name'] = scrape.title()
+    except TypeError:
+        recipe_json['name'] = ''
 
     try:
         description = scrape.schema.data.get("description") or ''
