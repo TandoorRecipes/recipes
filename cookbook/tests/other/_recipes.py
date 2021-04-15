@@ -6,7 +6,7 @@ ALLRECIPES = {
     "servings": 4,
     "prepTime": 15,
     "cookTime": 25,
-    "image": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F8145402.jpg",
+    "image": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https://images.media-allrecipes.com/userphotos/8145402.jpg",
     "keywords": [
         {
             "id": 1645424,
