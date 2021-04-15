@@ -9,6 +9,7 @@ from json import JSONDecodeError
 from recipe_scrapers._utils import get_host_name, normalize_string
 from urllib.parse import unquote
 
+
 def get_recipe_from_source(text, url, space):
     def build_node(k, v):
         if isinstance(v, dict):
@@ -67,7 +68,7 @@ def get_recipe_from_source(text, url, space):
                 'servings': '',
                 'prepTime': '',
                 'cookTime': ''
-                }
+    }
     recipe_tree = []
     parse_list = []
     html_data = []
