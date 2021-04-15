@@ -248,3 +248,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
+
+# future versions of django will make undeclared default django.db.models.BigAutoField which will force migrations on all models
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
