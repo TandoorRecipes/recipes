@@ -16,9 +16,10 @@
 
         <div class="row">
           <div class="col col-md-12">
-            <ul>
-              <li v-for="r in recipes" v-bind:key="r.id">{{ r.name }}</li>
-            </ul>
+            <b-card-group deck>
+              <recipe-card style="max-width: 15vw; height: 30vh" v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
+            </b-card-group>
+
           </div>
         </div>
 
@@ -45,13 +46,14 @@ import {ResolveUrlMixin} from "@/utils/utils";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
+import RecipeCard from "@/components/RecipeCard";
 
 Vue.use(BootstrapVue)
 
 export default {
   name: 'RecipeSearchView',
   mixins: [],
-  components: {},
+  components: {RecipeCard},
   data() {
     return {
       recipes: [],
