@@ -16,8 +16,8 @@ from django_tables2 import RequestConfig
 from PIL import Image, UnidentifiedImageError
 
 from cookbook.forms import BatchEditForm, SyncForm
-from cookbook.helper.permission_helper import (group_required,
-                                               has_group_permission)
+from cookbook.helper.permission_helper import group_required, has_group_permission
+from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
                              RecipeImport, Step, Sync, Unit)
 from cookbook.tables import SyncTable
@@ -108,6 +108,8 @@ def batch_edit(request):
 def import_url(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        data['cookTime'] = parse_cooktime(data.get('cookTime', ''))
+        data['prepTime'] = parse_cooktime(data.get('prepTime', ''))
 
         recipe = Recipe.objects.create(
             name=data['name'],
