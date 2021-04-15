@@ -228,8 +228,8 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset.filter(
-            Q(created_by=self.request.user) |
-            Q(shared=self.request.user)
+            Q(created_by=self.request.user)
+            | Q(shared=self.request.user)
         ).filter(space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', None)
@@ -554,6 +554,10 @@ def recipe_from_source(request):
     mode = request.POST.get('mode', None)
     auto = request.POST.get('auto', 'true')
 
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
+    }
+
     if (not url and not data) or (mode == 'url' and not url) or (mode == 'source' and not data):
         return JsonResponse(
             {
@@ -563,7 +567,7 @@ def recipe_from_source(request):
             status=400
         )
 
-    if mode == 'url':
+    if mode == 'url' and auto == 'true':
         if auto == 'true':
             try:
                 scrape = scrape_me(url)
@@ -594,31 +598,10 @@ def recipe_from_source(request):
                     status=400)
             else:
                 return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
-        else:
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
-            }
-            try:
-                response = requests.get(url, headers=headers)
-            except requests.exceptions.ConnectionError:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('The requested page could not be found.')
-                    },
-                    status=400
-                )
 
-            if response.status_code == 403:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('The requested page refused to provide any information (Status Code 403).')
-                    },
-                    status=400
-                )
-            data = response.text
     if (mode == 'source') or (mode == 'url' and auto == 'false'):
+        if not data or data == 'undefined':
+            data = requests.get(url, headers=HEADERS).content
         recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request.space)
         if len(recipe_tree) == 0 and len(recipe_json) == 0:
             return JsonResponse(
@@ -637,12 +620,12 @@ def recipe_from_source(request):
             })
 
     return JsonResponse(
-            {
-                'error': True,
-                'msg': _('I couldn\'t find anything to do.')
-            },
-            status=400
-        )
+        {
+            'error': True,
+            'msg': _('I couldn\'t find anything to do.')
+        },
+        status=400
+    )
 
 
 @group_required('admin')
