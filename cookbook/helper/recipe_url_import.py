@@ -6,6 +6,7 @@ from isodate.isoerror import ISO8601Error
 from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
 from cookbook.models import Keyword
 from django.utils.dateparse import parse_duration
+from recipe_scrapers._schemaorg import SchemaOrgException
 from recipe_scrapers._utils import get_minutes, normalize_string
 
 
@@ -13,7 +14,10 @@ def get_from_scraper(scrape, space):
     # converting the scrape_me object to the existing json format based on ld+json
 
     recipe_json = {}
-    recipe_json['name'] = scrape.title()
+    try:
+        recipe_json['name'] = scrape.title()
+    except TypeError:
+        recipe_json['name'] = ''
 
     try:
         description = scrape.schema.data.get("description") or ''
@@ -21,7 +25,7 @@ def get_from_scraper(scrape, space):
     except AttributeError:
         description = ''
 
-    recipe_json['description'] = normalize_string(description)
+    recipe_json['description'] = parse_description(description)
 
     try:
         servings = scrape.yields()
@@ -40,7 +44,7 @@ def get_from_scraper(scrape, space):
 
     try:
         recipe_json['image'] = parse_image(scrape.image()) or ''
-    except (AttributeError, TypeError):
+    except (AttributeError, TypeError, SchemaOrgException):
         recipe_json['image'] = ''
 
     keywords = []
@@ -179,6 +183,14 @@ def parse_ingredients(ingredients):
         else:
             ingredients = []
     return ingredients
+
+
+def parse_description(description):
+    description = re.sub(r'\n\s*\n', '\n\n', description)
+    description = re.sub(' +', ' ', description)
+    description = re.sub('</p>', '\n', description)
+    description = re.sub('<[^<]+?>', '', description)
+    return normalize_string(description)
 
 
 def parse_instructions(instructions):
