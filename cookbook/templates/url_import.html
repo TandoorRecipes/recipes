@@ -922,7 +922,7 @@
                             this.recipe_json.keywords.push(new_keyword)
                             break;
                         case 'servings':
-                            this.recipe_json.servings=v
+                            this.recipe_json.servings=parseInt(v.match(/\b\d+\b/)[0])
                             break;
                         case 'prepTime':
                             this.recipe_json.prepTime=v
