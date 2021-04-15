@@ -47,7 +47,8 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     assert r.status_code == 200
     response = json.loads(r.content)
     assert len(response) == 2
-    assert response[0]['name'] == obj_1.name
+    # unit model isn't sorted - this isn't a stable test
+    # assert response[0]['name'] == obj_1.name
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?limit=1').content)
     assert len(response) == 1
@@ -57,6 +58,7 @@ def test_list_filter(obj_1, obj_2, u1_s1):
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[4:]}').content)
     assert len(response) == 1
+    assert response[0]['name'] == obj_1.name
 
 
 @pytest.mark.parametrize("arg", [

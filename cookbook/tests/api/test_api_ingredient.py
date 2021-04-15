@@ -4,7 +4,7 @@ import pytest
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient
+from cookbook.models import Ingredient
 
 LIST_URL = 'api:ingredient-list'
 DETAIL_URL = 'api:ingredient-detail'
@@ -77,7 +77,8 @@ def test_add(arg, request, u1_s2):
     print(r)
     assert r.status_code == arg[1]
     if r.status_code == 201:
-        assert response['id'] == 1
+        # id can change when running multiple tests - changed to look at the name of the food
+        assert response['food']['name'] == 'test'
         r = c.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 404  # ingredient is not linked to a recipe and therefore cannot be accessed
         r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))
