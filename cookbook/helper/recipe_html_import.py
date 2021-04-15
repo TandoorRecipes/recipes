@@ -7,6 +7,7 @@ from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.scrapers.scrapers import text_scraper
 from json import JSONDecodeError
 from recipe_scrapers._utils import get_host_name, normalize_string
+from urllib.parse import unquote
 
 
 def get_recipe_from_source(text, url, space):
@@ -72,8 +73,8 @@ def get_recipe_from_source(text, url, space):
     parse_list = []
     html_data = []
     images = []
+    text = unquote(text)
 
-    # text = normalize_string(text)
     try:
         parse_list.append(remove_graph(json.loads(text)))
 
