@@ -55,7 +55,9 @@ def index(request):
 
 def search(request):
     if has_group_permission(request.user, ('guest',)):
-        f = RecipeFilter(request.GET, queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'), space=request.space)
+        f = RecipeFilter(request.GET,
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
+                         space=request.space)
 
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -64,7 +66,8 @@ def search(request):
         RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
         if request.GET == {} and request.user.userpreference.show_recent:
-            qs = Recipe.objects.filter(viewlog__created_by=request.user).filter(space=request.user.userpreference.space).order_by('-viewlog__created_at').all()
+            qs = Recipe.objects.filter(viewlog__created_by=request.user).filter(
+                space=request.user.userpreference.space).order_by('-viewlog__created_at').all()
 
             recent_list = []
             for r in qs:
@@ -83,6 +86,10 @@ def search(request):
             return HttpResponseRedirect(reverse('view_no_group'))
         else:
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+
+
+def search_v2(request):
+    return render(request, 'search.html', {})
 
 
 def no_groups(request):
@@ -109,18 +116,23 @@ def recipe_view(request, pk, share=None):
         recipe = get_object_or_404(Recipe, pk=pk)
 
         if not request.user.is_authenticated and not share_link_valid(recipe, share):
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+            messages.add_message(request, messages.ERROR,
+                                 _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
-        if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+        if not (has_group_permission(request.user,
+                                     ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe,
+                                                                                                             share):
+            messages.add_message(request, messages.ERROR,
+                                 _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('index'))
 
         comments = Comment.objects.filter(recipe__space=request.space, recipe=recipe)
 
         if request.method == "POST":
             if not request.user.is_authenticated:
-                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to perform this action!'))
+                messages.add_message(request, messages.ERROR,
+                                     _('You do not have the required permissions to perform this action!'))
                 return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': recipe.pk, 'share': share}))
 
             comment_form = CommentForm(request.POST, prefix='comment')
@@ -148,17 +160,22 @@ def recipe_view(request, pk, share=None):
             user_servings = 0
 
         if request.user.is_authenticated:
-            if not ViewLog.objects.filter(recipe=recipe, created_by=request.user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)), space=request.space).exists():
+            if not ViewLog.objects.filter(recipe=recipe, created_by=request.user,
+                                          created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)),
+                                          space=request.space).exists():
                 ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
 
-        return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'user_servings': user_servings})
+        return render(request, 'recipe_view.html',
+                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share,
+                       'user_servings': user_servings})
 
 
 @group_required('user')
 def books(request):
     book_list = []
 
-    recipe_books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user), space=request.space).distinct().all()
+    recipe_books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user),
+                                             space=request.space).distinct().all()
 
     for b in recipe_books:
         book_list.append(
@@ -195,7 +212,9 @@ def meal_plan_entry(request, pk):
 
 @group_required('user')
 def latest_shopping_list(request):
-    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False, space=request.space).order_by('-created_at').first()
+    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
+                                                                                                 space=request.space).order_by(
+        '-created_at').first()
 
     if sl:
         return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')
@@ -323,7 +342,8 @@ def system(request):
 def setup(request):
     with scopes_disabled():
         if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
-            messages.add_message(request, messages.ERROR, _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
+            messages.add_message(request, messages.ERROR,
+                                 _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
             return HttpResponseRedirect(reverse('account_login'))
 
         if request.method == 'POST':
