@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import ast
 import os
-import random
-import string
 
 from corsheaders.defaults import default_headers
 from django.contrib import messages
