@@ -683,7 +683,6 @@
                                 'data': this.source_data, 
                                 'auto':this.automatic, 
                                 'mode':this.mode}, {emulateJSON: true}).then((response) => {
-                        console.log(response.data)
                         this.recipe_json = response.data['recipe_json'];
                         this.recipe_tree = response.data['recipe_tree'];
                         this.recipe_html = response.data['recipe_html'];
