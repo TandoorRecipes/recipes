@@ -34,8 +34,14 @@ def get_from_scraper(scrape, space):
         servings = 1
     recipe_json['servings'] = servings
 
-    recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
-    recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+    try:
+        recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+    except AttributeError:
+        recipe_json['prepTime'] = 0
+    try:
+        recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+    except AttributeError:
+        recipe_json['cookTime'] = 0
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
