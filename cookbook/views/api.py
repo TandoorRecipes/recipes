@@ -584,7 +584,7 @@ def recipe_from_source(request):
                 status=400)
         else:
             return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
-    else:
+    elif mode == 'url' and auto == 'false':
         try:
             response = requests.get(url, headers=HEADERS)
         except requests.exceptions.ConnectionError:
@@ -605,7 +605,7 @@ def recipe_from_source(request):
                 status=400
             )
         data = response.text
-    if (mode == 'source') or (mode == 'url' and auto == 'false'):
+    elif (mode == 'source') or (mode == 'url' and auto == 'false'):
         if not data or data == 'undefined':
             data = requests.get(url, headers=HEADERS).content
         recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request.space)
@@ -625,13 +625,14 @@ def recipe_from_source(request):
                 'images': images,
             })
 
-    return JsonResponse(
-        {
-            'error': True,
-            'msg': _('I couldn\'t find anything to do.')
-        },
-        status=400
-    )
+    else:
+        return JsonResponse(
+            {
+                'error': True,
+                'msg': _('I couldn\'t find anything to do.')
+            },
+            status=400
+        )
 
 
 @group_required('admin')
