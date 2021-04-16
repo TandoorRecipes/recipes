@@ -12,9 +12,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
-from django.http import FileResponse, HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
+from django.http import FileResponse, HttpResponse, JsonResponse
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 
