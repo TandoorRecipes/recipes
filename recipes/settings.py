@@ -273,9 +273,6 @@ TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 # TODO since token auth is enabled - this all should be https by default
 CORS_ORIGIN_ALLOW_ALL = True
 
-# django rest_framework requires authentication header
-#CORS_ALLOW_HEADERS = list(default_headers) + ['authentication',]
-
 # enable CORS only for bookmarklet api and only for posts, get and options
 CORS_URLS_REGEX = r'^/api/bookmarklet-import.*$'
 CORS_ALLOW_METHODS = ['GET', 'OPTIONS', 'POST']
