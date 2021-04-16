@@ -555,37 +555,56 @@ def recipe_from_source(request):
         )
 
     if mode == 'url' and auto == 'true':
-        if auto == 'true':
+        try:
+            scrape = scrape_me(url)
+        except WebsiteNotImplementedError:
             try:
-                scrape = scrape_me(url)
-            except WebsiteNotImplementedError:
-                try:
-                    scrape = scrape_me(url, wild_mode=True)
-                except NoSchemaFoundInWildMode:
-                    return JsonResponse(
-                        {
-                            'error': True,
-                            'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
-                        },
-                        status=400)
-            except ConnectionError:
+                scrape = scrape_me(url, wild_mode=True)
+            except NoSchemaFoundInWildMode:
                 return JsonResponse(
                     {
                         'error': True,
-                        'msg': _('The requested page could not be found.')
-                    },
-                    status=400
-                )
-            if len(scrape.schema.data) == 0:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('The requested site does not provide any recognized data format to import the recipe from.')  # noqa: E501
+                        'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
                     },
                     status=400)
-            else:
-                return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
+        except ConnectionError:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested page could not be found.')
+                },
+                status=400
+            )
+        if len(scrape.schema.data) == 0:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested site does not provide any recognized data format to import the recipe from.')  # noqa: E501
+                },
+                status=400)
+        else:
+            return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
+    else:
+        try:
+            response = requests.get(url, headers=HEADERS)
+        except requests.exceptions.ConnectionError:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested page could not be found.')
+                },
+                status=400
+            )
 
+        if response.status_code == 403:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested page refused to provide any information (Status Code 403).')
+                },
+                status=400
+            )
+        data = response.text
     if (mode == 'source') or (mode == 'url' and auto == 'false'):
         if not data or data == 'undefined':
             data = requests.get(url, headers=HEADERS).content
