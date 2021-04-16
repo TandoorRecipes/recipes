@@ -699,36 +699,13 @@
                         this.error = err.data
                         this.loading = false
                         console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
-                    })
-                },
-                loadBookmarklet: function(id_bkmk) {
-                    let uri = window.location.search.substring(1); 
-                    let params = new URLSearchParams(uri);
-                    q = params.get("id")
-                    console.log(q)
-                    this.error = undefined
-                    this.loading = true
-                    this.$http.get("{% url 'api:bookmarkletimport-list' %}?id=" + id_bkmk ).then((response) => {
-                        console.log(response.data)
-                        this.automatic = false
-                        this.source_data = response.data[0]['html']
-                        this.remote_url = response.data[0]['url']
-                        this.loadSource()
-                    }).catch((err) => {
-                        this.error = err.data
-                        this.loading = false
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('Bookmarklet not found!') , 'danger')
-                    })
-                },
-                deleteBookmarklet: function(id_bkmk) {
-                    this.error = undefined
-                    this.$http.delete("{% url 'api:bookmarkletimport-list' %}" + id_bkmk +"/").then((response) => {
-                    }).catch((err) => {
-                        this.error = err.data
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error deleting bookmarklet!') + err.bodyText, 'danger')
+                        let msg = gettext('There was an error loading a resource!')
+                        if (err.bodyText.length < 300) {
+                            msg += err.bodyText
+                        } else {
+                            msg += ' ' + err.status + ' ' + err.statusText
+                        }
+                        this.makeToast(gettext('Error'), msg, 'danger')
                     })
                 },
                 loadBookmarklet: function(id_bkmk) {
