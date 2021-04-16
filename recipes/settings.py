@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import ast
 import os
 
-from corsheaders.defaults import default_headers
 from django.contrib import messages
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
