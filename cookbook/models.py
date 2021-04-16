@@ -679,7 +679,7 @@ class ImportLog(models.Model, PermissionModelMixin):
 
 class BookmarkletImport(models.Model, PermissionModelMixin):
     html = models.TextField()
-    url = models.CharField(max_length=128, null=True, blank=True)
+    url = models.CharField(max_length=256, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
