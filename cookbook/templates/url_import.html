@@ -711,11 +711,9 @@
                     let uri = window.location.search.substring(1); 
                     let params = new URLSearchParams(uri);
                     q = params.get("id")
-                    console.log(q)
                     this.error = undefined
                     this.loading = true
                     this.$http.get("{% url 'api:bookmarkletimport-list' %}?id=" + id_bkmk ).then((response) => {
-                        console.log(response.data)
                         this.automatic = false
                         this.source_data = response.data[0]['html']
                         this.remote_url = response.data[0]['url']
@@ -780,7 +778,6 @@
                         formData.append('files', this.recipe_files[i]);
                         }
                     this.$http.post("{% url 'view_import' %}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
-                        console.log(response.data)
                         window.location.href = "{% url 'view_import_response' 1237654 %}".replace('1237654', response.data['import_id'])
                     }).catch((err) => {
                         this.error = err.data
@@ -890,11 +887,9 @@
                     
                 },
                 htmlDragStart: function (e) {
-                    console.log(e.target.innerText)
                     e.dataTransfer.setData('value', e.target.innerText)
                 },
                 imageDragStart: function (e) {
-                    console.log(e.target.src)
                     e.dataTransfer.setData('value', e.target.src)
                 },
                 replacePreview: function(field, e) {
@@ -928,7 +923,6 @@
                             break;
                         case 'ingredients':
                             this.$http.post('{% url 'api_ingredient_from_string' %}', {text: v}, {emulateJSON: true}).then((response) => {
-                                console.log(response)
                                 let new_ingredient={
                                 unit: {id: Math.random() * 1000, text: response.body.unit},
                                 amount: String(response.body.amount),
