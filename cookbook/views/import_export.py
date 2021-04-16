@@ -107,3 +107,7 @@ def export_recipe(request):
 
     return render(request, 'export.html', {'form': form})
 
+
+@group_required('user')
+def import_response(request, pk):
+    return render(request, 'import_response.html', {'pk': pk})

@@ -1,5 +1,4 @@
 import bleach
-import re
 import markdown as md
 from bleach_allowlist import markdown_attrs, markdown_tags
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
@@ -7,10 +6,8 @@ from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import Space, get_model_name
 from django import template
 from django.db.models import Avg
-from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
 from recipes import settings
-from rest_framework.authtoken.models import Token
 from gettext import gettext as _
 
 register = template.Library()
@@ -109,29 +106,3 @@ def message_of_the_day():
 @register.simple_tag
 def is_debug():
     return settings.DEBUG
-
-
-@register.simple_tag
-def bookmarklet(request):
-    if request.is_secure():
-        prefix = "https://"
-    else:
-        prefix = "http://"
-    server = prefix + request.get_host()
-    # TODO is it safe to store the token in clear text in a bookmark?
-    if (api_token := Token.objects.filter(user=request.user).first()) is None:
-        api_token = Token.objects.create(user=request.user)
-
-    bookmark = "javascript: \
-    (function(){ \
-        if(window.bookmarkletTandoor!==undefined){ \
-            bookmarkletTandoor(); \
-        } else { \
-            localStorage.setItem('importURL', '" + server + reverse('api:bookmarkletimport-list') + "'); \
-            localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
-            localStorage.setItem('token', '" + api_token.__str__() + "'); \
-            document.body.appendChild(document.createElement(\'script\')).src=\'"  \
-            + server + static('js/bookmarklet.js') + "? \
-            r=\'+Math.floor(Math.random()*999999999);}})();"
-
-    return re.sub(r"[\n\t\s]*", "", bookmark)

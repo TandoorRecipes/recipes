@@ -128,10 +128,8 @@ ALLRECIPES = {
 }
 
 AMERICAS_TEST_KITCHEN = {
-    "file": [
-        'americastestkitchen.html',
-        'cookscountry.html'
-    ],
+    "file": ['americastestkitchen.html'],
+    'url': 'http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes',
     "name": "Pasta with Chicken, Broccoli, and Sun-dried Tomatoes",
     "description": "This restaurant-chain classic can be as off-putting as a bad horror movie: drab colors, tough meat, and a main character—the pasta—with no bite.",
     "servings": 4,
@@ -140,13 +138,12 @@ AMERICAS_TEST_KITCHEN = {
     "image": "https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_150/33255_sfs-pasta-with-chicken-broccoli-sun-dried-tomatoes-15",
     "keywords": [
         {
-            "id": "21",
             "text": "main courses"
         }
     ],
     "recipeIngredient": [
         {
-            "amount": 4,
+            "amount": 4.0,
             "unit": {
                 "text": "tablespoons"
             },
@@ -157,7 +154,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "4 tablespoons unsalted butter"
         },
         {
-            "amount": 1,
+            "amount": 1.0,
             "unit": {
                 "text": "pound"
             },
@@ -168,7 +165,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1 pound boneless, skinless chicken breast, trimmed of fat and cut crosswise into 1/4-inch slices"
         },
         {
-            "amount": 1,
+            "amount": 1.0,
             "unit": {
                 "text": "small"
             },
@@ -190,7 +187,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "  Table salt"
         },
         {
-            "amount": 6,
+            "amount": 6.0,
             "unit": {
                 "text": "medium"
             },
@@ -212,7 +209,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1/4 teaspoon red pepper flakes"
         },
         {
-            "amount": 2,
+            "amount": 2.0,
             "unit": {
                 "text": "teaspoons"
             },
@@ -223,7 +220,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 teaspoons chopped fresh thyme leaves"
         },
         {
-            "amount": 2,
+            "amount": 2.0,
             "unit": {
                 "text": "teaspoons"
             },
@@ -234,7 +231,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 teaspoons all-purpose flour"
         },
         {
-            "amount": 1,
+            "amount": 1.0,
             "unit": {
                 "text": "cup"
             },
@@ -245,7 +242,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1 cup dry white wine"
         },
         {
-            "amount": 2,
+            "amount": 2.0,
             "unit": {
                 "text": "cups"
             },
@@ -256,7 +253,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 cups low-sodium chicken broth"
         },
         {
-            "amount": 1,
+            "amount": 1.0,
             "unit": {
                 "text": "bunch"
             },
@@ -278,7 +275,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1/2 pound penne pasta, ziti, cavatappi, or campanelle"
         },
         {
-            "amount": 2,
+            "amount": 2.0,
             "unit": {
                 "text": "ounces"
             },
@@ -289,7 +286,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "2 ounces grated Asiago cheese(1 cup), plus extra for serving"
         },
         {
-            "amount": 1,
+            "amount": 1.0,
             "unit": {
                 "text": "jar"
             },
@@ -300,7 +297,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "1 jar oil-packed sun-dried tomato(7 to 8 1/2 ounces), rinsed, patted dry, and cut into 1/4-inch strips (about 1 cup)"
         },
         {
-            "amount": 1,
+            "amount": 1.0,
             "unit": {
                 "text": "tablespoon"
             },
@@ -1705,7 +1702,7 @@ MADAME_DESSERT = {
     "servings": 6,
     "prepTime": 0,
     "cookTime": 20,
-    "image": "https://madamedessert.de/wp-content/uploads/2020/02/Madame-Dessert_Schokopudding-Schokoladenpudding-mit-echter-Schokolade-0238-scaled.jpg",
+    "image": "https://assets.madamedessert.de/wp-content/uploads/2020/02/25163328/Madame-Dessert_Schokopudding-Schokoladenpudding-mit-echter-Schokolade-0238-scaled.jpg",
     "keywords": [
         {
             "id": 7588432,
@@ -1795,7 +1792,7 @@ MADAME_DESSERT = {
             "original": "1 TL Vanilleextrakt"
         },
         {
-            "amount": 125,
+            "amount": 150,
             "unit": {
                 "text": "g",
                 "id": 24254
@@ -1805,7 +1802,7 @@ MADAME_DESSERT = {
                 "id": 42645
             },
             "note": "",
-            "original": "125 g Zucker"
+            "original": "150 g Zucker"
         },
         {
             "amount": 30,
