@@ -584,27 +584,6 @@ def recipe_from_source(request):
                 status=400)
         else:
             return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
-    elif mode == 'url' and auto == 'false':
-        try:
-            response = requests.get(url, headers=HEADERS)
-        except requests.exceptions.ConnectionError:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _('The requested page could not be found.')
-                },
-                status=400
-            )
-
-        if response.status_code == 403:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _('The requested page refused to provide any information (Status Code 403).')
-                },
-                status=400
-            )
-        data = response.text
     elif (mode == 'source') or (mode == 'url' and auto == 'false'):
         if not data or data == 'undefined':
             data = requests.get(url, headers=HEADERS).content
