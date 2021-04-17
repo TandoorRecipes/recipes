@@ -6,8 +6,9 @@ from isodate.isoerror import ISO8601Error
 from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
 from cookbook.models import Keyword
 from django.utils.dateparse import parse_duration
+from html import unescape
 from recipe_scrapers._schemaorg import SchemaOrgException
-from recipe_scrapers._utils import get_minutes, normalize_string
+from recipe_scrapers._utils import get_minutes
 
 
 def get_from_scraper(scrape, space):
@@ -18,10 +19,9 @@ def get_from_scraper(scrape, space):
         recipe_json['name'] = parse_name(scrape.title() or scrape.schema.data.get('name') or '')
     except (TypeError, AttributeError):
         recipe_json['name'] = ''
-
+    
     try:
         description = scrape.schema.data.get("description") or ''
-
     except AttributeError:
         description = ''
 
@@ -192,10 +192,6 @@ def parse_ingredients(ingredients):
 
 
 def parse_description(description):
-    description = re.sub(r'\n\s*\n', '\n\n', description)
-    description = re.sub(' +', ' ', description)
-    description = re.sub('</p>', '\n', description)
-    description = re.sub('<[^<]+?>', '', description)
     return normalize_string(description)
 
 
@@ -220,10 +216,6 @@ def parse_instructions(instructions):
                     instruction_text += str(i)
         instructions = instruction_text
 
-    instructions = re.sub(r'\n\s*\n', '\n\n', instructions)
-    instructions = re.sub(' +', ' ', instructions)
-    instructions = re.sub('</p>', '\n', instructions)
-    instructions = re.sub('<[^<]+?>', '', instructions)
     return normalize_string(instructions)
 
 
@@ -323,3 +315,14 @@ def listify_keywords(keyword_list):
     if (type(keyword_list) == list and len(keyword_list) == 1 and ',' in keyword_list[0]):
         keyword_list = keyword_list[0].split(',')
     return [x.strip() for x in keyword_list]
+
+
+def normalize_string(string):
+    # Convert all named and numeric character references (e.g. &gt;, &#62;)
+    unescaped_string = unescape(string)
+    unescaped_string = re.sub('<[^<]+?>', '', unescaped_string)
+    unescaped_string = re.sub(' +', ' ', unescaped_string)
+    unescaped_string = re.sub('</p>', '\n', unescaped_string)
+    unescaped_string = re.sub(r'\n\s*\n', '\n\n', unescaped_string)
+    unescaped_string = unescaped_string.replace("\xa0", " ").replace("\t", " ").strip()
+    return unescaped_string
