@@ -8,7 +8,7 @@
 
 {% block content_fluid %}
 
-    <div id="app">
+    <div id="app" >
         <recipe-search-view></recipe-search-view>
     </div>
 
@@ -24,7 +24,7 @@
     {% endif %}
 
     <script type="application/javascript">
-
+        window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
     </script>
 
     {% render_bundle 'chunk-vendors' %}
