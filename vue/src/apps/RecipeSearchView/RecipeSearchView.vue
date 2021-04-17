@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="margin-bottom: 4vh">
 
     <div class="row">
       <div class="col-xl-2 d-none d-xl-block">
@@ -10,19 +10,18 @@
 
         <div class="row">
           <div class="col col-md-12">
-            <b-input class="form-control" v-model="search_input" @keyup="refreshData"></b-input>
+            <b-input class="form-control" v-model="search_input" @keyup="refreshData" v-bind:placeholder="$t('Search')"></b-input>
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin-top: 2vh">
           <div class="col col-md-12">
-            <b-card-group deck>
-              <recipe-card style="max-width: 15vw; height: 30vh" v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
-            </b-card-group>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
 
+            </div>
           </div>
         </div>
-
       </div>
       <div class="col-xl-2 d-none d-xl-block">
 
@@ -68,7 +67,7 @@ export default {
     refreshData: function () {
       let apiClient = new ApiApiFactory()
 
-      apiClient.listRecipes({query: {query: this.search_input, limit: 10}}).then(result => {
+      apiClient.listRecipes({query: {query: this.search_input, limit: 20}}).then(result => {
         this.recipes = result.data
       })
     }
