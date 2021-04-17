@@ -19,7 +19,7 @@ def get_from_scraper(scrape, space):
         recipe_json['name'] = parse_name(scrape.title() or scrape.schema.data.get('name') or '')
     except (TypeError, AttributeError):
         recipe_json['name'] = ''
-    
+
     try:
         description = scrape.schema.data.get("description") or ''
     except AttributeError:

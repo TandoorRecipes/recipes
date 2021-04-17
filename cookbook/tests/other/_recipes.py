@@ -124,7 +124,7 @@ ALLRECIPES = {
             "original": "⅛ cup milk"
         }
     ],
-    "recipeInstructions": "Heat oil in a large skilled over medium heat. Add chicken and saute for 15 to 20 minutes, or until cooked through and juices run clear. Add green onion and mushrooms and saute until soft, then add Marsala wine and bring to a boil. Boil for 2 to 4 minutes, seasoning with salt and pepper to taste. Stir in cream and milk and simmer until heated through, about 5 minutes.\n\nImported from https://www.allrecipes.com/recipe/24010/easy-chicken-marsala/",
+    "recipeInstructions": "Heat oil in a large skilled over medium heat. Add chicken and saute for 15 to 20 minutes, or until cooked through and juices run clear.\nAdd green onion and mushrooms and saute until soft, then add Marsala wine and bring to a boil.\nBoil for 2 to 4 minutes, seasoning with salt and pepper to taste. Stir in cream and milk and simmer until heated through, about 5 minutes.\n\nImported from https://www.allrecipes.com/recipe/24010/easy-chicken-marsala/",
 }
 
 AMERICAS_TEST_KITCHEN = {
@@ -319,7 +319,7 @@ AMERICAS_TEST_KITCHEN = {
             "original": "  Ground black pepper"
         }
     ],
-    "recipeInstructions": "Lightly browning chicken breast strips in butter started building flavor into our pasta with chicken recipe. We kept the chicken tender and added more flavor by letting the strips finish cooking in the sauce, and we kept the broccoli fresh and crisp by blanching it in the boiling pasta water and then putting it aside until the dish was assembled. But our real breakthrough in developing this pasta and chicken recipe was to eliminate the cream typically used in this dish and to create instead a broth-based sauce, which we rounded out with a few tablespoons of butter, a handful of Asiago cheese, and some sun-dried tomatoes. Bring 4 quarts water to rolling boil, covered, in stockpot. Meanwhile, heat 1 tablespoon butter in 12-inch nonstick skillet over high heat until just beginning to brown, about 1 minute. Add chicken in single layer; cook for 1 minute without stirring, then stir chicken and continue to cook until most, but not all, of pink color has disappeared and chicken is lightly browned around the edges, about 2 minutes longer. Transfer chicken to clean bowl; set aside. Return skillet to high heat and add 1 tablespoon butter; add onion and 1/4 teaspoon salt and cook, stirring occasionally, until browned about edges, 2 to 3 minutes. Stir in garlic, red pepper flakes, thyme, and flour; cook, stirring constantly, until fragrant, about 30 seconds. Add wine and chicken broth; bring to simmer, then reduce heat to medium and continue to simmer, stirring occasionally, until sauce has thickened slightly and reduced to 1 1/4 cups, about 15 minutes. While sauce simmers, add 1 tablespoon salt and broccoli to boiling water; cook until broccoli is tender but still crisp at center, about 2 minutes. Using slotted spoon, transfer broccoli to large paper towel-lined plate. Return water to boil; stir in pasta and cook until al dente. Drain, reserving 1/2 cup pasta cooking water; return pasta to pot. Stir remaining 2 tablespoons butter, Asiago, sun-dried tomatoes, parsley, and chicken into sauce in skillet; cook until chicken is hot and cooked through, about 1 minute. Off heat, season to taste with pepper. Pour chicken/sauce mixture over pasta and add broccoli; toss gently to combine, adding pasta cooking water as needed to adjust sauce consistency. Serve immediately, passing additional Asiago and the lemon wedges (if using) separately.\n\nImported from http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes"
+    "recipeInstructions": "Note: Be sure to use low-sodium chicken broth in this recipe; regular chicken broth will make the dish extremely salty. The broccoli is blanched in the same water that is later used to cook the pasta. Remove the broccoli when it is tender at the edges but still crisp at the core-it will continue to cook with residual heat. If you can't find Asiago cheese, Parmesan is an acceptable alternative.\nLightly browning chicken breast strips in butter started building flavor into our pasta with chicken recipe. We kept the chicken tender and added more flavor by letting the strips finish cooking in the sauce, and we kept the broccoli fresh and crisp by blanching it in the boiling pasta water and then putting it aside until the dish was assembled. But our real breakthrough in developing this pasta and chicken recipe was to eliminate the cream typically used in this dish and to create instead a broth-based sauce, which we rounded out with a few tablespoons of butter, a handful of Asiago cheese, and some sun-dried tomatoes.\nBring 4 quarts water to rolling boil, covered, in stockpot.\nMeanwhile, heat 1 tablespoon butter in 12-inch nonstick skillet over high heat until just beginning to brown, about 1 minute. Add chicken in single layer; cook for 1 minute without stirring, then stir chicken and continue to cook until most, but not all, of pink color has disappeared and chicken is lightly browned around the edges, about 2 minutes longer. Transfer chicken to clean bowl; set aside.\nReturn skillet to high heat and add 1 tablespoon butter; add onion and 1/4 teaspoon salt and cook, stirring occasionally, until browned about edges, 2 to 3 minutes. Stir in garlic, red pepper flakes, thyme, and flour; cook, stirring constantly, until fragrant, about 30 seconds. Add wine and chicken broth; bring to simmer, then reduce heat to medium and continue to simmer, stirring occasionally, until sauce has thickened slightly and reduced to 1 1/4 cups, about 15 minutes.\nWhile sauce simmers, add 1 tablespoon salt and broccoli to boiling water; cook until broccoli is tender but still crisp at center, about 2 minutes. Using slotted spoon, transfer broccoli to large paper towel-lined plate. Return water to boil; stir in pasta and cook until al dente. Drain, reserving 1/2 cup pasta cooking water; return pasta to pot.\nStir remaining 2 tablespoons butter, Asiago, sun-dried tomatoes, parsley, and chicken into sauce in skillet; cook until chicken is hot and cooked through, about 1 minute. Off heat, season to taste with pepper. Pour chicken/sauce mixture over pasta and add broccoli; toss gently to combine, adding pasta cooking water as needed to adjust sauce consistency. Serve immediately, passing additional Asiago and the lemon wedges (if using) separately.\n\nImported from http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes"
 }
 
 CHEF_KOCH = {
@@ -531,14 +531,14 @@ CHEF_KOCH = {
             "original": "Salz und Pfeffer , Ras el-Hanout"
         }
     ],
-    "recipeInstructions": "Wasser, Gemüsebrühe, Kurkuma und Öl erhitzen. Couscous unter Rühren zufügen und quellen lassen, bis er al dente ist. Gemüse putzen. Zucchini vierteln und in Scheiben, Paprika entkernen und das Fruchtfleisch in Streifen schneiden. Getrocknete Tomaten fein würfeln, Frühlingszwiebeln in feine Ringe schneiden. Alles vermengen und mit gepresstem Knoblauch, Zitrone, den Kräutern, Salz, Pfeffer und Ras el-Hanout würzen bzw. abschmecken. 4 Blätter Pergament ausbreiten, etwas Couscous darauf geben, das Gemüse gleichmäßig darüber verteilen und die Gambas obenauf setzen. Diese noch nach Geschmack mit Salz und Pfeffer würzen und das Pergament verschließen. Im vorgeheizten Backofen bei 180°C Umluft ca. 20-25 Minuten garen. Anrichten: Couscous, Gemüse und Garnelen im Pergament auf einen Teller legen, das Pergament oben etwas öffnen, und aus dem Pergament heraus genießen! Guten Appetit!\n\nImported from https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html",
+    "recipeInstructions": 'Wasser, Gemüsebrühe, Kurkuma und Öl erhitzen. Couscous unter Rühren zufügen und quellen lassen, bis er al dente ist.\r\n\nGemüse putzen. Zucchini vierteln und in Scheiben, Paprika entkernen und das Fruchtfleisch in Streifen schneiden. Getrocknete Tomaten fein würfeln, Frühlingszwiebeln in feine Ringe schneiden. \r\n\nAlles vermengen und mit gepresstem Knoblauch, Zitrone, den Kräutern, Salz, Pfeffer und Ras el-Hanout würzen bzw. abschmecken.\r\n\n4 Blätter Pergament ausbreiten, etwas Couscous darauf geben, das Gemüse gleichmäßig darüber verteilen und die Gambas obenauf setzen. Diese noch nach Geschmack mit Salz und Pfeffer würzen und das Pergament verschließen. \r\n\nIm vorgeheizten Backofen bei 180°C Umluft ca. 20-25 Minuten garen.\r\n\nAnrichten: Couscous, Gemüse und Garnelen im Pergament auf einen Teller legen, das Pergament oben etwas öffnen, und aus dem Pergament heraus genießen! Guten Appetit!\n\nImported from https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html',
 }
 
 COOKPAD = {
     'file': ['cookpad.html'],
     "url": "https://cookpad.com/us/recipes/14815875-chicken-and-moringa-drumsticks-soup",
     "name": "Chicken and Moringa Drumsticks Soup",
-    "description": "Great recipe for Chicken and Moringa Drumsticks Soup. Try this soup with Moringa / Malunggay pods, also called \"drumsticks.\" These were picked right from our yard. :) #veggies #moringaoleifera",
+    "description": "Great recipe for Chicken and Moringa Drumsticks Soup. Try this soup with Moringa / Malunggay pods, also called \"drumsticks.\" These were picked right from our yard. :)\n#veggies #moringaoleifera",
     "servings": 1,
     "prepTime": 0,
     "cookTime": 0,
@@ -663,7 +663,7 @@ COOKPAD = {
             "original": "Cooking oil"
         }
     ],
-    "recipeInstructions": "Sauté the onions, garlic and ginger in oil until fragrant. Add the peeled Moringa pods, with seeds. You can search the net on how to peel the pods. Forgot to take a photo of it, just remove the hard skin with a knife. Add the chicken pieces, a few tbsp water, sauté the cover. Let the juices of chicken come out. Dissolve the chicken broth cube in water then add to your pot. Cook until Moringa pods are tender. Taste and season accordingly. Delicious to eat and pour soup over rice.\n\nImported from https://cookpad.com/us/recipes/14815875-chicken-and-moringa-drumsticks-soup",
+    "recipeInstructions": 'Sauté the onions, garlic and ginger in oil until fragrant.\nAdd the peeled Moringa pods, with seeds. You can search the net on how to peel the pods. Forgot to take a photo of it, just remove the hard skin with a knife.\nAdd the chicken pieces, a few tbsp water, sauté the cover. Let the juices of chicken come out.\nDissolve the chicken broth cube in water then add to your pot.\nCook until Moringa pods are tender. Taste and season accordingly. Delicious to eat and pour soup over rice.\n\nImported from https://cookpad.com/us/recipes/14815875-chicken-and-moringa-drumsticks-soup',
 }
 
 COOKS_COUNTRY = {
@@ -852,7 +852,7 @@ COOKS_COUNTRY = {
             "original": "  Ground black pepper"
         }
     ],
-    "recipeInstructions": "To prepare our Shrimp Piccata Pasta, we seared the shrimp over high heat until just barely cooked through, then set them aside until the sauce was prepared. We used just one pan for cooking both the shrimp and the sauce so the sauce picked up the flavors left behind by the shrimp. We made sure to cook the red pepper flakes with the garlic to maximize their flavor. For cooking pasta, we recommend 1 tablespoon of table salt for every gallon of water. Pasta cooked in unsalted water will taste very bland. Bring 4 quarts water to boil in pot for cooking pasta. Meanwhile, heat 1 tablespoon oil in large skillet over high heat. Add shrimp and cook, stirring, until just opaque, about 1 minute. Transfer to large plate. Heat remaining tablespoon oil in empty skillet over medium heat. Add garlic and pepper flakes and cook until fragrant but not browned, about 30 seconds. Add wine, increase heat to high, and simmer until liquid is reduced and syrupy, about 2 minutes. Add clam broth and lemon juice, bring to boil, and cook until mixture is reduced to 1/3 cup, about 8 minutes. As the sauce cooks, add 1 tablespoon salt and pasta to boiling water and cook until al dente. Reserving 1/2 cup cooking water, drain pasta, then transfer to large serving bowl. Toss with sauce, shrimp, capers, parsley, and butter until butter melts and shrimp is warmed through. (Add reserved cooking water if sauce seems dry.) Adjust seasonings with salt and pepper. Serve.\n\nImported from http://www.cookscountry.com/recipes/2202-shrimp-piccata-pasta",
+    "recipeInstructions": 'Note: Be sure to toss the shrimp and sauce with the pasta immediately after draining. The hot pasta will heat the shrimp and melt the butter.\nTo prepare our Shrimp Piccata Pasta, we seared the shrimp over high heat until just barely cooked through, then set them aside until the sauce was prepared. We used just one pan for cooking both the shrimp and the sauce so the sauce picked up the flavors left behind by the shrimp. We made sure to cook the red pepper flakes with the garlic to maximize their flavor. For cooking pasta, we recommend 1 tablespoon of table salt for every gallon of water. Pasta cooked in unsalted water will taste very bland.\nBring 4 quarts water to boil in pot for cooking pasta. Meanwhile, heat 1 tablespoon oil in large skillet over high heat. Add shrimp and cook, stirring, until just opaque, about 1 minute. Transfer to large plate. Heat remaining tablespoon oil in empty skillet over medium heat. Add garlic and pepper flakes and cook until fragrant but not browned, about 30 seconds. Add wine, increase heat to high, and simmer until liquid is reduced and syrupy, about 2 minutes. Add clam broth and lemon juice, bring to boil, and cook until mixture is reduced to 1/3 cup, about 8 minutes.\nAs the sauce cooks, add 1 tablespoon salt and pasta to boiling water and cook until al dente. Reserving 1/2 cup cooking water, drain pasta, then transfer to large serving bowl. Toss with sauce, shrimp, capers, parsley, and butter until butter melts and shrimp is warmed through. (Add reserved cooking water if sauce seems dry.) Adjust seasonings with salt and pepper. Serve.\n\nImported from http://www.cookscountry.com/recipes/2202-shrimp-piccata-pasta',
 }
 
 DELISH = {
@@ -1032,8 +1032,7 @@ DELISH = {
             "original": "Red pepper flakes, for garnish (optional)"
         }
     ],
-    "recipeInstructions": "Preheat oven to 400º. Place asparagus in a 9\"-x-13\" baking dish and pour over heavy cream and scatter with garlic. Generously season with salt and pepper, then sprinkle with Parmesan, mozzarella and red pepper flakes (if using). Bake until cheese is golden and melty and asparagus is tender, about 25 to 30 minutes, and serve.\n\nImported from https://www.delish.com/cooking/recipe-ideas/recipes/a52405/cheesy-baked-asparagus-recipe/",
-
+    "recipeInstructions": 'Preheat oven to 400º. Place asparagus in a 9"-x-13" baking dish and pour over heavy cream and scatter with garlic. Generously season with salt and pepper, then sprinkle with Parmesan, mozzarella and red pepper flakes (if using).\nBake until cheese is golden and melty and asparagus is tender, about 25 to 30 minutes, and serve.\n\nImported from https://www.delish.com/cooking/recipe-ideas/recipes/a52405/cheesy-baked-asparagus-recipe/',
 }
 
 FOOD_NETWORK = {
@@ -1222,8 +1221,7 @@ FOOD_NETWORK = {
             "original": "2 tablespoons butter"
         }
     ],
-    "recipeInstructions": "Heat grill to high. Brush potatoes halves, onion slices, peppers, and chiles with oil and season with salt and pepper, to taste. Grill potatoes and onions for 2 to 3 minutes per side or until just cooked through and slightly charred. Remove from heat, cut each potato half in half again, and finely chop the onions. Grill peppers and chiles until charred on all sides. Remove from the grill, place in a bowl, cover, and let steam for 5 minutes. Remove skin and finely dice. Melt butter in a 9-inch cast iron skillet on the grates of the grill. Add the potatoes, onions, peppers, and chiles all in 1 layer and pack down. Cook until crisp and nicely browned.\n\nImported from https://www.foodnetwork.com/recipes/bobby-flay/cast-iron-home-fries-recipe-1945083",
-
+    "recipeInstructions": 'Heat grill to high. Brush potatoes halves, onion slices, peppers, and chiles with oil and season with salt and pepper, to taste. Grill potatoes and onions for 2 to 3 minutes per side or until just cooked through and slightly charred. Remove from heat, cut each potato half in half again, and finely chop the onions.\nGrill peppers and chiles until charred on all sides. Remove from the grill, place in a bowl, cover, and let steam for 5 minutes. Remove skin and finely dice.\nMelt butter in a 9-inch cast iron skillet on the grates of the grill. Add the potatoes, onions, peppers, and chiles all in 1 layer and pack down. Cook until crisp and nicely browned.\n\nImported from https://www.foodnetwork.com/recipes/bobby-flay/cast-iron-home-fries-recipe-1945083',
 }
 
 GIALLOZAFFERANO = {
@@ -1484,7 +1482,7 @@ GIALLOZAFFERANO = {
             "original": "Trentingrana 100 g"
         }
     ],
-    "recipeInstructions": "Per preparare gli strangolapreti alla trentina come prima cosa cuocete gli spinaci. Ve ne serviranno 650 freschi per ottenerne 300 g cotti e molto ben strizzati. Se usate spinaci freschi potete sbollentarli in acqua leggermente salata per qualche minuto. Se utilizzate quelli in busta potete cuocerli al vapore. Ripulite i panini dalla crosta esterna (potrete usarla come indicato nel consiglio in fondo alla ricetta!) e tagliate la mollica che servirà per gli strangolapreti: dovrete ottenere dei cubetti di 1 cm. Trasferiteli all'interno di una ciotola 1 , unite circa metà dose di latte 2 e l'olio 3 . Mescolate leggermente 4 e tenete da parte. Versate gli spinaci strizzati all'interno di un contenitore stretto e alto 5 , aggiungete il latte rimasto 6 . Unite anche le uova 7 e regolate di sale 8 e pepe. Aggiungete anche la noce moscata 9 e frullate il tutto con un minipimer 10 fino ad ottenere una crema liscia 11 . Versate quindi la crema di spinaci all'interno della ciotola con il pane 12 e mescolate con un mestolo di legno 13 . Aggiungete la farina 14 e il pangrattato 15 . Mescolate ancora con il mestolo 16 , poi terminate l'impasto lavorandolo brevemente con le mani anche per sentirne la consistenza 17 . Lasciatelo riposare qualche minuto. Inumidite due cucchiai 18 e prelevate una porzione d'impasto, circa mezzo cucchiaio 19 . Trasferite il primo mucchietto su un canovaccio ben infarinato 20 e proseguite in questo modo per tutti gli altri 21 . Si andranno a formare delle quenelle. Spolverizzate con poca farina i mucchietti e lavoratene uno ad uno con le mani 22 , in modo da arrotondarli leggermente come fossero canederli, ma schiacciando leggermente per creare una forma conica 23 . Ogni tanto infarinatevi bene le mani, in questo modo sarà più facile lavorare il composto e terranno meglio la cottura. Se preferite potete realizzare la classica forma a quenelle lavorando il composto solo con i due cucchiai inumiditi 24 . Poi dovrete comunque leggermente spolverizzare con la farina. Mettete sul fuoco due tegami con dell'acqua, che servirà per la cottura degli gnocchi. Salate l'acqua e non appena inizierà a sobbollire tuffate pochi gnocchi alla volta 25 . Dato che la cottura è delicata, per cuocerli tutti insieme serviranno almeno due tegami. Se riducete le dosi o avete modo di cuocerli un po' alla volta potete anche utilizzarne uno solo. Nel frattempo preparate anche il condimento. In un tegame aggiungete burro e salvia 26 , lasciate fondere il burro e insaporire le foglioline 27 . Non appena gli gnocchi saliranno a galla aspettate 2-3 minuti e scolateli 28 . In tutto ci vorranno circa 8 minuti. Scolateli e conservateli in una ciotola. Intanto cuocete gli altri. Poi trasferite gli gnocchi su un piatto 29 , guarnite con abbondante Trentingrana grattugiato 30 aggiungete abbondante burro fuso 31 e decorate con le foglioline di salvia 32 . Servite gli gnocchi alla trentina ancora caldi 33 !\n\nImported from https://ricette.giallozafferano.it/Strangolapreti-alla-trentina.html",
+    "recipeInstructions": "Per preparare gli strangolapreti alla trentina come prima cosa cuocete gli spinaci. Ve ne serviranno 650 freschi per ottenerne 300 g cotti e molto ben strizzati. Se usate spinaci freschi potete sbollentarli in acqua leggermente salata per qualche minuto. Se utilizzate quelli in busta potete cuocerli al vapore. Ripulite i panini dalla crosta esterna (potrete usarla come indicato nel consiglio in fondo alla ricetta!) e tagliate la mollica che servirà per gli strangolapreti: dovrete ottenere dei cubetti di 1 cm. Trasferiteli all'interno di una ciotola 1 , unite circa metà dose di latte 2 e l'olio 3 .\nMescolate leggermente 4 e tenete da parte. Versate gli spinaci strizzati all'interno di un contenitore stretto e alto 5 , aggiungete il latte rimasto 6 .\nUnite anche le uova 7 e regolate di sale 8 e pepe. Aggiungete anche la noce moscata 9\ne frullate il tutto con un minipimer 10 fino ad ottenere una crema liscia 11 . Versate quindi la crema di spinaci all'interno della ciotola con il pane 12\ne mescolate con un mestolo di legno 13 . Aggiungete la farina 14 e il pangrattato 15 .\nMescolate ancora con il mestolo 16 , poi terminate l'impasto lavorandolo brevemente con le mani anche per sentirne la consistenza 17 . Lasciatelo riposare qualche minuto. Inumidite due cucchiai 18\ne prelevate una porzione d'impasto, circa mezzo cucchiaio 19 . Trasferite il primo mucchietto su un canovaccio ben infarinato 20 e proseguite in questo modo per tutti gli altri 21 . Si andranno a formare delle quenelle.\nSpolverizzate con poca farina i mucchietti e lavoratene uno ad uno con le mani 22 , in modo da arrotondarli leggermente come fossero canederli, ma schiacciando leggermente per creare una forma conica 23 . Ogni tanto infarinatevi bene le mani, in questo modo sarà più facile lavorare il composto e terranno meglio la cottura. Se preferite potete realizzare la classica forma a quenelle lavorando il composto solo con i due cucchiai inumiditi 24 . Poi dovrete comunque leggermente spolverizzare con la farina.\nMettete sul fuoco due tegami con dell'acqua, che servirà per la cottura degli gnocchi. Salate l'acqua e non appena inizierà a sobbollire tuffate pochi gnocchi alla volta 25 . Dato che la cottura è delicata, per cuocerli tutti insieme serviranno almeno due tegami. Se riducete le dosi o avete modo di cuocerli un po' alla volta potete anche utilizzarne uno solo. Nel frattempo preparate anche il condimento. In un tegame aggiungete burro e salvia 26 , lasciate fondere il burro e insaporire le foglioline 27 .\nNon appena gli gnocchi saliranno a galla aspettate 2-3 minuti e scolateli 28 . In tutto ci vorranno circa 8 minuti. Scolateli e conservateli in una ciotola. Intanto cuocete gli altri. Poi trasferite gli gnocchi su un piatto 29 , guarnite con abbondante Trentingrana grattugiato 30\naggiungete abbondante burro fuso 31 e decorate con le foglioline di salvia 32 . Servite gli gnocchi alla trentina ancora caldi 33 !\n\nImported from https://ricette.giallozafferano.it/Strangolapreti-alla-trentina.html",
 }
 
 JOURNAL_DES_FEMMES = {
@@ -1691,7 +1689,7 @@ JOURNAL_DES_FEMMES = {
             "original": "poivre"
         }
     ],
-    "recipeInstructions": "Lavez et détaillez les courgettes, l'aubergine, le poivron vert et le rouge, en cubes de taille moyenne. Coupez les tomates en quartiers et émincez l'oignon. Dans une poêle, versez un peu d'huile d'olive et faites-y revenir les uns après les autres les différents légumes pendant 5 minutes pour qu'ils colorent. Commencez par les poivrons, puis les aubergines, les courgettes et enfin les oignons et les tomates que vous cuirez ensemble. Après avoir fait cuire les légumes, ajoutez-les tous aux tomates et aux oignons, baissez le feu puis mélangez. Ajoutez un beau bouquet garni de thym, de romarin et de laurier, salez, poivrez, puis couvrez pour laisser mijoter 40 minutes en remuant régulièrement. À environ 10 minutes du terme de la cuisson, ajoutez les deux belles gousses d'ail écrasées puis couvrez de nouveau. N'hésitez pas à goûter et à assaisonner de nouveau selon vos goûts. Dégustez avec des grillades ou un barbecue.\n\nImported from https://cuisine.journaldesfemmes.fr/recette/317747-ratatouille",
+    "recipeInstructions": "Lavez et détaillez les courgettes, l'aubergine, le poivron vert et le rouge, en cubes de taille moyenne. Coupez les tomates en quartiers et émincez l'oignon.\nDans une poêle, versez un peu d'huile d'olive et faites-y revenir les uns après les autres les différents légumes pendant 5 minutes pour qu'ils colorent. Commencez par les poivrons, puis les aubergines, les courgettes et enfin les oignons et les tomates que vous cuirez ensemble.\nAprès avoir fait cuire les légumes, ajoutez-les tous aux tomates et aux oignons, baissez le feu puis mélangez. Ajoutez un beau bouquet garni de thym, de romarin et de laurier, salez, poivrez, puis couvrez pour laisser mijoter 40 minutes en remuant régulièrement.\nÀ environ 10 minutes du terme de la cuisson, ajoutez les deux belles gousses d'ail écrasées puis couvrez de nouveau. N'hésitez pas à goûter et à assaisonner de nouveau selon vos goûts.\nDégustez avec des grillades ou un barbecue.\n\nImported from https://cuisine.journaldesfemmes.fr/recette/317747-ratatouille",
 }
 
 MADAME_DESSERT = {
@@ -1831,7 +1829,7 @@ MADAME_DESSERT = {
             "original": "6 Eigelbe (Größe L) (bei Raumtemperatur)"
         }
     ],
-    "recipeInstructions": "Hacke die Schokolade fein und stelle sie beiseite. Gib die Milch zusammen mit der Sahne, etwas Salz, dem Vanilleextrakt und 50g des Zuckers in einen Topf. Koche alles kurz unter gelegentlichem Rühren auf. Reduziere die Hitze anschließend auf eine mittlere Stufe. Während die Milch warm wird, vermische den restlichen Zucker mit der Stärke in einer Schüssel. Gib anschließend die Eigelbe dazu und rühre sie unter. Gib etwa 1/3 der heißen Milch-Mischung zu den Eingelben und rühre alles glatt. Gieße alles zusammen langsam und gleichmäßig unter stetigem Rühren zurück in den Topf. Erwärme den Pudding unter stetigem Rühren für etwa 3 bis 4 Minuten, bis es einmal kurz aufblubbert und eindickt. Am besten verwendest du hierfür einen hitzebeständigen Teigschaber rühren. Hat dein Pudding die perfekte Konsistenz erreicht und eine große Luftblase ist in der Mitte nach oben gestiegen, kannst du den Topf vom Herd nehmen, die Platte ausschalten und die klein gehackte Schokolade unterrühren. Die Schokolade sollte sich vollständig auflösen und einen homogenen Pudding bilden. Gieße den Schokoladenpudding in eine große Form oder mehrere kleine Dessert Gläser. Je nachdem wie du deinen Pudding am liebsten magst – warm, kalt, mit Haut oder ohne Haut – liest du dir am besten noch einmal meine Tipps im Rezept auf dem Blog durch. Macht es euch lecker!Eure Madame Dessert\n\nImported from https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/#webpage",
+    "recipeInstructions": 'Hacke die Schokolade fein und stelle sie beiseite.\nGib die Milch zusammen mit der Sahne, etwas Salz, dem Vanilleextrakt und 50g des Zuckers in einen Topf. Koche alles kurz unter gelegentlichem Rühren auf. Reduziere die Hitze anschließend auf eine mittlere Stufe.\nWährend die Milch warm wird, vermische den restlichen Zucker mit der Stärke in einer Schüssel. Gib anschließend die Eigelbe dazu und rühre sie unter.\nGib etwa 1/3 der heißen Milch-Mischung zu den Eingelben und rühre alles glatt. Gieße alles zusammen langsam und gleichmäßig unter stetigem Rühren zurück in den Topf.\nErwärme den Pudding unter stetigem Rühren für etwa 3 bis 4 Minuten, bis es einmal kurz aufblubbert und eindickt. Am besten verwendest du hierfür einen hitzebeständigen Teigschaber rühren.\nHat dein Pudding die perfekte Konsistenz erreicht und eine große Luftblase ist in der Mitte nach oben gestiegen, kannst du den Topf vom Herd nehmen, die Platte ausschalten und die klein gehackte Schokolade unterrühren. Die Schokolade sollte sich vollständig auflösen und einen homogenen Pudding bilden. Gieße den Schokoladenpudding in eine große Form oder mehrere kleine Dessert Gläser.\nJe nachdem wie du deinen Pudding am liebsten magst – warm, kalt, mit Haut oder ohne Haut – liest du dir am besten noch einmal meine Tipps im Rezept auf dem Blog durch.\nMacht es euch lecker!Eure Madame Dessert\n\nImported from https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/#webpage',
 }
 
 MARMITON = {
@@ -2029,7 +2027,7 @@ MARMITON = {
             "original": "sel"
         }
     ],
-    "recipeInstructions": "Dans une poêle, faire sauter l'agneau coupé en gros dés avec l'huile et le beurre. Le laisser colorer et assaisonner. Réserver la viande au chaud et la remplacer par les oignons émincés et la farine. Les faire revenir jusqu'à coloration et mouiller avec le bouillon. Assaisonner et ajouter l'oseille. Replacer les dés d'agneau et laisser cuire à feu doux, à couvert pendant 30 min. Au moment de servir, mettre les morceaux de viande dans le plat de service. Incorporer très vite le jaune d'oeuf et napper la viande de sauce.\n\nImported from https://www.marmiton.org/recettes/recette_fricassee-d-agneau-a-l-oseille_22719.aspx",
+    "recipeInstructions": "Dans une poêle, faire sauter l'agneau coupé en gros dés avec l'huile et le beurre. Le laisser colorer et assaisonner.\nRéserver la viande au chaud et la remplacer par les oignons émincés et la farine. Les faire revenir jusqu'à coloration et mouiller avec le bouillon. Assaisonner et ajouter l'oseille.\nReplacer les dés d'agneau et laisser cuire à feu doux, à couvert pendant 30 min.\nAu moment de servir, mettre les morceaux de viande dans le plat de service.\nIncorporer très vite le jaune d'oeuf et napper la viande de sauce.\n\nImported from https://www.marmiton.org/recettes/recette_fricassee-d-agneau-a-l-oseille_22719.aspx",
 
 }
 
@@ -2214,7 +2212,243 @@ TASTE_OF_HOME = {
             "original": "1 tablespoon honey"
         }
     ],
-    "recipeInstructions": "Preheat oven to 400°. Unfold 1 pastry sheet and place on a parchment-lined baking sheet; repeat with remaining pastry sheet. Whisk egg and water; brush over pastries. Using a sharp knife, score a 1-in. border around edges of pastry sheets (do not cut through). With a fork, prick center of pastries. Bake until golden brown, about 15 minutes. With a spatula, press down center portion of pastries, leaving outer edges intact. Remove to wire racks to cool. Meanwhile, for topping, arrange rhubarb in a single layer in a 13x9-in. baking dish. Combine orange juice, honey and amaretto; pour over rhubarb. Bake at 400° until rhubarb is just tender but still holds its shape, about 10 minutes. Remove with a slotted spoon, reserving cooking liquid; let rhubarb cool. Transfer reserved cooking liquid to a small saucepan; bring to a boil over medium-high heat. Reduce heat; simmer until reduced to 1/2 cup, about 20 minutes. Cool. For filling, stir together mascarpone cheese, amaretto and honey until smooth. Spread mascarpone mixture over center of each pastry. Top with rhubarb ribs. Brush rhubarb with cooled cooking liquid. Refrigerate leftovers.\n\nImported from https://www.tasteofhome.com/recipes/rhubarb-tart/",
+    "recipeInstructions": 'Preheat oven to 400°. Unfold 1 pastry sheet and place on a parchment-lined baking sheet; repeat with remaining pastry sheet. Whisk egg and water; brush over pastries. Using a sharp knife, score a 1-in. border around edges of pastry sheets (do not cut through). With a fork, prick center of pastries. Bake until golden brown, about 15 minutes. With a spatula, press down center portion of pastries, leaving outer edges intact. Remove to wire racks to cool.\nMeanwhile, for topping, arrange rhubarb in a single layer in a 13x9-in. baking dish. Combine orange juice, honey and amaretto; pour over rhubarb. Bake at 400° until rhubarb is just tender but still holds its shape, about 10 minutes. Remove with a slotted spoon, reserving cooking liquid; let rhubarb cool. Transfer reserved cooking liquid to a small saucepan; bring to a boil over medium-high heat. Reduce heat; simmer until reduced to 1/2 cup, about 20 minutes. Cool.\nFor filling, stir together mascarpone cheese, amaretto and honey until smooth. Spread mascarpone mixture over center of each pastry. Top with rhubarb ribs. Brush rhubarb with cooled cooking liquid. Refrigerate leftovers.\n\nImported from https://www.tasteofhome.com/recipes/rhubarb-tart/',
+}
+
+THE_SPRUCE_EATS = {
+    'file': ['thespruceeats.html'],
+    'url': 'https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797',
+    "name": "",
+    "description": "",
+    "servings": 1,
+    "prepTime": 0,
+    "cookTime": 0,
+    "image": "",
+    "keywords": [],
+    "recipeIngredient": [
+        {
+            "amount": 2,
+            "unit": {
+                "text": "tablespoons",
+                "id": 99364
+            },
+            "ingredient": {
+                "text": "butter",
+                "id": 84919
+            },
+            "note": "",
+            "original": "2 tablespoons butter"
+        },
+        {
+            "amount": 1.5,
+            "unit": {
+                "text": "to",
+                "id": 15026
+            },
+            "ingredient": {
+                "text": "2 cups onion",
+                "id": 89800
+            },
+            "note": "chopped",
+            "original": "1 1/2 to 2 cups onion (chopped)"
+        },
+        {
+            "amount": 1,
+            "unit": {
+                "text": "cup",
+                "id": 74768
+            },
+            "ingredient": {
+                "text": "celery",
+                "id": 70601
+            },
+            "note": "chopped",
+            "original": "1 cup celery (chopped)"
+        },
+        {
+            "amount": 2,
+            "unit": {
+                "text": "large",
+                "id": 39225
+            },
+            "ingredient": {
+                "text": "carrots",
+                "id": 72417
+            },
+            "note": "peeled and chopped",
+            "original": "2 large carrots (peeled and chopped)"
+        },
+        {
+            "amount": 2,
+            "unit": {
+                "text": "to",
+                "id": 17146
+            },
+            "ingredient": {
+                "text": "3 cups ham",
+                "id": 14124
+            },
+            "note": "about 1 pound, diced",
+            "original": "2 to 3 cups ham (about 1 pound, diced)"
+        },
+        {
+            "amount": 1,
+            "unit": {
+                "text": "clove",
+                "id": 59174
+            },
+            "ingredient": {
+                "text": "garlic",
+                "id": 63566
+            },
+            "note": "minced",
+            "original": "1 clove garlic (minced)"
+        },
+        {
+            "amount": 2,
+            "unit": {
+                "text": "cups",
+                "id": 38790
+            },
+            "ingredient": {
+                "text": "vegetable broth",
+                "id": 10572
+            },
+            "note": "",
+            "original": "2 cups vegetable broth"
+        },
+        {
+            "amount": 1,
+            "unit": {
+                "text": "cup",
+                "id": 91657
+            },
+            "ingredient": {
+                "text": "water",
+                "id": 28583
+            },
+            "note": "",
+            "original": "1 cup water"
+        },
+        {
+            "amount": 4,
+            "unit": {
+                "text": "to",
+                "id": 35482
+            },
+            "ingredient": {
+                "text": "5 cups potatoes",
+                "id": 16911
+            },
+            "note": "peeled and diced",
+            "original": "4 to 5 cups potatoes (peeled and diced)"
+        },
+        {
+            "amount": 3,
+            "unit": {
+                "text": "tablespoons",
+                "id": 42650
+            },
+            "ingredient": {
+                "text": "all-purpose flour",
+                "id": 40407
+            },
+            "note": "",
+            "original": "3 tablespoons all-purpose flour"
+        },
+        {
+            "amount": 1,
+            "unit": {
+                "text": "cup",
+                "id": 26167
+            },
+            "ingredient": {
+                "text": "heavy cream",
+                "id": 19424
+            },
+            "note": "",
+            "original": "1 cup heavy cream"
+        },
+        {
+            "amount": 1,
+            "unit": {
+                "text": "cup",
+                "id": 55243
+            },
+            "ingredient": {
+                "text": "half-and-half",
+                "id": 61156
+            },
+            "note": "or whole milk, more if needed to thin",
+            "original": "1 cup half-and-half (or whole milk, more if needed to thin)"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": "",
+                "id": 48319
+            },
+            "ingredient": {
+                "text": "Dash salt",
+                "id": 75657
+            },
+            "note": "to taste",
+            "original": "Dash salt (to taste)"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": "",
+                "id": 94308
+            },
+            "ingredient": {
+                "text": "Dash freshly ground black pepper",
+                "id": 49484
+            },
+            "note": "to taste",
+            "original": "Dash freshly ground black pepper (to taste)"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": "",
+                "id": 15775
+            },
+            "ingredient": {
+                "text": "Optional: 2 tablespoons fresh parsley",
+                "id": 73062
+            },
+            "note": "chopped",
+            "original": "Optional: 2 tablespoons fresh parsley (chopped)"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": "",
+                "id": 18745
+            },
+            "ingredient": {
+                "text": "Garnish: green onions or chives",
+                "id": 73287
+            },
+            "note": "sliced",
+            "original": "Garnish: green onions or chives (sliced)"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": "",
+                "id": 51247
+            },
+            "ingredient": {
+                "text": "Optional: cheddar cheese or cheddar-jack blend",
+                "id": 18932
+            },
+            "note": "shredded",
+            "original": "Optional: cheddar cheese or cheddar-jack blend (shredded)"
+        }
+    ],
+    "recipeInstructions": "Gather the ingredients. ​The Spruce Eats / Katarina Zunic\nIn a large saucepan, melt butter over medium-low heat. ​The Spruce Eats / Katarina Zunic\nAdd onion, celery, carrots, and ham. ​The Spruce Eats / Katarina Zunic\nCook, stirring frequently until onions are tender, about 5 minutes. ​The Spruce Eats / Katarina Zunic\nAdd the garlic and continue cooking for 1 to 2 minutes longer. ​The Spruce Eats / Katarina Zunic\nAdd vegetable broth, water, and potatoes. ​The Spruce Eats / Katarina Zunic\nCover and cook for about 25 minutes, until potatoes are tender. ​The Spruce Eats / Katarina Zunic\nWhisk flour into the heavy cream until smooth. ​The Spruce Eats / Katarina Zunic\nStir into the hot mixture. ​The Spruce Eats / Katarina Zunic\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot. ​The Spruce Eats / Katarina Zunic\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick. ​The Spruce Eats / Katarina Zunic\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese. ​The Spruce Eats / Katarina Zunic\nGather the ingredients. ​The Spruce Eats / Katarina Zunic\nIn a large saucepan, melt butter over medium-low heat. ​The Spruce Eats / Katarina Zunic\nAdd onion, celery, carrots, and ham. ​The Spruce Eats / Katarina Zunic\nCook, stirring frequently until onions are tender, about 5 minutes. ​The Spruce Eats / Katarina Zunic\nAdd the garlic and continue cooking for 1 to 2 minutes longer. ​The Spruce Eats / Katarina Zunic\nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes. ​The Spruce Eats / Katarina Zunic\nCover and cook on HIGH for about 2 to 3 hours, or until the potatoes are very tender. ​The Spruce Eats / Katarina Zunic\nWhisk flour into the heavy cream until smooth. ​The Spruce Eats / Katarina Zunic\nStir the flour-cream mixture into the slow cooker. ​The Spruce Eats / Katarina Zunic\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot. ​The Spruce Eats / Katarina Zunic\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick. ​The Spruce Eats / Katarina Zunic\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese. ​The Spruce Eats / Katarina Zunic\nAdd a cup or more of chopped kale, chard leaves, or spinach to the soup along with the other vegetables.\nLighten the soup with low-fat or fat-free half-and-half in place of the heavy cream.\nOmit the diced ham or replace it with 1 or 2 cups of diced sausage or crumbled browned ground sausage, mild or spicy. Or add cooked crumbled bacon before it's done.\nAdd 1 cup of shredded cheddar cheese to the soup along with the milk and cook until the cheese has melted.\nFor a vegan version, try this dairy-free vegan cream of potato soup.\nCheddar\ndinner\nsouthern\nwinter\n\nImported from https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
 }
 
 TUDOGOSTOSO = {
