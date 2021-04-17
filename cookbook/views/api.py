@@ -9,7 +9,6 @@ from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core import management
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
@@ -17,8 +16,8 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
-from rest_framework import decorators, viewsets, status
-from rest_framework.exceptions import APIException, PermissionDenied, NotFound, MethodNotAllowed
+from rest_framework import decorators, viewsets
+from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
@@ -575,7 +574,7 @@ def recipe_from_source(request):
                 },
                 status=400
             )
-        if len(scrape.schema.data) == 0:
+        if len(scrape.ingredients()) and len(scrape.instructions()) == 0:
             return JsonResponse(
                 {
                     'error': True,
