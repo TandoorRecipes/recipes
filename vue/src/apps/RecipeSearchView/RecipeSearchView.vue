@@ -2,7 +2,7 @@
   <div id="app" style="margin-bottom: 4vh">
 
     <div class="row">
-      <div class="col-xl-2 d-none d-xl-block">
+      <div class="col-md-2 d-none d-md-block">
 
       </div>
       <div class="col-xl-8 col-12">
@@ -10,25 +10,53 @@
 
         <div class="row">
           <div class="col col-md-12">
-            <b-input class="form-control" v-model="search_input" @keyup="refreshData" v-bind:placeholder="$t('Search')"></b-input>
+            <b-input class="form-control" v-model="search_input" @keyup="refreshData"
+                     v-bind:placeholder="$t('Search')"></b-input>
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <a class="card-link" :href="resolveDjangoUrl('new_recipe')">new Recipe</a>
+                  </div>
+                  <div class="col-md-4">
+                    <a class="card-link" :href="resolveDjangoUrl('data_import_url')">URL Import</a>
+                  </div>
+                  <div class="col-md-4">
+                    <a class="card-link" href="#">Rest Search</a>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
+                                         search_function="listKeywords" label="label"></generic-multiselect>
+                    <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
+                                         search_function="listFoods" label="name"></generic-multiselect>
+                    <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
+                                         search_function="listRecipeBooks" label="name"></generic-multiselect>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="row">
+
         </div>
 
         <div class="row" style="margin-top: 2vh">
           <div class="col col-md-12">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
               <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
-
             </div>
           </div>
         </div>
       </div>
-      <div class="col-xl-2 d-none d-xl-block">
+      <div class="col-md-2 d-none d-md-block">
 
       </div>
     </div>
-
-
   </div>
 
 
@@ -40,23 +68,30 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+
 import {ResolveUrlMixin} from "@/utils/utils";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
+import GenericMultiselect from "@/components/GenericMultiselect";
 
 Vue.use(BootstrapVue)
 
 export default {
   name: 'RecipeSearchView',
-  mixins: [],
-  components: {RecipeCard},
+  mixins: [ResolveUrlMixin],
+  components: {GenericMultiselect, RecipeCard},
   data() {
     return {
       recipes: [],
       search_input: '',
+
+      search_keywords: [],
+      search_foods: [],
+      search_books: [],
+
     }
 
   },
@@ -70,13 +105,17 @@ export default {
       apiClient.listRecipes({query: {query: this.search_input, limit: 20}}).then(result => {
         this.recipes = result.data
       })
+    },
+    genericSelectChanged: function (obj) {
+      this[obj.var] = obj.val
     }
   }
 }
 
 </script>
 
-<style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
+<style>
 
 </style>
