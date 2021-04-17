@@ -28,6 +28,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required, share_link_valid)
+from cookbook.helper.recipe_search import search_recipes
 from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
@@ -269,7 +270,7 @@ class StepViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(recipe__space=self.request.space)
 
 
-class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class RecipeViewSet(viewsets.ModelViewSet):
     """
     list:
     optional parameters
@@ -288,11 +289,7 @@ class RecipeViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        internal = self.request.query_params.get('internal', None)
-        if internal:
-            self.queryset = self.queryset.filter(internal=True)
-
-        return super().get_queryset()
+        return search_recipes(self.queryset, self.request.GET)
 
     # TODO write extensive tests for permissions
 
