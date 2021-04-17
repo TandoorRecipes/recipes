@@ -30,7 +30,9 @@ class CooksIllustrated(AbstractScraper):
     def ingredients(self):
         if not self.recipe:
             self.get_recipe()
-        ingredients = self.recipe['ingredientGroups'][0]['fields']['recipeIngredientItems']
+        ingredients = []
+        for group in self.recipe['ingredientGroups']:
+            ingredients += group['fields']['recipeIngredientItems']
         return [
             "{} {} {}{}".format(
                 i['fields']['qty'] or '',
