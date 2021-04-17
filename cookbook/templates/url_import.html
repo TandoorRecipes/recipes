@@ -717,6 +717,7 @@
                     this.$http.post(`{% url 'data_import_url' %}`, this.recipe_data).then((response) => {
                         window.location.href = response.data
                     }).catch((err) => {
+                        this.importing_recipe = false
                         console.log(err);
                         this.makeToast(gettext('Error'), gettext('An error occurred while trying to import this recipe!') + err.bodyText, 'danger')
                     })
