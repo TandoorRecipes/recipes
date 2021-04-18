@@ -115,8 +115,9 @@ class UserPreference(models.Model, PermissionModelMixin):
     # Search Style
     SMALL = 'SMALL'
     LARGE = 'LARGE'
+    NEW = 'NEW'
 
-    SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')),)
+    SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')), (NEW, _('New')))
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)

@@ -16,6 +16,9 @@
   "Import_finished": "Import finished",
   "View_Recipes": "View Recipes",
   "Log_Cooking": "Log Cooking",
+  "New_Recipe": "New Recipe",
+  "Url_Import": "Url Import",
+  "Reset_Search": "Reset Search",
 
   "Keywords": "Keywords",
   "Books": "Books",
@@ -42,7 +45,7 @@
   "Search": "Search",
   "Import": "Import",
   "Print": "Print",
-  "OR": "OR",
-  "AND": "AND",
+  "or": "or",
+  "and": "and",
   "Information": "Information"
 }

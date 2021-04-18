@@ -28,18 +28,23 @@
               <div class="card">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-md-4">
-                      <a class="btn btn-primary" :href="resolveDjangoUrl('new_recipe')">new Recipe</a>
+                    <div class="col-md-3">
+                      <a class="btn btn-primary btn-block text-uppercase"
+                         :href="resolveDjangoUrl('new_recipe')">{{ $t('New_Recipe') }}</a>
                     </div>
-                    <div class="col-md-4">
-                      <a class="btn btn-primary" :href="resolveDjangoUrl('data_import_url')">URL Import</a>
+                    <div class="col-md-3">
+                      <a class="btn btn-primary btn-block text-uppercase"
+                         :href="resolveDjangoUrl('data_import_url')">{{ $t('Url_Import') }}</a>
                     </div>
-                    <div class="col-md-4">
-                      <a class="btn btn-primary" href="#">Rest Search</a>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary btn-block text-uppercase" @click="resetSearch">
+                        {{ $t('Reset_Search') }}
+                      </button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3" style="position: relative;">
                       <b-form-checkbox v-model="search_internal" name="check-button" @change="refreshData"
-                                       class="shadow-none" switch>
+                                       class="shadow-none"
+                                       style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
                         {{ $t('show_only_internal') }}
                       </b-form-checkbox>
                     </div>
@@ -52,15 +57,19 @@
                       <b-input-group style="margin-top: 1vh">
 
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
+                                             :initial_selection="search_keywords"
                                              search_function="listKeywords" label="label" style="width: 90%"
                                              v-bind:placeholder="$t('Keywords')"></generic-multiselect>
 
-                        <b-input-group-append is-text style="width: 10%">
-                          <b-form-checkbox v-model="search_keywords_or" name="check-button" @change="refreshData"
-                                           class="shadow-none" style="width: 100%" switch>
-                            <template v-if="search_keywords_or">{{ $t('OR') }}</template>
-                            <template v-else>{{ $t('AND') }}</template>
-                          </b-form-checkbox>
+                        <b-input-group-append style="width: 10%">
+                          <b-input-group-text style="width: 100%">
+
+                            <b-form-checkbox v-model="search_keywords_or" name="check-button" @change="refreshData"
+                                             class="shadow-none" switch>
+                              <span class="text-uppercase" v-if="search_keywords_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-else>{{ $t('and') }}</span>
+                            </b-form-checkbox>
+                          </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
                     </div>
@@ -71,14 +80,17 @@
 
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
-
+                                             :initial_selection="search_foods"
                                              search_function="listFoods" label="name" style="width: 90%"
                                              v-bind:placeholder="$t('Ingredients')"></generic-multiselect>
-                        <b-input-group-append is-text style="width: 10%">
-                          <b-form-checkbox v-model="search_foods_or" name="check-button" @change="refreshData"
-                                           class="shadow-none" tyle="width: 100%" switch>
-                            {{ $t('OR') }}
-                          </b-form-checkbox>
+                        <b-input-group-append style="width: 10%">
+                          <b-input-group-text style="width: 100%">
+                            <b-form-checkbox v-model="search_foods_or" name="check-button" @change="refreshData"
+                                             class="shadow-none" switch>
+                              <span class="text-uppercase" v-if="search_foods_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-else>{{ $t('and') }}</span>
+                            </b-form-checkbox>
+                          </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
 
@@ -90,13 +102,18 @@
 
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
+                                             :initial_selection="search_books"
                                              search_function="listRecipeBooks" label="name" style="width: 90%"
                                              v-bind:placeholder="$t('Books')"></generic-multiselect>
-                        <b-input-group-append is-text style="width: 10%">
-                          <b-form-checkbox v-model="search_books_or" name="check-button" @change="refreshData"
-                                           class="shadow-none" tyle="width: 100%" switch>
-                            {{ $t('OR') }}
-                          </b-form-checkbox>
+                        <b-input-group-append style="width: 10%">
+                          <b-input-group-text style="width: 100%">
+
+                            <b-form-checkbox v-model="search_books_or" name="check-button" @change="refreshData"
+                                             class="shadow-none" tyle="width: 100%" switch>
+                              <span class="text-uppercase" v-if="search_books_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-else>{{ $t('and') }}</span>
+                            </b-form-checkbox>
+                          </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
 
@@ -202,6 +219,14 @@ export default {
     },
     genericSelectChanged: function (obj) {
       this[obj.var] = obj.val
+      this.refreshData()
+    },
+    resetSearch: function () {
+      this.search_input = ''
+      this.search_internal = false
+      this.search_keywords = []
+      this.search_foods = []
+      this.search_books = []
       this.refreshData()
     }
   }
