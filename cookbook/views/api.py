@@ -4,13 +4,11 @@ import re
 import uuid
 
 import requests
-import yaml
 from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core import management
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
@@ -18,19 +16,21 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
-from rest_framework import decorators, viewsets, status
-from rest_framework.exceptions import APIException, PermissionDenied, NotFound, MethodNotAllowed
-from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
+from rest_framework import decorators, viewsets
+from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
-from rest_framework.schemas import AutoSchema
+from rest_framework.schemas.openapi import AutoSchema
+from rest_framework.schemas.utils import is_list_view
 from rest_framework.viewsets import ViewSetMixin
 
 from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
-                                               group_required, share_link_valid)
+                                               group_required)
 from cookbook.helper.recipe_search import search_recipes
 from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper, find_recipe_json
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
@@ -55,7 +55,6 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
 from recipes.settings import DEMO
-from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -281,34 +280,58 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
 
-from rest_framework.schemas.openapi import AutoSchema, SchemaGenerator
-
-
+# TODO move to separate class to cleanup
 class RecipeSchema(AutoSchema):
 
     def get_path_parameters(self, path, method):
+        if not is_list_view(path, method, self.view):
+            return []
+
         parameters = super().get_path_parameters(path, method)
-        parameters.append(
-            {
-                "name": 'query',
-                "in": "path",
-                "required": True,
-                "description": 'description',
-                'schema': {
-                    'type': 'string',  # TODO: integer, pattern, ...
-                },
-            }
-        )
+        parameters.append({
+            "name": 'query', "in": "query", "required": False,
+            "description": 'Query string matched (fuzzy) against recipe name. In the future also fulltext search.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'keywords', "in": "query", "required": False,
+            "description": 'Id of keyword a recipe should have. For multiple repeat parameter.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'foods', "in": "query", "required": False,
+            "description": 'Id of food a recipe should have. For multiple repeat parameter.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'books', "in": "query", "required": False,
+            "description": 'Id of book a recipe should have. For multiple repeat parameter.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'keywords_or', "in": "query", "required": False,
+            "description": 'If recipe should have all (AND) or any (OR) of the provided keywords.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'foods_or', "in": "query", "required": False,
+            "description": 'If recipe should have all (AND) or any (OR) any of the provided foods.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'books_or', "in": "query", "required": False,
+            "description": 'If recipe should be in all (AND) or any (OR) any of the provided books.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'internal', "in": "query", "required": False,
+            "description": 'true or false. If only internal recipes should be returned or not.',
+            'schema': {'type': 'string', },
+        })
         return parameters
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """
-       list:
-       optional parameters
-       - **query**: search recipes for a string contained in the recipe name (case in-sensitive)
-       - **limit**: limits the amount of returned results
-       """
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
@@ -316,7 +339,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     pagination_class = RecipePagination
 
-    # schema = RecipeSchema
+    schema = RecipeSchema()
 
     def get_queryset(self):
         share = self.request.query_params.get('share', None)

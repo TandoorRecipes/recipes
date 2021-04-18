@@ -834,7 +834,7 @@
                     }
 
                     this.$http.get(url).then((response) => {
-                        this.recipes = response.data;
+                        this.recipes = response.data.results;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')

@@ -17,7 +17,6 @@ def search_recipes(queryset, params):
     search_books_or = params.get('books_or', True)
 
     search_internal = params.get('internal', None)
-    search_limit = params.get('limit', None)
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
         queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_string), ).filter(Q(similarity__gt=0.1) | Q(name__unaccent__icontains=search_string)).order_by('-similarity')
@@ -49,8 +48,5 @@ def search_recipes(queryset, params):
 
     if search_internal == 'true':
         queryset = queryset.filter(internal=True)
-
-    # if search_limit:
-    #     queryset = queryset[:int(search_limit)]
 
     return queryset
