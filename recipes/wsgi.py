@@ -17,6 +17,15 @@ _application = get_wsgi_application()
 
 
 # allows proxy servers to serve application at a subfolder
+# NGINX config should look something like this
+# location /my_app {
+#     proxy_pass https://mywebapp.com/;
+#     proxy_set_header Host $host;
+#     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#     proxy_set_header X-Script-Name /my_app;
+#     proxy_cookie_path / /my_app;
+# }
+
 def application(environ, start_response):
     # http://flask.pocoo.org/snippets/35/
     script_name = environ.get('HTTP_X_SCRIPT_NAME', '')
