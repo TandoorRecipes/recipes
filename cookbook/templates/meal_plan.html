@@ -513,7 +513,7 @@
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
                     } else {
-                        url += '&random=True'
+                        url += '&random=true'
                     }
 
                     this.$http.get(url).then((response) => {
