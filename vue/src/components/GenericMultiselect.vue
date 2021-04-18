@@ -36,6 +36,15 @@ export default {
     search_function: String,
     label: String,
     parent_variable: String,
+    initial_selection: Array,
+  },
+  watch: {
+    initial_selection: function (newVal, oldVal) { // watch it
+      this.selected_objects = newVal
+    }
+  },
+  mounted() {
+    this.search('')
   },
   methods: {
     search: function (query) {
