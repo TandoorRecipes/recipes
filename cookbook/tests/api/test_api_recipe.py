@@ -22,15 +22,15 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 1
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 0
 
     with scopes_disabled():
         recipe_1_s1.space = space_2
         recipe_1_s1.save()
 
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 0
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 1
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
 
 
 @pytest.mark.parametrize("arg", [
