@@ -328,6 +328,11 @@ class RecipeSchema(AutoSchema):
             "description": 'true or false. If only internal recipes should be returned or not.',
             'schema': {'type': 'string', },
         })
+        parameters.append({
+            "name": 'random', "in": "query", "required": False,
+            "description": 'true or false. returns the results in randomized order.',
+            'schema': {'type': 'string', },
+        })
         return parameters
 
 
