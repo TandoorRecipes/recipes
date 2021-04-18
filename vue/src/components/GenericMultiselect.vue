@@ -2,7 +2,7 @@
   <multiselect
       v-model="selected_objects"
       :options="objects"
-      :close-on-select="false"
+      :close-on-select="true"
       :clear-on-select="true"
       :hide-selected="true"
       :preserve-search="true"

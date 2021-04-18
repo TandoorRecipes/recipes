@@ -2,6 +2,7 @@
   "import_running": "Import running, please wait!",
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
+  "show_only_internal": "Show only internal recipes",
 
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
@@ -41,5 +42,7 @@
   "Search": "Search",
   "Import": "Import",
   "Print": "Print",
+  "OR": "OR",
+  "AND": "AND",
   "Information": "Information"
 }
