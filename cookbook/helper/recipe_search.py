@@ -50,7 +50,7 @@ def search_recipes(queryset, params):
     if search_internal == 'true':
         queryset = queryset.filter(internal=True)
 
-    if search_limit:
-        queryset = queryset[:int(search_limit)]
+    # if search_limit:
+    #     queryset = queryset[:int(search_limit)]
 
     return queryset
