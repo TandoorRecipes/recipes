@@ -28,20 +28,20 @@
               <div class="card">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-3" style="margin-top: 1vh">
                       <a class="btn btn-primary btn-block text-uppercase"
                          :href="resolveDjangoUrl('new_recipe')">{{ $t('New_Recipe') }}</a>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" style="margin-top: 1vh">
                       <a class="btn btn-primary btn-block text-uppercase"
                          :href="resolveDjangoUrl('data_import_url')">{{ $t('Url_Import') }}</a>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" style="margin-top: 1vh">
                       <button class="btn btn-primary btn-block text-uppercase" @click="resetSearch">
                         {{ $t('Reset_Search') }}
                       </button>
                     </div>
-                    <div class="col-md-3" style="position: relative;">
+                    <div class="col-md-3" style="position: relative; margin-top: 1vh">
                       <b-form-checkbox v-model="search_internal" name="check-button" @change="refreshData"
                                        class="shadow-none"
                                        style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
@@ -49,6 +49,8 @@
                       </b-form-checkbox>
                     </div>
                   </div>
+
+
 
                   <div class="row">
                     <div class="col-12">
@@ -58,11 +60,11 @@
 
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
                                              :initial_selection="search_keywords"
-                                             search_function="listKeywords" label="label" style="width: 90%"
+                                             search_function="listKeywords" label="label" style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Keywords')"></generic-multiselect>
 
-                        <b-input-group-append style="width: 10%">
-                          <b-input-group-text style="width: 100%">
+                        <b-input-group-append >
+                          <b-input-group-text >
 
                             <b-form-checkbox v-model="search_keywords_or" name="check-button" @change="refreshData"
                                              class="shadow-none" switch>
@@ -81,10 +83,10 @@
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
                                              :initial_selection="search_foods"
-                                             search_function="listFoods" label="name" style="width: 90%"
+                                             search_function="listFoods" label="name"  style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Ingredients')"></generic-multiselect>
-                        <b-input-group-append style="width: 10%">
-                          <b-input-group-text style="width: 100%">
+                        <b-input-group-append >
+                          <b-input-group-text >
                             <b-form-checkbox v-model="search_foods_or" name="check-button" @change="refreshData"
                                              class="shadow-none" switch>
                               <span class="text-uppercase" v-if="search_foods_or">{{ $t('or') }}</span>
@@ -103,10 +105,10 @@
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="search_books"
-                                             search_function="listRecipeBooks" label="name" style="width: 90%"
+                                             search_function="listRecipeBooks" label="name"  style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')"></generic-multiselect>
-                        <b-input-group-append style="width: 10%">
-                          <b-input-group-text style="width: 100%">
+                        <b-input-group-append >
+                          <b-input-group-text >
 
                             <b-form-checkbox v-model="search_books_or" name="check-button" @change="refreshData"
                                              class="shadow-none" tyle="width: 100%" switch>
