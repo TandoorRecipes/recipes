@@ -33,17 +33,17 @@ def search_recipes(queryset, params):
 
     if len(search_foods) > 0:
         if search_foods_or == 'true':
-            queryset = queryset.filter(keywords__id__in=search_foods)
+            queryset = queryset.filter(steps__ingredients__food__id__in=search_foods)
         else:
             for k in search_foods:
-                queryset = queryset.filter(keywords__id=k)
+                queryset = queryset.filter(steps__ingredients__food__id=k)
 
     if len(search_books) > 0:
         if search_books_or == 'true':
-            queryset = queryset.filter(keywords__id__in=search_books)
+            queryset = queryset.filter(recipebookentry__book__id__in=search_books)
         else:
             for k in search_books:
-                queryset = queryset.filter(keywords__id=k)
+                queryset = queryset.filter(recipebookentry__book__id=k)
 
     queryset = queryset.distinct()
 
