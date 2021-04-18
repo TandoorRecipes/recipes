@@ -51,7 +51,6 @@
                   </div>
 
 
-
                   <div class="row">
                     <div class="col-12">
 
@@ -60,11 +59,12 @@
 
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
                                              :initial_selection="search_keywords"
-                                             search_function="listKeywords" label="label" style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                             search_function="listKeywords" label="label"
+                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Keywords')"></generic-multiselect>
 
-                        <b-input-group-append >
-                          <b-input-group-text >
+                        <b-input-group-append>
+                          <b-input-group-text>
 
                             <b-form-checkbox v-model="search_keywords_or" name="check-button" @change="refreshData"
                                              class="shadow-none" switch>
@@ -83,10 +83,11 @@
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
                                              :initial_selection="search_foods"
-                                             search_function="listFoods" label="name"  style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                             search_function="listFoods" label="name"
+                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Ingredients')"></generic-multiselect>
-                        <b-input-group-append >
-                          <b-input-group-text >
+                        <b-input-group-append>
+                          <b-input-group-text>
                             <b-form-checkbox v-model="search_foods_or" name="check-button" @change="refreshData"
                                              class="shadow-none" switch>
                               <span class="text-uppercase" v-if="search_foods_or">{{ $t('or') }}</span>
@@ -105,10 +106,11 @@
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="search_books"
-                                             search_function="listRecipeBooks" label="name"  style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                             search_function="listRecipeBooks" label="name"
+                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')"></generic-multiselect>
-                        <b-input-group-append >
-                          <b-input-group-text >
+                        <b-input-group-append>
+                          <b-input-group-text>
 
                             <b-form-checkbox v-model="search_books_or" name="check-button" @change="refreshData"
                                              class="shadow-none" tyle="width: 100%" switch>
@@ -139,6 +141,21 @@
             </div>
           </div>
         </div>
+
+        <div class="row" style="margin-top: 2vh">
+          <div class="col col-md-12">
+            <b-pagination
+                v-model="pagination_page"
+                :total-rows="pagination_count"
+                per-page="25"
+                @change="pageChange"
+                align="center">
+
+            </b-pagination>
+          </div>
+        </div>
+
+
       </div>
       <div class="col-md-2 d-none d-md-block">
 
@@ -185,6 +202,8 @@ export default {
 
       advanced_search_visible: true,
 
+      pagination_count: 0,
+      pagination_page: 1,
     }
 
   },
@@ -213,10 +232,11 @@ export default {
           books_or: this.search_books_or,
 
           internal: this.search_internal,
-          limit: 20,
+          page: this.pagination_page,
         }
       }).then(result => {
-        this.recipes = result.data
+        this.recipes = result.data.results
+        this.pagination_count = result.data.count
       })
     },
     genericSelectChanged: function (obj) {
@@ -229,6 +249,10 @@ export default {
       this.search_keywords = []
       this.search_foods = []
       this.search_books = []
+      this.refreshData()
+    },
+    pageChange: function (page){
+      this.pagination_page = page
       this.refreshData()
     }
   }

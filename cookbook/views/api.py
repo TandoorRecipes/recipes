@@ -4,6 +4,7 @@ import re
 import uuid
 
 import requests
+import yaml
 from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
@@ -19,8 +20,10 @@ from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from rest_framework import decorators, viewsets, status
 from rest_framework.exceptions import APIException, PermissionDenied, NotFound, MethodNotAllowed
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
+from rest_framework.schemas import AutoSchema
 from rest_framework.viewsets import ViewSetMixin
 
 from cookbook.helper.ingredient_parser import parse
@@ -49,7 +52,8 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  StorageSerializer, SyncLogSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer, RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
+                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
+                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
 from recipes.settings import DEMO
 from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
 
@@ -248,7 +252,8 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(space=self.request.space).all()
+        queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(
+            space=self.request.space).all()
         return queryset
 
 
@@ -270,29 +275,59 @@ class StepViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(recipe__space=self.request.space)
 
 
+class RecipePagination(PageNumberPagination):
+    page_size = 25
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
+from rest_framework.schemas.openapi import AutoSchema, SchemaGenerator
+
+
+class RecipeSchema(AutoSchema):
+
+    def get_path_parameters(self, path, method):
+        parameters = super().get_path_parameters(path, method)
+        parameters.append(
+            {
+                "name": 'query',
+                "in": "path",
+                "required": True,
+                "description": 'description',
+                'schema': {
+                    'type': 'string',  # TODO: integer, pattern, ...
+                },
+            }
+        )
+        return parameters
+
+
 class RecipeViewSet(viewsets.ModelViewSet):
     """
-    list:
-    optional parameters
-
-    - **query**: search recipes for a string contained
-                 in the recipe name (case in-sensitive)
-    - **limit**: limits the amount of returned results
-    """
+       list:
+       optional parameters
+       - **query**: search recipes for a string contained in the recipe name (case in-sensitive)
+       - **limit**: limits the amount of returned results
+       """
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
     permission_classes = [CustomIsShare | CustomIsGuest]
+
+    pagination_class = RecipePagination
+
+    # schema = RecipeSchema
 
     def get_queryset(self):
         share = self.request.query_params.get('share', None)
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        return search_recipes(self.queryset, self.request.GET)
+        self.queryset = search_recipes(self.queryset, self.request.GET)
+
+        return super().get_queryset()
 
     # TODO write extensive tests for permissions
-
     def get_serializer_class(self):
         if self.action == 'list':
             return RecipeOverviewSerializer
@@ -341,7 +376,9 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        return self.queryset.filter(Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(shoppinglist__space=self.request.space).all()
+        return self.queryset.filter(
+            Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
+            shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
@@ -350,7 +387,9 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        return self.queryset.filter(Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(shoppinglist__space=self.request.space).all()
+        return self.queryset.filter(
+            Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
+            shoppinglist__space=self.request.space).all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
@@ -359,7 +398,8 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
-        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
+            space=self.request.space).distinct()
 
     def get_serializer_class(self):
         try:
@@ -562,7 +602,8 @@ def recipe_from_url_old(request):
     url = request.POST['url']
 
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'  # noqa: E501
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'
+        # noqa: E501
     }
     try:
         response = requests.get(url, headers=headers)
