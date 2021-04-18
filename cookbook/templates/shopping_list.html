@@ -825,7 +825,7 @@
                     }
                 },
                 getRecipes: function () {
-                    let url = "{% url 'api:recipe-list' %}?limit=5&internal=true"
+                    let url = "{% url 'api:recipe-list' %}?page_size=5&internal=true"
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
                     } else {

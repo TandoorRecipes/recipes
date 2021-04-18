@@ -137,6 +137,12 @@
         <div class="row" style="margin-top: 2vh">
           <div class="col col-md-12">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
+
+              <template v-if="search_input === '' && search_keywords.length === 0 &&  search_foods.length === 0  && search_books.length === 0">
+                <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
+                             :meal_plan="m"></recipe-card>
+              </template>
+
               <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
             </div>
           </div>
@@ -171,7 +177,7 @@ import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+import moment from 'moment'
 
 import {ResolveUrlMixin} from "@/utils/utils";
 
@@ -190,6 +196,8 @@ export default {
   data() {
     return {
       recipes: [],
+      meal_plans: [],
+
       search_input: '',
       search_internal: false,
       search_keywords: [],
@@ -209,6 +217,8 @@ export default {
   },
   mounted() {
     this.refreshData()
+
+    this.loadSpecialData()
   },
   methods: {
     refreshData: function () {
@@ -239,6 +249,18 @@ export default {
         this.pagination_count = result.data.count
       })
     },
+    loadSpecialData: function () {
+      let apiClient = new ApiApiFactory()
+
+      apiClient.listMealPlans({
+        query: {
+          from_date: moment().format('YYYY-MM-DD'),
+          to_date: moment().format('YYYY-MM-DD')
+        }
+      }).then(result => {
+        this.meal_plans = result.data
+      })
+    },
     genericSelectChanged: function (obj) {
       this[obj.var] = obj.val
       this.refreshData()
@@ -251,7 +273,7 @@ export default {
       this.search_books = []
       this.refreshData()
     },
-    pageChange: function (page){
+    pageChange: function (page) {
       this.pagination_page = page
       this.refreshData()
     }
