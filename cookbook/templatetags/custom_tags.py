@@ -111,37 +111,6 @@ def is_debug():
     return settings.DEBUG
 
 
-@register.simple_tag()
-def markdown_link():
-    return f"{_('You can use markdown to format this field. See the ')}<a target='_blank' href='{reverse('docs_markdown')}'>{_('docs here')}</a>"
-
-
-@register.simple_tag
-def bookmarklet(request):
-    if request.is_secure():
-        prefix = "https://"
-    else:
-        prefix = "http://"
-    server = prefix + request.get_host()
-    prefix = settings.JS_REVERSE_SCRIPT_PREFIX
-    # TODO is it safe to store the token in clear text in a bookmark?
-    if (api_token := Token.objects.filter(user=request.user).first()) is None:
-        api_token = Token.objects.create(user=request.user)
-
-    bookmark = "javascript: \
-    (function(){ \
-        if(window.bookmarkletTandoor!==undefined){ \
-            bookmarkletTandoor(); \
-        } else { \
-            localStorage.setItem('importURL', '" + server + reverse('api:bookmarkletimport-list') + "'); \
-            localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
-            localStorage.setItem('token', '" + api_token.__str__() + "'); \
-            document.body.appendChild(document.createElement(\'script\')).src=\'" \
-            + server + prefix + static('js/bookmarklet.js') + "? \
-            r=\'+Math.floor(Math.random()*999999999);}})();"
-    return re.sub(r"[\n\t\s]*", "", bookmark)
-
-
 @register.simple_tag
 def base_path(request, path_type):
     if path_type == 'base':
