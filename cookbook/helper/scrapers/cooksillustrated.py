@@ -46,13 +46,13 @@ class CooksIllustrated(AbstractScraper):
     def instructions(self):
         if not self.recipe:
             self.get_recipe()
-        if 'headnote' in self.recipe:
+        if self.recipe.get('headnote', False):
             i = ['Note: ' + self.recipe.get('headnote', '')]
         else:
             i = []
         return "\n".join(
             i
-            + [self.recipe.get('whyThisWorks','')]
+            + [self.recipe.get('whyThisWorks', '')]
             + [
                 instruction['fields']['content']
                 for instruction in self.recipe['instructions']
