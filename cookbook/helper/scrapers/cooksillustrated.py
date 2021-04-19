@@ -52,7 +52,7 @@ class CooksIllustrated(AbstractScraper):
             i = []
         return "\n".join(
             i
-            + [self.recipe['whyThisWorks']]
+            + [self.recipe.get('whyThisWorks','')]
             + [
                 instruction['fields']['content']
                 for instruction in self.recipe['instructions']
