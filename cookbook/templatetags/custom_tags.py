@@ -106,3 +106,11 @@ def message_of_the_day():
 @register.simple_tag
 def is_debug():
     return settings.DEBUG
+
+
+@register.simple_tag
+def base_path(request, path_type):
+    if path_type == 'base':
+        return request._current_scheme_host + request.META.get('HTTP_X_SCRIPT_NAME', '')
+    elif path_type == 'script':
+        return request.META.get('HTTP_X_SCRIPT_NAME', '')
