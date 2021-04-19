@@ -708,15 +708,12 @@
                     })
                 },
                 loadBookmarklet: function(id_bkmk) {
-                    let uri = window.location.search.substring(1); 
-                    let params = new URLSearchParams(uri);
-                    q = params.get("id")
                     this.error = undefined
                     this.loading = true
-                    this.$http.get("{% url 'api:bookmarkletimport-list' %}?id=" + id_bkmk ).then((response) => {
+                    this.$http.get("{% url 'api:bookmarkletimport-detail' 1237654 %}".replace('1237654', id_bkmk)).then((response) => {
                         this.automatic = false
-                        this.source_data = response.data[0]['html']
-                        this.remote_url = response.data[0]['url']
+                        this.source_data = response.data['html']
+                        this.remote_url = response.data['url']
                         this.loadRecipe()
                     }).catch((err) => {
                         this.error = err.data
