@@ -1,6 +1,44 @@
 # Getting Started
 
 ## Prerequisites
+In order to complete this guide, you should have a fresh Ubuntu 20.04 server instance with a basic firewall and a non-root user with sudo privileges configured. You can learn how to set this up by running through our initial server setup guide.
+
+We will be installing Django within a virtual environment. Installing Django into an environment specific to your project will allow your projects and their requirements to be handled separately.
+
+Once we have our database and application up and running, we will install and configure the Gunicorn application server. This will serve as an interface to our application, translating client requests from HTTP to Python calls that our application can process. We will then set up Nginx in front of Gunicorn to take advantage of its high performance connection handling mechanisms and its easy-to-implement security features.
+
+Let’s get started.
+
+### Installing the Packages from the Ubuntu Repositories
+
+To begin the process, we’ll download and install all of the items we need from the Ubuntu repositories. We will use the Python package manager pip to install additional components a bit later.
+
+We need to update the local apt package index and then download and install the packages. The packages we install depend on which version of Python your project will use.
+```shell script
+$ sudo apt update
+$ sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Creating a Ubuntu VM
 - https://www.unbxtech.com/2020/04/howto-create-vm-freenas-11.html
 - https://www.youtube.com/watch?v=8oMAEBUOPQ0
@@ -13,12 +51,7 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postg
 
 **Installing the Packages from the Ubuntu Repositories**
 
-To begin the process, we’ll download and install all of the items we need from the Ubuntu repositories. We will use the Python package manager pip to install additional components a bit later.
 
-We need to update the local apt package index and then download and install the packages. The packages we install depend on which version of Python your project will use.
-
-sudo apt update
-sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
 
 
 sudo -u postgres psql
