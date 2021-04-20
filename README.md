@@ -1,3 +1,26 @@
+Creating a Ubuntu VM
+- https://www.youtube.com/watch?v=8oMAEBUOPQ0
+
+Initial Server Setup with Ubuntu 20.04
+https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04
+
+How To Set Up Django with Postgres, Nginx, and Gunicorn on Ubuntu 20.04
+https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-20-04
+
+**Installing the Packages from the Ubuntu Repositories**
+To begin the process, we’ll download and install all of the items we need from the Ubuntu repositories. We will use the Python package manager pip to install additional components a bit later.
+
+We need to update the local apt package index and then download and install the packages. The packages we install depend on which version of Python your project will use.
+
+sudo apt update
+sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+
+
+sudo -u postgres psql
+
+
+
+
 iocage setup
 New Jail
 DCHP
