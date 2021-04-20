@@ -19,14 +19,27 @@ $ sudo apt update
 $ sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
 ```
 
+## Creating the PostgreSQL Database and User
+Log into an interactive Postgres session by typing:
 
+``` shell script
+$ sudo -u postgres psql
+```
+In the psql console:
+```
+CREATE DATABASE djangodb;
+CREATE USER djangouser WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE djangodb TO djangouser;
+ALTER DATABASE djangodb OWNER TO djangouser;
 
+--Maybe not necessary, but should be faster:
+ALTER ROLE djangouser SET client_encoding TO 'utf8';
+ALTER ROLE djangouser SET default_transaction_isolation TO 'read committed';
+ALTER ROLE djangouser SET timezone TO 'UTC';
 
-
-
-
-
-
+--Grant superuser right to your new user, it will be removed later
+ALTER USER djangouser WITH SUPERUSER;
+```
 
 
 
