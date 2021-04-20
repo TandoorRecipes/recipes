@@ -1,10 +1,14 @@
-Creating a Ubuntu VM
+# Getting Started
+
+## Prerequisites
+### Creating a Ubuntu VM
+- https://www.unbxtech.com/2020/04/howto-create-vm-freenas-11.html
 - https://www.youtube.com/watch?v=8oMAEBUOPQ0
 
-Initial Server Setup with Ubuntu 20.04
+### Initial Server Setup with Ubuntu 20.04
 https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04
 
-How To Set Up Django with Postgres, Nginx, and Gunicorn on Ubuntu 20.04
+### How To Set Up Django with Postgres, Nginx, and Gunicorn on Ubuntu 20.04
 https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-20-04
 
 **Installing the Packages from the Ubuntu Repositories**
