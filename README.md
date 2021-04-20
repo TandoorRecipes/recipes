@@ -111,6 +111,44 @@ Generate static files:
 python3.8 manage.py collectstatic
 ```
 
+Test to see everything worked by typing:
+``` 
+python3.8 manage.py runserver
+```
+
+
+## Setup web services
+
+Create a service that will start gunicorn at boot:
+```
+sudo nano /etc/systemd/system/gunicorn_recipes.service
+```
+And enter these lines:
+```
+[Unit]
+Description=gunicorn daemon for recipes
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+Group=www-data
+WorkingDirectory=/media/data/recipes
+EnvironmentFile=/media/data/recipes/.env
+ExecStart=/opt/.pyenv/versions/3.8.5/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/media/data/recipes/recipes.sock recipes.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+```
+
+sudo systemctl enable gunicorn_recipes.service
+sudo systemctl start gunicorn_recipes.service
+systemctl status gunicorn_recipes.service
+
+
+
+
 
 
 
