@@ -16,7 +16,7 @@ To begin the process, we’ll download and install all of the items we need from
 We need to update the local apt package index and then download and install the packages. The packages we install depend on which version of Python your project will use.
 ```shell script
 $ sudo apt update
-$ sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+$ sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib nginx curl git
 ```
 
 ## Creating the PostgreSQL Database and User
@@ -82,6 +82,46 @@ Note: When the virtual environment is activated (when your prompt has (myproject
 $ pip install django gunicorn psycopg2-binary
  ```
 You should now have all of the software needed to start a Django project.
+
+## Installing Django Project
+Get the last version from the repository: 
+``` shell script
+$ git clone https://github.com/vabene1111/recipes.git -b master
+```
+
+Load variables from .env
+``` shell script
+$ export $(cat .env |grep "^[^#]" | xargs) 
+```
+
+Execute
+```
+python3.8 manage.py migrate
+```
+Log into an interactive Postgres session by typing:
+```
+sudo -u postgres psql
+```
+revert superuser from postgres
+```
+ALTER USER djangouser WITH NOSUPERUSER;
+```
+Generate static files:
+```
+python3.8 manage.py collectstatic
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Creating a Ubuntu VM
 - https://www.unbxtech.com/2020/04/howto-create-vm-freenas-11.html
