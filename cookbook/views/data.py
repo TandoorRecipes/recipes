@@ -136,7 +136,7 @@ def import_url(request):
             # elif data['all_keywords']:
             #     k = Keyword.objects.create(name=kw['text'], space=request.space)
             #     recipe.keywords.add(k)
-            k = Keyword.objects.get_or_create(name=kw['text'].strip(), space=request.space)
+            k, created = Keyword.objects.get_or_create(name=kw['text'].strip(), space=request.space)
             recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
