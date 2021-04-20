@@ -11,6 +11,377 @@
 {% endblock %}
 
 {% block content %}
+    <h3>{% trans 'Edit Recipe' %}</h3>
+
+    <div v-if="!recipe" class="text-center">
+        <br/>
+        <i class="fas fa-spinner fa-spin fa-8x"></i>
+    </div>
+
+    <div v-if="recipe">
+
+        <div class="row">
+            <div class="col-md-12">
+                <label for="id_name"> {% trans 'Name' %}</label>
+                <input class="form-control" id="id_name" v-model="recipe.name">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="id_description">
+                    {% trans 'Description' %}
+                </label>
+                <textarea id="id_description" class="form-control" v-model="recipe.description"
+                          maxlength="512"></textarea>
+
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% if recipe.image %}{{ recipe.image.url }}{% endif %}" id="id_image"
+                     class="img img-fluid img-responsive"
+                     style="max-height: 20vh">
+                <input type="file" @change="imageChanged">
+            </div>
+            <div class="col-md-6">
+                <label for="id_name"> {% trans 'Preparation Time' %}</label>
+                <input class="form-control" id="id_prep_time" v-model="recipe.working_time">
+                <br/>
+                <label for="id_name"> {% trans 'Waiting Time' %}</label>
+                <input class="form-control" id="id_wait_time" v-model="recipe.waiting_time">
+                <br/>
+                <label for="id_name"> {% trans 'Servings' %}</label>
+                <input class="form-control" id="id_servings" v-model="recipe.servings">
+                <br/>
+                <label for="id_name"> {% trans 'Servings Text' %}</label>
+                <input class="form-control" id="id_servings_text" v-model="recipe.servings_text" maxlength="32">
+                <br/>
+                <label for="id_name"> {% trans 'Keywords' %}</label>
+                <multiselect
+                        v-model="recipe.keywords"
+                        :options="keywords"
+                        :close-on-select="false"
+                        :clear-on-select="true"
+                        :hide-selected="true"
+                        :preserve-search="true"
+                        placeholder="{% trans 'Select Keywords' %}"
+                        tag-placeholder="{% trans 'Add Keyword' %}"
+                        :taggable="true"
+                        @tag="addKeyword"
+                        label="label"
+                        track-by="id"
+                        id="id_keywords"
+                        :multiple="true"
+                        :loading="keywords_loading"
+                        @search-change="searchKeywords">
+                </multiselect>
+            </div>
+        </div>
+
+        <template v-if="recipe !== undefined">
+            <div class="row" v-if="recipe.nutrition" style="margin-top: 1vh">
+                <div class="col-md-12">
+                    <div class="card border-grey">
+                        <div class="card-body">
+                            <h4 class="card-title">{% trans 'Nutrition' %}</h4>
+                            <div class="dropdown-menu dropdown-menu-right"
+                                 aria-labelledby="dropdownMenuLink">
+                                <button class="dropdown-item" @click="removeStep(step)"><i
+                                        class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
+
+                            </div>
+
+                            <label for="id_name"> {% trans 'Calories' %}</label>
+                            <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
+
+                            <label for="id_name"> {% trans 'Carbohydrates' %}</label>
+                            <input class="form-control" id="id_carbohydrates" v-model="recipe.nutrition.carbohydrates">
+
+                            <label for="id_name"> {% trans 'Fats' %}</label>
+                            <input class="form-control" id="id_fats" v-model="recipe.nutrition.fats">
+                            <label for="id_name"> {% trans 'Proteins' %}</label>
+                            <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins">
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+
+        <draggable :list="recipe.steps" group="steps"
+                   :empty-insert-threshold="10" handle=".handle" @sort="sortSteps()">
+
+            <div v-for="step, step_index in recipe.steps" style="margin-top: 1vh" class="card">
+
+                <div class="card-body" :id="`id_card_step_${step_index}`">
+                    <div class="row">
+                        <div class="col-11">
+                            <h4 class="handle" :id="'id_step_' + step_index">
+                                <i class="fas fa-paragraph" v-if="step.type == 'TEXT'"></i>
+                                <i class="fas fa-clock" v-if="step.type == 'TIME'"></i>
+                                <template v-if="step.name !== ''">[[step.name]]</template>
+                                <template v-else>{% trans 'Step' %} [[step_index+1]]</template>
+
+                            </h4>
+                        </div>
+                        <div class="col-1" style="text-align: right">
+                            <a class="btn shadow-none btn-lg" href="#" role="button"
+                               id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                <i class="fas fa-ellipsis-v text-muted"></i>
+                            </a>
+
+
+                            <div class="dropdown-menu dropdown-menu-right"
+                                 aria-labelledby="dropdownMenuLink">
+                                <button class="dropdown-item" @click="removeStep(step)"><i
+                                        class="fa fa-trash fa-fw"></i> {% trans 'Delete Step' %}</button>
+
+                                <button type="button" class="dropdown-item"
+                                        v-if="!step.show_as_header"
+                                        @click="step.show_as_header = true"><i
+                                        class="fas fa-eye fa-fw"></i> {% trans 'Show as header' %}
+                                </button>
+
+                                <button type="button" class="dropdown-item"
+                                        v-if="step.show_as_header"
+                                        @click="step.show_as_header = false"><i
+                                        class="fas fa-eye-slash fa-fw"></i> {% trans 'Hide as header' %}
+                                </button>
+
+                                <button class="dropdown-item" @click="moveStep(step, (step_index - 1))"
+                                        v-if="step_index > 0">
+                                    <i class="fa fa-arrow-up fa-fw"></i> {% trans 'Move Up' %}
+                                </button>
+                                <button class="dropdown-item"
+                                        @click="moveStep(step, (step_index + 1))"
+                                        v-if="step_index != (recipe.steps.length - 1)">
+                                    <i class="fa fa-arrow-down fa-fw"></i> {% trans 'Move Down' %}
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label :for="'id_step_' + step.id + 'name'">{% trans 'Step Name' %}</label>
+                            <input class="form-control" v-model="step.name" :id="'id_step_' + step.id + 'name'">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="id_type"> {% trans 'Step Type' %}</label>
+                            <select class="form-control" id="id_type" v-model="step.type">
+                                <option value="TEXT">{% trans 'Text' %}</option>
+                                <option value="TIME">{% trans 'Time' %}</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row" style="margin-top: 12px">
+                        <div class="col-md-12">
+                            <label :for="'id_step_' + step.id + '_time'">{% trans 'Step time in Minutes' %}</label>
+                            <input class="form-control" v-model="step.time"
+                                   :id="'id_step_' + step.id + '_time'">
+                        </div>
+                    </div>
+
+                    <template v-if="step.type == 'TEXT'">
+                        <div class="row" style="margin-top: 12px">
+                            <div class="col-md-12">
+                                <div class="jumbotron" style="padding: 16px">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4>{% trans 'Ingredients' %}</h4>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="margin-top: 8px">
+                                            <draggable :list="step.ingredients" group="ingredients"
+                                                       :empty-insert-threshold="10" handle=".handle"
+                                                       @sort="sortIngredients(step)">
+                                                <div v-for="ingredient, index in step.ingredients"
+                                                     :key="ingredient.id">
+
+                                                    <hr class="d-md-none"/>
+                                                    <div class="d-flex">
+                                                        <div class="flex-grow-0 handle align-self-start">
+                                                            <button type="button" class="btn btn-lg shadow-none"><i
+                                                                    class="fas fa-arrows-alt-v "></i></button>
+                                                        </div>
+
+                                                        <div class="flex-fill row"
+                                                             style="margin-left: 4px; margin-right: 4px">
+                                                            <div class="col-lg-2 col-md-6 small-padding"
+                                                                 v-if="!ingredient.is_header">
+                                                                <input class="form-control"
+                                                                       v-model="ingredient.amount"
+                                                                       type="number" step="any"
+                                                                       v-if="!ingredient.no_amount"
+                                                                       :id="`amount_${step_index}_${index}`">
+                                                            </div>
+
+                                                            <div class="col-lg-2 col-md-6 small-padding"
+                                                                 v-if="!ingredient.is_header">
+                                                                <multiselect
+                                                                        v-if="!ingredient.no_amount"
+                                                                        v-tabindex
+                                                                        ref="unit"
+                                                                        v-model="ingredient.unit"
+                                                                        :options="units"
+                                                                        :close-on-select="true"
+                                                                        :clear-on-select="true"
+                                                                        :allow-empty="true"
+                                                                        :preserve-search="true"
+                                                                        placeholder="{% trans 'Select Unit' %}"
+                                                                        tag-placeholder="{% trans 'Create' %}"
+                                                                        select-label="{% trans 'Select' %}"
+                                                                        :taggable="true"
+                                                                        @tag="addUnitType"
+                                                                        :id="`unit_${step_index}_${index}`"
+                                                                        label="name"
+                                                                        track-by="name"
+                                                                        :multiple="false"
+                                                                        :loading="units_loading"
+                                                                        @search-change="searchUnits">
+                                                                </multiselect>
+                                                            </div>
+                                                            <div class="col-lg-4 col-md-6 small-padding"
+                                                                 v-if="!ingredient.is_header">
+                                                                <multiselect
+                                                                        v-tabindex
+                                                                        ref="food"
+                                                                        v-model="ingredient.food"
+                                                                        :options="foods"
+                                                                        :close-on-select="true"
+                                                                        :clear-on-select="true"
+                                                                        :allow-empty="true"
+                                                                        :preserve-search="true"
+                                                                        placeholder="{% trans 'Select Food' %}"
+                                                                        tag-placeholder="{% trans 'Create' %}"
+                                                                        select-label="{% trans 'Select' %}"
+                                                                        :taggable="true"
+                                                                        @tag="addFoodType"
+                                                                        :id="`ingredient_${step_index}_${index}`"
+                                                                        label="name"
+                                                                        track-by="name"
+                                                                        :multiple="false"
+                                                                        :loading="foods_loading"
+                                                                        @search-change="searchFoods">
+                                                                </multiselect>
+                                                            </div>
+                                                            <div class="small-padding"
+                                                                 v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
+                                                                <input class="form-control"
+                                                                       v-model="ingredient.note"
+                                                                       placeholder="{% trans 'Note' %}">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex-grow-0 small-padding">
+                                                            <a class="btn shadow-none btn-lg" href="#" role="button"
+                                                               id="dropdownMenuLink"
+                                                               data-toggle="dropdown" aria-haspopup="true"
+                                                               aria-expanded="false">
+                                                                <i class="fas fa-ellipsis-v text-muted"></i>
+                                                            </a>
+
+                                                            <div class="dropdown-menu dropdown-menu-right"
+                                                                 aria-labelledby="dropdownMenuLink">
+                                                                <button type="button" class="dropdown-item"
+                                                                        @click="removeIngredient(step, ingredient)">
+                                                                    <i
+                                                                            class="fa fa-trash fa-fw"></i> {% trans 'Delete Ingredient' %}
+                                                                </button>
+
+                                                                <button type="button" class="dropdown-item"
+                                                                        v-if="!ingredient.is_header "
+                                                                        @click="ingredient.is_header = true"><i
+                                                                        class="fas fa-heading fa-fw"></i> {% trans 'Make Header' %}
+                                                                </button>
+
+                                                                <button type="button" class="dropdown-item"
+                                                                        v-if="ingredient.is_header "
+                                                                        @click="ingredient.is_header = false"><i
+                                                                        class="fas fa-leaf fa-fw"></i> {% trans 'Make Ingredient' %}
+                                                                </button>
+
+                                                                <button type="button" class="dropdown-item"
+                                                                        v-if="!ingredient.no_amount "
+                                                                        @click="ingredient.no_amount = true"><i
+                                                                        class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Disable Amount' %}
+                                                                </button>
+
+                                                                <button type="button" class="dropdown-item"
+                                                                        v-if="ingredient.no_amount "
+                                                                        @click="ingredient.no_amount = false"><i
+                                                                        class="fas fa-balance-scale-right fa-fw"></i> {% trans 'Enable Amount' %}
+                                                                </button>
+                                                                <button type="button" class="dropdown-item"
+                                                                        @click="copyTemplateReference(index, ingredient)">
+                                                                    <i
+                                                                            class="fas fa-code"></i> {% trans 'Copy Template Reference' %}
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </draggable>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2 offset-md-5"
+                                             style="text-align: center; margin-top: 8px;">
+                                            <button class="btn btn-dark btn-block" @click="addIngredient(step)"><i
+                                                    class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
+                            <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
+                                             :id="'id_instruction_' + step.id"></b-form-textarea>
+                            {% markdown_link as markdown_link %}
+                            <small class="text-muted">{{ markdown_link|safe }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </draggable>
+
+        <div class="row" style="margin-top: 1vh; margin-bottom: 8vh" v-if="recipe !== undefined">
+            <div class="col-12">
+                <button type="button" @click="updateRecipe(true)"
+                        class="btn btn-success shadow-none">{% trans 'Save & View' %}</button>
+                <button type="button" @click="updateRecipe(false)"
+                        class="btn btn-info shadow-none">{% trans 'Save' %}</button>
+                <button type="button" @click="addStep()"
+                        class="btn btn-primary shadow-none">{% trans 'Add Step' %}</button>
+                <button type="button" @click="addNutrition()"
+                        class="btn btn-primary shadow-none"
+                        v-if="recipe.nutrition === null">{% trans 'Add Nutrition' %}</button>
+                <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
+                        class="btn btn-warning shadow-none">{% trans 'Remove Nutrition' %}</button>
+                <a href="{% url 'view_recipe' recipe.pk %}" @click="addStep()"
+                   class="btn btn-secondary shadow-none">{% trans 'View Recipe' %}</a>
+                <a href="{% url 'delete_recipe' recipe.pk %}"
+                   class="btn btn-danger shadow-none">{% trans 'Delete Recipe' %}</a>
+            </div>
+
+        </div>
 
     <div id="app">
         <edit-internal-recipe></edit-internal-recipe>
