@@ -40,17 +40,39 @@ ALTER ROLE djangouser SET timezone TO 'UTC';
 --Grant superuser right to your new user, it will be removed later
 ALTER USER djangouser WITH SUPERUSER;
 ```
+When you are finished, exit out of the PostgreSQL prompt by typing:
 
+``` shell script
+\q
+```
 
+## Creating a Python Virtual Environment for your Project
+Now that we have our database, we can begin getting the rest of our project requirements ready. We will be installing our Python requirements within a virtual environment for easier management.
 
+To do this, we first need access to the virtualenv command. We can install this with pip.
 
+If you are using Python 3, upgrade pip and install the package by typing:
 
+``` shell script
+$ sudo -H pip3 install --upgrade pip
+$ sudo -H pip3 install virtualenv
+```
+With virtualenv installed, we can start forming our project. Create and move into a directory where we can keep our project files:
 
+``` shell script
+$ mkdir ~/recipes
+$ cd ~/recipes
+```
+Within the project directory, create a Python virtual environment by typing:
+``` shell script
+virtualenv recipesenv
+```
+This will create a directory called recipesenv within your myprojectdir directory. Inside, it will install a local version of Python and a local version of pip. We can use this to install and configure an isolated Python environment for our project.
 
-
-
-
-
+Before we install our project’s Python requirements, we need to activate the virtual environment. You can do that by typing:
+``` shell script
+$ source myprojectenv/bin/activate
+```
 
 ### Creating a Ubuntu VM
 - https://www.unbxtech.com/2020/04/howto-create-vm-freenas-11.html
