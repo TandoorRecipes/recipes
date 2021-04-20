@@ -67,12 +67,21 @@ Within the project directory, create a Python virtual environment by typing:
 ``` shell script
 virtualenv recipesenv
 ```
-This will create a directory called recipesenv within your myprojectdir directory. Inside, it will install a local version of Python and a local version of pip. We can use this to install and configure an isolated Python environment for our project.
+This will create a directory called recipesenv within your recipes directory. Inside, it will install a local version of Python and a local version of pip. We can use this to install and configure an isolated Python environment for our project.
 
 Before we install our project’s Python requirements, we need to activate the virtual environment. You can do that by typing:
 ``` shell script
-$ source myprojectenv/bin/activate
+$ source recipesenv/bin/activate
 ```
+Your prompt should change to indicate that you are now operating within a Python virtual environment. It will look something like this: (recipesenv)user@host:~/recipes$.
+
+*With your virtual environment active, install Django, Gunicorn, and the psycopg2 PostgreSQL adaptor with the local instance of pip:
+Note: When the virtual environment is activated (when your prompt has (myprojectenv) preceding it), use pip instead of pip3, even if you are using Python 3. The virtual environment’s copy of the tool is always named pip, regardless of the Python version.*
+
+``` shell script
+$ pip install django gunicorn psycopg2-binary
+ ```
+You should now have all of the software needed to start a Django project.
 
 ### Creating a Ubuntu VM
 - https://www.unbxtech.com/2020/04/howto-create-vm-freenas-11.html
