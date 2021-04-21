@@ -157,6 +157,7 @@ After=network.target
 User=jcm
 Group=www-data
 WorkingDirectory=/home/jcm/recipes/recipes
+EnvironmentFile=/home/jcm/recipes/recipes/.env
 ExecStart=/home/jcm/recipes/recipesenv/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
