@@ -1,16 +1,34 @@
 from datetime import datetime, timedelta
 from functools import reduce
 
-from django.contrib.postgres.search import TrigramSimilarity
-from django.db.models import Q, Case, When, Value
-from django.forms import IntegerField
-
-from cookbook.models import ViewLog
+from cookbook.models import Recipe
 from recipes import settings
+from django.contrib.postgres.aggregates import StringAgg
+from django.contrib.postgres.search import (
+    SearchQuery, SearchRank, SearchVector, TrigramSimilarity,
+)
+from django.db import models
+from django.db.models import Q
+from django.utils import translation
 
 
-def search_recipes(request, queryset, params):
-    search_string = params.get('query', '')
+DICTIONARY = {
+    # TODO find custom dictionaries - maybe from here https://www.postgresql.org/message-id/CAF4Au4x6X_wSXFwsQYE8q5o0aQZANrvYjZJ8uOnsiHDnOVPPEg%40mail.gmail.com
+    # 'hy': 'Armenian',
+    # 'ca': 'Catalan',
+    # 'cs': 'Czech',
+    'nl': 'dutch',
+    'en': 'english',
+    'fr': 'french',
+    'de': 'german',
+    'it': 'italian',
+    # 'lv': 'Latvian',
+    'es': 'spanish',
+}
+
+
+def search_recipes(queryset, params):
+    search_string = params.get('query', '').strip()
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
     search_books = params.getlist('books', [])
@@ -23,21 +41,26 @@ def search_recipes(request, queryset, params):
     search_random = params.get('random', False)
     search_last_viewed = int(params.get('last_viewed', 0))
 
-    if search_last_viewed > 0:
-        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space,
-                                                     created_at__gte=datetime.now() - timedelta(days=14)).values_list(
-            'recipe__pk', flat=True).distinct()
-
-        return queryset.filter(pk__in=list(set(last_viewed_recipes))[-search_last_viewed:])
-
-    queryset = queryset.annotate(
-        new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
-                        default=Value(0), )).order_by('-new_recipe', 'name')
-
-    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                                   'django.db.backends.postgresql']:
-        queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_string), ).filter(
-            Q(similarity__gt=0.1) | Q(name__unaccent__icontains=search_string)).order_by('-similarity')
+    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql'] and search_string != '':
+        # queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_string), )
+        # .filter(Q(similarity__gt=0.1) | Q(name__unaccent__icontains=search_string)).order_by('-similarity')
+        language = DICTIONARY.get(translation.get_language(), 'simple')
+        search_query = SearchQuery(
+            search_string,
+            config=language,
+            search_type="websearch"
+        )
+        search_vectors = (
+            SearchVector('search_vector')
+            + SearchVector(StringAgg('steps__ingredients__food__name', delimiter=' '), weight='B', config=language)
+            + SearchVector(StringAgg('keywords__name', delimiter=' '), weight='B', config=language))
+        search_rank = SearchRank(search_vectors, search_query)
+        queryset = (
+            queryset.annotate(
+                search=search_vectors,
+                rank=search_rank,)
+            .filter(Q(search=search_query))
+            .order_by('-rank'))
     else:
         queryset = queryset.filter(name__icontains=search_string)
 
