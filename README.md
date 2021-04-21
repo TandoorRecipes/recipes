@@ -167,6 +167,46 @@ ExecStart=/home/jcm/recipes/recipesenv/bin/gunicorn \
 WantedBy=multi-user.target
 ```
 
+
+We can now start and enable the Gunicorn socket. This will create the socket file at /run/gunicorn.sock now and at boot. When a connection is made to that socket, systemd will automatically start the gunicorn.service to handle it:
+```
+sudo systemctl start gunicorn.socket
+sudo systemctl enable gunicorn.socket
+```
+Check the status of the process to find out whether it was able to start:
+```
+sudo systemctl status gunicorn.socket
+```
+You should receive an output like this:
+```
+Output
+● gunicorn.socket - gunicorn socket
+     Loaded: loaded (/etc/systemd/system/gunicorn.socket; enabled; vendor prese>
+     Active: active (listening) since Fri 2020-06-26 17:53:10 UTC; 14s ago
+   Triggers: ● gunicorn.service
+     Listen: /run/gunicorn.sock (Stream)
+      Tasks: 0 (limit: 1137)
+     Memory: 0B
+     CGroup: /system.slice/gunicorn.socket
+```
+Next, check for the existence of the gunicorn.sock file within the /run directory:
+```
+$ file /run/gunicorn.sock
+```
+```
+Output
+/run/gunicorn.sock: socket
+```
+
+Check the Gunicorn socket’s logs by typing:
+```
+$ sudo journalctl -u gunicorn.socket
+```
+
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn
+
+
 ## Configure Nginx to Proxy Pass to Gunicorn
 ow that Gunicorn is set up, we need to configure Nginx to pass traffic to the process.
 
@@ -221,41 +261,6 @@ sudo ufw allow 'Nginx Full'
 
 
 
-
-We can now start and enable the Gunicorn socket. This will create the socket file at /run/gunicorn.sock now and at boot. When a connection is made to that socket, systemd will automatically start the gunicorn.service to handle it:
-```
-sudo systemctl start gunicorn.socket
-sudo systemctl enable gunicorn.socket
-```
-Check the status of the process to find out whether it was able to start:
-```
-sudo systemctl status gunicorn.socket
-```
-You should receive an output like this:
-```
-Output
-● gunicorn.socket - gunicorn socket
-     Loaded: loaded (/etc/systemd/system/gunicorn.socket; enabled; vendor prese>
-     Active: active (listening) since Fri 2020-06-26 17:53:10 UTC; 14s ago
-   Triggers: ● gunicorn.service
-     Listen: /run/gunicorn.sock (Stream)
-      Tasks: 0 (limit: 1137)
-     Memory: 0B
-     CGroup: /system.slice/gunicorn.socket
-```
-Next, check for the existence of the gunicorn.sock file within the /run directory:
-```
-$ file /run/gunicorn.sock
-```
-```
-Output
-/run/gunicorn.sock: socket
-```
-
-Check the Gunicorn socket’s logs by typing:
-```
-$ sudo journalctl -u gunicorn.socket
-```
 
 
 
