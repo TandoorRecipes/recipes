@@ -152,7 +152,7 @@ After=network.target
 User=jcm
 Group=www-data
 WorkingDirectory=/home/jcm/recipes
-ExecStart=/home/jcm/recipes/recipesenv/bin/guinicorn
+ExecStart=/home/jcm/recipes/recipesenv/bin/gunicorn
           --access-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
@@ -161,6 +161,58 @@ ExecStart=/home/jcm/recipes/recipesenv/bin/guinicorn
 [Install]
 WantedBy=multi-user.target
 ```
+
+## Configure Nginx to Proxy Pass to Gunicorn
+ow that Gunicorn is set up, we need to configure Nginx to pass traffic to the process.
+
+Start by creating and opening a new server block in Nginx’s sites-available directory:
+
+```
+sudo nano /etc/nginx/sites-available/recipes
+```
+
+```
+server {
+    listen 8002;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/jcm/recipes/recipes/staticfiles;
+    }
+
+    location /media/ {
+        root /home/jcm/recipes/recipes/mediafiles;
+    }
+    
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+```
+Save and close the file when you are finished. Now, we can enable the file by linking it to the sites-enabled directory:
+```
+sudo ln -s /etc/nginx/sites-available/recipes /etc/nginx/sites-enabled
+```
+
+Test your Nginx configuration for syntax errors by typing:
+```
+sudo nginx -t
+```
+If no errors are reported, go ahead and restart Nginx by typing:
+```
+sudo systemctl restart nginx
+```
+
+Finally, we need to open up our firewall to normal traffic on port 80. Since we no longer need access to the development server, we can remove the rule to open port 8000 as well:
+```
+sudo ufw delete allow 8002
+sudo ufw allow 'Nginx Full'
+```
+
+
+
+
 
 
 
@@ -194,6 +246,24 @@ $ file /run/gunicorn.sock
 Output
 /run/gunicorn.sock: socket
 ```
+
+Check the Gunicorn socket’s logs by typing:
+```
+$ sudo journalctl -u gunicorn.socket
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
