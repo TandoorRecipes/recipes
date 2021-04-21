@@ -221,12 +221,12 @@ server {
     listen 8002;
 
     location = /favicon.ico { access_log off; log_not_found off; }
-    location /static/ {
-        root /home/jcm/recipes/recipes/staticfiles;
+    location /static {
+        alias /home/jcm/recipes/recipes/staticfiles;
     }
 
-    location /media/ {
-        root /home/jcm/recipes/recipes/mediafiles;
+    location /media {
+        alias /home/jcm/recipes/recipes/mediafiles;
     }
     
     location / {
