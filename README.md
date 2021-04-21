@@ -92,7 +92,9 @@ Download the .env configuration file and edit it accordingly.
 ```
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
 ```
-Load variables from .env
+edit .env template line 
+Load variables from POSTGRES_HOST=db_recipes to POSTGRES_HOST=localhost
+
 ``` shell script
 $ export $(cat .env |grep "^[^#]" | xargs) 
 ```
