@@ -117,7 +117,86 @@ python3.8 manage.py runserver
 ```
 
 
-## Setup web services
+## Creating systemd Socket and Service Files for Gunicorn
+
+The Gunicorn socket will be created at boot and will listen for connections. When a connection occurs, systemd will automatically start the Gunicorn process to handle the connection.
+
+Start by creating and opening a systemd socket file for Gunicorn with sudo privileges:
+```
+sudo nano /etc/systemd/system/gunicorn.socket
+```
+Inside, we will create a [Unit] section to describe the socket, a [Socket] section to define the socket location, and an [Install] section to make sure the socket is created at the right time:
+```
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+```
+
+Next, create and open a systemd service file for Gunicorn with sudo privileges in your text editor. The service filename should match the socket filename with the exception of the extension:
+```
+sudo nano /etc/systemd/system/gunicorn.service
+```
+
+```
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=jcm
+Group=www-data
+WorkingDirectory=/home/jcm/recipes
+ExecStart=/home/jcm/recipes/recipesenv/bin/guinicorn
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          recipes.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
+
+We can now start and enable the Gunicorn socket. This will create the socket file at /run/gunicorn.sock now and at boot. When a connection is made to that socket, systemd will automatically start the gunicorn.service to handle it:
+```
+sudo systemctl start gunicorn.socket
+sudo systemctl enable gunicorn.socket
+```
+Check the status of the process to find out whether it was able to start:
+```
+sudo systemctl status gunicorn.socket
+```
+You should receive an output like this:
+```
+Output
+● gunicorn.socket - gunicorn socket
+     Loaded: loaded (/etc/systemd/system/gunicorn.socket; enabled; vendor prese>
+     Active: active (listening) since Fri 2020-06-26 17:53:10 UTC; 14s ago
+   Triggers: ● gunicorn.service
+     Listen: /run/gunicorn.sock (Stream)
+      Tasks: 0 (limit: 1137)
+     Memory: 0B
+     CGroup: /system.slice/gunicorn.socket
+```
+Next, check for the existence of the gunicorn.sock file within the /run directory:
+```
+$ file /run/gunicorn.sock
+```
+```
+Output
+/run/gunicorn.sock: socket
+```
+
+
+
 
 Create a service that will start gunicorn at boot:
 ```
@@ -153,7 +232,7 @@ systemctl status gunicorn_recipes.service
 
 
 
-
+ --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/run/guinicorn.sock recipes.wsgi:application
 
 
 
