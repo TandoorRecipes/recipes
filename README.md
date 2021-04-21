@@ -151,8 +151,8 @@ After=network.target
 [Service]
 User=jcm
 Group=www-data
-WorkingDirectory=/home/jcm/recipes
-ExecStart=/home/jcm/recipes/recipesenv/bin/gunicorn
+WorkingDirectory=/home/jcm/recipes/recipes
+ExecStart=/home/jcm/recipes/recipesenv/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
