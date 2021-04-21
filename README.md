@@ -223,11 +223,11 @@ server {
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static {
-        alias /home/jcm/recipes/recipes/staticfiles/recipes;
+        alias /home/jcm/recipes/recipes/staticfiles;
     }
 
     location /media {
-        alias /home/jcm/recipes/recipes/mediafiles/recipes;
+        alias /home/jcm/recipes/recipes/mediafiles;
     }
     
     location / {
