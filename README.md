@@ -88,7 +88,10 @@ Get the last version from the repository:
 ``` shell script
 $ git clone https://github.com/vabene1111/recipes.git -b master
 ```
-
+Download the .env configuration file and edit it accordingly.
+```
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
+```
 Load variables from .env
 ``` shell script
 $ export $(cat .env |grep "^[^#]" | xargs) 
