@@ -23,7 +23,7 @@
             let url = localStorage.getItem('importURL')
             let redirect = localStorage.getItem('redirectURL')
             let token = localStorage.getItem('token')
-            let params = { 'html' : recipe,'url': window.location.href}; 
+            let params = { 'url': window.location.protocol + '//' + window.location.host + window.location.pathname, 'html' : recipe}; 
             
             const xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
