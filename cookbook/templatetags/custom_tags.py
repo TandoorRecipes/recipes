@@ -118,6 +118,7 @@ def bookmarklet(request):
     else:
         prefix = "http://"
     server = prefix + request.get_host()
+    prefix = settings.JS_REVERSE_SCRIPT_PREFIX
     # TODO is it safe to store the token in clear text in a bookmark?
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
@@ -131,7 +132,7 @@ def bookmarklet(request):
             localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
             localStorage.setItem('token', '" + api_token.__str__() + "'); \
             document.body.appendChild(document.createElement(\'script\')).src=\'"  \
-            + server + static('js/bookmarklet.js') + "? \
+            + server + prefix + static('js/bookmarklet.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();"
 
     return re.sub(r"[\n\t\s]*", "", bookmark)
