@@ -2,7 +2,7 @@ Django==3.2
 cryptography==3.4.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
-django-cleanup==5.1.0
+django-cleanup==5.2.0
 django-crispy-forms==1.11.2
 django-emoji-picker==0.0.6
 django-filter==2.4.0
