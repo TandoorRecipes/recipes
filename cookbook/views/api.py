@@ -351,7 +351,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        self.queryset = search_recipes(self.queryset, self.request.GET)
+        self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
 
         return super().get_queryset()
 

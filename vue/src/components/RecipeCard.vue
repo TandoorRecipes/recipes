@@ -29,8 +29,8 @@
     </b-card-body>
 
 
-    <b-card-footer v-if="meal_plan !== undefined">
-      <i class="far fa-calendar-alt"></i> {{ meal_plan.meal_type_name }}
+    <b-card-footer v-if="footer_text !== undefined">
+      <i v-bind:class="footer_icon"></i> {{ footer_text }}
     </b-card-footer>
   </b-card>
 
@@ -50,6 +50,8 @@ export default {
   props: {
     recipe: Object,
     meal_plan: Object,
+    footer_text: String,
+    footer_icon: String,
   },
   data() {
     return {
