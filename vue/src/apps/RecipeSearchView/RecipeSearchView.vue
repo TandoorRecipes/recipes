@@ -17,14 +17,14 @@
                        v-bind:placeholder="$t('Search')"></b-input>
               <b-input-group-append>
                 <b-button v-b-toggle.collapse_advanced_search variant="primary" class="shadow-none"><i
-                    class="fas fa-caret-down" v-if="!advanced_search_visible"></i><i class="fas fa-caret-up"
-                                                                                     v-if="advanced_search_visible"></i>
+                    class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i class="fas fa-caret-up"
+                                                                                              v-if="settings.advanced_search_visible"></i>
                 </b-button>
               </b-input-group-append>
             </b-input-group>
 
 
-            <b-collapse id="collapse_advanced_search" class="mt-2" v-model="advanced_search_visible">
+            <b-collapse id="collapse_advanced_search" class="mt-2" v-model="settings.advanced_search_visible">
               <div class="card">
                 <div class="card-body">
                   <div class="row">
@@ -66,9 +66,10 @@
                         <b-input-group-append>
                           <b-input-group-text>
 
-                            <b-form-checkbox v-model="search_keywords_or" name="check-button" @change="refreshData"
+                            <b-form-checkbox v-model="settings.search_keywords_or" name="check-button"
+                                             @change="refreshData"
                                              class="shadow-none" switch>
-                              <span class="text-uppercase" v-if="search_keywords_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-if="settings.search_keywords_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
                             </b-form-checkbox>
                           </b-input-group-text>
@@ -88,9 +89,10 @@
                                              v-bind:placeholder="$t('Ingredients')"></generic-multiselect>
                         <b-input-group-append>
                           <b-input-group-text>
-                            <b-form-checkbox v-model="search_foods_or" name="check-button" @change="refreshData"
+                            <b-form-checkbox v-model="settings.search_foods_or" name="check-button"
+                                             @change="refreshData"
                                              class="shadow-none" switch>
-                              <span class="text-uppercase" v-if="search_foods_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-if="settings.search_foods_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
                             </b-form-checkbox>
                           </b-input-group-text>
@@ -112,9 +114,10 @@
                         <b-input-group-append>
                           <b-input-group-text>
 
-                            <b-form-checkbox v-model="search_books_or" name="check-button" @change="refreshData"
+                            <b-form-checkbox v-model="settings.search_books_or" name="check-button"
+                                             @change="refreshData"
                                              class="shadow-none" tyle="width: 100%" switch>
-                              <span class="text-uppercase" v-if="search_books_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-if="settings.search_books_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
                             </b-form-checkbox>
                           </b-input-group-text>
@@ -141,12 +144,14 @@
               <template
                   v-if="search_input === '' && search_keywords.length === 0 &&  search_foods.length === 0  && search_books.length === 0">
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
-                             :meal_plan="m" :footer_text="m.meal_type_name" footer_icon="far fa-calendar-alt"></recipe-card>
+                             :meal_plan="m" :footer_text="m.meal_type_name"
+                             footer_icon="far fa-calendar-alt"></recipe-card>
 
-                <recipe-card v-for="r in last_viewed_recipes" v-bind:key="`rv_${r.id}`" :recipe="r" v-bind:footer_text="$t('Recently_Viewed')" footer_icon="fas fa-eye"></recipe-card>
+                <recipe-card v-for="r in last_viewed_recipes" v-bind:key="`rv_${r.id}`" :recipe="r"
+                             v-bind:footer_text="$t('Recently_Viewed')" footer_icon="fas fa-eye"></recipe-card>
               </template>
 
-              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r" ></recipe-card>
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
             </div>
           </div>
         </div>
@@ -182,6 +187,10 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import moment from 'moment'
 
+import VueCookies from 'vue-cookies'
+
+Vue.use(VueCookies)
+
 import {ResolveUrlMixin} from "@/utils/utils";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -208,11 +217,12 @@ export default {
       search_foods: [],
       search_books: [],
 
-      search_keywords_or: true,
-      search_foods_or: true,
-      search_books_or: true,
-
-      advanced_search_visible: true,
+      settings: {
+        search_keywords_or: true,
+        search_foods_or: true,
+        search_books_or: true,
+        advanced_search_visible: false,
+      },
 
       pagination_count: 0,
       pagination_page: 1,
@@ -220,9 +230,23 @@ export default {
 
   },
   mounted() {
+    if (this.$cookies.isKey('search_settings')) {
+      console.log('loaded cookie settings')
+      this.settings = this.$cookies.get("search_settings")
+    }
+
     this.refreshData()
 
     this.loadSpecialData()
+  },
+  watch: {
+    settings: {
+      handler(val) {
+        console.log('saved cookie settings', val)
+        this.$cookies.set("search_settings", this.settings, -1)
+      },
+      deep: true
+    }
   },
   methods: {
     refreshData: function () {
@@ -241,9 +265,9 @@ export default {
             return A["id"];
           }),
 
-          keywords_or: this.search_keywords_or,
-          foods_or: this.search_foods_or,
-          books_or: this.search_books_or,
+          keywords_or: this.settings.search_keywords_or,
+          foods_or: this.settings.search_foods_or,
+          books_or: this.settings.search_books_or,
 
           internal: this.search_internal,
           page: this.pagination_page,
