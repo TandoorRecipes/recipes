@@ -3,14 +3,12 @@
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
   "show_only_internal": "Show only internal recipes",
-
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
   "Add_to_Book": "Add to Book",
   "Add_to_Shopping": "Add to Shopping",
   "Add_to_Plan": "Add to Plan",
   "Step_start_time": "Step start time",
-
   "Select_Book": "Select Book",
   "Recipe_Image": "Recipe Image",
   "Import_finished": "Import finished",
@@ -20,7 +18,6 @@
   "Url_Import": "Url Import",
   "Reset_Search": "Reset Search",
   "Recently_Viewed": "Recently Viewed",
-
   "Keywords": "Keywords",
   "Books": "Books",
   "Proteins": "Proteins",
@@ -39,6 +36,7 @@
   "Servings": "Servings",
   "Waiting": "Waiting",
   "Preparation": "Preparation",
+  "External": "External",
   "Edit": "Edit",
   "Open": "Open",
   "Save": "Save",

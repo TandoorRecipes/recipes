@@ -23,6 +23,7 @@
         <template v-if="recipe !== null">
           {{ recipe.description }}
           <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
+          <b-badge pill variant="info" v-if="!recipe.internal">{{ $t('External') }}</b-badge>
         </template>
         <template v-else>{{ meal_plan.note }}</template>
       </b-card-text>
