@@ -138,12 +138,15 @@
           <div class="col col-md-12">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
 
-              <template v-if="search_input === '' && search_keywords.length === 0 &&  search_foods.length === 0  && search_books.length === 0">
+              <template
+                  v-if="search_input === '' && search_keywords.length === 0 &&  search_foods.length === 0  && search_books.length === 0">
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
-                             :meal_plan="m"></recipe-card>
+                             :meal_plan="m" :footer_text="m.meal_type_name" footer_icon="far fa-calendar-alt"></recipe-card>
+
+                <recipe-card v-for="r in last_viewed_recipes" v-bind:key="`rv_${r.id}`" :recipe="r" v-bind:footer_text="$t('Recently_Viewed')" footer_icon="fas fa-eye"></recipe-card>
               </template>
 
-              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r" ></recipe-card>
             </div>
           </div>
         </div>
@@ -197,6 +200,7 @@ export default {
     return {
       recipes: [],
       meal_plans: [],
+      last_viewed_recipes: [],
 
       search_input: '',
       search_internal: false,
@@ -259,6 +263,10 @@ export default {
         }
       }).then(result => {
         this.meal_plans = result.data
+      })
+
+      apiClient.listRecipes({query: {last_viewed: 5}}).then(result => {
+        this.last_viewed_recipes = result.data.results
       })
     },
     genericSelectChanged: function (obj) {
