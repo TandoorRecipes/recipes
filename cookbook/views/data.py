@@ -14,6 +14,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
 from PIL import Image, UnidentifiedImageError
+from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.permission_helper import (group_required,
@@ -164,7 +165,7 @@ def import_url(request):
             step.ingredients.add(ingredient)
             print(ingredient)
 
-        if 'image' in data and data['image'] != '':
+        if 'image' in data and data['image'] != '' and data['image'] is not None:
             try:
                 response = requests.get(data['image'])
                 img = Image.open(BytesIO(response.content))
@@ -182,6 +183,8 @@ def import_url(request):
                 )
                 recipe.save()
             except UnidentifiedImageError:
+                pass
+            except MissingSchema:
                 pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
