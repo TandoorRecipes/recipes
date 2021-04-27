@@ -1,10 +1,11 @@
 import re
+from bs4 import BeautifulSoup
 
 from django.utils.translation import gettext as _
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient
+from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
 
 
 class RecipeKeeper(Integration):
@@ -12,46 +13,51 @@ class RecipeKeeper(Integration):
     def import_file_name_filter(self, zip_info_object):
         return re.match(r'^recipes.html$', zip_info_object.filename)
 
+    def split_recipe_file(self, file):
+        recipe_html = BeautifulSoup(file, 'html.parser')
+        return recipe_html.find_all('div',class_='recipe-details')
+
     def get_recipe_from_file(self, file):
-        source_url = ''
+        # 'file' comes is as a beautifulsoup object
+        recipe = Recipe.objects.create(name=file.find("h2",{"itemprop":"name"}).text.strip(), created_by=self.request.user, internal=True, space=self.request.space, )
 
-        ingredient_mode = 0
+        # add 'Courses' and 'Categories' as keywords
+        for course in file.find_all("span", {"itemprop": "recipeCourse"}):
+            keyword, created = Keyword.objects.get_or_create(name=course.text, space=self.request.space)
+            recipe.keywords.add(keyword)
 
-        ingredients = []
-        directions = []
-        for i, fl in enumerate(file.readlines(), start=0):
-            line = fl.decode("utf-8")
-            if i == 0:
-                title = line.strip()
-            else:
-                if line.startswith('https:') or line.startswith('http:'):
-                    source_url = line.strip()
-                else:
-                    if ingredient_mode == 1 and len(line.strip()) == 0:
-                        ingredient_mode = 2
-                    if re.match(r'^([0-9])[^.](.)*$', line) and ingredient_mode < 2:
-                        ingredient_mode = 1
-                        ingredients.append(line.strip())
-                    else:
-                        directions.append(line.strip())
+        for category in file.find_all("meta", {"itemprop":"recipeCategory"}):
+            keyword, created = Keyword.objects.get_or_create(name=category.get("content"), space=self.request.space)
+            recipe.keywords.add(keyword)
 
-        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space, )
+        # TODO: import prep and cook times
+        # Recipe Keeper uses ISO 8601 format for its duration periods.
 
-        step = Step.objects.create(instruction='\n'.join(directions))
+        ingredients_added = False
+        for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
+            
+            if s.text == "":
+                continue
 
-        if source_url != '':
-            step.instruction += '\n' + source_url
-            step.save()
+            step = Step.objects.create(
+                instruction=s.text
+            )
+            if not ingredients_added:
+                ingredients_added = True
+                for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
+                    if ingredient.text == "":
+                        continue
+                    amount, unit, ingredient, note = parse(ingredient.text.strip())
+                    f = get_food(ingredient, self.request.space)
+                    u = get_unit(unit, self.request.space)
+                    step.ingredients.add(Ingredient.objects.create(
+                        food=f, unit=u, amount=amount, note=note
+                    ))
+            recipe.steps.add(step)
 
-        for ingredient in ingredients:
-            if len(ingredient.strip()) > 0:
-                amount, unit, ingredient, note = parse(ingredient)
-                f = get_food(ingredient, self.request.space)
-                u = get_unit(unit, self.request.space)
-                step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note
-                ))
-        recipe.steps.add(step)
+  #      if source_url != '':
+  #          step.instruction += '\n' + source_url
+  #          step.save()
 
         return recipe
 
