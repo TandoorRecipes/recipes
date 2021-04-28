@@ -31,6 +31,9 @@ class RecetteTek(Integration):
         # Create initial recipe with just a title and a decription
         recipe = Recipe.objects.create(name=file['title'], created_by=self.request.user, internal=True, space=self.request.space, )
 
+        # set the description as an empty string for later use for the source URL, incase there is no description text.
+        recipe.description = ''
+
         try:
             if file['description'] != '':
                 recipe.description = file['description'].strip()
@@ -80,11 +83,10 @@ class RecetteTek(Integration):
             
         recipe.save()
 
-        # Append the original import url if it exists
+        # Append the original import url to the description if it exists
         try: 
             if file['url'] != '':
-                step.instruction += '\n\nImported from: ' + file['url']
-                step.save()
+                recipe.description += "\n\nOriginal Source: " + file['url']
         except Exception as e:
             print(recipe.name, ': failed to import source url ', str(e))
 
