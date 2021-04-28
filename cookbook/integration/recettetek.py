@@ -57,9 +57,13 @@ class RecetteTek(Integration):
         recipe.steps.add(step)
 
         # Attempt to import prep/cooking times
+        # quick hack, this assumes only one number in the quantity field.
         try:
             if file['quantity'] != '':
-                recipe.servings = int(file['quantity'])
+                for item in file['quantity'].split(' '):
+                    if item.isdigit():
+                        recipe.servings = int(item)
+                        break
         except Exception as e:
             print(recipe.name, ': failed to parse quantity ', str(e))
 
