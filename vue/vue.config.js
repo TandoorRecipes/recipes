@@ -78,9 +78,7 @@ module.exports = {
         })
         */
 
-        config
-            .plugin('BundleTracker')
-            .use(BundleTracker, [{filename: '../vue/webpack-stats.json'}]);
+        config.plugin('BundleTracker').use(BundleTracker, [{relativePath: true, path: '../vue/'}]);
 
         config.resolve.alias
             .set('__STATIC__', 'static')
