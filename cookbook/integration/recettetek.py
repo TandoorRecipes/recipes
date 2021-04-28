@@ -90,17 +90,24 @@ class RecetteTek(Integration):
 
         # TODO: Parse Nutritional Information
             
-        # Grab the original image that was used for the recipe
+        # Import the original image from the zip file, if we cannot do that, attempt to download it again.
         try:
-            if file['originalPicture']!= '':
-                response = requests.get(file['originalPicture'])
-                if imghdr.what(BytesIO(response.content)) != None:
-                    self.import_recipe_image(recipe, BytesIO(response.content))
-                else:
-                    raise Exception("Original image failed to download.")
+            if file['pictures'][0] !='':
+                image_file_name = file['pictures'][0].split('/')[-1]
+                for f in self.files:
+                    if '.rtk' in f['name']:
+                        import_zip = ZipFile(f['file'])
+                        self.import_recipe_image(recipe, BytesIO(import_zip.read(image_file_name)))
+            else:
+                if file['originalPicture'] != '':
+                    response=requests.get(file['originalPicture'])
+                    if imghdr.what(BytesIO(response.content)) != None:
+                        self.import_recipe_image(recipe, BytesIO(response.content))
+                    else:
+                        raise Exception("Original image failed to download.")
         except Exception as e:
             print(recipe.name, ': failed to import image ', str(e))
-            
+
         return recipe
 
     def get_file_from_recipe(self, recipe):
