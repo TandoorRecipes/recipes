@@ -27,6 +27,7 @@
             <b-collapse id="collapse_advanced_search" class="mt-2" v-model="settings.advanced_search_visible">
               <div class="card">
                 <div class="card-body">
+
                   <div class="row">
                     <div class="col-md-3" style="margin-top: 1vh">
                       <a class="btn btn-primary btn-block text-uppercase"
@@ -51,21 +52,18 @@
                   </div>
 
 
+
+
                   <div class="row">
                     <div class="col-12">
-
-
                       <b-input-group style="margin-top: 1vh">
-
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
                                              :initial_selection="search_keywords"
                                              search_function="listKeywords" label="label"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Keywords')"></generic-multiselect>
-
                         <b-input-group-append>
                           <b-input-group-text>
-
                             <b-form-checkbox v-model="settings.search_keywords_or" name="check-button"
                                              @change="refreshData"
                                              class="shadow-none" switch>
@@ -80,7 +78,6 @@
 
                   <div class="row">
                     <div class="col-12">
-
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
                                              :initial_selection="search_foods"
@@ -98,13 +95,11 @@
                           </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
-
                     </div>
                   </div>
 
                   <div class="row">
                     <div class="col-12">
-
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="search_books"
@@ -113,7 +108,6 @@
                                              v-bind:placeholder="$t('Books')"></generic-multiselect>
                         <b-input-group-append>
                           <b-input-group-text>
-
                             <b-form-checkbox v-model="settings.search_books_or" name="check-button"
                                              @change="refreshData"
                                              class="shadow-none" tyle="width: 100%" switch>
@@ -123,8 +117,6 @@
                           </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
-
-
                     </div>
                   </div>
 
@@ -222,6 +214,8 @@ export default {
         search_foods_or: true,
         search_books_or: true,
         advanced_search_visible: false,
+        show_meal_plan: true,
+        recently_viewed: 5,
       },
 
       pagination_count: 0,
