@@ -1,5 +1,7 @@
 import re
 from bs4 import BeautifulSoup
+from io import BytesIO
+from zipfile import ZipFile
 
 from django.utils.translation import gettext as _
 
@@ -15,18 +17,18 @@ class RecipeKeeper(Integration):
 
     def split_recipe_file(self, file):
         recipe_html = BeautifulSoup(file, 'html.parser')
-        return recipe_html.find_all('div',class_='recipe-details')
+        return recipe_html.find_all('div', class_='recipe-details')
 
     def get_recipe_from_file(self, file):
         # 'file' comes is as a beautifulsoup object
-        recipe = Recipe.objects.create(name=file.find("h2",{"itemprop":"name"}).text.strip(), created_by=self.request.user, internal=True, space=self.request.space, )
+        recipe = Recipe.objects.create(name=file.find("h2", {"itemprop": "name"}).text.strip(), created_by=self.request.user, internal=True, space=self.request.space, )
 
         # add 'Courses' and 'Categories' as keywords
         for course in file.find_all("span", {"itemprop": "recipeCourse"}):
             keyword, created = Keyword.objects.get_or_create(name=course.text, space=self.request.space)
             recipe.keywords.add(keyword)
 
-        for category in file.find_all("meta", {"itemprop":"recipeCategory"}):
+        for category in file.find_all("meta", {"itemprop": "recipeCategory"}):
             keyword, created = Keyword.objects.get_or_create(name=category.get("content"), space=self.request.space)
             recipe.keywords.add(keyword)
 
@@ -35,7 +37,7 @@ class RecipeKeeper(Integration):
 
         ingredients_added = False
         for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
-            
+
             if s.text == "":
                 continue
 
@@ -55,6 +57,16 @@ class RecipeKeeper(Integration):
                     ))
             recipe.steps.add(step)
 
+        # import the Primary recipe image that is stored in the Zip
+        try:
+            for f in self.files:
+                if '.zip' in f['name']:
+                    import_zip = ZipFile(f['file'])
+                    self.import_recipe_image(recipe, BytesIO(import_zip.read(file.find("img", class_="recipe-photo").get("src"))))
+        except Exception as e:
+            pass
+
+  # TODO: Import the source url
   #      if source_url != '':
   #          step.instruction += '\n' + source_url
   #          step.save()
