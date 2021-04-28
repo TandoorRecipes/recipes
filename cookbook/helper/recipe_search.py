@@ -22,10 +22,10 @@ def search_recipes(request, queryset, params):
     search_last_viewed = int(params.get('last_viewed', 0))
 
     if search_last_viewed > 0:
-        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space).order_by(
-            '-created_at').values('recipe').distinct().all()[:search_last_viewed]
-
-        return queryset.filter(pk__in=last_viewed_recipes)
+        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space).values_list('recipe__pk', flat=True).distinct()
+        # TODO filter by created by in last two weeks and re add limit to recipe selection (after reversing the order)
+        # Distinct does not work with order by
+        return queryset.filter(pk__in=list(set(last_viewed_recipes)))
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                    'django.db.backends.postgresql']:

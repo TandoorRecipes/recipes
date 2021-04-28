@@ -51,8 +51,46 @@
                     </div>
                   </div>
 
-
-
+                  <button id="id_settings_button" class="btn btn-primary"><i class="fas fa-cog"></i></button>
+                  <b-popover
+                      target="id_settings_button"
+                      triggers="click"
+                      placement="bottom"
+                      :title="$t('Settings')">
+                    <div>
+                      <b-form-group
+                          v-bind:label="$t('Recently_Viewed')"
+                          label-for="popover-input-1"
+                          label-cols="3"
+                          class="mb-1">
+                        <b-form-input
+                            type="number"
+                            v-model="settings.recently_viewed"
+                            id="popover-input-1"
+                            size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                      <b-form-group
+                          v-bind:label="$t('Meal_Plan')"
+                          label-for="popover-input-2"
+                          label-cols="3"
+                          class="mb-1">
+                        <b-form-checkbox
+                            switch
+                            v-model="settings.show_meal_plan"
+                            id="popover-input-2"
+                            size="sm"
+                        ></b-form-checkbox>
+                      </b-form-group>
+                    </div>
+                    <div class="row" style="margin-top: 1vh">
+                      <div class="col-12" style="text-align: right">
+                        <b-button size="sm" variant="secondary" style="margin-right:8px">Cancel
+                        </b-button>
+                        <b-button size="sm" variant="primary">Ok</b-button>
+                      </div>
+                    </div>
+                  </b-popover>
 
                   <div class="row">
                     <div class="col-12">
@@ -224,23 +262,33 @@ export default {
 
   },
   mounted() {
-    if (this.$cookies.isKey('search_settings')) {
-      console.log('loaded cookie settings')
-      this.settings = this.$cookies.get("search_settings")
-    }
+    this.$nextTick(function () {
+      if (this.$cookies.isKey('search_settings')) {
+        console.log('loaded cookie settings', this.$cookies.get("search_settings"))
+        this.settings = this.$cookies.get("search_settings")
+      }
+
+      this.loadMealPlan()
+    this.loadRecentlyViewed()
+    })
 
     this.refreshData()
-
-    this.loadSpecialData()
   },
   watch: {
     settings: {
-      handler(val) {
-        console.log('saved cookie settings', val)
+      handler() {
         this.$cookies.set("search_settings", this.settings, -1)
       },
       deep: true
-    }
+    },
+    'settings.show_meal_plan': function () {
+      console.log('Test')
+      this.loadMealPlan()
+    },
+    'settings.recently_viewed': function () {
+      console.log('RV')
+      this.loadRecentlyViewed()
+    },
   },
   methods: {
     refreshData: function () {
@@ -271,21 +319,33 @@ export default {
         this.pagination_count = result.data.count
       })
     },
-    loadSpecialData: function () {
+    loadMealPlan: function () {
       let apiClient = new ApiApiFactory()
 
-      apiClient.listMealPlans({
-        query: {
-          from_date: moment().format('YYYY-MM-DD'),
-          to_date: moment().format('YYYY-MM-DD')
-        }
-      }).then(result => {
-        this.meal_plans = result.data
-      })
+      if (this.settings.show_meal_plan) {
+        apiClient.listMealPlans({
+          query: {
+            from_date: moment().format('YYYY-MM-DD'),
+            to_date: moment().format('YYYY-MM-DD')
+          }
+        }).then(result => {
+          this.meal_plans = result.data
+        })
+      } else {
+        this.meal_plans = []
+      }
 
-      apiClient.listRecipes({query: {last_viewed: 5}}).then(result => {
-        this.last_viewed_recipes = result.data.results
-      })
+
+    },
+    loadRecentlyViewed: function () {
+      let apiClient = new ApiApiFactory()
+      if (this.settings.recently_viewed > 0) {
+        apiClient.listRecipes({query: {last_viewed: this.settings.recently_viewed}}).then(result => {
+          this.last_viewed_recipes = result.data.results
+        })
+      } else {
+        this.last_viewed_recipes = []
+      }
     },
     genericSelectChanged: function (obj) {
       this[obj.var] = obj.val
