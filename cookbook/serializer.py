@@ -349,7 +349,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
 
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-    recipe = RecipeOverviewSerializer()
+    recipe = RecipeOverviewSerializer(required=False)
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
