@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2021-04-11 15:23+0000\n"
-"Last-Translator: vabene1111 <vabene1234@googlemail.com>\n"
+"PO-Revision-Date: 2021-05-01 13:01+0000\n"
+"Last-Translator: Marcel Paluch <marcelpaluch@icloud.com>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -43,7 +43,9 @@ msgstr ""
 
 #: .\cookbook\forms.py:46
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr "Standardeinheit für neue Zutaten."
+msgstr ""
+"Standardeinheit, die beim Einfügen einer neuen Zutat in ein Rezept zu "
+"verwenden ist."
 
 #: .\cookbook\forms.py:47
 msgid ""
@@ -71,7 +73,9 @@ msgstr "Anzahl an Dezimalstellen, auf die gerundet werden soll."
 
 #: .\cookbook\forms.py:51
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr "Ob Kommentare unter Rezepten erstellt und angesehen werden können."
+msgstr ""
+"Wenn du in der Lage sein willst, Kommentare unter Rezepten zu erstellen und "
+"zu sehen."
 
 #: .\cookbook\forms.py:53
 msgid ""
@@ -94,7 +98,7 @@ msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Beide Felder sind optional, wenn keins von beiden gegeben ist, wird der "
+"Beide Felder sind optional. Wenn keins von beiden gegeben ist, wird der "
 "Nutzername angezeigt"
 
 #: .\cookbook\forms.py:93 .\cookbook\forms.py:315
@@ -123,7 +127,7 @@ msgstr "Pfad"
 
 #: .\cookbook\forms.py:98
 msgid "Storage UID"
-msgstr "Speicher-ID"
+msgstr "Speicher-UID"
 
 #: .\cookbook\forms.py:121
 msgid "Default"
@@ -135,7 +139,7 @@ msgid ""
 "ignored. Check this box to import everything."
 msgstr ""
 "Um Duplikate zu vermeiden werden Rezepte mit dem gleichen Namen ignoriert. "
-"Checken sie diese Box um alle Rezepte zu importieren."
+"Aktivieren Sie dieses Kontrollkästchen, um alles zu importieren."
 
 #: .\cookbook\forms.py:149
 msgid "New Unit"
@@ -204,8 +208,8 @@ msgstr "Mindestens ein Rezept oder ein Titel müssen angegeben werden."
 #: .\cookbook\forms.py:367
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
-"Benutzer, mit denen neue Rezepte standardmäßig geteilt werden sollen, können "
-"in den Einstellungen angegeben werden."
+"Sie können in den Einstellungen Standardbenutzer auflisten, für die Sie "
+"Rezepte freigeben möchten."
 
 #: .\cookbook\forms.py:368
 #: .\cookbook\templates\forms\edit_internal_recipe.html:377
@@ -213,8 +217,8 @@ msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
 msgstr ""
-"Markdown kann genutzt werden, um dieses Feld zu formatieren. Siehe <a href="
-"\"/docs/markdown/\">hier</a> für weitere Information."
+"Markdown kann genutzt werden, um dieses Feld zu formatieren. Siehe <a href=\""
+"/docs/markdown/\">hier</a> für weitere Information"
 
 #: .\cookbook\forms.py:393
 msgid "A username is not required, if left blank the new user can choose one."
@@ -309,8 +313,9 @@ msgstr "Quelle"
 #: .\cookbook\templates\forms\edit_internal_recipe.html:75
 #: .\cookbook\templates\include\log_cooking.html:16
 #: .\cookbook\templates\url_import.html:84
+#, fuzzy
 msgid "Servings"
-msgstr "Portion(en)"
+msgstr "Portionen"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
