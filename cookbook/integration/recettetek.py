@@ -42,6 +42,14 @@ class RecetteTek(Integration):
 
         step = Step.objects.create(instruction=file['instructions'])
 
+        # Append the original import url to the step (if it exists)
+        try:
+            if file['url'] != '':
+                step.instruction += '\n\nImported from: ' + file['url']
+                step.save()
+        except Exception as e:
+            print(recipe.name, ': failed to import source url ', str(e))
+        
         try:
             # Process the ingredients. Assumes 1 ingredient per line.
             for ingredient in file['ingredients'].split('\n'):
@@ -86,13 +94,6 @@ class RecetteTek(Integration):
             print(recipe.name, ': failed to parse cooking time ', str(e))
             
         recipe.save()
-
-        # Append the original import url to the description if it exists
-        try: 
-            if file['url'] != '':
-                recipe.description += "\n\nOriginal Source: " + file['url']
-        except Exception as e:
-            print(recipe.name, ': failed to import source url ', str(e))
 
         # TODO: Parse Nutritional Information
             
