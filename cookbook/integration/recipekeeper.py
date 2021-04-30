@@ -35,6 +35,7 @@ class RecipeKeeper(Integration):
         # TODO: import prep and cook times
         # Recipe Keeper uses ISO 8601 format for its duration periods.
 
+        source_url_added = False
         ingredients_added = False
         for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
 
@@ -44,6 +45,14 @@ class RecipeKeeper(Integration):
             step = Step.objects.create(
                 instruction=s.text
             )
+
+            if not source_url_added:
+                # If there is a source URL, add it to the first step field.
+                if file.find("span", {"itemprop": "recipeSource"}).text != '':
+                    step.instruction += "\n\nImported from: " + file.find("span", {"itemprop": "recipeSource"}).text
+                    step.save()
+                    source_url_added = True
+
             if not ingredients_added:
                 ingredients_added = True
                 for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
@@ -65,11 +74,6 @@ class RecipeKeeper(Integration):
                     self.import_recipe_image(recipe, BytesIO(import_zip.read(file.find("img", class_="recipe-photo").get("src"))))
         except Exception as e:
             pass
-
-  # TODO: Import the source url
-  #      if source_url != '':
-  #          step.instruction += '\n' + source_url
-  #          step.save()
 
         return recipe
 
