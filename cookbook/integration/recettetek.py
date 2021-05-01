@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient
+from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
 
 
 class RecetteTek(Integration):
@@ -94,6 +94,16 @@ class RecetteTek(Integration):
             print(recipe.name, ': failed to parse cooking time ', str(e))
             
         recipe.save()
+
+        # Import the recipe keywords
+        try:
+            if file['keywords'] != '':
+                for keyword in file['keywords'].split(';'):
+                    k, created = Keyword.objects.get_or_create(name=keyword.strip(), space=self.request.space)
+                    recipe.keywords.add(k)
+            recipe.save()
+        except Exception as e:
+            pass
 
         # TODO: Parse Nutritional Information
             
