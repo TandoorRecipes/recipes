@@ -421,6 +421,9 @@ class Comment(models.Model, PermissionModelMixin):
     def get_space_key():
         return 'recipe', 'space'
 
+    def get_space(self):
+        return self.recipe.space
+
     def __str__(self):
         return self.text
 

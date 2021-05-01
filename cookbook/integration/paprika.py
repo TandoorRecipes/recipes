@@ -20,8 +20,10 @@ class Paprika(Integration):
             recipe_json = json.loads(recipe_zip.read().decode("utf-8"))
 
             recipe = Recipe.objects.create(
-                name=recipe_json['name'].strip(), description=recipe_json['description'].strip(),
-                created_by=self.request.user, internal=True, space=self.request.space)
+                name=recipe_json['name'].strip(), created_by=self.request.user, internal=True, space=self.request.space)
+
+            if 'description' in recipe_json:
+                recipe.description = recipe_json['description'].strip()
 
             try:
                 if re.match(r'([0-9])+\s(.)*', recipe_json['servings'] ):
@@ -40,14 +42,17 @@ class Paprika(Integration):
             recipe.save()
 
             instructions = recipe_json['directions']
-            if len(recipe_json['notes'].strip()) > 0:
+            if recipe_json['notes'] and len(recipe_json['notes'].strip()) > 0:
                 instructions += '\n\n### ' + _('Notes') + ' \n' + recipe_json['notes']
 
-            if len(recipe_json['nutritional_info'].strip()) > 0:
+            if recipe_json['nutritional_info'] and len(recipe_json['nutritional_info'].strip()) > 0:
                 instructions += '\n\n### ' + _('Nutritional Information') + ' \n' + recipe_json['nutritional_info']
 
-            if len(recipe_json['source'].strip()) > 0 or len(recipe_json['source_url'].strip()) > 0:
-                instructions += '\n\n### ' + _('Source') + ' \n' + recipe_json['source'].strip() + ' \n' + recipe_json['source_url'].strip()
+            try:
+                if len(recipe_json['source'].strip()) > 0 or len(recipe_json['source_url'].strip()) > 0:
+                    instructions += '\n\n### ' + _('Source') + ' \n' + recipe_json['source'].strip() + ' \n' + recipe_json['source_url'].strip()
+            except AttributeError:
+                pass
 
             step = Step.objects.create(
                 instruction=instructions
@@ -58,14 +63,17 @@ class Paprika(Integration):
                     keyword, created = Keyword.objects.get_or_create(name=c.strip(), space=self.request.space)
                     recipe.keywords.add(keyword)
 
-            for ingredient in recipe_json['ingredients'].split('\n'):
-                if len(ingredient.strip()) > 0:
-                    amount, unit, ingredient, note = parse(ingredient)
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
-                    ))
+            try:
+                for ingredient in recipe_json['ingredients'].split('\n'):
+                    if len(ingredient.strip()) > 0:
+                        amount, unit, ingredient, note = parse(ingredient)
+                        f = get_food(ingredient, self.request.space)
+                        u = get_unit(unit, self.request.space)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note
+                        ))
+            except AttributeError:
+                pass
 
             recipe.steps.add(step)
 
