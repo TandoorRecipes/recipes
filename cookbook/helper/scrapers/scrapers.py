@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from json import JSONDecodeError
-from recipe_scrapers import SCRAPERS, get_domain, _exception_handling
+from recipe_scrapers import SCRAPERS, get_host_name
 from recipe_scrapers._factory import SchemaScraperFactory
 from recipe_scrapers._schemaorg import SchemaOrg
 
@@ -30,7 +30,7 @@ def text_scraper(text, url=None):
                 url=None
         ):
             self.wild_mode = False
-            self.exception_handling = _exception_handling
+            self.exception_handling = None  # TODO add new method here, old one was deprecated
             self.meta_http_equiv = False
             self.soup = BeautifulSoup(page_data, "html.parser")
             self.url = url

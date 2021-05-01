@@ -34,9 +34,13 @@ from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
+
                                                group_required, share_link_valid)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_url_import import get_from_scraper
+from cookbook.helper.recipe_search import search_recipes
+from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper, find_recipe_json
+
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
