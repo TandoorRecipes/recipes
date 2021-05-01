@@ -160,7 +160,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def create(self, validated_data):
-        obj, created = Keyword.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
+        obj, created = Keyword.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
         return obj
 
     class Meta:
@@ -174,7 +174,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
-        obj, created = Unit.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
+        obj, created = Unit.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
         return obj
 
     class Meta:
@@ -217,7 +217,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
-        obj, created = Food.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
+        obj, created = Food.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
         return obj
 
     def update(self, instance, validated_data):
