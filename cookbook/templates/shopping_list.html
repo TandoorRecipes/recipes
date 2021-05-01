@@ -825,7 +825,7 @@
                     }
                 },
                 getRecipes: function () {
-                    let url = "{% url 'api:recipe-list' %}?limit=5&internal=true"
+                    let url = "{% url 'api:recipe-list' %}?page_size=5&internal=true"
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
                     } else {
@@ -834,7 +834,7 @@
                     }
 
                     this.$http.get(url).then((response) => {
-                        this.recipes = response.data;
+                        this.recipes = response.data.results;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')

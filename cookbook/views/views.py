@@ -55,6 +55,9 @@ def index(request):
 
 def search(request):
     if has_group_permission(request.user, ('guest',)):
+        if request.user.userpreference.search_style == UserPreference.NEW:
+            return search_v2(request)
+
         f = RecipeFilter(request.GET,
                          queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
                          space=request.space)

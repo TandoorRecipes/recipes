@@ -13,8 +13,10 @@ import ast
 import os
 
 from django.contrib import messages
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
+from webpack_loader.loader import WebpackLoader
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -192,6 +194,18 @@ DATABASES = {
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
 
+
+class CustomWebpackLoader(WebpackLoader):
+
+    def get_chunk_url(self, chunk):
+        asset = self.get_assets()['assets'][chunk['name']]
+        return super().get_chunk_url(asset)
+
+    def filter_chunks(self, chunks):
+        chunks = [chunk if isinstance(chunk, dict) else {'name': chunk} for chunk in chunks]
+        return super().filter_chunks(chunks)
+
+
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
@@ -199,7 +213,8 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(VUE_DIR, 'webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        'LOADER_CLASS': 'recipes.settings.CustomWebpackLoader',
     }
 }
 
