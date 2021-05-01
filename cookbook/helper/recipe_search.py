@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from functools import reduce
 
 from django.contrib.postgres.search import TrigramSimilarity
@@ -22,10 +23,9 @@ def search_recipes(request, queryset, params):
     search_last_viewed = int(params.get('last_viewed', 0))
 
     if search_last_viewed > 0:
-        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space).values_list('recipe__pk', flat=True).distinct()
-        # TODO filter by created by in last two weeks and re add limit to recipe selection (after reversing the order)
-        # Distinct does not work with order by
-        return queryset.filter(pk__in=list(set(last_viewed_recipes)))
+        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space, created_at__gte=datetime.now() - timedelta(days=14)).values_list('recipe__pk', flat=True).distinct()
+
+        return queryset.filter(pk__in=list(set(last_viewed_recipes))[-search_last_viewed:])
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                    'django.db.backends.postgresql']:
