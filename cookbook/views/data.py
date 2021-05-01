@@ -17,8 +17,8 @@ from PIL import Image, UnidentifiedImageError
 from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
-from cookbook.helper.permission_helper import (group_required,
-                                               has_group_permission)
+from cookbook.helper.permission_helper import group_required, has_group_permission
+from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
                              RecipeImport, Step, Sync, Unit)
 from cookbook.tables import SyncTable
@@ -111,6 +111,8 @@ def batch_edit(request):
 def import_url(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        data['cookTime'] = parse_cooktime(data.get('cookTime', ''))
+        data['prepTime'] = parse_cooktime(data.get('prepTime', ''))
 
         recipe = Recipe.objects.create(
             name=data['name'],
@@ -130,23 +132,25 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if kw['id'] != "null" and (k := Keyword.objects.filter(id=kw['id'], space=request.space).first()):
-                recipe.keywords.add(k)
-            elif data['all_keywords']:
-                k = Keyword.objects.create(name=kw['text'], space=request.space)
-                recipe.keywords.add(k)
+            # if k := Keyword.objects.filter(name=kw['text'], space=request.space).first():
+            #     recipe.keywords.add(k)
+            # elif data['all_keywords']:
+            #     k = Keyword.objects.create(name=kw['text'], space=request.space)
+            #     recipe.keywords.add(k)
+            k, created = Keyword.objects.get_or_create(name=kw['text'].strip(), space=request.space)
+            recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
             ingredient = Ingredient()
 
             if ing['ingredient']['text'] != '':
                 ingredient.food, f_created = Food.objects.get_or_create(
-                    name=ing['ingredient']['text'], space=request.space
+                    name=ing['ingredient']['text'].strip(), space=request.space
                 )
 
             if ing['unit'] and ing['unit']['text'] != '':
                 ingredient.unit, u_created = Unit.objects.get_or_create(
-                    name=ing['unit']['text'], space=request.space
+                    name=ing['unit']['text'].strip(), space=request.space
                 )
 
             # TODO properly handle no_amount recipes

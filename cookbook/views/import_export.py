@@ -3,7 +3,7 @@ import threading
 from io import BytesIO
 
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -68,9 +68,15 @@ def import_recipe(request):
                 t.setDaemon(True)
                 t.start()
 
-                return HttpResponseRedirect(reverse('view_import_response', args=[il.pk]))
+                return JsonResponse({'import_id': [il.pk]})
             except NotImplementedError:
-                messages.add_message(request, messages.ERROR, _('Importing is not implemented for this provider'))
+                return JsonResponse(
+                    {
+                        'error': True,
+                        'msg': _('Importing is not implemented for this provider')
+                    },
+                    status=400
+                )
     else:
         form = ImportForm()
 
