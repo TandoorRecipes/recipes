@@ -2,7 +2,7 @@ Django==3.2
 cryptography==3.4.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
-django-cleanup==5.1.0
+django-cleanup==5.2.0
 django-crispy-forms==1.11.2
 django-emoji-picker==0.0.6
 django-filter==2.4.0
@@ -16,7 +16,7 @@ lxml==4.6.3
 Markdown==3.3.4
 Pillow==8.2.0
 psycopg2-binary==2.8.6
-python-dotenv==0.17.0
+python-dotenv==0.17.1
 requests==2.25.1
 simplejson==3.17.2
 six==1.15.0
@@ -31,7 +31,7 @@ Jinja2==2.11.3
 django-webpack-loader==0.7.0
 django-js-reverse==0.9.1
 django-allauth==0.44.0
-recipe-scrapers==12.2.2
+recipe-scrapers==13.1.1
 django-scopes==1.2.0
 pytest==6.2.3
 pytest-django==4.2.0

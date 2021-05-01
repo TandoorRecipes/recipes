@@ -269,6 +269,12 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 class RecipeOverviewSerializer(WritableNestedModelSerializer):
     keywords = KeywordLabelSerializer(many=True)
 
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        return instance
+
     class Meta:
         model = Recipe
         fields = (
@@ -342,7 +348,8 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         fields = ('id', 'book', 'recipe',)
 
 
-class MealPlanSerializer(SpacedModelSerializer):
+class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+    recipe = RecipeOverviewSerializer(required=False)
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
     note_markdown = serializers.SerializerMethodField('get_note_markdown')

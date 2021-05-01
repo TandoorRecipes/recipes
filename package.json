@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue-cookies": "^1.7.4"
+  }
+}

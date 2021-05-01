@@ -19,12 +19,14 @@ def meal_type(space_1, u1_s1):
 
 @pytest.fixture()
 def obj_1(space_1, recipe_1_s1, meal_type, u1_s1):
-    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, date=datetime.now(), created_by=auth.get_user(u1_s1))
+    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, date=datetime.now(),
+                                   created_by=auth.get_user(u1_s1))
 
 
 @pytest.fixture
 def obj_2(space_1, recipe_1_s1, meal_type, u1_s1):
-    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, date=datetime.now(), created_by=auth.get_user(u1_s1))
+    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, date=datetime.now(),
+                                   created_by=auth.get_user(u1_s1))
 
 
 @pytest.mark.parametrize("arg", [
@@ -55,13 +57,16 @@ def test_list_filter(obj_1, u1_s1):
     response = json.loads(r.content)
     assert len(response) == 1
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}').content)
     assert len(response) == 0
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?to_date={(datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")}').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?to_date={(datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")}').content)
     assert len(response) == 0
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?from_date={(datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}').content)
+    response = json.loads(u1_s1.get(
+        f'{reverse(LIST_URL)}?from_date={(datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}').content)
     assert len(response) == 1
 
 
@@ -100,10 +105,12 @@ def test_add(arg, request, u1_s2, recipe_1_s1, meal_type):
     c = request.getfixturevalue(arg[0])
     r = c.post(
         reverse(LIST_URL),
-        {'recipe': recipe_1_s1.id, 'meal_type': meal_type.id, 'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test'},
+        {'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []}, 'meal_type': meal_type.id,
+         'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test'},
         content_type='application/json'
     )
     response = json.loads(r.content)
+    print(response)
     assert r.status_code == arg[1]
     if r.status_code == 201:
         assert response['title'] == 'test'
