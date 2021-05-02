@@ -30,7 +30,7 @@ def text_scraper(text, url=None):
                 url=None
         ):
             self.wild_mode = False
-            self.exception_handling = None  # TODO add new method here, old one was deprecated
+            # self.exception_handling = None  # TODO add new method here, old one was deprecated
             self.meta_http_equiv = False
             self.soup = BeautifulSoup(page_data, "html.parser")
             self.url = url
