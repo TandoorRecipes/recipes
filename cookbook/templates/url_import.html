@@ -75,6 +75,25 @@
                     <label class="btn btn-outline-info btn-sm" @click="recipe_app='SAFRON'">
                     <input type="radio" autocomplete="off"> Safron
                     </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='CHEFTAP'">
+                    <input type="radio" autocomplete="off"> Cheftap
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='PEPPERPLATE'">
+                    <input type="radio" autocomplete="off"> Pepperplate
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='RECIPESAGE'">
+                    <input type="radio" autocomplete="off"> Recipesage
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='DOMESTICA'">
+                    <input type="radio" autocomplete="off"> Domestica
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='MEALMASTER'">
+                    <input type="radio" autocomplete="off"> Mealmaster
+                    </label>
+                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='REZKONV'">
+                    <input type="radio" autocomplete="off"> Rezkonv
+                    </label>
+
                 </div>
                 <b-form-file
                     class="my-2"
@@ -105,7 +124,7 @@
                     </textarea>
                 </div>
                 <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
-                            id="id_btn_app"><i class="fas fa-code"></i> {% trans 'Import' %} 
+                            id="id_btn_app"><i class="fas fa-code"></i> {% trans 'Import' %}
                 </button>
             </div>
         </div>
@@ -266,18 +285,18 @@
                     </div>
                     <br/>
                     <!-- end of preview card -->
-                    <button @click="showRecipe()" class="btn btn-primary shadow-none" type="button"
+                    <button @click="showRecipe()" class="btn btn-primary shadow-none" type="button" style="margin-bottom: 2vh"
                                 id="id_btn_json"><i class="fas fa-code"></i> {% trans 'Import' %} 
                     </button>
                 </div>
                 
                 <!-- start of source data -->
-                <div class="col" style="max-width:50%">
-                    <div class="card card-border-primary">
+                <div class="col" style="max-width:50%;">
+                    <div class="card card-border-primary sticky-top" style="z-index: 100;">
                         <div class="card-header">
                             <h3>{% trans 'Discovered Attributes' %}</h3>
                             <div class='small text-muted'>
-                                {% trans 'Drag recipe attributes from below into the appropriate box on the left. Click any node to display its full properties.' %} 
+                                {% trans 'Drag recipe attributes from below into the appropriate box on the left. Click any node to display its full properties.' %}
                             </div>
                         </div>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -291,8 +310,8 @@
                             <input type="radio" autocomplete="off"> images
                             </label>
                         </div>
-                        <i :class="[show_blank ? 'fa-chevron-up' : 'fa-chevron-down', 'fas']" 
-                                    style="cursor:pointer;" 
+                        <i :class="[show_blank ? 'fa-chevron-up' : 'fa-chevron-down', 'fas']"
+                                    style="cursor:pointer;"
                                     @click="show_blank=!show_blank"
                                     title="{% trans 'Show Blank Field' %}"></i>
                         <div class="card-body p-1">
@@ -304,9 +323,9 @@
                                     </div>
                                     <div class="small text-muted">{% trans 'Items dragged to Blank Field will be appended.'%}</div>
                                 </div>
-                                <div class="card-body drop-zone"  
-                                    @drop="replacePreview('blank', $event)" 
-                                    @dragover.prevent 
+                                <div class="card-body drop-zone"
+                                    @drop="replacePreview('blank', $event)"
+                                    @dragover.prevent
                                     @dragenter.prevent
                                     draggable
                                     @dragstart="htmlDragStart($event)">
@@ -324,7 +343,7 @@
                                     <div  class="col" @click.ctrl="customItemClickWithCtrl">
                                         <div class="row clearfix" style="width:100%" >
                                             <div class="col-es" style="align-right">
-                                                <button style="border: 0px; background-color: transparent; cursor: pointer;" 
+                                                <button style="border: 0px; background-color: transparent; cursor: pointer;"
                                                     @click="deleteNode(_.vm, _.model, $event)"><i class="fas fa-minus-square" style="color:red"></i></button>
                                             </div>
                                             <div class="col overflow-hidden">
@@ -335,17 +354,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                
+
                                 </template>
                             </v-jstree>
                             <!-- start of html data -->
                             <div v-if="preview_type=='html'">
                                 <ul class="list-group list-group-flush" v-for="(txt, key) in recipe_html">
-                                        <div class="list-group-item bg-light m-0 small"  
-                                            draggable 
+                                        <div class="list-group-item bg-light m-0 small"
+                                            draggable
                                             @dragstart="htmlDragStart($event)"
-                                            style="display:flex; justify-content:space-between;"> 
-                                        [[txt]] 
+                                            style="display:flex; justify-content:space-between;">
+                                        [[txt]]
                                         <i class="fas fa-minus-square"  style="cursor:pointer; color:red" @click="$delete(recipe_html, key)" title="{% trans 'Delete Text'%}"></i>
                                         </div>
                                 </ul>
@@ -353,10 +372,10 @@
                             <!-- start of images -->
                             <div v-if="preview_type=='image'">
                                 <ul class="list-group list-group-flush" v-for="(img, key) in images">
-                                        <div class="list-group-item bg-light m-0 small"  
-                                            draggable 
+                                        <div class="list-group-item bg-light m-0 small"
+                                            draggable
                                             @dragstart="imageDragStart($event)"
-                                            style="display:flex; justify-content:space-between;"> 
+                                            style="display:flex; justify-content:space-between;">
                                         <img class="card-img" v-bind:src=[[img]] alt="Image">
                                         <i class="fas fa-minus-square"  style="cursor:pointer; color:red" @click="$delete(images, key)" title="{% trans 'Delete image'%}"></i>
                                         </div>
