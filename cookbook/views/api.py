@@ -30,16 +30,16 @@ from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
-
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
+
 from cookbook.helper.recipe_search import search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -55,7 +55,8 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
-                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
+                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
+                                 BookmarkletImportSerializer)
 from recipes.settings import DEMO
 
 
@@ -470,6 +471,15 @@ class CookLogViewSet(viewsets.ModelViewSet):
 class ImportLogViewSet(viewsets.ModelViewSet):
     queryset = ImportLog.objects
     serializer_class = ImportLogSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space).all()
+
+
+class BookmarkletImportViewSet(viewsets.ModelViewSet):
+    queryset = BookmarkletImport.objects
+    serializer_class = BookmarkletImportSerializer
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):

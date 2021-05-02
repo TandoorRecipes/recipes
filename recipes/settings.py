@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'django_tables2',
+    'corsheaders',
     'django_filters',
     'crispy_forms',
     'emoji_picker',
@@ -97,6 +98,7 @@ SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
     os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -263,5 +265,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 
+
+# settings for cross site origin (CORS)
+# all origins allowed to support bookmarklet
+# all of this may or may not work with nginx or other web servers
+# TODO make this user configureable - enable or disable bookmarklets
+# TODO since token auth is enabled - this all should be https by default
+CORS_ORIGIN_ALLOW_ALL = True
+
+# enable CORS only for bookmarklet api and only for posts, get and options
+CORS_URLS_REGEX = r'^/api/bookmarklet-import.*$'
+CORS_ALLOW_METHODS = ['GET', 'OPTIONS', 'POST']
 # future versions of django will make undeclared default django.db.models.BigAutoField which will force migrations on all models
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
