@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2021-04-22 18:29+0000\n"
+"PO-Revision-Date: 2021-05-04 09:02+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
@@ -1441,7 +1441,7 @@ msgstr "Geschatte wachttijd"
 
 #: .\cookbook\templates\recipes_table.html:60
 msgid "External"
-msgstr "Extern"
+msgstr "Externe"
 
 #: .\cookbook\templates\recipes_table.html:86
 msgid "Log Cooking"
