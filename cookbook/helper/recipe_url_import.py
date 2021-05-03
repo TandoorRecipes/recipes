@@ -14,11 +14,10 @@ from recipe_scrapers._utils import get_minutes
 
 def get_from_scraper(scrape, space):
     # converting the scrape_me object to the existing json format based on ld+json
-
     recipe_json = {}
     try:
         recipe_json['name'] = parse_name(scrape.title() or None)
-    except (TypeError, AttributeError, ElementNotFoundInHtml, NotImplementedError):
+    except Exception:
         recipe_json['name'] = None
     if not recipe_json['name']:
         try:
@@ -28,7 +27,7 @@ def get_from_scraper(scrape, space):
 
     try:
         description = scrape.schema.data.get("description") or ''
-    except (AttributeError, ElementNotFoundInHtml, NotImplementedError, SchemaOrgException):
+    except Exception:
         description = ''
 
     recipe_json['description'] = parse_description(description)
