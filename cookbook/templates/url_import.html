@@ -722,6 +722,7 @@
                             msg += err.bodyText
                         } else {
                             msg += ' ' + err.status + ' ' + err.statusText
+                            this.preview = true
                         }
                         this.makeToast(gettext('Error'), msg, 'danger')
                     })

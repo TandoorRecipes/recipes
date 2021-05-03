@@ -163,7 +163,7 @@ def import_url(request):
             elif isinstance(ing['amount'], float) \
                     or isinstance(ing['amount'], int):
                 ingredient.amount = ing['amount']
-            ingredient.note = ing['note'] if 'note' in ing else ''
+            ingredient.note = ing['note'].strip() if 'note' in ing else ''
 
             ingredient.save()
             step.ingredients.add(ingredient)

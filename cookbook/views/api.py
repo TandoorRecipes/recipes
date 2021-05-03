@@ -680,7 +680,6 @@ def recipe_from_source(request):
                 'images': images,
             })
 
-
     else:
         return JsonResponse(
             {

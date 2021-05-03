@@ -25,9 +25,9 @@ def text_scraper(text, url=None):
 
     class TextScraper(scraper_class):
         def __init__(
-                self,
-                page_data,
-                url=None
+            self,
+            page_data,
+            url=None
         ):
             self.wild_mode = False
             # self.exception_handling = None  # TODO add new method here, old one was deprecated
