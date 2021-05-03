@@ -863,7 +863,7 @@ DELISH = {
     "servings": 6,
     "prepTime": 10,
     "cookTime": 0,
-    "image": '',
+    "image": 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/delish-cheesy-asparagus-horizontal-7-1536094595.png',
     "keywords": [
         {
             "id": 2211187,
