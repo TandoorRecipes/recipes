@@ -14,56 +14,86 @@ from recipe_scrapers._utils import get_minutes
 
 def get_from_scraper(scrape, space):
     # converting the scrape_me object to the existing json format based on ld+json
-
     recipe_json = {}
     try:
-        recipe_json['name'] = parse_name(scrape.title() or scrape.schema.data.get('name') or '')
-    except (TypeError, AttributeError,ElementNotFoundInHtml):
-        recipe_json['name'] = ''
+        recipe_json['name'] = parse_name(scrape.title() or None)
+    except Exception:
+        recipe_json['name'] = None
+    if not recipe_json['name']:
+        try:
+            recipe_json['name'] = scrape.schema.data.get('name') or ''
+        except Exception:
+            recipe_json['name'] = ''
 
     try:
         description = scrape.schema.data.get("description") or ''
-    except (AttributeError,ElementNotFoundInHtml):
+    except Exception:
         description = ''
 
     recipe_json['description'] = parse_description(description)
 
     try:
-        servings = scrape.yields()
-        servings = int(re.findall(r'\b\d+\b', servings)[0])
-    except (AttributeError,ElementNotFoundInHtml, ValueError, IndexError):
-        servings = 1
+        servings = scrape.yields() or None
+    except Exception:
+        servings = None
+    if not servings:
+        try:
+            servings = scrape.schema.data.get('recipeYield') or 1
+        except Exception:
+            servings = 1
+    if type(servings) != int:
+        try:
+            servings = int(re.findall(r'\b\d+\b', servings)[0])
+        except Exception:
+            servings = 1
     recipe_json['servings'] = servings
 
     try:
         recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
-    except (AttributeError, ElementNotFoundInHtml):
+    except Exception:
         recipe_json['prepTime'] = 0
     try:
         recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
-    except (AttributeError, ElementNotFoundInHtml):
+    except Exception:
         recipe_json['cookTime'] = 0
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
-        except (AttributeError,ElementNotFoundInHtml):
-            pass
+        except Exception:
+            try:
+                get_minutes(scrape.schema.data.get("totalTime")) or 0
+            except Exception:
+                pass
 
     try:
-        recipe_json['image'] = parse_image(scrape.image()) or ''
-    except (AttributeError,ElementNotFoundInHtml, TypeError, SchemaOrgException):
-        recipe_json['image'] = ''
+        recipe_json['image'] = parse_image(scrape.image()) or None
+    except Exception:
+        recipe_json['image'] = None
+    if not recipe_json['image']:
+        try:
+            recipe_json['image'] = parse_image(scrape.schema.data.get('image')) or ''
+        except Exception:
+            recipe_json['image'] = ''
 
     keywords = []
     try:
         if scrape.schema.data.get("keywords"):
             keywords += listify_keywords(scrape.schema.data.get("keywords"))
+    except Exception:
+        pass
+    try:
         if scrape.schema.data.get('recipeCategory'):
             keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+    except Exception:
+        pass
+    try:
         if scrape.schema.data.get('recipeCuisine'):
             keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+    except Exception:
+        pass
+    try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
-    except (AttributeError,ElementNotFoundInHtml):
+    except AttributeError:
         recipe_json['keywords'] = keywords
 
     try:
@@ -104,12 +134,12 @@ def get_from_scraper(scrape, space):
                     }
                 )
         recipe_json['recipeIngredient'] = ingredients
-    except (AttributeError,ElementNotFoundInHtml):
+    except Exception:
         recipe_json['recipeIngredient'] = ingredients
 
     try:
         recipe_json['recipeInstructions'] = parse_instructions(scrape.instructions())
-    except (AttributeError,ElementNotFoundInHtml):
+    except Exception:
         recipe_json['recipeInstructions'] = ""
 
     if scrape.url:
@@ -222,6 +252,8 @@ def parse_instructions(instructions):
 
 def parse_image(image):
     # check if list of images is returned, take first if so
+    if not image:
+        return None
     if type(image) == list:
         for pic in image:
             if (type(pic) == str) and (pic[:4] == 'http'):
