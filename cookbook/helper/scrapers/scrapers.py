@@ -37,7 +37,7 @@ def text_scraper(text, url=None):
             self.recipe = None
             try:
                 self.schema = SchemaOrg(page_data)
-            except JSONDecodeError:
+            except (JSONDecodeError, AttributeError):
                 pass
 
     return TextScraper(text, url)
