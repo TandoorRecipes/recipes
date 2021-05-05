@@ -54,7 +54,7 @@
             </div>
             <div class="my-auto" style="padding-right: 4px">
               <input style="text-align: right; border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
-                     value="1" maxlength="3"
+                     value="1" maxlength="3" min="0"
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </div>
             <div class="my-auto">
