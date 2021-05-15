@@ -1,6 +1,10 @@
 This application features a very versatile import and export feature in order 
 to offer the best experience possible and allow you to freely choose where your data goes.
 
+!!! warning "WIP"
+    The Module is relatively new. There is a know issue with [Timeouts](https://github.com/vabene1111/recipes/issues/417) on large exports.
+    A fix is being developed and will likely be released with the next version.
+
 The Module is build with maximum flexibility and expandability in mind and allows to easily add new
 integrations to allow you to both import and export your recipes into whatever format you desire.
 
@@ -14,12 +18,42 @@ if your favorite one is missing.
     Because of this importing as many formats as possible is prioritized over exporting.
     Exporter for the different formats will follow over time.
 
+Overview of the capabilities of the different integrations.
+
+| Integration | Import | Export | Images |
+| ----------- | ------ | ------ | ------ |
+| Default     | ✔️      | ✔️      | ✔️      |
+| Nextcloud   | ✔️      | ⌚      | ✔️      |
+| Mealie      | ✔️      | ⌚      | ✔️      |
+| Chowdown    | ✔️      | ⌚      | ✔️      |
+| Safron      | ✔️      | ⌚      | ❌      |
+| Paprika     | ✔️      | ⌚      | ✔️      |
+| ChefTap     | ✔️      | ❌      |  ❌     |
+| Pepperplate     | ✔️      | ⌚      | ❌      |
+| RecipeSage     | ✔️      | ✔️      | ✔️      |
+| Domestica     | ✔️      | ⌚      | ✔️      |
+| MealMaster     | ✔️      | ❌      |  ❌        |
+| RezKonv     | ✔️      | ❌      |  ❌        |
+
+✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
+
 ## Default
 The default integration is the build in (and preferred) way to import and export recipes.
 It is maintained with new fields added and contains all data to transfer your recipes from one installation to another.
 
 It is also one of the few recipe formats that is actually structured in a way that allows for 
 easy machine readability if you want to use the data for any other purpose. 
+
+## RecipeSage
+Go to Settings > Export Recipe Data and select `EXPORT AS JSON-LD (BEST)`. Then simply upload the exported file 
+to Tandoor.
+
+The RecipeSage integration also allows exporting. To migrate from Tandoor to RecipeSage simply export with Recipe Sage 
+selected and import the json file in RecipeSage. Images are currently not supported for exporting.
+
+## Domestica
+Go to Import/Export and select `Export Recipes`. Then simply upload the exported file 
+to Tandoor.
 
 ## Nextcloud
 Importing recipes from Nextcloud cookbook is very easy and since Nextcloud Cookbook provides nice, standardized and 
@@ -88,22 +122,42 @@ Then simply upload the entire `.zip` file to the importer.
     Safron exports do not contain any images. They will be lost during import.
 
 ## Paprika
-Paprika can create two types of export. The first is a proprietary `.paprikarecipes` file in some kind of binarized format.
-The second one is HTML files containing at least a bit of microdata.
+A Paprika export contains a folder with a html representation of your recipes and a `.paprikarecipes` file.
 
-If you want to import your Paprika recipes follow these steps
+The `.paprikarecipes` file is basically just a zip with gzipped contents. Simply upload the whole file and import 
+all your recipes. 
 
-1. create a html export
-2. Create a `.zip` file from the `Recipes` folder (next to the `index.html`) the structure should look like this
-```
-Recipes.zip/
-    └── Recipes/
-        ├── recipe one.html
-        ├── recipe two.thml
-        └── Images/
-            ├── 5D5E09CD-8F88-4F61-8121-0727DD3E0E89/
-            │   └── 5D5E09CD-8F88-4F61-8121-0727DD3E0E89.jpg
-            └── 7CEE2AC6-DF60-4464-9B61-4F5E347EB90C/
-                └── 7CEE2AC6-DF60-4464-9B61-4F5E347EB90C.jpg
-```
-3. Upload the zip file in the import module and import it
+## Pepperplate
+Pepperplate provides a `.zip` files contain all your recipes as `.txt` files. These files are well-structured and allow
+the import of all data without loosing anything.
+
+Simply export the recipes from Pepperplate and upload the zip to Tandoor. Images are not included in the export and 
+thus cannot be imported.
+
+## ChefTap
+ChefTaps allows you to export your recipes from the app (I think). The export is a zip file containing a folder called
+`cheftap_export` which in turn contains `.txt` files with your recipes.
+
+This format is basically completely unstructured and every export looks different. This makes importing it very hard
+and leads to suboptimal results. Images are also not supported as they are not included in the export (at least 
+the tests I had).
+
+Usually the import should recognize all ingredients and put everything else into the instructions. If you import fails
+or is worse than this feel free to provide me with more example data and I can try to improve the importer.
+
+As ChefTap cannot import these files anyway there won't be an exporter implemented in Tandoor.
+
+## MealMaster
+Meal master can be imported by uploading one or more meal master files. 
+The files should either be `.txt`, `.MMF` or `.MM` files. 
+
+The MealMaster spec allow for many variations. Currently, only the on column format for ingredients is supported.
+Second line notes to ingredients are currently also not imported as a note but simply put into the instructions.
+If you have MealMaster recipes that cannot be imported feel free to raise an issue.
+
+## RezKonv
+The RezKonv format is primarily used in the german recipe manager RezKonv Suite. 
+To migrate from RezKonv Suite to Tandoor select `Export > Gesamtes Kochbuch exportieren` (the last option in the export menu).
+The generated file can simply be imported into Tandoor.
+
+As i only had limited sample data feel free to open an issue if your RezKonv export cannot be imported.

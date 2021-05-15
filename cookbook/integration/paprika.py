@@ -1,56 +1,83 @@
+import base64
+import gzip
 import json
 import re
 from io import BytesIO
-from zipfile import ZipFile
 
-import microdata
-from bs4 import BeautifulSoup
-
-from cookbook.helper.recipe_url_import import find_recipe_json
+from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Ingredient, Unit
+from cookbook.models import Recipe, Step, Ingredient, Keyword
+from gettext import gettext as _
 
 
 class Paprika(Integration):
-
-    def import_file_name_filter(self, zip_info_object):
-        print("testing", zip_info_object.filename)
-        return re.match(r'^Recipes/([A-Za-z\s])+.html$', zip_info_object.filename)
 
     def get_file_from_recipe(self, recipe):
         raise NotImplementedError('Method not implemented in storage integration')
 
     def get_recipe_from_file(self, file):
-        html_text = file.getvalue().decode("utf-8")
+        with  gzip.open(file, 'r') as recipe_zip:
+            recipe_json = json.loads(recipe_zip.read().decode("utf-8"))
 
-        items = microdata.get_items(html_text)
-        for i in items:
-            md_json = json.loads(i.json())
-            if 'schema.org/Recipe' in str(md_json['type']):
-                recipe_json = find_recipe_json(md_json['properties'], '')
-                recipe = Recipe.objects.create(name=recipe_json['name'].strip(), created_by=self.request.user, internal=True)
-                step = Step.objects.create(
-                    instruction=recipe_json['recipeInstructions']
-                )
+            recipe = Recipe.objects.create(
+                name=recipe_json['name'].strip(), created_by=self.request.user, internal=True, space=self.request.space)
 
-                for ingredient in recipe_json['recipeIngredient']:
-                    f, created = Food.objects.get_or_create(name=ingredient['ingredient']['text'])
-                    u, created = Unit.objects.get_or_create(name=ingredient['unit']['text'])
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=ingredient['amount'], note=ingredient['note']
-                    ))
+            if 'description' in recipe_json:
+                recipe.description = recipe_json['description'].strip()
 
-                recipe.steps.add(step)
+            try:
+                if re.match(r'([0-9])+\s(.)*', recipe_json['servings'] ):
+                    s = recipe_json['servings'].split(' ')
+                    recipe.servings = s[0]
+                    recipe.servings_text = s[1]
 
-                soup = BeautifulSoup(html_text, "html.parser")
-                image = soup.find('img')
-                image_name = image.attrs['src'].strip().replace('Images/', '')
+                if len(recipe_json['cook_time'].strip()) > 0:
+                    recipe.waiting_time = re.findall(r'\d+', recipe_json['cook_time'])[0]
 
-                for f in self.files:
-                    if '.zip' in f.name:
-                        import_zip = ZipFile(f.file)
-                        for z in import_zip.filelist:
-                            if re.match(f'^Recipes/Images/{image_name}$', z.filename):
-                                self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)))
+                if len(recipe_json['prep_time'].strip()) > 0:
+                    recipe.working_time = re.findall(r'\d+', recipe_json['prep_time'])[0]
+            except Exception:
+                pass
 
-                return recipe
+            recipe.save()
+
+            instructions = recipe_json['directions']
+            if recipe_json['notes'] and len(recipe_json['notes'].strip()) > 0:
+                instructions += '\n\n### ' + _('Notes') + ' \n' + recipe_json['notes']
+
+            if recipe_json['nutritional_info'] and len(recipe_json['nutritional_info'].strip()) > 0:
+                instructions += '\n\n### ' + _('Nutritional Information') + ' \n' + recipe_json['nutritional_info']
+
+            try:
+                if len(recipe_json['source'].strip()) > 0 or len(recipe_json['source_url'].strip()) > 0:
+                    instructions += '\n\n### ' + _('Source') + ' \n' + recipe_json['source'].strip() + ' \n' + recipe_json['source_url'].strip()
+            except AttributeError:
+                pass
+
+            step = Step.objects.create(
+                instruction=instructions
+            )
+
+            if 'categories' in recipe_json:
+                for c in recipe_json['categories']:
+                    keyword, created = Keyword.objects.get_or_create(name=c.strip(), space=self.request.space)
+                    recipe.keywords.add(keyword)
+
+            try:
+                for ingredient in recipe_json['ingredients'].split('\n'):
+                    if len(ingredient.strip()) > 0:
+                        amount, unit, ingredient, note = parse(ingredient)
+                        f = get_food(ingredient, self.request.space)
+                        u = get_unit(unit, self.request.space)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note
+                        ))
+            except AttributeError:
+                pass
+
+            recipe.steps.add(step)
+
+            if recipe_json.get("photo_data", None):
+                self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])))
+                
+            return recipe

@@ -47,7 +47,7 @@ class RecipeTable(tables.Table):
         model = Recipe
         template_name = 'recipes_table.html'
         fields = (
-            'id', 'name', 'all_tags', 'image', 'instructions',
+            'id', 'name', 'all_tags', 'description', 'image', 'instructions',
             'working_time', 'waiting_time', 'internal'
         )
 

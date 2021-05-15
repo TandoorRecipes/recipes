@@ -1,10 +1,10 @@
 import bleach
 import markdown as md
-from bleach_whitelist import markdown_attrs, markdown_tags
+from bleach_allowlist import markdown_attrs, markdown_tags
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
-from jinja2 import Template, TemplateSyntaxError
-
+from jinja2 import Template, TemplateSyntaxError, UndefinedError
+from gettext import gettext as _
 
 class IngredientObject(object):
     amount = ""
@@ -57,6 +57,8 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         template = Template(instructions)
         instructions = template.render(ingredients=ingredients)
     except TemplateSyntaxError:
-        pass
+        return _('Could not parse template code.') + ' Error: Template Syntax broken'
+    except UndefinedError:
+        return _('Could not parse template code.') + ' Error: Undefined Error'
 
     return instructions
