@@ -46,6 +46,16 @@
                 <input class="form-control" id="id_name" v-model="recipe.name">
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="id_description">
+                    {% trans 'Description' %}
+                </label>
+                <textarea id="id_description" class="form-control" v-model="recipe.description"
+                          maxlength="512"></textarea>
+
+            </div>
+        </div>
         <br/>
 
         <div class="row">
@@ -77,6 +87,9 @@
                         :hide-selected="true"
                         :preserve-search="true"
                         placeholder="{% trans 'Select Keywords' %}"
+                        tag-placeholder="{% trans 'Add Keyword' %}"
+                        :taggable="true"
+                        @tag="addKeyword"
                         label="label"
                         track-by="id"
                         id="id_keywords"
@@ -86,19 +99,6 @@
                 </multiselect>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-12">
-                <label for="id_description">
-                    {% trans 'Description' %}
-                </label>
-                <textarea id="id_description" class="form-control" v-model="recipe.description"
-                          maxlength="512"></textarea>
-
-            </div>
-
-        </div>
-
 
         <template v-if="recipe !== undefined">
             <div class="row" v-if="recipe.nutrition" style="margin-top: 1vh">
@@ -666,6 +666,10 @@
                     new_unit.unit = {'name': tag}
                     this.units.push(new_unit.unit)
                     this.recipe.steps[step].ingredients[id] = new_unit
+                },
+                addKeyword: function (tag) {
+                    let new_keyword = {'label':tag,'name':tag}
+                    this.recipe.keywords.push(new_keyword)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true

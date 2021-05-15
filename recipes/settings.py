@@ -16,8 +16,10 @@ import re
 import string
 
 from django.contrib import messages
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
+from webpack_loader.loader import WebpackLoader
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,6 +28,9 @@ SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_S
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 DEMO = bool(int(os.getenv('DEMO', False)))
+
+SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
+SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
 
 INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
@@ -72,7 +77,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'django_tables2',
+    'corsheaders',
     'django_filters',
     'crispy_forms',
     'emoji_picker',
@@ -90,9 +97,11 @@ INSTALLED_APPS = [
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
-SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
+    os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -102,6 +111,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
 
 # Auth related settings
@@ -190,27 +200,43 @@ if os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': {
             'ENGINE': engine,
+            'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
             'HOST': settings['host'],
             'PORT': settings['port'],
             'USER': settings['user'],
             'PASSWORD': settings['password'],
-            'NAME': settings['database']
+            'NAME': settings['database'],
+            'CONN_MAX_AGE': 600,
         }
     }
 else:
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('DB_ENGINE') if os.getenv('DB_ENGINE') else 'django.db.backends.sqlite3',
+            'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
             'HOST': os.getenv('POSTGRES_HOST'),
             'PORT': os.getenv('POSTGRES_PORT'),
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
             'NAME': os.getenv('POSTGRES_DB') if os.getenv('POSTGRES_DB') else 'db.sqlite3',
+            'CONN_MAX_AGE': 600,
         }
     }
 
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
+
+
+class CustomWebpackLoader(WebpackLoader):
+
+    def get_chunk_url(self, chunk):
+        asset = self.get_assets()['assets'][chunk['name']]
+        return super().get_chunk_url(asset)
+
+    def filter_chunks(self, chunks):
+        chunks = [chunk if isinstance(chunk, dict) else {'name': chunk} for chunk in chunks]
+        return super().filter_chunks(chunks)
+
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -219,7 +245,8 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(VUE_DIR, 'webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        'LOADER_CLASS': 'recipes.settings.CustomWebpackLoader',
     }
 }
 
@@ -237,6 +264,7 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = [
+    ('hy', _('Armenian ')),
     ('ca', _('Catalan')),
     ('cs', _('Czech')),
     ('nl', _('Dutch')),
@@ -254,6 +282,8 @@ LANGUAGES = [
 # path for django_js_reverse to generate the javascript file containing all urls. Only done because the default command (collectstatic_js_reverse) fails to update the manifest
 JS_REVERSE_OUTPUT_PATH = os.path.join(BASE_DIR, "cookbook/static/django_js_reverse")
 
+JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', os.getenv('SCRIPT_NAME', ''))
+
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -262,3 +292,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
+
+
+# settings for cross site origin (CORS)
+# all origins allowed to support bookmarklet
+# all of this may or may not work with nginx or other web servers
+# TODO make this user configureable - enable or disable bookmarklets
+# TODO since token auth is enabled - this all should be https by default
+CORS_ORIGIN_ALLOW_ALL = True
+
+# enable CORS only for bookmarklet api and only for posts, get and options
+CORS_URLS_REGEX = r'^/api/bookmarklet-import.*$'
+CORS_ALLOW_METHODS = ['GET', 'OPTIONS', 'POST']
+# future versions of django will make undeclared default django.db.models.BigAutoField which will force migrations on all models
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

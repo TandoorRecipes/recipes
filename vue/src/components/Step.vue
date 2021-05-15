@@ -8,9 +8,9 @@
         <div class="col col-md-8">
           <h5 class="text-primary">
             <template v-if="step.name">{{ step.name }}</template>
-            <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
+            <template v-else>{{ $t('Step') }} {{ index + 1 }}</template>
             <small style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fas fa-user-clock"></i>
-              {{ step.time }} {{ _('min') }}
+              {{ step.time }} {{ $t('min') }}
 
             </small>
             <small v-if="start_time !== ''" class="d-print-none">
@@ -51,10 +51,10 @@
         <div class="col-md-8 offset-md-2" style="text-align: center">
           <h4 class="text-primary">
             <template v-if="step.name">{{ step.name }}</template>
-            <template v-else>{{ _('Step') }} {{ index + 1 }}</template>
+            <template v-else>{{ $t('Step') }} {{ index + 1 }}</template>
           </h4>
           <span style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fa fa-stopwatch"></i>
-              {{ step.time }} {{ _('min') }}</span>
+              {{ step.time }} {{ $t('min') }}</span>
           <b-link class="d-print-none" :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#" v-if="start_time !== ''">
             {{ moment(start_time).add(step.time_offset, 'minutes').format('HH:mm') }}
           </b-link>
@@ -83,7 +83,7 @@
           triggers="click"
           placement="bottom"
           :ref="`id_reactive_popover_${step.id}`"
-          :title="_('Step start time')">
+          :title="$t('Step start time')">
         <div>
           <b-form-group
               label="Time"

@@ -1,15 +1,15 @@
 <template>
 
   <div>
-    <b-modal class="modal" id="id_modal_add_book" :title="_('Add to Book')" :ok-title="_('Add')"
-             :cancel-title="_('Close')" @ok="addToBook()">
+    <b-modal class="modal" id="id_modal_add_book" :title="$t('Add_to_Book')" :ok-title="$t('Add')"
+             :cancel-title="$t('Close')" @ok="addToBook()">
 
       <multiselect
           v-model="selected_book"
           :options="books"
 
           :preserve-search="true"
-          :placeholder="_('Select Book')"
+          :placeholder="$t('Select_Book')"
           label="name"
           track-by="id"
           id="id_books"
@@ -23,7 +23,6 @@
 
 <script>
 
-import {GettextMixin} from "@/utils/utils";
 import Multiselect from 'vue-multiselect'
 
 import moment from 'moment'
@@ -38,9 +37,6 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'AddRecipeToBook',
-  mixins: [
-    GettextMixin,
-  ],
   components: {
     Multiselect
   },

@@ -1,7 +1,7 @@
 <template>
     <div v-if="recipe.keywords.length > 0">
       <small :key="k.id" v-for="k in recipe.keywords" style="padding: 2px">
-        {{k.icon}} {{k.name}}
+        <b-badge pill variant="light">{{k.label}}</b-badge>
       </small>
     </div>
 </template>

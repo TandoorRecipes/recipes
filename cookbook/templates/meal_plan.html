@@ -509,28 +509,28 @@
                     this.getRecipes();
                 },
                 getRecipes: function () {
-                    let url = "{% url 'api:recipe-list' %}?limit=5"
+                    let url = "{% url 'api:recipe-list' %}?page_size=5"
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
                     } else {
-                        url += '&random=True'
+                        url += '&random=true'
                     }
 
                     this.$http.get(url).then((response) => {
-                        this.recipes = response.data;
+                        this.recipes = response.data.results;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
                 getMdNote: function () {
-                    let url = "{% url 'api:recipe-list' %}?limit=5"
+                    let url = "{% url 'api:recipe-list' %}?page_size=5"
                     if (this.recipe_query !== '') {
                         url += '&query=' + this.recipe_query;
                     }
 
                     this.$http.get(url).then((response) => {
-                        this.recipes = response.data;
+                        this.recipes = response.data.results;
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
@@ -627,13 +627,14 @@
                 cloneRecipe: function (recipe) {
                     let r = {
                         id: Math.round(Math.random() * 1000) + 10000,
-                        recipe: recipe.id,
+                        recipe: recipe,
                         recipe_name: recipe.name,
                         servings: (this.new_note_servings > 1) ? this.new_note_servings : recipe.servings,
                         title: this.new_note_title,
                         note: this.new_note_text,
                         is_new: true
                     }
+                    console.log(recipe)
 
                     this.new_note_title = ''
                     this.new_note_text = ''
@@ -669,7 +670,7 @@
                     }
                 },
                 planDetailRecipeUrl: function () {
-                    return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
+                    return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe.id);
                 },
                 planDetailEditUrl: function () {
                     return "{% url 'edit_meal_plan' 12345 %}".replace(/12345/, this.plan_detail.id);

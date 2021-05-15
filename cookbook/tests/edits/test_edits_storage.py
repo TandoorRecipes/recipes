@@ -1,68 +1,58 @@
 from cookbook.models import Storage
-from cookbook.tests.views.test_views import TestViews
 from django.contrib import auth
 from django.urls import reverse
+import pytest
 
 
-class TestEditsRecipe(TestViews):
+@pytest.fixture
+def storage_obj(a1_s1, space_1):
+    return Storage.objects.create(
+        name='TestStorage',
+        method=Storage.DROPBOX,
+        created_by=auth.get_user(a1_s1),
+        token='test',
+        username='test',
+        password='test',
+        space=space_1,
+    )
 
-    def setUp(self):
-        super(TestEditsRecipe, self).setUp()
 
-        self.storage = Storage.objects.create(
-            name='TestStorage',
-            method=Storage.DROPBOX,
-            created_by=auth.get_user(self.admin_client_1),
-            token='test',
-            username='test',
-            password='test',
-        )
-        self.url = reverse('edit_storage', args=[self.storage.pk])
+def test_edit_storage(storage_obj, a1_s1, a1_s2):
+    r = a1_s1.post(
+        reverse('edit_storage', args={storage_obj.pk}),
+        {
+            'name': 'NewStorage',
+            'password': '1234_pw',
+            'token': '1234_token',
+            'method': Storage.DROPBOX
+        }
+    )
+    storage_obj.refresh_from_db()
+    assert r.status_code == 200
+    assert storage_obj.password == '1234_pw'
+    assert storage_obj.token == '1234_token'
 
-    def test_edit_storage(self):
-        r = self.admin_client_1.post(
-            self.url,
-            {
-                'name': 'NewStorage',
-                'password': '1234_pw',
-                'token': '1234_token',
-                'method': Storage.DROPBOX
-            }
-        )
-        self.storage.refresh_from_db()
-        self.assertEqual(self.storage.password, '1234_pw')
-        self.assertEqual(self.storage.token, '1234_token')
+    r = a1_s2.post(
+        reverse('edit_storage', args={storage_obj.pk}),
+        {
+            'name': 'NewStorage',
+            'password': '1234_pw',
+            'token': '1234_token',
+            'method': Storage.DROPBOX
+        }
+    )
+    assert r.status_code == 404
 
-        r = self.admin_client_1.post(
-            self.url,
-            {
-                'name': 'NewStorage',
-                'password': '1234_pw',
-                'token': '1234_token',
-                'method': 'not_a_valid_method'
-            }
-        )
-        self.assertFormError(
-            r,
-            'form',
-            'method',
-            [
-                'Select a valid choice. not_a_valid_method is not one of the available choices.'  # noqa: E501
-            ]
-        )
 
-    def test_edit_storage_permissions(self):
-        r = self.anonymous_client.get(self.url)
-        self.assertEqual(r.status_code, 302)
-
-        r = self.guest_client_1.get(self.url)
-        self.assertEqual(r.status_code, 302)
-
-        r = self.user_client_1.get(self.url)
-        self.assertEqual(r.status_code, 302)
-
-        r = self.admin_client_1.get(self.url)
-        self.assertEqual(r.status_code, 200)
-
-        r = self.superuser_client.get(self.url)
-        self.assertEqual(r.status_code, 200)
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 302],
+    ['a1_s1', 200],
+    ['g1_s2', 302],
+    ['u1_s2', 302],
+    ['a1_s2', 404],
+])
+def test_view_permission(arg, request, storage_obj):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('edit_storage', args={storage_obj.pk})).status_code == arg[1]

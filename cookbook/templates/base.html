@@ -13,17 +13,21 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
     <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon.svg' %}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon.svg' %}" sizes="96x96">
-    <link rel="apple-touch-icon" href="{% static 'assets/favicon.svg' %}">  
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/favicon.svg' %}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'assets/favicon.svg' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/favicon.svg' %}">
-    <link rel="apple-touch-icon" sizes="167x167" href="{% static 'assets/favicon.svg' %}">
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16">
+
+    <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#161616">
+    <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}" sizes="180x180">
 
     <link rel="manifest" href="{% url 'web_manifest' %}">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#161616">
+    <meta name="msapplication-TileColor" content="#161616">
+    <meta name="theme-color" content="#ffffff">
+
 
     <!-- Bootstrap 4 -->
     <link id="id_main_css" href="{% theme_url request %}" rel="stylesheet">
@@ -117,7 +121,7 @@
                             class="fas fa-chart-line fa-fw"></i> {% trans 'Statistics' %}</a>
                     <a class="dropdown-item" href="{% url 'edit_food' %}"><i
                             class="fas fa-balance-scale fa-fw"></i> {% trans 'Units & Ingredients' %}</a>
-                    <a class="dropdown-item" href="{% url 'view_import' %}"><i
+                    <a class="dropdown-item" href="{% url 'data_import_url' %}"><i
                             class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
 
                 </div>
@@ -158,12 +162,13 @@
                                 class="fas fa-file-code fa-fw"></i> {% trans 'API Browser' %}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'account_logout' %}"><i
-                                class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Logout' %}</a>
+                                class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Log out' %}</a>
                     </div>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_logout' %}">{% trans 'Login' %} <i class="fas fa-sign-in-alt"></i></a>
+                    <a class="nav-link" href="{% url 'account_login' %}">{% trans 'Login' %} <i
+                            class="fas fa-sign-in-alt"></i></a>
                 </li>
             {% endif %}
         </ul>
@@ -223,7 +228,7 @@
 <script type="application/javascript">
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{% url 'service_worker' %}", { scope: '/' }).then(function (reg) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: '/'}).then(function (reg) {
 
             }).catch(function (err) {
                 console.warn('Error whilst registering service worker', err);

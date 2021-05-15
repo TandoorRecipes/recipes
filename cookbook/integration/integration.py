@@ -1,33 +1,38 @@
 import datetime
+import json
 import uuid
-
 from io import BytesIO, StringIO
 from zipfile import ZipFile, BadZipFile
 
-from django.contrib import messages
 from django.core.files import File
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.http import HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
-from cookbook.models import Keyword
+from django_scopes import scope
+
+from cookbook.forms import ImportExportBase
+from cookbook.models import Keyword, Recipe
 
 
 class Integration:
     request = None
     keyword = None
     files = None
+    export_type = None
+    ignored_recipes = []
 
-    def __init__(self, request):
+    def __init__(self, request, export_type):
         """
         Integration for importing and exporting recipes
         :param request: request context of import session (used to link user to created objects)
         """
         self.request = request
+        self.export_type = export_type
         self.keyword = Keyword.objects.create(
-            name=f'Import {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
-            description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}',
-            icon='📥'
+            name=f'Import {export_type} {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
+            description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}',
+            icon='📥',
+            space=request.space
         )
 
     def do_export(self, recipes):
@@ -36,33 +41,44 @@ class Integration:
         :param recipes: list of recipe objects
         :return: HttpResponse with a ZIP file that is directly downloaded
         """
-        export_zip_stream = BytesIO()
-        export_zip_obj = ZipFile(export_zip_stream, 'w')
 
-        for r in recipes:
-            if r.internal:
-                recipe_zip_stream = BytesIO()
-                recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
+        # TODO this is temporary, find a better solution for different export formats when doing other exporters
+        if self.export_type != ImportExportBase.RECIPESAGE:
+            export_zip_stream = BytesIO()
+            export_zip_obj = ZipFile(export_zip_stream, 'w')
 
-                recipe_stream = StringIO()
-                filename, data = self.get_file_from_recipe(r)
-                recipe_stream.write(data)
-                recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
-                recipe_stream.close()
+            for r in recipes:
+                if r.internal and r.space == self.request.space:
+                    recipe_zip_stream = BytesIO()
+                    recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
 
-                try:
-                    recipe_zip_obj.write(r.image.path, 'image.png')
-                except ValueError:
-                    pass
+                    recipe_stream = StringIO()
+                    filename, data = self.get_file_from_recipe(r)
+                    recipe_stream.write(data)
+                    recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
+                    recipe_stream.close()
 
-                recipe_zip_obj.close()
-                export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
+                    try:
+                        recipe_zip_obj.write(r.image.path, 'image.png')
+                    except ValueError:
+                        pass
 
-        export_zip_obj.close()
+                    recipe_zip_obj.close()
+                    export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
 
-        response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="export.zip"'
-        return response
+            export_zip_obj.close()
+
+            response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="export.zip"'
+            return response
+        else:
+            json_list = []
+            for r in recipes:
+                json_list.append(self.get_file_from_recipe(r))
+
+            response = HttpResponse(json.dumps(json_list), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="recipes.json"'
+            return response
 
     def import_file_name_filter(self, zip_info_object):
         """
@@ -74,29 +90,63 @@ class Integration:
         """
         return True
 
-    def do_import(self, files):
+    def do_import(self, files, il, import_duplicates):
         """
         Imports given files
+        :param import_duplicates: if true duplicates are imported as well
         :param files: List of in memory files
+        :param il: Import Log object to refresh while running
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
-        try:
-            self.files = files
-            for f in files:
-                if '.zip' in f.name:
-                    import_zip = ZipFile(f.file)
-                    for z in import_zip.filelist:
-                        if self.import_file_name_filter(z):
-                            recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
-                            recipe.keywords.add(self.keyword)
-                    import_zip.close()
-                else:
-                    recipe = self.get_recipe_from_file(f.file)
-                    recipe.keywords.add(self.keyword)
-        except BadZipFile:
-            messages.add_message(self.request, messages.ERROR, _('Importer expected a .zip file. Did you choose the correct importer type for your data ?'))
+        with scope(space=self.request.space):
+            self.keyword.name = _('Import') + ' ' + str(il.pk)
+            self.keyword.save()
 
-        return HttpResponseRedirect(reverse('view_search') + '?keywords=' + str(self.keyword.pk))
+            try:
+                self.files = files
+                for f in files:
+                    if '.zip' in f['name'] or '.paprikarecipes' in f['name']:
+                        import_zip = ZipFile(f['file'])
+                        for z in import_zip.filelist:
+                            if self.import_file_name_filter(z):
+                                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                recipe.keywords.add(self.keyword)
+                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                self.handle_duplicates(recipe, import_duplicates)
+
+                        import_zip.close()
+                    elif '.json' in f['name'] or '.txt' in f['name']:
+                        data_list = self.split_recipe_file(f['file'])
+                        for d in data_list:
+                            recipe = self.get_recipe_from_file(d)
+                            recipe.keywords.add(self.keyword)
+                            il.msg += f'{recipe.pk} - {recipe.name} \n'
+                            self.handle_duplicates(recipe, import_duplicates)
+                    else:
+                        recipe = self.get_recipe_from_file(f['file'])
+                        recipe.keywords.add(self.keyword)
+                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                        self.handle_duplicates(recipe, import_duplicates)
+            except BadZipFile:
+                il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
+
+            if len(self.ignored_recipes) > 0:
+                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(self.ignored_recipes) + '\n\n'
+
+            il.keyword = self.keyword
+            il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'
+            il.running = False
+            il.save()
+
+    def handle_duplicates(self, recipe, import_duplicates):
+        """
+        Checks if a recipe is already present, if so deletes it
+        :param recipe: Recipe object
+        :param import_duplicates: if duplicates should be imported
+        """
+        if Recipe.objects.filter(space=self.request.space, name=recipe.name).count() > 1 and not import_duplicates:
+            recipe.delete()
+            self.ignored_recipes.append(recipe.name)
 
     @staticmethod
     def import_recipe_image(recipe, image_file):
@@ -114,7 +164,15 @@ class Integration:
         :param file: ByteIO or any file like object, depends on provider
         :return: Recipe object
         """
-        raise NotImplementedError('Method not implemented in storage integration')
+        raise NotImplementedError('Method not implemented in integration')
+
+    def split_recipe_file(self, file):
+        """
+        Takes a file that contains multiple recipes and splits it into a list of strings of various formats (e.g. json, text, ..)
+        :param file: ByteIO or any file like object, depends on provider
+        :return: list of strings
+        """
+        raise NotImplementedError('Method not implemented in integration')
 
     def get_file_from_recipe(self, recipe):
         """
@@ -125,4 +183,4 @@ class Integration:
             - name - file name in export
             - data - string content for file to get created in export zip
         """
-        raise NotImplementedError('Method not implemented in storage integration')
+        raise NotImplementedError('Method not implemented in integration')

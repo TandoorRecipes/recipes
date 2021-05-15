@@ -1,7 +1,7 @@
 !!! info "Community Contributed"
     The examples in this section were contributed by members of the community.
     This page especially contains some setups that might help you if you really want to go down a certain path but none
-    of the examples are supported (as i simply am not able to give you support for them).
+    of the examples are supported (as I simply am not able to give you support for them).
 
 
 ## Apache + Traefik + Sub-Path
@@ -35,6 +35,7 @@ docker-compose:
     environment:
       # all the other env
       - SCRIPT_NAME=/<sub path>
+      - JS_REVERSE_SCRIPT_PREFIX=/<sub path>/
       - STATIC_URL=/<www path>/static/
       - MEDIA_URL=/<www path>/media/
     labels:

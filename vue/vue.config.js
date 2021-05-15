@@ -1,12 +1,20 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
 const pages = {
+    'recipe_search_view': {
+        entry: './src/apps/RecipeSearchView/main.js',
+        chunks: ['chunk-vendors']
+    },
     'recipe_view': {
         entry: './src/apps/RecipeView/main.js',
         chunks: ['chunk-vendors']
     },
     'offline_view': {
         entry: './src/apps/OfflineView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'import_response_view': {
+        entry: './src/apps/ImportResponseView/main.js',
         chunks: ['chunk-vendors']
     },
 }
@@ -40,6 +48,14 @@ module.exports = {
             ],
         }
     },
+    pluginOptions: {
+        i18n: {
+            locale: 'en',
+            fallbackLocale: 'en',
+            localeDir: 'locales',
+            enableInSFC: true
+        }
+    },
     chainWebpack: config => {
 
         config.optimization.splitChunks({
@@ -62,9 +78,7 @@ module.exports = {
         })
         */
 
-        config
-            .plugin('BundleTracker')
-            .use(BundleTracker, [{filename: '../vue/webpack-stats.json'}]);
+        config.plugin('BundleTracker').use(BundleTracker, [{relativePath: true, path: '../vue/'}]);
 
         config.resolve.alias
             .set('__STATIC__', 'static')

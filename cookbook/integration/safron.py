@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-from cookbook.helper.ingredient_parser import parse
+from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient
 
@@ -41,14 +41,14 @@ class Safron(Integration):
                 ingredient_mode = False
                 direction_mode = True
 
-        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, )
+        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space, )
 
         step = Step.objects.create(instruction='\n'.join(directions))
 
         for ingredient in ingredients:
             amount, unit, ingredient, note = parse(ingredient)
-            f, created = Food.objects.get_or_create(name=ingredient)
-            u, created = Unit.objects.get_or_create(name=unit)
+            f = get_food(ingredient, self.request.space)
+            u = get_unit(unit, self.request.space)
             step.ingredients.add(Ingredient.objects.create(
                 food=f, unit=u, amount=amount, note=note
             ))
