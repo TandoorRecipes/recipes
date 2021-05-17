@@ -34,5 +34,5 @@ django-allauth==0.44.0
 recipe-scrapers==13.2.1
 django-scopes==1.2.0
 pytest==6.2.4
-pytest-django==4.2.0
+pytest-django==4.3.0
 django-cors-headers==3.7.0
