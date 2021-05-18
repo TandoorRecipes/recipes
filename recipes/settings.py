@@ -226,18 +226,6 @@ else:
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
 
-
-class CustomWebpackLoader(WebpackLoader):
-
-    def get_chunk_url(self, chunk):
-        asset = self.get_assets()['assets'][chunk['name']]
-        return super().get_chunk_url(asset)
-
-    def filter_chunks(self, chunks):
-        chunks = [chunk if isinstance(chunk, dict) else {'name': chunk} for chunk in chunks]
-        return super().filter_chunks(chunks)
-
-
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
@@ -246,7 +234,6 @@ WEBPACK_LOADER = {
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-        'LOADER_CLASS': 'recipes.settings.CustomWebpackLoader',
     }
 }
 
