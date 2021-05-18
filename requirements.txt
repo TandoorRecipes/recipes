@@ -6,7 +6,7 @@ django-cleanup==5.2.0
 django-crispy-forms==1.11.2
 django-emoji-picker==0.0.6
 django-filter==2.4.0
-django-tables2==2.3.4
+django-tables2==2.4.0
 djangorestframework==3.12.4
 drf-writable-nested==0.6.2
 bleach==3.3.0
