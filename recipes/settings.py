@@ -223,6 +223,19 @@ else:
         }
     }
 
+# Local testing DB
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'HOST': 'localhost',
+#         'PORT': 5432,
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres', # set to local pw
+#         'NAME': 'postgres',
+#         'CONN_MAX_AGE': 600,
+#     }
+# }
+
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
 

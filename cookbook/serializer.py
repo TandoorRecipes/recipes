@@ -177,6 +177,10 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         obj, created = Unit.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
         return obj
+    
+    def update(self, instance, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        return super(UnitSerializer, self).update(instance, validated_data)
 
     class Meta:
         model = Unit
@@ -222,6 +226,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
         return obj
 
     def update(self, instance, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
         return super(FoodSerializer, self).update(instance, validated_data)
 
     class Meta:
