@@ -1,4 +1,4 @@
-Django==3.2.2
+Django==3.2.3
 cryptography==3.4.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
@@ -28,11 +28,11 @@ uritemplate==3.0.1
 beautifulsoup4==4.9.3
 microdata==0.7.1
 Jinja2==3.0.0
-django-webpack-loader==0.7.0
+django-webpack-loader==1.0.0
 django-js-reverse==0.9.1
 django-allauth==0.44.0
 recipe-scrapers==13.2.1
 django-scopes==1.2.0
 pytest==6.2.4
-pytest-django==4.2.0
+pytest-django==4.3.0
 django-cors-headers==3.7.0
