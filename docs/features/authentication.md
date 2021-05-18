@@ -116,7 +116,7 @@ server {
   # Required to allow user to logout of authentication from within Recipes
   # Ensure the <auth_endpoint> below is changed to actual the authentication url
   location /accounts/logout/ {
-    return 301 http://<auth_endpoint>/logout
+    return 301 http://<auth_endpoint>/logout;
   }
 }
 ```
