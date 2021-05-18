@@ -55,7 +55,7 @@ def recipe_rating(recipe, user):
     if not user.is_authenticated:
         return ''
     rating = recipe.cooklog_set \
-        .filter(created_by=user) \
+        .filter(created_by=user, rating__gte=0) \
         .aggregate(Avg('rating'))
     if rating['rating__avg']:
 
@@ -131,8 +131,8 @@ def bookmarklet(request):
             localStorage.setItem('importURL', '" + server + reverse('api:bookmarkletimport-list') + "'); \
             localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
             localStorage.setItem('token', '" + api_token.__str__() + "'); \
-            document.body.appendChild(document.createElement(\'script\')).src=\'"  \
-            + server + prefix + static('js/bookmarklet.js') + "? \
+            document.body.appendChild(document.createElement(\'script\')).src=\'" \
+               + server + prefix + static('js/bookmarklet.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();"
 
     return re.sub(r"[\n\t\s]*", "", bookmark)
