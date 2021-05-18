@@ -1,4 +1,4 @@
-Django==3.2.2
+Django==3.2.3
 cryptography==3.4.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
@@ -6,7 +6,7 @@ django-cleanup==5.2.0
 django-crispy-forms==1.11.2
 django-emoji-picker==0.0.6
 django-filter==2.4.0
-django-tables2==2.3.4
+django-tables2==2.4.0
 djangorestframework==3.12.4
 drf-writable-nested==0.6.2
 bleach==3.3.0
@@ -27,12 +27,12 @@ pyyaml==5.4.1
 uritemplate==3.0.1
 beautifulsoup4==4.9.3
 microdata==0.7.1
-Jinja2==2.11.3
-django-webpack-loader==0.7.0
+Jinja2==3.0.0
+django-webpack-loader==1.0.0
 django-js-reverse==0.9.1
 django-allauth==0.44.0
-recipe-scrapers==13.2.1
+recipe-scrapers==13.2.3
 django-scopes==1.2.0
 pytest==6.2.4
-pytest-django==4.2.0
+pytest-django==4.3.0
 django-cors-headers==3.7.0
