@@ -16,7 +16,7 @@ class RecetteTek(Integration):
 
     def import_file_name_filter(self, zip_info_object):
         print("testing", zip_info_object.filename)
-        return re.match(r'^recipes_0.json$', zip_info_object.filename)
+        return re.match(r'^recipes_0.json$', zip_info_object.filename) or re.match(r'^recipes.json$', zip_info_object.filename)
 
     def split_recipe_file(self, file):
 
@@ -40,7 +40,11 @@ class RecetteTek(Integration):
         except Exception as e:
             print(recipe.name, ': failed to parse recipe description ', str(e))
 
-        step = Step.objects.create(instruction=file['instructions'])
+        instructions = file['instructions']
+        if not instructions:
+            instructions = ''
+
+        step = Step.objects.create(instruction=instructions)
 
         # Append the original import url to the step (if it exists)
         try:

@@ -109,29 +109,37 @@ class Integration:
                         import_zip = ZipFile(f['file'])
                         for z in import_zip.filelist:
                             if self.import_file_name_filter(z):
-                                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
-                                recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
-                                self.handle_duplicates(recipe, import_duplicates)
-
+                                try:
+                                    recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                    recipe.keywords.add(self.keyword)
+                                    il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                    self.handle_duplicates(recipe, import_duplicates)
+                                except Exception as e:
+                                    il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
                         import_zip.close()
                     elif '.json' in f['name'] or '.txt' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         for d in data_list:
-                            recipe = self.get_recipe_from_file(d)
-                            recipe.keywords.add(self.keyword)
-                            il.msg += f'{recipe.pk} - {recipe.name} \n'
-                            self.handle_duplicates(recipe, import_duplicates)
+                            try:
+                                recipe = self.get_recipe_from_file(d)
+                                recipe.keywords.add(self.keyword)
+                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                self.handle_duplicates(recipe, import_duplicates)
+                            except Exception as e:
+                                il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
                     elif '.rtk' in f['name']:
                         import_zip = ZipFile(f['file'])
                         for z in import_zip.filelist:
                             if self.import_file_name_filter(z):
                                 data_list = self.split_recipe_file(import_zip.read(z.filename).decode('utf-8'))
                                 for d in data_list:
-                                    recipe = self.get_recipe_from_file(d)
-                                    recipe.keywords.add(self.keyword)
-                                    il.msg += f'{recipe.pk} - {recipe.name} \n'
-                                    self.handle_duplicates(recipe, import_duplicates)
+                                    try:
+                                        recipe = self.get_recipe_from_file(d)
+                                        recipe.keywords.add(self.keyword)
+                                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                        self.handle_duplicates(recipe, import_duplicates)
+                                    except Exception as e:
+                                        il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
                         import_zip.close()
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
