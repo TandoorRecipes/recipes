@@ -567,10 +567,11 @@
                                 console.log("dragChanged create error", err);
                             })
                         } else {
+                            console.log(plan_entry)
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
-                                this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                             })
                         }
                     }
