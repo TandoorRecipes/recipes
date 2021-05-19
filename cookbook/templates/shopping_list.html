@@ -412,6 +412,7 @@
                     amount: undefined,
                     food: undefined,
                 },
+                unchecked_entries: 0,
                 foods: [],
                 foods_loading: false,
                 units: [],
@@ -449,6 +450,7 @@
                     return cache
                 },
                 display_categories() {
+                    this.unchecked_entries = 0
                     let categories = {
                         no_category: {
                             name: gettext('Uncategorized'),
@@ -513,6 +515,9 @@
                             } else {
                                 categories['no_category'].entries.push(item)
                             }
+                        }
+                        if (!item.checked) {
+                            this.unchecked_entries += 1
                         }
                     });
 
@@ -772,6 +777,27 @@
 
                     Promise.allSettled(updates).then(() => {
                         this.auto_sync_blocked = false
+                        if (this.unchecked_entries < 1) {
+                            this.shopping_list.finished = true
+
+                            this.$http.put("{% url 'api:shoppinglist-detail' 123456 %}".replace('123456', this.shopping_list.id), this.shopping_list, {}).then((response) => {
+                                this.makeToast(gettext('Finished'), gettext('Shopping list finished!'), 'success')
+                            }).catch((err) => {
+                                console.log(err)
+                                this.makeToast(gettext('Error'), gettext("There was an error updating a resource!") + err.bodyText, 'danger')
+                            })
+                        } else {
+                            if (this.unchecked_entries > 0 && this.shopping_list.finished) {
+                                this.shopping_list.finished = false
+
+                                this.$http.put("{% url 'api:shoppinglist-detail' 123456 %}".replace('123456', this.shopping_list.id), this.shopping_list, {}).then((response) => {
+                                    this.makeToast(gettext('Open'), gettext('Shopping list reopened!'), 'success')
+                                }).catch((err) => {
+                                    console.log(err)
+                                    this.makeToast(gettext('Error'), gettext("There was an error updating a resource!") + err.bodyText, 'danger')
+                                })
+                            }
+                        }
                     })
                 },
                 addEntry: function () {
