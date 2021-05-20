@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 from functools import reduce
 
 from django.contrib.postgres.search import TrigramSimilarity
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value
+from django.forms import IntegerField
 
 from cookbook.models import ViewLog
 from recipes import settings
@@ -23,7 +24,9 @@ def search_recipes(request, queryset, params):
     search_last_viewed = int(params.get('last_viewed', 0))
 
     if search_last_viewed > 0:
-        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space, created_at__gte=datetime.now() - timedelta(days=14)).values_list('recipe__pk', flat=True).distinct()
+        last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space,
+                                                     created_at__gte=datetime.now() - timedelta(days=14)).values_list(
+            'recipe__pk', flat=True).distinct()
 
         return queryset.filter(pk__in=list(set(last_viewed_recipes))[-search_last_viewed:])
 
@@ -59,6 +62,10 @@ def search_recipes(request, queryset, params):
 
     if search_internal == 'true':
         queryset = queryset.filter(internal=True)
+
+    queryset = queryset.annotate(
+        new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
+                        default=Value(0), )).order_by('-new_recipe', 'name')
 
     if search_random == 'true':
         queryset = queryset.order_by("?")

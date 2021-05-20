@@ -13,8 +13,7 @@
 
 
             <b-input-group class="mt-3">
-              <b-input class="form-control" v-model="search_input" @keyup="refreshData"
-                       v-bind:placeholder="$t('Search')"></b-input>
+              <b-input class="form-control" v-model="search_input" v-bind:placeholder="$t('Search')"></b-input>
               <b-input-group-append>
                 <b-button v-b-toggle.collapse_advanced_search variant="primary" class="shadow-none"><i
                     class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i class="fas fa-caret-up"
@@ -224,6 +223,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import moment from 'moment'
+import _debounce from 'lodash/debounce'
 
 import VueCookies from 'vue-cookies'
 
@@ -295,6 +295,9 @@ export default {
     'settings.recently_viewed': function () {
       this.loadRecentlyViewed()
     },
+    search_input: _debounce(function () {
+      this.refreshData()
+    }, 300),
   },
   methods: {
     refreshData: function () {
@@ -344,7 +347,7 @@ export default {
     loadRecentlyViewed: function () {
       let apiClient = new ApiApiFactory()
       if (this.settings.recently_viewed > 0) {
-        apiClient.listRecipes({query: {last_viewed: this.settings.recently_viewed}}).then(result => {
+        apiClient.listRecipes({options: {query: {last_viewed: this.settings.recently_viewed}}}).then(result => {
           this.last_viewed_recipes = result.data.results
         })
       } else {
