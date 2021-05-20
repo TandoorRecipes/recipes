@@ -2218,12 +2218,12 @@ TASTE_OF_HOME = {
 THE_SPRUCE_EATS = {
     'file': ['thespruceeats.html'],
     'url': 'https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797',
-    "name": "",
+    "name": "Creamy Potato Soup With Ham",
     "description": "",
-    "servings": 1,
-    "prepTime": 0,
+    "servings": 6,
+    "prepTime": 55,
     "cookTime": 0,
-    "image": "",
+    "image": 'https://www.thespruceeats.com/thmb/KfpdKXpq4JYKIIyv8ZuKuR8GRkQ=/960x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/creamy-potato-soup-with-ham-3059797-stovetop-step-12-99dc3bf1962c4e26a2d225ee3c25ecad.jpg',
     "keywords": [],
     "recipeIngredient": [
         {
