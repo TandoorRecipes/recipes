@@ -51,7 +51,8 @@
                     </div>
 
                     <div class="col-md-1" style="position: relative; margin-top: 1vh">
-                      <button id="id_settings_button" class="btn btn-primary btn-block"><i class="fas fa-cog"></i></button>
+                      <button id="id_settings_button" class="btn btn-primary btn-block"><i class="fas fa-cog"></i>
+                      </button>
                     </div>
 
 
@@ -92,7 +93,9 @@
                     </div>
                     <div class="row" style="margin-top: 1vh">
                       <div class="col-12" style="text-align: right">
-                        <b-button size="sm" variant="secondary" style="margin-right:8px" @click="$root.$emit('bv::hide::popover')">{{$t('Close')}}</b-button>
+                        <b-button size="sm" variant="secondary" style="margin-right:8px"
+                                  @click="$root.$emit('bv::hide::popover')">{{ $t('Close') }}
+                        </b-button>
                       </div>
                     </div>
                   </b-popover>
@@ -274,7 +277,7 @@ export default {
       }
 
       this.loadMealPlan()
-    this.loadRecentlyViewed()
+      this.loadRecentlyViewed()
     })
 
     this.refreshData()
@@ -287,11 +290,9 @@ export default {
       deep: true
     },
     'settings.show_meal_plan': function () {
-      console.log('Test')
       this.loadMealPlan()
     },
     'settings.recently_viewed': function () {
-      console.log('RV')
       this.loadRecentlyViewed()
     },
   },
@@ -299,27 +300,25 @@ export default {
     refreshData: function () {
       let apiClient = new ApiApiFactory()
 
-      apiClient.listRecipes({
-        query: {
-          query: this.search_input,
-          keywords: this.search_keywords.map(function (A) {
+      apiClient.listRecipes(
+          this.search_input,
+          this.search_keywords.map(function (A) {
             return A["id"];
           }),
-          foods: this.search_foods.map(function (A) {
+          this.search_foods.map(function (A) {
             return A["id"];
           }),
-          books: this.search_books.map(function (A) {
+          this.search_books.map(function (A) {
             return A["id"];
           }),
+          this.settings.search_keywords_or,
+          this.settings.search_foods_or,
+          this.settings.search_books_or,
 
-          keywords_or: this.settings.search_keywords_or,
-          foods_or: this.settings.search_foods_or,
-          books_or: this.settings.search_books_or,
-
-          internal: this.search_internal,
-          page: this.pagination_page,
-        }
-      }).then(result => {
+          this.search_internal,
+          undefined,
+          this.pagination_page,
+      ).then(result => {
         this.recipes = result.data.results
         this.pagination_count = result.data.count
       })
