@@ -11,7 +11,7 @@ from cookbook.models import Recipe, Step, Food, Unit, Ingredient
 class NextcloudCookbook(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        return re.match(r'^Recipes/([A-Za-z\d\s])+/recipe.json$', zip_info_object.filename)
+        return zip_info_object.filename.endswith('.json')
 
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
