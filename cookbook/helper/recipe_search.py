@@ -30,6 +30,10 @@ def search_recipes(request, queryset, params):
 
         return queryset.filter(pk__in=list(set(last_viewed_recipes))[-search_last_viewed:])
 
+    queryset = queryset.annotate(
+        new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
+                        default=Value(0), )).order_by('-new_recipe', 'name')
+
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                    'django.db.backends.postgresql']:
         queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_string), ).filter(
@@ -62,10 +66,6 @@ def search_recipes(request, queryset, params):
 
     if search_internal == 'true':
         queryset = queryset.filter(internal=True)
-
-    queryset = queryset.annotate(
-        new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
-                        default=Value(0), )).order_by('-new_recipe', 'name')
 
     if search_random == 'true':
         queryset = queryset.order_by("?")
