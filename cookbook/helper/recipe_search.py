@@ -6,8 +6,11 @@ from django.contrib.postgres.aggregates import StringAgg
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, SearchVector, TrigramSimilarity,
 )
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value
+from django.forms import IntegerField
 from django.utils import translation
+
+from cookbook.models import ViewLog
 
 
 DICTIONARY = {
@@ -25,8 +28,8 @@ DICTIONARY = {
 }
 
 
-def search_recipes(queryset, params):
-    search_string = params.get('query', '').strip()
+def search_recipes(request, queryset, params):
+    search_string = params.get('query', '')
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
     search_books = params.getlist('books', [])
@@ -39,6 +42,18 @@ def search_recipes(queryset, params):
     search_random = params.get('random', False)
     search_new = params.get('new', False)
     search_last_viewed = int(params.get('last_viewed', 0))
+
+    if search_last_viewed > 0:
+        last_viewed_recipes = ViewLog.objects.filter(
+            created_by=request.user, space=request.space,
+            created_at__gte=datetime.now() - timedelta(days=14)).values_list(
+            'recipe__pk', flat=True).distinct()
+        return queryset.filter(pk__in=list(set(last_viewed_recipes))[-search_last_viewed:])
+
+    queryset = queryset.annotate(
+        new_recipe=Case(When(
+            created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
+            default=Value(0), )).order_by('-new_recipe', 'name')
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql'] and search_string != '':
         # queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_string), )
@@ -80,8 +95,15 @@ def search_recipes(queryset, params):
                 | Q(name__istartswith=search_string)
             )
             .order_by('-rank'))
-    for k in search_keywords:
-        queryset = queryset.filter(keywords__id=k)
+    else:
+        queryset = queryset.filter(name__icontains=search_string)
+
+    if len(search_keywords) > 0:
+        if search_keywords_or == 'true':
+            queryset = queryset.filter(keywords__id__in=search_keywords)
+        else:
+            for k in search_keywords:
+                queryset = queryset.filter(keywords__id=k)
 
     if len(search_foods) > 0:
         if search_foods_or == 'true':
