@@ -633,7 +633,7 @@ def recipe_from_source(request):
     if mode == 'url' and auto == 'true':
         try:
             scrape = scrape_me(url)
-        except WebsiteNotImplementedError:
+        except (WebsiteNotImplementedError, AttributeError):
             try:
                 scrape = scrape_me(url, wild_mode=True)
             except NoSchemaFoundInWildMode:
