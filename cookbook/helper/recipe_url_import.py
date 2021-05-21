@@ -46,7 +46,7 @@ def get_from_scraper(scrape, space):
             servings = int(re.findall(r'\b\d+\b', servings)[0])
         except Exception:
             servings = 1
-    recipe_json['servings'] = servings
+    recipe_json['servings'] = max(servings, 1)
 
     try:
         recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
