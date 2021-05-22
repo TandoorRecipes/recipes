@@ -1,4 +1,6 @@
 import json
+import os
+
 import pytest
 
 from django.urls import reverse
@@ -51,7 +53,8 @@ def test_import_permission(arg, request):
 ])
 def test_recipe_import(arg, u1_s1):
     for f in arg['file']:
-        with open(DATA_DIR + f, 'r', encoding='UTF-8') as d:
+        test_file = os.path.join(os.getenv('PYTEST_CURRENT_TEST').split('test_url_import.py')[0], 'test_data', f)
+        with open(test_file, 'r', encoding='UTF-8') as d:
             response = u1_s1.post(
                 reverse(IMPORT_SOURCE_URL),
                 {
