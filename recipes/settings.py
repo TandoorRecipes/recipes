@@ -21,7 +21,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 from webpack_loader.loader import WebpackLoader
-
+load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files

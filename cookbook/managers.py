@@ -53,7 +53,7 @@ class RecipeSearchManager(models.Manager):
             .annotate(
                 search=search_vectors,
                 rank=search_rank,
-                #trigram=trigram_name+trigram_description+trigram_food+trigram_keyword
+                # trigram=trigram_name+trigram_description+trigram_food+trigram_keyword
                 # trigram_name=trigram_name,
                 # trigram_description=trigram_description,
                 # trigram_food=trigram_food,
