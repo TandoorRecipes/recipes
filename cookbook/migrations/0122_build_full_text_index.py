@@ -19,7 +19,7 @@ def set_default_search_vector(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('cookbook', '0119_auto_20210411_2101'),
+        ('cookbook', '0121_auto_20210518_1638'),
     ]
     operations = [
         migrations.AddField(
