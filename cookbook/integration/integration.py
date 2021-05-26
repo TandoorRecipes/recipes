@@ -57,9 +57,8 @@ class Integration:
                     recipe_stream.write(data)
                     recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
                     recipe_stream.close()
-
                     try:
-                        recipe_zip_obj.write(r.image.path, 'image.png')
+                        recipe_zip_obj.writestr('image.png', r.image.file.read())
                     except ValueError:
                         pass
 
@@ -147,10 +146,13 @@ class Integration:
                         il.msg += f'{recipe.pk} - {recipe.name} \n'
                         self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
-                il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
+                il.msg += 'ERROR ' + _(
+                    'Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
 
             if len(self.ignored_recipes) > 0:
-                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(self.ignored_recipes) + '\n\n'
+                il.msg += '\n' + _(
+                    'The following recipes were ignored because they already existed:') + ' ' + ', '.join(
+                    self.ignored_recipes) + '\n\n'
 
             il.keyword = self.keyword
             il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'
