@@ -287,14 +287,27 @@ JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', os.getenv('SCRI
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+if os.getenv('S3_ACCESS_KEY', ''):
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
+    AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', '')
+    AWS_QUERYSTRING_AUTH = True
+
+    if os.getenv('S3_ENDPOINT_URL', ''):
+        AWS_S3_ENDPOINT_URL  = os.getenv('S3_ENDPOINT_URL', '')
+
+    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+else:
+    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
-
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
