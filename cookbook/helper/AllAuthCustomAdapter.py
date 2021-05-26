@@ -9,11 +9,14 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         """
         Whether to allow sign ups.
         """
-        if request.resolver_match.view_name == 'account_signup':
+        if request.resolver_match.view_name == 'account_signup' and not settings.ENABLE_SIGNUP:
             return False
         else:
             return super(AllAuthCustomAdapter, self).is_open_for_signup(request)
 
     # disable password reset for now
     def send_mail(self, template_prefix, email, context):
-        pass
+        if settings.EMAIL_HOST != '':
+            super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
+        else:
+            pass
