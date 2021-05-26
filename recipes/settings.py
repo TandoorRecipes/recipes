@@ -100,6 +100,8 @@ INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
     os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
+ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -293,10 +295,10 @@ if os.getenv('S3_ACCESS_KEY', ''):
     AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
     AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
     AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', '')
-    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_AUTH = bool(int(os.getenv('S3_QUERYSTRING_AUTH', True)))
 
     if os.getenv('S3_ENDPOINT_URL', ''):
-        AWS_S3_ENDPOINT_URL  = os.getenv('S3_ENDPOINT_URL', '')
+        AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', '')
 
     MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
@@ -321,3 +323,11 @@ CORS_URLS_REGEX = r'^/api/bookmarklet-import.*$'
 CORS_ALLOW_METHODS = ['GET', 'OPTIONS', 'POST']
 # future versions of django will make undeclared default django.db.models.BigAutoField which will force migrations on all models
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 25))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS', False)))
+EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
+ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
