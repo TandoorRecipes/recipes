@@ -12,6 +12,8 @@ from ._recipes import (
 
 IMPORT_SOURCE_URL = 'api_recipe_from_source'
 DATA_DIR = "cookbook/tests/other/test_data/"
+
+
 # These were chosen arbitrarily from:
 # Top 10 recipe websites listed here https://www.similarweb.com/top-websites/category/food-and-drink/cooking-and-recipes/
 # plus the test that previously existed
@@ -53,8 +55,8 @@ def test_import_permission(arg, request):
 ])
 def test_recipe_import(arg, u1_s1):
     for f in arg['file']:
-        test_file = os.path.join(os.getenv('PYTEST_CURRENT_TEST').split('test_url_import.py')[0], 'test_data', f)
-        with open(test_file, 'r', encoding='UTF-8') as d:
+        test_file = os.path.join(os.getcwd(), 'other', 'test_data', f)
+        with open(test_file, 'r',  encoding='UTF-8') as d:
             response = u1_s1.post(
                 reverse(IMPORT_SOURCE_URL),
                 {
