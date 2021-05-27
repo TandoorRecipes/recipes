@@ -8,7 +8,7 @@ django-emoji-picker==0.0.6
 django-filter==2.4.0
 django-tables2==2.4.0
 djangorestframework==3.12.4
-drf-writable-nested==0.6.2
+drf-writable-nested==0.6.3
 bleach==3.3.0
 bleach-allowlist==1.0.3
 gunicorn==20.1.0
