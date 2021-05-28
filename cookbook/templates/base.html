@@ -144,6 +144,9 @@
                                 class="fas fa-user-cog fa-fw"></i> {% trans 'Settings' %}</a>
                         <a class="dropdown-item" href="{% url 'view_history' %}"><i
                                 class="fas fa-history"></i> {% trans 'History' %}</a>
+                        {% if request.user == request.space.created_by %}
+                            <a class="dropdown-item" href="{% url 'view_space' %}"><i class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
+                        {% endif %}
                         {% if user.is_superuser %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'view_system' %}"><i

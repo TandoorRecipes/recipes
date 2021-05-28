@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Space Settings" %}{% endblock %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <h3>{{ request.space.name }}</h3>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {% trans 'Number of objects' %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{% trans 'Recipes' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes }} /
+                        {% if request.space.max_recipes > 0 %}
+                            {{ request.space.max_recipes }}{% else %}∞{% endif %}</span></li>
+                    <li class="list-group-item">{% trans 'Keywords' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.keywords }}</span></li>
+                    <li class="list-group-item">{% trans 'Units' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.units }}</span></li>
+                    <li class="list-group-item">{% trans 'Ingredients' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.ingredients }}</span></li>
+                    <li class="list-group-item">{% trans 'Recipe Imports' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipe_import }}</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {% trans 'Objects stats' %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{% trans 'Recipes without Keywords' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes_no_keyword }}</span></li>
+                    <li class="list-group-item">{% trans 'External Recipes' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes_external }}</span></li>
+                    <li class="list-group-item">{% trans 'Internal Recipes' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes_internal }}</span></li>
+                    <li class="list-group-item">{% trans 'Comments' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.comments }}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col col-md-12">
+
+            <h4>{% trans 'Members' %} <small class="text-muted">{{ space_users|length }}/
+                {% if request.space.max_users > 0 %}
+                    {{ request.space.max_users }}{% else %}∞{% endif %}</small>
+            </h4><a href="{% url 'new_invite_link' %}">{% trans 'Invite User' %}</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-md-12">
+            {% if space_users %}
+                <table class="table table-bordered">
+                    {% for u in space_users %}
+                        <tr>
+                            <td>
+                                {{ u.user.username }}
+                            </td>
+                            <td>
+                                <a class="btn btn-success btn-sm" href="">{% trans 'Remove' %}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            {% else %}
+                <p>{% trans 'There are no members in your space yet!' %}</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
