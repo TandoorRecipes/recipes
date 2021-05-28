@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from django_scopes import scopes_disabled
 from django.utils.translation import gettext_lazy as _
 
-from cookbook.models import Recipe
+from cookbook.models import Recipe, Step
 
 
 # can be executed at the command line with 'python manage.py rebuildindex'
@@ -17,10 +17,11 @@ class Command(BaseCommand):
 
         try:
             with scopes_disabled():
-                search_vector = (
-                    SearchVector('name__unaccent', weight='A')
-                    + SearchVector('description__unaccent', weight='B'))
-                Recipe.objects.all().update(search_vector=search_vector)
+                Recipe.objects.all().update(
+                    name_search_vector=SearchVector('name__unaccent', weight='A'),
+                    desc_search_vector=SearchVector('description__unaccent', weight='B')
+                )
+                Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B'))
 
                 self.stdout.write(self.style.SUCCESS(_('Recipe index rebuild complete.')))
         except:
