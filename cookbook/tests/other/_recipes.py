@@ -1104,19 +1104,6 @@ FOOD_NETWORK = {
     ],
     "recipeIngredient": [
         {
-            "amount": 0,
-            "unit": {
-                "text": "",
-                "id": 65816
-            },
-            "ingredient": {
-                "text": "Deselect All",
-                "id": 17169
-            },
-            "note": "",
-            "original": "Deselect All"
-        },
-        {
             "amount": 2,
             "unit": {
                 "text": "pounds",
@@ -2448,7 +2435,7 @@ THE_SPRUCE_EATS = {
             "original": "Optional: cheddar cheese or cheddar-jack blend (shredded)"
         }
     ],
-    "recipeInstructions": "Gather the ingredients. ​The Spruce Eats / Katarina Zunic\nIn a large saucepan, melt butter over medium-low heat. ​The Spruce Eats / Katarina Zunic\nAdd onion, celery, carrots, and ham. ​The Spruce Eats / Katarina Zunic\nCook, stirring frequently until onions are tender, about 5 minutes. ​The Spruce Eats / Katarina Zunic\nAdd the garlic and continue cooking for 1 to 2 minutes longer. ​The Spruce Eats / Katarina Zunic\nAdd vegetable broth, water, and potatoes. ​The Spruce Eats / Katarina Zunic\nCover and cook for about 25 minutes, until potatoes are tender. ​The Spruce Eats / Katarina Zunic\nWhisk flour into the heavy cream until smooth. ​The Spruce Eats / Katarina Zunic\nStir into the hot mixture. ​The Spruce Eats / Katarina Zunic\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot. ​The Spruce Eats / Katarina Zunic\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick. ​The Spruce Eats / Katarina Zunic\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese. ​The Spruce Eats / Katarina Zunic\nGather the ingredients. ​The Spruce Eats / Katarina Zunic\nIn a large saucepan, melt butter over medium-low heat. ​The Spruce Eats / Katarina Zunic\nAdd onion, celery, carrots, and ham. ​The Spruce Eats / Katarina Zunic\nCook, stirring frequently until onions are tender, about 5 minutes. ​The Spruce Eats / Katarina Zunic\nAdd the garlic and continue cooking for 1 to 2 minutes longer. ​The Spruce Eats / Katarina Zunic\nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes. ​The Spruce Eats / Katarina Zunic\nCover and cook on HIGH for about 2 to 3 hours, or until the potatoes are very tender. ​The Spruce Eats / Katarina Zunic\nWhisk flour into the heavy cream until smooth. ​The Spruce Eats / Katarina Zunic\nStir the flour-cream mixture into the slow cooker. ​The Spruce Eats / Katarina Zunic\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot. ​The Spruce Eats / Katarina Zunic\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick. ​The Spruce Eats / Katarina Zunic\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese. ​The Spruce Eats / Katarina Zunic\nAdd a cup or more of chopped kale, chard leaves, or spinach to the soup along with the other vegetables.\nLighten the soup with low-fat or fat-free half-and-half in place of the heavy cream.\nOmit the diced ham or replace it with 1 or 2 cups of diced sausage or crumbled browned ground sausage, mild or spicy. Or add cooked crumbled bacon before it's done.\nAdd 1 cup of shredded cheddar cheese to the soup along with the milk and cook until the cheese has melted.\nFor a vegan version, try this dairy-free vegan cream of potato soup.\nCheddar\ndinner\nsouthern\nwinter\n\nImported from https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
+    "recipeInstructions": "Gather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nAdd vegetable broth, water, and potatoes.\nCover and cook for about 25 minutes, until potatoes are tender.\nWhisk flour into the heavy cream until smooth.\nStir into the hot mixture.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\nGather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes.\nCover and cook on HIGH for about 2 to 3 hours, or until the potatoes are very tender.\nWhisk flour into the heavy cream until smooth.\nStir the flour-cream mixture into the slow cooker.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\n\nImported from https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
 }
 
 TUDOGOSTOSO = {
