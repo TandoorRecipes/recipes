@@ -399,10 +399,15 @@ class InviteLinkForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['space'].queryset = Space.objects.filter(created_by=user).all()
 
+    def clean(self):
+        space = self.cleaned_data['space']
+        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(space=space).count()) >= space.max_users:
+            raise ValidationError(_('Maximum number of users for this space reached.'))
+
     def clean_email(self):
         email = self.cleaned_data['email']
         with scopes_disabled():
-            if User.objects.filter(email=email).exists():
+            if email != '' and User.objects.filter(email=email).exists():
                 raise ValidationError(_('Email address already taken!'))
 
         return email
@@ -410,7 +415,7 @@ class InviteLinkForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data['username']
         with scopes_disabled():
-            if User.objects.filter(username=username).exists() or InviteLink.objects.filter(username=username).exists():
+            if username != '' and (User.objects.filter(username=username).exists() or InviteLink.objects.filter(username=username).exists()):
                 raise ValidationError(_('Username already taken!'))
         return username
 

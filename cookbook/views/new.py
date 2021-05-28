@@ -17,7 +17,7 @@ from cookbook.forms import (ImportRecipeForm, InviteLinkForm, KeywordForm,
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
 from cookbook.models import (InviteLink, Keyword, MealPlan, MealType, Recipe,
-                             RecipeBook, RecipeImport, ShareLink, Step)
+                             RecipeBook, RecipeImport, ShareLink, Step, UserPreference)
 from cookbook.views.edit import SpaceFormMixing
 
 
@@ -28,6 +28,14 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     fields = ('name',)
 
     def form_valid(self, form):
+        if Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:
+            messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+            return HttpResponseRedirect(reverse('index'))
+
+        if UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
+            messages.add_message(self.request, messages.WARNING, _('You have more users than allowed in your space.'))
+            return HttpResponseRedirect(reverse('index'))
+
         obj = form.save(commit=False)
         obj.created_by = self.request.user
         obj.space = self.request.space
