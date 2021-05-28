@@ -1,13 +1,11 @@
 from datetime import datetime, timedelta
-from functools import reduce
 
 from recipes import settings
 from django.contrib.postgres.aggregates import StringAgg
 from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, SearchVector, TrigramSimilarity,
+    SearchQuery, SearchRank, SearchVector,
 )
-from django.db.models import Q, Case, When, Value
-from django.forms import IntegerField
+from django.db.models import Q, Case, When, Value, Count, Sum
 from django.utils import translation
 
 from cookbook.models import ViewLog
@@ -55,7 +53,9 @@ def search_recipes(request, queryset, params):
             created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
             default=Value(0), )).order_by('-new_recipe', 'name')
 
+    rank_results = False
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql'] and search_string != '':
+        rank_results = True
         # queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_string), )
         # .filter(Q(similarity__gt=0.1) | Q(name__unaccent__icontains=search_string)).order_by('-similarity')
         language = DICTIONARY.get(translation.get_language(), 'simple')
@@ -67,34 +67,41 @@ def search_recipes(request, queryset, params):
         # TODO create user options to add/remove query elements from search so that they can fine tune their own experience
         # trigrams, icontains, unaccent and startswith all impact results and performance significantly
         search_vectors = (
-            SearchVector('search_vector')
-            # searching instruction is extremely slow
-            # TODO add search vector field, GIN index and save signal to update the vector on step save
-            # + SearchVector('steps__instruction', weight='D', config=language)
-            + SearchVector(StringAgg('steps__ingredients__food__name__unaccent', delimiter=' '), weight='B', config=language)
-            + SearchVector(StringAgg('keywords__name__unaccent', delimiter=' '), weight='B', config=language))
-        trigram = (
-            TrigramSimilarity('name__unaccent', search_string)
-            + TrigramSimilarity('description__unaccent', search_string)
-            # adding trigrams to ingredients and keywords causes duplicate results that can't be made unique
-            # + TrigramSimilarity('steps__ingredients__food__name__unaccent', search_string)
-            # + TrigramSimilarity('keywords__name__unaccent', search_string)
+            # SearchVector('search_vector') <-- this can be searched like a field
+            SearchVector(StringAgg('steps__ingredients__food__name__unaccent', delimiter=' '), weight='B')
+            + SearchVector(StringAgg('keywords__name__unaccent', delimiter=' '), weight='B')
         )
-        search_rank = SearchRank(search_vectors, search_query)
+        # trigrams don't seem to add anything and severely limit accuracy of results.
+        # TODO add trigrams as an on/off feature
+        # trigram = (
+        #     TrigramSimilarity('name__unaccent', search_string)
+        #     + TrigramSimilarity('description__unaccent', search_string)
+        #     # adding trigrams to ingredients and keywords causes duplicate results that can't be made unique
+        #     + TrigramSimilarity('steps__ingredients__food__name__unaccent', search_string)
+        #     + TrigramSimilarity('keywords__name__unaccent', search_string)
+        # )
+        search_rank = (
+            SearchRank('name_search_vector', search_query)
+            + SearchRank('desc_search_vector', search_query)
+            + SearchRank('steps__search_vector', search_query)
+            + SearchRank(search_vectors, search_query)
+        )
         queryset = (
             queryset.annotate(
                 vector=search_vectors,
-                rank=search_rank + trigram,
-                trigram=trigram
+                rank=search_rank
             )
             .filter(
                 # vector=search_query
-                Q(vector=search_query)
+                Q(name_search_vector=search_query)
+                | Q(desc_search_vector=search_query)
+                | Q(steps__search_vector=search_query)
+                | Q(vector=search_query)
                 # adding trigrams to ingredients causes duplicate results that can't be made unique
                 # | Q(trigram__gt=0.2)
                 | Q(name__istartswith=search_string)
             )
-            .order_by('-rank'))
+        )
     else:
         queryset = queryset.filter(name__icontains=search_string)
 
@@ -119,12 +126,14 @@ def search_recipes(request, queryset, params):
             for k in search_books:
                 queryset = queryset.filter(recipebookentry__book__id=k)
 
-    queryset = queryset.distinct()
-
     if search_internal == 'true':
         queryset = queryset.filter(internal=True)
 
+    queryset = queryset.distinct()
+
     if search_random == 'true':
         queryset = queryset.order_by("?")
+    elif rank_results:
+        queryset = queryset.order_by('-rank')
 
     return queryset
