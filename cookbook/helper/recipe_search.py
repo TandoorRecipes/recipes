@@ -87,8 +87,7 @@ def search_recipes(request, queryset, params):
         )
         queryset = (
             queryset.annotate(
-                vector=search_vectors,
-                rank=search_rank
+                vector=search_vectors
             )
             .filter(
                 # vector=search_query
@@ -96,10 +95,8 @@ def search_recipes(request, queryset, params):
                 | Q(desc_search_vector=search_query)
                 | Q(steps__search_vector=search_query)
                 | Q(vector=search_query)
-                # adding trigrams to ingredients causes duplicate results that can't be made unique
-                # | Q(trigram__gt=0.2)
                 | Q(name__istartswith=search_string)
-            )
+            ).annotate(rank=search_rank)
         )
     else:
         queryset = queryset.filter(name__icontains=search_string)
