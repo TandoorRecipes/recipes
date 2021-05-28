@@ -7,6 +7,8 @@
 
 {% block extra_head %}
     {{ form.media }}
+
+    {% include 'include/vue_base.html' %}
 {% endblock %}
 
 {% block content %}
@@ -70,24 +72,72 @@
         <div class="col col-md-12">
             {% if space_users %}
                 <table class="table table-bordered">
+                    <tr>
+                    <tr>
+                        <th>{% trans 'User' %}</th>
+                        <th>{% trans 'Groups' %}</th>
+                        <th>{% trans 'Edit' %}</th>
+                    </tr>
+                    </tr>
                     {% for u in space_users %}
                         <tr>
                             <td>
                                 {{ u.user.username }}
                             </td>
                             <td>
-                                <a class="btn btn-success btn-sm" href="">{% trans 'Remove' %}</a>
+                                {{ u.user.groups.all |join:", " }}
+                            </td>
+                            <td>
+                                <div class="input-group mb-3">
+
+                                    <select v-model="users['{{ u.pk }}']" class="custom-select">
+                                        <option>{% trans 'admin' %}</option>
+                                        <option>{% trans 'user' %}</option>
+                                        <option>{% trans 'guest' %}</option>
+                                        <option>{% trans 'remove' %}</option>
+                                    </select>
+                                    <div class="input-group-append">
+
+                                        <a class="btn btn-warning"
+                                           :href="editUserUrl({{ u.pk }}, {{ u.space.pk }})">{% trans 'Update' %}</a>
+                                    </div>
+                                </div>
+
+
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
-
             {% else %}
                 <p>{% trans 'There are no members in your space yet!' %}</p>
             {% endif %}
         </div>
     </div>
 
+{% endblock %}
 
+{% block script %}
+
+    <script type="application/javascript">
+        let app = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#id_base_container',
+            data: {
+                users: {
+                    {% for u in space_users %}
+                        '{{ u.pk }}': 'none',
+                    {% endfor %}
+                }
+            },
+            mounted: function () {
+
+            },
+            methods: {
+                editUserUrl: function (user_id, space_id) {
+                    return '{% url 'change_space_member' 1234 5678 'role' %}'.replace('1234', user_id).replace('5678', space_id).replace('role', this.users[user_id])
+                }
+            }
+        });
+    </script>
 
 {% endblock %}

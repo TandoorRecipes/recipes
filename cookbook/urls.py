@@ -42,6 +42,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
     path('space/', views.space, name='view_space'),
+    path('space/member/<int:user_id>/<int:space_id>/<slug:group>', views.space_change_member, name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('no-space', views.no_space, name='view_no_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
