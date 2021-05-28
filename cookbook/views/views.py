@@ -431,6 +431,7 @@ def signup(request, token):
 
                 link.used_by = request.user
                 link.save()
+                request.user.groups.clear()
                 request.user.groups.add(link.group)
 
                 request.user.userpreference.space = link.space
@@ -461,6 +462,8 @@ def signup(request, token):
 
                                 link.used_by = user
                                 link.save()
+
+                                request.user.groups.clear()
                                 user.groups.add(link.group)
 
                                 user.userpreference.space = link.space
@@ -499,6 +502,34 @@ def space(request):
     counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
 
     return render(request, 'space.html', {'space_users': space_users, 'counts': counts})
+
+
+# TODO super hacky and quick solution, safe but needs rework
+# TODO move group settings to space to prevent permissions from one space to move to another
+@group_required('admin')
+def space_change_member(request, user_id, space_id, group):
+    m_space = get_object_or_404(Space, pk=space_id)
+    m_user = get_object_or_404(User, pk=user_id)
+    if request.user == m_space.created_by and m_user != m_space.created_by:
+        if m_user.userpreference.space == m_space:
+            if group == 'admin':
+                m_user.groups.clear()
+                m_user.groups.add(Group.objects.get(name='admin'))
+                return HttpResponseRedirect(reverse('view_space'))
+            if group == 'user':
+                m_user.groups.clear()
+                m_user.groups.add(Group.objects.get(name='user'))
+                return HttpResponseRedirect(reverse('view_space'))
+            if group == 'guest':
+                m_user.groups.clear()
+                m_user.groups.add(Group.objects.get(name='guest'))
+                return HttpResponseRedirect(reverse('view_space'))
+            if group == 'remove':
+                m_user.groups.clear()
+                m_user.userpreference.space = None
+                m_user.userpreference.save()
+                return HttpResponseRedirect(reverse('view_space'))
+    return HttpResponseRedirect(reverse('view_space'))
 
 
 def markdown_info(request):
