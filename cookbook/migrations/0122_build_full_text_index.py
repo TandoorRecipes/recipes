@@ -4,17 +4,19 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import migrations
 from django_scopes import scopes_disabled
-from cookbook.models import Recipe
+from cookbook.models import Recipe, Step
 
 
 def set_default_search_vector(apps, schema_editor):
     if settings.DATABASES['default']['ENGINE'] not in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
         return
     with scopes_disabled():
-        search_vector = (
-            SearchVector('name__unaccent', weight='A')
-            + SearchVector('description__unaccent', weight='B'))
-        Recipe.objects.all().update(search_vector=search_vector)
+        # TODO add language
+        Recipe.objects.all().update(
+            name_search_vector=SearchVector('name__unaccent', weight='A'),
+            desc_search_vector=SearchVector('description__unaccent', weight='B')
+            )
+        Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B'))
 
 
 class Migration(migrations.Migration):
@@ -24,12 +26,26 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='recipe',
-            name='search_vector',
+            name='desc_search_vector',
+            field=SearchVectorField(null=True),
+        ),
+        migrations.AddField(
+            model_name='recipe',
+            name='name_search_vector',
             field=SearchVectorField(null=True),
         ),
         migrations.AddIndex(
             model_name='recipe',
-            index=GinIndex(fields=['search_vector'], name='cookbook_re_search__404e46_gin'),
+            index=GinIndex(fields=['name_search_vector', 'desc_search_vector'], name='cookbook_re_name_se_bdf3ca_gin'),
+        ),
+        migrations.AddField(
+            model_name='step',
+            name='search_vector',
+            field=SearchVectorField(null=True),
+        ),
+        migrations.AddIndex(
+            model_name='step',
+            index=GinIndex(fields=['search_vector'], name='cookbook_st_search__2ef7fa_gin'),
         ),
         migrations.RunPython(
             set_default_search_vector
