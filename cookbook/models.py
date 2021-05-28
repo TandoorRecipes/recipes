@@ -340,6 +340,7 @@ class Step(models.Model, PermissionModelMixin):
     time = models.IntegerField(default=0, blank=True)
     order = models.IntegerField(default=0)
     show_as_header = models.BooleanField(default=True)
+    search_vector = SearchVectorField(null=True)
 
     objects = ScopedManager(space='recipe__space')
 
@@ -356,6 +357,7 @@ class Step(models.Model, PermissionModelMixin):
 
     class Meta:
         ordering = ['order', 'pk']
+        indexes = (GinIndex(fields=["search_vector"]),)
 
 
 class NutritionInformation(models.Model, PermissionModelMixin):
@@ -407,7 +409,8 @@ class Recipe(models.Model, PermissionModelMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    search_vector = SearchVectorField(null=True)
+    name_search_vector = SearchVectorField(null=True)
+    desc_search_vector = SearchVectorField(null=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
     # load custom manager for full text search if postgress is available
@@ -420,7 +423,7 @@ class Recipe(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta():
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["name_search_vector", "desc_search_vector"]),)
 
 
 class Comment(models.Model, PermissionModelMixin):

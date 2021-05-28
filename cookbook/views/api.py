@@ -288,7 +288,7 @@ class RecipeSchema(AutoSchema):
 
     def get_path_parameters(self, path, method):
         if not is_list_view(path, method, self.view):
-            return super(RecipeSchema, self).get_path_parameters(path,method)
+            return super(RecipeSchema, self).get_path_parameters(path, method)
 
         parameters = super().get_path_parameters(path, method)
         parameters.append({
