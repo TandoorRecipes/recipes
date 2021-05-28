@@ -16,7 +16,7 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
 
     # disable password reset for now
     def send_mail(self, template_prefix, email, context):
-        if settings.EMAIL_HOST == '':
+        if settings.EMAIL_HOST != '':
             super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
         else:
             pass
