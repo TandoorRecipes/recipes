@@ -62,6 +62,8 @@ class Space(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     message = models.CharField(max_length=512, default='', blank=True)
     max_recipes = models.IntegerField(default=0)
+    allow_files = models.BooleanField(default=True)
+    max_users = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -607,6 +609,7 @@ def default_valid_until():
 class InviteLink(models.Model, PermissionModelMixin):
     uuid = models.UUIDField(default=uuid.uuid4)
     username = models.CharField(blank=True, max_length=64)
+    email = models.EmailField(blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     valid_until = models.DateField(default=default_valid_until)
     used_by = models.ForeignKey(

@@ -16,6 +16,9 @@ class ScopeMiddleware:
                 with scopes_disabled():
                     return self.get_response(request)
 
+            if request.path.startswith('/signup/'):
+                return self.get_response(request)
+
             with scopes_disabled():
                 if request.user.userpreference.space is None and not reverse('account_logout') in request.path:
                     return views.no_space(request)
