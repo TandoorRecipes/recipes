@@ -111,7 +111,13 @@ def no_space(request):
         create_form = SpaceCreateForm(request.POST, prefix='create')
         join_form = SpaceJoinForm(request.POST, prefix='join')
         if create_form.is_valid():
-            created_space = Space.objects.create(name=create_form.cleaned_data['name'], created_by=request.user)
+            created_space = Space.objects.create(
+                name=create_form.cleaned_data['name'],
+                created_by=request.user,
+                allow_files=settings.SPACE_DEFAULT_FILES,
+                max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
+                max_users=settings.SPACE_DEFAULT_MAX_USERS,
+            )
             request.user.userpreference.space = created_space
             request.user.userpreference.save()
             request.user.groups.add(Group.objects.filter(name='admin').get())

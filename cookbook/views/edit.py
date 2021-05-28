@@ -18,7 +18,7 @@ from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
 from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, RecipeImport,
-                             Storage, Sync)
+                             Storage, Sync, UserPreference)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -45,6 +45,14 @@ def convert_recipe(request, pk):
 
 @group_required('user')
 def internal_recipe_update(request, pk):
+    if Recipe.objects.filter(space=request.space).count() > request.space.max_recipes:
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
+    if UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
     recipe_instance = get_object_or_404(Recipe, pk=pk, space=request.space)
 
     return render(
