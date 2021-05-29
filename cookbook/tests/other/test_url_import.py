@@ -50,13 +50,13 @@ def test_import_permission(arg, request):
     MARMITON,
     TASTE_OF_HOME,
     # example of non-json recipes_scraper
-    #THE_SPRUCE_EATS, # TODO reactivate test, fails for some reason but cant reproduce currently
+    THE_SPRUCE_EATS,
     TUDOGOSTOSO,
 ])
 def test_recipe_import(arg, u1_s1):
     for f in arg['file']:
-        test_file = os.path.join(os.getcwd(), 'other', 'test_data', f)
-        with open(test_file, 'r',  encoding='UTF-8') as d:
+        test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', f)
+        with open(test_file, 'r', encoding='UTF-8') as d:
             response = u1_s1.post(
                 reverse(IMPORT_SOURCE_URL),
                 {
