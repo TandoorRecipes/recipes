@@ -14,6 +14,7 @@ def test_switch_recipe(u1_s1, recipe_1_s1, space_1):
 
     url = reverse('edit_recipe', args=[recipe_1_s1.pk])
     r = u1_s1.get(url)
+    print(r)
     assert r.status_code == 302
 
     r = u1_s1.get(r.url)
