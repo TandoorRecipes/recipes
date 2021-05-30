@@ -15,6 +15,7 @@ def theme_url(request):
         UserPreference.FLATLY: 'themes/flatly.min.css',
         UserPreference.DARKLY: 'themes/darkly.min.css',
         UserPreference.SUPERHERO: 'themes/superhero.min.css',
+        UserPreference.TANDOOR: 'themes/tandoor.min.css',
     }
     if request.user.userpreference.theme in themes:
         return static(themes[request.user.userpreference.theme])
