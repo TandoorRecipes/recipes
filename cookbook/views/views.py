@@ -309,16 +309,16 @@ def user_settings(request):
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
 
                 up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
-                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:  # noqa: E501
-                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL  # noqa: E501
+                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
+                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
 
                 up.save()
 
         if 'user_name_form' in request.POST:
             user_name_form = UserNameForm(request.POST, prefix='name')
             if user_name_form.is_valid():
-                request.user.first_name = user_name_form.cleaned_data['first_name']  # noqa: E501
-                request.user.last_name = user_name_form.cleaned_data['last_name']  # noqa: E501
+                request.user.first_name = user_name_form.cleaned_data['first_name']
+                request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
         if 'password_form' in request.POST:
@@ -339,7 +339,7 @@ def user_settings(request):
         'preference_form': preference_form,
         'user_name_form': user_name_form,
         'password_form': password_form,
-        'api_token': api_token
+        'api_token': api_token,
     })
 
 

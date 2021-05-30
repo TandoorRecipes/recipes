@@ -77,7 +77,6 @@ class UserNameForm(forms.ModelForm):
 
         help_texts = {
             'first_name': _('Both fields are optional. If none are given the username will be displayed instead')
-            # noqa: E501
         }
 
 
