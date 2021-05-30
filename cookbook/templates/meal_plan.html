@@ -44,9 +44,9 @@
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-sm table-striped table-responsive-sm" style=" table-layout:fixed;">
-                    <thead class="thead-dark">
+                    <thead class="thead-dark" style="background-image: url({% static 'assets/header.svg' %});">
                     <tr>
-                        <th v-for="d in dates" style="width: 14.2%; text-align: center">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
+                        <th class="thead-blank" v-for="d in dates" style="width: 14.2%; text-align: center;">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
                             <button class="btn btn-sm btn-outline-secondary shadow-none" @click="addDayToShopping(d)"><i
                                     class="fas fa-cart-plus fa-sm"></i></button>
                         </th>

@@ -58,12 +58,18 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %}" id="id_main_nav"
+<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %} bg-header" id="id_main_nav"
      style="{% sticky_nav request %}">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
             aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+
+    {% if request.user.is_authenticated and request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+    <a class="navbar-brand p-0 me-2 justify-content-center" href="/" aria-label="Tandoor">
+         <img class="brand-icon" src="{% static 'assets/brand_logo.svg' %}" alt="" style="height: 5vh;">
+    </a>
+    {% endif %}
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if request.resolver_match.url_name in 'view_search,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe,data_import_url' %}active{% endif %}">

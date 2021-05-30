@@ -64,20 +64,21 @@
             <h4>{% trans 'Members' %} <small class="text-muted">{{ space_users|length }}/
                 {% if request.space.max_users > 0 %}
                     {{ request.space.max_users }}{% else %}∞{% endif %}</small>
-            </h4><a href="{% url 'new_invite_link' %}">{% trans 'Invite User' %}</a>
+                <a class="btn btn-success float-right" href="{% url 'new_invite_link' %}"><i
+                        class="fas fa-plus-circle"></i> {% trans 'Invite User' %}</a>
+            </h4>
         </div>
     </div>
+    <br>
 
     <div class="row">
         <div class="col col-md-12">
             {% if space_users %}
                 <table class="table table-bordered">
                     <tr>
-                    <tr>
                         <th>{% trans 'User' %}</th>
                         <th>{% trans 'Groups' %}</th>
                         <th>{% trans 'Edit' %}</th>
-                    </tr>
                     </tr>
                     {% for u in space_users %}
                         <tr>
@@ -88,22 +89,22 @@
                                 {{ u.user.groups.all |join:", " }}
                             </td>
                             <td>
+                                {% if u.user != request.user %}
                                 <div class="input-group mb-3">
-
-                                    <select v-model="users['{{ u.pk }}']" class="custom-select">
+                                    <select v-model="users['{{ u.pk }}']" class="custom-select form-control" style="height: 44px">
                                         <option>{% trans 'admin' %}</option>
                                         <option>{% trans 'user' %}</option>
                                         <option>{% trans 'guest' %}</option>
                                         <option>{% trans 'remove' %}</option>
                                     </select>
-                                    <div class="input-group-append">
-
+                                    <span class="input-group-append">
                                         <a class="btn btn-warning"
-                                           :href="editUserUrl({{ u.pk }}, {{ u.space.pk }})">{% trans 'Update' %}</a>
-                                    </div>
+                                           :href="editUserUrl({{ u.pk }}, {{ u.space.pk }})" >{% trans 'Update' %}</a>
+                                    </span>
                                 </div>
-
-
+                                {% else %}
+                                    {% trans 'You cannot edit yourself.' %}
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
