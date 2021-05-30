@@ -13,7 +13,7 @@
 
 
             <b-input-group class="mt-3">
-              <b-input class="form-control" v-model="search_input" v-bind:placeholder="$t('Search')"></b-input>
+              <b-input class="form-control" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
               <b-input-group-append>
                 <b-button v-b-toggle.collapse_advanced_search variant="primary" class="shadow-none"><i
                     class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i class="fas fa-caret-up"
@@ -42,7 +42,7 @@
                       </button>
                     </div>
                     <div class="col-md-2" style="position: relative; margin-top: 1vh">
-                      <b-form-checkbox v-model="search_internal" name="check-button" @change="refreshData"
+                      <b-form-checkbox v-model="settings.search_internal" name="check-button" @change="refreshData"
                                        class="shadow-none"
                                        style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
                         {{ $t('show_only_internal') }}
@@ -103,7 +103,7 @@
                     <div class="col-12">
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
-                                             :initial_selection="search_keywords"
+                                             :initial_selection="settings.search_keywords"
                                              search_function="listKeywords" label="label"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Keywords')"></generic-multiselect>
@@ -125,7 +125,7 @@
                     <div class="col-12">
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
-                                             :initial_selection="search_foods"
+                                             :initial_selection="settings.search_foods"
                                              search_function="listFoods" label="name"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Ingredients')"></generic-multiselect>
@@ -147,7 +147,7 @@
                     <div class="col-12">
                       <b-input-group style="margin-top: 1vh">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
-                                             :initial_selection="search_books"
+                                             :initial_selection="settings.search_books"
                                              search_function="listRecipeBooks" label="name"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')"></generic-multiselect>
@@ -179,7 +179,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
 
               <template
-                  v-if="search_input === '' && search_keywords.length === 0 &&  search_foods.length === 0  && search_books.length === 0">
+                  v-if="settings.search_input === '' && settings.search_keywords.length === 0 &&  settings.search_foods.length === 0  && settings.search_books.length === 0">
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
@@ -249,13 +249,13 @@ export default {
       meal_plans: [],
       last_viewed_recipes: [],
 
-      search_input: '',
-      search_internal: false,
-      search_keywords: [],
-      search_foods: [],
-      search_books: [],
-
       settings: {
+        search_input: '',
+        search_internal: false,
+        search_keywords: [],
+        search_foods: [],
+        search_books: [],
+
         search_keywords_or: true,
         search_foods_or: true,
         search_books_or: true,
@@ -272,15 +272,12 @@ export default {
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey('search_settings')) {
-        console.log('loaded cookie settings', this.$cookies.get("search_settings"))
         this.settings = this.$cookies.get("search_settings")
       }
-
       this.loadMealPlan()
       this.loadRecentlyViewed()
+      this.refreshData()
     })
-
-    this.refreshData()
 
     this.$i18n.locale = window.CUSTOM_LOCALE
   },
@@ -297,30 +294,29 @@ export default {
     'settings.recently_viewed': function () {
       this.loadRecentlyViewed()
     },
-    search_input: _debounce(function () {
+    'settings.search_input': _debounce(function () {
       this.refreshData()
     }, 300),
   },
   methods: {
     refreshData: function () {
       let apiClient = new ApiApiFactory()
-
       apiClient.listRecipes(
-          this.search_input,
-          this.search_keywords.map(function (A) {
+          this.settings.search_input,
+          this.settings.search_keywords.map(function (A) {
             return A["id"];
           }),
-          this.search_foods.map(function (A) {
+          this.settings.search_foods.map(function (A) {
             return A["id"];
           }),
-          this.search_books.map(function (A) {
+          this.settings.search_books.map(function (A) {
             return A["id"];
           }),
           this.settings.search_keywords_or,
           this.settings.search_foods_or,
           this.settings.search_books_or,
 
-          this.search_internal,
+          this.settings.search_internal,
           undefined,
           this.pagination_page,
       ).then(result => {
@@ -350,7 +346,7 @@ export default {
       let apiClient = new ApiApiFactory()
       if (this.settings.recently_viewed > 0) {
         apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
-            undefined, undefined,undefined, undefined,undefined,{query: {last_viewed: this.settings.recently_viewed}}).then(result => {
+            undefined, undefined, undefined, undefined, undefined, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
           this.last_viewed_recipes = result.data.results
         })
       } else {
@@ -358,15 +354,15 @@ export default {
       }
     },
     genericSelectChanged: function (obj) {
-      this[obj.var] = obj.val
+      this.settings[obj.var] = obj.val
       this.refreshData()
     },
     resetSearch: function () {
-      this.search_input = ''
-      this.search_internal = false
-      this.search_keywords = []
-      this.search_foods = []
-      this.search_books = []
+      this.settings.search_input = ''
+      this.settings.search_internal = false
+      this.settings.search_keywords = []
+      this.settings.search_foods = []
+      this.settings.search_books = []
       this.refreshData()
     },
     pageChange: function (page) {
