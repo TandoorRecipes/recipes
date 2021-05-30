@@ -16,88 +16,141 @@
         {% trans 'Settings' %}
     </h3>
 
-    <br/>
-    <br/>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 2vh">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="account-tab" data-toggle="tab" href="#account" role="tab"
+               aria-controls="account" aria-selected="true">{% trans 'Account' %}</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="preferences-tab" data-toggle="tab" href="#preferences" role="tab"
+               aria-controls="preferences" aria-selected="false">{% trans 'Preferences' %}</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="api-tab" data-toggle="tab" href="#api" role="tab" aria-controls="api"
+               aria-selected="false">{% trans 'API-Settings' %}</a>
+        </li>
 
-    <h4><i class="fas fa-user-edit fa-fw"></i> {% trans 'Account' %}</h4>
+    </ul>
 
-    <form action="." method="post">
-        {% csrf_token %}
-        {{ user_name_form|crispy }}
-        <button class="btn btn-success" type="submit" name="user_name_form"><i
-                class="fas fa-save"></i> {% trans 'Save' %}</button>
-    </form>
-
-    <form action="." method="post">
-        {% csrf_token %}
-        {{ password_form|crispy }}
-        <button class="btn btn-success" type="submit" name="password_form"><i
-                class="fas fa-save"></i> {% trans 'Save' %}</button>
-    </form>
-
-    <a href="{% url 'socialaccount_connections' %}">{% trans 'Link social account' %}</a>
-    <br/>
-    <br/>
-
-    <h4><i class="fas fa-language fa-fw"></i> {% trans 'Language' %}</h4>
-    <div class="row">
-        <div class="col-md-12">
-            <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
-                <input class="form-control" name="next" type="hidden" value="{{ redirect_to }}">
-                <select name="language" class="form-control">
-                    {% get_current_language as LANGUAGE_CODE %}
-                    {% get_available_languages as LANGUAGES %}
-                    {% get_language_info_list for LANGUAGES as languages %}
-                    {% for language in languages %}
-                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
-                            {{ language.name_local }} ({{ language.code }})
-                        </option>
-                    {% endfor %}
-                </select>
-                <br/>
-                <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}</button>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="account" role="tabpanel" aria-labelledby="account-tab">
+            <h4>{% trans 'Name Settings' %}</h4>
+            <form action="." method="post">
+                {% csrf_token %}
+                {{ user_name_form|crispy }}
+                <button class="btn btn-success" type="submit" name="user_name_form"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}</button>
             </form>
+
+            <h4>{% trans 'Password Settings' %}</h4>
+            <form action="." method="post">
+                {% csrf_token %}
+                {{ password_form|crispy }}
+                <button class="btn btn-success" type="submit" name="password_form"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}</button>
+            </form>
+
+            <h4>{% trans 'Email Settings' %}</h4>
+
+            <a href="{% url 'account_email'%}" class="btn btn-primary">{% trans 'Manage Email Settings' %}</a>
+
+            <br/><br/>
+
+            <h4>{% trans 'Social' %}</h4>
+
+            <a href="{% url 'socialaccount_connections' %}" class="btn btn-primary">{% trans 'Manage Social Accounts' %}</a>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
         </div>
-
-    </div>
-
-    <br/>
-    <br/>
-
-    <h4><i class="fas fa-palette fa-fw"></i> {% trans 'Style' %}</h4>
-
-    <form action="." method="post">
-        {% csrf_token %}
-        {{ preference_form|crispy }}
-        <button class="btn btn-success" type="submit" name="preference_form"><i
-                class="fas fa-save"></i> {% trans 'Save' %}</button>
-    </form>
-
-    <br/>
-    <br/>
-
-    <h4><i class="fas fa-terminal fa-fw"></i> {% trans 'API Token' %}</h4>
-    {% trans 'You can use both basic authentication and token based authentication to access the REST API.' %} <br/>
-    <br/>
+        <div class="tab-pane" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
 
 
-    <div class="input-group mb-3">
-        <input class="form-control" value="{{ api_token }}" id="id_token">
-        <div class="input-group-append">
-            <button class="input-group-btn btn btn-primary" onclick="copyToken()"><i
-                    class="far fa-copy"></i></button>
+            <div class="row">
+                <div class="col col-md-12">
+                    <h4><i class="fas fa-language fa-fw"></i> {% trans 'Language' %}</h4>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                        <input class="form-control" name="next" type="hidden" value="{{ redirect_to }}">
+                        <select name="language" class="form-control">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
+                                        selected{% endif %}>
+                                    {{ language.name_local }} ({{ language.code }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <br/>
+                        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Save' %}
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col col-md-12">
+                    <h4><i class="fas fa-palette fa-fw"></i> {% trans 'Style' %}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-md-12">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        {{ preference_form|crispy }}
+                        <button class="btn btn-success" type="submit" name="preference_form"><i
+                                class="fas fa-save"></i> {% trans 'Save' %}</button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="tab-pane" id="api" role="tabpanel" aria-labelledby="api-tab">
+
+            <div class="row">
+                <div class="col col-md-12">
+                    <h4><i class="fas fa-terminal fa-fw"></i> {% trans 'API Token' %}</h4>
+                    {% trans 'You can use both basic authentication and token based authentication to access the REST API.' %}
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-md-12">
+
+                    <div class="input-group mb-3">
+                        <input class="form-control" value="{{ api_token }}" id="id_token">
+                        <div class="input-group-append">
+                            <button class="input-group-btn btn btn-primary" onclick="copyToken()"><i
+                                    class="far fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <br/>
+                    {% trans 'Use the token as an Authorization header prefixed by the word token as shown in the following examples:' %}
+                    <br/>
+                    <code>Authorization: Token {{ api_token }}</code> {% trans 'or' %}<br/>
+                    <code>curl -X GET http://your.domain.com/api/recipes/ -H 'Authorization:
+                        Token {{ api_token }}'</code>
+                </div>
+            </div>
+
+
         </div>
     </div>
-    <br/>
-    {% trans 'Use the token as an Authorization header prefixed by the word token as shown in the following examples:' %}
-    <br/>
-    <code>Authorization: Token {{ api_token }}</code> {% trans 'or' %}<br/>
-    <code>curl -X GET http://your.domain.com/api/recipes/ -H 'Authorization: Token {{ api_token }}'</code>
-
-    <br/>
-    <br/>
-    <br/>
-    <br/>
 
     <script type="application/javascript">
         function copyToken() {
