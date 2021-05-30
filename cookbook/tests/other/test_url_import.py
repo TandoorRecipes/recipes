@@ -55,7 +55,10 @@ def test_import_permission(arg, request):
 ])
 def test_recipe_import(arg, u1_s1):
     for f in arg['file']:
-        test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', f)
+        if 'cookbook' in os.getcwd():
+            test_file = os.path.join(os.getcwd(), 'other', 'test_data', f)
+        else:
+            test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', f)
         with open(test_file, 'r', encoding='UTF-8') as d:
             response = u1_s1.post(
                 reverse(IMPORT_SOURCE_URL),
