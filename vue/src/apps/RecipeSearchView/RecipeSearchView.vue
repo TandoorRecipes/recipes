@@ -349,7 +349,8 @@ export default {
     loadRecentlyViewed: function () {
       let apiClient = new ApiApiFactory()
       if (this.settings.recently_viewed > 0) {
-        apiClient.listRecipes({options: {query: {last_viewed: this.settings.recently_viewed}}}).then(result => {
+        apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
+            undefined, undefined,undefined, undefined,undefined,{query: {last_viewed: this.settings.recently_viewed}}).then(result => {
           this.last_viewed_recipes = result.data.results
         })
       } else {
