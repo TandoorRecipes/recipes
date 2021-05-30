@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-md-3" style="margin-top: 1vh">
                       <a class="btn btn-primary btn-block text-uppercase"
-                         :href="resolveDjangoUrl('data_import_url')">{{ $t('Url_Import') }}</a>
+                         :href="resolveDjangoUrl('data_import_url')">{{ $t('Import') }}</a>
                     </div>
                     <div class="col-md-3" style="margin-top: 1vh">
                       <button class="btn btn-primary btn-block text-uppercase" @click="resetSearch">
@@ -281,6 +281,8 @@ export default {
     })
 
     this.refreshData()
+
+    this.$i18n.locale = window.CUSTOM_LOCALE
   },
   watch: {
     settings: {

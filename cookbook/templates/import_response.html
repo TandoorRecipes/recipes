@@ -25,6 +25,7 @@
 
     <script type="application/javascript">
         window.IMPORT_ID = {{pk}};
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
     </script>
 
     {% render_bundle 'import_response_view' %}

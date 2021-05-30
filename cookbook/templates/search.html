@@ -25,6 +25,8 @@
 
     <script type="application/javascript">
         window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
+
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
     </script>
 
     {% render_bundle 'recipe_search_view' %}
