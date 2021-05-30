@@ -271,8 +271,8 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-      if (this.$cookies.isKey('search_settings')) {
-        this.settings = this.$cookies.get("search_settings")
+      if (this.$cookies.isKey('search_settings_v2')) {
+        this.settings = this.$cookies.get("search_settings_v2")
       }
       this.loadMealPlan()
       this.loadRecentlyViewed()
@@ -284,7 +284,7 @@ export default {
   watch: {
     settings: {
       handler() {
-        this.$cookies.set("search_settings", this.settings, -1)
+        this.$cookies.set("search_settings_v2", this.settings, -1)
       },
       deep: true
     },
