@@ -4,18 +4,23 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import migrations
 from django_scopes import scopes_disabled
+from django.utils import translation
+from cookbook.managers import DICTIONARY
 from cookbook.models import Recipe, Step
+
+
 
 
 def set_default_search_vector(apps, schema_editor):
     if settings.DATABASES['default']['ENGINE'] not in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
         return
+    language = DICTIONARY.get(translation.get_language(), 'simple')
     with scopes_disabled():
-        # TODO add language
+        # TODO this approach doesn't work terribly well if multiple languages are in use
         Recipe.objects.all().update(
-            name_search_vector=SearchVector('name__unaccent', weight='A'),
-            desc_search_vector=SearchVector('description__unaccent', weight='B')
-            )
+            name_search_vector=SearchVector('name__unaccent', weight='A', config=language),
+            desc_search_vector=SearchVector('description__unaccent', weight='B', config=language)
+        )
         Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B'))
 
 
