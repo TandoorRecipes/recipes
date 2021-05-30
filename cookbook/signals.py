@@ -19,7 +19,7 @@ def update_recipe_search_vector(sender, instance=None, created=False, **kwargs):
 
     language = DICTIONARY.get(translation.get_language(), 'simple')
     instance.name_search_vector = SearchVector('name__unaccent', weight='A', config=language)
-    instance.desc_search_vector =  SearchVector('description__unaccent', weight='C', config=language)
+    instance.desc_search_vector = SearchVector('description__unaccent', weight='C', config=language)
 
     try:
         instance._dirty = True
@@ -37,7 +37,8 @@ def update_step_search_vector(sender, instance=None, created=False, **kwargs):
     if hasattr(instance, '_dirty'):
         return
 
-    instance.search_vector = SearchVector('instruction__unaccent', weight='B')
+    language = DICTIONARY.get(translation.get_language(), 'simple')
+    instance.search_vector = SearchVector('instruction__unaccent', weight='B', config=language)
 
     try:
         instance._dirty = True
