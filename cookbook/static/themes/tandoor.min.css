@@ -9798,7 +9798,6 @@ body.sidebar-open:before {
 }
 
 .contact-us .contact-us-bgimage {
-    background-image: url(../images/gdpr.jpg);
     background-position: 50%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -10403,8 +10402,21 @@ footer a:hover {
     background-color: transparent !important;
 }
 
-textarea, input:not([type="submit"]), select {
+textarea, input:not([type="submit"]):not([class="multiselect__input"]), select {
     background-color: white !important;
     border-radius: .25rem !important;
     border: 1px solid #ced4da !important;
+}
+
+.multiselect__tag, .multiselect__option--highlight, .multiselect__option--highlight:after {
+    background-color: #cfd5cd !important;
+    color: #212529 !important;
+}
+
+.multiselect__tag-icon:hover,.multiselect__tag-icon:focus {
+    background-color: #a7240e !important;
+}
+
+.multiselect__tag-icon:after {
+    color: #212529 !important
 }
