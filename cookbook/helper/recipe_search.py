@@ -27,8 +27,7 @@ def search_recipes(request, queryset, params):
         last_viewed_recipes = ViewLog.objects.filter(created_by=request.user, space=request.space,
                                                      created_at__gte=datetime.now() - timedelta(days=14)).values_list(
             'recipe__pk', flat=True).distinct()
-
-        return queryset.filter(pk__in=list(set(last_viewed_recipes))[-search_last_viewed:])
+        return queryset.filter(pk__in=last_viewed_recipes[len(last_viewed_recipes)-search_last_viewed:])
 
     queryset = queryset.annotate(
         new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
