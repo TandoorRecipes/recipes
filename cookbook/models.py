@@ -12,6 +12,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.validators import MinLengthValidator
 from django.db import models
+from django.db.models import Index
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
@@ -278,6 +279,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), models.Model, PermissionMod
 
     class Meta:
         unique_together = (('space', 'name'),)
+        indexes = (Index(fields=['id', 'name']), )
 
 
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
@@ -309,6 +311,7 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
 
     class Meta:
         unique_together = (('space', 'name'),)
+        indexes = (Index(fields=['id', 'name']), )
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -328,6 +331,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
     class Meta:
         ordering = ['order', 'pk']
+        indexes = (Index(fields=['id', 'food', 'unit']), )
 
 
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
@@ -359,7 +363,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
 
     class Meta:
         ordering = ['order', 'pk']
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]), )
 
 
 class NutritionInformation(models.Model, PermissionModelMixin):
@@ -419,7 +423,7 @@ class Recipe(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta():
-        indexes = (GinIndex(fields=["name_search_vector", "desc_search_vector"]),)
+        indexes = (GinIndex(fields=["name_search_vector", "desc_search_vector"]), Index(fields=['id', 'name', 'description']), )
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):
@@ -468,6 +472,9 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
 
     def __str__(self):
         return self.name
+
+    class Meta():
+        indexes = (Index(fields=['name', 'description']), )
 
 
 class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, PermissionModelMixin):
@@ -665,6 +672,9 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
     def __str__(self):
         return self.recipe.name
 
+    class Meta():
+        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating']), )
+
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -676,6 +686,9 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
 
     def __str__(self):
         return self.recipe.name
+
+    class Meta():
+        indexes = (Index(fields=['recipe', '-created_at']), )
 
 
 class ImportLog(models.Model, PermissionModelMixin):

@@ -6,7 +6,7 @@ from django.db import migrations
 from django_scopes import scopes_disabled
 from django.utils import translation
 from cookbook.managers import DICTIONARY
-from cookbook.models import Recipe, Step
+from cookbook.models import Recipe, Step, Index
 
 
 
@@ -51,6 +51,34 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name='step',
             index=GinIndex(fields=['search_vector'], name='cookbook_st_search__2ef7fa_gin'),
+        ),
+        migrations.AddIndex(
+            model_name='cooklog',
+            index=Index(fields=['id', 'recipe', '-created_at', 'rating'], name='cookbook_co_id_37485a_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='food',
+            index=Index(fields=['id', 'name'], name='cookbook_fo_id_22b733_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='ingredient',
+            index=Index(fields=['id', 'food', 'unit'], name='cookbook_in_id_3368be_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='keyword',
+            index=Index(fields=['id', 'name'], name='cookbook_ke_id_ebc03f_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='recipe',
+            index=Index(fields=['id', 'name', 'description'], name='cookbook_re_id_e4c2d4_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='recipebook',
+            index=Index(fields=['name', 'description'], name='cookbook_re_name_bbe446_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='viewlog',
+            index=Index(fields=['recipe', '-created_at'], name='cookbook_vi_recipe__5cd178_idx'),
         ),
         migrations.RunPython(
             set_default_search_vector
