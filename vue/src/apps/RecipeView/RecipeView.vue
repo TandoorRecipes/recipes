@@ -196,6 +196,7 @@ export default {
   },
   mounted() {
     this.loadRecipe(window.RECIPE_ID)
+    this.$i18n.locale = window.CUSTOM_LOCALE
   },
   methods: {
     loadRecipe: function (recipe_id) {
