@@ -1645,6 +1645,25 @@ export interface Supermarket {
 /**
  * 
  * @export
+ * @interface SupermarketCategory
+ */
+export interface SupermarketCategory {
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategory
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategory
+     */
+    name: string;
+}
+/**
+ * 
+ * @export
  * @interface Sync
  */
 export interface Sync {
@@ -1848,7 +1867,8 @@ export enum UserPreferenceThemeEnum {
     Bootstrap = 'BOOTSTRAP',
     Darkly = 'DARKLY',
     Flatly = 'FLATLY',
-    Superhero = 'SUPERHERO'
+    Superhero = 'SUPERHERO',
+    Tandoor = 'TANDOOR'
 }
 /**
     * @export
@@ -2476,6 +2496,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(supermarket, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarketCategory: async (supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket-category/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3177,6 +3230,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroySupermarketCategory: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroySupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3846,6 +3932,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          */
         listStorages: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/storage/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listSupermarketCategorys: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket-category/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4702,6 +4817,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateSupermarketCategory: async (id: string, supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateSupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -5386,6 +5538,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('retrieveSupermarket', 'id', id)
             const localVarPath = `/api/supermarket/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveSupermarketCategory: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveSupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6238,6 +6423,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSupermarketCategory: async (id: string, supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateSupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -6566,6 +6788,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createSupermarketCategory(supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSupermarketCategory(supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6776,6 +7008,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroySupermarketCategory(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroySupermarketCategory(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6978,6 +7220,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listStorages(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Storage>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listStorages(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listSupermarketCategorys(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategory>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategorys(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7232,6 +7483,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateSupermarketCategory(id, supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -7442,6 +7704,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveSupermarket(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveSupermarket(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveSupermarketCategory(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveSupermarketCategory(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7693,6 +7965,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSupermarketCategory(id, supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -7900,6 +8183,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarketCategory(supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.createSupermarketCategory(supermarketCategory, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8089,6 +8381,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroySupermarketCategory(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroySupermarketCategory(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8271,6 +8572,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listStorages(options?: any): AxiosPromise<Array<Storage>> {
             return localVarFp.listStorages(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listSupermarketCategorys(options?: any): AxiosPromise<Array<SupermarketCategory>> {
+            return localVarFp.listSupermarketCategorys(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8500,6 +8809,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.partialUpdateSupermarketCategory(id, supermarketCategory, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -8690,6 +9009,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveSupermarket(id: string, options?: any): AxiosPromise<Supermarket> {
             return localVarFp.retrieveSupermarket(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveSupermarketCategory(id: string, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.retrieveSupermarketCategory(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8914,6 +9242,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         updateSupermarket(id: string, supermarket?: Supermarket, options?: any): AxiosPromise<Supermarket> {
             return localVarFp.updateSupermarket(id, supermarket, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.updateSupermarketCategory(id, supermarketCategory, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9154,6 +9492,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createSupermarketCategory(supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).createSupermarketCategory(supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {Sync} [sync] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -9385,6 +9734,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroySupermarketCategory(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroySupermarketCategory(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this sync.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -9608,6 +9968,16 @@ export class ApiApi extends BaseAPI {
      */
     public listStorages(options?: any) {
         return ApiApiFp(this.configuration).listStorages(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listSupermarketCategorys(options?: any) {
+        return ApiApiFp(this.configuration).listSupermarketCategorys(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9886,6 +10256,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateSupermarketCategory(id, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this sync.
      * @param {Sync} [sync] 
      * @param {*} [options] Override http request option.
@@ -10117,6 +10499,17 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveSupermarket(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveSupermarket(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveSupermarketCategory(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveSupermarketCategory(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10387,6 +10780,18 @@ export class ApiApi extends BaseAPI {
      */
     public updateSupermarket(id: string, supermarket?: Supermarket, options?: any) {
         return ApiApiFp(this.configuration).updateSupermarket(id, supermarket, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).updateSupermarketCategory(id, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

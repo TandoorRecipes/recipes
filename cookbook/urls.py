@@ -35,6 +35,7 @@ router.register(r'cook-log', api.CookLogViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
+router.register(r'supermarket-category', api.SupermarketCategoryViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 
@@ -42,7 +43,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
     path('space/', views.space, name='view_space'),
-    path('space/member/<int:user_id>/<int:space_id>/<slug:group>', views.space_change_member, name='change_space_member'),
+    path('space/member/<int:user_id>/<int:space_id>/<slug:group>', views.space_change_member,
+         name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('no-space', views.no_space, name='view_no_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
@@ -58,6 +60,7 @@ urlpatterns = [
     path('shopping/latest/', views.latest_shopping_list, name='view_shopping_latest'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
+    path('supermarket/', views.supermarket, name='view_supermarket'),
     path('test/', views.test, name='view_test'),
     path('test2/', views.test2, name='view_test2'),
 
@@ -111,15 +114,18 @@ urlpatterns = [
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/api/', views.api_info, name='docs_api'),
 
-    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True, permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
+    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
+                                     permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
 
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path('offline/', views.offline, name='view_offline'),
 
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
-    path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )), name='web_manifest'),
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )),
+         name='service_worker'),
+    path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )),
+         name='web_manifest'),
 ]
 
 generic_models = (
