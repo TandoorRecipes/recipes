@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %}{% trans 'Supermarket' %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/vue-multiselect-bs4.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div id="app" >
+        <supermarket-view></supermarket-view>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
+
+    <script type="application/javascript">
+
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+    </script>
+
+    {% render_bundle 'supermarket_view' %}
+{% endblock %}

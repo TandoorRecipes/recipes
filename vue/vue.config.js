@@ -17,6 +17,10 @@ const pages = {
         entry: './src/apps/ImportResponseView/main.js',
         chunks: ['chunk-vendors']
     },
+    'supermarket_view': {
+        entry: './src/apps/SupermarketView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {

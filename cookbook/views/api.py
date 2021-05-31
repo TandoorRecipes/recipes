@@ -39,7 +39,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -56,7 +56,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer)
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer)
 from recipes.settings import DEMO
 
 
@@ -151,6 +151,16 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
+
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategory.objects
+    serializer_class = SupermarketCategorySerializer
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
@@ -288,7 +298,7 @@ class RecipeSchema(AutoSchema):
 
     def get_path_parameters(self, path, method):
         if not is_list_view(path, method, self.view):
-            return super(RecipeSchema, self).get_path_parameters(path,method)
+            return super(RecipeSchema, self).get_path_parameters(path, method)
 
         parameters = super().get_path_parameters(path, method)
         parameters.append({
@@ -655,7 +665,9 @@ def recipe_from_source(request):
             return JsonResponse(
                 {
                     'error': True,
-                    'msg': _('The requested site does not provide any recognized data format to import the recipe from.')  # noqa: E501
+                    'msg': _(
+                        'The requested site does not provide any recognized data format to import the recipe from.')
+                    # noqa: E501
                 },
                 status=400)
         else:

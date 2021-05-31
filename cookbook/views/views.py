@@ -232,6 +232,11 @@ def meal_plan(request):
 
 
 @group_required('user')
+def supermarket(request):
+    return render(request, 'supermarket.html', {})
+
+
+@group_required('user')
 def meal_plan_entry(request, pk):
     plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
 
