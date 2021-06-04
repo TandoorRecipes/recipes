@@ -25,8 +25,8 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
-from cookbook.helper.ingredient_parser import parse
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
+                            SearchPreferenceForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
@@ -56,9 +56,6 @@ def index(request):
         return HttpResponseRedirect(reverse('view_search'))
 
 
-# faceting
-# unaccent / likely will perform full table scan
-# create tests
 def search(request):
     if has_group_permission(request.user, ('guest',)):
         if request.user.userpreference.search_style == UserPreference.NEW:
@@ -307,6 +304,7 @@ def user_settings(request):
         return redirect('index')
 
     up = request.user.userpreference
+    sp = request.user.searchpreference
 
     user_name_form = UserNameForm(instance=request.user)
 
@@ -335,17 +333,42 @@ def user_settings(request):
 
                 up.save()
 
-        if 'user_name_form' in request.POST:
+        elif 'user_name_form' in request.POST:
             user_name_form = UserNameForm(request.POST, prefix='name')
             if user_name_form.is_valid():
                 request.user.first_name = user_name_form.cleaned_data['first_name']
                 request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
+        elif 'password_form' in request.POST:
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+
+        elif 'search_form' in request.POST:
+            search_form = SearchPreferenceForm(request.POST, prefix='search')
+            if form.is_valid():
+                if not sp:
+                    sp = search_form(user=request.user)
+
+                sp.search = search_form.cleaned_data['search']
+                sp.unaccent = search_form.cleaned_data['unaccent']
+                sp.icontains = search_form.cleaned_data['icontains']
+                sp.istartswith = search_form.cleaned_data['istartswith']
+                sp.trigram = search_form.cleaned_data['trigram']
+                sp.fulltext = search_form.cleaned_data['fulltext']
+
+                sp.save()
     if up:
         preference_form = UserPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm()
+
+    if sp:
+        preference_form = SearchPreferenceForm(instance=sp)
+    else:
+        preference_form = SearchPreferenceForm()
 
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
@@ -354,6 +377,7 @@ def user_settings(request):
         'preference_form': preference_form,
         'user_name_form': user_name_form,
         'api_token': api_token,
+        'search_form': search_form
     })
 
 
