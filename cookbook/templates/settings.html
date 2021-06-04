@@ -30,6 +30,10 @@
             <a class="nav-link" id="api-tab" data-toggle="tab" href="#api" role="tab" aria-controls="api"
                aria-selected="false">{% trans 'API-Settings' %}</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="search"
+               aria-selected="false">{% trans 'Search-Settings' %}</a>
+        </li>
 
     </ul>
 
@@ -150,6 +154,16 @@
 
 
         </div>
+        <div class="tab-pane" id="search" role="tabpanel" aria-labelledby="search-tab">
+            <h4>{% trans 'Search Settings' %}</h4>
+            <form action="." method="post">
+                {% csrf_token %}
+                {{ search_form|crispy }}
+                <button class="btn btn-success" type="submit" name="search_form"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}</button>
+            </form>
+        </div>
+        
     </div>
 
     <script type="application/javascript">

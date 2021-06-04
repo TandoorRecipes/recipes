@@ -105,7 +105,8 @@ class UserPreference(models.Model, PermissionModelMixin):
     COLORS = (
         (PRIMARY, 'Primary'),
         (SECONDARY, 'Secondary'),
-        (SUCCESS, 'Success'), (INFO, 'Info'),
+        (SUCCESS, 'Success'),
+        (INFO, 'Info'),
         (WARNING, 'Warning'),
         (DANGER, 'Danger'),
         (LIGHT, 'Light'),
@@ -721,3 +722,50 @@ class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+
+# field names used to configure search behavior - all data populated during data migration
+# other option is to use a MultiSelectField from https://github.com/goinnn/django-multiselectfield
+class SearchFields(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=32, unique=True)
+    field = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return _(self.name)
+
+    @staticmethod
+    def get_name(self):
+        return _(self.name)
+
+
+def allSearchFields():
+    return SearchFields.objects.values_list('id')
+
+
+def nameSearchField():
+    return [SearchFields.objects.get(name='Name').id]
+
+
+class SearchPreference(models.Model, PermissionModelMixin):
+    # Search Style (validation parsleyjs.org)
+    # phrase or plain or raw (websearch and trigrams are mutually exclusive)
+    SIMPLE = 'SIMPLE'
+    PLAIN = 'PLAIN'
+    PHRASE = 'PHRASE'
+    WEB = 'WEBSEARCH'
+    RAW = 'RAW'
+    SEARCH_STYLE = (
+        (PLAIN, _('Plain')),
+        (PHRASE, _('Phrase')),
+        (WEB, _('Web')),
+        (RAW, _('Raw'))
+    )
+
+    user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    search = models.CharField(choices=SEARCH_STYLE, max_length=32, default=SIMPLE)
+
+    unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
+    icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
+    istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
+    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
+    fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
