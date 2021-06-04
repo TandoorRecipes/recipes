@@ -28,7 +28,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     fields = ('name',)
 
     def form_valid(self, form):
-        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:
+        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes: # TODO move to central helper function
             messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
             return HttpResponseRedirect(reverse('index'))
 
