@@ -57,7 +57,6 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
                                  BookmarkletImportSerializer, SupermarketCategorySerializer)
-from recipes.settings import DEMO
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -390,7 +389,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             obj, data=request.data, partial=True
         )
 
-        if DEMO:
+        if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
 
         if serializer.is_valid():
@@ -537,7 +536,7 @@ def get_recipe_file(request, recipe_id):
 
 @group_required('user')
 def sync_all(request):
-    if DEMO:
+    if request.space.demo:
         messages.add_message(
             request, messages.ERROR, _('This feature is not available in the demo version!')
         )

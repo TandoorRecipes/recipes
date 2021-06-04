@@ -33,7 +33,6 @@ from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
-from recipes.settings import DEMO
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -284,7 +283,7 @@ def shopping_list(request, pk=None):
 
 @group_required('guest')
 def user_settings(request):
-    if DEMO:
+    if request.space.demo:
         messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
         return redirect('index')
 
