@@ -111,7 +111,8 @@ class UserPreference(models.Model, PermissionModelMixin):
     COLORS = (
         (PRIMARY, 'Primary'),
         (SECONDARY, 'Secondary'),
-        (SUCCESS, 'Success'), (INFO, 'Info'),
+        (SUCCESS, 'Success'),
+        (INFO, 'Info'),
         (WARNING, 'Warning'),
         (DANGER, 'Danger'),
         (LIGHT, 'Light'),
@@ -720,18 +721,48 @@ class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
 
-class UserFile(ExportModelOperationsMixin('user_files'), models.Model, PermissionModelMixin):
-    name = models.CharField(max_length=128)
-    file = models.FileField(upload_to='files/')
-    file_size_kb = models.IntegerField(default=0, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+# field names used to configure search behavior - all data populated during data migration
+# other option is to use a MultiSelectField from https://github.com/goinnn/django-multiselectfield
+class SearchFields(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=32, unique=True)
+    field = models.CharField(max_length=64, unique=True)
 
-    objects = ScopedManager(space='space')
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    def __str__(self):
+        return _(self.name)
 
-    def save(self, *args, **kwargs):
-        if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file, InMemoryUploadedFile):
-            self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
-            self.file_size_kb = round(self.file.size / 1000)
-        super(UserFile, self).save(*args, **kwargs)
+    @staticmethod
+    def get_name(self):
+        return _(self.name)
+
+
+def allSearchFields():
+    return SearchFields.objects.values_list('id')
+
+
+def nameSearchField():
+    return [SearchFields.objects.get(name='Name').id]
+
+
+class SearchPreference(models.Model, PermissionModelMixin):
+    # Search Style (validation parsleyjs.org)
+    # phrase or plain or raw (websearch and trigrams are mutually exclusive)
+    SIMPLE = 'SIMPLE'
+    PLAIN = 'PLAIN'
+    PHRASE = 'PHRASE'
+    WEB = 'WEBSEARCH'
+    RAW = 'RAW'
+    SEARCH_STYLE = (
+        (PLAIN, _('Plain')),
+        (PHRASE, _('Phrase')),
+        (WEB, _('Web')),
+        (RAW, _('Raw'))
+    )
+
+    user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    search = models.CharField(choices=SEARCH_STYLE, max_length=32, default=SIMPLE)
+
+    unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
+    icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
+    istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
+    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
+    fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
