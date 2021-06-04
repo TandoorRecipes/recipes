@@ -64,6 +64,7 @@ class Space(models.Model):
     max_recipes = models.IntegerField(default=0)
     allow_files = models.BooleanField(default=True)
     max_users = models.IntegerField(default=0)
+    demo = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
