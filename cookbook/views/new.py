@@ -28,11 +28,11 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     fields = ('name',)
 
     def form_valid(self, form):
-        if Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:
+        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:
             messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
             return HttpResponseRedirect(reverse('index'))
 
-        if UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
+        if self.request.space.max_users != 0 and UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
             messages.add_message(self.request, messages.WARNING, _('You have more users than allowed in your space.'))
             return HttpResponseRedirect(reverse('index'))
 
