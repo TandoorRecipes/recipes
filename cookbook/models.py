@@ -80,11 +80,11 @@ class UserPreference(models.Model, PermissionModelMixin):
     TANDOOR = 'TANDOOR'
 
     THEMES = (
+        (TANDOOR, 'Tandoor'),
         (BOOTSTRAP, 'Bootstrap'),
         (DARKLY, 'Darkly'),
         (FLATLY, 'Flatly'),
         (SUPERHERO, 'Superhero'),
-        (TANDOOR, 'Tandoor')
     )
 
     # Nav colors
@@ -126,7 +126,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')), (NEW, _('New')))
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    theme = models.CharField(choices=THEMES, max_length=128, default=FLATLY)
+    theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(
         choices=COLORS, max_length=128, default=PRIMARY
     )
