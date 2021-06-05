@@ -64,6 +64,16 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_TABLES2_TEMPLATE = 'cookbook/templates/generic/table_template.html'
 DJANGO_TABLES2_PAGE_RANGE = 8
 
+HCAPTCHA_SITEKEY = ''  # os.getenv('HCAPTCHA_SITEKEY', '')
+HCAPTCHA_SECRET = ''  # os.getenv('HCAPTCHA_SECRET', '')
+
+
+ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+
+TERMS_URL = os.getenv('TERMS_URL', '')
+PRIVACY_URL = os.getenv('PRIVACY_URL', '')
+IMPRINT_URL = os.getenv('IMPRINT_URL', '')
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
@@ -92,6 +102,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'webpack_loader',
     'django_js_reverse',
+    'hcaptcha',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -185,6 +196,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'cookbook.helper.context_processors.context_settings',
             ],
         },
     },

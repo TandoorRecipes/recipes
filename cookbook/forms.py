@@ -1,10 +1,12 @@
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
+from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
@@ -66,6 +68,21 @@ class UserPreferenceForm(forms.ModelForm):
         widgets = {
             'plan_share': MultiSelectWidget
         }
+
+
+class AllAuthSignupForm(forms.Form):
+    captcha = hCaptchaField()
+    terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
+
+    def __init__(self, **kwargs):
+        super(AllAuthSignupForm, self).__init__(**kwargs)
+        if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
+            self.fields.pop('terms')
+        if settings.HCAPTCHA_SECRET == '':
+            self.fields.pop('captcha')
+
+    def signup(self, request, user):
+        pass
 
 
 class UserNameForm(forms.ModelForm):

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
+{% load crispy_forms_filters %}
 {% load i18n %}
 
 {% block title %}{% trans 'Register' %}{% endblock %}
@@ -10,7 +11,45 @@
 
     <form method="post">
         {% csrf_token %}
-        {{ form|crispy }}
+
+        <div class="form-group">
+            {{ form.username |as_crispy_field }}
+        </div>
+        <div class="form-group">
+            {{ form.email |as_crispy_field }}
+        </div>
+        <div class="form-group">
+            {{ form.password1 |as_crispy_field }}
+        </div>
+        <div class="form-group">
+            {{ form.password2 |as_crispy_field }}
+        </div>
+
+        {% if TERMS_URL != '' or PRIVACY_URL != '' %}
+            <div class="form-group">
+                {{ form.terms |as_crispy_field }}
+                <small>
+                    {% trans 'I accept the follwoing' %}
+                    {% if TERMS_URL != '' %}
+                        <a href="{{ TERMS_URL }}" target="_blank" rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>
+                    {% endif %}
+                {% if TERMS_URL != '' or PRIVACY_URL != '' %}
+                    {% trans 'and' %}
+                    {% endif %}
+                    {% if PRIVACY_URL != '' %}
+                        <a href="{{ PRIVACY_URL }}"  target="_blank" rel="noreferrer nofollow">{% trans 'Privacy Policy' %}</a>
+                    {% endif %}
+                </small>
+            </div>
+        {% endif %}
+
+         {% if CAPTCHA_ENABLED %}
+            <div class="form-group">
+                {{ form.captcha.errors }}
+                {{ form.captcha }}
+            </div>
+        {% endif %}
+
         <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create User' %}</button>
     </form>
 
