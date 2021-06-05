@@ -7,52 +7,65 @@
 
 {% block content %}
 
-    <h3>{% trans 'Create your Account' %}</h3>
+    <div class="row">
+        <div class="col-12" style="text-align: center">
+            <h3>{% trans "Create an Account" %}</h3>
+        </div>
+    </div>
 
-    <form method="post">
-        {% csrf_token %}
+    <div class="row">
+        <div class="col-6 offset-3">
+            <hr>
+            <form method="post">
+                {% csrf_token %}
 
-        <div class="form-group">
-            {{ form.username |as_crispy_field }}
-        </div>
-        <div class="form-group">
-            {{ form.email |as_crispy_field }}
-        </div>
-        <div class="form-group">
-            {{ form.password1 |as_crispy_field }}
-        </div>
-        <div class="form-group">
-            {{ form.password2 |as_crispy_field }}
-        </div>
+                <div class="form-group">
+                    {{ form.username |as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    {{ form.email |as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    {{ form.password1 |as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    {{ form.password2 |as_crispy_field }}
+                </div>
 
-        {% if TERMS_URL != '' or PRIVACY_URL != '' %}
-            <div class="form-group">
-                {{ form.terms |as_crispy_field }}
-                <small>
-                    {% trans 'I accept the follwoing' %}
-                    {% if TERMS_URL != '' %}
-                        <a href="{{ TERMS_URL }}" target="_blank" rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>
-                    {% endif %}
                 {% if TERMS_URL != '' or PRIVACY_URL != '' %}
-                    {% trans 'and' %}
-                    {% endif %}
-                    {% if PRIVACY_URL != '' %}
-                        <a href="{{ PRIVACY_URL }}"  target="_blank" rel="noreferrer nofollow">{% trans 'Privacy Policy' %}</a>
-                    {% endif %}
-                </small>
-            </div>
-        {% endif %}
+                    <div class="form-group">
+                        {{ form.terms |as_crispy_field }}
+                        <small>
+                            {% trans 'I accept the follwoing' %}
+                            {% if TERMS_URL != '' %}
+                                <a href="{{ TERMS_URL }}" target="_blank"
+                                   rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>
+                            {% endif %}
+                            {% if TERMS_URL != '' or PRIVACY_URL != '' %}
+                                {% trans 'and' %}
+                            {% endif %}
+                            {% if PRIVACY_URL != '' %}
+                                <a href="{{ PRIVACY_URL }}" target="_blank"
+                                   rel="noreferrer nofollow">{% trans 'Privacy Policy' %}</a>
+                            {% endif %}
+                        </small>
+                    </div>
+                {% endif %}
 
-         {% if CAPTCHA_ENABLED %}
-            <div class="form-group">
-                {{ form.captcha.errors }}
-                {{ form.captcha }}
-            </div>
-        {% endif %}
+                {% if CAPTCHA_ENABLED %}
+                    <div class="form-group">
+                        {{ form.captcha.errors }}
+                        {{ form.captcha }}
+                    </div>
+                {% endif %}
 
-        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create User' %}</button>
-    </form>
+                <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create User' %}
+                </button>
+            </form>
 
-    <p>{% trans 'Already have an account?' %} <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></p>
+            <p>{% trans 'Already have an account?' %} <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></p>
+        </div>
+
+    </div>
 
 {% endblock %}

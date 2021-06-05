@@ -14,7 +14,12 @@
     <br/>
     <br/>
     <div class="text-center">
-        <i class="fas fa-sync fa-spin fa-10x"></i>
+
+        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+           <img class="spinner-tandoor"/>
+        {% else %}
+            <i class="fas fa-sync fa-spin fa-10x"></i>
+        {% endif %}
 
         <br/>
         <br/>

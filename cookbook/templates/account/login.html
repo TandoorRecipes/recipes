@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
 {% load i18n %}
+{% load static %}
 
 {% load account socialaccount %}
 
 {% block title %}{% trans 'Login' %}{% endblock %}
 
 {% block content %}
+
 
     <div class="row">
         <div class="col-12" style="text-align: center">
@@ -17,6 +19,7 @@
 
     <div class="row">
         <div class="col-6 offset-3">
+        <hr>
             <form class="login" method="POST" action="{% url 'account_login' %}">
                 {% csrf_token %}
                 {{ form | crispy }}
@@ -25,12 +28,12 @@
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                 {% endif %}
 
-                <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-                <a class="btn btn-success" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                <button class="btn btn-success" type="submit">{% trans "Sign In" %}</button>
+                <a class="btn btn-secondary" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
 
                 {% if EMAIL_ENABLED %}
-                    <a class="btn btn-secondary"
-                       href="{% url 'account_reset_password' %}">{% trans "Reset Password" %}</a>
+                    <a class="btn btn-warning float-right"
+                       href="{% url 'account_reset_password' %}">{% trans "Reset My Password" %}</a>
                 {% endif %}
             </form>
         </div>
