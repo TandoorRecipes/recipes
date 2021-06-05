@@ -12,14 +12,7 @@ from cookbook.models import Food, Keyword, ViewLog
 
 
 def search_recipes(request, queryset, params):
-    fields = {
-        'name': 'name',
-        'description': 'description',
-        'instructions': 'steps__instruction',
-        'foods': 'steps__ingredients__food__name',
-        'keywords': 'keywords__name'
-    }
-
+    search_prefs = request.user.searchpreference
     search_string = params.get('query', '')
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
@@ -45,35 +38,38 @@ def search_recipes(request, queryset, params):
             created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
             default=Value(0), )).order_by('-new_recipe', 'name')
 
-    search_type = None
+    search_type = search_prefs.search or 'plain'
     search_sort = None
     if len(search_string) > 0:
-        # TODO move all of these to settings somewhere - probably user settings
+        unaccent_include = search_prefs.unaccent.values_list('field', flat=True)
 
-        unaccent_include = ['name', 'description', 'instructions', 'keywords', 'foods']  # can also contain: description, instructions, keywords, foods
-        # TODO when setting up settings length of arrays below must be >=1
+        icontains_include = [x + '__unaccent' if x in unaccent_include else x for x in search_prefs.icontains.values_list('field', flat=True)]
+        istartswith_include = [x + '__unaccent' if x in unaccent_include else x for x in search_prefs.istartswith.values_list('field', flat=True)]
+        trigram_include = [x + '__unaccent' if x in unaccent_include else x for x in search_prefs.trigram.values_list('field', flat=True)]
+        fulltext_include = search_prefs.fulltext.values_list('field', flat=True)  # fulltext doesn't use field name directly
 
-        icontains_include = []  # can contain: name, description, instructions, keywords, foods
-        istartswith_include = ['name']  # can also contain: description, instructions, keywords, foods
-        trigram_include = ['name', 'description', 'instructions']  # only these choices - keywords and foods are really, really, really slow maybe add to subquery?
-        fulltext_include = ['name', 'description', 'instructions', 'foods', 'keywords']
+        # if no filters are configured use name__icontains as default
+        if len(icontains_include) + len(istartswith_include) + len(trigram_include) + len(fulltext_include) == 0:
+            filters = [Q(**{"name__icontains": search_string})]
+        else:
+            filters = []
 
-        # END OF SETTINGS SECTION
-        for f in unaccent_include:
-            fields[f] += '__unaccent'
-
-        filters = []
+        # dynamically build array of filters that will be applied
         for f in icontains_include:
-            filters += [Q(**{"%s__icontains" % fields[f]: search_string})]
+            filters += [Q(**{"%s__icontains" % f: search_string})]
 
         for f in istartswith_include:
-            filters += [Q(**{"%s__istartswith" % fields[f]: search_string})]
+            filters += [Q(**{"%s__istartswith" % f: search_string})]
 
         if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
             language = DICTIONARY.get(translation.get_language(), 'simple')
             # django full text search https://docs.djangoproject.com/en/3.2/ref/contrib/postgres/search/#searchquery
-            search_type = 'websearch'  # other postgress options are phrase or plain or raw (websearch and trigrams are mutually exclusive)
-            search_trigram = False
+            # TODO can options install this extension to further enhance search query language https://github.com/caub/pg-tsquery
+            # trigram breaks full text search 'websearch' and 'raw' capabilities and will be ignored if those methods are chosen
+            if search_type in ['websearch', 'raw']:
+                search_trigram = False
+            else:
+                search_trigram = True
             search_query = SearchQuery(
                 search_string,
                 search_type=search_type,
@@ -85,10 +81,11 @@ def search_recipes(request, queryset, params):
                 trigram = None
                 for f in trigram_include:
                     if trigram:
-                        trigram += TrigramSimilarity(fields[f], search_string)
+                        trigram += TrigramSimilarity(f, search_string)
                     else:
-                        trigram = TrigramSimilarity(fields[f], search_string)
+                        trigram = TrigramSimilarity(f, search_string)
                 queryset.annotate(simularity=trigram)
+                # TODO allow user to play with trigram scores
                 filters += [Q(simularity__gt=0.5)]
 
             if 'name' in fulltext_include:

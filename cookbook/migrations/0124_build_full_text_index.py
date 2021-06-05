@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
             name='SearchPreference',
             fields=[
                 ('user', annoying.fields.AutoOneToOneField(on_delete=deletion.CASCADE, primary_key=True, serialize=False, to='auth.user')),
-                ('search', models.CharField(choices=[('PLAIN', 'Plain'), ('PHRASE', 'Phrase'), ('WEBSEARCH', 'Web'), ('RAW', 'Raw')], default='SIMPLE', max_length=32)),
+                ('search', models.CharField(choices=[('plain', 'Plain'), ('phrase', 'Phrase'), ('websearch', 'Web'), ('raw', 'Raw')], default='plain', max_length=32)),
                 ('fulltext', models.ManyToManyField(blank=True, related_name='fulltext_fields', to='cookbook.SearchFields')),
                 ('icontains', models.ManyToManyField(blank=True, default=nameSearchField, related_name='icontains_fields', to='cookbook.SearchFields')),
                 ('istartswith', models.ManyToManyField(blank=True, related_name='istartswith_fields', to='cookbook.SearchFields')),
