@@ -506,6 +506,4 @@ class SearchPreferenceForm(forms.ModelForm):
             'istartswith': MultiSelectWidget,
             'trigram': MultiSelectWidget,
             'fulltext': MultiSelectWidget,
-        }
-
-        
+        }   
