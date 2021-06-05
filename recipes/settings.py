@@ -64,8 +64,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_TABLES2_TEMPLATE = 'cookbook/templates/generic/table_template.html'
 DJANGO_TABLES2_PAGE_RANGE = 8
 
-HCAPTCHA_SITEKEY = ''  # os.getenv('HCAPTCHA_SITEKEY', '')
-HCAPTCHA_SECRET = ''  # os.getenv('HCAPTCHA_SECRET', '')
+HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
+HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
 
 ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
