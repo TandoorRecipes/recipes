@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django_prometheus',
     'django_tables2',
     'corsheaders',
     'django_filters',
@@ -105,6 +106,8 @@ SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
 
 ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
+ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -118,6 +121,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
+
+if ENABLE_METRICS:
+    MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
 
 # Auth related settings
 AUTHENTICATION_BACKENDS = [
@@ -308,6 +314,7 @@ if os.getenv('S3_ACCESS_KEY', ''):
     AWS_QUERYSTRING_AUTH = bool(int(os.getenv('S3_QUERYSTRING_AUTH', True)))
     AWS_QUERYSTRING_EXPIRE = int(os.getenv('S3_QUERYSTRING_EXPIRE', 3600))
     AWS_S3_SIGNATURE_VERSION = os.getenv('S3_SIGNATURE_VERSION', 's3v4')
+    AWS_S3_REGION_NAME = os.getenv('S3_REGION_NAME', None)
 
     if os.getenv('S3_ENDPOINT_URL', ''):
         AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', '')
