@@ -33,6 +33,8 @@ from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
+from recipes import settings
+from recipes.settings import DEMO
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -290,6 +292,8 @@ def user_settings(request):
 
     up = request.user.userpreference
     sp = request.user.searchpreference
+    search_error = False
+    active_tab = 'account'
 
     user_name_form = UserNameForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
@@ -297,6 +301,7 @@ def user_settings(request):
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
+            active_tab = 'preferences'
             form = UserPreferenceForm(request.POST, prefix='preference')
             if form.is_valid():
                 if not up:
@@ -334,38 +339,62 @@ def user_settings(request):
                 update_session_auth_hash(request, user)
 
         elif 'search_form' in request.POST:
+            active_tab = 'search'
             search_form = SearchPreferenceForm(request.POST, prefix='search')
-            if form.is_valid():
+            if search_form.is_valid():
                 if not sp:
-                    sp = search_form(user=request.user)
+                    sp = SearchPreferenceForm(user=request.user)
+                fields_searched = (
+                    len(search_form.cleaned_data['icontains'])
+                    + len(search_form.cleaned_data['istartswith'])
+                    + len(search_form.cleaned_data['trigram'])
+                    + len(search_form.cleaned_data['fulltext']))
+                # TODO add 'recommended' option
+                if fields_searched == 0:
+                    search_form.add_error(None, _('You must select at least one field to search!'))
+                    search_error = True
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
+                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
+                    search_error = True
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
+                    search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
+                    search_error = True
+                else:
+                    sp.search = search_form.cleaned_data['search']
+                    sp.unaccent.set(search_form.cleaned_data['unaccent'])
+                    sp.icontains.set(search_form.cleaned_data['icontains'])
+                    sp.istartswith.set(search_form.cleaned_data['istartswith'])
+                    sp.trigram.set(search_form.cleaned_data['trigram'])
+                    sp.fulltext.set(search_form.cleaned_data['fulltext'])
 
-                sp.search = search_form.cleaned_data['search']
-                sp.unaccent = search_form.cleaned_data['unaccent']
-                sp.icontains = search_form.cleaned_data['icontains']
-                sp.istartswith = search_form.cleaned_data['istartswith']
-                sp.trigram = search_form.cleaned_data['trigram']
-                sp.fulltext = search_form.cleaned_data['fulltext']
-
-                sp.save()
+                    sp.save()
     if up:
         preference_form = UserPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm()
 
-    if sp:
-        preference_form = SearchPreferenceForm(instance=sp)
-    else:
-        preference_form = SearchPreferenceForm()
+    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
+    if sp and not search_error and fields_searched > 0:
+        search_form = SearchPreferenceForm(instance=sp)
+    elif not search_error:
+        search_form = SearchPreferenceForm()
 
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
+
+    # these fields require postgress - just disable them if postgress isn't available
+    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        search_form.fields['search'].disabled = True
+        search_form.fields['trigram'].disabled = True
+        search_form.fields['fulltext'].disabled = True
 
     return render(request, 'settings.html', {
         'preference_form': preference_form,
         'user_name_form': user_name_form,
         'password_form': password_form,
         'api_token': api_token,
-        'search_form': search_form
+        'search_form': search_form,
+        'active_tab': active_tab
     })
 
 
@@ -560,6 +589,10 @@ def space_change_member(request, user_id, space_id, group):
 
 def markdown_info(request):
     return render(request, 'markdown_info.html', {})
+
+
+def search_info(request):
+    return render(request, 'search_info.html', {})
 
 
 @group_required('guest')
