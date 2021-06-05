@@ -118,6 +118,7 @@ urlpatterns = [
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
+    path('docs/search/', views.search_info, name='docs_search'),
     path('docs/api/', views.api_info, name='docs_api'),
 
     path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
