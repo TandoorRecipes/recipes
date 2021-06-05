@@ -482,7 +482,7 @@ class SearchPreferenceForm(forms.ModelForm):
         fields = ('search', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext')
 
         help_texts = {
-            'search': _('Select type method of search.  Click here for full desciption of choices.'),
+            'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
             'unaccent': _('Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
             'icontains': _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
             'istartswith': _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
@@ -507,3 +507,5 @@ class SearchPreferenceForm(forms.ModelForm):
             'trigram': MultiSelectWidget,
             'fulltext': MultiSelectWidget,
         }
+
+        

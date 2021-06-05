@@ -746,13 +746,12 @@ def nameSearchField():
 class SearchPreference(models.Model, PermissionModelMixin):
     # Search Style (validation parsleyjs.org)
     # phrase or plain or raw (websearch and trigrams are mutually exclusive)
-    SIMPLE = 'SIMPLE'
-    PLAIN = 'PLAIN'
-    PHRASE = 'PHRASE'
-    WEB = 'WEBSEARCH'
-    RAW = 'RAW'
+    SIMPLE = 'plain'
+    PHRASE = 'phrase'
+    WEB = 'websearch'
+    RAW = 'raw'
     SEARCH_STYLE = (
-        (PLAIN, _('Plain')),
+        (SIMPLE, _('Simple')),
         (PHRASE, _('Phrase')),
         (WEB, _('Web')),
         (RAW, _('Raw'))
