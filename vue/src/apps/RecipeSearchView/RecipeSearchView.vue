@@ -91,6 +91,11 @@
                       </b-form-group>
                     </div>
                     <div class="row" style="margin-top: 1vh">
+                      <div class="col-12">
+                        <a :href="resolveDjangoUrl('view_settings')">{{ $t('Advanced Search Settings') }}</a>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 1vh">
                       <div class="col-12" style="text-align: right">
                         <b-button size="sm" variant="secondary" style="margin-right:8px"
                                   @click="$root.$emit('bv::hide::popover')">{{ $t('Close') }}
