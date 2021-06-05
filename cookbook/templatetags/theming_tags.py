@@ -9,7 +9,7 @@ register = template.Library()
 @register.simple_tag
 def theme_url(request):
     if not request.user.is_authenticated:
-        return static('themes/flatly.min.css')
+        return static('themes/tandoor.min.css')
     themes = {
         UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
         UserPreference.FLATLY: 'themes/flatly.min.css',
