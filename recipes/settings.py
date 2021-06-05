@@ -300,12 +300,13 @@ STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 if os.getenv('S3_ACCESS_KEY', ''):
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
 
     AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
     AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
     AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', '')
     AWS_QUERYSTRING_AUTH = bool(int(os.getenv('S3_QUERYSTRING_AUTH', True)))
+    AWS_QUERYSTRING_EXPIRE = int(os.getenv('S3_QUERYSTRING_EXPIRE', 3600))
 
     if os.getenv('S3_ENDPOINT_URL', ''):
         AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', '')
