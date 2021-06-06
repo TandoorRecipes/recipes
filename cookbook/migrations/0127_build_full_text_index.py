@@ -28,7 +28,7 @@ def set_default_search_vector(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ('auth', '0012_alter_user_first_name_max_length'),
-        ('cookbook', '0123_invitelink_email'),
+        ('cookbook', '0126_alter_userpreference_theme'),
     ]
     operations = [
         migrations.AddField(

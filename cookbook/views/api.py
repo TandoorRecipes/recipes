@@ -94,7 +94,7 @@ class FuzzyFilterMixin(ViewSetMixin):
         query = self.request.query_params.get('query', None)
         fuzzy = self.request.user.searchpreference.lookup
 
-        if query is not None or query != '':
+        if query is not None and query != '':
             if fuzzy:
                 queryset = queryset.annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2).order_by("-trigram")
             else:
