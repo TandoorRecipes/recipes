@@ -9,6 +9,7 @@ from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Q
@@ -88,6 +89,38 @@ class StandardFilterMixin(ViewSetMixin):
         return queryset
 
 
+class FuzzyFilterMixin(ViewSetMixin):
+
+    def get_queryset(self):
+        queryset = self.queryset
+        query = self.request.query_params.get('query', None)
+        fuzzy = self.request.user.searchpreference.lookup
+
+        if query is not None or query != '':
+            if fuzzy:
+                queryset = queryset.annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2).order_by("-trigram")
+            else:
+                # TODO have this check unaccent search settings?
+                queryset = queryset.filter(name__icontains=query)
+
+        updated_at = self.request.query_params.get('updated_at', None)
+        if updated_at is not None:
+            try:
+                queryset = queryset.filter(updated_at__gte=updated_at)
+            except FieldError:
+                pass
+            except ValidationError:
+                raise APIException(_('Parameter updated_at incorrectly formatted'))
+
+        limit = self.request.query_params.get('limit', None)
+        random = self.request.query_params.get('random', False)
+        if limit is not None:
+            if random:
+                queryset = queryset.order_by("?")
+            queryset = queryset[:int(limit)]
+        return queryset
+
+
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     """
     list:
@@ -159,27 +192,7 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = SupermarketCategory.objects
-    serializer_class = SupermarketCategorySerializer
-    permission_classes = [CustomIsUser]
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
-
-
-class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
-    queryset = SupermarketCategoryRelation.objects
-    serializer_class = SupermarketCategoryRelationSerializer
-    permission_classes = [CustomIsUser]
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
-        return super().get_queryset()
-
-
-class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class KeywordViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     """
        list:
        optional parameters
@@ -197,7 +210,7 @@ class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class UnitViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     queryset = Unit.objects
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser]
@@ -207,7 +220,7 @@ class UnitViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class FoodViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class FoodViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     queryset = Food.objects
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]

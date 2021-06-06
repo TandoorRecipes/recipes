@@ -760,6 +760,7 @@ class SearchPreference(models.Model, PermissionModelMixin):
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     search = models.CharField(choices=SEARCH_STYLE, max_length=32, default=SIMPLE)
 
+    lookup = models.BooleanField(default=False)
     unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
     icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
     istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
