@@ -34,7 +34,6 @@ from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable, InviteLinkTable)
 from cookbook.views.data import Object
-from recipes import settings
 from recipes.settings import DEMO
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
@@ -374,6 +373,7 @@ def user_settings(request):
                     search_error = True
                 else:
                     sp.search = search_form.cleaned_data['search']
+                    sp.lookup = search_form.cleaned_data['lookup']
                     sp.unaccent.set(search_form.cleaned_data['unaccent'])
                     sp.icontains.set(search_form.cleaned_data['icontains'])
                     sp.istartswith.set(search_form.cleaned_data['istartswith'])
@@ -398,6 +398,7 @@ def user_settings(request):
     # these fields require postgress - just disable them if postgress isn't available
     if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
         search_form.fields['search'].disabled = True
+        search_form.fields['lookup'].disabled = True
         search_form.fields['trigram'].disabled = True
         search_form.fields['fulltext'].disabled = True
 

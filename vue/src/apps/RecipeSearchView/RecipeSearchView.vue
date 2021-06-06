@@ -119,7 +119,7 @@
                     </div>
                     <div class="row" style="margin-top: 1vh">
                       <div class="col-12">
-                        <a :href="resolveDjangoUrl('view_settings')">{{ $t('Advanced Search Settings') }}</a>
+                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t('Advanced Search Settings') }}</a>
                       </div>
                     </div>
                     <div class="row" style="margin-top: 1vh">

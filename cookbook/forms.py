@@ -479,10 +479,11 @@ class SearchPreferenceForm(forms.ModelForm):
 
     class Meta:
         model = SearchPreference
-        fields = ('search', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext')
+        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext')
 
         help_texts = {
             'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
+            'lookup': _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'),
             'unaccent': _('Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
             'icontains': _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
             'istartswith': _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
@@ -492,6 +493,7 @@ class SearchPreferenceForm(forms.ModelForm):
 
         labels = {
             'search': _('Search Method'),
+            'lookup': _('Fuzzy Lookups'),
             'unaccent': _('Ignore Accent'),
             'icontains': _("Partial Match"),
             'istartswith': _("Starts Wtih"),
@@ -506,4 +508,4 @@ class SearchPreferenceForm(forms.ModelForm):
             'istartswith': MultiSelectWidget,
             'trigram': MultiSelectWidget,
             'fulltext': MultiSelectWidget,
-        }   
+        }
