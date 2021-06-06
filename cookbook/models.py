@@ -393,7 +393,7 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         return 'Nutrition'
 
 
-class Recipe(models.Model, PermissionModelMixin):
+class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=512, blank=True, null=True)
     servings = models.IntegerField(default=1)

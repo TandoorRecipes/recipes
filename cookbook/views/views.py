@@ -33,7 +33,6 @@ from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
-from recipes.settings import DEMO
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
