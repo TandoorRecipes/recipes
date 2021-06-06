@@ -192,6 +192,16 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategory.objects
+    serializer_class = SupermarketCategorySerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
+
 class KeywordViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     """
        list:
