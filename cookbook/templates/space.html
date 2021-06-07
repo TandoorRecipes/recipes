@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load django_tables2 %}
 {% load crispy_forms_filters %}
 {% load static %}
 {% load i18n %}
@@ -90,18 +91,19 @@
                             </td>
                             <td>
                                 {% if u.user != request.user %}
-                                <div class="input-group mb-3">
-                                    <select v-model="users['{{ u.pk }}']" class="custom-select form-control" style="height: 44px">
-                                        <option>{% trans 'admin' %}</option>
-                                        <option>{% trans 'user' %}</option>
-                                        <option>{% trans 'guest' %}</option>
-                                        <option>{% trans 'remove' %}</option>
-                                    </select>
-                                    <span class="input-group-append">
+                                    <div class="input-group mb-3">
+                                        <select v-model="users['{{ u.pk }}']" class="custom-select form-control"
+                                                style="height: 44px">
+                                            <option>{% trans 'admin' %}</option>
+                                            <option>{% trans 'user' %}</option>
+                                            <option>{% trans 'guest' %}</option>
+                                            <option>{% trans 'remove' %}</option>
+                                        </select>
+                                        <span class="input-group-append">
                                         <a class="btn btn-warning"
-                                           :href="editUserUrl({{ u.pk }}, {{ u.space.pk }})" >{% trans 'Update' %}</a>
+                                           :href="editUserUrl({{ u.pk }}, {{ u.space.pk }})">{% trans 'Update' %}</a>
                                     </span>
-                                </div>
+                                    </div>
                                 {% else %}
                                     {% trans 'You cannot edit yourself.' %}
                                 {% endif %}
@@ -114,6 +116,17 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="row">
+        <div class="col col-md-12">
+            <h4>{% trans 'Invite Links' %}</h4>
+             {% render_table invite_links %}
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+    <br/>
 
 {% endblock %}
 

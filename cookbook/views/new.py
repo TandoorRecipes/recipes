@@ -245,7 +245,7 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
             except (SMTPException, BadHeaderError, TimeoutError):
                 messages.add_message(self.request, messages.ERROR, _('Email to user could not be send, please share link manually.'))
 
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('view_space'))
 
     def get_context_data(self, **kwargs):
         context = super(InviteLinkCreate, self).get_context_data(**kwargs)
