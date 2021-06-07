@@ -126,7 +126,7 @@ def no_space(request):
             return HttpResponseRedirect(reverse('index'))
 
         if join_form.is_valid():
-            return HttpResponseRedirect(reverse('view_signup', args=[join_form.cleaned_data['token']]))
+            return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
         if settings.SOCIAL_DEFAULT_ACCESS:
             request.user.userpreference.space = Space.objects.first()
@@ -134,7 +134,7 @@ def no_space(request):
             request.user.groups.add(Group.objects.get(name=settings.SOCIAL_DEFAULT_GROUP))
             return HttpResponseRedirect(reverse('index'))
         if 'signup_token' in request.session:
-            return HttpResponseRedirect(reverse('view_signup', args=[request.session.pop('signup_token', '')]))
+            return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
         create_form = SpaceCreateForm()
         join_form = SpaceJoinForm()
@@ -420,7 +420,7 @@ def setup(request):
         return render(request, 'setup.html', {'form': form})
 
 
-def signup(request, token):
+def invite_link(request, token):
     with scopes_disabled():
         try:
             token = UUID(token, version=4)
@@ -446,47 +446,15 @@ def signup(request, token):
                 return HttpResponseRedirect(reverse('index'))
             else:
                 request.session['signup_token'] = str(token)
+                return HttpResponseRedirect(reverse('account_signup'))
 
-                if request.method == 'POST':
-                    updated_request = request.POST.copy()
-                    if link.username != '':
-                        updated_request.update({'username': link.username})
+    messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
+    return HttpResponseRedirect(reverse('index'))
 
-                    form = SignupForm(data=updated_request)
 
-                    if form.is_valid():
-                        if form.cleaned_data['password1'] != form.cleaned_data['password_confirm']:  # noqa: E501
-                            form.add_error('password1', _('Passwords dont match!'))
-                        else:
-                            user = User(username=form.cleaned_data['username'], )
-                            try:
-                                validate_password(form.cleaned_data['password1'], user=user)
-                                user.set_password(form.cleaned_data['password1'])
-                                user.save()
-                                messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
-
-                                link.used_by = user
-                                link.save()
-
-                                request.user.groups.clear()
-                                user.groups.add(link.group)
-
-                                user.userpreference.space = link.space
-                                user.userpreference.save()
-                                return HttpResponseRedirect(reverse('account_login'))
-                            except ValidationError as e:
-                                for m in e:
-                                    form.add_error('password', m)
-                else:
-                    form = SignupForm()
-
-            if link.username != '':
-                form.fields['name'].initial = link.username
-                form.fields['name'].disabled = True
-            return render(request, 'account/signup.html', {'form': form, 'link': link})
-
-        messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
-        return HttpResponseRedirect(reverse('index'))
+# TODO deprecated with 0.16.2 remove at some point
+def signup(request, token):
+    return HttpResponseRedirect(reverse('view_invite', args=[token]))
 
 
 @group_required('admin')

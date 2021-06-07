@@ -166,7 +166,7 @@ admin.site.register(ViewLog, ViewLogAdmin)
 
 class InviteLinkAdmin(admin.ModelAdmin):
     list_display = (
-        'username', 'group', 'valid_until',
+        'group', 'valid_until',
         'created_by', 'created_at', 'used_by'
     )
 

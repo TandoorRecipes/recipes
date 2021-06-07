@@ -413,19 +413,11 @@ class InviteLinkForm(forms.ModelForm):
 
         return email
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        with scopes_disabled():
-            if username != '' and (User.objects.filter(username=username).exists() or InviteLink.objects.filter(username=username).exists()):
-                raise ValidationError(_('Username already taken!'))
-        return username
-
     class Meta:
         model = InviteLink
-        fields = ('username', 'email', 'group', 'valid_until', 'space')
+        fields = ('email', 'group', 'valid_until', 'space')
         help_texts = {
-            'username': _('A username is not required, if left blank the new user can choose one.'),
-            'email': _('An email address is not required but if present the invite link will be send to the user.')
+            'email': _('An email address is not required but if present the invite link will be send to the user.'),
         }
         field_classes = {
             'space': SafeModelChoiceField,

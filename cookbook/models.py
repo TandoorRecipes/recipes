@@ -612,7 +612,6 @@ def default_valid_until():
 
 class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, PermissionModelMixin):
     uuid = models.UUIDField(default=uuid.uuid4)
-    username = models.CharField(blank=True, max_length=64)
     email = models.EmailField(blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     valid_until = models.DateField(default=default_valid_until)
