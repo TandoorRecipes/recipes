@@ -70,21 +70,6 @@ class UserPreferenceForm(forms.ModelForm):
         }
 
 
-class AllAuthSignupForm(forms.Form):
-    captcha = hCaptchaField()
-    terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
-
-    def __init__(self, **kwargs):
-        super(AllAuthSignupForm, self).__init__(**kwargs)
-        if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
-            self.fields.pop('terms')
-        if settings.HCAPTCHA_SECRET == '':
-            self.fields.pop('captcha')
-
-    def signup(self, request, user):
-        pass
-
-
 class UserNameForm(forms.ModelForm):
     prefix = 'name'
 
@@ -462,6 +447,21 @@ class SpaceCreateForm(forms.Form):
 class SpaceJoinForm(forms.Form):
     prefix = 'join'
     token = forms.CharField()
+
+
+class AllAuthSignupForm(forms.Form):
+    captcha = hCaptchaField()
+    terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
+
+    def __init__(self, **kwargs):
+        super(AllAuthSignupForm, self).__init__(**kwargs)
+        if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
+            self.fields.pop('terms')
+        if settings.HCAPTCHA_SECRET == '':
+            self.fields.pop('captcha')
+
+    def signup(self, request, user):
+        pass
 
 
 class UserCreateForm(forms.Form):

@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 from uuid import UUID
 
+from allauth.account.forms import SignupForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -25,13 +26,13 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm)
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
                              Food)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
-                             ViewLogTable)
+                             ViewLogTable, InviteLinkTable)
 from cookbook.views.data import Object
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
@@ -444,23 +445,23 @@ def signup(request, token):
                 messages.add_message(request, messages.SUCCESS, _('Successfully joined space.'))
                 return HttpResponseRedirect(reverse('index'))
             else:
-                request.session['signup_token'] = token
+                request.session['signup_token'] = str(token)
 
                 if request.method == 'POST':
                     updated_request = request.POST.copy()
                     if link.username != '':
-                        updated_request.update({'name': link.username})
+                        updated_request.update({'username': link.username})
 
-                    form = UserCreateForm(updated_request)
+                    form = SignupForm(data=updated_request)
 
                     if form.is_valid():
-                        if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
-                            form.add_error('password', _('Passwords dont match!'))
+                        if form.cleaned_data['password1'] != form.cleaned_data['password_confirm']:  # noqa: E501
+                            form.add_error('password1', _('Passwords dont match!'))
                         else:
-                            user = User(username=form.cleaned_data['name'], )
+                            user = User(username=form.cleaned_data['username'], )
                             try:
-                                validate_password(form.cleaned_data['password'], user=user)
-                                user.set_password(form.cleaned_data['password'])
+                                validate_password(form.cleaned_data['password1'], user=user)
+                                user.set_password(form.cleaned_data['password1'])
                                 user.save()
                                 messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
 
@@ -477,7 +478,7 @@ def signup(request, token):
                                 for m in e:
                                     form.add_error('password', m)
                 else:
-                    form = UserCreateForm()
+                    form = SignupForm()
 
             if link.username != '':
                 form.fields['name'].initial = link.username
@@ -505,7 +506,10 @@ def space(request):
 
     counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
 
-    return render(request, 'space.html', {'space_users': space_users, 'counts': counts})
+    invite_links = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(invite_links)
+
+    return render(request, 'space.html', {'space_users': space_users, 'counts': counts, 'invite_links': invite_links})
 
 
 # TODO super hacky and quick solution, safe but needs rework
