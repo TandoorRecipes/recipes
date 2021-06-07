@@ -96,10 +96,10 @@
                                     <div class="input-group mb-3">
                                         <select v-model="users['{{ u.pk }}']" class="custom-select form-control"
                                                 style="height: 44px">
-                                            <option>{% trans 'admin' %}</option>
-                                            <option>{% trans 'user' %}</option>
-                                            <option>{% trans 'guest' %}</option>
-                                            <option>{% trans 'remove' %}</option>
+                                            <option value="admin">{% trans 'admin' %}</option>
+                                            <option value="user">{% trans 'user' %}</option>
+                                            <option value="guest">{% trans 'guest' %}</option>
+                                            <option value="remove">{% trans 'remove' %}</option>
                                         </select>
                                         <span class="input-group-append">
                                         <a class="btn btn-warning"

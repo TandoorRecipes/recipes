@@ -141,7 +141,7 @@ class ShoppingListTable(tables.Table):
 
 class InviteLinkTable(tables.Table):
     link = tables.TemplateColumn(
-        "<input value='{{ request.scheme }}://{{ request.get_host }}{% url 'view_signup' record.uuid %}' class='form-control' />"
+        "<input value='{{ request.scheme }}://{{ request.get_host }}{% url 'view_invite' record.uuid %}' class='form-control' />"
     )
     delete_link = tables.TemplateColumn(
         "<a href='{% url 'delete_invite_link' record.pk %}' >" + _('Delete') + "</a>", verbose_name=_('Delete')

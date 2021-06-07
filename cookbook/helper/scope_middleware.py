@@ -16,7 +16,10 @@ class ScopeMiddleware:
                 with scopes_disabled():
                     return self.get_response(request)
 
-            if request.path.startswith('/signup/'):
+            if request.path.startswith('/signup/') or request.path.startswith('/invite/'):
+                return self.get_response(request)
+
+            if request.path.startswith('/accounts/'):
                 return self.get_response(request)
 
             with scopes_disabled():
