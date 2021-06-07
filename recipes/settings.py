@@ -67,12 +67,13 @@ DJANGO_TABLES2_PAGE_RANGE = 8
 HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
 HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
-
 ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
+
+HOSTED = bool(int(os.getenv('HOSTED', False)))
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
