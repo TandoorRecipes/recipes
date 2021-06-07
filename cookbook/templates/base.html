@@ -140,7 +140,7 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
-                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
                             class="fas fa-user-alt"></i> {{ user.get_user_name }}
