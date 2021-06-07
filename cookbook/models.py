@@ -1,3 +1,4 @@
+import operator
 import re
 import uuid
 from datetime import date, timedelta
@@ -53,9 +54,11 @@ class PermissionModelMixin:
 
     def get_space(self):
         p = '.'.join(self.get_space_key())
-        if getattr(self, p, None):
-            return getattr(self, p)
-        raise NotImplementedError('get space for method not implemented and standard fields not available')
+        try:
+            if space := operator.attrgetter(p)(self):
+                return space
+        except AttributeError:
+            raise NotImplementedError('get space for method not implemented and standard fields not available')
 
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
