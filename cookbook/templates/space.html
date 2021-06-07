@@ -14,7 +14,9 @@
 
 {% block content %}
 
-    <h3>{{ request.space.name }}</h3>
+    <h3>{{ request.space.name }} <small>{% if HOSTED %}
+    <a href="https://tandoor.dev/manage">{% trans 'Manage Subscription' %}</a>{% endif %}</small></h3>
+
     <br/>
 
     <div class="row">
@@ -120,7 +122,7 @@
     <div class="row">
         <div class="col col-md-12">
             <h4>{% trans 'Invite Links' %}</h4>
-             {% render_table invite_links %}
+            {% render_table invite_links %}
         </div>
     </div>
 
