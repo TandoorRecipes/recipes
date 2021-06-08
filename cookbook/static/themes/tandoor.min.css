@@ -4190,12 +4190,12 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .navbar-dark .navbar-toggler {
-    color: hsla(0, 0%, 18%, .5);
-    border-color: hsla(0, 0%, 18%, .1)
+    color: rgba(46, 46, 46, 0.5);
+    border-color: rgba(46, 46, 46, 0.5);
 }
 
 .navbar-dark .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E")
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(46, 46, 46, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E")
 }
 
 .navbar-dark .navbar-text {
@@ -4261,7 +4261,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .card-header {
     padding: .75rem 1.25rem;
     margin-bottom: 0;
-    background-color: rgba(0, 0, 0, .03);
+    background-color: #ffffff;
     border-bottom: 1px solid rgba(0, 0, 0, .125)
 }
 
@@ -10419,6 +10419,12 @@ footer a:hover {
 
 .modal-content .modal-body {
     padding: 0 40px
+}
+
+.modal-content .modal-footer {
+    border: none;
+    justify-content: flex-start;
+    padding: 5px 0 20px 39px
 }
 
 .modal-content .modal-footer {
