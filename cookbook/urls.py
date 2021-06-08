@@ -38,6 +38,7 @@ router.register(r'supermarket', api.SupermarketViewSet)
 router.register(r'supermarket-category', api.SupermarketCategoryViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
+router.register(r'user-file', api.UserFileViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -62,6 +63,7 @@ urlpatterns = [
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
+    path('files/', views.files, name='view_files'),
     path('test/', views.test, name='view_test'),
     path('test2/', views.test2, name='view_test2'),
 

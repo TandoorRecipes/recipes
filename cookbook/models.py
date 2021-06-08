@@ -1,4 +1,5 @@
 import operator
+import pathlib
 import re
 import uuid
 from datetime import date, timedelta
@@ -66,7 +67,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     message = models.CharField(max_length=512, default='', blank=True)
     max_recipes = models.IntegerField(default=0)
-    allow_files = models.BooleanField(default=True)
+    max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
     demo = models.BooleanField(default=False)
 
@@ -694,3 +695,19 @@ class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+
+class UserFile(ExportModelOperationsMixin('user_files'), models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=128)
+    file = models.FileField(upload_to='files/')
+    file_size_kb = models.IntegerField(default=0, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
+        self.file_size_kb = round(self.file.size / 1000)
+        super(UserFile, self).save(*args, **kwargs)
