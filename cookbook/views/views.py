@@ -238,7 +238,10 @@ def supermarket(request):
 
 @group_required('user')
 def files(request):
-    current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+    try:
+        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+    except TypeError:
+        current_file_size_mb = 0
     return render(request, 'files.html', {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
 
 
@@ -261,9 +264,7 @@ def meal_plan_entry(request, pk):
 
 @group_required('user')
 def latest_shopping_list(request):
-    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
-                                                                                                 space=request.space).order_by(
-        '-created_at').first()
+    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False, pace=request.space).order_by('-created_at').first()
 
     if sl:
         return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')

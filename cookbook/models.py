@@ -7,6 +7,7 @@ from datetime import date, timedelta
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
+from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
@@ -332,10 +333,11 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
     TEXT = 'TEXT'
     TIME = 'TIME'
+    FILE = 'FILE'
 
     name = models.CharField(max_length=128, default='', blank=True)
     type = models.CharField(
-        choices=((TEXT, _('Text')), (TIME, _('Time')),),
+        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')),),
         default=TEXT,
         max_length=16
     )
@@ -343,6 +345,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     ingredients = models.ManyToManyField(Ingredient, blank=True)
     time = models.IntegerField(default=0, blank=True)
     order = models.IntegerField(default=0)
+    file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
 
     objects = ScopedManager(space='recipe__space')
@@ -708,6 +711,7 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
-        self.file_size_kb = round(self.file.size / 1000)
+        if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file, InMemoryUploadedFile):
+            self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
+            self.file_size_kb = round(self.file.size / 1000)
         super(UserFile, self).save(*args, **kwargs)

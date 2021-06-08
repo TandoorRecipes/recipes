@@ -1,4 +1,11 @@
 {
+  "err_fetching_resource": "There was an error fetching a resource!",
+  "err_creating_resource": "There was an error creating a resource!",
+  "err_updating_resource": "There was an error updating a resource!",
+  "success_fetching_resource": "Successfully fetched a resource!",
+  "success_creating_resource": "Successfully created a resource!",
+  "success_updating_resource": "Successfully updated a resource!",
+
   "import_running": "Import running, please wait!",
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
@@ -38,6 +45,7 @@
   "Close": "Close",
   "Add": "Add",
   "New": "New",
+  "Success": "Success",
   "Ingredients": "Ingredients",
   "Supermarket": "Supermarket",
   "Categories": "Categories",
@@ -50,6 +58,7 @@
   "External": "External",
   "Size": "Size",
   "Files": "Files",
+  "File": "File",
   "Edit": "Edit",
   "Open": "Open",
   "Save": "Save",
@@ -60,5 +69,6 @@
   "Settings": "Settings",
   "or": "or",
   "and": "and",
-  "Information": "Information"
+  "Information": "Information",
+  "Download": "Download"
 }

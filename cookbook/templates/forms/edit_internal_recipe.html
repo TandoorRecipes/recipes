@@ -201,16 +201,39 @@
                             <select class="form-control" id="id_type" v-model="step.type">
                                 <option value="TEXT">{% trans 'Text' %}</option>
                                 <option value="TIME">{% trans 'Time' %}</option>
+                                <option value="FILE">{% trans 'File' %}</option>
                             </select>
                         </div>
                     </div>
 
 
                     <div class="row" style="margin-top: 12px">
-                        <div class="col-md-12">
+                        <div class="col-md-3">
                             <label :for="'id_step_' + step.id + '_time'">{% trans 'Step time in Minutes' %}</label>
                             <input class="form-control" v-model="step.time"
                                    :id="'id_step_' + step.id + '_time'">
+                        </div>
+
+                        <div class="col-md-9">
+                            <label :for="'id_step_' + step.id + '_file'">{% trans 'File' %}</label>
+                            <multiselect
+                                    v-tabindex
+                                    ref="file"
+                                    v-model="step.file"
+                                    :options="files"
+                                    :close-on-select="true"
+                                    :clear-on-select="true"
+                                    :allow-empty="true"
+                                    :preserve-search="true"
+                                    placeholder="{% trans 'Select File' %}"
+                                    select-label="{% trans 'Select' %}"
+                                    :id="'id_step_' + step.id + '_file'"
+                                    label="name"
+                                    track-by="name"
+                                    :multiple="false"
+                                    :loading="files_loading"
+                                    @search-change="searchFiles">
+                            </multiselect>
                         </div>
                     </div>
 
@@ -498,6 +521,8 @@
                 foods_loading: false,
                 units: [],
                 units_loading: false,
+                files: [],
+                files_loading: false,
                 message: '',
             },
             directives: {
@@ -523,6 +548,7 @@
                 this.searchUnits('')
                 this.searchFoods('')
                 this.searchKeywords('')
+                this.searchFiles('')
 
                 this._keyListener = function (e) {
                     if (e.code === "Space" && e.ctrlKey) {
@@ -572,6 +598,9 @@
                     this.sortSteps()
                     for (let s of this.recipe.steps) {
                         this.sortIngredients(s)
+                        if (s.file !== null){
+                            delete s.file.file //TODO stupid quick hack because I cant figure out how to fix the writable serializer right now
+                        }
                     }
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe,
                         {}).then((response) => {
@@ -606,8 +635,6 @@
                         }
                         reader.readAsDataURL(event.target.files[0]);
                     }
-
-
                 },
                 addStep: function () { //TODO see if default can be generated from options request
                     this.recipe.steps.push(
@@ -680,6 +707,16 @@
                     this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.keywords = response.data;
                         this.keywords_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
+                },
+                searchFiles: function (query) {
+                    this.files_loading = true
+                    this.$http.get("{% url 'api:userfile-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.files = response.data
+                        this.files_loading = false
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
