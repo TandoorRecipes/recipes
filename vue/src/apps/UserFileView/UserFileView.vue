@@ -5,7 +5,7 @@
 
     <div class="row">
       <div class="col col-md-12">
-        <h3>{{ $t('Files') }} <a class="btn btn-success float-right"><i class="fas fa-plus-circle"></i> {{ $t('New') }}</a>
+        <h3>{{ $t('Files') }} <span class="float-right"><file-editor @change="loadInitial()" ></file-editor></span>
         </h3>
       </div>
 
@@ -14,8 +14,8 @@
     <div class="row" style="margin-top: 2vh">
       <div class="col col-md-12">
         <b-progress :max="max_file_size_mb">
-          <b-progress-bar :value="current_file_size_mb">
-            <span><strong>{{ current_file_size_mb.toFixed(2) }} / {{ max_file_size_mb }} MB</strong></span>
+          <b-progress-bar :value="current_file_size_mb" >
+            <span><strong class="text-dark ">{{ current_file_size_mb.toFixed(2) }} / {{ max_file_size_mb }} MB</strong></span>
           </b-progress-bar>
         </b-progress>
       </div>
@@ -29,11 +29,16 @@
           <tr>
             <th>{{ $t('Name') }}</th>
             <th>{{ $t('Size') }} (MB)</th>
+            <th>{{ $t('Edit') }}</th>
           </tr>
           </thead>
           <tr v-for="f in files" v-bind:key="f.id">
             <td>{{ f.name }}</td>
             <td>{{ f.file_size_kb / 1000 }}</td>
+            <td><a :href="f.file" target="_blank" rel="noreferrer nofollow">{{$t('Download')}}</a></td>
+            <td>
+              <file-editor @change="loadInitial()" :file_id="f.id"></file-editor>
+            </td>
           </tr>
         </table>
       </div>
@@ -58,6 +63,7 @@ Vue.use(BootstrapVue)
 // import draggable from 'vuedraggable'
 
 import axios from 'axios'
+import FileEditor from "@/components/FileEditor";
 // import Multiselect from "vue-multiselect";
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -70,8 +76,7 @@ export default {
     ToastMixin,
   ],
   components: {
-    // Multiselect,
-    // draggable
+    FileEditor
   },
   data() {
     return {
@@ -91,19 +96,6 @@ export default {
       apiClient.listUserFiles().then(results => {
         this.files = results.data
       })
-
-    },
-    supermarketModalOk: function () {
-      let apiClient = new ApiApiFactory()
-      if (this.selected_supermarket.new) {
-        apiClient.createSupermarket({name: this.selected_supermarket.name}).then(results => {
-          this.selected_supermarket = undefined
-          this.loadInitial()
-        })
-      } else {
-        apiClient.partialUpdateSupermarket(this.selected_supermarket.id, {name: this.selected_supermarket.name})
-
-      }
     },
   }
 }

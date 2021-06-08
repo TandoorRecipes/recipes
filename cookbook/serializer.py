@@ -103,6 +103,20 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         )
 
 
+class UserFileSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = UserFile
+        fields = ('name', 'file', 'file_size_kb', 'id',)
+        read_only_fields = ('id', 'file_size_kb')
+        extra_kwargs = {"file": {"required": False, }}
+
+
 class StorageSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
@@ -251,6 +265,7 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
+    file = UserFileSerializer(allow_null=True)
 
     def get_ingredients_vue(self, obj):
         return obj.get_instruction_render()
@@ -262,7 +277,7 @@ class StepSerializer(WritableNestedModelSerializer):
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header'
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file',
         )
 
 
@@ -492,18 +507,6 @@ class BookmarkletImportSerializer(serializers.ModelSerializer):
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')
         read_only_fields = ('created_by', 'space')
-
-
-class UserFileSerializer(serializers.ModelSerializer):
-
-    def create(self, validated_data):
-        validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
-
-    class Meta:
-        model = UserFile
-        fields = ('id', 'name', 'file_size_kb', 'file')
 
 
 # Export/Import Serializers

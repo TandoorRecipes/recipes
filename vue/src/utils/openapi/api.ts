@@ -1780,16 +1780,16 @@ export interface Unit {
 export interface UserFile {
     /**
      * 
-     * @type {number}
-     * @memberof UserFile
-     */
-    id?: number;
-    /**
-     * 
      * @type {string}
      * @memberof UserFile
      */
     name: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof UserFile
+     */
+    file?: any;
     /**
      * 
      * @type {number}
@@ -1798,10 +1798,10 @@ export interface UserFile {
     file_size_kb?: number;
     /**
      * 
-     * @type {any}
+     * @type {number}
      * @memberof UserFile
      */
-    file: any;
+    id?: number;
 }
 /**
  * 
@@ -2634,11 +2634,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserFile: async (userFile?: UserFile, options: any = {}): Promise<RequestArgs> => {
+        createUserFile: async (name: string, file?: any, fileSizeKb?: number, id?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('createUserFile', 'name', name)
             const localVarPath = `/api/user-file/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2650,15 +2655,32 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+            if (id !== undefined) { 
+                localVarFormParams.append('id', id as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userFile, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5055,13 +5077,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} id A unique integer value identifying this user file.
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        partialUpdateUserFile: async (id: string, userFile?: UserFile, options: any = {}): Promise<RequestArgs> => {
+        partialUpdateUserFile: async (id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('partialUpdateUserFile', 'id', id)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('partialUpdateUserFile', 'name', name)
             const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5074,15 +5101,32 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userFile, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6731,13 +6775,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} id A unique integer value identifying this user file.
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUserFile: async (id: string, userFile?: UserFile, options: any = {}): Promise<RequestArgs> => {
+        updateUserFile: async (id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('updateUserFile', 'id', id)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('updateUserFile', 'name', name)
             const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6750,15 +6799,32 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userFile, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7051,12 +7117,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUserFile(userFile?: UserFile, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserFile(userFile, options);
+        async createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserFile(name, file, fileSizeKb, id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7779,12 +7848,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} id A unique integer value identifying this user file.
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async partialUpdateUserFile(id: string, userFile?: UserFile, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateUserFile(id, userFile, options);
+        async partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateUserFile(id, name, file, fileSizeKb, id2, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8282,12 +8354,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} id A unique integer value identifying this user file.
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUserFile(id: string, userFile?: UserFile, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserFile(id, userFile, options);
+        async updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserFile(id, name, file, fileSizeKb, id2, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8504,12 +8579,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserFile(userFile?: UserFile, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.createUserFile(userFile, options).then((request) => request(axios, basePath));
+        createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.createUserFile(name, file, fileSizeKb, id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9160,12 +9238,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} id A unique integer value identifying this user file.
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        partialUpdateUserFile(id: string, userFile?: UserFile, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.partialUpdateUserFile(id, userFile, options).then((request) => request(axios, basePath));
+        partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.partialUpdateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9615,12 +9696,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} id A unique integer value identifying this user file.
-         * @param {UserFile} [userFile] 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUserFile(id: string, userFile?: UserFile, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.updateUserFile(id, userFile, options).then((request) => request(axios, basePath));
+        updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9874,13 +9958,16 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {UserFile} [userFile] 
+     * @param {string} name 
+     * @param {any} [file] 
+     * @param {number} [fileSizeKb] 
+     * @param {number} [id] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public createUserFile(userFile?: UserFile, options?: any) {
-        return ApiApiFp(this.configuration).createUserFile(userFile, options).then((request) => request(this.axios, this.basePath));
+    public createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any) {
+        return ApiApiFp(this.configuration).createUserFile(name, file, fileSizeKb, id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10674,13 +10761,16 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} id A unique integer value identifying this user file.
-     * @param {UserFile} [userFile] 
+     * @param {string} name 
+     * @param {any} [file] 
+     * @param {number} [fileSizeKb] 
+     * @param {number} [id2] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public partialUpdateUserFile(id: string, userFile?: UserFile, options?: any) {
-        return ApiApiFp(this.configuration).partialUpdateUserFile(id, userFile, options).then((request) => request(this.axios, this.basePath));
+    public partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11225,13 +11315,16 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} id A unique integer value identifying this user file.
-     * @param {UserFile} [userFile] 
+     * @param {string} name 
+     * @param {any} [file] 
+     * @param {number} [fileSizeKb] 
+     * @param {number} [id2] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public updateUserFile(id: string, userFile?: UserFile, options?: any) {
-        return ApiApiFp(this.configuration).updateUserFile(id, userFile, options).then((request) => request(this.axios, this.basePath));
+    public updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
+        return ApiApiFp(this.configuration).updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

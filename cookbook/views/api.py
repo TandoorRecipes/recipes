@@ -495,13 +495,15 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
-class UserFileViewSet(viewsets.ModelViewSet):
+class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser]
+    parser_classes = [MultiPartParser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space).all()
+        self.queryset = self.queryset.filter(space=self.request.space).all()
+        return super().get_queryset()
 
 
 # -------------- non django rest api views --------------------
