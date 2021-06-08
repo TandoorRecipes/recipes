@@ -21,6 +21,10 @@ const pages = {
         entry: './src/apps/SupermarketView/main.js',
         chunks: ['chunk-vendors']
     },
+    'user_file_view': {
+        entry: './src/apps/UserFileView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {

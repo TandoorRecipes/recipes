@@ -15,7 +15,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
                              Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket,
-                             SupermarketCategoryRelation, ImportLog, BookmarkletImport)
+                             SupermarketCategoryRelation, ImportLog, BookmarkletImport, UserFile)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -177,7 +177,7 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         obj, created = Unit.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
         return obj
-    
+
     def update(self, instance, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         return super(UnitSerializer, self).update(instance, validated_data)
@@ -492,6 +492,18 @@ class BookmarkletImportSerializer(serializers.ModelSerializer):
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')
         read_only_fields = ('created_by', 'space')
+
+
+class UserFileSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = UserFile
+        fields = ('id', 'name', 'file_size_kb', 'file')
 
 
 # Export/Import Serializers

@@ -8,7 +8,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
                      ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport)
+                     ImportLog, TelegramBot, BookmarkletImport, UserFile)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -235,3 +235,10 @@ class BookmarkletImportAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
+
+
+class UserFileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'file_size_kb', 'created_at',)
+
+
+admin.site.register(UserFile, UserFileAdmin)

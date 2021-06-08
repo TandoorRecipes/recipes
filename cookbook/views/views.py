@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
@@ -30,7 +30,7 @@ from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
-                             Food)
+                             Food, UserFile)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable, InviteLinkTable)
 from cookbook.views.data import Object
@@ -234,6 +234,12 @@ def meal_plan(request):
 @group_required('user')
 def supermarket(request):
     return render(request, 'supermarket.html', {})
+
+
+@group_required('user')
+def files(request):
+    current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+    return render(request, 'files.html', {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
 
 
 @group_required('user')
