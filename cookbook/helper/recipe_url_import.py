@@ -358,3 +358,11 @@ def normalize_string(string):
     unescaped_string = re.sub(r'\n\s*\n', '\n\n', unescaped_string)
     unescaped_string = unescaped_string.replace("\xa0", " ").replace("\t", " ").strip()
     return unescaped_string
+
+
+def iso_duration_to_minutes(string):
+    match = re.match(
+        r'P((?P<years>\d+)Y)?((?P<months>\d+)M)?((?P<weeks>\d+)W)?((?P<days>\d+)D)?T((?P<hours>\d+)H)?((?P<minutes>\d+)M)?((?P<seconds>\d+)S)?',
+        string
+    ).groupdict()
+    return int(match['days'] or 0) * 24 * 60 + int(match['hours'] or 0) * 60 + int(match['minutes'] or 0)
