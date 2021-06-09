@@ -1,5 +1,6 @@
 import datetime
 import json
+import re
 import uuid
 from io import BytesIO, StringIO
 from zipfile import ZipFile, BadZipFile
@@ -216,3 +217,4 @@ class Integration:
             - data - string content for file to get created in export zip
         """
         raise NotImplementedError('Method not implemented in integration')
+

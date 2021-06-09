@@ -35,6 +35,7 @@ Overview of the capabilities of the different integrations.
 | MealMaster     | ✔️      | ❌      |  ❌        |
 | RezKonv     | ✔️      | ❌      |  ❌        |
 | OpenEats     | ✔️      | ❌      |  ⌚        |
+| OpenEats     | ✔️      | ❌      |  ✔        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -161,7 +162,11 @@ The RezKonv format is primarily used in the german recipe manager RezKonv Suite.
 To migrate from RezKonv Suite to Tandoor select `Export > Gesamtes Kochbuch exportieren` (the last option in the export menu).
 The generated file can simply be imported into Tandoor.
 
-As i only had limited sample data feel free to open an issue if your RezKonv export cannot be imported.
+As I only had limited sample data feel free to open an issue if your RezKonv export cannot be imported.
+
+## Recipekeeper
+Recipe keeper allows to export a zip file containing recipes and images using its apps. 
+This zip file can simply be imported into Tandoor.
 
 ## OpenEats
 OpenEats does not provide any way to export the data using the interface. Luckily it is relatively easy to export it from the command line.

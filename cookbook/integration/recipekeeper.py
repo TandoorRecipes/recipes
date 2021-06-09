@@ -6,6 +6,7 @@ from zipfile import ZipFile
 from django.utils.translation import gettext as _
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.recipe_url_import import parse_servings, iso_duration_to_minutes
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
 
@@ -32,39 +33,37 @@ class RecipeKeeper(Integration):
             keyword, created = Keyword.objects.get_or_create(name=category.get("content"), space=self.request.space)
             recipe.keywords.add(keyword)
 
-        # TODO: import prep and cook times
-        # Recipe Keeper uses ISO 8601 format for its duration periods.
+        try:
+            recipe.servings = parse_servings(file.find("span", {"itemprop": "recipeYield"}).text.strip())
+            recipe.working_time = iso_duration_to_minutes(file.find("span", {"meta": "prepTime"}).text.strip())
+            recipe.waiting_time = iso_duration_to_minutes(file.find("span", {"meta": "cookTime"}).text.strip())
+            recipe.save()
+        except AttributeError:
+            pass
 
-        source_url_added = False
-        ingredients_added = False
+        step = Step.objects.create(instruction='')
+
+        for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
+            if ingredient.text == "":
+                continue
+            amount, unit, ingredient, note = parse(ingredient.text.strip())
+            f = get_food(ingredient, self.request.space)
+            u = get_unit(unit, self.request.space)
+            step.ingredients.add(Ingredient.objects.create(
+                food=f, unit=u, amount=amount, note=note
+            ))
+
         for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
-
             if s.text == "":
                 continue
+            step.instruction += s.text + ' \n'
 
-            step = Step.objects.create(
-                instruction=s.text
-            )
+        if file.find("span", {"itemprop": "recipeSource"}).text != '':
+            step.instruction += "\n\nImported from: " + file.find("span", {"itemprop": "recipeSource"}).text
+            step.save()
+            source_url_added = True
 
-            if not source_url_added:
-                # If there is a source URL, add it to the first step field.
-                if file.find("span", {"itemprop": "recipeSource"}).text != '':
-                    step.instruction += "\n\nImported from: " + file.find("span", {"itemprop": "recipeSource"}).text
-                    step.save()
-                    source_url_added = True
-
-            if not ingredients_added:
-                ingredients_added = True
-                for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
-                    if ingredient.text == "":
-                        continue
-                    amount, unit, ingredient, note = parse(ingredient.text.strip())
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
-                    ))
-            recipe.steps.add(step)
+        recipe.steps.add(step)
 
         # import the Primary recipe image that is stored in the Zip
         try:
