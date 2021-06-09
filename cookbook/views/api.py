@@ -495,6 +495,7 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
+
 class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
