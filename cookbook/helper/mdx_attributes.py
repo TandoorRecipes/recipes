@@ -19,7 +19,7 @@ class StyleTreeprocessor(Treeprocessor):
 
 
 class MarkdownFormatExtension(markdown.Extension):
-    # md_ globals deprecated - see here: 
+    # md_ globals deprecated - see here:
     def extendMarkdown(self, md):
         md.treeprocessors.register(
             StyleTreeprocessor(),

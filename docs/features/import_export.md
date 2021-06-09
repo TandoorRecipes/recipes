@@ -34,6 +34,7 @@ Overview of the capabilities of the different integrations.
 | Domestica     | ✔️      | ⌚      | ✔️      |
 | MealMaster     | ✔️      | ❌      |  ❌        |
 | RezKonv     | ✔️      | ❌      |  ❌        |
+| OpenEats     | ✔️      | ❌      |  ⌚        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -161,3 +162,44 @@ To migrate from RezKonv Suite to Tandoor select `Export > Gesamtes Kochbuch expo
 The generated file can simply be imported into Tandoor.
 
 As i only had limited sample data feel free to open an issue if your RezKonv export cannot be imported.
+
+## OpenEats
+OpenEats does not provide any way to export the data using the interface. Luckily it is relatively easy to export it from the command line.
+You need to run the command `python manage.py dumpdata recipe ingredient` inside of the application api container.
+If you followed the default installation method you can use the following command `docker-compose -f docker-prod.yml run --rm --entrypoint 'sh' api ./manage.py dumpdata recipe ingredient`.
+
+Store the outputted json string in a `.json` file and simply import it using the importer. The file should look something like this
+```json
+[
+   {
+      "model":"recipe.recipe",
+      "pk":1,
+      "fields":{
+         "title":"Tasty Chili",
+         ...
+      }
+   },
+  ...
+    {
+      "model":"ingredient.ingredientgroup",
+      "pk":1,
+      "fields":{
+         "title":"Veges",
+         "recipe":1
+      }
+   },
+  ...
+  {
+      "model":"ingredient.ingredient",
+      "pk":1,
+      "fields":{
+         "title":"black pepper",
+         "numerator":1.0,
+         "denominator":1.0,
+         "measurement":"dash",
+         "ingredient_group":1
+      }
+   }
+]
+
+```

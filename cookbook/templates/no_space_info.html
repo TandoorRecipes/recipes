@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 {% load static %}
 {% load i18n %}
 
@@ -9,10 +10,59 @@
 
     <div style="text-align: center">
 
-        <h1 class="">{% trans 'No Space' %}</h1>
-        <br/>
+        <h3 class="">{% trans 'No Space' %}</h3>
 
-        <span>{% trans 'You are not a member of any space.' %}  {% trans 'Please contact your administrator.' %}</span> <br/>
+        <div class="row">
+            <div class="col col-md-12">
+                {% trans 'Recipes, foods, shopping lists and more are organized in spaces of one or more people.' %}
+                {% trans 'You can either be invited into an existing space or create your own one.' %}
+            </div>
+        </div>
+
+
+        <div class="row" style="margin-top: 2vh">
+            <div class="col col-md-12">
+
+                <div class="card-group">
+
+
+                    <div class="card">
+                        <div class="card-header">
+                            {% trans 'Join Space' %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans 'Join an existing space.' %}</h5>
+                            <p class="card-text">{% trans 'To join an existing space either enter your invite token or click on the invite link the space owner send you.' %}</p>
+
+                            <form method="POST" action="{% url 'view_no_space' %}">
+                                {% csrf_token %}
+                                {{ join_form | crispy }}
+                                <input type="submit" class="btn btn-primary" value="{% trans 'Join Space' %}"/>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            {% trans 'Create Space' %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans 'Create your own recipe space.' %}</h5>
+                            <p class="card-text">{% trans 'Start your own recipe space and invite other users to it.' %}</p>
+                            <form method="POST" action="{% url 'view_no_space' %}">
+                                {% csrf_token %}
+                                {{ create_form | crispy }}
+                                <input type="submit" class="btn btn-primary" value="{% trans 'Create Space' %}"/>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
 
     </div>
 

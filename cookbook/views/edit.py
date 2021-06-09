@@ -1,6 +1,7 @@
 import os
 
 from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
@@ -18,7 +19,7 @@ from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
 from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, RecipeImport,
-                             Storage, Sync)
+                             Storage, Sync, UserPreference)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -45,6 +46,14 @@ def convert_recipe(request, pk):
 
 @group_required('user')
 def internal_recipe_update(request, pk):
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() > request.space.max_recipes:  # TODO move to central helper function
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
+    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
     recipe_instance = get_object_or_404(Recipe, pk=pk, space=request.space)
 
     return render(
@@ -279,14 +288,15 @@ def edit_ingredients(request):
             new_unit = units_form.cleaned_data['new_unit']
             old_unit = units_form.cleaned_data['old_unit']
             if new_unit != old_unit:
-                recipe_ingredients = Ingredient.objects.filter(unit=old_unit, step__recipe__space=request.space).all()
-                for i in recipe_ingredients:
-                    i.unit = new_unit
-                    i.save()
+                with scopes_disabled():
+                    recipe_ingredients = Ingredient.objects.filter(unit=old_unit).filter(Q(step__recipe__space=request.space) | Q(step__recipe__isnull=True)).all()
+                    for i in recipe_ingredients:
+                        i.unit = new_unit
+                        i.save()
 
-                old_unit.delete()
-                success = True
-                messages.add_message(request, messages.SUCCESS, _('Units merged!'))
+                    old_unit.delete()
+                    success = True
+                    messages.add_message(request, messages.SUCCESS, _('Units merged!'))
             else:
                 messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
 
@@ -295,7 +305,7 @@ def edit_ingredients(request):
             new_food = food_form.cleaned_data['new_food']
             old_food = food_form.cleaned_data['old_food']
             if new_food != old_food:
-                ingredients = Ingredient.objects.filter(food=old_food, step__recipe__space=request.space).all()
+                ingredients = Ingredient.objects.filter(food=old_food).filter(Q(step__recipe__space=request.space) | Q(step__recipe__isnull=True)).all()
                 for i in ingredients:
                     i.food = new_food
                     i.save()

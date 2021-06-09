@@ -3,7 +3,7 @@
 These intructions are inspired from a standard django/gunicorn/postgresql instructions ([for example](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04))
 
 !!! warning
-    Be sure to use pyton3.8 and pip related to python 3.8. Depending on your distribution calling `python` or `pip` will use python2 instead of pyton 3.8.
+    Be sure to use pyton3.9 and pip related to python 3.9. Depending on your distribution calling `python` or `pip` will use python2 instead of pyton 3.9.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ These intructions are inspired from a standard django/gunicorn/postgresql instru
 Get the last version from the repository: `git clone https://github.com/vabene1111/recipes.git -b master`
 
 Install postgresql requirements: `sudo apt install libpq-dev postgresql`
-Install project requirements: `pip3.8 install -r requirements.txt`
+Install project requirements: `pip3.9 install -r requirements.txt`
 
 ## Setup postgresql
 
@@ -44,11 +44,11 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template 
 
 Execute `export $(cat .env |grep "^[^#]" | xargs)` to load variables from `.env`
 
-Execute `/python3.8 manage.py migrate`
+Execute `/python3.9 manage.py migrate`
 
 and revert superuser from postgres: `sudo -u postgres psql` and `ALTER USER djangouser WITH NOSUPERUSER;`
 
-Generate static files: `python3.8 manage.py collectstatic` and remember the folder where files have been copied.
+Generate static files: `python3.9 manage.py collectstatic` and remember the folder where files have been copied.
 
 ## Setup web services
 
@@ -70,7 +70,7 @@ RestartSec=3
 Group=www-data
 WorkingDirectory=/media/data/recipes
 EnvironmentFile=/media/data/recipes/.env
-ExecStart=/opt/.pyenv/versions/3.8.5/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/media/data/recipes/recipes.sock recipes.wsgi:application
+ExecStart=/opt/.pyenv/versions/3.9/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/media/data/recipes/recipes.sock recipes.wsgi:application
 
 [Install]
 WantedBy=multi-user.target

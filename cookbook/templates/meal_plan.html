@@ -44,9 +44,9 @@
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-sm table-striped table-responsive-sm" style=" table-layout:fixed;">
-                    <thead class="thead-dark">
+                    <thead class="thead-dark" style="background-image: url({% static 'assets/header.svg' %});">
                     <tr>
-                        <th v-for="d in dates" style="width: 14.2%; text-align: center">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
+                        <th class="thead-blank" v-for="d in dates" style="width: 14.2%; text-align: center;">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
                             <button class="btn btn-sm btn-outline-secondary shadow-none" @click="addDayToShopping(d)"><i
                                     class="fas fa-cart-plus fa-sm"></i></button>
                         </th>
@@ -567,10 +567,11 @@
                                 console.log("dragChanged create error", err);
                             })
                         } else {
+                            console.log(plan_entry)
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
-                                this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                                this.makeToast(gettext('Error'), gettext('There was an error updating a resource!') + err.bodyText, 'danger')
                             })
                         }
                     }
@@ -670,7 +671,7 @@
                     }
                 },
                 planDetailRecipeUrl: function () {
-                    return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe);
+                    return "{% url 'view_recipe' 12345 %}".replace(/12345/, this.plan_detail.recipe.id);
                 },
                 planDetailEditUrl: function () {
                     return "{% url 'edit_meal_plan' 12345 %}".replace(/12345/, this.plan_detail.id);

@@ -3,7 +3,7 @@ import threading
 from io import BytesIO
 
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -18,12 +18,14 @@ from cookbook.integration.domestica import Domestica
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.mealmaster import MealMaster
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
+from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
 from cookbook.integration.recipekeeper import RecipeKeeper
+from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.rezkonv import RezKonv
 from cookbook.integration.safron import Safron
-from cookbook.models import Recipe, ImportLog
+from cookbook.models import Recipe, ImportLog, UserPreference
 
 
 def get_integration(request, export_type):
@@ -47,16 +49,28 @@ def get_integration(request, export_type):
         return Domestica(request, export_type)
     if export_type == ImportExportBase.RECIPEKEEPER:
         return RecipeKeeper(request, export_type)
+    if export_type == ImportExportBase.RECETTETEK:
+        return RecetteTek(request, export_type)
     if export_type == ImportExportBase.RECIPESAGE:
         return RecipeSage(request, export_type)
     if export_type == ImportExportBase.REZKONV:
         return RezKonv(request, export_type)
     if export_type == ImportExportBase.MEALMASTER:
         return MealMaster(request, export_type)
+    if export_type == ImportExportBase.OPENEATS:
+        return OpenEats(request, export_type)
 
 
 @group_required('user')
 def import_recipe(request):
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes: # TODO move to central helper function
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == "POST":
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
@@ -71,9 +85,15 @@ def import_recipe(request):
                 t.setDaemon(True)
                 t.start()
 
-                return HttpResponseRedirect(reverse('view_import_response', args=[il.pk]))
+                return JsonResponse({'import_id': [il.pk]})
             except NotImplementedError:
-                messages.add_message(request, messages.ERROR, _('Importing is not implemented for this provider'))
+                return JsonResponse(
+                    {
+                        'error': True,
+                        'msg': _('Importing is not implemented for this provider')
+                    },
+                    status=400
+                )
     else:
         form = ImportForm()
 

@@ -38,8 +38,6 @@
         <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
     {% endif %}
 
-    {% render_bundle 'chunk-vendors' %}
-
     <!--
         yes this is a stupid solution! i need to figure out a better way to do this but the version hashes
         of djangos static files prevent my from simply using preCacheAndRoute

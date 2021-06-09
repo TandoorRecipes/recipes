@@ -11,13 +11,15 @@ from cookbook.models import Recipe, Step, Food, Unit, Ingredient
 class NextcloudCookbook(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        return re.match(r'^Recipes/([A-Za-z\d\s])+/recipe.json$', zip_info_object.filename)
+        return zip_info_object.filename.endswith('.json')
 
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
 
+        description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
+
         recipe = Recipe.objects.create(
-            name=recipe_json['name'].strip(), description=recipe_json['description'].strip(),
+            name=recipe_json['name'].strip(), description=description,
             created_by=self.request.user, internal=True,
             servings=recipe_json['recipeYield'], space=self.request.space)
 
@@ -30,6 +32,9 @@ class NextcloudCookbook(Integration):
                 instruction=s
             )
             if not ingredients_added:
+                if len(recipe_json['description'].strip()) > 500:
+                    step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
+
                 ingredients_added = True
 
                 for ingredient in recipe_json['recipeIngredient']:

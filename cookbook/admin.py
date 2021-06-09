@@ -7,7 +7,8 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation, ImportLog, TelegramBot)
+                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
+                     ImportLog, TelegramBot, BookmarkletImport, UserFile)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -165,7 +166,7 @@ admin.site.register(ViewLog, ViewLogAdmin)
 
 class InviteLinkAdmin(admin.ModelAdmin):
     list_display = (
-        'username', 'group', 'valid_until',
+        'group', 'valid_until',
         'created_by', 'created_at', 'used_by'
     )
 
@@ -227,3 +228,17 @@ class TelegramBotAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TelegramBot, TelegramBotAdmin)
+
+
+class BookmarkletImportAdmin(admin.ModelAdmin):
+    list_display = ('id', 'url', 'created_by', 'created_at',)
+
+
+admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
+
+
+class UserFileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'file_size_kb', 'created_at',)
+
+
+admin.site.register(UserFile, UserFileAdmin)

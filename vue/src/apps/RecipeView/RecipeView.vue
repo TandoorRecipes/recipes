@@ -53,13 +53,12 @@
               <i class="fas fa-pizza-slice fa-2x text-primary"></i>
             </div>
             <div class="my-auto" style="padding-right: 4px">
-              <input dir="rtl"
-                     style="border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
-                     value="1" maxlength="3"
+              <input style="text-align: right; border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
+                     value="1" maxlength="3" min="0"
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </div>
-            <div class="my-auto">
-              <b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b>
+            <div class="my-auto ">
+              <span class="text-primary"><b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b></span>
             </div>
           </div>
         </div>
@@ -197,6 +196,7 @@ export default {
   },
   mounted() {
     this.loadRecipe(window.RECIPE_ID)
+    this.$i18n.locale = window.CUSTOM_LOCALE
   },
   methods: {
     loadRecipe: function (recipe_id) {
