@@ -23,14 +23,16 @@
         <template v-if="recipe !== null">
           {{ recipe.description }}
           <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
+          <b-badge pill variant="info" v-if="!recipe.internal">{{ $t('External') }}</b-badge>
+          <b-badge pill variant="success" v-if="Date.parse(recipe.created_at) > new Date(Date.now() - (7 * (1000 * 60 * 60 * 24)))">{{ $t('New') }}</b-badge>
         </template>
         <template v-else>{{ meal_plan.note }}</template>
       </b-card-text>
     </b-card-body>
 
 
-    <b-card-footer v-if="meal_plan !== undefined">
-      <i class="far fa-calendar-alt"></i> {{ meal_plan.meal_type_name }}
+    <b-card-footer v-if="footer_text !== undefined">
+      <i v-bind:class="footer_icon"></i> {{ footer_text }}
     </b-card-footer>
   </b-card>
 
@@ -50,6 +52,8 @@ export default {
   props: {
     recipe: Object,
     meal_plan: Object,
+    footer_text: String,
+    footer_icon: String,
   },
   data() {
     return {

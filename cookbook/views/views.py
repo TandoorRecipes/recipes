@@ -3,15 +3,17 @@ import re
 from datetime import datetime
 from uuid import UUID
 
+from allauth.account.forms import SignupForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
@@ -24,13 +26,14 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm)
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space)
+                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
+                             Food, UserFile)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
-                             ViewLogTable)
-from recipes.settings import DEMO
+                             ViewLogTable, InviteLinkTable)
+from cookbook.views.data import Object
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -99,18 +102,50 @@ def no_groups(request):
     return render(request, 'no_groups_info.html')
 
 
+@login_required
 def no_space(request):
-    if settings.SOCIAL_DEFAULT_ACCESS:
-        request.user.userpreference.space = Space.objects.first()
-        request.user.userpreference.save()
-        request.user.groups.add(Group.objects.get(name=settings.SOCIAL_DEFAULT_GROUP))
+    if request.user.userpreference.space:
         return HttpResponseRedirect(reverse('index'))
-    return render(request, 'no_space_info.html')
+
+    if request.POST:
+        create_form = SpaceCreateForm(request.POST, prefix='create')
+        join_form = SpaceJoinForm(request.POST, prefix='join')
+        if create_form.is_valid():
+            created_space = Space.objects.create(
+                name=create_form.cleaned_data['name'],
+                created_by=request.user,
+                allow_files=settings.SPACE_DEFAULT_FILES,
+                max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
+                max_users=settings.SPACE_DEFAULT_MAX_USERS,
+            )
+            request.user.userpreference.space = created_space
+            request.user.userpreference.save()
+            request.user.groups.add(Group.objects.filter(name='admin').get())
+
+            messages.add_message(request, messages.SUCCESS, _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
+            return HttpResponseRedirect(reverse('index'))
+
+        if join_form.is_valid():
+            return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
+    else:
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            request.user.userpreference.space = Space.objects.first()
+            request.user.userpreference.save()
+            request.user.groups.add(Group.objects.get(name=settings.SOCIAL_DEFAULT_GROUP))
+            return HttpResponseRedirect(reverse('index'))
+        if 'signup_token' in request.session:
+            return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
+
+        create_form = SpaceCreateForm()
+        join_form = SpaceJoinForm()
+
+    return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})
 
 
 def no_perm(request):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('index'))
+        messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.GET.get('next', '/search/'))
     return render(request, 'no_perm_info.html')
 
 
@@ -197,6 +232,20 @@ def meal_plan(request):
 
 
 @group_required('user')
+def supermarket(request):
+    return render(request, 'supermarket.html', {})
+
+
+@group_required('user')
+def files(request):
+    try:
+        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+    except TypeError:
+        current_file_size_mb = 0
+    return render(request, 'files.html', {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
+
+
+@group_required('user')
 def meal_plan_entry(request, pk):
     plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
 
@@ -215,9 +264,7 @@ def meal_plan_entry(request, pk):
 
 @group_required('user')
 def latest_shopping_list(request):
-    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
-                                                                                                 space=request.space).order_by(
-        '-created_at').first()
+    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False, pace=request.space).order_by('-created_at').first()
 
     if sl:
         return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')
@@ -227,10 +274,10 @@ def latest_shopping_list(request):
 
 @group_required('user')
 def shopping_list(request, pk=None):
-    raw_list = request.GET.getlist('r')
+    html_list = request.GET.getlist('r')
 
     recipes = []
-    for r in raw_list:
+    for r in html_list:
         r = r.replace('[', '').replace(']', '')
         if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
             rid, multiplier = r.split(',')
@@ -244,7 +291,7 @@ def shopping_list(request, pk=None):
 
 @group_required('guest')
 def user_settings(request):
-    if DEMO:
+    if request.space.demo:
         messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
         return redirect('index')
 
@@ -274,16 +321,16 @@ def user_settings(request):
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
 
                 up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
-                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:  # noqa: E501
-                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL  # noqa: E501
+                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
+                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
 
                 up.save()
 
         if 'user_name_form' in request.POST:
             user_name_form = UserNameForm(request.POST, prefix='name')
             if user_name_form.is_valid():
-                request.user.first_name = user_name_form.cleaned_data['first_name']  # noqa: E501
-                request.user.last_name = user_name_form.cleaned_data['last_name']  # noqa: E501
+                request.user.first_name = user_name_form.cleaned_data['first_name']
+                request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
         if 'password_form' in request.POST:
@@ -304,7 +351,7 @@ def user_settings(request):
         'preference_form': preference_form,
         'user_name_form': user_name_form,
         'password_form': password_form,
-        'api_token': api_token
+        'api_token': api_token,
     })
 
 
@@ -380,7 +427,7 @@ def setup(request):
         return render(request, 'setup.html', {'form': form})
 
 
-def signup(request, token):
+def invite_link(request, token):
     with scopes_disabled():
         try:
             token = UUID(token, version=4)
@@ -389,44 +436,83 @@ def signup(request, token):
             return HttpResponseRedirect(reverse('index'))
 
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
-            if request.method == 'POST':
-                updated_request = request.POST.copy()
-                if link.username != '':
-                    updated_request.update({'name': link.username})
+            if request.user.is_authenticated:
+                if request.user.userpreference.space:
+                    messages.add_message(request, messages.WARNING, _('You are already member of a space and therefore cannot join this one.'))
+                    return HttpResponseRedirect(reverse('index'))
 
-                form = UserCreateForm(updated_request)
+                link.used_by = request.user
+                link.save()
+                request.user.groups.clear()
+                request.user.groups.add(link.group)
 
-                if form.is_valid():
-                    if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:  # noqa: E501
-                        form.add_error('password', _('Passwords dont match!'))
-                    else:
-                        user = User(username=form.cleaned_data['name'], )
-                        try:
-                            validate_password(form.cleaned_data['password'], user=user)
-                            user.set_password(form.cleaned_data['password'])
-                            user.save()
-                            messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
+                request.user.userpreference.space = link.space
+                request.user.userpreference.save()
 
-                            link.used_by = user
-                            link.save()
-                            user.groups.add(link.group)
-
-                            user.userpreference.space = link.space
-                            user.userpreference.save()
-                            return HttpResponseRedirect(reverse('account_login'))
-                        except ValidationError as e:
-                            for m in e:
-                                form.add_error('password', m)
+                messages.add_message(request, messages.SUCCESS, _('Successfully joined space.'))
+                return HttpResponseRedirect(reverse('index'))
             else:
-                form = UserCreateForm()
+                request.session['signup_token'] = str(token)
+                return HttpResponseRedirect(reverse('account_signup'))
 
-            if link.username != '':
-                form.fields['name'].initial = link.username
-                form.fields['name'].disabled = True
-            return render(request, 'account/signup.html', {'form': form, 'link': link})
+    messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
+    return HttpResponseRedirect(reverse('index'))
 
-        messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
-        return HttpResponseRedirect(reverse('index'))
+
+# TODO deprecated with 0.16.2 remove at some point
+def signup(request, token):
+    return HttpResponseRedirect(reverse('view_invite', args=[token]))
+
+
+@group_required('admin')
+def space(request):
+    space_users = UserPreference.objects.filter(space=request.space).all()
+
+    counts = Object()
+    counts.recipes = Recipe.objects.filter(space=request.space).count()
+    counts.keywords = Keyword.objects.filter(space=request.space).count()
+    counts.recipe_import = RecipeImport.objects.filter(space=request.space).count()
+    counts.units = Unit.objects.filter(space=request.space).count()
+    counts.ingredients = Food.objects.filter(space=request.space).count()
+    counts.comments = Comment.objects.filter(recipe__space=request.space).count()
+
+    counts.recipes_internal = Recipe.objects.filter(internal=True, space=request.space).count()
+    counts.recipes_external = counts.recipes - counts.recipes_internal
+
+    counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
+
+    invite_links = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(invite_links)
+
+    return render(request, 'space.html', {'space_users': space_users, 'counts': counts, 'invite_links': invite_links})
+
+
+# TODO super hacky and quick solution, safe but needs rework
+# TODO move group settings to space to prevent permissions from one space to move to another
+@group_required('admin')
+def space_change_member(request, user_id, space_id, group):
+    m_space = get_object_or_404(Space, pk=space_id)
+    m_user = get_object_or_404(User, pk=user_id)
+    if request.user == m_space.created_by and m_user != m_space.created_by:
+        if m_user.userpreference.space == m_space:
+            if group == 'admin':
+                m_user.groups.clear()
+                m_user.groups.add(Group.objects.get(name='admin'))
+                return HttpResponseRedirect(reverse('view_space'))
+            if group == 'user':
+                m_user.groups.clear()
+                m_user.groups.add(Group.objects.get(name='user'))
+                return HttpResponseRedirect(reverse('view_space'))
+            if group == 'guest':
+                m_user.groups.clear()
+                m_user.groups.add(Group.objects.get(name='guest'))
+                return HttpResponseRedirect(reverse('view_space'))
+            if group == 'remove':
+                m_user.groups.clear()
+                m_user.userpreference.space = None
+                m_user.userpreference.save()
+                return HttpResponseRedirect(reverse('view_space'))
+    return HttpResponseRedirect(reverse('view_space'))
 
 
 def markdown_info(request):

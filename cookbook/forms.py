@@ -1,8 +1,12 @@
 from django import forms
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
+from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
+from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
@@ -42,10 +46,15 @@ class UserPreferenceForm(forms.ModelForm):
         )
 
         help_texts = {
-            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),  # noqa: E501
+            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
+            # noqa: E501
             'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),  # noqa: E501
-            'use_fractions': _('Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),  # noqa: E501
-            'plan_share': _('Users with whom newly created meal plan/shopping list entries should be shared by default.'),  # noqa: E501
+            'use_fractions': _(
+                'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
+            # noqa: E501
+            'plan_share': _(
+                'Users with whom newly created meal plan/shopping list entries should be shared by default.'),
+            # noqa: E501
             'show_recent': _('Show recently viewed recipes on search page.'),  # noqa: E501
             'ingredient_decimals': _('Number of decimals to round ingredients.'),  # noqa: E501
             'comments': _('If you want to be able to create and see comments underneath recipes.'),  # noqa: E501
@@ -69,7 +78,7 @@ class UserNameForm(forms.ModelForm):
         fields = ('first_name', 'last_name')
 
         help_texts = {
-            'first_name': _('Both fields are optional. If none are given the username will be displayed instead')  # noqa: E501
+            'first_name': _('Both fields are optional. If none are given the username will be displayed instead')
         }
 
 
@@ -113,22 +122,27 @@ class ImportExportBase(forms.Form):
     CHEFTAP = 'CHEFTAP'
     PEPPERPLATE = 'PEPPERPLATE'
     RECIPEKEEPER = 'RECIPEKEEPER'
+    RECETTETEK = 'RECETTETEK'
     RECIPESAGE = 'RECIPESAGE'
     DOMESTICA = 'DOMESTICA'
     MEALMASTER = 'MEALMASTER'
     REZKONV = 'REZKONV'
+    OPENEATS = 'OPENEATS'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
         (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
-        (PEPPERPLATE, 'Pepperplate'), (RECIPEKEEPER, 'Recipe Keeper'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
-        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'),
+        (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
+        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
+
     ))
 
 
 class ImportForm(ImportExportBase):
     files = forms.FileField(required=True, widget=forms.ClearableFileInput(attrs={'multiple': True}))
-    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'), required=False)
+    duplicates = forms.BooleanField(help_text=_(
+        'To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'),
+        required=False)
 
 
 class ExportForm(ImportExportBase):
@@ -251,7 +265,8 @@ class StorageForm(forms.ModelForm):
         fields = ('name', 'method', 'username', 'password', 'token', 'url', 'path')
 
         help_texts = {
-            'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
+            'url': _(
+                'Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
         }
 
 
@@ -366,7 +381,8 @@ class MealPlanForm(forms.ModelForm):
 
         help_texts = {
             'shared': _('You can list default users to share recipes with in the settings.'),  # noqa: E501
-            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')  # noqa: E501
+            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
+            # noqa: E501
         }
 
         widgets = {
@@ -387,15 +403,60 @@ class InviteLinkForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['space'].queryset = Space.objects.filter(created_by=user).all()
 
+    def clean(self):
+        space = self.cleaned_data['space']
+        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(space=space).count()) >= space.max_users:
+            raise ValidationError(_('Maximum number of users for this space reached.'))
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        with scopes_disabled():
+            if email != '' and User.objects.filter(email=email).exists():
+                raise ValidationError(_('Email address already taken!'))
+
+        return email
+
     class Meta:
         model = InviteLink
-        fields = ('username', 'group', 'valid_until', 'space')
+        fields = ('email', 'group', 'valid_until', 'space')
         help_texts = {
-            'username': _('A username is not required, if left blank the new user can choose one.')  # noqa: E501
+            'email': _('An email address is not required but if present the invite link will be send to the user.'),
         }
         field_classes = {
             'space': SafeModelChoiceField,
         }
+
+
+class SpaceCreateForm(forms.Form):
+    prefix = 'create'
+    name = forms.CharField()
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        with scopes_disabled():
+            if Space.objects.filter(name=name).exists():
+                raise ValidationError(_('Name already taken.'))
+        return name
+
+
+class SpaceJoinForm(forms.Form):
+    prefix = 'join'
+    token = forms.CharField()
+
+
+class AllAuthSignupForm(forms.Form):
+    captcha = hCaptchaField()
+    terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
+
+    def __init__(self, **kwargs):
+        super(AllAuthSignupForm, self).__init__(**kwargs)
+        if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
+            self.fields.pop('terms')
+        if settings.HCAPTCHA_SECRET == '':
+            self.fields.pop('captcha')
+
+    def signup(self, request, user):
+        pass
 
 
 class UserCreateForm(forms.Form):

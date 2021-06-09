@@ -31,13 +31,15 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
                                                group_required)
+from cookbook.helper.recipe_html_import import get_recipe_from_source
+
 from cookbook.helper.recipe_search import search_recipes
-from cookbook.helper.recipe_url_import import get_from_html, get_from_scraper, find_recipe_json
+from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -53,8 +55,8 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  SyncSerializer, UnitSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
-                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer)
-from recipes.settings import DEMO
+                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer)
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -155,6 +157,16 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategory.objects
+    serializer_class = SupermarketCategorySerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
+
 class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     """
        list:
@@ -227,8 +239,8 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset.filter(
-            Q(created_by=self.request.user) |
-            Q(shared=self.request.user)
+            Q(created_by=self.request.user)
+            | Q(shared=self.request.user)
         ).filter(space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', None)
@@ -285,7 +297,7 @@ class RecipeSchema(AutoSchema):
 
     def get_path_parameters(self, path, method):
         if not is_list_view(path, method, self.view):
-            return []
+            return super(RecipeSchema, self).get_path_parameters(path, method)
 
         parameters = super().get_path_parameters(path, method)
         parameters.append({
@@ -351,7 +363,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        self.queryset = search_recipes(self.queryset, self.request.GET)
+        self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
 
         return super().get_queryset()
 
@@ -377,7 +389,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             obj, data=request.data, partial=True
         )
 
-        if DEMO:
+        if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
 
         if serializer.is_valid():
@@ -474,6 +486,27 @@ class ImportLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
+class BookmarkletImportViewSet(viewsets.ModelViewSet):
+    queryset = BookmarkletImport.objects
+    serializer_class = BookmarkletImportSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space).all()
+
+
+
+class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = UserFile.objects
+    serializer_class = UserFileSerializer
+    permission_classes = [CustomIsUser]
+    parser_classes = [MultiPartParser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space).all()
+        return super().get_queryset()
+
+
 # -------------- non django rest api views --------------------
 
 def get_recipe_provider(recipe):
@@ -515,7 +548,7 @@ def get_recipe_file(request, recipe_id):
 
 @group_required('user')
 def sync_all(request):
-    if DEMO:
+    if request.space.demo:
         messages.add_message(
             request, messages.ERROR, _('This feature is not available in the demo version!')
         )
@@ -599,85 +632,91 @@ def get_plan_ical(request, from_date, to_date):
 
 
 @group_required('user')
-def recipe_from_url(request):
-    url = request.POST['url']
+def recipe_from_source(request):
+    url = request.POST.get('url', None)
+    data = request.POST.get('data', None)
+    mode = request.POST.get('mode', None)
+    auto = request.POST.get('auto', 'true')
 
-    try:
-        scrape = scrape_me(url)
-    except WebsiteNotImplementedError:
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
+    }
+
+    if (not url and not data) or (mode == 'url' and not url) or (mode == 'source' and not data):
+        return JsonResponse(
+            {
+                'error': True,
+                'msg': _('Nothing to do.')
+            },
+            status=400
+        )
+
+    if mode == 'url' and auto == 'true':
         try:
-            scrape = scrape_me(url, wild_mode=True)
-        except NoSchemaFoundInWildMode:
+            scrape = scrape_me(url)
+        except (WebsiteNotImplementedError, AttributeError):
+            try:
+                scrape = scrape_me(url, wild_mode=True)
+            except NoSchemaFoundInWildMode:
+                return JsonResponse(
+                    {
+                        'error': True,
+                        'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
+                    },
+                    status=400)
+        except ConnectionError:
             return JsonResponse(
                 {
                     'error': True,
-                    'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
+                    'msg': _('The requested page could not be found.')
+                },
+                status=400
+            )
+        if len(scrape.ingredients()) and len(scrape.instructions()) == 0:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _(
+                        'The requested site does not provide any recognized data format to import the recipe from.')
+                    # noqa: E501
                 },
                 status=400)
-    except ConnectionError:
+        else:
+            return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
+    elif (mode == 'source') or (mode == 'url' and auto == 'false'):
+        if not data or data == 'undefined':
+            data = requests.get(url, headers=HEADERS).content
+        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request.space)
+        if len(recipe_tree) == 0 and len(recipe_json) == 0:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('No useable data could be found.')
+                },
+                status=400
+            )
+        else:
+            return JsonResponse({
+                'recipe_tree': recipe_tree,
+                'recipe_json': recipe_json,
+                'recipe_html': recipe_html,
+                'images': images,
+            })
+
+    else:
         return JsonResponse(
             {
                 'error': True,
-                'msg': _('The requested page could not be found.')
-            },
-            status=400
-        )
-    return JsonResponse(get_from_scraper(scrape, request.space))
-
-
-@group_required('user')
-def recipe_from_url_old(request):
-    url = request.POST['url']
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'
-        # noqa: E501
-    }
-    try:
-        response = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('The requested page could not be found.')
+                'msg': _('I couldn\'t find anything to do.')
             },
             status=400
         )
 
-    if response.status_code == 403:
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('The requested page refused to provide any information (Status Code 403).')  # noqa: E501
-            },
-            status=400
-        )
-    return get_from_html(response.text, url, request.space)
 
-
-@group_required('user')
-def recipe_from_json(request):
-    mjson = request.POST['json']
-
-    md_json = json.loads(mjson)
-    for ld_json_item in md_json:
-        # recipes type might be wrapped in @graph type
-        if '@graph' in ld_json_item:
-            for x in md_json['@graph']:
-                if '@type' in x and x['@type'] == 'Recipe':
-                    md_json = x
-
-        if ('@type' in md_json
-                and md_json['@type'] == 'Recipe'):
-            return JsonResponse(find_recipe_json(md_json, '', request.space))
-
-    return JsonResponse(
-        {
-            'error': True,
-            'msg': _('Could not parse correctly...')
-        },
-        status=400
-    )
+@group_required('admin')
+def get_backup(request):
+    if not request.user.is_superuser:
+        return HttpResponse('', status=403)
 
 
 @group_required('user')
@@ -690,6 +729,7 @@ def ingredient_from_string(request):
             'amount': amount,
             'unit': unit,
             'food': food,
+            'note': note
         },
         status=200
     )

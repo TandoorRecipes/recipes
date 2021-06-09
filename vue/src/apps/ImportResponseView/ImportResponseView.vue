@@ -23,7 +23,7 @@
         <loading-spinner></loading-spinner>
         <br/>
         <br/>
-        <h5 style="text-align: center">{{ $t('import-running') }}</h5>
+        <h5 style="text-align: center">{{ $t('Importing') }}...</h5>
 
       </template>
       <template v-else>
@@ -86,7 +86,7 @@ export default {
   },
   mounted() {
     this.refreshData()
-
+    this.$i18n.locale = window.CUSTOM_LOCALE
     setInterval(() => {
       if ((this.import_id !== null) && window.navigator.onLine && this.import_info.running) {
         this.refreshData()

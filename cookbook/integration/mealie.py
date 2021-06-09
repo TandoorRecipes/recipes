@@ -16,8 +16,10 @@ class Mealie(Integration):
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
 
+        description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
+
         recipe = Recipe.objects.create(
-            name=recipe_json['name'].strip(), description=recipe_json['description'].strip(),
+            name=recipe_json['name'].strip(), description=description,
             created_by=self.request.user, internal=True, space=self.request.space)
 
         # TODO parse times (given in PT2H3M )
@@ -29,6 +31,9 @@ class Mealie(Integration):
             )
             if not ingredients_added:
                 ingredients_added = True
+
+                if len(recipe_json['description'].strip()) > 500:
+                    step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
 
                 for ingredient in recipe_json['recipeIngredient']:
                     amount, unit, ingredient, note = parse(ingredient)

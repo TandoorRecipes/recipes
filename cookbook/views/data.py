@@ -17,15 +17,23 @@ from PIL import Image, UnidentifiedImageError
 from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
-from cookbook.helper.permission_helper import (group_required,
-                                               has_group_permission)
+from cookbook.helper.permission_helper import group_required, has_group_permission
+from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
-                             RecipeImport, Step, Sync, Unit)
+                             RecipeImport, Step, Sync, Unit, UserPreference)
 from cookbook.tables import SyncTable
 
 
 @group_required('user')
 def sync(request):
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == "POST":
         if not has_group_permission(request.user, ['admin']):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
@@ -109,8 +117,18 @@ def batch_edit(request):
 @group_required('user')
 @atomic
 def import_url(request):
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == 'POST':
         data = json.loads(request.body)
+        data['cookTime'] = parse_cooktime(data.get('cookTime', ''))
+        data['prepTime'] = parse_cooktime(data.get('prepTime', ''))
 
         recipe = Recipe.objects.create(
             name=data['name'],
@@ -130,7 +148,7 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if kw['id'] != "null" and (k := Keyword.objects.filter(id=kw['id'], space=request.space).first()):
+            if k := Keyword.objects.filter(name=kw['text'], space=request.space).first():
                 recipe.keywords.add(k)
             elif data['all_keywords']:
                 k = Keyword.objects.create(name=kw['text'], space=request.space)
@@ -141,12 +159,12 @@ def import_url(request):
 
             if ing['ingredient']['text'] != '':
                 ingredient.food, f_created = Food.objects.get_or_create(
-                    name=ing['ingredient']['text'], space=request.space
+                    name=ing['ingredient']['text'].strip(), space=request.space
                 )
 
             if ing['unit'] and ing['unit']['text'] != '':
                 ingredient.unit, u_created = Unit.objects.get_or_create(
-                    name=ing['unit']['text'], space=request.space
+                    name=ing['unit']['text'].strip(), space=request.space
                 )
 
             # TODO properly handle no_amount recipes
@@ -159,7 +177,7 @@ def import_url(request):
             elif isinstance(ing['amount'], float) \
                     or isinstance(ing['amount'], int):
                 ingredient.amount = ing['amount']
-            ingredient.note = ing['note'] if 'note' in ing else ''
+            ingredient.note = ing['note'].strip() if 'note' in ing else ''
 
             ingredient.save()
             step.ingredients.add(ingredient)
@@ -189,7 +207,12 @@ def import_url(request):
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
 
-    return render(request, 'url_import.html', {})
+    if 'id' in request.GET:
+        context = {'bookmarklet': request.GET.get('id', '')}
+    else:
+        context = {}
+
+    return render(request, 'url_import.html', context)
 
 
 class Object(object):

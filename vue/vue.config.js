@@ -17,6 +17,14 @@ const pages = {
         entry: './src/apps/ImportResponseView/main.js',
         chunks: ['chunk-vendors']
     },
+    'supermarket_view': {
+        entry: './src/apps/SupermarketView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'user_file_view': {
+        entry: './src/apps/UserFileView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {
@@ -78,9 +86,7 @@ module.exports = {
         })
         */
 
-        config
-            .plugin('BundleTracker')
-            .use(BundleTracker, [{filename: '../vue/webpack-stats.json'}]);
+        config.plugin('BundleTracker').use(BundleTracker, [{relativePath: true, path: '../vue/'}]);
 
         config.resolve.alias
             .set('__STATIC__', 'static')

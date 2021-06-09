@@ -1,8 +1,19 @@
 {
+  "err_fetching_resource": "There was an error fetching a resource!",
+  "err_creating_resource": "There was an error creating a resource!",
+  "err_updating_resource": "There was an error updating a resource!",
+  "err_deleting_resource": "There was an error deleting a resource!",
+  "success_fetching_resource": "Successfully fetched a resource!",
+  "success_creating_resource": "Successfully created a resource!",
+  "success_updating_resource": "Successfully updated a resource!",
+  "success_deleting_resource": "Successfully deleted a resource!",
+
   "import_running": "Import running, please wait!",
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
   "show_only_internal": "Show only internal recipes",
+
+
 
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
@@ -11,6 +22,7 @@
   "Add_to_Plan": "Add to Plan",
   "Step_start_time": "Step start time",
 
+  "Meal_Plan": "Meal Plan",
   "Select_Book": "Select Book",
   "Recipe_Image": "Recipe Image",
   "Import_finished": "Import finished",
@@ -19,6 +31,7 @@
   "New_Recipe": "New Recipe",
   "Url_Import": "Url Import",
   "Reset_Search": "Reset Search",
+  "Recently_Viewed": "Recently Viewed",
 
   "Keywords": "Keywords",
   "Books": "Books",
@@ -33,19 +46,34 @@
   "Rating": "Rating",
   "Close": "Close",
   "Add": "Add",
+  "New": "New",
+  "Success": "Success",
   "Ingredients": "Ingredients",
+  "Supermarket": "Supermarket",
+  "Categories": "Categories",
+  "Category": "Category",
+  "Selected": "Selected",
   "min": "min",
   "Servings": "Servings",
   "Waiting": "Waiting",
   "Preparation": "Preparation",
+  "External": "External",
+  "Size": "Size",
+  "Files": "Files",
+  "File": "File",
   "Edit": "Edit",
+  "Cancel": "Cancel",
+  "Delete": "Delete",
   "Open": "Open",
+  "Ok": "Open",
   "Save": "Save",
   "Step": "Step",
   "Search": "Search",
   "Import": "Import",
   "Print": "Print",
+  "Settings": "Settings",
   "or": "or",
   "and": "and",
-  "Information": "Information"
+  "Information": "Information",
+  "Download": "Download"
 }

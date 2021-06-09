@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load django_tables2 %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Space Settings" %}{% endblock %}
+
+{% block extra_head %}
+    {{ form.media }}
+
+    {% include 'include/vue_base.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <h3>{{ request.space.name }} <small>{% if HOSTED %}
+    <a href="https://tandoor.dev/manage">{% trans 'Manage Subscription' %}</a>{% endif %}</small></h3>
+
+    <br/>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {% trans 'Number of objects' %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{% trans 'Recipes' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes }} /
+                        {% if request.space.max_recipes > 0 %}
+                            {{ request.space.max_recipes }}{% else %}∞{% endif %}</span></li>
+                    <li class="list-group-item">{% trans 'Keywords' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.keywords }}</span></li>
+                    <li class="list-group-item">{% trans 'Units' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.units }}</span></li>
+                    <li class="list-group-item">{% trans 'Ingredients' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.ingredients }}</span></li>
+                    <li class="list-group-item">{% trans 'Recipe Imports' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipe_import }}</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {% trans 'Objects stats' %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{% trans 'Recipes without Keywords' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes_no_keyword }}</span></li>
+                    <li class="list-group-item">{% trans 'External Recipes' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes_external }}</span></li>
+                    <li class="list-group-item">{% trans 'Internal Recipes' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.recipes_internal }}</span></li>
+                    <li class="list-group-item">{% trans 'Comments' %} : <span
+                            class="badge badge-pill badge-info">{{ counts.comments }}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col col-md-12">
+
+            <h4>{% trans 'Members' %} <small class="text-muted">{{ space_users|length }}/
+                {% if request.space.max_users > 0 %}
+                    {{ request.space.max_users }}{% else %}∞{% endif %}</small>
+                <a class="btn btn-success float-right" href="{% url 'new_invite_link' %}"><i
+                        class="fas fa-plus-circle"></i> {% trans 'Invite User' %}</a>
+            </h4>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col col-md-12">
+            {% if space_users %}
+                <table class="table table-bordered">
+                    <tr>
+                        <th>{% trans 'User' %}</th>
+                        <th>{% trans 'Groups' %}</th>
+                        <th>{% trans 'Edit' %}</th>
+                    </tr>
+                    {% for u in space_users %}
+                        <tr>
+                            <td>
+                                {{ u.user.username }}
+                            </td>
+                            <td>
+                                {{ u.user.groups.all |join:", " }}
+                            </td>
+                            <td>
+                                {% if u.user != request.user %}
+                                    <div class="input-group mb-3">
+                                        <select v-model="users['{{ u.pk }}']" class="custom-select form-control"
+                                                style="height: 44px">
+                                            <option value="admin">{% trans 'admin' %}</option>
+                                            <option value="user">{% trans 'user' %}</option>
+                                            <option value="guest">{% trans 'guest' %}</option>
+                                            <option value="remove">{% trans 'remove' %}</option>
+                                        </select>
+                                        <span class="input-group-append">
+                                        <a class="btn btn-warning"
+                                           :href="editUserUrl({{ u.pk }}, {{ u.space.pk }})">{% trans 'Update' %}</a>
+                                    </span>
+                                    </div>
+                                {% else %}
+                                    {% trans 'You cannot edit yourself.' %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>{% trans 'There are no members in your space yet!' %}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-md-12">
+            <h4>{% trans 'Invite Links' %}</h4>
+            {% render_table invite_links %}
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+    <br/>
+
+{% endblock %}
+
+{% block script %}
+
+    <script type="application/javascript">
+        let app = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#id_base_container',
+            data: {
+                users: {
+                    {% for u in space_users %}
+                        '{{ u.pk }}': 'none',
+                    {% endfor %}
+                }
+            },
+            mounted: function () {
+
+            },
+            methods: {
+                editUserUrl: function (user_id, space_id) {
+                    return '{% url 'change_space_member' 1234 5678 'role' %}'.replace('1234', user_id).replace('5678', space_id).replace('role', this.users[user_id])
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

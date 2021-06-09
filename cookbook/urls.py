@@ -35,15 +35,22 @@ router.register(r'cook-log', api.CookLogViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
+router.register(r'supermarket-category', api.SupermarketCategoryViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
+router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
+router.register(r'user-file', api.UserFileViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
+    path('space/', views.space, name='view_space'),
+    path('space/member/<int:user_id>/<int:space_id>/<slug:group>', views.space_change_member,
+         name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('no-space', views.no_space, name='view_no_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
-    path('signup/<slug:token>', views.signup, name='view_signup'),
+    path('signup/<slug:token>', views.signup, name='view_signup'),  # TODO deprecated with 0.16.2 remove at some point
+    path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
     path('search/v2/', views.search_v2, name='view_search_v2'),
@@ -55,6 +62,8 @@ urlpatterns = [
     path('shopping/latest/', views.latest_shopping_list, name='view_shopping_latest'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
+    path('supermarket/', views.supermarket, name='view_supermarket'),
+    path('files/', views.files, name='view_files'),
     path('test/', views.test, name='view_test'),
     path('test2/', views.test2, name='view_test2'),
 
@@ -93,8 +102,8 @@ urlpatterns = [
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
     path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
-    path('api/recipe-from-url/', api.recipe_from_url, name='api_recipe_from_url'),
-    path('api/recipe-from-json/', api.recipe_from_json, name='api_recipe_from_json'),
+    path('api/recipe-from-source/', api.recipe_from_source, name='api_recipe_from_source'),
+    path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
@@ -108,15 +117,18 @@ urlpatterns = [
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/api/', views.api_info, name='docs_api'),
 
-    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True, permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
+    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
+                                     permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
 
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path('offline/', views.offline, name='view_offline'),
 
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
-    path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )), name='web_manifest'),
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )),
+         name='service_worker'),
+    path('manifest.json', (TemplateView.as_view(template_name="manifest.json", content_type='application/json', )),
+         name='web_manifest'),
 ]
 
 generic_models = (

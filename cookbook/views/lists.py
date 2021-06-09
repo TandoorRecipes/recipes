@@ -30,7 +30,7 @@ def keyword(request):
 @group_required('admin')
 def sync_log(request):
     table = ImportLogTable(
-        SyncLog.objects.filter(space=request.space).all().order_by('-created_at')
+        SyncLog.objects.filter(sync__space=request.space).all().order_by('-created_at')
     )
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 

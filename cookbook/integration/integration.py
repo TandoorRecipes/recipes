@@ -57,9 +57,8 @@ class Integration:
                     recipe_stream.write(data)
                     recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
                     recipe_stream.close()
-
                     try:
-                        recipe_zip_obj.write(r.image.path, 'image.png')
+                        recipe_zip_obj.writestr('image.png', r.image.file.read())
                     except ValueError:
                         pass
 
@@ -120,29 +119,51 @@ class Integration:
                         import_zip = ZipFile(f['file'])
                         for z in import_zip.filelist:
                             if self.import_file_name_filter(z):
-                                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
-                                recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
-                                self.handle_duplicates(recipe, import_duplicates)
-
+                                try:
+                                    recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                    recipe.keywords.add(self.keyword)
+                                    il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                    self.handle_duplicates(recipe, import_duplicates)
+                                except Exception as e:
+                                    il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
                         import_zip.close()
                     elif '.json' in f['name'] or '.txt' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         for d in data_list:
-                            recipe = self.get_recipe_from_file(d)
-                            recipe.keywords.add(self.keyword)
-                            il.msg += f'{recipe.pk} - {recipe.name} \n'
-                            self.handle_duplicates(recipe, import_duplicates)
+                            try:
+                                recipe = self.get_recipe_from_file(d)
+                                recipe.keywords.add(self.keyword)
+                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                self.handle_duplicates(recipe, import_duplicates)
+                            except Exception as e:
+                                il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
+                    elif '.rtk' in f['name']:
+                        import_zip = ZipFile(f['file'])
+                        for z in import_zip.filelist:
+                            if self.import_file_name_filter(z):
+                                data_list = self.split_recipe_file(import_zip.read(z.filename).decode('utf-8'))
+                                for d in data_list:
+                                    try:
+                                        recipe = self.get_recipe_from_file(d)
+                                        recipe.keywords.add(self.keyword)
+                                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                        self.handle_duplicates(recipe, import_duplicates)
+                                    except Exception as e:
+                                        il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
+                        import_zip.close()
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
                         recipe.keywords.add(self.keyword)
                         il.msg += f'{recipe.pk} - {recipe.name} \n'
                         self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
-                il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
+                il.msg += 'ERROR ' + _(
+                    'Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
 
             if len(self.ignored_recipes) > 0:
-                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(self.ignored_recipes) + '\n\n'
+                il.msg += '\n' + _(
+                    'The following recipes were ignored because they already existed:') + ' ' + ', '.join(
+                    self.ignored_recipes) + '\n\n'
 
             il.keyword = self.keyword
             il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'

@@ -24,6 +24,43 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface BookmarkletImport
+ */
+export interface BookmarkletImport {
+    /**
+     * 
+     * @type {number}
+     * @memberof BookmarkletImport
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImport
+     */
+    url?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImport
+     */
+    html: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImport
+     */
+    created_by?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImport
+     */
+    created_at?: string;
+}
+/**
+ * 
+ * @export
  * @interface CookLog
  */
 export interface CookLog {
@@ -276,6 +313,37 @@ export interface Ingredient {
 /**
  * 
  * @export
+ * @interface InlineResponse200
+ */
+export interface InlineResponse200 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse200
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse200
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse200
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeOverview>}
+     * @memberof InlineResponse200
+     */
+    results?: Array<RecipeOverview>;
+}
+/**
+ * 
+ * @export
  * @interface Keyword
  */
 export interface Keyword {
@@ -342,10 +410,10 @@ export interface MealPlan {
     title?: string;
     /**
      * 
-     * @type {number}
+     * @type {MealPlanRecipe}
      * @memberof MealPlan
      */
-    recipe?: number | null;
+    recipe?: MealPlanRecipe | null;
     /**
      * 
      * @type {string}
@@ -400,6 +468,91 @@ export interface MealPlan {
      * @memberof MealPlan
      */
     meal_type_name?: string;
+}
+/**
+ * 
+ * @export
+ * @interface MealPlanRecipe
+ */
+export interface MealPlanRecipe {
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRecipe
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof MealPlanRecipe
+     */
+    image?: any;
+    /**
+     * 
+     * @type {Array<RecipeOverviewKeywords>}
+     * @memberof MealPlanRecipe
+     */
+    keywords: Array<RecipeOverviewKeywords>;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRecipe
+     */
+    working_time?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRecipe
+     */
+    waiting_time?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    created_by?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    updated_at?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MealPlanRecipe
+     */
+    internal?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRecipe
+     */
+    servings?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    file_path?: string;
 }
 /**
  * 
@@ -1492,6 +1645,25 @@ export interface Supermarket {
 /**
  * 
  * @export
+ * @interface SupermarketCategory
+ */
+export interface SupermarketCategory {
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategory
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategory
+     */
+    name: string;
+}
+/**
+ * 
+ * @export
  * @interface Sync
  */
 export interface Sync {
@@ -1603,6 +1775,37 @@ export interface Unit {
 /**
  * 
  * @export
+ * @interface UserFile
+ */
+export interface UserFile {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    name: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof UserFile
+     */
+    file?: any;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserFile
+     */
+    file_size_kb?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserFile
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
  * @interface UserName
  */
 export interface UserName {
@@ -1692,6 +1895,7 @@ export interface UserPreference {
     * @enum {string}
     */
 export enum UserPreferenceThemeEnum {
+    Tandoor = 'TANDOOR',
     Bootstrap = 'BOOTSTRAP',
     Darkly = 'DARKLY',
     Flatly = 'FLATLY',
@@ -1726,7 +1930,8 @@ export enum UserPreferenceDefaultPageEnum {
     */
 export enum UserPreferenceSearchStyleEnum {
     Small = 'SMALL',
-    Large = 'LARGE'
+    Large = 'LARGE',
+    New = 'NEW'
 }
 
 /**
@@ -1767,6 +1972,39 @@ export interface ViewLog {
  */
 export const ApiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBookmarkletImport: async (bookmarkletImport?: BookmarkletImport, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/bookmarklet-import/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImport, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {CookLog} [cookLog] 
@@ -2297,6 +2535,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarketCategory: async (supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket-category/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2363,6 +2634,61 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUserFile: async (name: string, file?: any, fileSizeKb?: number, id?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('createUserFile', 'name', name)
+            const localVarPath = `/api/user-file/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+            if (id !== undefined) { 
+                localVarFormParams.append('id', id as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {UserPreference} [userPreference] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2421,6 +2747,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(viewLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyBookmarkletImport: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyBookmarkletImport', 'id', id)
+            const localVarPath = `/api/bookmarklet-import/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2957,6 +3316,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroySupermarketCategory: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroySupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2998,6 +3390,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('destroyUnit', 'id', id)
             const localVarPath = `/api/unit/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyUserFile: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyUserFile', 'id', id)
+            const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3123,6 +3548,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBookmarkletImports: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/bookmarklet-import/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3391,11 +3845,22 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * optional parameters  - **query**: search recipes for a string contained              in the recipe name (case in-sensitive) - **limit**: limits the amount of returned results
+         * 
+         * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
+         * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
+         * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+         * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
+         * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
+         * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
+         * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
+         * @param {string} [internal] true or false. If only internal recipes should be returned or not.
+         * @param {string} [random] true or false. returns the results in randomized order.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3407,6 +3872,50 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
+
+            if (keywords !== undefined) {
+                localVarQueryParameter['keywords'] = keywords;
+            }
+
+            if (foods !== undefined) {
+                localVarQueryParameter['foods'] = foods;
+            }
+
+            if (books !== undefined) {
+                localVarQueryParameter['books'] = books;
+            }
+
+            if (keywordsOr !== undefined) {
+                localVarQueryParameter['keywords_or'] = keywordsOr;
+            }
+
+            if (foodsOr !== undefined) {
+                localVarQueryParameter['foods_or'] = foodsOr;
+            }
+
+            if (booksOr !== undefined) {
+                localVarQueryParameter['books_or'] = booksOr;
+            }
+
+            if (internal !== undefined) {
+                localVarQueryParameter['internal'] = internal;
+            }
+
+            if (random !== undefined) {
+                localVarQueryParameter['random'] = random;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -3569,6 +4078,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        listSupermarketCategorys: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket-category/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         listSupermarkets: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3685,6 +4223,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        listUserFiles: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user-file/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         listUserPreferences: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-preference/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3761,6 +4328,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateBookmarkletImport: async (id: string, bookmarkletImport?: BookmarkletImport, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateBookmarkletImport', 'id', id)
+            const localVarPath = `/api/bookmarklet-import/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImport, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4361,6 +4965,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateSupermarketCategory: async (id: string, supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateSupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -4435,6 +5076,65 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateUserFile: async (id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateUserFile', 'id', id)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('partialUpdateUserFile', 'name', name)
+            const localVarPath = `/api/user-file/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} user A unique value identifying this user preference.
          * @param {UserPreference} [userPreference] 
          * @param {*} [options] Override http request option.
@@ -4501,6 +5201,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(viewLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveBookmarkletImport: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveBookmarkletImport', 'id', id)
+            const localVarPath = `/api/bookmarklet-import/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5037,6 +5770,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveSupermarketCategory: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveSupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5169,6 +5935,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUserFile: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveUserFile', 'id', id)
+            const localVarPath = `/api/user-file/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} user A unique value identifying this user preference.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5227,6 +6026,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateBookmarkletImport: async (id: string, bookmarkletImport?: BookmarkletImport, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateBookmarkletImport', 'id', id)
+            const localVarPath = `/api/bookmarklet-import/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImport, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5827,6 +6663,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSupermarketCategory: async (id: string, supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateSupermarketCategory', 'id', id)
+            const localVarPath = `/api/supermarket-category/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -5893,6 +6766,65 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserFile: async (id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateUserFile', 'id', id)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('updateUserFile', 'name', name)
+            const localVarPath = `/api/user-file/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5983,6 +6915,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 export const ApiApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ApiApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createBookmarkletImport(bookmarkletImport?: BookmarkletImport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBookmarkletImport(bookmarkletImport, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
         /**
          * 
          * @param {CookLog} [cookLog] 
@@ -6145,6 +7087,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createSupermarketCategory(supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSupermarketCategory(supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6165,6 +7117,19 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserFile(name, file, fileSizeKb, id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {UserPreference} [userPreference] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6181,6 +7146,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async createViewLog(viewLog?: ViewLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createViewLog(viewLog, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyBookmarkletImport(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyBookmarkletImport(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6345,6 +7320,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroySupermarketCategory(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroySupermarketCategory(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6361,6 +7346,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async destroyUnit(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.destroyUnit(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyUserFile(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyUserFile(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6392,6 +7387,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async imageRecipe(id: string, image?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.imageRecipe(id, image, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listBookmarkletImports(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BookmarkletImport>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listBookmarkletImports(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6476,12 +7480,23 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * optional parameters  - **query**: search recipes for a string contained              in the recipe name (case in-sensitive) - **limit**: limits the amount of returned results
+         * 
+         * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
+         * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
+         * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+         * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
+         * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
+         * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
+         * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
+         * @param {string} [internal] true or false. If only internal recipes should be returned or not.
+         * @param {string} [random] true or false. returns the results in randomized order.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RecipeOverview>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(options);
+        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6534,6 +7549,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async listSupermarketCategorys(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategory>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategorys(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async listSupermarkets(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Supermarket>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarkets(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
@@ -6570,6 +7594,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async listUserFiles(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserFile>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserFiles(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async listUserPreferences(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserPreference>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUserPreferences(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
@@ -6590,6 +7623,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listViewLogs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ViewLog>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateBookmarkletImport(id: string, bookmarkletImport?: BookmarkletImport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateBookmarkletImport(id, bookmarkletImport, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6770,6 +7814,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateSupermarketCategory(id, supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -6792,6 +7847,20 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateUserFile(id, name, file, fileSizeKb, id2, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} user A unique value identifying this user preference.
          * @param {UserPreference} [userPreference] 
          * @param {*} [options] Override http request option.
@@ -6810,6 +7879,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async partialUpdateViewLog(id: string, viewLog?: ViewLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateViewLog(id, viewLog, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveBookmarkletImport(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveBookmarkletImport(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6974,6 +8053,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveSupermarketCategory(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveSupermarketCategory(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7014,6 +8103,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveUserFile(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveUserFile(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} user A unique value identifying this user preference.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7030,6 +8129,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveViewLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveViewLog(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateBookmarkletImport(id: string, bookmarkletImport?: BookmarkletImport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateBookmarkletImport(id, bookmarkletImport, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7210,6 +8320,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSupermarketCategory(id, supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -7228,6 +8349,20 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async updateUnit(id: string, unit?: Unit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateUnit(id, unit, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserFile(id, name, file, fileSizeKb, id2, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7262,6 +8397,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
 export const ApiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ApiApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBookmarkletImport(bookmarkletImport?: BookmarkletImport, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.createBookmarkletImport(bookmarkletImport, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {CookLog} [cookLog] 
@@ -7408,6 +8552,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarketCategory(supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.createSupermarketCategory(supermarketCategory, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7426,6 +8579,18 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.createUserFile(name, file, fileSizeKb, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {UserPreference} [userPreference] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7441,6 +8606,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         createViewLog(viewLog?: ViewLog, options?: any): AxiosPromise<ViewLog> {
             return localVarFp.createViewLog(viewLog, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyBookmarkletImport(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyBookmarkletImport(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7588,6 +8762,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroySupermarketCategory(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroySupermarketCategory(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7603,6 +8786,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         destroyUnit(id: string, options?: any): AxiosPromise<void> {
             return localVarFp.destroyUnit(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyUserFile(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyUserFile(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7631,6 +8823,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         imageRecipe(id: string, image?: any, options?: any): AxiosPromise<RecipeImage> {
             return localVarFp.imageRecipe(id, image, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBookmarkletImports(options?: any): AxiosPromise<Array<BookmarkletImport>> {
+            return localVarFp.listBookmarkletImports(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7705,12 +8905,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.listRecipeBooks(options).then((request) => request(axios, basePath));
         },
         /**
-         * optional parameters  - **query**: search recipes for a string contained              in the recipe name (case in-sensitive) - **limit**: limits the amount of returned results
+         * 
+         * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
+         * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
+         * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+         * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
+         * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
+         * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
+         * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
+         * @param {string} [internal] true or false. If only internal recipes should be returned or not.
+         * @param {string} [random] true or false. returns the results in randomized order.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(options?: any): AxiosPromise<Array<RecipeOverview>> {
-            return localVarFp.listRecipes(options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
+            return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7757,6 +8968,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        listSupermarketCategorys(options?: any): AxiosPromise<Array<SupermarketCategory>> {
+            return localVarFp.listSupermarketCategorys(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         listSupermarkets(options?: any): AxiosPromise<Array<Supermarket>> {
             return localVarFp.listSupermarkets(options).then((request) => request(axios, basePath));
         },
@@ -7789,6 +9008,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        listUserFiles(options?: any): AxiosPromise<Array<UserFile>> {
+            return localVarFp.listUserFiles(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         listUserPreferences(options?: any): AxiosPromise<Array<UserPreference>> {
             return localVarFp.listUserPreferences(options).then((request) => request(axios, basePath));
         },
@@ -7807,6 +9034,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listViewLogs(options?: any): AxiosPromise<Array<ViewLog>> {
             return localVarFp.listViewLogs(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateBookmarkletImport(id: string, bookmarkletImport?: BookmarkletImport, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.partialUpdateBookmarkletImport(id, bookmarkletImport, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7970,6 +9207,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.partialUpdateSupermarketCategory(id, supermarketCategory, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -7990,6 +9237,19 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.partialUpdateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} user A unique value identifying this user preference.
          * @param {UserPreference} [userPreference] 
          * @param {*} [options] Override http request option.
@@ -8007,6 +9267,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         partialUpdateViewLog(id: string, viewLog?: ViewLog, options?: any): AxiosPromise<ViewLog> {
             return localVarFp.partialUpdateViewLog(id, viewLog, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveBookmarkletImport(id: string, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.retrieveBookmarkletImport(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8154,6 +9423,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveSupermarketCategory(id: string, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.retrieveSupermarketCategory(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8190,6 +9468,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUserFile(id: string, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.retrieveUserFile(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} user A unique value identifying this user preference.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8205,6 +9492,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveViewLog(id: string, options?: any): AxiosPromise<ViewLog> {
             return localVarFp.retrieveViewLog(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this bookmarklet import.
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateBookmarkletImport(id: string, bookmarkletImport?: BookmarkletImport, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.updateBookmarkletImport(id, bookmarkletImport, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8368,6 +9665,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.updateSupermarketCategory(id, supermarketCategory, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this sync.
          * @param {Sync} [sync] 
          * @param {*} [options] Override http request option.
@@ -8385,6 +9692,19 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         updateUnit(id: string, unit?: Unit, options?: any): AxiosPromise<Unit> {
             return localVarFp.updateUnit(id, unit, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user file.
+         * @param {string} name 
+         * @param {any} [file] 
+         * @param {number} [fileSizeKb] 
+         * @param {number} [id2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8416,6 +9736,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
  * @extends {BaseAPI}
  */
 export class ApiApi extends BaseAPI {
+    /**
+     * 
+     * @param {BookmarkletImport} [bookmarkletImport] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createBookmarkletImport(bookmarkletImport?: BookmarkletImport, options?: any) {
+        return ApiApiFp(this.configuration).createBookmarkletImport(bookmarkletImport, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {CookLog} [cookLog] 
@@ -8594,6 +9925,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createSupermarketCategory(supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).createSupermarketCategory(supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {Sync} [sync] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -8616,6 +9958,20 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} name 
+     * @param {any} [file] 
+     * @param {number} [fileSizeKb] 
+     * @param {number} [id] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any) {
+        return ApiApiFp(this.configuration).createUserFile(name, file, fileSizeKb, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {UserPreference} [userPreference] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -8634,6 +9990,17 @@ export class ApiApi extends BaseAPI {
      */
     public createViewLog(viewLog?: ViewLog, options?: any) {
         return ApiApiFp(this.configuration).createViewLog(viewLog, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this bookmarklet import.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyBookmarkletImport(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyBookmarkletImport(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8814,6 +10181,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroySupermarketCategory(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroySupermarketCategory(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this sync.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -8832,6 +10210,17 @@ export class ApiApi extends BaseAPI {
      */
     public destroyUnit(id: string, options?: any) {
         return ApiApiFp(this.configuration).destroyUnit(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this user file.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyUserFile(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyUserFile(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8866,6 +10255,16 @@ export class ApiApi extends BaseAPI {
      */
     public imageRecipe(id: string, image?: any, options?: any) {
         return ApiApiFp(this.configuration).imageRecipe(id, image, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listBookmarkletImports(options?: any) {
+        return ApiApiFp(this.configuration).listBookmarkletImports(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8959,13 +10358,24 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * optional parameters  - **query**: search recipes for a string contained              in the recipe name (case in-sensitive) - **limit**: limits the amount of returned results
+     * 
+     * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
+     * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
+     * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+     * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
+     * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
+     * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
+     * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
+     * @param {string} [internal] true or false. If only internal recipes should be returned or not.
+     * @param {string} [random] true or false. returns the results in randomized order.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9024,6 +10434,16 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
+    public listSupermarketCategorys(options?: any) {
+        return ApiApiFp(this.configuration).listSupermarketCategorys(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
     public listSupermarkets(options?: any) {
         return ApiApiFp(this.configuration).listSupermarkets(options).then((request) => request(this.axios, this.basePath));
     }
@@ -9064,6 +10484,16 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
+    public listUserFiles(options?: any) {
+        return ApiApiFp(this.configuration).listUserFiles(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
     public listUserPreferences(options?: any) {
         return ApiApiFp(this.configuration).listUserPreferences(options).then((request) => request(this.axios, this.basePath));
     }
@@ -9086,6 +10516,18 @@ export class ApiApi extends BaseAPI {
      */
     public listViewLogs(options?: any) {
         return ApiApiFp(this.configuration).listViewLogs(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this bookmarklet import.
+     * @param {BookmarkletImport} [bookmarkletImport] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateBookmarkletImport(id: string, bookmarkletImport?: BookmarkletImport, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateBookmarkletImport(id, bookmarkletImport, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9282,6 +10724,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateSupermarketCategory(id, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this sync.
      * @param {Sync} [sync] 
      * @param {*} [options] Override http request option.
@@ -9306,6 +10760,21 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this user file.
+     * @param {string} name 
+     * @param {any} [file] 
+     * @param {number} [fileSizeKb] 
+     * @param {number} [id2] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} user A unique value identifying this user preference.
      * @param {UserPreference} [userPreference] 
      * @param {*} [options] Override http request option.
@@ -9326,6 +10795,17 @@ export class ApiApi extends BaseAPI {
      */
     public partialUpdateViewLog(id: string, viewLog?: ViewLog, options?: any) {
         return ApiApiFp(this.configuration).partialUpdateViewLog(id, viewLog, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this bookmarklet import.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveBookmarkletImport(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveBookmarkletImport(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9506,6 +10986,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveSupermarketCategory(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveSupermarketCategory(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this sync.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -9550,6 +11041,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this user file.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveUserFile(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveUserFile(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} user A unique value identifying this user preference.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -9568,6 +11070,18 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveViewLog(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveViewLog(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this bookmarklet import.
+     * @param {BookmarkletImport} [bookmarkletImport] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateBookmarkletImport(id: string, bookmarkletImport?: BookmarkletImport, options?: any) {
+        return ApiApiFp(this.configuration).updateBookmarkletImport(id, bookmarkletImport, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9764,6 +11278,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateSupermarketCategory(id: string, supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).updateSupermarketCategory(id, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this sync.
      * @param {Sync} [sync] 
      * @param {*} [options] Override http request option.
@@ -9784,6 +11310,21 @@ export class ApiApi extends BaseAPI {
      */
     public updateUnit(id: string, unit?: Unit, options?: any) {
         return ApiApiFp(this.configuration).updateUnit(id, unit, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this user file.
+     * @param {string} name 
+     * @param {any} [file] 
+     * @param {number} [fileSizeKb] 
+     * @param {number} [id2] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
+        return ApiApiFp(this.configuration).updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

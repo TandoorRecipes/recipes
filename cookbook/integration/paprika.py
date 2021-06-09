@@ -20,11 +20,13 @@ class Paprika(Integration):
             recipe_json = json.loads(recipe_zip.read().decode("utf-8"))
 
             recipe = Recipe.objects.create(
-                name=recipe_json['name'].strip(), description=recipe_json['description'].strip(),
-                created_by=self.request.user, internal=True, space=self.request.space)
+                name=recipe_json['name'].strip(), created_by=self.request.user, internal=True, space=self.request.space)
+
+            if 'description' in recipe_json:
+                recipe.description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
 
             try:
-                if re.match(r'([0-9])+\s(.)*', recipe_json['servings'] ):
+                if re.match(r'([0-9])+\s(.)*', recipe_json['servings']):
                     s = recipe_json['servings'].split(' ')
                     recipe.servings = s[0]
                     recipe.servings_text = s[1]
@@ -40,34 +42,45 @@ class Paprika(Integration):
             recipe.save()
 
             instructions = recipe_json['directions']
-            if len(recipe_json['notes'].strip()) > 0:
+            if recipe_json['notes'] and len(recipe_json['notes'].strip()) > 0:
                 instructions += '\n\n### ' + _('Notes') + ' \n' + recipe_json['notes']
 
-            if len(recipe_json['nutritional_info'].strip()) > 0:
+            if recipe_json['nutritional_info'] and len(recipe_json['nutritional_info'].strip()) > 0:
                 instructions += '\n\n### ' + _('Nutritional Information') + ' \n' + recipe_json['nutritional_info']
 
-            if len(recipe_json['source'].strip()) > 0 or len(recipe_json['source_url'].strip()) > 0:
-                instructions += '\n\n### ' + _('Source') + ' \n' + recipe_json['source'].strip() + ' \n' + recipe_json['source_url'].strip()
+            try:
+                if len(recipe_json['source'].strip()) > 0 or len(recipe_json['source_url'].strip()) > 0:
+                    instructions += '\n\n### ' + _('Source') + ' \n' + recipe_json['source'].strip() + ' \n' + recipe_json['source_url'].strip()
+            except AttributeError:
+                pass
 
             step = Step.objects.create(
                 instruction=instructions
             )
+
+            if len(recipe_json['description'].strip()) > 500:
+                step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
 
             if 'categories' in recipe_json:
                 for c in recipe_json['categories']:
                     keyword, created = Keyword.objects.get_or_create(name=c.strip(), space=self.request.space)
                     recipe.keywords.add(keyword)
 
-            for ingredient in recipe_json['ingredients'].split('\n'):
-                if len(ingredient.strip()) > 0:
-                    amount, unit, ingredient, note = parse(ingredient)
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
-                    ))
+            try:
+                for ingredient in recipe_json['ingredients'].split('\n'):
+                    if len(ingredient.strip()) > 0:
+                        amount, unit, ingredient, note = parse(ingredient)
+                        f = get_food(ingredient, self.request.space)
+                        u = get_unit(unit, self.request.space)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note
+                        ))
+            except AttributeError:
+                pass
 
             recipe.steps.add(step)
 
-            self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])))
+            if recipe_json.get("photo_data", None):
+                self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])))
+
             return recipe
