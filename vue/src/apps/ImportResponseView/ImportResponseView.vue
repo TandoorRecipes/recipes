@@ -30,7 +30,7 @@
         <div class="row">
           <div class="col col-md-12">
             <span>{{ $t('Import_finished') }}! </span>
-            <a :href="`${resolveDjangoUrl('view_search') }?keywords=${import_info.keyword.id}`"
+            <a :href="`${resolveDjangoUrl('view_search') }?keyword=${import_info.keyword.id}`"
                v-if="import_info.keyword !== null">{{ $t('View_Recipes') }}</a>
 
           </div>

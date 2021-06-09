@@ -10,7 +10,6 @@
            style="float:right; text-align: right; padding-top: 10px; padding-right: 5px">
         <recipe-context-menu :recipe="recipe" style="float:right" v-if="recipe !== null"></recipe-context-menu>
       </div>
-
     </a>
 
     <b-card-body>

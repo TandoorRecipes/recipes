@@ -66,58 +66,25 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Import from Recipe Application -->
             <div class=" tab-pane fade show" id="nav-app" role="tabpanel">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-outline-info btn-sm active" @click="recipe_app='DEFAULT'">
-                        <input type="radio" autocomplete="off" checked> Tandoor
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='PAPRIKA'">
-                        <input type="radio" autocomplete="off"> Paprika
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='NEXTCLOUD'">
-                        <input type="radio" autocomplete="off"> Nextcloud Cookbook
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='MEALIE'">
-                        <input type="radio" autocomplete="off"> Mealie
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='CHOWDOWN'">
-                        <input type="radio" autocomplete="off"> Chowdown
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='SAFRON'">
-                        <input type="radio" autocomplete="off"> Safron
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='OPENEATS'">
-                        <input type="radio" autocomplete="off"> Openeats
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='CHEFTAP'">
-                        <input type="radio" autocomplete="off"> Cheftap
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='PEPPERPLATE'">
-                        <input type="radio" autocomplete="off"> Pepperplate
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='RECIPESAGE'">
-                        <input type="radio" autocomplete="off"> Recipesage
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='RECIPEKEEPER'">
-                        <input type="radio" autocomplete="off"> Recipekeeper
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='DOMESTICA'">
-                        <input type="radio" autocomplete="off"> Domestica
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='MEALMASTER'">
-                        <input type="radio" autocomplete="off"> Mealmaster
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='REZKONV'">
-                        <input type="radio" autocomplete="off"> Rezkonv
-                    </label>
-                    <label class="btn btn-outline-info btn-sm" @click="recipe_app='RECETTETEK'">
-                        <input type="radio" autocomplete="off"> RecetteTek
-                    </label>
+                <select class="form-control" v-model="recipe_app">
+                    <option value="DEFAULT">Tandoor</option>
 
-
-                </div>
+                    <option value="PAPRIKA">Paprika</option>
+                    <option value="NEXTCLOUD">Nextcloud Cookbook</option>
+                    <option value="MEALIE">Mealie</option>
+                    <option value="CHOWDOWN">Chowdown</option>
+                    <option value="SAFRON">Safron</option>
+                    <option value="OPENEATS">Openeats</option>
+                    <option value="CHEFTAP">Cheftap</option>
+                    <option value="PEPPERPLATE">Pepperplate</option>
+                    <option value="RECIPESAGE">Recipesage</option>
+                    <option value="RECIPEKEEPER">Recipekeeper</option>
+                    <option value="DOMESTICA">Domestica</option>
+                    <option value="MEALMASTER">Mealmaster</option>
+                    <option value="REZKONV">Rezkonv</option>
+                    <option value="RECETTETEK">RecetteTek</option>
+                </select>
 
                 <b-form-checkbox v-model="import_duplicates" name="check-button" switch style="margin-top: 1vh">
                     {% trans 'To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.' %}
@@ -125,7 +92,6 @@
 
                 <b-form-file
                         class="my-2"
-                        accept=".zip"
                         multiple
                         v-model="recipe_files"
                         placeholder="{% trans 'Select recipe files to import or drop them here...' %}"
@@ -164,7 +130,7 @@
         <div v-if="loading" class="text-center">
             <br/>
             {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
-            <img class="spinner-tandoor"/>
+                <img class="spinner-tandoor"/>
             {% else %}
                 <i class="fas fa-spinner fa-spin fa-8x"></i>
             {% endif %}
