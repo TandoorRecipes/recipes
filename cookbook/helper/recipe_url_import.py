@@ -101,22 +101,21 @@ def get_from_scraper(scrape, space):
         for x in scrape.ingredients():
             try:
                 amount, unit, ingredient, note = parse_single_ingredient(x)
-                if ingredient:
-                    ingredients.append(
-                        {
-                            'amount': amount,
-                            'unit': {
-                                'text': unit,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'ingredient': {
-                                'text': ingredient,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'note': note,
-                            'original': x
-                        }
-                    )
+                ingredients.append(
+                    {
+                        'amount': amount,
+                        'unit': {
+                            'text': unit,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'ingredient': {
+                            'text': ingredient,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'note': note,
+                        'original': x
+                    }
+                )
             except Exception:
                 ingredients.append(
                     {
