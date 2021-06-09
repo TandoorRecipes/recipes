@@ -42,7 +42,8 @@
                       </button>
                     </div>
                     <div class="col-md-2" style="position: relative; margin-top: 1vh">
-                      <b-form-checkbox v-model="settings.search_internal" name="check-button" @change="refreshData"
+                      <b-form-checkbox v-model="settings.search_internal" name="check-button"
+                                       @change="refreshData(false)"
                                        class="shadow-none"
                                        style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
                         {{ $t('show_only_internal') }}
@@ -110,7 +111,7 @@
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_keywords_or" name="check-button"
-                                             @change="refreshData"
+                                             @change="refreshData(false)"
                                              class="shadow-none" switch>
                               <span class="text-uppercase" v-if="settings.search_keywords_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
@@ -132,7 +133,7 @@
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_foods_or" name="check-button"
-                                             @change="refreshData"
+                                             @change="refreshData(false)"
                                              class="shadow-none" switch>
                               <span class="text-uppercase" v-if="settings.search_foods_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
@@ -154,7 +155,7 @@
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_books_or" name="check-button"
-                                             @change="refreshData"
+                                             @change="refreshData(false)"
                                              class="shadow-none" tyle="width: 100%" switch>
                               <span class="text-uppercase" v-if="settings.search_books_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
@@ -193,19 +194,12 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 2vh">
+        <div class="row" style="margin-top: 2vh; text-align: center">
           <div class="col col-md-12">
-            <b-pagination
-                v-model="pagination_page"
-                :total-rows="pagination_count"
-                per-page="25"
-                @change="pageChange"
-                align="center">
-
-            </b-pagination>
+            <b-button @click="loadMore()" class="btn-block btn-success" v-if="pagination_more">{{ $t('Load_More') }}
+            </b-button>
           </div>
         </div>
-
 
       </div>
       <div class="col-md-2 d-none d-md-block">
@@ -264,7 +258,7 @@ export default {
         recently_viewed: 5,
       },
 
-      pagination_count: 0,
+      pagination_more: true,
       pagination_page: 1,
     }
 
@@ -274,9 +268,24 @@ export default {
       if (this.$cookies.isKey('search_settings_v2')) {
         this.settings = this.$cookies.get("search_settings_v2")
       }
+
+      let urlParams = new URLSearchParams(window.location.search);
+      let apiClient = new ApiApiFactory()
+
+      if (urlParams.has('keyword')) {
+        this.settings.search_keywords = []
+        for (let x of urlParams.getAll('keyword')) {
+          let keyword = {id: x, name: 'loading'}
+          this.settings.search_keywords.push(keyword)
+          apiClient.retrieveKeyword(x).then(result => {
+            this.$set(this.settings.search_keywords,this.settings.search_keywords.indexOf(keyword), result.data)
+          })
+        }
+      }
+
       this.loadMealPlan()
       this.loadRecentlyViewed()
-      this.refreshData()
+      this.refreshData(false)
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE
@@ -295,11 +304,11 @@ export default {
       this.loadRecentlyViewed()
     },
     'settings.search_input': _debounce(function () {
-      this.refreshData()
+      this.refreshData(false)
     }, 300),
   },
   methods: {
-    refreshData: function () {
+    refreshData: function (page_load) {
       let apiClient = new ApiApiFactory()
       apiClient.listRecipes(
           this.settings.search_input,
@@ -320,8 +329,14 @@ export default {
           undefined,
           this.pagination_page,
       ).then(result => {
-        this.recipes = result.data.results
-        this.pagination_count = result.data.count
+        this.pagination_more = (result.data.next !== null)
+        if (page_load) {
+          for (let x of result.data.results) {
+            this.recipes.push(x)
+          }
+        } else {
+          this.recipes = result.data.results
+        }
       })
     },
     loadMealPlan: function () {
@@ -355,7 +370,7 @@ export default {
     },
     genericSelectChanged: function (obj) {
       this.settings[obj.var] = obj.val
-      this.refreshData()
+      this.refreshData(false)
     },
     resetSearch: function () {
       this.settings.search_input = ''
@@ -363,11 +378,11 @@ export default {
       this.settings.search_keywords = []
       this.settings.search_foods = []
       this.settings.search_books = []
-      this.refreshData()
+      this.refreshData(false)
     },
-    pageChange: function (page) {
-      this.pagination_page = page
-      this.refreshData()
+    loadMore: function (page) {
+      this.pagination_page++
+      this.refreshData(true)
     }
   }
 }
