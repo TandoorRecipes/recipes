@@ -598,9 +598,7 @@
                     this.sortSteps()
                     for (let s of this.recipe.steps) {
                         this.sortIngredients(s)
-                        if (s.file !== null){
-                            delete s.file.file //TODO stupid quick hack because I cant figure out how to fix the writable serializer right now
-                        }
+
                     }
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe,
                         {}).then((response) => {
