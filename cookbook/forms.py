@@ -126,12 +126,13 @@ class ImportExportBase(forms.Form):
     DOMESTICA = 'DOMESTICA'
     MEALMASTER = 'MEALMASTER'
     REZKONV = 'REZKONV'
+    OPENEATS = 'OPENEATS'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
         (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
-        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'),
+        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'),
     ))
 
 

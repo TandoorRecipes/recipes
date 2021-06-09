@@ -18,6 +18,7 @@ from cookbook.integration.domestica import Domestica
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.mealmaster import MealMaster
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
+from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
 from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipesage import RecipeSage
@@ -53,6 +54,8 @@ def get_integration(request, export_type):
         return RezKonv(request, export_type)
     if export_type == ImportExportBase.MEALMASTER:
         return MealMaster(request, export_type)
+    if export_type == ImportExportBase.OPENEATS:
+        return OpenEats(request, export_type)
 
 
 @group_required('user')
