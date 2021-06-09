@@ -121,6 +121,7 @@ class ImportExportBase(forms.Form):
     SAFRON = 'SAFRON'
     CHEFTAP = 'CHEFTAP'
     PEPPERPLATE = 'PEPPERPLATE'
+    RECIPEKEEPER = 'RECIPEKEEPER'
     RECETTETEK = 'RECETTETEK'
     RECIPESAGE = 'RECIPESAGE'
     DOMESTICA = 'DOMESTICA'
@@ -132,7 +133,8 @@ class ImportExportBase(forms.Form):
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
         (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
-        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'),
+        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
+
     ))
 
 
