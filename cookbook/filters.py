@@ -47,8 +47,10 @@ with scopes_disabled():
         def filter_name(queryset, name, value):
             if not name == 'name':
                 return queryset
-            if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-                return queryset
+            if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                                           'django.db.backends.postgresql']:
+                queryset = queryset.annotate(similarity=TrigramSimilarity('name', value), ).filter(
+                    Q(similarity__gt=0.1) | Q(name__unaccent__icontains=value)).order_by('-similarity')
             else:
                 queryset = queryset.filter(name__icontains=value)
             return queryset
