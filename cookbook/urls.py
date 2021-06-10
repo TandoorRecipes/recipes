@@ -11,7 +11,7 @@ from cookbook.helper import dal
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
                      Storage, Sync, SyncLog, get_model_name)
-from .views import api, data, delete, edit, import_export, lists, new, views, telegram
+from .views import api, data, delete, edit, import_export, lists, trees, new, views, telegram
 
 router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
@@ -118,6 +118,7 @@ urlpatterns = [
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
+    path('docs/search/', views.search_info, name='docs_search'),
     path('docs/api/', views.api_info, name='docs_api'),
 
     path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
@@ -172,5 +173,17 @@ for m in generic_models:
                 f'delete/{url_name}/<int:pk>/',
                 c.as_view(),
                 name=f'delete_{py_name}'
+            )
+        )
+
+tree_models = [Keyword]
+for m in tree_models:
+    py_name = get_model_name(m)
+    url_name = py_name.replace('_', '-')
+
+    if c := getattr(trees, py_name, None):
+        urlpatterns.append(
+            path(
+                f'list/{url_name}/', c, name=f'list_{py_name}'
             )
         )

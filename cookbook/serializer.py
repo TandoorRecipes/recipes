@@ -1,3 +1,4 @@
+import random
 from decimal import Decimal
 from gettext import gettext as _
 
@@ -7,6 +8,7 @@ from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, NotFound
+from treebeard.mp_tree import MP_NodeQuerySet
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              MealPlan, MealType, NutritionInformation, Recipe,
@@ -45,7 +47,7 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if type(data) == QuerySet and data.query.is_sliced:
+        if (type(data) == QuerySet and data.query.is_sliced) or type(data) == MP_NodeQuerySet:
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
@@ -200,20 +202,36 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     label = serializers.SerializerMethodField('get_label')
+    image = serializers.SerializerMethodField('get_image')
+    numrecipe = serializers.SerializerMethodField('count_recipes')
 
     def get_label(self, obj):
         return str(obj)
 
+    def get_image(self, obj):
+        recipes = obj.recipe_set.all().exclude(image__isnull=True).exclude(image__exact='')
+        if len(recipes) == 0:
+            recipes = Recipe.objects.filter(keywords__in=Keyword.get_tree(obj)).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        if len(recipes) != 0:
+            return random.choice(recipes).image.url
+        else:
+            return None
+
+    def count_recipes(self, obj):
+        return obj.recipe_set.all().count()
+
     def create(self, validated_data):
-        obj, created = Keyword.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
+        validated_data['space'] = self.context['request'].space
+        obj = Keyword.get_or_create(**validated_data)
         return obj
 
     class Meta:
-        list_serializer_class = SpaceFilterSerializer
+        # list_serializer_class = SpaceFilterSerializer
         model = Keyword
-        fields = ('id', 'name', 'icon', 'label', 'description', 'created_at', 'updated_at')
-
-        read_only_fields = ('id',)
+        fields = ('id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'numchild',)
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):

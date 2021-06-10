@@ -25,6 +25,10 @@ const pages = {
         entry: './src/apps/UserFileView/main.js',
         chunks: ['chunk-vendors']
     },
+    'keyword_list_view': {
+        entry: './src/apps/KeywordListView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {

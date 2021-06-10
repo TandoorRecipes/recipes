@@ -5,16 +5,20 @@ import uuid
 from datetime import date, timedelta
 
 from annoying.fields import AutoOneToOneField
+from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import models
+from django.db.models import Index
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from treebeard.mp_tree import MP_Node, MP_NodeManager
+from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
-from django_scopes import ScopedManager
-
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
                               STICKY_NAV_PREF_DEFAULT)
 
@@ -107,7 +111,8 @@ class UserPreference(models.Model, PermissionModelMixin):
     COLORS = (
         (PRIMARY, 'Primary'),
         (SECONDARY, 'Secondary'),
-        (SUCCESS, 'Success'), (INFO, 'Info'),
+        (SUCCESS, 'Success'),
+        (INFO, 'Info'),
         (WARNING, 'Warning'),
         (DANGER, 'Danger'),
         (LIGHT, 'Light'),
@@ -212,6 +217,7 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta:
+        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
         unique_together = (('space', 'name'),)
 
 
@@ -227,6 +233,7 @@ class Supermarket(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta:
+        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
         unique_together = (('space', 'name'),)
 
 
@@ -257,7 +264,9 @@ class SyncLog(models.Model, PermissionModelMixin):
         return f"{self.created_at}:{self.sync} - {self.status}"
 
 
-class Keyword(ExportModelOperationsMixin('keyword'), models.Model, PermissionModelMixin):
+class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMixin):
+    # TODO create get_or_create method
+    node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
@@ -265,7 +274,9 @@ class Keyword(ExportModelOperationsMixin('keyword'), models.Model, PermissionMod
     updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='space', _manager_class=MP_NodeManager)
+
+    _full_name_separator = ' > '
 
     def __str__(self):
         if self.icon:
@@ -273,8 +284,68 @@ class Keyword(ExportModelOperationsMixin('keyword'), models.Model, PermissionMod
         else:
             return f"{self.name}"
 
+    @property
+    def parent(self):
+        parent = self.get_parent()
+        if parent:
+            return self.get_parent().id
+        return None
+
+    @classmethod
+    def get_or_create(self, **kwargs):
+        # an attempt to mimic get_or_create functionality with Keywords
+        # function attempts to get the keyword,
+        # if the length of the return is 0 will add a root node
+        kwargs['name'] = kwargs['name'].strip()
+        q = self.get_tree().filter(name=kwargs['name'], space=kwargs['space'])
+        if len(q) != 0:
+            return q[0]
+        else:
+            return Keyword.add_root(**kwargs)
+
+    @property
+    def full_name(self):
+        """
+        Returns a string representation of the keyword and it's ancestors,
+        e.g. 'Cuisine > Asian > Chinese > Catonese'.
+        """
+        names = [keyword.name for keyword in self.get_ancestors_and_self()]
+        return self._full_name_separator.join(names)
+
+    def get_ancestors_and_self(self):
+        """
+        Gets ancestors and includes itself. Use treebeard's get_ancestors
+        if you don't want to include the keyword itself. It's a separate
+        function as it's commonly used in templates.
+        """
+        if self.is_root():
+            return [self]
+        return list(self.get_ancestors()) + [self]
+
+    def get_descendants_and_self(self):
+        """
+        Gets descendants and includes itself. Use treebeard's get_descendants
+        if you don't want to include the keyword itself. It's a separate
+        function as it's commonly used in templates.
+        """
+        return self.get_tree(self)
+
+    def has_children(self):
+        return self.get_num_children() > 0
+
+    def get_num_children(self):
+        return self.get_children().count()
+
+    @classmethod
+    def add_root(self, **kwargs):
+        with scopes_disabled():
+            return super().add_root(**kwargs)
+
     class Meta:
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+        ]
+        indexes = (Index(fields=['id', 'name']), )
 
 
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
@@ -288,6 +359,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
         return self.name
 
     class Meta:
+        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
         unique_together = (('space', 'name'),)
 
 
@@ -305,7 +377,9 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
         return self.name
 
     class Meta:
+        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
         unique_together = (('space', 'name'),)
+        indexes = (Index(fields=['id', 'name']), )
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -325,6 +399,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
     class Meta:
         ordering = ['order', 'pk']
+        indexes = (Index(fields=['id', 'food', 'unit']), )
 
 
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
@@ -345,7 +420,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     order = models.IntegerField(default=0)
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
-    step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
+    search_vector = SearchVectorField(null=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -356,6 +431,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
 
     class Meta:
         ordering = ['order', 'pk']
+        indexes = (GinIndex(fields=["search_vector"]), )
 
 
 class NutritionInformation(models.Model, PermissionModelMixin):
@@ -401,11 +477,17 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    name_search_vector = SearchVectorField(null=True)
+    desc_search_vector = SearchVectorField(null=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return self.name
+
+    class Meta():
+        indexes = (GinIndex(fields=["name_search_vector", "desc_search_vector"]), Index(fields=['id', 'name', 'description']), )
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):
@@ -455,6 +537,9 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
     def __str__(self):
         return self.name
 
+    class Meta():
+        indexes = (Index(fields=['name', 'description']), )
+
 
 class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -476,6 +561,7 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
             return None
 
     class Meta:
+        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
         unique_together = (('recipe', 'book'),)
 
 
@@ -651,6 +737,9 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
     def __str__(self):
         return self.recipe.name
 
+    class Meta():
+        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating']), )
+
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -662,6 +751,9 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
 
     def __str__(self):
         return self.recipe.name
+
+    class Meta():
+        indexes = (Index(fields=['recipe', '-created_at']), )
 
 
 class ImportLog(models.Model, PermissionModelMixin):
@@ -691,6 +783,53 @@ class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+
+# field names used to configure search behavior - all data populated during data migration
+# other option is to use a MultiSelectField from https://github.com/goinnn/django-multiselectfield
+class SearchFields(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=32, unique=True)
+    field = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return _(self.name)
+
+    @staticmethod
+    def get_name(self):
+        return _(self.name)
+
+
+def allSearchFields():
+    return SearchFields.objects.values_list('id')
+
+
+def nameSearchField():
+    return [SearchFields.objects.get(name='Name').id]
+
+
+class SearchPreference(models.Model, PermissionModelMixin):
+    # Search Style (validation parsleyjs.org)
+    # phrase or plain or raw (websearch and trigrams are mutually exclusive)
+    SIMPLE = 'plain'
+    PHRASE = 'phrase'
+    WEB = 'websearch'
+    RAW = 'raw'
+    SEARCH_STYLE = (
+        (SIMPLE, _('Simple')),
+        (PHRASE, _('Phrase')),
+        (WEB, _('Web')),
+        (RAW, _('Raw'))
+    )
+
+    user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    search = models.CharField(choices=SEARCH_STYLE, max_length=32, default=SIMPLE)
+
+    lookup = models.BooleanField(default=False)
+    unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
+    icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
+    istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
+    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
+    fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
 
 
 class UserFile(ExportModelOperationsMixin('user_files'), models.Model, PermissionModelMixin):

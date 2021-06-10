@@ -12,8 +12,7 @@
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
   "show_only_internal": "Show only internal recipes",
-
-
+  "show_split_screen": "Show split view",
 
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
@@ -35,6 +34,13 @@
   "Reset_Search": "Reset Search",
   "Recently_Viewed": "Recently Viewed",
   "Load_More": "Load More",
+  "New_Keyword": "New Keyword",
+  "Delete_Keyword": "Delete Keyword",
+  "Edit_Keyword": "Edit Keyword",
+  "Move_Keyword": "Move Keyword",
+  "Merge_Keyword": "Merge Keyword",
+  "Hide_Keywords": "Hide Keywords",
+  "Hide_Recipes": "Hide Recipes",
 
   "Keywords": "Keywords",
   "Books": "Books",
@@ -49,7 +55,7 @@
   "Copy": "Copy",
   "Rating": "Rating",
   "Close": "Close",
-  "Link": "Link",
+  "Cancel": "Cancel",
   "Add": "Add",
   "New": "New",
   "Success": "Success",
@@ -67,7 +73,6 @@
   "Files": "Files",
   "File": "File",
   "Edit": "Edit",
-  "Cancel": "Cancel",
   "Delete": "Delete",
   "Open": "Open",
   "Ok": "Open",
@@ -80,5 +85,17 @@
   "or": "or",
   "and": "and",
   "Information": "Information",
-  "Download": "Download"
+  "View": "View",
+  "Recipes": "Recipes",
+  "Move": "Move",
+  "Merge": "Merge",
+  "Parent": "Parent",
+  "delete_confimation": "Are you sure that you want to delete {kw} and all of it's children?",
+  "move_confirmation": "Move {child} to parent {parent}",
+  "merge_confirmation": "Replace {source} with {target}",
+  "move_selection": "Select a parent to move {child} to.",
+  "merge_selection": "Replace all occurences of {source} with the selected {type}.",
+  "Advanced Search Settings": "Advanced Search Settings",
+  "Download": "Download",
+  "Root": "Root"
 }

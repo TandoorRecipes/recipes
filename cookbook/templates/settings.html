@@ -21,23 +21,35 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 2vh">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="account-tab" data-toggle="tab" href="#account" role="tab"
-               aria-controls="account" aria-selected="true">{% trans 'Account' %}</a>
+            <a class="nav-link {% if active_tab == 'account' %} active {% endif %}" id="account-tab" data-toggle="tab" href="#account" role="tab"
+               aria-controls="account"  
+               aria-selected="{% if active_tab == 'account' %} 'true' {% else %} 'false' {% endif %}">
+               {% trans 'Account' %}</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="preferences-tab" data-toggle="tab" href="#preferences" role="tab"
-               aria-controls="preferences" aria-selected="false">{% trans 'Preferences' %}</a>
+            <a class="nav-link {% if active_tab == 'prefernces' %} active {% endif %}" id="preferences-tab" data-toggle="tab" href="#preferences" role="tab"
+               aria-controls="preferences" 
+               aria-selected="{% if active_tab == 'prefernces' %} 'true' {% else %} 'false' {% endif %}">
+               {% trans 'Preferences' %}</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="api-tab" data-toggle="tab" href="#api" role="tab" aria-controls="api"
-               aria-selected="false">{% trans 'API-Settings' %}</a>
+            <a class="nav-link {% if active_tab == 'api' %} active {% endif %}" id="api-tab" data-toggle="tab" href="#api" role="tab" 
+                aria-controls="api" 
+                aria-selected="{% if active_tab == 'api' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'API-Settings' %}</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if active_tab == 'search' %} active {% endif %}" id="search-tab" data-toggle="tab" href="#search" role="tab"
+                aria-controls="search"  
+                aria-selected="{% if active_tab == 'search' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'Search-Settings' %}</a>
         </li>
 
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane active" id="account" role="tabpanel" aria-labelledby="account-tab">
+        <div class="tab-pane {% if active_tab == 'account' %} active {% endif %}" id="account" role="tabpanel" aria-labelledby="account-tab">
             <h4>{% trans 'Name Settings' %}</h4>
             <form action="." method="post">
                 {% csrf_token %}
@@ -58,7 +70,7 @@
             <br/>
 
         </div>
-        <div class="tab-pane" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
+        <div class="tab-pane {% if active_tab == 'preferences' %} active {% endif %}" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
 
 
             <div class="row">
@@ -109,7 +121,7 @@
 
 
         </div>
-        <div class="tab-pane" id="api" role="tabpanel" aria-labelledby="api-tab">
+        <div class="tab-pane {% if active_tab == 'api' %} active {% endif %}" id="api" role="tabpanel" aria-labelledby="api-tab">
 
             <div class="row">
                 <div class="col col-md-12">
@@ -141,6 +153,16 @@
 
 
         </div>
+        <div class="tab-pane {% if active_tab == 'search' %} active {% endif %}" id="search" role="tabpanel" aria-labelledby="search-tab">
+            <h4>{% trans 'Search Settings' %}</h4>
+            <form action="." method="post">
+                {% csrf_token %}
+                {{ search_form|crispy }}
+                <button class="btn btn-success" type="submit" name="search_form"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}</button>
+            </form>
+        </div>
+        
     </div>
 
     <script type="application/javascript">
@@ -149,5 +171,15 @@
             token.select();
             document.execCommand("copy");
         }
+        // Javascript to enable link to tab
+        var hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
+        if (hash) {
+            $('.nav-tabs a[href="#' + hash + '"]').tab('show');
+        } 
+
+        // Change hash for page-reload
+        $('.nav-tabs a').on('shown.bs.tab', function (e) {
+            window.location.hash = e.target.hash;
+        })
     </script>
 {% endblock %}

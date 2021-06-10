@@ -12,22 +12,21 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django_scopes import scopes_disabled, scope
+from django_scopes import scopes_disabled
 from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
-from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
+from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
-from cookbook.helper.ingredient_parser import parse
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
+                            SearchPreferenceForm, AllAuthSignupForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
@@ -57,15 +56,16 @@ def index(request):
         return HttpResponseRedirect(reverse('view_search'))
 
 
+# faceting
+# unaccent / likely will perform full table scan
+# create tests
 def search(request):
     if has_group_permission(request.user, ('guest',)):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
-
         f = RecipeFilter(request.GET,
                          queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
                          space=request.space)
-
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
         else:
@@ -95,6 +95,7 @@ def search(request):
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
+@group_required('guest')
 def search_v2(request):
     return render(request, 'search.html', {})
 
@@ -304,11 +305,15 @@ def user_settings(request):
         return redirect('index')
 
     up = request.user.userpreference
+    sp = request.user.searchpreference
+    search_error = False
+    active_tab = 'account'
 
     user_name_form = UserNameForm(instance=request.user)
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
+            active_tab = 'preferences'
             form = UserPreferenceForm(request.POST, prefix='preference')
             if form.is_valid():
                 if not up:
@@ -332,25 +337,77 @@ def user_settings(request):
 
                 up.save()
 
-        if 'user_name_form' in request.POST:
+        elif 'user_name_form' in request.POST:
             user_name_form = UserNameForm(request.POST, prefix='name')
             if user_name_form.is_valid():
                 request.user.first_name = user_name_form.cleaned_data['first_name']
                 request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
+        elif 'password_form' in request.POST:
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+
+        elif 'search_form' in request.POST:
+            active_tab = 'search'
+            search_form = SearchPreferenceForm(request.POST, prefix='search')
+            if search_form.is_valid():
+                if not sp:
+                    sp = SearchPreferenceForm(user=request.user)
+                fields_searched = (
+                    len(search_form.cleaned_data['icontains'])
+                    + len(search_form.cleaned_data['istartswith'])
+                    + len(search_form.cleaned_data['trigram'])
+                    + len(search_form.cleaned_data['fulltext']))
+                # TODO add 'recommended' option
+                if fields_searched == 0:
+                    search_form.add_error(None, _('You must select at least one field to search!'))
+                    search_error = True
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
+                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
+                    search_error = True
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
+                    search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
+                    search_error = True
+                else:
+                    sp.search = search_form.cleaned_data['search']
+                    sp.lookup = search_form.cleaned_data['lookup']
+                    sp.unaccent.set(search_form.cleaned_data['unaccent'])
+                    sp.icontains.set(search_form.cleaned_data['icontains'])
+                    sp.istartswith.set(search_form.cleaned_data['istartswith'])
+                    sp.trigram.set(search_form.cleaned_data['trigram'])
+                    sp.fulltext.set(search_form.cleaned_data['fulltext'])
+
+                    sp.save()
     if up:
         preference_form = UserPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm()
 
+    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
+    if sp and not search_error and fields_searched > 0:
+        search_form = SearchPreferenceForm(instance=sp)
+    elif not search_error:
+        search_form = SearchPreferenceForm()
+
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
+
+    # these fields require postgress - just disable them if postgress isn't available
+    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        search_form.fields['search'].disabled = True
+        search_form.fields['lookup'].disabled = True
+        search_form.fields['trigram'].disabled = True
+        search_form.fields['fulltext'].disabled = True
 
     return render(request, 'settings.html', {
         'preference_form': preference_form,
         'user_name_form': user_name_form,
         'api_token': api_token,
+        'search_form': search_form,
+        'active_tab': active_tab
     })
 
 
@@ -372,8 +429,8 @@ def history(request):
 @group_required('admin')
 def system(request):
     postgres = False if (
-            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
-            or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
+        settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
+        or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
     ) else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True
@@ -531,6 +588,10 @@ def report_share_abuse(request, token):
 
 def markdown_info(request):
     return render(request, 'markdown_info.html', {})
+
+
+def search_info(request):
+    return render(request, 'search_info.html', {})
 
 
 @group_required('guest')

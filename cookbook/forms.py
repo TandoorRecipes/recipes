@@ -6,11 +6,13 @@ from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
+from treebeard.forms import MoveNodeForm
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
-                     UserPreference, SupermarketCategory, MealType, Space)
+                     UserPreference, SupermarketCategory, MealType, Space,
+                     SearchPreference)
 
 
 class SelectWidget(widgets.Select):
@@ -216,10 +218,11 @@ class CommentForm(forms.ModelForm):
         }
 
 
-class KeywordForm(forms.ModelForm):
+class KeywordForm(MoveNodeForm):
     class Meta:
         model = Keyword
         fields = ('name', 'icon', 'description')
+        exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
         widgets = {'icon': EmojiPickerTextInput}
 
 
@@ -471,3 +474,40 @@ class UserCreateForm(forms.Form):
             attrs={'autocomplete': 'new-password', 'type': 'password'}
         )
     )
+
+
+class SearchPreferenceForm(forms.ModelForm):
+    prefix = 'search'
+
+    class Meta:
+        model = SearchPreference
+        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext')
+
+        help_texts = {
+            'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
+            'lookup': _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'),
+            'unaccent': _('Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
+            'icontains': _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
+            'istartswith': _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
+            'trigram': _("Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
+            'fulltext': _("Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields.")
+        }
+
+        labels = {
+            'search': _('Search Method'),
+            'lookup': _('Fuzzy Lookups'),
+            'unaccent': _('Ignore Accent'),
+            'icontains': _("Partial Match"),
+            'istartswith': _("Starts Wtih"),
+            'trigram': _("Fuzzy Search"),
+            'fulltext': _("Full Text")
+        }
+
+        widgets = {
+            'search': SelectWidget,
+            'unaccent': MultiSelectWidget,
+            'icontains': MultiSelectWidget,
+            'istartswith': MultiSelectWidget,
+            'trigram': MultiSelectWidget,
+            'fulltext': MultiSelectWidget,
+        }

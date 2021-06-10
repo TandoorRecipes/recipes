@@ -259,6 +259,30 @@ export interface ImportLogKeyword {
      * @type {string}
      * @memberof ImportLogKeyword
      */
+    image?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ImportLogKeyword
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLogKeyword
+     */
+    numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ImportLogKeyword
+     */
+    numrecipe?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ImportLogKeyword
+     */
     created_at?: string;
     /**
      * 
@@ -348,8 +372,39 @@ export interface InlineResponse200 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<RecipeOverview>}
+     * @type {Array<Keyword>}
      * @memberof InlineResponse200
+     */
+    results?: Array<Keyword>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse2001
+ */
+export interface InlineResponse2001 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeOverview>}
+     * @memberof InlineResponse2001
      */
     results?: Array<RecipeOverview>;
 }
@@ -389,6 +444,30 @@ export interface Keyword {
      * @memberof Keyword
      */
     description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    image?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Keyword
+     */
+    numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    numrecipe?: string;
     /**
      * 
      * @type {string}
@@ -841,6 +920,30 @@ export interface RecipeKeywords {
      * @memberof RecipeKeywords
      */
     description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    image?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeKeywords
+     */
+    numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    numrecipe?: string;
     /**
      * 
      * @type {string}
@@ -3910,11 +4013,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * optional parameters  - **query**: search keywords for a string contained              in the keyword name (case in-sensitive) - **limit**: limits the amount of returned results
+         * 
+         * @param {string} [query] Query string matched against keyword name.
+         * @param {number} [root] Return first level children of keyword with ID [int].  Integer 0 will return root keywords.
+         * @param {number} [tree] Return all self and children of keyword with ID [int].
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listKeywords: async (options: any = {}): Promise<RequestArgs> => {
+        listKeywords: async (query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/keyword/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3926,6 +4034,26 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
+
+            if (root !== undefined) {
+                localVarQueryParameter['root'] = root;
+            }
+
+            if (tree !== undefined) {
+                localVarQueryParameter['tree'] = tree;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -4572,6 +4700,88 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this keyword.
+         * @param {string} target 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergeKeyword: async (id: string, target: string, keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('mergeKeyword', 'id', id)
+            // verify required parameter 'target' is not null or undefined
+            assertParamExists('mergeKeyword', 'target', target)
+            const localVarPath = `/api/keyword/{id}/merge/{target}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"target"}}`, encodeURIComponent(String(target)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this keyword.
+         * @param {string} parent 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        moveKeyword: async (id: string, parent: string, keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('moveKeyword', 'id', id)
+            // verify required parameter 'parent' is not null or undefined
+            assertParamExists('moveKeyword', 'parent', parent)
+            const localVarPath = `/api/keyword/{id}/move/{parent}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7806,12 +8016,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * optional parameters  - **query**: search keywords for a string contained              in the keyword name (case in-sensitive) - **limit**: limits the amount of returned results
+         * 
+         * @param {string} [query] Query string matched against keyword name.
+         * @param {number} [root] Return first level children of keyword with ID [int].  Integer 0 will return root keywords.
+         * @param {number} [tree] Return all self and children of keyword with ID [int].
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listKeywords(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Keyword>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listKeywords(options);
+        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listKeywords(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7867,8 +8082,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8004,6 +8219,30 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listViewLogs(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ViewLog>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this keyword.
+         * @param {string} target 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mergeKeyword(id, target, keyword, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this keyword.
+         * @param {string} parent 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async moveKeyword(id: string, parent: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.moveKeyword(id, parent, keyword, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9296,12 +9535,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.listIngredients(options).then((request) => request(axios, basePath));
         },
         /**
-         * optional parameters  - **query**: search keywords for a string contained              in the keyword name (case in-sensitive) - **limit**: limits the amount of returned results
+         * 
+         * @param {string} [query] Query string matched against keyword name.
+         * @param {number} [root] Return first level children of keyword with ID [int].  Integer 0 will return root keywords.
+         * @param {number} [tree] Return all self and children of keyword with ID [int].
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listKeywords(options?: any): AxiosPromise<Array<Keyword>> {
-            return localVarFp.listKeywords(options).then((request) => request(axios, basePath));
+        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
+            return localVarFp.listKeywords(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date
@@ -9352,8 +9596,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
-            return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+            return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9474,6 +9718,28 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listViewLogs(options?: any): AxiosPromise<Array<ViewLog>> {
             return localVarFp.listViewLogs(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this keyword.
+         * @param {string} target 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.mergeKeyword(id, target, keyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this keyword.
+         * @param {string} parent 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        moveKeyword(id: string, parent: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.moveKeyword(id, parent, keyword, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10799,13 +11065,18 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * optional parameters  - **query**: search keywords for a string contained              in the keyword name (case in-sensitive) - **limit**: limits the amount of returned results
+     * 
+     * @param {string} [query] Query string matched against keyword name.
+     * @param {number} [root] Return first level children of keyword with ID [int].  Integer 0 will return root keywords.
+     * @param {number} [tree] Return all self and children of keyword with ID [int].
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listKeywords(options?: any) {
-        return ApiApiFp(this.configuration).listKeywords(options).then((request) => request(this.axios, this.basePath));
+    public listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listKeywords(query, root, tree, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11018,6 +11289,32 @@ export class ApiApi extends BaseAPI {
      */
     public listViewLogs(options?: any) {
         return ApiApiFp(this.configuration).listViewLogs(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this keyword.
+     * @param {string} target 
+     * @param {Keyword} [keyword] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any) {
+        return ApiApiFp(this.configuration).mergeKeyword(id, target, keyword, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this keyword.
+     * @param {string} parent 
+     * @param {Keyword} [keyword] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public moveKeyword(id: string, parent: string, keyword?: Keyword, options?: any) {
+        return ApiApiFp(this.configuration).moveKeyword(id, parent, keyword, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
