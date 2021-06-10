@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.search import SearchVector
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
 from django_scopes import scopes_disabled
@@ -86,7 +88,24 @@ class SyncLogAdmin(admin.ModelAdmin):
 
 admin.site.register(SyncLog, SyncLogAdmin)
 
-admin.site.register(Keyword)
+
+class KeywordAdmin(TreeAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+
+    # removing ability to delete keywords from admin
+    # to avoid creating orphaned keywords
+    # def get_actions(self, request):
+    #     actions = super().get_actions(request)
+    #     if 'delete_selected' in actions:
+    #         del actions['delete_selected']
+    #     return actions
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
+
+
+admin.site.register(Keyword, KeywordAdmin)
 
 
 class StepAdmin(admin.ModelAdmin):

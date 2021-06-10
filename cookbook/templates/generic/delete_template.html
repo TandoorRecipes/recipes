@@ -12,13 +12,16 @@
 
     <h3>{% trans 'Delete' %} {{ title }}</h3>
 
+    
     <form action="." method="post">
         {% csrf_token %}
         <div class="alert alert-danger" role="alert">
             {% blocktrans %}Are you sure you want to delete the {{ title }}: <b>{{ object }}</b> {% endblocktrans %}
         </div>
         {{ form|crispy }}
-        <button class="btn btn-success" type="submit"><i class="fas fa-trash-alt"></i> {% trans 'Confirm' %}</button>
+        <button class="btn btn-success" type="submit" href="{{ success_url }}"><i class="fas fa-trash-alt"></i> {% trans 'Confirm' %}</button>
+        <a href="javascript:history.back()"  class="btn btn-danger"><i class="fas fa-undo-alt"></i> {% trans 'Cancel' %}</a>
     </form>
+    
 
 {% endblock %}

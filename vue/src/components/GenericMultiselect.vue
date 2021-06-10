@@ -9,7 +9,7 @@
       :placeholder="placeholder"
       :label="label"
       track-by="id"
-      :multiple="true"
+      :multiple="multiple"
       :loading="loading"
       @search-change="search"
       @input="selectionChanged">
@@ -35,13 +35,16 @@ export default {
     placeholder: String,
     search_function: String,
     label: String,
-    parent_variable: String,
-    initial_selection: Array,
+    parent_variable: {type: String, default: undefined},
+    sticky_options: {type:Array, default(){return []}},
+    initial_selection: {type:Array, default(){return []}},
+    multiple: {type: Boolean, default: true},
+    tree_api: {type: Boolean, default: false} // api requires params that are unique to TreeMixin
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
       this.selected_objects = newVal
-    }
+    },
   },
   mounted() {
     this.search('')
@@ -49,10 +52,23 @@ export default {
   methods: {
     search: function (query) {
       let apiClient = new ApiApiFactory()
+      if (this.tree_api) {
+        let page = 1
+        let root = undefined
+        let tree = undefined
+        let pageSize = 10
 
-      apiClient[this.search_function]({query: {query: query, limit: 10}}).then(result => {
-        this.objects = result.data
-      })
+        if (query === '') {
+          query = undefined
+        }
+        apiClient[this.search_function](query, root, tree, page, pageSize).then(result => {
+          this.objects = this.sticky_options.concat(result.data.results)
+        })
+      } else {
+        apiClient[this.search_function]({query: {query: query, limit: 10}}).then(result => {
+          this.objects = this.sticky_options.concat(result.data)
+        })
+      }
     },
     selectionChanged: function () {
       this.$emit('change', {var: this.parent_variable, val: this.selected_objects})

@@ -52,15 +52,6 @@ class RecipeTable(tables.Table):
         )
 
 
-class KeywordTable(tables.Table):
-    id = tables.LinkColumn('edit_keyword', args=[A('id')])
-
-    class Meta:
-        model = Keyword
-        template_name = 'generic/table_template.html'
-        fields = ('id', 'icon', 'name')
-
-
 class IngredientTable(tables.Table):
     id = tables.LinkColumn('edit_food', args=[A('id')])
 
