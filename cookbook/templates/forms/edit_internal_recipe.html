@@ -424,7 +424,8 @@
                             <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
                             <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
                                              :id="'id_instruction_' + step.id"></b-form-textarea>
-                            <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
+                            {% markdown_link as markdown_link %}
+                            <small class="text-muted">{{ markdown_link|safe }}</small>
                         </div>
                     </div>
                 </div>
@@ -729,7 +730,8 @@
                 searchKeywords: function (query) {
                     this.keywords_loading = true
                     this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.keywords = response.data;
+                        console.log(response.data)
+                        this.keywords = response.data.results;
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)

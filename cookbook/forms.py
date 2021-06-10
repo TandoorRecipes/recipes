@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
+from treebeard.forms import MoveNodeForm
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
@@ -217,10 +218,11 @@ class CommentForm(forms.ModelForm):
         }
 
 
-class KeywordForm(forms.ModelForm):
+class KeywordForm(MoveNodeForm):
     class Meta:
         model = Keyword
         fields = ('name', 'icon', 'description')
+        exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
         widgets = {'icon': EmojiPickerTextInput}
 
 

@@ -28,7 +28,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     fields = ('name',)
 
     def form_valid(self, form):
-        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes: # TODO move to central helper function
+        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:  # TODO move to central helper function
             messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
             return HttpResponseRedirect(reverse('index'))
 
@@ -68,10 +68,9 @@ class KeywordCreate(GroupRequiredMixin, CreateView):
     success_url = reverse_lazy('list_keyword')
 
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.space = self.request.space
-        obj.save()
-        return HttpResponseRedirect(reverse('edit_keyword', kwargs={'pk': obj.pk}))
+        form.cleaned_data['space'] = self.request.space
+        form.save()
+        return HttpResponseRedirect(reverse('list_keyword'))
 
     def get_context_data(self, **kwargs):
         context = super(KeywordCreate, self).get_context_data(**kwargs)

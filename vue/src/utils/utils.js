@@ -60,10 +60,18 @@ export const ResolveUrlMixin = {
 }
 
 export function resolveDjangoUrl(url, params = null) {
-    if (params !== null) {
-        return window.Urls[url](params)
-    } else {
+    if (params == null) {
         return window.Urls[url]()
+    } else if (typeof(params) != "object") {
+        return window.Urls[url](params)
+    } else if (typeof(params) == "object") {
+        if (params.length === 1) {
+            return window.Urls[url](params)
+        } else if (params.length === 2) {
+            return window.Urls[url](params[0],params[1])
+        } else if (params.length === 3) {
+            return window.Urls[url](params[0],params[1],params[2])
+        }
     }
 }
 

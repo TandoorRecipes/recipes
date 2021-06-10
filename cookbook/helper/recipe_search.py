@@ -148,4 +148,14 @@ def search_recipes(request, queryset, params):
     elif search_sort == 'rank':
         queryset = queryset.order_by('-rank')
 
+    # kw = Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))
+    # Keyword.get_annotated_list_qs(Keyword.objects.filter(id__in=[item.id for k in kw for item in k.get_ancestors_and_self()]))
+    # print(time.time()-start, len(queryset), len(kw))
+    # Keyword.get_annotated_list_qs(
+    #     Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))
+    #     | Keyword.objects.all().filter(id__in=set([k.parent for k in Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))])))
     return queryset
+
+
+# this returns a list of keywords in the queryset and how many times it appears
+# Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))
