@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import translation
 
+# TODO move this somewhere else and delete this file
 DICTIONARY = {
     # TODO find custom dictionaries - maybe from here https://www.postgresql.org/message-id/CAF4Au4x6X_wSXFwsQYE8q5o0aQZANrvYjZJ8uOnsiHDnOVPPEg%40mail.gmail.com
     # 'hy': 'Armenian',
