@@ -18,7 +18,6 @@ from django_scopes import ScopedManager
 
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
                               STICKY_NAV_PREF_DEFAULT)
-from cookbook.managers import RecipeSearchManager
 
 
 def get_user_name(self):
@@ -422,11 +421,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     desc_search_vector = SearchVectorField(null=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
-    # load custom manager for full text search if postgress is available
-    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-        objects = ScopedManager(_manager_class=RecipeSearchManager, space='space')
-    else:
-        objects = ScopedManager(space='space')
+    objects = ScopedManager(space='space')
 
     def __str__(self):
         return self.name
