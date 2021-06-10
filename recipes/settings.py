@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import ast
 import os
-import random
 import re
-import string
 
 from django.contrib import messages
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -27,6 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
+DEMO = bool(int(os.getenv('DEMO', False)))
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
@@ -108,6 +107,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'cookbook.apps.CookbookConfig',
+    'treebeard',
 ]
 
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []

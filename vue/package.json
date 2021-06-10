@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.13.14",
+    "@kevinfaguiar/vue-twemoji-picker": "^5.7.4",
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.14.0",
@@ -15,8 +17,10 @@
     "moment": "^2.29.1",
     "vue": "^2.6.14",
     "vue-class-component": "^7.2.3",
+    "vue-clickaway": "^2.2.2",
     "vue-cookies": "^1.7.4",
     "vue-i18n": "^8.24.4",
+    "vue-infinite-loading": "^2.4.5",
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.1.2",
     "vue-template-compiler": "^2.6.14",

@@ -79,3 +79,5 @@ postgresql/
 /docker-compose.override.yml
 vue/node_modules
 .vscode/
+vue/yarn.lock
+vetur.config.js
