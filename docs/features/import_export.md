@@ -172,6 +172,7 @@ This zip file can simply be imported into Tandoor.
 OpenEats does not provide any way to export the data using the interface. Luckily it is relatively easy to export it from the command line.
 You need to run the command `python manage.py dumpdata recipe ingredient` inside of the application api container.
 If you followed the default installation method you can use the following command `docker-compose -f docker-prod.yml run --rm --entrypoint 'sh' api ./manage.py dumpdata recipe ingredient`.
+This command might also work `docker exec -it openeats_api_1 ./manage.py dumpdata recipe ingredient > recipe_ingredients.json`
 
 Store the outputted json string in a `.json` file and simply import it using the importer. The file should look something like this
 ```json

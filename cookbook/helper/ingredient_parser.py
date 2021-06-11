@@ -163,6 +163,8 @@ def parse(x):
 
 # small utility functions to prevent emtpy unit/food creation
 def get_unit(unit, space):
+    if not unit:
+        return None
     if len(unit) > 0:
         u, created = Unit.objects.get_or_create(name=unit, space=space)
         return u
@@ -170,6 +172,8 @@ def get_unit(unit, space):
 
 
 def get_food(food, space):
+    if not food:
+        return None
     if len(food) > 0:
         f, created = Food.objects.get_or_create(name=food, space=space)
         return f

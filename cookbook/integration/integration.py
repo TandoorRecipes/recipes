@@ -160,6 +160,9 @@ class Integration:
             except BadZipFile:
                 il.msg += 'ERROR ' + _(
                     'Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
+            except:
+                il.msg += 'ERROR ' + _(
+                    'An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n'
 
             if len(self.ignored_recipes) > 0:
                 il.msg += '\n' + _(
@@ -217,4 +220,3 @@ class Integration:
             - data - string content for file to get created in export zip
         """
         raise NotImplementedError('Method not implemented in integration')
-
