@@ -603,6 +603,8 @@ class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, Pe
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4)
+    request_count = models.IntegerField(default=0)
+    abuse_blocked = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

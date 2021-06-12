@@ -67,6 +67,9 @@ DJANGO_TABLES2_PAGE_RANGE = 8
 HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
 HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
+SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
+SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
+
 ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 
 TERMS_URL = os.getenv('TERMS_URL', '')

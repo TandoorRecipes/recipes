@@ -134,6 +134,14 @@
     </div>
 
     <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
+
+    <div class="row text-center" style="margin-top: 3vh; margin-bottom: 3vh" v-if="share_uid !== ''">
+      <div class="col col-md-12">
+        <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)" >{{$t('Report Abuse')}}</a>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -191,7 +199,8 @@ export default {
       recipe: undefined,
       ingredient_count: 0,
       servings: 1,
-      start_time: ""
+      start_time: "",
+      share_uid: window.SHARE_UID
     }
   },
   mounted() {
