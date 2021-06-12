@@ -295,7 +295,7 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
-    file = UserFileViewSerializer(allow_null=True)
+    file = UserFileViewSerializer(allow_null=True, required=False)
 
     def get_ingredients_vue(self, obj):
         return obj.get_instruction_render()
