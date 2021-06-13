@@ -204,6 +204,8 @@ def import_url(request):
                 pass
             except MissingSchema:
                 pass
+            except:
+                pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
 
