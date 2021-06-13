@@ -701,10 +701,10 @@
                     let first = true
                     for (let se of this.shopping_list) {
                         if (first) {
-                            url += `?r=[${se.recipe},${se.servings}]`
+                            url += `?r=[${se.recipe.id},${se.servings}]`
                             first = false
                         } else {
-                            url += `&r=[${se.recipe},${se.servings}]`
+                            url += `&r=[${se.recipe.id},${se.servings}]`
                         }
                     }
                     return url
