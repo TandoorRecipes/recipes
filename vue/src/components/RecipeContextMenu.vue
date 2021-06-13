@@ -30,9 +30,9 @@
         </a>
 
 
-        <a class="dropdown-item" @click="$bvModal.show('id_modal_cook_log')"><i
+        <button class="dropdown-item" @click="$bvModal.show('id_modal_cook_log')"><i
             class="fas fa-clipboard-list fa-fw"></i> {{ $t('Log_Cooking') }}
-        </a>
+        </button>
 
         <button class="dropdown-item" onclick="window.print()"><i
             class="fas fa-print fa-fw"></i> {{ $t('Print') }}
