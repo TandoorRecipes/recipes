@@ -7,7 +7,7 @@
         </td>
     </template>
     <template v-else>
-        <td>
+        <td class="d-print-none">
           <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
           <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
         </td>
@@ -31,7 +31,7 @@
           </span>
 
             <div class="d-none d-print-block">
-              <i class="far fa-comment-alt"></i> {{ ingredient.note }}
+              <i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}
             </div>
           </div>
         </td>

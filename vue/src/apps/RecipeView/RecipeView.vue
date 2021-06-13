@@ -135,7 +135,7 @@
 
     <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
 
-    <div class="row text-center" style="margin-top: 3vh; margin-bottom: 3vh" v-if="share_uid !== ''">
+    <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh" v-if="share_uid !== ''">
       <div class="col col-md-12">
         <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)" >{{$t('Report Abuse')}}</a>
       </div>

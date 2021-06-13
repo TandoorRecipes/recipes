@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="dropdown">
+    <div class="dropdown d-print-none">
       <a class="btn shadow-none" href="#" role="button" id="dropdownMenuLink"
          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-ellipsis-v"></i>
