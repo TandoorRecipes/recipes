@@ -15,7 +15,7 @@
             <b-input-group class="mt-3">
               <b-input class="form-control" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
               <b-input-group-append>
-                <b-button v-b-toggle.collapse_advanced_search variant="primary" class="shadow-none"><i
+                <b-button v-b-toggle.collapse_advanced_search v-bind:class="{'btn-primary': !isAdvancedSettingsSet(), 'btn-danger': isAdvancedSettingsSet()}" class="shadow-none btn"><i
                     class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i class="fas fa-caret-up"
                                                                                               v-if="settings.advanced_search_visible"></i>
                 </b-button>
@@ -383,6 +383,9 @@ export default {
     loadMore: function (page) {
       this.pagination_page++
       this.refreshData(true)
+    },
+    isAdvancedSettingsSet(){
+      return ((this.settings.search_keywords.length + this.settings.search_foods.length + this.settings.search_books.length) > 0)
     }
   }
 }
