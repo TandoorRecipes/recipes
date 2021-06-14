@@ -70,7 +70,7 @@ class RecipeKeeper(Integration):
             for f in self.files:
                 if '.zip' in f['name']:
                     import_zip = ZipFile(f['file'])
-                    self.import_recipe_image(recipe, BytesIO(import_zip.read(file.find("img", class_="recipe-photo").get("src"))))
+                    self.import_recipe_image(recipe, BytesIO(import_zip.read(file.find("img", class_="recipe-photo").get("src"))), filetype='.jpeg')
         except Exception as e:
             pass
 

@@ -81,6 +81,6 @@ class Paprika(Integration):
             recipe.steps.add(step)
 
             if recipe_json.get("photo_data", None):
-                self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])))
+                self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])), filetype='.jpeg')
 
             return recipe

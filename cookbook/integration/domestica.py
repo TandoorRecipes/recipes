@@ -45,7 +45,7 @@ class Domestica(Integration):
         recipe.steps.add(step)
 
         if file['image'] != '':
-            self.import_recipe_image(recipe, BytesIO(base64.b64decode(file['image'].replace('data:image/jpeg;base64,', ''))))
+            self.import_recipe_image(recipe, BytesIO(base64.b64decode(file['image'].replace('data:image/jpeg;base64,', ''))), filetype='.jpeg')
 
         return recipe
 

@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import re
 import uuid
 from io import BytesIO, StringIO
@@ -12,6 +13,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scope
 
 from cookbook.forms import ImportExportBase
+from cookbook.helper.image_processing import get_filetype
 from cookbook.models import Keyword, Recipe
 
 
@@ -59,7 +61,7 @@ class Integration:
                     recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
                     recipe_stream.close()
                     try:
-                        recipe_zip_obj.writestr('image.png', r.image.file.read())
+                        recipe_zip_obj.writestr(f'image{get_filetype(r.image.file.name)}', r.image.file.read())
                     except ValueError:
                         pass
 
@@ -185,13 +187,14 @@ class Integration:
             self.ignored_recipes.append(recipe.name)
 
     @staticmethod
-    def import_recipe_image(recipe, image_file):
+    def import_recipe_image(recipe, image_file, filetype='.jpeg'):
         """
         Adds an image to a recipe naming it correctly
         :param recipe: Recipe object
         :param image_file: ByteIO stream containing the image
+        :param filetype: type of file to write bytes to, default to .jpeg if unknown
         """
-        recipe.image = File(image_file, name=f'{uuid.uuid4()}_{recipe.pk}.png')
+        recipe.image = File(image_file, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
         recipe.save()
 
     def get_recipe_from_file(self, file):
