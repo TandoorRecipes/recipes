@@ -7,6 +7,7 @@ from zipfile import ZipFile
 import imghdr
 from django.utils.translation import gettext as _
 
+from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
@@ -25,7 +26,7 @@ class RecetteTek(Integration):
         recipe_list = [r for r in recipe_json]
 
         return recipe_list
-        
+
     def get_recipe_from_file(self, file):
 
         # Create initial recipe with just a title and a decription
@@ -53,7 +54,7 @@ class RecetteTek(Integration):
                 step.save()
         except Exception as e:
             print(recipe.name, ': failed to import source url ', str(e))
-        
+
         try:
             # Process the ingredients. Assumes 1 ingredient per line.
             for ingredient in file['ingredients'].split('\n'):
@@ -96,7 +97,7 @@ class RecetteTek(Integration):
                 recipe.waiting_time = int(file['cookingTime'])
         except Exception as e:
             print(recipe.name, ': failed to parse cooking time ', str(e))
-            
+
         recipe.save()
 
         # Import the recipe keywords
@@ -110,20 +111,20 @@ class RecetteTek(Integration):
             pass
 
         # TODO: Parse Nutritional Information
-            
+
         # Import the original image from the zip file, if we cannot do that, attempt to download it again.
         try:
-            if file['pictures'][0] !='':
+            if file['pictures'][0] != '':
                 image_file_name = file['pictures'][0].split('/')[-1]
                 for f in self.files:
                     if '.rtk' in f['name']:
                         import_zip = ZipFile(f['file'])
-                        self.import_recipe_image(recipe, BytesIO(import_zip.read(image_file_name)))
+                        self.import_recipe_image(recipe, BytesIO(import_zip.read(image_file_name)), filetype=get_filetype(image_file_name))
             else:
                 if file['originalPicture'] != '':
-                    response=requests.get(file['originalPicture'])
+                    response = requests.get(file['originalPicture'])
                     if imghdr.what(BytesIO(response.content)) != None:
-                        self.import_recipe_image(recipe, BytesIO(response.content))
+                        self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
                     else:
                         raise Exception("Original image failed to download.")
         except Exception as e:

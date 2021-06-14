@@ -26,6 +26,7 @@ from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.schemas.utils import is_list_view
 from rest_framework.viewsets import ViewSetMixin
 
+from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
@@ -394,16 +395,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            img = Image.open(obj.image)
 
-            basewidth = 720
-            wpercent = (basewidth / float(img.size[0]))
-            hsize = int((float(img.size[1]) * float(wpercent)))
-            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-            im_io = io.BytesIO()
-            img.save(im_io, 'PNG', quality=70)
-            obj.image = File(im_io, name=f'{uuid.uuid4()}_{obj.pk}.png')
+            img, filetype = handle_image(request, obj.image)
+            obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
             obj.save()
 
             return Response(serializer.data)
@@ -493,7 +487,6 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space).all()
-
 
 
 class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
