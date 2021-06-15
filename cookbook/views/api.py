@@ -579,9 +579,12 @@ def sync_all(request):
 
 @group_required('user')
 def share_link(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
-    link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-    return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+    if request.space.allow_sharing:
+        recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+        link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
+        return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+    else:
+        return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
 
 @group_required('user')

@@ -42,7 +42,8 @@
            rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t('Export') }}</a>
 
         <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i
-            class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}</button>
+            class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}
+        </button>
       </div>
 
 
@@ -62,8 +63,8 @@
           </label>
           <br/>
           <br/>
-          <b-button variant="success" @click="copyShareLink()" style="margin-right: 1vh; ">{{$t('Copy')}}</b-button>
-          <b-button @click="$bvModal.hide('modal-share-link')">{{$t('Close')}}</b-button>
+          <b-button variant="success" @click="copyShareLink()" style="margin-right: 1vh; ">{{ $t('Copy') }}</b-button>
+          <b-button @click="$bvModal.hide('modal-share-link')">{{ $t('Close') }}</b-button>
           <br/>
           <br/>
         </div>
@@ -76,7 +77,7 @@
 
 <script>
 
-import {resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
+import {makeToast, resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
 import CookLog from "@/components/CookLog";
 import axios from "axios";
 
@@ -106,14 +107,18 @@ export default {
   },
   methods: {
     createShareLink: function () {
-      this.$bvModal.show('modal-share-link')
       axios.get(resolveDjangoUrl('api_share_link', this.recipe.id)).then(result => {
+        this.$bvModal.show('modal-share-link')
         this.recipe_share_link = result.data.link
-        console.log('GET', result)
+      }).catch(err => {
+
+        if (err.response.status === 403) {
+          makeToast(this.$t('Share'), this.$t('Sharing is not enabled for this space.'), 'danger')
+        }
       })
 
     },
-    copyShareLink: function (){
+    copyShareLink: function () {
 
       let share_input = this.$refs.share_link_ref;
       share_input.select();
