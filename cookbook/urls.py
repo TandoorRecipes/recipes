@@ -106,6 +106,7 @@ urlpatterns = [
     path('api/recipe-from-source/', api.recipe_from_source, name='api_recipe_from_source'),
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
+    path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
