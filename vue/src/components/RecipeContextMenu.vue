@@ -41,21 +41,44 @@
         <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank"
            rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t('Export') }}</a>
 
-        <a class="dropdown-item" :href="resolveDjangoUrl('new_share_link', recipe.id)" target="_blank"
-           rel="noopener noreferrer" v-if="recipe.internal"><i class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}</a>
+        <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i
+            class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}</button>
       </div>
 
 
     </div>
 
     <cook-log :recipe="recipe"></cook-log>
+
+    <b-modal id="modal-share-link" v-bind:title="$t('Share')" hide-footer>
+      <div class="row">
+        <div class="col col-md-12">
+
+          <label v-if="recipe_share_link !== undefined">
+
+            {{ $t('Link') }}
+            <input ref="share_link_ref" class="form-control" v-model="recipe_share_link"/>
+
+          </label>
+          <br/>
+          <br/>
+          <b-button variant="success" @click="copyShareLink()" style="margin-right: 1vh; ">{{$t('Copy')}}</b-button>
+          <b-button @click="$bvModal.hide('modal-share-link')">{{$t('Close')}}</b-button>
+          <br/>
+          <br/>
+        </div>
+      </div>
+    </b-modal>
+
+
   </div>
 </template>
 
 <script>
 
-import {ResolveUrlMixin} from "@/utils/utils";
+import {resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
 import CookLog from "@/components/CookLog";
+import axios from "axios";
 
 export default {
   name: 'RecipeContextMenu',
@@ -67,7 +90,8 @@ export default {
   },
   data() {
     return {
-      servings_value: 0
+      servings_value: 0,
+      recipe_share_link: undefined
     }
   },
   props: {
@@ -79,6 +103,22 @@ export default {
   },
   mounted() {
     this.servings_value = ((this.servings === -1) ? this.recipe.servings : this.servings)
+  },
+  methods: {
+    createShareLink: function () {
+      this.$bvModal.show('modal-share-link')
+      axios.get(resolveDjangoUrl('api_share_link', this.recipe.id)).then(result => {
+        this.recipe_share_link = result.data.link
+        console.log('GET', result)
+      })
+
+    },
+    copyShareLink: function (){
+
+      let share_input = this.$refs.share_link_ref;
+      share_input.select();
+      document.execCommand("copy");
+    }
   }
 }
 </script>

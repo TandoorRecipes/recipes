@@ -14,6 +14,7 @@ from django.core.files import File
 from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
@@ -40,7 +41,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -574,6 +575,13 @@ def sync_all(request):
             request, messages.ERROR, _('Error synchronizing with Storage')
         )
         return redirect('list_recipe_import')
+
+
+@group_required('user')
+def share_link(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+    link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
+    return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
 
 
 @group_required('user')
