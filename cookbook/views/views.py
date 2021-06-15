@@ -268,7 +268,7 @@ def meal_plan_entry(request, pk):
 @group_required('user')
 def latest_shopping_list(request):
     sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
-                                                                                                 pace=request.space).order_by(
+                                                                                                 space=request.space).order_by(
         '-created_at').first()
 
     if sl:
