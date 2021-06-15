@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: 2021-05-04 09:02+0000\n"
-"Last-Translator: Jesse <jesse.kamps@pm.me>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"PO-Revision-Date: 2021-06-16 20:12+0000\n"
+"Last-Translator: Sander <dev.tandoor.translate_1623785130@binaryletter.com>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.3\n"
+"X-Generator: Weblate 4.6.2\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:246
@@ -223,21 +223,23 @@ msgstr ""
 
 #: .\cookbook\forms.py:409
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Maximum aantal gebruikers voor deze ruimte bereikt."
 
 #: .\cookbook\forms.py:415
 msgid "Email address already taken!"
-msgstr ""
+msgstr "E-mailadres reeds in gebruik!"
 
 #: .\cookbook\forms.py:423
 msgid ""
 "An email address is not required but if present the invite link will be send "
 "to the user."
 msgstr ""
+"Een e-mailadres is niet vereist, maar indien aanwezig zal de "
+"uitnodigingslink naar de gebruiker worden gestuurd."
 
 #: .\cookbook\forms.py:438
 msgid "Name already taken."
-msgstr ""
+msgstr "Naam reeds in gebruik."
 
 #: .\cookbook\forms.py:449
 msgid "Accept Terms and Privacy"
@@ -248,6 +250,8 @@ msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Om spam te voorkomen werd de gevraagde e-mail niet verzonden. Wacht een paar "
+"minuten en probeer het opnieuw."
 
 #: .\cookbook\helper\permission_helper.py:124
 #: .\cookbook\helper\permission_helper.py:144 .\cookbook\views\views.py:147
@@ -303,6 +307,8 @@ msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Er is een onverwachte fout opgetreden tijdens het importeren. Controleer of "
+"u een geldig bestand hebt geüpload."
 
 #: .\cookbook\integration\integration.py:169
 msgid "The following recipes were ignored because they already existed:"
@@ -373,6 +379,8 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Maximale bestandsopslag voor ruimte in MB. 0 voor onbeperkt, -1 om uploaden "
+"van bestanden uit te schakelen."
 
 #: .\cookbook\models.py:121 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:52
@@ -416,18 +424,16 @@ msgstr "Tijd"
 #: .\cookbook\models.py:340
 #: .\cookbook\templates\forms\edit_internal_recipe.html:204
 #: .\cookbook\templates\forms\edit_internal_recipe.html:218
-#, fuzzy
-#| msgid "File ID"
 msgid "File"
-msgstr "Bestands ID"
+msgstr "Bestand"
 
 #: .\cookbook\serializer.py:109
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Bestandsuploads zijn niet ingeschakeld voor deze Ruimte."
 
 #: .\cookbook\serializer.py:117
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "U heeft de uploadlimiet bereikt."
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\books.html:36
 #: .\cookbook\templates\generic\edit_template.html:6
@@ -468,23 +474,23 @@ msgstr "Rapporteer een bug"
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:9
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "E-mailadressen"
 
 #: .\cookbook\templates\account\email.html:11
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "De volgende e-mailadressen zijn aan uw account gekoppeld:"
 
 #: .\cookbook\templates\account\email.html:28
 msgid "Verified"
-msgstr ""
+msgstr "Geverifieerd"
 
 #: .\cookbook\templates\account\email.html:30
 msgid "Unverified"
-msgstr ""
+msgstr "Ongeverifieerd"
 
 #: .\cookbook\templates\account\email.html:32
 msgid "Primary"
-msgstr ""
+msgstr "Primair"
 
 #: .\cookbook\templates\account\email.html:39
 #, fuzzy
@@ -494,7 +500,7 @@ msgstr "Stel in als kop"
 
 #: .\cookbook\templates\account\email.html:41
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Verificatie opnieuw verzenden"
 
 #: .\cookbook\templates\account\email.html:42
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -502,33 +508,33 @@ msgid "Remove"
 msgstr "Verwijder"
 
 #: .\cookbook\templates\account\email.html:50
-#, fuzzy
-#| msgid "Warning"
 msgid "Warning:"
-msgstr "Waarschuwing"
+msgstr "Waarschuwing:"
 
 #: .\cookbook\templates\account\email.html:50
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"U hebt momenteel geen e-mailadres ingesteld. U zou een e-mailadres moeten "
+"toevoegen zodat u meldingen kunt ontvangen, uw wachtwoord kunt resetten, enz."
 
 #: .\cookbook\templates\account\email.html:56
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "E-mailadres toevoegen"
 
 #: .\cookbook\templates\account\email.html:61
 msgid "Add E-mail"
-msgstr ""
+msgstr "E-mail toevoegen"
 
 #: .\cookbook\templates\account\email.html:71
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Wilt u het geselecteerde e-mailadres echt verwijderen?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Bevestig e-mailadres"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -538,6 +544,10 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
+"Bevestig dat\n"
+" <a href=\"mailto:%(email)s\">%(email)s</a> een e-mailadres is voor "
+"gebruiker %(user_display)s\n"
+" ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:21
