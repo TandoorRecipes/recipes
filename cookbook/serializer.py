@@ -283,6 +283,10 @@ class IngredientSerializer(WritableNestedModelSerializer):
     unit = UnitSerializer(allow_null=True)
     amount = CustomDecimalField()
 
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = Ingredient
         fields = (
@@ -296,6 +300,10 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
     file = UserFileViewSerializer(allow_null=True, required=False)
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
 
     def get_ingredients_vue(self, obj):
         return obj.get_instruction_render()
@@ -312,6 +320,11 @@ class StepSerializer(WritableNestedModelSerializer):
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = NutritionInformation
         fields = ('id', 'carbohydrates', 'fats', 'proteins', 'calories', 'source')
