@@ -51,8 +51,8 @@ def get_random_recipe(space_1, u1_s1):
         internal=True,
     )
 
-    s1 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), )
-    s2 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), )
+    s1 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), space=space_1, )
+    s2 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), space=space_1, )
 
     r.steps.add(s1)
     r.steps.add(s2)
@@ -64,6 +64,7 @@ def get_random_recipe(space_1, u1_s1):
                 food=Food.objects.create(name=uuid.uuid4(), space=space_1, ),
                 unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
                 note=uuid.uuid4(),
+                space=space_1,
             )
         )
 
@@ -73,6 +74,7 @@ def get_random_recipe(space_1, u1_s1):
                 food=Food.objects.create(name=uuid.uuid4(), space=space_1, ),
                 unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
                 note=uuid.uuid4(),
+                space=space_1,
             )
         )
 

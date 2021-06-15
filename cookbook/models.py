@@ -315,14 +315,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
 
-    objects = ScopedManager(space='step__recipe__space')
-
-    @staticmethod
-    def get_space_key():
-        return 'step', 'recipe', 'space'
-
-    def get_space(self):
-        return self.step_set.first().recipe_set.first().space
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     def __str__(self):
         return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
@@ -349,14 +343,8 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
 
-    objects = ScopedManager(space='recipe__space')
-
-    @staticmethod
-    def get_space_key():
-        return 'recipe', 'space'
-
-    def get_space(self):
-        return self.recipe_set.first().space
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     def get_instruction_render(self):
         from cookbook.helper.template_helper import render_instructions
@@ -377,17 +365,11 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         max_length=512, default="", null=True, blank=True
     )
 
-    objects = ScopedManager(space='recipe__space')
-
-    @staticmethod
-    def get_space_key():
-        return 'recipe', 'space'
-
-    def get_space(self):
-        return self.recipe_set.first().space
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     def __str__(self):
-        return 'Nutrition'
+        return f'Nutrition {self.pk}'
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
