@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.core.cache import caches
 from gettext import gettext as _
 
+from cookbook.models import InviteLink
+
 
 class AllAuthCustomAdapter(DefaultAccountAdapter):
 
@@ -14,7 +16,11 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         """
         Whether to allow sign ups.
         """
-        if request.resolver_match.view_name == 'account_signup' and not settings.ENABLE_SIGNUP:
+        signup_token = False
+        if 'signup_token' in request.session and InviteLink.objects.filter(valid_until__gte=datetime.datetime.today(), used_by=None, uuid=request.session['signup_token']).exists():
+            signup_token = True
+
+        if request.resolver_match.view_name == 'account_signup' and not settings.ENABLE_SIGNUP and not signup_token:
             return False
         else:
             return super(AllAuthCustomAdapter, self).is_open_for_signup(request)
