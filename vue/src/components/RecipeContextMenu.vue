@@ -15,9 +15,11 @@
         <a class="dropdown-item" :href="resolveDjangoUrl('edit_convert_recipe', recipe.id)" v-if="!recipe.internal"><i
             class="fas fa-exchange-alt fa-fw"></i> {{ $t('convert_internal') }}</a>
 
-        <button class="dropdown-item" @click="$bvModal.show('id_modal_add_book')">
-          <i class="fas fa-bookmark fa-fw"></i> {{ $t('Add_to_Book') }}
-        </button>
+        <a href="#">
+          <button class="dropdown-item" @click="$bvModal.show(`id_modal_add_book_${modal_id}`)">
+            <i class="fas fa-bookmark fa-fw"></i> {{ $t('Add_to_Book') }}
+          </button>
+        </a>
 
         <a class="dropdown-item" :href="`${resolveDjangoUrl('view_shopping') }?r=[${recipe.id},${servings_value}]`"
            v-if="recipe.internal" target="_blank" rel="noopener noreferrer">
@@ -29,10 +31,11 @@
             class="fas fa-calendar fa-fw"></i> {{ $t('Add_to_Plan') }}
         </a>
 
-
-        <button class="dropdown-item" @click="$bvModal.show('id_modal_cook_log')"><i
-            class="fas fa-clipboard-list fa-fw"></i> {{ $t('Log_Cooking') }}
-        </button>
+        <a href="#">
+          <button class="dropdown-item" @click="$bvModal.show(`id_modal_cook_log_${modal_id}`)"><i
+              class="fas fa-clipboard-list fa-fw"></i> {{ $t('Log_Cooking') }}
+          </button>
+        </a>
 
         <button class="dropdown-item" onclick="window.print()"><i
             class="fas fa-print fa-fw"></i> {{ $t('Print') }}
@@ -41,34 +44,30 @@
         <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank"
            rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t('Export') }}</a>
 
-        <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i
-            class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}
-        </button>
+        <a href="#">
+          <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i
+              class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}
+          </button>
+        </a>
       </div>
 
 
     </div>
 
-    <cook-log :recipe="recipe"></cook-log>
+    <cook-log :recipe="recipe" :modal_id="modal_id"></cook-log>
+    <add-recipe-to-book :recipe="recipe" :modal_id="modal_id"></add-recipe-to-book>
 
-    <b-modal id="modal-share-link" v-bind:title="$t('Share')" hide-footer>
+    <b-modal :id="`modal-share-link_${modal_id}`" v-bind:title="$t('Share')" hide-footer>
       <div class="row">
         <div class="col col-md-12">
-
-          <label v-if="recipe_share_link !== undefined">
-
-            {{ $t('Link') }}
-            <input ref="share_link_ref" class="form-control" v-model="recipe_share_link"/>
-
-          </label>
-          <br/>
-          <br/>
-          <b-button variant="success" @click="copyShareLink()" style="margin-right: 1vh; ">{{ $t('Copy') }}</b-button>
-          <b-button @click="$bvModal.hide('modal-share-link')">{{ $t('Close') }}</b-button>
-          <br/>
-          <br/>
+          <label v-if="recipe_share_link !== undefined">{{ $t('Link') }}</label>
+          <input ref="share_link_ref" class="form-control" v-model="recipe_share_link"/>
+          <b-button class="mt-2 mb-3" variant="secondary" @click="$bvModal.hide(`modal-share-link_${modal_id}`)">{{ $t('Close') }}</b-button>
+          <b-button class="mt-2 mb-3 ml-2" variant="primary" @click="copyShareLink()">{{ $t('Copy') }}</b-button>
+          <a :href="`whatsapp://send?text=${recipe_share_link}`" data-action="share/whatsapp/share"><b-button class="mt-2 mb-3 ml-2" >Test</b-button></a>
         </div>
       </div>
+
     </b-modal>
 
 
@@ -80,6 +79,7 @@
 import {makeToast, resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
 import CookLog from "@/components/CookLog";
 import axios from "axios";
+import AddRecipeToBook from "./AddRecipeToBook";
 
 export default {
   name: 'RecipeContextMenu',
@@ -87,12 +87,14 @@ export default {
     ResolveUrlMixin
   ],
   components: {
+    AddRecipeToBook,
     CookLog
   },
   data() {
     return {
       servings_value: 0,
-      recipe_share_link: undefined
+      recipe_share_link: undefined,
+      modal_id: this.recipe.id + Math.round(Math.random() * 100000)
     }
   },
   props: {
@@ -108,7 +110,7 @@ export default {
   methods: {
     createShareLink: function () {
       axios.get(resolveDjangoUrl('api_share_link', this.recipe.id)).then(result => {
-        this.$bvModal.show('modal-share-link')
+        this.$bvModal.show(`modal-share-link_${this.modal_id}`)
         this.recipe_share_link = result.data.link
       }).catch(err => {
 

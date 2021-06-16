@@ -5,12 +5,12 @@
     <a :href="clickUrl()">
       <b-card-img-lazy style="height: 15vh; object-fit: cover" :src=recipe_image v-bind:alt="$t('Recipe_Image')"
                        top></b-card-img-lazy>
-
       <div class="card-img-overlay h-100 d-flex flex-column justify-content-right"
            style="float:right; text-align: right; padding-top: 10px; padding-right: 5px">
-        <recipe-context-menu :recipe="recipe" style="float:right" v-if="recipe !== null"></recipe-context-menu>
+        <a><recipe-context-menu :recipe="recipe" style="float:right" v-if="recipe !== null"></recipe-context-menu></a>
       </div>
     </a>
+
 
     <b-card-body>
       <h5><a :href="clickUrl()">
@@ -23,7 +23,10 @@
           {{ recipe.description }}
           <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
           <b-badge pill variant="info" v-if="!recipe.internal">{{ $t('External') }}</b-badge>
-          <b-badge pill variant="success" v-if="Date.parse(recipe.created_at) > new Date(Date.now() - (7 * (1000 * 60 * 60 * 24)))">{{ $t('New') }}</b-badge>
+          <b-badge pill variant="success"
+                   v-if="Date.parse(recipe.created_at) > new Date(Date.now() - (7 * (1000 * 60 * 60 * 24)))">
+            {{ $t('New') }}
+          </b-badge>
         </template>
         <template v-else>{{ meal_plan.note }}</template>
       </b-card-text>
