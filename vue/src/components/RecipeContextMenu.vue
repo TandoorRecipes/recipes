@@ -64,7 +64,7 @@
           <input ref="share_link_ref" class="form-control" v-model="recipe_share_link"/>
           <b-button class="mt-2 mb-3" variant="secondary" @click="$bvModal.hide(`modal-share-link_${modal_id}`)">{{ $t('Close') }}</b-button>
           <b-button class="mt-2 mb-3 ml-2" variant="primary" @click="copyShareLink()">{{ $t('Copy') }}</b-button>
-          <a :href="`whatsapp://send?text=${recipe_share_link}`" data-action="share/whatsapp/share"><b-button class="mt-2 mb-3 ml-2" >Test</b-button></a>
+          <b-button class="mt-2 mb-3 ml-2 float-right" variant="success" @click="shareIntend()">{{ $t('Share') }} <i class="fa fa-share-alt"></i></b-button>
         </div>
       </div>
 
@@ -121,10 +121,17 @@ export default {
 
     },
     copyShareLink: function () {
-
       let share_input = this.$refs.share_link_ref;
       share_input.select();
       document.execCommand("copy");
+    },
+    shareIntend: function () {
+      let shareData = {
+        title: this.recipe.name,
+        text: this.$t('Check out this recipe!'),
+        url: this.recipe_share_link
+      }
+      navigator.share(shareData)
     }
   }
 }
