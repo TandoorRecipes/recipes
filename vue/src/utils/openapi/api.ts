@@ -195,6 +195,18 @@ export interface ImportLog {
     keyword?: ImportLogKeyword;
     /**
      * 
+     * @type {number}
+     * @memberof ImportLog
+     */
+    total_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLog
+     */
+    imported_recipes?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ImportLog
      */
@@ -1031,6 +1043,12 @@ export interface RecipeSteps {
      * @memberof RecipeSteps
      */
     show_as_header?: boolean;
+    /**
+     * 
+     * @type {StepFile}
+     * @memberof RecipeSteps
+     */
+    file?: StepFile | null;
 }
 
 /**
@@ -1039,7 +1057,8 @@ export interface RecipeSteps {
     */
 export enum RecipeStepsTypeEnum {
     Text = 'TEXT',
-    Time = 'TIME'
+    Time = 'TIME',
+    File = 'FILE'
 }
 
 /**
@@ -1429,6 +1448,12 @@ export interface Step {
      * @memberof Step
      */
     show_as_header?: boolean;
+    /**
+     * 
+     * @type {StepFile}
+     * @memberof Step
+     */
+    file?: StepFile | null;
 }
 
 /**
@@ -1437,9 +1462,35 @@ export interface Step {
     */
 export enum StepTypeEnum {
     Text = 'TEXT',
-    Time = 'TIME'
+    Time = 'TIME',
+    File = 'FILE'
 }
 
+/**
+ * 
+ * @export
+ * @interface StepFile
+ */
+export interface StepFile {
+    /**
+     * 
+     * @type {string}
+     * @memberof StepFile
+     */
+    name: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof StepFile
+     */
+    file?: any;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepFile
+     */
+    id?: number;
+}
 /**
  * 
  * @export
