@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: 2021-04-11 15:23+0000\n"
+"PO-Revision-Date: 2021-06-18 23:12+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.3\n"
+"X-Generator: Weblate 4.6.2\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:246
@@ -470,7 +470,7 @@ msgstr "Segnala un Bug"
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:9
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "Indirizzi email"
 
 #: .\cookbook\templates\account\email.html:11
 msgid "The following e-mail addresses are associated with your account:"
@@ -478,15 +478,15 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:28
 msgid "Verified"
-msgstr ""
+msgstr "Verificato"
 
 #: .\cookbook\templates\account\email.html:30
 msgid "Unverified"
-msgstr ""
+msgstr "Non verificato"
 
 #: .\cookbook\templates\account\email.html:32
 msgid "Primary"
-msgstr ""
+msgstr "Principale"
 
 #: .\cookbook\templates\account\email.html:39
 #, fuzzy
