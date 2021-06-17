@@ -591,6 +591,10 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
     unit = UnitExportSerializer(allow_null=True)
     amount = CustomDecimalField()
 
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = Ingredient
         fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
@@ -598,6 +602,10 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
 
 class StepExportSerializer(WritableNestedModelSerializer):
     ingredients = IngredientExportSerializer(many=True)
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
 
     class Meta:
         model = Step
