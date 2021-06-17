@@ -55,7 +55,7 @@ class Paprika(Integration):
                 pass
 
             step = Step.objects.create(
-                instruction=instructions
+                instruction=instructions, space=self.request.space,
             )
 
             if len(recipe_json['description'].strip()) > 500:
@@ -73,7 +73,7 @@ class Paprika(Integration):
                         f = get_food(ingredient, self.request.space)
                         u = get_unit(unit, self.request.space)
                         step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note
+                            food=f, unit=u, amount=amount, note=note, space=self.request.space,
                         ))
             except AttributeError:
                 pass

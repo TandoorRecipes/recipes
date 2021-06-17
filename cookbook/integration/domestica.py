@@ -28,7 +28,7 @@ class Domestica(Integration):
         recipe.save()
 
         step = Step.objects.create(
-            instruction=file['directions']
+            instruction=file['directions'], space=self.request.space,
         )
 
         if file['source'] != '':
@@ -40,7 +40,7 @@ class Domestica(Integration):
                 f = get_food(ingredient, self.request.space)
                 u = get_unit(unit, self.request.space)
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note
+                    food=f, unit=u, amount=amount, note=note, space=self.request.space,
                 ))
         recipe.steps.add(step)
 

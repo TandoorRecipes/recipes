@@ -45,7 +45,7 @@ class RecetteTek(Integration):
         if not instructions:
             instructions = ''
 
-        step = Step.objects.create(instruction=instructions)
+        step = Step.objects.create(instruction=instructions, space=self.request.space,)
 
         # Append the original import url to the step (if it exists)
         try:
@@ -63,7 +63,7 @@ class RecetteTek(Integration):
                     f = get_food(ingredient, self.request.space)
                     u = get_unit(unit, self.request.space)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
+                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))
         except Exception as e:
             print(recipe.name, ': failed to parse recipe ingredients ', str(e))

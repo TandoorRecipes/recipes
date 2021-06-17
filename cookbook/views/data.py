@@ -143,7 +143,7 @@ def import_url(request):
         )
 
         step = Step.objects.create(
-            instruction=data['recipeInstructions'],
+            instruction=data['recipeInstructions'], space=request.space,
         )
 
         recipe.steps.add(step)
@@ -156,7 +156,7 @@ def import_url(request):
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
-            ingredient = Ingredient()
+            ingredient = Ingredient(space=request.space,)
 
             if ing['ingredient']['text'] != '':
                 ingredient.food, f_created = Food.objects.get_or_create(

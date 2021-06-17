@@ -533,7 +533,7 @@ class ImportLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ImportLog
-        fields = ('id', 'type', 'msg', 'running', 'keyword', 'created_by', 'created_at')
+        fields = ('id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
 
 

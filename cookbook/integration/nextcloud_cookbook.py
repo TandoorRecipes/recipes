@@ -30,7 +30,7 @@ class NextcloudCookbook(Integration):
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
             step = Step.objects.create(
-                instruction=s
+                instruction=s, space=self.request.space,
             )
             if not ingredients_added:
                 if len(recipe_json['description'].strip()) > 500:
@@ -43,7 +43,7 @@ class NextcloudCookbook(Integration):
                     f = get_food(ingredient, self.request.space)
                     u = get_unit(unit, self.request.space)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
+                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))
             recipe.steps.add(step)
 

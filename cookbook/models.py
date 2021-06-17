@@ -665,6 +665,10 @@ class ImportLog(models.Model, PermissionModelMixin):
     running = models.BooleanField(default=True)
     msg = models.TextField(default="")
     keyword = models.ForeignKey(Keyword, null=True, blank=True, on_delete=models.SET_NULL)
+
+    total_recipes = models.IntegerField(default=0)
+    imported_recipes = models.IntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
