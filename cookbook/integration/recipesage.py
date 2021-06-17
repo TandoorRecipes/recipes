@@ -36,7 +36,7 @@ class RecipeSage(Integration):
         ingredients_added = False
         for s in file['recipeInstructions']:
             step = Step.objects.create(
-                instruction=s['text']
+                instruction=s['text'], space=self.request.space,
             )
             if not ingredients_added:
                 ingredients_added = True
@@ -46,7 +46,7 @@ class RecipeSage(Integration):
                     f = get_food(ingredient, self.request.space)
                     u = get_unit(unit, self.request.space)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
+                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))
             recipe.steps.add(step)
 

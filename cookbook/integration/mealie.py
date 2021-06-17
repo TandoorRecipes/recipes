@@ -12,7 +12,7 @@ from cookbook.models import Recipe, Step, Food, Unit, Ingredient
 class Mealie(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        return re.match(r'^recipes/([A-Za-z\d-])+.json$', zip_info_object.filename)
+        return re.match(r'^recipes/([A-Za-z\d-])+/([A-Za-z\d-])+.json$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
@@ -26,9 +26,9 @@ class Mealie(Integration):
         # TODO parse times (given in PT2H3M )
 
         ingredients_added = False
-        for s in recipe_json['recipeInstructions']:
+        for s in recipe_json['recipe_instructions']:
             step = Step.objects.create(
-                instruction=s['text']
+                instruction=s['text'], space=self.request.space,
             )
             if not ingredients_added:
                 ingredients_added = True
@@ -36,21 +36,31 @@ class Mealie(Integration):
                 if len(recipe_json['description'].strip()) > 500:
                     step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
 
-                for ingredient in recipe_json['recipeIngredient']:
-                    amount, unit, ingredient, note = parse(ingredient)
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
-                    ))
+                for ingredient in recipe_json['recipe_ingredient']:
+                    try:
+                        if ingredient['food']:
+                            f = get_food(ingredient['food'], self.request.space)
+                            u = get_unit(ingredient['unit'], self.request.space)
+                            amount = ingredient['quantity']
+                            note = ingredient['note']
+                        else:
+                            amount, unit, ingredient, note = parse(ingredient['note'])
+                            f = get_food(ingredient, self.request.space)
+                            u = get_unit(unit, self.request.space)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                        ))
+                    except:
+                        pass
             recipe.steps.add(step)
 
         for f in self.files:
             if '.zip' in f['name']:
                 import_zip = ZipFile(f['file'])
-                for z in import_zip.filelist:
-                    if re.match(f'^images/{recipe_json["slug"]}.jpg$', z.filename):
-                        self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
+                try:
+                    self.import_recipe_image(recipe, BytesIO(import_zip.read(f'recipes/{recipe_json["slug"]}/images/min-original.webp')), filetype=get_filetype(f'recipes/{recipe_json["slug"]}/images/original'))
+                except:
+                    pass
 
         return recipe
 

@@ -41,7 +41,7 @@ class RecipeKeeper(Integration):
         except AttributeError:
             pass
 
-        step = Step.objects.create(instruction='')
+        step = Step.objects.create(instruction='', space=self.request.space,)
 
         for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
             if ingredient.text == "":
@@ -50,7 +50,7 @@ class RecipeKeeper(Integration):
             f = get_food(ingredient, self.request.space)
             u = get_unit(unit, self.request.space)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note
+                food=f, unit=u, amount=amount, note=note, space=self.request.space,
             ))
 
         for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
