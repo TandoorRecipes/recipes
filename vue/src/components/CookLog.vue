@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <b-modal class="modal" id="id_modal_cook_log" :title="$t('Log_Recipe_Cooking')" :ok-title="$t('Save')"
+    <b-modal class="modal" :id="`id_modal_cook_log_${modal_id}`" :title="$t('Log_Recipe_Cooking')" :ok-title="$t('Save')"
              :cancel-title="$t('Close')" @ok="logCook()">
 
       <p>{{ $t('all_fields_optional') }}</p>
@@ -38,6 +38,7 @@ export default {
   name: 'CookLog',
   props: {
     recipe: Object,
+    modal_id: Number
   },
   data() {
     return {
