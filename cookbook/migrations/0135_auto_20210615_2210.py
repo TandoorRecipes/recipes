@@ -45,19 +45,4 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cookbook.space', null=True),
         ),
         migrations.RunPython(migrate_spaces),
-        migrations.AlterField(
-            model_name='ingredient',
-            name='space',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cookbook.space'),
-        ),
-        migrations.AlterField(
-            model_name='nutritioninformation',
-            name='space',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cookbook.space'),
-        ),
-        migrations.AlterField(
-            model_name='step',
-            name='space',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cookbook.space'),
-        ),
     ]
