@@ -303,8 +303,6 @@ def user_settings(request):
     up = request.user.userpreference
 
     user_name_form = UserNameForm(instance=request.user)
-    password_form = PasswordChangeForm(request.user)
-    password_form.fields['old_password'].widget.attrs.pop("autofocus", None)
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
@@ -338,12 +336,6 @@ def user_settings(request):
                 request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
-        if 'password_form' in request.POST:
-            password_form = PasswordChangeForm(request.user, request.POST)
-            if password_form.is_valid():
-                user = password_form.save()
-                update_session_auth_hash(request, user)
-
     if up:
         preference_form = UserPreferenceForm(instance=up)
     else:
@@ -355,7 +347,6 @@ def user_settings(request):
     return render(request, 'settings.html', {
         'preference_form': preference_form,
         'user_name_form': user_name_form,
-        'password_form': password_form,
         'api_token': api_token,
     })
 
