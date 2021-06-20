@@ -188,16 +188,19 @@ def import_url(request):
             try:
                 response = requests.get(data['image'])
 
-                img, filetype = handle_image(request, response.content)
+                img, filetype = handle_image(request, BytesIO(response.content))
                 recipe.image = File(
                     img, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}'
                 )
                 recipe.save()
-            except UnidentifiedImageError:
+            except UnidentifiedImageError as e:
+                print(e)
                 pass
-            except MissingSchema:
+            except MissingSchema as e:
+                print(e)
                 pass
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
