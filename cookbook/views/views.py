@@ -14,7 +14,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import Avg, Q, Sum
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -27,6 +27,7 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
                             UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
+from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
@@ -542,6 +543,7 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
 
 
 def test2(request):

@@ -57,6 +57,8 @@ def test_ingredient_parser():
         "400g unsalted butter": (400, "g", "butter", "unsalted"),
         "2L Wasser": (2, "L", "Wasser", ""),
         "1 (16 ounce) package dry lentils, rinsed": (1, "package", "dry lentils, rinsed", "16 ounce"),
+        "2-3 c Water": (2, "c", "Water", "2-3"),
+        "Pane (raffermo o secco) 80 g": (0, "", "Pane 80 g", "raffermo o secco"), #TODO this is actually not a good result but currently expected
     }
     # for German you could say that if an ingredient does not have
     # an amount # and it starts with a lowercase letter, then that

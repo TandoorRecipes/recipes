@@ -23,6 +23,7 @@ def parse_fraction(x):
 def parse_amount(x):
     amount = 0
     unit = ''
+    note = ''
 
     did_check_frac = False
     end = 0
@@ -52,9 +53,10 @@ def parse_amount(x):
             except ValueError:
                 unit = x[end:]
 
-    if unit.startswith('('):  # i dont know any unit that starts with ( so its likely an alternative like 1L (500ml) Water
+    if unit.startswith('(') or unit.startswith('-'):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
         unit = ''
-    return amount, unit
+        note = x
+    return amount, unit, note
 
 
 def parse_ingredient_with_comma(tokens):
@@ -105,6 +107,7 @@ def parse(x):
     unit = ''
     ingredient = ''
     note = ''
+    unit_note = ''
 
     # if the string contains parenthesis early on remove it and place it at the end
     # because its likely some kind of note
@@ -119,8 +122,7 @@ def parse(x):
     else:
         try:
             # try to parse first argument as amount
-            amount, unit = parse_amount(tokens[0])
-            print('test', unit)
+            amount, unit, unit_note = parse_amount(tokens[0])
             # only try to parse second argument as amount if there are at least
             # three arguments if it already has a unit there can't be
             # a fraction for the amount
@@ -167,6 +169,9 @@ def parse(x):
                 ingredient, note = parse_ingredient(tokens)
             except ValueError:
                 ingredient = ' '.join(tokens[1:])
+
+    if unit_note not in note:
+        note += ' ' + unit_note
     return amount, unit.strip(), ingredient.strip(), note.strip()
 
 
