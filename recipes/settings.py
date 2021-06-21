@@ -126,6 +126,9 @@ ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
     os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
+SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', None)
+SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_DOMAIN', 'sessionid')
+
 ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
 ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
