@@ -12,9 +12,11 @@
 
 {% block content %}
 
-    <h3>
-        {% trans 'Settings' %}
-    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'view_settings' %}">{% trans 'Settings' %}</a></li>
+        </ol>
+    </nav>
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 2vh">
