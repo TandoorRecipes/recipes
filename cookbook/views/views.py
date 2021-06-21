@@ -115,7 +115,7 @@ def no_space(request):
             created_space = Space.objects.create(
                 name=create_form.cleaned_data['name'],
                 created_by=request.user,
-                max_file_storage_mb=settings.SPACE_DEFAULT_FILES,
+                max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
                 max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
                 max_users=settings.SPACE_DEFAULT_MAX_USERS,
             )
