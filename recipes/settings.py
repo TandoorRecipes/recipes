@@ -133,7 +133,7 @@ except ValueError:
         os.getenv('SOCIALACCOUNT_PROVIDERS').replace("'", '"') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', None)
-SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_DOMAIN', 'sessionid')
+SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_NAME', 'sessionid')
 
 ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
