@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import ast
+import json
 import os
 import random
 import re
@@ -124,8 +125,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 90
 ACCOUNT_LOGOUT_ON_GET = True
 
-SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
-    os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+try:
+    SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
+        os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+except ValueError:
+    SOCIALACCOUNT_PROVIDERS = json.loads(
+        os.getenv('SOCIALACCOUNT_PROVIDERS').replace("'", '"') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', None)
 SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_DOMAIN', 'sessionid')
