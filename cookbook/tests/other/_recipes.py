@@ -1501,7 +1501,7 @@ GIALLOZAFFERANO = {
                 "text": "Pane 80 g",
                 "id": 24720
             },
-            "note": "(raffermo o secco)",
+            "note": "raffermo o secco",
             "original": "Pane (raffermo o secco) 80 g"
         },
         {
