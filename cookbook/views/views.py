@@ -118,6 +118,7 @@ def no_space(request):
                 max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
                 max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
                 max_users=settings.SPACE_DEFAULT_MAX_USERS,
+                allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
             request.user.userpreference.space = created_space
             request.user.userpreference.save()
