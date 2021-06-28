@@ -67,7 +67,7 @@
                 <img src="{% if recipe.image %}{{ recipe.image.url }}{% endif %}" id="id_image"
                      class="img img-fluid img-responsive"
                      style="max-height: 20vh">
-                <input type="file" @change="imageChanged">
+                <input class="mt-2" type="file" @change="imageChanged">
             </div>
             <div class="col-md-6">
                 <label for="id_name"> {% trans 'Preparation Time' %}</label>

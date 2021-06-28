@@ -773,7 +773,7 @@ COOKPAD = {
                 "text": "Water",
                 "id": 49092
             },
-            "note": "",
+            "note": "2-3",
             "original": "2-3 c Water"
         },
         {
@@ -1498,10 +1498,10 @@ GIALLOZAFFERANO = {
                 "id": 64900
             },
             "ingredient": {
-                "text": "Pane (raffermo o secco) 80 g",
+                "text": "Pane 80 g",
                 "id": 24720
             },
-            "note": "",
+            "note": "raffermo o secco",
             "original": "Pane (raffermo o secco) 80 g"
         },
         {
