@@ -7,7 +7,9 @@
                        top></b-card-img-lazy>
       <div class="card-img-overlay h-100 d-flex flex-column justify-content-right"
            style="float:right; text-align: right; padding-top: 10px; padding-right: 5px">
-        <a><recipe-context-menu :recipe="recipe" style="float:right" v-if="recipe !== null"></recipe-context-menu></a>
+        <a>
+          <recipe-context-menu :recipe="recipe" style="float:right" v-if="recipe !== null"></recipe-context-menu>
+        </a>
       </div>
     </a>
 
@@ -21,12 +23,18 @@
       <b-card-text style="text-overflow: ellipsis;">
         <template v-if="recipe !== null">
           {{ recipe.description }}
+
+          <recipe-rating :recipe="recipe"></recipe-rating> <br/> <!-- TODO UGLY! -->
+          <last-cooked :recipe="recipe"></last-cooked>
           <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
+
+
           <b-badge pill variant="info" v-if="!recipe.internal">{{ $t('External') }}</b-badge>
           <b-badge pill variant="success"
                    v-if="Date.parse(recipe.created_at) > new Date(Date.now() - (7 * (1000 * 60 * 60 * 24)))">
             {{ $t('New') }}
           </b-badge>
+
         </template>
         <template v-else>{{ meal_plan.note }}</template>
       </b-card-text>
@@ -44,13 +52,19 @@
 import RecipeContextMenu from "@/components/RecipeContextMenu";
 import Keywords from "@/components/Keywords";
 import {resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
+import RecipeRating from "@/components/RecipeRating";
+import moment from "moment/moment";
+import Vue from "vue";
+import LastCooked from "@/components/LastCooked";
+
+Vue.prototype.moment = moment
 
 export default {
   name: "RecipeCard",
   mixins: [
     ResolveUrlMixin,
   ],
-  components: {Keywords, RecipeContextMenu},
+  components: {LastCooked, RecipeRating, Keywords, RecipeContextMenu},
   props: {
     recipe: Object,
     meal_plan: Object,
