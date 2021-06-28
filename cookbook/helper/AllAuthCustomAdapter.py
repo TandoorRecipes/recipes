@@ -20,7 +20,7 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         if 'signup_token' in request.session and InviteLink.objects.filter(valid_until__gte=datetime.datetime.today(), used_by=None, uuid=request.session['signup_token']).exists():
             signup_token = True
 
-        if request.resolver_match.view_name == 'account_signup' and not settings.ENABLE_SIGNUP and not signup_token:
+        if (request.resolver_match.view_name == 'account_signup' or request.resolver_match.view_name == 'socialaccount_signup') and not settings.ENABLE_SIGNUP and not signup_token:
             return False
         else:
             return super(AllAuthCustomAdapter, self).is_open_for_signup(request)
