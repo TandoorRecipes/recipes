@@ -55,7 +55,7 @@ def recipe_rating(recipe, user):
     if not user.is_authenticated:
         return ''
     rating = recipe.cooklog_set \
-        .filter(created_by=user, rating__gte=0) \
+        .filter(created_by=user, rating__gt=0) \
         .aggregate(Avg('rating'))
     if rating['rating__avg']:
 
