@@ -64,7 +64,7 @@ def recipe_rating(recipe, user):
             rating_stars = rating_stars + '<i class="fas fa-star fa-xs"></i>'
 
         if rating['rating__avg'] % 1 >= 0.5:
-            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'  # noqa: E501
+            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'
 
         rating_stars += '</span>'
 
