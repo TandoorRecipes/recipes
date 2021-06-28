@@ -11,6 +11,13 @@
         </div>
       </div>
 
+      <div class="row text-center">
+        <div class="col col-md-12">
+          <recipe-rating :recipe="recipe"></recipe-rating> <br/>
+          <last-cooked :recipe="recipe"></last-cooked>
+        </div>
+      </div>
+
       <div class="my-auto">
         <div class="col-12" style="text-align: center">
           <i>{{ recipe.description }}</i>
@@ -166,6 +173,8 @@ import moment from 'moment'
 import Keywords from "@/components/Keywords";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import AddRecipeToBook from "@/components/AddRecipeToBook";
+import RecipeRating from "@/components/RecipeRating";
+import LastCooked from "@/components/LastCooked";
 
 Vue.prototype.moment = moment
 
@@ -178,6 +187,8 @@ export default {
     ToastMixin,
   ],
   components: {
+    LastCooked,
+    RecipeRating,
     PdfViewer,
     ImageViewer,
     Ingredient,

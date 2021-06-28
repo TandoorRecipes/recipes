@@ -2,7 +2,7 @@ from decimal import Decimal
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Sum
+from django.db.models import QuerySet, Sum, Avg
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
@@ -330,8 +330,24 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
         fields = ('id', 'carbohydrates', 'fats', 'proteins', 'calories', 'source')
 
 
-class RecipeOverviewSerializer(WritableNestedModelSerializer):
+class RecipeBaseSerializer(WritableNestedModelSerializer):
+    def get_recipe_rating(self, obj):
+        rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
+        if rating['rating__avg']:
+            return rating['rating__avg']
+        return 0
+
+    def get_recipe_last_cooked(self, obj):
+        last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
+        if last:
+            return last.created_at
+        return None
+
+
+class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
+    rating = serializers.SerializerMethodField('get_recipe_rating')
+    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
 
     def create(self, validated_data):
         pass
@@ -344,22 +360,24 @@ class RecipeOverviewSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'servings', 'file_path'
+            'internal', 'servings', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
 
-class RecipeSerializer(WritableNestedModelSerializer):
+class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
+    rating = serializers.SerializerMethodField('get_recipe_rating')
+    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
 
     class Meta:
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'nutrition', 'servings', 'file_path', 'servings_text',
+            'internal', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
