@@ -12,13 +12,13 @@
     </a>
 
 
-    <b-card-body>
-      <h5><a :href="clickUrl()">
+    <b-card-body style="padding: 16px">
+      <h6><a :href="clickUrl()">
         <template v-if="recipe !== null">{{ recipe.name }}</template>
         <template v-else>{{ meal_plan.title }}</template>
-      </a></h5>
+      </a></h6>
 
-      <b-card-text style="text-overflow: ellipsis">
+      <b-card-text style="text-overflow: ellipsis;">
         <template v-if="recipe !== null">
           {{ recipe.description }}
           <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
