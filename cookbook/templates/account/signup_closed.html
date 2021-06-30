@@ -5,9 +5,14 @@
 {% block title %}{% trans "Sign Up Closed" %}{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Sign Up Closed" %}</h1>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <hr>
+            <h1>{% trans "Sign Up Closed" %}</h1>
 
-    <p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
+            <p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
 
-    <a class="btn btn-primary" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+            <a class="btn btn-primary" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+        </div>
+    </div>
 {% endblock %}

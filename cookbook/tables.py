@@ -143,9 +143,9 @@ class InviteLinkTable(tables.Table):
     link = tables.TemplateColumn(
         "<a href='{% url 'view_signup' record.uuid %}' >" + _('Link') + "</a>"
     )
-    delete = tables.TemplateColumn(
-        "<a href='{% url 'delete_invite_link' record.id %}' >" + _('Delete') + "</a>"  # noqa: E501
-    )
+    # delete = tables.TemplateColumn(
+    #     "<a href='{% url 'delete_invite_link' record.pk %}' >" + _('Delete') + "</a>"
+    # )
 
     class Meta:
         model = InviteLink
