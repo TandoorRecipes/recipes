@@ -3,6 +3,7 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
+from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
@@ -54,7 +55,7 @@ class Chowdown(Integration):
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n' + '\n'.join(descriptions)
+            instruction='\n'.join(directions) + '\n\n' + '\n'.join(descriptions), space=self.request.space,
         )
 
         for ingredient in ingredients:
@@ -62,7 +63,7 @@ class Chowdown(Integration):
             f = get_food(ingredient, self.request.space)
             u = get_unit(unit, self.request.space)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note
+                food=f, unit=u, amount=amount, note=note, space=self.request.space,
             ))
         recipe.steps.add(step)
 
@@ -71,7 +72,7 @@ class Chowdown(Integration):
                 import_zip = ZipFile(f['file'])
                 for z in import_zip.filelist:
                     if re.match(f'^images/{image}$', z.filename):
-                        self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)))
+                        self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
 
         return recipe
 

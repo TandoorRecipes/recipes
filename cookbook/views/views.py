@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db.models import Avg, Q, Sum
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -26,11 +26,13 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
                             UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
-                            SearchPreferenceForm, AllAuthSignupForm)
+                            SearchPreferenceForm, AllAuthSignupForm,
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
+from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
-                             Food, UserFile)
+                             Food, UserFile, ShareLink)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable, InviteLinkTable)
 from cookbook.views.data import Object
@@ -116,15 +118,17 @@ def no_space(request):
             created_space = Space.objects.create(
                 name=create_form.cleaned_data['name'],
                 created_by=request.user,
-                allow_files=settings.SPACE_DEFAULT_FILES,
+                max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
                 max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
                 max_users=settings.SPACE_DEFAULT_MAX_USERS,
+                allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
             request.user.userpreference.space = created_space
             request.user.userpreference.save()
             request.user.groups.add(Group.objects.filter(name='admin').get())
 
-            messages.add_message(request, messages.SUCCESS, _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
+            messages.add_message(request, messages.SUCCESS,
+                                 _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
             return HttpResponseRedirect(reverse('index'))
 
         if join_form.is_valid():
@@ -241,10 +245,12 @@ def supermarket(request):
 @group_required('user')
 def files(request):
     try:
-        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
+                                   'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
-    return render(request, 'files.html', {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
+    return render(request, 'files.html',
+                  {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
 
 
 @group_required('user')
@@ -266,7 +272,9 @@ def meal_plan_entry(request, pk):
 
 @group_required('user')
 def latest_shopping_list(request):
-    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False, pace=request.space).order_by('-created_at').first()
+    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
+                                                                                                 space=request.space).order_by(
+        '-created_at').first()
 
     if sl:
         return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')
@@ -303,8 +311,6 @@ def user_settings(request):
     active_tab = 'account'
 
     user_name_form = UserNameForm(instance=request.user)
-    password_form = PasswordChangeForm(request.user)
-    password_form.fields['old_password'].widget.attrs.pop("autofocus", None)
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
@@ -400,7 +406,6 @@ def user_settings(request):
     return render(request, 'settings.html', {
         'preference_form': preference_form,
         'user_name_form': user_name_form,
-        'password_form': password_form,
         'api_token': api_token,
         'search_form': search_form,
         'active_tab': active_tab
@@ -490,7 +495,8 @@ def invite_link(request, token):
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
             if request.user.is_authenticated:
                 if request.user.userpreference.space:
-                    messages.add_message(request, messages.WARNING, _('You are already member of a space and therefore cannot join this one.'))
+                    messages.add_message(request, messages.WARNING,
+                                         _('You are already member of a space and therefore cannot join this one.'))
                     return HttpResponseRedirect(reverse('index'))
 
                 link.used_by = request.user
@@ -533,7 +539,8 @@ def space(request):
 
     counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
 
-    invite_links = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
+    invite_links = InviteLinkTable(
+        InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(invite_links)
 
     return render(request, 'space.html', {'space_users': space_users, 'counts': counts, 'invite_links': invite_links})
@@ -567,6 +574,19 @@ def space_change_member(request, user_id, space_id, group):
     return HttpResponseRedirect(reverse('view_space'))
 
 
+def report_share_abuse(request, token):
+    if not settings.SHARING_ABUSE:
+        messages.add_message(request, messages.WARNING,
+                             _('Reporting share links is not enabled for this instance. Please notify the page administrator to report problems.'))
+    else:
+        if link := ShareLink.objects.filter(uuid=token).first():
+            link.abuse_blocked = True
+            link.save()
+            messages.add_message(request, messages.WARNING,
+                                 _('Recipe sharing link has been disabled! For additional information please contact the page administrator.'))
+    return HttpResponseRedirect(reverse('index'))
+
+
 def markdown_info(request):
     return render(request, 'markdown_info.html', {})
 
@@ -587,6 +607,7 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
 
 
 def test2(request):

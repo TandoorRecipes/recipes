@@ -31,14 +31,20 @@ admin.site.unregister(Group)
 
 
 class SpaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'message')
+    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
+    search_fields = ('name', 'created_by__username')
+    list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
+    date_hierarchy = 'created_at'
 
 
 admin.site.register(Space, SpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'space', 'theme', 'nav_color', 'default_page', 'search_style',)
+    list_display = ('name', 'space', 'theme', 'nav_color', 'default_page', 'search_style',)  # TODO add new fields
+    search_fields = ('user__username', 'space__name')
+    list_filter = ('theme', 'nav_color', 'default_page', 'search_style')
+    date_hierarchy = 'created_at'
 
     @staticmethod
     def name(obj):
@@ -50,6 +56,7 @@ admin.site.register(UserPreference, UserPreferenceAdmin)
 
 class StorageAdmin(admin.ModelAdmin):
     list_display = ('name', 'method')
+    search_fields = ('name',)
 
 
 admin.site.register(Storage, StorageAdmin)
@@ -57,6 +64,7 @@ admin.site.register(Storage, StorageAdmin)
 
 class SyncAdmin(admin.ModelAdmin):
     list_display = ('storage', 'path', 'active', 'last_checked')
+    search_fields = ('storage__name', 'path')
 
 
 admin.site.register(Sync, SyncAdmin)
@@ -102,6 +110,7 @@ admin.site.register(Keyword, KeywordAdmin)
 
 class StepAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'order')
+    search_fields = ('name', 'type')
 
 
 admin.site.register(Step, StepAdmin)
@@ -120,6 +129,9 @@ def rebuild_index(modeladmin, request, queryset):
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage')
+    search_fields = ('name', 'created_by__username')
+    list_filter = ('internal',)
+    date_hierarchy = 'created_at'
 
     @staticmethod
     def created_by(obj):
@@ -137,6 +149,7 @@ admin.site.register(Food)
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('food', 'amount', 'unit')
+    search_fields = ('food__name', 'unit__name')
 
 
 admin.site.register(Ingredient, IngredientAdmin)
@@ -144,6 +157,8 @@ admin.site.register(Ingredient, IngredientAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'name', 'created_at')
+    search_fields = ('text', 'user__username')
+    date_hierarchy = 'created_at'
 
     @staticmethod
     def name(obj):
@@ -162,6 +177,7 @@ admin.site.register(RecipeImport, RecipeImportAdmin)
 
 class RecipeBookAdmin(admin.ModelAdmin):
     list_display = ('name', 'user_name')
+    search_fields = ('name', 'created_by__username')
 
     @staticmethod
     def user_name(obj):
@@ -191,6 +207,7 @@ admin.site.register(MealPlan, MealPlanAdmin)
 
 class MealTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_by', 'order')
+    search_fields = ('name', 'created_by__username')
 
 
 admin.site.register(MealType, MealTypeAdmin)

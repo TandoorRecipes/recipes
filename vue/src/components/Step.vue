@@ -22,7 +22,7 @@
         </div>
         <div class="col col-md-4" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
-                    class="shadow-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
+                    class="shadow-none d-print-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
           </b-button>
         </div>
@@ -65,7 +65,7 @@
 
         <div class="col-md-2" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
-                    class="shadow-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
+                    class="shadow-none d-print-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
           </b-button>
         </div>

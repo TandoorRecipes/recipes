@@ -195,6 +195,18 @@ export interface ImportLog {
     keyword?: ImportLogKeyword;
     /**
      * 
+     * @type {number}
+     * @memberof ImportLog
+     */
+    total_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLog
+     */
+    imported_recipes?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ImportLog
      */
@@ -631,7 +643,19 @@ export interface MealPlanRecipe {
      * @type {string}
      * @memberof MealPlanRecipe
      */
-    file_path?: string;
+    servings_text?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    rating?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    last_cooked?: string;
 }
 /**
  * 
@@ -766,6 +790,18 @@ export interface Recipe {
      * @memberof Recipe
      */
     servings_text?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recipe
+     */
+    rating?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recipe
+     */
+    last_cooked?: string;
 }
 /**
  * 
@@ -1047,7 +1083,19 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    file_path?: string;
+    servings_text?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeOverview
+     */
+    rating?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeOverview
+     */
+    last_cooked?: string;
 }
 /**
  * 
@@ -1134,6 +1182,12 @@ export interface RecipeSteps {
      * @memberof RecipeSteps
      */
     show_as_header?: boolean;
+    /**
+     * 
+     * @type {StepFile}
+     * @memberof RecipeSteps
+     */
+    file?: StepFile | null;
 }
 
 /**
@@ -1142,7 +1196,8 @@ export interface RecipeSteps {
     */
 export enum RecipeStepsTypeEnum {
     Text = 'TEXT',
-    Time = 'TIME'
+    Time = 'TIME',
+    File = 'FILE'
 }
 
 /**
@@ -1532,6 +1587,12 @@ export interface Step {
      * @memberof Step
      */
     show_as_header?: boolean;
+    /**
+     * 
+     * @type {StepFile}
+     * @memberof Step
+     */
+    file?: StepFile | null;
 }
 
 /**
@@ -1540,9 +1601,35 @@ export interface Step {
     */
 export enum StepTypeEnum {
     Text = 'TEXT',
-    Time = 'TIME'
+    Time = 'TIME',
+    File = 'FILE'
 }
 
+/**
+ * 
+ * @export
+ * @interface StepFile
+ */
+export interface StepFile {
+    /**
+     * 
+     * @type {string}
+     * @memberof StepFile
+     */
+    name: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof StepFile
+     */
+    file?: any;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepFile
+     */
+    id?: number;
+}
 /**
  * 
  * @export

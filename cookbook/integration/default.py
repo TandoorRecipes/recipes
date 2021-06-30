@@ -1,9 +1,11 @@
 import json
 from io import BytesIO
+from re import match
 from zipfile import ZipFile
 
 from rest_framework.renderers import JSONRenderer
 
+from cookbook.helper.image_processing import get_filetype
 from cookbook.integration.integration import Integration
 from cookbook.serializer import RecipeExportSerializer
 
@@ -15,8 +17,9 @@ class Default(Integration):
 
         recipe_string = recipe_zip.read('recipe.json').decode("utf-8")
         recipe = self.decode_recipe(recipe_string)
-        if 'image.png' in recipe_zip.namelist():
-            self.import_recipe_image(recipe, BytesIO(recipe_zip.read('image.png')))
+        images = list(filter(lambda v: match('image.*', v), recipe_zip.namelist()))
+        if images:
+            self.import_recipe_image(recipe, BytesIO(recipe_zip.read(images[0])), filetype=get_filetype(images[0]))
         return recipe
 
     def decode_recipe(self, string):

@@ -15,7 +15,9 @@
             <b-input-group class="mt-3">
               <b-input class="form-control" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
               <b-input-group-append>
-                <b-button v-b-toggle.collapse_advanced_search variant="primary" class="shadow-none"><i
+                <b-button v-b-toggle.collapse_advanced_search
+                          v-bind:class="{'btn-primary': !isAdvancedSettingsSet(), 'btn-danger': isAdvancedSettingsSet()}"
+                          class="shadow-none btn"><i
                     class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i class="fas fa-caret-up"
                                                                                               v-if="settings.advanced_search_visible"></i>
                 </b-button>
@@ -37,21 +39,16 @@
                          :href="resolveDjangoUrl('data_import_url')">{{ $t('Import') }}</a>
                     </div>
                     <div class="col-md-3" style="margin-top: 1vh">
-                      <button class="btn btn-primary btn-block text-uppercase" @click="resetSearch">
-                        {{ $t('Reset_Search') }}
+                      <button class="btn btn-block text-uppercase" v-b-tooltip.hover :title="$t('show_only_internal')"
+                              v-bind:class="{'btn-success':settings.search_internal, 'btn-primary':!settings.search_internal}"
+                              @click="settings.search_internal = !settings.search_internal;refreshData()">
+                        {{ $t('Internal') }}
                       </button>
                     </div>
-                    <div class="col-md-2" style="position: relative; margin-top: 1vh">
-                      <b-form-checkbox v-model="settings.search_internal" name="check-button"
-                                       @change="refreshData(false)"
-                                       class="shadow-none"
-                                       style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
-                        {{ $t('show_only_internal') }}
-                      </b-form-checkbox>
-                    </div>
 
-                    <div class="col-md-1" style="position: relative; margin-top: 1vh">
-                      <button id="id_settings_button" class="btn btn-primary btn-block"><i class="fas fa-cog"></i>
+                    <div class="col-md-3" style="position: relative; margin-top: 1vh">
+                      <button id="id_settings_button" class="btn btn-primary btn-block text-uppercase"><i
+                          class="fas fa-cog"></i>
                       </button>
                     </div>
 
@@ -181,7 +178,16 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 2vh">
+        <div class="row">
+          <div class="col col-md-12 text-right" style="margin-top: 2vh">
+            <span class="text-muted">
+            {{ $t('Page') }} {{ settings.pagination_page }}/{{ pagination_count }} <a href="#" @click="resetSearch"><i
+                class="fas fa-times-circle"></i> {{ $t('Reset') }}</a>
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
           <div class="col col-md-12">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
 
@@ -200,10 +206,16 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 2vh; text-align: center">
+        <div class="row" style="margin-top: 2vh">
           <div class="col col-md-12">
-            <b-button @click="loadMore()" class="btn-block btn-success" v-if="pagination_more">{{ $t('Load_More') }}
-            </b-button>
+            <b-pagination pills
+                          v-model="settings.pagination_page"
+                          :total-rows="pagination_count"
+                          per-page="25"
+                          @change="pageChange"
+                          align="center">
+
+            </b-pagination>
           </div>
         </div>
 
@@ -239,6 +251,8 @@ import GenericMultiselect from "@/components/GenericMultiselect";
 
 Vue.use(BootstrapVue)
 
+let SETTINGS_COOKIE_NAME = 'search_settings'
+
 export default {
   name: 'RecipeSearchView',
   mixins: [ResolveUrlMixin],
@@ -249,6 +263,7 @@ export default {
       meal_plans: [],
       last_viewed_recipes: [],
 
+      settings_loaded: false,
       settings: {
         search_input: '',
         search_internal: false,
@@ -262,18 +277,32 @@ export default {
         advanced_search_visible: false,
         show_meal_plan: true,
         recently_viewed: 5,
+
+        pagination_page: 1,
       },
 
-      pagination_more: true,
-      pagination_page: 1,
+      pagination_count: 0,
     }
 
   },
   mounted() {
     this.$nextTick(function () {
-      if (this.$cookies.isKey('search_settings_v2')) {
-        this.settings = this.$cookies.get("search_settings_v2")
+      if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
+        let cookie_val = this.$cookies.get(SETTINGS_COOKIE_NAME)
+        for (let i of Object.keys(cookie_val)) {
+          this.$set(this.settings, i, cookie_val[i])
+        }
+        //TODO i have no idea why the above code does not suffice to update the
+        //TODO pagination UI element as $set should update all values reactively but it does not
+        setTimeout(function () {
+          this.$set(this.settings, 'pagination_page', 0)
+        }.bind(this), 50)
+        setTimeout(function () {
+          this.$set(this.settings, 'pagination_page', cookie_val['pagination_page'])
+        }.bind(this), 51)
+
       }
+
 
       let urlParams = new URLSearchParams(window.location.search);
       let apiClient = new ApiApiFactory()
@@ -284,7 +313,7 @@ export default {
           let keyword = {id: x, name: 'loading'}
           this.settings.search_keywords.push(keyword)
           apiClient.retrieveKeyword(x).then(result => {
-            this.$set(this.settings.search_keywords,this.settings.search_keywords.indexOf(keyword), result.data)
+            this.$set(this.settings.search_keywords, this.settings.search_keywords.indexOf(keyword), result.data)
           })
         }
       }
@@ -299,7 +328,7 @@ export default {
   watch: {
     settings: {
       handler() {
-        this.$cookies.set("search_settings_v2", this.settings, -1)
+        this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, -1)
       },
       deep: true
     },
@@ -333,16 +362,11 @@ export default {
 
           this.settings.search_internal,
           undefined,
-          this.pagination_page,
+          this.settings.pagination_page,
       ).then(result => {
-        this.pagination_more = (result.data.next !== null)
-        if (page_load) {
-          for (let x of result.data.results) {
-            this.recipes.push(x)
-          }
-        } else {
-          this.recipes = result.data.results
-        }
+        window.scrollTo(0, 0);
+        this.pagination_count = result.data.count
+        this.recipes = result.data.results
       })
     },
     loadMealPlan: function () {
@@ -384,11 +408,15 @@ export default {
       this.settings.search_keywords = []
       this.settings.search_foods = []
       this.settings.search_books = []
+      this.settings.pagination_page = 1
       this.refreshData(false)
     },
-    loadMore: function (page) {
-      this.pagination_page++
-      this.refreshData(true)
+    pageChange: function (page) {
+      this.settings.pagination_page = page
+      this.refreshData()
+    },
+    isAdvancedSettingsSet() {
+      return ((this.settings.search_keywords.length + this.settings.search_foods.length + this.settings.search_books.length) > 0)
     }
   }
 }
