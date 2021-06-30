@@ -13,7 +13,7 @@ def create_searchfields(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0127_build_full_text_index'),
+        ('cookbook', '0141_build_full_text_index'),
     ]
 
     operations = [
