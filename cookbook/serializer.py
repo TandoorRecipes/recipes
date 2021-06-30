@@ -1,13 +1,14 @@
+import random
 from decimal import Decimal
+from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Sum, Avg
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, NotAuthenticated, NotFound, ParseError
-from rest_framework.fields import ModelField
-from rest_framework.serializers import BaseSerializer, Serializer
+from rest_framework.exceptions import ValidationError, NotFound
+from treebeard.mp_tree import MP_NodeQuerySet
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              MealPlan, MealType, NutritionInformation, Recipe,
@@ -15,7 +16,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
                              Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket,
-                             SupermarketCategoryRelation, ImportLog, BookmarkletImport)
+                             SupermarketCategoryRelation, ImportLog, BookmarkletImport, UserFile)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -46,7 +47,7 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if type(data) == QuerySet and data.query.is_sliced:
+        if (type(data) == QuerySet and data.query.is_sliced) or type(data) == MP_NodeQuerySet:
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
@@ -103,6 +104,51 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         )
 
 
+class UserFileSerializer(serializers.ModelSerializer):
+
+    def check_file_limit(self, validated_data):
+        if self.context['request'].space.max_file_storage_mb == -1:
+            raise ValidationError(_('File uploads are not enabled for this Space.'))
+
+        try:
+            current_file_size_mb = UserFile.objects.filter(space=self.context['request'].space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+        except TypeError:
+            current_file_size_mb = 0
+
+        if (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5) > self.context['request'].space.max_file_storage_mb != 0:
+            raise ValidationError(_('You have reached your file upload limit.'))
+
+    def create(self, validated_data):
+        self.check_file_limit(validated_data)
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        self.check_file_limit(validated_data)
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = UserFile
+        fields = ('name', 'file', 'file_size_kb', 'id',)
+        read_only_fields = ('id', 'file_size_kb')
+        extra_kwargs = {"file": {"required": False, }}
+
+
+class UserFileViewSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create File over this view')
+
+    def update(self, instance, validated_data):
+        return instance
+
+    class Meta:
+        model = UserFile
+        fields = ('name', 'file', 'id',)
+        read_only_fields = ('id', 'file')
+
+
 class StorageSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
@@ -156,20 +202,36 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
 class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     label = serializers.SerializerMethodField('get_label')
+    image = serializers.SerializerMethodField('get_image')
+    numrecipe = serializers.SerializerMethodField('count_recipes')
 
     def get_label(self, obj):
         return str(obj)
 
+    def get_image(self, obj):
+        recipes = obj.recipe_set.all().exclude(image__isnull=True).exclude(image__exact='')
+        if len(recipes) == 0:
+            recipes = Recipe.objects.filter(keywords__in=Keyword.get_tree(obj)).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        if len(recipes) != 0:
+            return random.choice(recipes).image.url
+        else:
+            return None
+
+    def count_recipes(self, obj):
+        return obj.recipe_set.all().count()
+
     def create(self, validated_data):
-        obj, created = Keyword.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
+        # since multi select tags dont have id's
+        # duplicate names might be routed to create
+        validated_data['space'] = self.context['request'].space
+        obj = Keyword.get_or_create(**validated_data)
         return obj
 
     class Meta:
-        list_serializer_class = SpaceFilterSerializer
+        # list_serializer_class = SpaceFilterSerializer
         model = Keyword
-        fields = ('id', 'name', 'icon', 'label', 'description', 'created_at', 'updated_at')
-
-        read_only_fields = ('id',)
+        fields = ('id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'numchild',)
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
@@ -239,6 +301,10 @@ class IngredientSerializer(WritableNestedModelSerializer):
     unit = UnitSerializer(allow_null=True)
     amount = CustomDecimalField()
 
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = Ingredient
         fields = (
@@ -251,6 +317,11 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
+    file = UserFileViewSerializer(allow_null=True, required=False)
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
 
     def get_ingredients_vue(self, obj):
         return obj.get_instruction_render()
@@ -262,18 +333,39 @@ class StepSerializer(WritableNestedModelSerializer):
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header'
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file',
         )
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = NutritionInformation
         fields = ('id', 'carbohydrates', 'fats', 'proteins', 'calories', 'source')
 
 
-class RecipeOverviewSerializer(WritableNestedModelSerializer):
+class RecipeBaseSerializer(WritableNestedModelSerializer):
+    def get_recipe_rating(self, obj):
+        rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
+        if rating['rating__avg']:
+            return rating['rating__avg']
+        return 0
+
+    def get_recipe_last_cooked(self, obj):
+        last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
+        if last:
+            return last.created_at
+        return None
+
+
+class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
+    rating = serializers.SerializerMethodField('get_recipe_rating')
+    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
 
     def create(self, validated_data):
         pass
@@ -286,22 +378,24 @@ class RecipeOverviewSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'servings', 'file_path'
+            'internal', 'servings', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
 
-class RecipeSerializer(WritableNestedModelSerializer):
+class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
+    rating = serializers.SerializerMethodField('get_recipe_rating')
+    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
 
     class Meta:
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'nutrition', 'servings', 'file_path', 'servings_text',
+            'internal', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
@@ -475,7 +569,7 @@ class ImportLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ImportLog
-        fields = ('id', 'type', 'msg', 'running', 'keyword', 'created_by', 'created_at')
+        fields = ('id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
 
 
@@ -533,6 +627,10 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
     unit = UnitExportSerializer(allow_null=True)
     amount = CustomDecimalField()
 
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
     class Meta:
         model = Ingredient
         fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
@@ -540,6 +638,10 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
 
 class StepExportSerializer(WritableNestedModelSerializer):
     ingredients = IngredientExportSerializer(many=True)
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
 
     class Meta:
         model = Step

@@ -1,6 +1,8 @@
 """
 Source: https://djangosnippets.org/snippets/1703/
 """
+from django.conf import settings
+from django.core.cache import caches
 from django.views.generic.detail import SingleObjectTemplateResponseMixin
 from django.views.generic.edit import ModelFormMixin
 
@@ -90,7 +92,18 @@ def share_link_valid(recipe, share):
     :return: true if a share link with the given recipe and uuid exists
     """
     try:
-        return True if ShareLink.objects.filter(recipe=recipe, uuid=share).exists() else False
+        CACHE_KEY = f'recipe_share_{recipe.pk}_{share}'
+        if c := caches['default'].get(CACHE_KEY, False):
+            return c
+
+        if link := ShareLink.objects.filter(recipe=recipe, uuid=share, abuse_blocked=False).first():
+            if 0 < settings.SHARING_LIMIT < link.request_count:
+                return False
+            link.request_count += 1
+            link.save()
+            caches['default'].set(CACHE_KEY, True, timeout=3)
+            return True
+        return False
     except ValidationError:
         return False
 
@@ -121,15 +134,18 @@ class GroupRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if not has_group_permission(request.user, self.groups_required):
             if not request.user.is_authenticated:
-                messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
+                messages.add_message(request, messages.ERROR,
+                                     _('You are not logged in and therefore cannot view this page!'))
                 return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
             else:
-                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                messages.add_message(request, messages.ERROR,
+                                     _('You do not have the required permissions to view this page!'))
                 return HttpResponseRedirect(reverse_lazy('index'))
         try:
             obj = self.get_object()
             if obj.get_space() != request.space:
-                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                messages.add_message(request, messages.ERROR,
+                                     _('You do not have the required permissions to view this page!'))
                 return HttpResponseRedirect(reverse_lazy('index'))
         except AttributeError:
             pass
@@ -141,17 +157,20 @@ class OwnerRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
+            messages.add_message(request, messages.ERROR,
+                                 _('You are not logged in and therefore cannot view this page!'))
             return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
         else:
             if not is_object_owner(request.user, self.get_object()):
-                messages.add_message(request, messages.ERROR, _('You cannot interact with this object as it is not owned by you!'))
+                messages.add_message(request, messages.ERROR,
+                                     _('You cannot interact with this object as it is not owned by you!'))
                 return HttpResponseRedirect(reverse('index'))
 
         try:
             obj = self.get_object()
             if obj.get_space() != request.space:
-                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
+                messages.add_message(request, messages.ERROR,
+                                     _('You do not have the required permissions to view this page!'))
                 return HttpResponseRedirect(reverse_lazy('index'))
         except AttributeError:
             pass

@@ -1,54 +1,42 @@
 <template>
   <div id="app">
 
-    <div class="row">
-      <div class="col col-md-12">
-        <h2>{{ $t('Import') }}</h2>
-      </div>
-
-    </div>
-
-    <br/>
     <br/>
 
     <template v-if="import_info !== undefined">
 
-      <template v-if="import_info.running" style="text-align: center;">
-        <div class="row">
-          <div class="col col-md-12">
-
-          </div>
-
-        </div>
-        <loading-spinner></loading-spinner>
-        <br/>
-        <br/>
+      <template v-if="import_info.running">
         <h5 style="text-align: center">{{ $t('Importing') }}...</h5>
 
+        <b-progress :max="import_info.total_recipes">
+          <b-progress-bar :value="import_info.imported_recipes" :label="`${import_info.imported_recipes}/${import_info.total_recipes}`"></b-progress-bar>
+        </b-progress>
+
+        <loading-spinner :size="25"></loading-spinner>
       </template>
-      <template v-else>
-        <div class="row">
-          <div class="col col-md-12">
-            <span>{{ $t('Import_finished') }}! </span>
-            <a :href="`${resolveDjangoUrl('view_search') }?keywords=${import_info.keyword.id}`"
-               v-if="import_info.keyword !== null">{{ $t('View_Recipes') }}</a>
 
-          </div>
+      <div class="row">
+        <div class="col col-md-12" v-if="!import_info.running">
+          <span>{{ $t('Import_finished') }}! </span>
+          <a :href="`${resolveDjangoUrl('view_search') }?keyword=${import_info.keyword.id}`"
+             v-if="import_info.keyword !== null">{{ $t('View_Recipes') }}</a>
+
         </div>
+      </div>
 
-        <br/>
+      <br/>
 
-        <div class="row">
-          <div class="col col-md-12">
-            <label for="id_textarea">{{ $t('Information') }}</label>
-            <textarea id="id_textarea" class="form-control" style="height: 50vh" v-html="import_info.msg"
-                      disabled></textarea>
+      <div class="row">
+        <div class="col col-md-12">
+          <label for="id_textarea">{{ $t('Information') }}</label>
+          <textarea id="id_textarea" ref="output_text" class="form-control" style="height: 50vh"
+                    v-html="import_info.msg"
+                    disabled></textarea>
 
-          </div>
         </div>
-
-
-      </template>
+      </div>
+      <br/>
+      <br/>
     </template>
   </div>
 
@@ -90,6 +78,8 @@ export default {
     setInterval(() => {
       if ((this.import_id !== null) && window.navigator.onLine && this.import_info.running) {
         this.refreshData()
+        let el = this.$refs.output_text
+        el.scrollTop = el.scrollHeight;
       }
     }, 5000)
 
@@ -100,6 +90,7 @@ export default {
 
       apiClient.retrieveImportLog(this.import_id).then(result => {
         this.import_info = result.data
+
       })
     }
   }

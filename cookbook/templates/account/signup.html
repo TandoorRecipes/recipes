@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
             <hr>
             <form method="post">
                 {% csrf_token %}
@@ -24,6 +24,9 @@
                 </div>
                 <div class="form-group">
                     {{ form.email |as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    {{ form.email2 |as_crispy_field }}
                 </div>
                 <div class="form-group">
                     {{ form.password1 |as_crispy_field }}

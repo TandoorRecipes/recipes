@@ -148,3 +148,7 @@ def search_recipes(request, queryset, params):
         queryset = queryset.order_by('-rank')
 
     return queryset
+
+
+# this returns a list of keywords in the queryset and how many times it appears
+# Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))

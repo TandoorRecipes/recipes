@@ -44,7 +44,7 @@ class MealMaster(Integration):
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n'
+            instruction='\n'.join(directions) + '\n\n', space=self.request.space,
         )
 
         for ingredient in ingredients:
@@ -53,7 +53,7 @@ class MealMaster(Integration):
                 f = get_food(ingredient, self.request.space)
                 u = get_unit(unit, self.request.space)
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note
+                    food=f, unit=u, amount=amount, note=note, space=self.request.space,
                 ))
         recipe.steps.add(step)
 

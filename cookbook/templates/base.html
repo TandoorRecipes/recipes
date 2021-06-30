@@ -67,9 +67,9 @@
     </button>
 
     {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
-    <a class="navbar-brand p-0 me-2 justify-content-center" href="/" aria-label="Tandoor">
-         <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="" style="height: 5vh;">
-    </a>
+        <a class="navbar-brand p-0 me-2 justify-content-center" href="/" aria-label="Tandoor">
+            <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="" style="height: 5vh;">
+        </a>
     {% endif %}
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
@@ -140,7 +140,7 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
-                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
                             class="fas fa-user-alt"></i> {{ user.get_user_name }}
@@ -152,12 +152,18 @@
                         <a class="dropdown-item" href="{% url 'view_history' %}"><i
                                 class="fas fa-history"></i> {% trans 'History' %}</a>
                         {% if request.user == request.space.created_by %}
-                            <a class="dropdown-item" href="{% url 'view_space' %}"><i class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
+                            <a class="dropdown-item" href="{% url 'view_space' %}"><i
+                                    class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
                         {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'view_system' %}"><i
+                                class="fas fa-server fa-fw"></i> {% trans 'System' %}</a>
+                        <a class="dropdown-item" href="{% url 'admin:index' %}"><i
+                                class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% if user.is_superuser %}
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'view_system' %}"><i
-                                    class="fas fa-server fa-fw"></i> {% trans 'System' %}</a>
+                            <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
+                                    class="fas fa-tags"></i> {% trans 'Keywords' %}</a>
                             <a class="dropdown-item" href="{% url 'admin:index' %}"><i
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% endif %}
@@ -192,10 +198,7 @@
     </div>
 {% endif %}
 
-<br/>
-<br/>
-
-<div class="container-fluid" id="id_base_container">
+<div class="container-fluid mt-2 mt-md-5 mt-xl-5 mt-lg-5" id="id_base_container">
     <div class="row">
         <div class="col-xl-2 d-none d-xl-block">
             {% block content_xl_left %}
@@ -236,9 +239,11 @@
 {% endblock script %}
 
 <script type="application/javascript">
+    localStorage.setItem('SCRIPT_NAME', "{% base_path request 'script' %}")
+    localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: '/'}).then(function (reg) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {
 
             }).catch(function (err) {
                 console.warn('Error whilst registering service worker', err);

@@ -6,6 +6,14 @@
 {% block title %}{% trans "E-mail Addresses" %}{% endblock %}
 
 {% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'view_settings' %}">{% trans 'Settings' %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Email' %}</li>
+        </ol>
+    </nav>
+
     <h3>{% trans "E-mail Addresses" %}</h3>
     {% if user.emailaddress_set.all %}
         <p>{% trans 'The following e-mail addresses are associated with your account:' %}</p>

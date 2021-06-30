@@ -38,7 +38,7 @@ class ChefTap(Integration):
 
         recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space, )
 
-        step = Step.objects.create(instruction='\n'.join(directions))
+        step = Step.objects.create(instruction='\n'.join(directions), space=self.request.space,)
 
         if source_url != '':
             step.instruction += '\n' + source_url
@@ -50,7 +50,7 @@ class ChefTap(Integration):
                 f = get_food(ingredient, self.request.space)
                 u = get_unit(unit, self.request.space)
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note
+                    food=f, unit=u, amount=amount, note=note, space=self.request.space,
                 ))
         recipe.steps.add(step)
 

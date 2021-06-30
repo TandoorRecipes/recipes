@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
+from treebeard.forms import MoveNodeForm
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
@@ -71,21 +72,6 @@ class UserPreferenceForm(forms.ModelForm):
         }
 
 
-class AllAuthSignupForm(forms.Form):
-    captcha = hCaptchaField()
-    terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
-
-    def __init__(self, **kwargs):
-        super(AllAuthSignupForm, self).__init__(**kwargs)
-        if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
-            self.fields.pop('terms')
-        if settings.HCAPTCHA_SECRET == '':
-            self.fields.pop('captcha')
-
-    def signup(self, request, user):
-        pass
-
-
 class UserNameForm(forms.ModelForm):
     prefix = 'name'
 
@@ -137,17 +123,20 @@ class ImportExportBase(forms.Form):
     SAFRON = 'SAFRON'
     CHEFTAP = 'CHEFTAP'
     PEPPERPLATE = 'PEPPERPLATE'
+    RECIPEKEEPER = 'RECIPEKEEPER'
     RECETTETEK = 'RECETTETEK'
     RECIPESAGE = 'RECIPESAGE'
     DOMESTICA = 'DOMESTICA'
     MEALMASTER = 'MEALMASTER'
     REZKONV = 'REZKONV'
+    OPENEATS = 'OPENEATS'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
         (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
-        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'),
+        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
+
     ))
 
 
@@ -229,10 +218,11 @@ class CommentForm(forms.ModelForm):
         }
 
 
-class KeywordForm(forms.ModelForm):
+class KeywordForm(MoveNodeForm):
     class Meta:
         model = Keyword
         fields = ('name', 'icon', 'description')
+        exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
         widgets = {'icon': EmojiPickerTextInput}
 
 
@@ -429,19 +419,11 @@ class InviteLinkForm(forms.ModelForm):
 
         return email
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        with scopes_disabled():
-            if username != '' and (User.objects.filter(username=username).exists() or InviteLink.objects.filter(username=username).exists()):
-                raise ValidationError(_('Username already taken!'))
-        return username
-
     class Meta:
         model = InviteLink
-        fields = ('username', 'email', 'group', 'valid_until', 'space')
+        fields = ('email', 'group', 'valid_until', 'space')
         help_texts = {
-            'username': _('A username is not required, if left blank the new user can choose one.'),
-            'email': _('An email address is not required but if present the invite link will be send to the user.')
+            'email': _('An email address is not required but if present the invite link will be send to the user.'),
         }
         field_classes = {
             'space': SafeModelChoiceField,
@@ -463,6 +445,21 @@ class SpaceCreateForm(forms.Form):
 class SpaceJoinForm(forms.Form):
     prefix = 'join'
     token = forms.CharField()
+
+
+class AllAuthSignupForm(forms.Form):
+    captcha = hCaptchaField()
+    terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
+
+    def __init__(self, **kwargs):
+        super(AllAuthSignupForm, self).__init__(**kwargs)
+        if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
+            self.fields.pop('terms')
+        if settings.HCAPTCHA_SECRET == '':
+            self.fields.pop('captcha')
+
+    def signup(self, request, user):
+        pass
 
 
 class UserCreateForm(forms.Form):
