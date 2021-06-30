@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <div class="col col-md-4 col-10">
+        <div class="col col-md-4 col-10 mt-2 mt-md-0 mt-lg-0 mt-xl-0">
           <div class="row d-flex" style="padding-left: 16px">
             <div class="my-auto" style="padding-right: 4px">
               <i class="fas fa-pizza-slice fa-2x text-primary"></i>
