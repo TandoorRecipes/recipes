@@ -10402,16 +10402,6 @@ footer a:hover {
     box-shadow: none
 }
 
-.modal-content {
-    width: 500px
-}
-
-@media (max-width: 575px) {
-    .modal-content {
-        width: 300px
-    }
-}
-
 .modal-content .modal-header {
     justify-content: center;
     border: none
