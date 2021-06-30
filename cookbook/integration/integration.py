@@ -31,11 +31,12 @@ class Integration:
         """
         self.request = request
         self.export_type = export_type
-        self.keyword = Keyword.objects.create(
+        # TODO add all import keywords under the importer root node
+        self.keyword = Keyword.add_root(
             name=f'Import {export_type} {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
             description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}',
             icon='📥',
-            space=request.space
+            space=request.space,
         )
 
     def do_export(self, recipes):
