@@ -115,7 +115,7 @@ def search_recipes(request, queryset, params):
             )
             queryset = queryset.filter(query_filter).annotate(rank=search_rank)
         else:
-            queryset = queryset.filter(query_filter)
+            queryset = queryset.filter(name__icontains=search_string)
 
     if len(search_keywords) > 0:
         if search_keywords_or == 'true':
