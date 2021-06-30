@@ -28,11 +28,11 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     fields = ('name',)
 
     def form_valid(self, form):
-        if Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:
+        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes: # TODO move to central helper function
             messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
             return HttpResponseRedirect(reverse('index'))
 
-        if UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
+        if self.request.space.max_users != 0 and UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
             messages.add_message(self.request, messages.WARNING, _('You have more users than allowed in your space.'))
             return HttpResponseRedirect(reverse('index'))
 
@@ -227,7 +227,7 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
                     message += _(' to join their Tandoor Recipes space ') + escape(self.request.space.name) + '.\n\n'
                     message += _('Click the following link to activate your account: ') + self.request.build_absolute_uri(reverse('view_signup', args=[str(obj.uuid)])) + '\n\n'
                     message += _('If the link does not work use the following code to manually join the space: ') + str(obj.uuid) + '\n\n'
-                    message += _('The invitation is valid until ') + obj.valid_until + '\n\n'
+                    message += _('The invitation is valid until ') + str(obj.valid_until) + '\n\n'
                     message += _('Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub ') + 'https://github.com/vabene1111/recipes/'
 
                     send_mail(
@@ -236,7 +236,6 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
                         None,
                         [obj.email],
                         fail_silently=False,
-
                     )
                     messages.add_message(self.request, messages.SUCCESS,
                                          _('Invite link successfully send to user.'))
@@ -246,7 +245,7 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
             except (SMTPException, BadHeaderError, TimeoutError):
                 messages.add_message(self.request, messages.ERROR, _('Email to user could not be send, please share link manually.'))
 
-        return HttpResponseRedirect(reverse('list_invite_link'))
+        return HttpResponseRedirect(reverse('index'))
 
     def get_context_data(self, **kwargs):
         context = super(InviteLinkCreate, self).get_context_data(**kwargs)

@@ -20,14 +20,13 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 from webpack_loader.loader import WebpackLoader
-
+load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
-DEMO = bool(int(os.getenv('DEMO', False)))
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
@@ -65,6 +64,16 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_TABLES2_TEMPLATE = 'cookbook/templates/generic/table_template.html'
 DJANGO_TABLES2_PAGE_RANGE = 8
 
+HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
+HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
+
+
+ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+
+TERMS_URL = os.getenv('TERMS_URL', '')
+PRIVACY_URL = os.getenv('PRIVACY_URL', '')
+IMPRINT_URL = os.getenv('IMPRINT_URL', '')
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
@@ -82,6 +91,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django_prometheus',
     'django_tables2',
     'corsheaders',
     'django_filters',
@@ -92,6 +102,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'webpack_loader',
     'django_js_reverse',
+    'hcaptcha',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -106,6 +117,8 @@ SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
 
 ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
+ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -119,6 +132,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
+
+if ENABLE_METRICS:
+    MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
 
 # Auth related settings
 AUTHENTICATION_BACKENDS = [
@@ -180,6 +196,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'cookbook.helper.context_processors.context_settings',
             ],
         },
     },
@@ -301,12 +318,15 @@ STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 if os.getenv('S3_ACCESS_KEY', ''):
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
 
     AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
     AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
     AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', '')
     AWS_QUERYSTRING_AUTH = bool(int(os.getenv('S3_QUERYSTRING_AUTH', True)))
+    AWS_QUERYSTRING_EXPIRE = int(os.getenv('S3_QUERYSTRING_EXPIRE', 3600))
+    AWS_S3_SIGNATURE_VERSION = os.getenv('S3_SIGNATURE_VERSION', 's3v4')
+    AWS_S3_REGION_NAME = os.getenv('S3_REGION_NAME', None)
 
     if os.getenv('S3_ENDPOINT_URL', ''):
         AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', '')

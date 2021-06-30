@@ -23,7 +23,7 @@
         <loading-spinner></loading-spinner>
         <br/>
         <br/>
-        <h5 style="text-align: center">{{ $t('import-running') }}</h5>
+        <h5 style="text-align: center">{{ $t('Importing') }}...</h5>
 
       </template>
       <template v-else>

@@ -35,7 +35,11 @@
 
     <div v-if="!recipe" class="text-center">
         <br/>
-        <i class="fas fa-spinner fa-spin fa-8x"></i>
+        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+            <img class="spinner-tandoor"/>
+        {% else %}
+            <i class="fas fa-spinner fa-spin fa-8x"></i>
+        {% endif %}
     </div>
 
     <div v-if="recipe">
@@ -668,7 +672,7 @@
                     this.recipe.steps[step].ingredients[id] = new_unit
                 },
                 addKeyword: function (tag) {
-                    let new_keyword = {'label':tag,'name':tag}
+                    let new_keyword = {'label': tag, 'name': tag}
                     this.recipe.keywords.push(new_keyword)
                 },
                 searchKeywords: function (query) {

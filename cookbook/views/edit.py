@@ -45,7 +45,7 @@ def convert_recipe(request, pk):
 
 @group_required('user')
 def internal_recipe_update(request, pk):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() > request.space.max_recipes:
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() > request.space.max_recipes: # TODO move to central helper function
         messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
         return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
 

@@ -1,6 +1,10 @@
+from django.conf import settings
 from django.contrib import admin
+from django.contrib.postgres.search import SearchVector
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
+from django_scopes import scopes_disabled
+from django.utils import translation
 
 from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      MealPlan, MealType, NutritionInformation, Recipe,
@@ -9,6 +13,8 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
                      ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
                      ImportLog, TelegramBot, BookmarkletImport)
+
+from cookbook.managers import DICTIONARY
 
 
 class CustomUserAdmin(UserAdmin):
@@ -82,12 +88,26 @@ class StepAdmin(admin.ModelAdmin):
 admin.site.register(Step, StepAdmin)
 
 
+@admin.action(description='Rebuild index for selected recipes')
+def rebuild_index(modeladmin, request, queryset):
+    language = DICTIONARY.get(translation.get_language(), 'simple')
+    with scopes_disabled():
+        Recipe.objects.all().update(
+            name_search_vector=SearchVector('name__unaccent', weight='A', config=language),
+            desc_search_vector=SearchVector('description__unaccent', weight='B', config=language)
+        )
+        Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B', config=language))
+
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage')
 
     @staticmethod
     def created_by(obj):
         return obj.created_by.get_user_name()
+
+    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        actions = [rebuild_index]
 
 
 admin.site.register(Recipe, RecipeAdmin)
