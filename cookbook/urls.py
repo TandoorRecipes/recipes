@@ -11,7 +11,7 @@ from cookbook.helper import dal
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
                      Storage, Sync, SyncLog, get_model_name)
-from .views import api, data, delete, edit, import_export, lists, new, views, telegram
+from .views import api, data, delete, edit, import_export, lists, trees, new, views, telegram
 
 router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
@@ -38,6 +38,7 @@ router.register(r'supermarket', api.SupermarketViewSet)
 router.register(r'supermarket-category', api.SupermarketCategoryViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
+router.register(r'user-file', api.UserFileViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -48,7 +49,8 @@ urlpatterns = [
     path('no-group', views.no_groups, name='view_no_group'),
     path('no-space', views.no_space, name='view_no_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
-    path('signup/<slug:token>', views.signup, name='view_signup'),
+    path('signup/<slug:token>', views.signup, name='view_signup'),  # TODO deprecated with 0.16.2 remove at some point
+    path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
     path('search/v2/', views.search_v2, name='view_search_v2'),
@@ -61,6 +63,7 @@ urlpatterns = [
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
+    path('files/', views.files, name='view_files'),
     path('test/', views.test, name='view_test'),
     path('test2/', views.test2, name='view_test2'),
 
@@ -112,6 +115,7 @@ urlpatterns = [
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
 
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
+    path('docs/search/', views.search_info, name='docs_search'),
     path('docs/api/', views.api_info, name='docs_api'),
 
     path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
@@ -166,5 +170,17 @@ for m in generic_models:
                 f'delete/{url_name}/<int:pk>/',
                 c.as_view(),
                 name=f'delete_{py_name}'
+            )
+        )
+
+tree_models = [Keyword]
+for m in tree_models:
+    py_name = get_model_name(m)
+    url_name = py_name.replace('_', '-')
+
+    if c := getattr(trees, py_name, None):
+        urlpatterns.append(
+            path(
+                f'list/{url_name}/', c, name=f'list_{py_name}'
             )
         )

@@ -6,7 +6,7 @@ import pytest
 from django.urls import reverse
 
 from ._recipes import (
-    ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, COOKPAD,
+    ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, CHEF_KOCH2, COOKPAD,
     COOKS_COUNTRY, DELISH, FOOD_NETWORK, GIALLOZAFFERANO, JOURNAL_DES_FEMMES,
     MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO)
 
@@ -18,7 +18,7 @@ DATA_DIR = "cookbook/tests/other/test_data/"
 # Top 10 recipe websites listed here https://www.similarweb.com/top-websites/category/food-and-drink/cooking-and-recipes/
 # plus the test that previously existed
 # plus the custom scraper that was created
-# TODO thoughtfully add recipes that test specific scenerios
+# plus any specific defects discovered along the way
 
 
 @pytest.mark.parametrize("arg", [
@@ -37,6 +37,8 @@ def test_import_permission(arg, request):
     # test of custom scraper ATK
     AMERICAS_TEST_KITCHEN,
     CHEF_KOCH,
+    # test for empty ingredient in ingredient_parser
+    CHEF_KOCH2,
     COOKPAD,
     # test of custom scraper ATK
     COOKS_COUNTRY,

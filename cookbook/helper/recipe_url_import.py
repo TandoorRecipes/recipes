@@ -2,13 +2,11 @@ import random
 import re
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
-from recipe_scrapers._exceptions import ElementNotFoundInHtml
 
 from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
 from cookbook.models import Keyword
 from django.utils.dateparse import parse_duration
 from html import unescape
-from recipe_scrapers._schemaorg import SchemaOrgException
 from recipe_scrapers._utils import get_minutes
 
 
@@ -56,6 +54,7 @@ def get_from_scraper(scrape, space):
         recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
     except Exception:
         recipe_json['cookTime'] = 0
+
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
@@ -101,22 +100,21 @@ def get_from_scraper(scrape, space):
         for x in scrape.ingredients():
             try:
                 amount, unit, ingredient, note = parse_single_ingredient(x)
-                if ingredient:
-                    ingredients.append(
-                        {
-                            'amount': amount,
-                            'unit': {
-                                'text': unit,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'ingredient': {
-                                'text': ingredient,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'note': note,
-                            'original': x
-                        }
-                    )
+                ingredients.append(
+                    {
+                        'amount': amount,
+                        'unit': {
+                            'text': unit,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'ingredient': {
+                            'text': ingredient,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'note': note,
+                        'original': x
+                    }
+                )
             except Exception:
                 ingredients.append(
                     {
@@ -359,3 +357,11 @@ def normalize_string(string):
     unescaped_string = re.sub(r'\n\s*\n', '\n\n', unescaped_string)
     unescaped_string = unescaped_string.replace("\xa0", " ").replace("\t", " ").strip()
     return unescaped_string
+
+
+def iso_duration_to_minutes(string):
+    match = re.match(
+        r'P((?P<years>\d+)Y)?((?P<months>\d+)M)?((?P<weeks>\d+)W)?((?P<days>\d+)D)?T((?P<hours>\d+)H)?((?P<minutes>\d+)M)?((?P<seconds>\d+)S)?',
+        string
+    ).groupdict()
+    return int(match['days'] or 0) * 24 * 60 + int(match['hours'] or 0) * 60 + int(match['minutes'] or 0)

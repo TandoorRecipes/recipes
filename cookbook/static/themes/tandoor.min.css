@@ -1,83 +1,91 @@
 /* devanagari */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_devanagari_400.woff2) format('woff2');
-  unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_devanagari_400.woff2) format('woff2');
+    unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
 }
+
 /* latin-ext */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_latin_ext_400.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_latin_ext_400.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+
 /* latin */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_latin_400.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_latin_400.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
 /* devanagari */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_devanagari_500.woff2) format('woff2');
-  unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_devanagari_500.woff2) format('woff2');
+    unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
 }
+
 /* latin-ext */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_latin_ext_500.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_latin_ext_500.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+
 /* latin */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_latin_500.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_latin_500.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
 /* devanagari */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_devanagari_700.woff2) format('woff2');
-  unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_devanagari_700.woff2) format('woff2');
+    unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
 }
+
 /* latin-ext */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_latin_ext_700.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_latin_ext_700.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+
 /* latin */
 @font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(/static/webfonts/poppins_latin_700.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(/static/webfonts/poppins_latin_700.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 
@@ -92,7 +100,7 @@
     --indigo: #6610f2;
     --purple: #6f42c1;
     --pink: #e83e8c;
-    --#a7240e: #dc3545;
+    -- #a7240e: #dc3545;
     --orange: #fd7e14;
     --yellow: #ffc107;
     --green: #28a745;
@@ -1812,7 +1820,9 @@ pre code {
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .form-control {
         transition: none
     }
@@ -2275,7 +2285,9 @@ select.form-control[multiple], select.form-control[size], textarea.form-control 
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .btn {
         transition: none
     }
@@ -2807,7 +2819,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     transition: opacity .15s linear
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .fade {
         transition: none
     }
@@ -2828,7 +2842,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     transition: height .35s ease
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .collapsing {
         transition: none
     }
@@ -3439,7 +3455,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     transition: transform .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .custom-switch .custom-control-label:after {
         transition: none
     }
@@ -3621,7 +3639,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     appearance: none
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .custom-range::-webkit-slider-thumb {
         transition: none
     }
@@ -3652,7 +3672,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     appearance: none
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .custom-range::-moz-range-thumb {
         transition: none
     }
@@ -3685,7 +3707,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     appearance: none
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .custom-range::-ms-thumb {
         transition: none
     }
@@ -3738,7 +3762,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .custom-control-label:before, .custom-file-label, .custom-select {
         transition: none
     }
@@ -4164,12 +4190,12 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .navbar-dark .navbar-toggler {
-    color: hsla(0, 0%, 18%, .5);
-    border-color: hsla(0, 0%, 18%, .1)
+    color: rgba(46, 46, 46, 0.5);
+    border-color: rgba(46, 46, 46, 0.5);
 }
 
 .navbar-dark .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E")
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(46, 46, 46, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E")
 }
 
 .navbar-dark .navbar-text {
@@ -4235,7 +4261,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .card-header {
     padding: .75rem 1.25rem;
     margin-bottom: 0;
-    background-color: rgba(0, 0, 0, .03);
+    background-color: #ffffff;
     border-bottom: 1px solid rgba(0, 0, 0, .125)
 }
 
@@ -4249,7 +4275,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 
 .card-footer {
     padding: .75rem 1.25rem;
-    background-color: rgba(0, 0, 0, .03);
+    background-color: #ffffff;
     border-top: 1px solid rgba(0, 0, 0, .125)
 }
 
@@ -4551,7 +4577,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .badge {
         transition: none
     }
@@ -4772,9 +4800,9 @@ a.badge-dark.focus, a.badge-dark:focus {
 }
 
 .alert-success {
-    color: #316f5d;
-    background-color: #dff7f0;
-    border-color: #d2f4ea
+    color: #2e2e2e;
+    background-color: #82aa8b;
+    border-color: #82aa8b
 }
 
 .alert-success hr {
@@ -4893,7 +4921,9 @@ a.badge-dark.focus, a.badge-dark:focus {
     transition: width .6s ease
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .progress-bar {
         transition: none
     }
@@ -4909,7 +4939,9 @@ a.badge-dark.focus, a.badge-dark:focus {
     animation: progress-bar-stripes 1s linear infinite
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .progress-bar-animated {
         -webkit-animation: none;
         animation: none
@@ -5358,7 +5390,9 @@ a.close.disabled {
     transform: translateY(-50px)
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .modal.fade .modal-dialog {
         transition: none
     }
@@ -5838,7 +5872,9 @@ a.close.disabled {
     transition: transform .6s ease-in-out
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .carousel-item {
         transition: none
     }
@@ -5873,7 +5909,9 @@ a.close.disabled {
     transition: opacity 0s .6s
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .carousel-fade .active.carousel-item-left, .carousel-fade .active.carousel-item-right {
         transition: none
     }
@@ -5894,7 +5932,9 @@ a.close.disabled {
     transition: opacity .15s ease
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .carousel-control-next, .carousel-control-prev {
         transition: none
     }
@@ -5961,7 +6001,9 @@ a.close.disabled {
     transition: opacity .6s ease
 }
 
-@media (prefers-#a7240euced-motion: #a7240euce) {
+@media (prefers-#a7240euced-motion: #a7240euce
+
+) {
     .carousel-indicators li {
         transition: none
     }
@@ -10117,9 +10159,9 @@ footer a:hover {
 }
 
 .btn-light:hover {
-    background: transparent;
+    background-color: hsla(0, 0%, 18%, .5);
     color: #cfd5cd;
-    border: 1px solid #cfd5cd
+    border: 1px solid hsla(0, 0%, 18%, .5)
 }
 
 .btn-dark {
@@ -10385,6 +10427,12 @@ footer a:hover {
     padding: 5px 0 20px 39px
 }
 
+.modal-content .modal-footer {
+    border: none;
+    justify-content: flex-start;
+    padding: 5px 0 20px 39px
+}
+
 /*# sourceMappingURL=maps/style.min.css.map */
 
 .bg-header {
@@ -10402,7 +10450,7 @@ footer a:hover {
     background-color: transparent !important;
 }
 
-textarea, input:not([type="submit"]):not([class="multiselect__input"]), select {
+textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([class="select2-search__field"]), select {
     background-color: white !important;
     border-radius: .25rem !important;
     border: 1px solid #ced4da !important;
@@ -10413,7 +10461,7 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]), select {
     color: #212529 !important;
 }
 
-.multiselect__tag-icon:hover,.multiselect__tag-icon:focus {
+.multiselect__tag-icon:hover, .multiselect__tag-icon:focus {
     background-color: #a7240e !important;
 }
 

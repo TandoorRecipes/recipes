@@ -1,6 +1,12 @@
+from django.conf import settings
 from django.contrib import admin
+from django.contrib.postgres.search import SearchVector
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
+from django_scopes import scopes_disabled
+from django.utils import translation
 
 from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      MealPlan, MealType, NutritionInformation, Recipe,
@@ -8,7 +14,9 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
                      ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport)
+                     ImportLog, TelegramBot, BookmarkletImport, UserFile)
+
+from cookbook.managers import DICTIONARY
 
 
 class CustomUserAdmin(UserAdmin):
@@ -72,7 +80,24 @@ class SyncLogAdmin(admin.ModelAdmin):
 
 admin.site.register(SyncLog, SyncLogAdmin)
 
-admin.site.register(Keyword)
+
+class KeywordAdmin(TreeAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+
+    # removing ability to delete keywords from admin
+    # to avoid creating orphaned keywords
+    # def get_actions(self, request):
+    #     actions = super().get_actions(request)
+    #     if 'delete_selected' in actions:
+    #         del actions['delete_selected']
+    #     return actions
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
+
+
+admin.site.register(Keyword, KeywordAdmin)
 
 
 class StepAdmin(admin.ModelAdmin):
@@ -82,12 +107,26 @@ class StepAdmin(admin.ModelAdmin):
 admin.site.register(Step, StepAdmin)
 
 
+@admin.action(description='Rebuild index for selected recipes')
+def rebuild_index(modeladmin, request, queryset):
+    language = DICTIONARY.get(translation.get_language(), 'simple')
+    with scopes_disabled():
+        Recipe.objects.all().update(
+            name_search_vector=SearchVector('name__unaccent', weight='A', config=language),
+            desc_search_vector=SearchVector('description__unaccent', weight='B', config=language)
+        )
+        Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B', config=language))
+
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage')
 
     @staticmethod
     def created_by(obj):
         return obj.created_by.get_user_name()
+
+    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        actions = [rebuild_index]
 
 
 admin.site.register(Recipe, RecipeAdmin)
@@ -166,7 +205,7 @@ admin.site.register(ViewLog, ViewLogAdmin)
 
 class InviteLinkAdmin(admin.ModelAdmin):
     list_display = (
-        'username', 'group', 'valid_until',
+        'group', 'valid_until',
         'created_by', 'created_at', 'used_by'
     )
 
@@ -235,3 +274,10 @@ class BookmarkletImportAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BookmarkletImport, BookmarkletImportAdmin)
+
+
+class UserFileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'file_size_kb', 'created_at',)
+
+
+admin.site.register(UserFile, UserFileAdmin)

@@ -6,7 +6,8 @@ import {ExpirationPlugin} from 'workbox-expiration';
 
 
 const OFFLINE_CACHE_NAME = 'offline-html';
-const OFFLINE_PAGE_URL = '/offline/';
+let script_name = typeof window !== 'undefined' ? localStorage.getItem('SCRIPT_NAME') : '/'
+var OFFLINE_PAGE_URL = script_name + 'offline/';
 
 self.addEventListener('install', async (event) => {
     event.waitUntil(
@@ -44,7 +45,7 @@ registerRoute(
 );
 
 registerRoute(
-    ({request}) => request.destination === 'script' || request.destination === 'style',
+    ({request}) => (request.destination === 'script' || request.destination === 'style'),
     new StaleWhileRevalidate({
         cacheName: 'assets'
     })

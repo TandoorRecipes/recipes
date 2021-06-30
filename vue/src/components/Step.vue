@@ -34,19 +34,21 @@
             <table class="table table-sm">
               <!-- eslint-disable vue/no-v-for-template-key-on-child -->
               <template v-for="i in step.ingredients">
-                <Ingredient v-bind:ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id" @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient>
+                <Ingredient v-bind:ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
+                            @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient>
               </template>
               <!-- eslint-enable vue/no-v-for-template-key-on-child -->
             </table>
           </div>
           <div class="col" :class="{ 'col-md-8':  recipe.steps.length > 1, 'col-md-12':  recipe.steps.length <= 1,}">
-            <compile-component :code="step.ingredients_markdown" :ingredient_factor="ingredient_factor"></compile-component>
+            <compile-component :code="step.ingredients_markdown"
+                               :ingredient_factor="ingredient_factor"></compile-component>
           </div>
         </div>
       </b-collapse>
     </template>
 
-    <template v-if="step.type === 'TIME'">
+    <template v-if="step.type === 'TIME' || step.type === 'FILE'">
       <div class="row">
         <div class="col-md-8 offset-md-2" style="text-align: center">
           <h4 class="text-primary">
@@ -55,7 +57,8 @@
           </h4>
           <span style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fa fa-stopwatch"></i>
               {{ step.time }} {{ $t('min') }}</span>
-          <b-link class="d-print-none" :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#" v-if="start_time !== ''">
+          <b-link class="d-print-none" :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#"
+                  v-if="start_time !== ''">
             {{ moment(start_time).add(step.time_offset, 'minutes').format('HH:mm') }}
           </b-link>
         </div>
@@ -71,11 +74,27 @@
       <b-collapse id="collapse-1" v-model="details_visible">
         <div class="row" v-if="step.instruction !== ''">
           <div class="col col-md-12" style="text-align: center">
-            <compile-component :code="step.ingredients_markdown" :ingredient_factor="ingredient_factor"></compile-component>
+            <compile-component :code="step.ingredients_markdown"
+                               :ingredient_factor="ingredient_factor"></compile-component>
           </div>
         </div>
       </b-collapse>
     </template>
+
+    <div class="row" style="text-align: center">
+      <div class="col col-md-12">
+        <template v-if="step.file !== null">
+          <div
+              v-if="step.file.file.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg') || recipe.file_path.includes('.gif')">
+            <img :src="step.file.file" style="max-width: 50vw; max-height: 50vh">
+          </div>
+          <div v-else>
+            <a :href="step.file.file" target="_blank" rel="noreferrer nofollow">{{ $t('Download') }} {{ $t('File') }}</a>
+          </div>
+        </template>
+      </div>
+    </div>
+
 
     <div v-if="start_time !== ''">
       <b-popover

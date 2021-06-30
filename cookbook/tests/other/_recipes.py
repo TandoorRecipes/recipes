@@ -323,7 +323,7 @@ AMERICAS_TEST_KITCHEN = {
 }
 
 CHEF_KOCH = {
-    'file': ['chefkoch.html'],
+    "file": ["chefkoch.html"],
     "url": "https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html",
     "name": "Couscous und Garnelen im Pergament",
     "description": "Couscous und Garnelen im Pergament. Über 75 Bewertungen und für sehr lecker befunden. Mit ► Portionsrechner ► Kochbuch ► Video-Tipps! Jetzt entdecken und ausprobieren!",
@@ -453,6 +453,19 @@ CHEF_KOCH = {
             "original": "6 EL Olivenöl"
         },
         {
+            "amount": 6.0,
+            "unit": {
+                "text": "Tomate(n)",
+                "id": 96849
+            },
+            "ingredient": {
+                "text": "",
+                "id": 59547
+            },
+            "note": "getrocknet",
+            "original": "6 Tomate(n) , getrocknet"
+        },
+        {
             "amount": 0.5,
             "unit": {
                 "text": "kleine",
@@ -518,6 +531,19 @@ CHEF_KOCH = {
             "original": "1 EL Petersilie , Koriander und Minze, frisch und fein geschnitten"
         },
         {
+            "amount": 1.0,
+            "unit": {
+                "text": "Zitrone(n)",
+                "id": 97094
+            },
+            "ingredient": {
+                "text": "",
+                "id": 44688
+            },
+            "note": "Bio",
+            "original": "1 Zitrone(n) , Bio"
+        },
+        {
             "amount": 0,
             "unit": {
                 "text": "",
@@ -531,7 +557,160 @@ CHEF_KOCH = {
             "original": "Salz und Pfeffer , Ras el-Hanout"
         }
     ],
-    "recipeInstructions": 'Wasser, Gemüsebrühe, Kurkuma und Öl erhitzen. Couscous unter Rühren zufügen und quellen lassen, bis er al dente ist.\r\n\nGemüse putzen. Zucchini vierteln und in Scheiben, Paprika entkernen und das Fruchtfleisch in Streifen schneiden. Getrocknete Tomaten fein würfeln, Frühlingszwiebeln in feine Ringe schneiden. \r\n\nAlles vermengen und mit gepresstem Knoblauch, Zitrone, den Kräutern, Salz, Pfeffer und Ras el-Hanout würzen bzw. abschmecken.\r\n\n4 Blätter Pergament ausbreiten, etwas Couscous darauf geben, das Gemüse gleichmäßig darüber verteilen und die Gambas obenauf setzen. Diese noch nach Geschmack mit Salz und Pfeffer würzen und das Pergament verschließen. \r\n\nIm vorgeheizten Backofen bei 180°C Umluft ca. 20-25 Minuten garen.\r\n\nAnrichten: Couscous, Gemüse und Garnelen im Pergament auf einen Teller legen, das Pergament oben etwas öffnen, und aus dem Pergament heraus genießen! Guten Appetit!\n\nImported from https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html',
+    "recipeInstructions": "Wasser, Gemüsebrühe, Kurkuma und Öl erhitzen. Couscous unter Rühren zufügen und quellen lassen, bis er al dente ist.\r\n\nGemüse putzen. Zucchini vierteln und in Scheiben, Paprika entkernen und das Fruchtfleisch in Streifen schneiden. Getrocknete Tomaten fein würfeln, Frühlingszwiebeln in feine Ringe schneiden. \r\n\nAlles vermengen und mit gepresstem Knoblauch, Zitrone, den Kräutern, Salz, Pfeffer und Ras el-Hanout würzen bzw. abschmecken.\r\n\n4 Blätter Pergament ausbreiten, etwas Couscous darauf geben, das Gemüse gleichmäßig darüber verteilen und die Gambas obenauf setzen. Diese noch nach Geschmack mit Salz und Pfeffer würzen und das Pergament verschließen. \r\n\nIm vorgeheizten Backofen bei 180°C Umluft ca. 20-25 Minuten garen.\r\n\nAnrichten: Couscous, Gemüse und Garnelen im Pergament auf einen Teller legen, das Pergament oben etwas öffnen, und aus dem Pergament heraus genießen! Guten Appetit!\n\nImported from https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html"
+}
+
+CHEF_KOCH2 = {
+    "file": ["chefkoch2.html"],
+    "url": "https://www.chefkoch.de/rezepte/804871184310070/Brokkoli-Bratlinge.html",
+    "name": "Brokkoli - Bratlinge",
+    "description": "Brokkoli - Bratlinge. Über 91 Bewertungen und für vorzüglich befunden. Mit ► Portionsrechner ► Kochbuch ► Video-Tipps! Jetzt entdecken und ausprobieren!",
+    "servings": 4,
+    "prepTime": 25,
+    "cookTime": 0,
+    "image": "https://img.chefkoch-cdn.de/rezepte/804871184310070/bilder/1045695/crop-960x540/brokkoli-bratlinge.jpg",
+    "keywords": [
+        {
+            "text": "braten"
+        },
+        {
+            "text": "herbst"
+        },
+        {
+            "text": "resteverwertung"
+        },
+        {
+            "text": "gemüse"
+        },
+        {
+            "text": "vegetarisch"
+        },
+        {
+            "text": "raffiniert oder preiswert"
+        },
+        {
+            "text": "hauptspeise"
+        },
+        {
+            "text": "sommer"
+        },
+        {
+            "text": "vollwert"
+        }
+    ],
+    "recipeIngredient": [
+        {
+            "amount": 500.0,
+            "unit": {
+                "text": "g"
+            },
+            "ingredient": {
+                "text": "Brokkoli"
+            },
+            "note": "bissfest gegart",
+            "original": "500 g Brokkoli , bissfest gegart"
+        },
+        {
+            "amount": 2.0,
+            "unit": {
+                "text": "Ei(er)"
+            },
+            "ingredient": {
+                "text": ""
+            },
+            "note": "getrennt",
+            "original": "2 Ei(er) , getrennt"
+        },
+        {
+            "amount": 2.0,
+            "unit": {
+                "text": "TL"
+            },
+            "ingredient": {
+                "text": "Speisestärke"
+            },
+            "note": "",
+            "original": "2 TL Speisestärke"
+        },
+        {
+            "amount": 100.0,
+            "unit": {
+                "text": "g"
+            },
+            "ingredient": {
+                "text": "Käse (Emmentaler)"
+            },
+            "note": "geraffelt",
+            "original": "100 g Käse (Emmentaler), geraffelt"
+        },
+        {
+            "amount": 3.0,
+            "unit": {
+                "text": "EL"
+            },
+            "ingredient": {
+                "text": "Sonnenblumenkerne"
+            },
+            "note": "",
+            "original": "3 EL Sonnenblumenkerne"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": ""
+            },
+            "ingredient": {
+                "text": "Paniermehl"
+            },
+            "note": "",
+            "original": "Paniermehl"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": ""
+            },
+            "ingredient": {
+                "text": "Margarine"
+            },
+            "note": "",
+            "original": "Margarine"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": ""
+            },
+            "ingredient": {
+                "text": "Salz und Pfeffer"
+            },
+            "note": "",
+            "original": "Salz und Pfeffer"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": ""
+            },
+            "ingredient": {
+                "text": "Paprikapulver"
+            },
+            "note": "",
+            "original": "Paprikapulver"
+        },
+        {
+            "amount": 0,
+            "unit": {
+                "text": ""
+            },
+            "ingredient": {
+                "text": "Muskat"
+            },
+            "note": "",
+            "original": "Muskat"
+        }
+    ],
+    "recipeInstructions": "Der Brokkoli wird in kleine Stücke geschnitten, möglichst nicht zermantschen. Das Eigelb wird mit der Speisestärke vermischt und dem Brokkoli beigefügt. Das Eiweiß wird zu Schnee geschlagen, danach wird der Käse mit dem Eiweiß vermengt und das Eiweiß-Käse-Gemisch zum Brokkoli gegeben, ebenso die Sonnenblumenkerne. Mit den angegebenen Gewürzen bestreuen und mit einem Teigschaber gut vermischen. Wenn der Teig sehr nass ist, dann kann man noch etwas Paniermehl oder auch Haferflocken zugeben. \r\n\nAus dem Teig lassen sich ca. 12 Bratlinge formen, diese werden in Paniermehl gewälzt und dann in der Pfanne von beiden Seiten solange gebraten, bis sie braun sind.\r\n\nDazu passt (Kräuter-)Baguette. Oder man serviert es dem vegetarisch essenden Teil der Familie, während die anderen Frikadellen bekommen. Diese Bratlinge eignen sich zum Einfrieren.\n\nImported from https://www.chefkoch.de/rezepte/804871184310070/Brokkoli-Bratlinge.html"
 }
 
 COOKPAD = {

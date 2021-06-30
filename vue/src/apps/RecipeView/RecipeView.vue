@@ -57,8 +57,8 @@
                      value="1" maxlength="3" min="0"
                      type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </div>
-            <div class="my-auto">
-              <b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b>
+            <div class="my-auto ">
+              <span class="text-primary"><b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b></span>
             </div>
           </div>
         </div>

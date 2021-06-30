@@ -1,0 +1,17 @@
+.spinner-tandoor {
+    animation: rotation 3s infinite linear;
+    content: url("../assets/spinner.svg");
+    width: auto;
+    height: 20vh;
+    margin: 0;
+    padding: 0;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
