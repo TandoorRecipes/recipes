@@ -24,12 +24,15 @@
       <b-card-text style="text-overflow: ellipsis;">
         <template v-if="recipe !== null">
           <recipe-rating :recipe="recipe"></recipe-rating>
-          <span v-if="recipe.description.length > 120">
+          <template v-if="recipe.description !== null">
+            <span v-if="recipe.description.length > 120">
           {{ recipe.description.substr(0, 120) + "\u2026" }}
           </span>
-          <span v-if="recipe.description.length <= 120">
+            <span v-if="recipe.description.length <= 120">
           {{ recipe.description }}
           </span>
+          </template>
+
           <br/> <!-- TODO UGLY! -->
           <last-cooked :recipe="recipe"></last-cooked>
           <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
