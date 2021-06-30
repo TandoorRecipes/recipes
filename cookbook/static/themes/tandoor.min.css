@@ -10458,3 +10458,7 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 .multiselect__tag-icon:after {
     color: #212529 !important
 }
+
+.form-control-search {
+    font-size: 20px;
+}
