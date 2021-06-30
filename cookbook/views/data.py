@@ -17,6 +17,7 @@ from PIL import Image, UnidentifiedImageError
 from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
+from cookbook.helper.image_processing import handle_image
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
@@ -142,7 +143,7 @@ def import_url(request):
         )
 
         step = Step.objects.create(
-            instruction=data['recipeInstructions'],
+            instruction=data['recipeInstructions'], space=request.space,
         )
 
         recipe.steps.add(step)
@@ -157,7 +158,7 @@ def import_url(request):
                 recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
-            ingredient = Ingredient()
+            ingredient = Ingredient(space=request.space,)
 
             if ing['ingredient']['text'] != '':
                 ingredient.food, f_created = Food.objects.get_or_create(
@@ -188,23 +189,20 @@ def import_url(request):
         if 'image' in data and data['image'] != '' and data['image'] is not None:
             try:
                 response = requests.get(data['image'])
-                img = Image.open(BytesIO(response.content))
 
-                # todo move image processing to dedicated function
-                basewidth = 720
-                wpercent = (basewidth / float(img.size[0]))
-                hsize = int((float(img.size[1]) * float(wpercent)))
-                img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-                im_io = BytesIO()
-                img.save(im_io, 'PNG', quality=70)
+                img, filetype = handle_image(request, BytesIO(response.content))
                 recipe.image = File(
-                    im_io, name=f'{uuid.uuid4()}_{recipe.pk}.png'
+                    img, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}'
                 )
                 recipe.save()
-            except UnidentifiedImageError:
+            except UnidentifiedImageError as e:
+                print(e)
                 pass
-            except MissingSchema:
+            except MissingSchema as e:
+                print(e)
+                pass
+            except Exception as e:
+                print(e)
                 pass
 
         return HttpResponse(reverse('view_recipe', args=[recipe.pk]))

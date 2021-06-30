@@ -3,6 +3,7 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
+from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Food, Unit, Ingredient
@@ -29,7 +30,7 @@ class NextcloudCookbook(Integration):
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
             step = Step.objects.create(
-                instruction=s
+                instruction=s, space=self.request.space,
             )
             if not ingredients_added:
                 if len(recipe_json['description'].strip()) > 500:
@@ -42,7 +43,7 @@ class NextcloudCookbook(Integration):
                     f = get_food(ingredient, self.request.space)
                     u = get_unit(unit, self.request.space)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note
+                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))
             recipe.steps.add(step)
 
@@ -51,7 +52,7 @@ class NextcloudCookbook(Integration):
                 import_zip = ZipFile(f['file'])
                 for z in import_zip.filelist:
                     if re.match(f'^Recipes/{recipe.name}/full.jpg$', z.filename):
-                        self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)))
+                        self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
 
         return recipe
 

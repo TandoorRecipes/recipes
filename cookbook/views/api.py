@@ -16,6 +16,7 @@ from django.db.models import Q
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
 from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from icalendar import Calendar, Event
 from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
@@ -28,6 +29,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import PathOverflow, InvalidMoveToDescendant, InvalidPosition
 
+from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
@@ -41,7 +43,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -482,16 +484,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            img = Image.open(obj.image)
 
-            basewidth = 720
-            wpercent = (basewidth / float(img.size[0]))
-            hsize = int((float(img.size[1]) * float(wpercent)))
-            img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-            im_io = io.BytesIO()
-            img.save(im_io, 'PNG', quality=70)
-            obj.image = File(im_io, name=f'{uuid.uuid4()}_{obj.pk}.png')
+            img, filetype = handle_image(request, obj.image)
+            obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
             obj.save()
 
             return Response(serializer.data)
@@ -667,6 +662,16 @@ def sync_all(request):
             request, messages.ERROR, _('Error synchronizing with Storage')
         )
         return redirect('list_recipe_import')
+
+
+@group_required('user')
+def share_link(request, pk):
+    if request.space.allow_sharing:
+        recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+        link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
+        return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+    else:
+        return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
 
 @group_required('user')

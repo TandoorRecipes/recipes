@@ -24,13 +24,13 @@ class OpenEats(Integration):
         if file["source"] != '':
             instructions += file["source"]
 
-        step = Step.objects.create(instruction=instructions)
+        step = Step.objects.create(instruction=instructions, space=self.request.space,)
 
         for ingredient in file['ingredients']:
             f = get_food(ingredient['food'], self.request.space)
             u = get_unit(ingredient['unit'], self.request.space)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=ingredient['amount']
+                food=f, unit=u, amount=ingredient['amount'], space=self.request.space,
             ))
         recipe.steps.add(step)
 

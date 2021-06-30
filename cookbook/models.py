@@ -70,10 +70,12 @@ class PermissionModelMixin:
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
     max_recipes = models.IntegerField(default=0)
     max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
+    allow_sharing = models.BooleanField(default=True)
     demo = models.BooleanField(default=False)
 
     def __str__(self):
@@ -157,6 +159,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_auto_sync = models.IntegerField(default=5)
     sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
 
+    created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
     objects = ScopedManager(space='space')
 
@@ -388,14 +391,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
 
-    objects = ScopedManager(space='step__recipe__space')
-
-    @staticmethod
-    def get_space_key():
-        return 'step', 'recipe', 'space'
-
-    def get_space(self):
-        return self.step_set.first().recipe_set.first().space
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     def __str__(self):
         return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
@@ -424,14 +421,8 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     show_as_header = models.BooleanField(default=True)
     search_vector = SearchVectorField(null=True)
 
-    objects = ScopedManager(space='recipe__space')
-
-    @staticmethod
-    def get_space_key():
-        return 'recipe', 'space'
-
-    def get_space(self):
-        return self.recipe_set.first().space
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     def get_instruction_render(self):
         from cookbook.helper.template_helper import render_instructions
@@ -453,17 +444,11 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         max_length=512, default="", null=True, blank=True
     )
 
-    objects = ScopedManager(space='recipe__space')
-
-    @staticmethod
-    def get_space_key():
-        return 'recipe', 'space'
-
-    def get_space(self):
-        return self.recipe_set.first().space
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     def __str__(self):
-        return 'Nutrition'
+        return f'Nutrition {self.pk}'
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
@@ -690,6 +675,8 @@ class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, Pe
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4)
+    request_count = models.IntegerField(default=0)
+    abuse_blocked = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -773,6 +760,10 @@ class ImportLog(models.Model, PermissionModelMixin):
     running = models.BooleanField(default=True)
     msg = models.TextField(default="")
     keyword = models.ForeignKey(Keyword, null=True, blank=True, on_delete=models.SET_NULL)
+
+    total_recipes = models.IntegerField(default=0)
+    imported_recipes = models.IntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
