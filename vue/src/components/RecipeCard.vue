@@ -1,9 +1,10 @@
 <template>
 
 
-  <b-card no-body>
+  <b-card no-body v-hover>
     <a :href="clickUrl()">
-      <b-card-img-lazy style="height: 15vh; object-fit: cover" :src=recipe_image v-bind:alt="$t('Recipe_Image')"
+      <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src=recipe_image
+                       v-bind:alt="$t('Recipe_Image')"
                        top></b-card-img-lazy>
       <div class="card-img-overlay h-100 d-flex flex-column justify-content-right"
            style="float:right; text-align: right; padding-top: 10px; padding-right: 5px">
@@ -14,7 +15,7 @@
     </a>
 
 
-    <b-card-body style="padding: 16px">
+    <b-card-body class="p-4">
       <h6><a :href="clickUrl()">
         <template v-if="recipe !== null">{{ recipe.name }}</template>
         <template v-else>{{ meal_plan.title }}</template>
@@ -95,6 +96,18 @@ export default {
         return resolveDjangoUrl('view_recipe', this.recipe.id)
       } else {
         return resolveDjangoUrl('view_plan_entry', this.meal_plan.id)
+      }
+    }
+  },
+  directives: {
+    hover: {
+      inserted: function (el) {
+        el.addEventListener('mouseenter', () => {
+          el.classList.add("shadow")
+        });
+        el.addEventListener('mouseleave', () => {
+          el.classList.remove("shadow")
+        });
       }
     }
   }
