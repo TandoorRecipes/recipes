@@ -23,10 +23,10 @@ class Paprika(Integration):
                 name=recipe_json['name'].strip(), created_by=self.request.user, internal=True, space=self.request.space)
 
             if 'description' in recipe_json:
-                recipe.description = recipe_json['description'].strip()
+                recipe.description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
 
             try:
-                if re.match(r'([0-9])+\s(.)*', recipe_json['servings'] ):
+                if re.match(r'([0-9])+\s(.)*', recipe_json['servings']):
                     s = recipe_json['servings'].split(' ')
                     recipe.servings = s[0]
                     recipe.servings_text = s[1]
@@ -58,6 +58,9 @@ class Paprika(Integration):
                 instruction=instructions
             )
 
+            if len(recipe_json['description'].strip()) > 500:
+                step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
+
             if 'categories' in recipe_json:
                 for c in recipe_json['categories']:
                     keyword, created = Keyword.objects.get_or_create(name=c.strip(), space=self.request.space)
@@ -79,5 +82,5 @@ class Paprika(Integration):
 
             if recipe_json.get("photo_data", None):
                 self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])))
-                
+
             return recipe

@@ -20,12 +20,20 @@ from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
-                             RecipeImport, Step, Sync, Unit)
+                             RecipeImport, Step, Sync, Unit, UserPreference)
 from cookbook.tables import SyncTable
 
 
 @group_required('user')
 def sync(request):
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == "POST":
         if not has_group_permission(request.user, ['admin']):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
@@ -109,6 +117,14 @@ def batch_edit(request):
 @group_required('user')
 @atomic
 def import_url(request):
+    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
+        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
+    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
+        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == 'POST':
         data = json.loads(request.body)
         data['cookTime'] = parse_cooktime(data.get('cookTime', ''))
@@ -131,14 +147,14 @@ def import_url(request):
 
         recipe.steps.add(step)
 
+        all_keywords = Keyword.get_tree()
         for kw in data['keywords']:
-            # if k := Keyword.objects.filter(name=kw['text'], space=request.space).first():
-            #     recipe.keywords.add(k)
-            # elif data['all_keywords']:
-            #     k = Keyword.objects.create(name=kw['text'], space=request.space)
-            #     recipe.keywords.add(k)
-            k, created = Keyword.objects.get_or_create(name=kw['text'].strip(), space=request.space)
-            recipe.keywords.add(k)
+            q = all_keywords.filter(name=kw['text'], space=request.space)
+            if len(q) != 0:
+                recipe.keywords.add(q[0])
+            elif data['all_keywords']:
+                k = Keyword.add_root(name=kw['text'], space=request.space)
+                recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
             ingredient = Ingredient()
@@ -199,6 +215,7 @@ def import_url(request):
         context = {}
 
     return render(request, 'url_import.html', context)
+
 
 class Object(object):
     pass

@@ -37,7 +37,11 @@
     <template v-if="shopping_list !== undefined">
 
         <div class="text-center" v-if="loading">
-            <i class="fas fa-spinner fa-spin fa-8x"></i>
+            {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+                <img class="spinner-tandoor"/>
+            {% else %}
+                <i class="fas fa-spinner fa-spin fa-8x"></i>
+            {% endif %}
         </div>
         <div v-else-if="edit_mode">
             <div class="row">

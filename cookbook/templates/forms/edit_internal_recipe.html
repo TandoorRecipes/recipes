@@ -35,7 +35,11 @@
 
     <div v-if="!recipe" class="text-center">
         <br/>
-        <i class="fas fa-spinner fa-spin fa-8x"></i>
+        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+            <img class="spinner-tandoor"/>
+        {% else %}
+            <i class="fas fa-spinner fa-spin fa-8x"></i>
+        {% endif %}
     </div>
 
     <div v-if="recipe">
@@ -197,16 +201,39 @@
                             <select class="form-control" id="id_type" v-model="step.type">
                                 <option value="TEXT">{% trans 'Text' %}</option>
                                 <option value="TIME">{% trans 'Time' %}</option>
+                                <option value="FILE">{% trans 'File' %}</option>
                             </select>
                         </div>
                     </div>
 
 
                     <div class="row" style="margin-top: 12px">
-                        <div class="col-md-12">
+                        <div class="col-md-3">
                             <label :for="'id_step_' + step.id + '_time'">{% trans 'Step time in Minutes' %}</label>
                             <input class="form-control" v-model="step.time"
                                    :id="'id_step_' + step.id + '_time'">
+                        </div>
+
+                        <div class="col-md-9">
+                            <label :for="'id_step_' + step.id + '_file'">{% trans 'File' %}</label>
+                            <multiselect
+                                    v-tabindex
+                                    ref="file"
+                                    v-model="step.file"
+                                    :options="files"
+                                    :close-on-select="true"
+                                    :clear-on-select="true"
+                                    :allow-empty="true"
+                                    :preserve-search="true"
+                                    placeholder="{% trans 'Select File' %}"
+                                    select-label="{% trans 'Select' %}"
+                                    :id="'id_step_' + step.id + '_file'"
+                                    label="name"
+                                    track-by="name"
+                                    :multiple="false"
+                                    :loading="files_loading"
+                                    @search-change="searchFiles">
+                            </multiselect>
                         </div>
                     </div>
 
@@ -374,7 +401,8 @@
                             <label :for="'id_instruction_' + step.id">{% trans 'Instructions' %}</label>
                             <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
                                              :id="'id_instruction_' + step.id"></b-form-textarea>
-                            <small class="text-muted">{% trans 'You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>' %}</small>
+                            {% markdown_link as markdown_link %}
+                            <small class="text-muted">{{ markdown_link|safe }}</small>
                         </div>
                     </div>
                 </div>
@@ -494,6 +522,8 @@
                 foods_loading: false,
                 units: [],
                 units_loading: false,
+                files: [],
+                files_loading: false,
                 message: '',
             },
             directives: {
@@ -519,6 +549,7 @@
                 this.searchUnits('')
                 this.searchFoods('')
                 this.searchKeywords('')
+                this.searchFiles('')
 
                 this._keyListener = function (e) {
                     if (e.code === "Space" && e.ctrlKey) {
@@ -568,6 +599,7 @@
                     this.sortSteps()
                     for (let s of this.recipe.steps) {
                         this.sortIngredients(s)
+
                     }
                     this.$http.put("{% url 'api:recipe-detail' recipe.pk %}", this.recipe,
                         {}).then((response) => {
@@ -602,8 +634,6 @@
                         }
                         reader.readAsDataURL(event.target.files[0]);
                     }
-
-
                 },
                 addStep: function () { //TODO see if default can be generated from options request
                     this.recipe.steps.push(
@@ -668,14 +698,25 @@
                     this.recipe.steps[step].ingredients[id] = new_unit
                 },
                 addKeyword: function (tag) {
-                    let new_keyword = {'label':tag,'name':tag}
+                    let new_keyword = {'label': tag, 'name': tag}
                     this.recipe.keywords.push(new_keyword)
                 },
                 searchKeywords: function (query) {
                     this.keywords_loading = true
                     this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.keywords = response.data;
+                        console.log(response.data)
+                        this.keywords = response.data.results;
                         this.keywords_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
+                },
+                searchFiles: function (query) {
+                    this.files_loading = true
+                    this.$http.get("{% url 'api:userfile-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.files = response.data
+                        this.files_loading = false
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')

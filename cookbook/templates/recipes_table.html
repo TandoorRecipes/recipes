@@ -45,7 +45,7 @@
                                                             <span class="badge badge-pill badge-light">{{ x }}</span>
                                                         {% endfor %}
                                                     </p>
-                                                    <p class="card-text"><small class="text-muted">
+                                                    <p class="card-text">
                                                         {% if row.cells.working_time != 0 %}
                                                             <span class="badge badge-secondary"><i
                                                                     class="fas fa-user-clock"></i> {% trans 'Preparation time ca.' %} {{ row.cells.working_time }} min </span>
@@ -63,7 +63,7 @@
                                                         {% if last_cooked %}
                                                             <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
                                                         {% endif %}
-                                                    </small></p>
+                                                    </p>
                                                 </div>
                                                 <div>
                                                     <div class="dropdown">

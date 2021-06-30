@@ -1,4 +1,4 @@
-Django==3.2.3
+Django==3.2.4
 cryptography==3.4.7
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
@@ -34,7 +34,10 @@ django-allauth==0.44.0
 recipe-scrapers==13.2.7
 django-scopes==1.2.0
 pytest==6.2.4
-pytest-django==4.3.0
+pytest-django==4.4.0
 django-cors-headers==3.7.0
+django-treebeard==4.5.1
 django-storages==1.11.1
-boto3==1.17.84
+boto3==1.17.90
+django-prometheus==2.1.0
+django-hCaptcha==0.1.0
