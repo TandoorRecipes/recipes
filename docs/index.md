@@ -6,6 +6,24 @@
   <br>
 </h1>
 
+<h4 align="center">This is my personal beta of vabene's excellent recipe app.  It includes many of the new features I've developed and should be considered experimental.</h4>
+## Experimental Features
+- Manual import recipes from URL & Source (HTML/JSON)
+- Bookmarklet to import recipes from any website
+- Full Text Search
+- Hierarchical Keywords
+
+## Coming Next
+- Heirarchical Ingredients
+- Faceted Search
+- What Can I Make Now?
+- Better ingredient/unit matching on import
+- Custom word replacement on import (e.g. 'grams' automatically imported as 'g')
+- improved ingredient parser (items in parens moved to notes)
+- quick view ingredients
+- quick view associated recipe
+- favorite recipes
+
 <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
 
 <p align="center">
@@ -18,7 +36,7 @@
 </p>
 
 <p align="center">
-<a href="https://docs.tandoor.dev/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
+<a href="https://docs.tandoor.dev/install/docker.html" rel="noopener noreferrer">Installation</a> •
 <a href="https://docs.tandoor.dev/" target="_blank" rel="noopener noreferrer">Documentation</a> •
 <a href="https://app.tandoor.dev/" target="_blank" rel="noopener noreferrer">Demo</a>
 </p>

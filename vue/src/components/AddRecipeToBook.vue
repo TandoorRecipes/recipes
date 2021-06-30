@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <b-modal class="modal" id="id_modal_add_book" :title="$t('Add_to_Book')" :ok-title="$t('Add')"
+    <b-modal class="modal" :id="`id_modal_add_book_${modal_id}`" :title="$t('Add_to_Book')" :ok-title="$t('Add')"
              :cancel-title="$t('Close')" @ok="addToBook()">
 
       <multiselect
@@ -42,6 +42,7 @@ export default {
   },
   props: {
     recipe: Object,
+    modal_id: Number
   },
   data() {
     return {

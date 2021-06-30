@@ -55,7 +55,7 @@ def recipe_rating(recipe, user):
     if not user.is_authenticated:
         return ''
     rating = recipe.cooklog_set \
-        .filter(created_by=user, rating__gte=0) \
+        .filter(created_by=user, rating__gt=0) \
         .aggregate(Avg('rating'))
     if rating['rating__avg']:
 
@@ -64,7 +64,7 @@ def recipe_rating(recipe, user):
             rating_stars = rating_stars + '<i class="fas fa-star fa-xs"></i>'
 
         if rating['rating__avg'] % 1 >= 0.5:
-            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'  # noqa: E501
+            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'
 
         rating_stars += '</span>'
 
@@ -111,6 +111,11 @@ def is_debug():
     return settings.DEBUG
 
 
+@register.simple_tag()
+def markdown_link():
+    return f"{_('You can use markdown to format this field. See the ')}<a target='_blank' href='{reverse('docs_markdown')}'>{_('docs here')}</a>"
+
+
 @register.simple_tag
 def bookmarklet(request):
     if request.is_secure():
@@ -132,7 +137,14 @@ def bookmarklet(request):
             localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
             localStorage.setItem('token', '" + api_token.__str__() + "'); \
             document.body.appendChild(document.createElement(\'script\')).src=\'" \
-               + server + prefix + static('js/bookmarklet.js') + "? \
+            + server + prefix + static('js/bookmarklet.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();"
-
     return re.sub(r"[\n\t\s]*", "", bookmark)
+
+
+@register.simple_tag
+def base_path(request, path_type):
+    if path_type == 'base':
+        return request._current_scheme_host + request.META.get('HTTP_X_SCRIPT_NAME', '')
+    elif path_type == 'script':
+        return request.META.get('HTTP_X_SCRIPT_NAME', '')

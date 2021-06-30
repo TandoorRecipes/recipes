@@ -23,10 +23,10 @@ class Paprika(Integration):
                 name=recipe_json['name'].strip(), created_by=self.request.user, internal=True, space=self.request.space)
 
             if 'description' in recipe_json:
-                recipe.description = recipe_json['description'].strip()
+                recipe.description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
 
             try:
-                if re.match(r'([0-9])+\s(.)*', recipe_json['servings'] ):
+                if re.match(r'([0-9])+\s(.)*', recipe_json['servings']):
                     s = recipe_json['servings'].split(' ')
                     recipe.servings = s[0]
                     recipe.servings_text = s[1]
@@ -55,8 +55,11 @@ class Paprika(Integration):
                 pass
 
             step = Step.objects.create(
-                instruction=instructions
+                instruction=instructions, space=self.request.space,
             )
+
+            if len(recipe_json['description'].strip()) > 500:
+                step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
 
             if 'categories' in recipe_json:
                 for c in recipe_json['categories']:
@@ -70,7 +73,7 @@ class Paprika(Integration):
                         f = get_food(ingredient, self.request.space)
                         u = get_unit(unit, self.request.space)
                         step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note
+                            food=f, unit=u, amount=amount, note=note, space=self.request.space,
                         ))
             except AttributeError:
                 pass
@@ -78,6 +81,6 @@ class Paprika(Integration):
             recipe.steps.add(step)
 
             if recipe_json.get("photo_data", None):
-                self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])))
-                
+                self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])), filetype='.jpeg')
+
             return recipe

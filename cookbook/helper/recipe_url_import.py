@@ -100,22 +100,21 @@ def get_from_scraper(scrape, space):
         for x in scrape.ingredients():
             try:
                 amount, unit, ingredient, note = parse_single_ingredient(x)
-                if ingredient:
-                    ingredients.append(
-                        {
-                            'amount': amount,
-                            'unit': {
-                                'text': unit,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'ingredient': {
-                                'text': ingredient,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'note': note,
-                            'original': x
-                        }
-                    )
+                ingredients.append(
+                    {
+                        'amount': amount,
+                        'unit': {
+                            'text': unit,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'ingredient': {
+                            'text': ingredient,
+                            'id': random.randrange(10000, 99999)
+                        },
+                        'note': note,
+                        'original': x
+                    }
+                )
             except Exception:
                 ingredients.append(
                     {
@@ -358,3 +357,11 @@ def normalize_string(string):
     unescaped_string = re.sub(r'\n\s*\n', '\n\n', unescaped_string)
     unescaped_string = unescaped_string.replace("\xa0", " ").replace("\t", " ").strip()
     return unescaped_string
+
+
+def iso_duration_to_minutes(string):
+    match = re.match(
+        r'P((?P<years>\d+)Y)?((?P<months>\d+)M)?((?P<weeks>\d+)W)?((?P<days>\d+)D)?T((?P<hours>\d+)H)?((?P<minutes>\d+)M)?((?P<seconds>\d+)S)?',
+        string
+    ).groupdict()
+    return int(match['days'] or 0) * 24 * 60 + int(match['hours'] or 0) * 60 + int(match['minutes'] or 0)
