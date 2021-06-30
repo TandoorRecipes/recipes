@@ -3,7 +3,6 @@ import re
 from datetime import datetime
 from uuid import UUID
 
-from allauth.account.forms import SignupForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -12,10 +11,10 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Avg, Q, Sum
-from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Avg, Q
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -27,11 +26,8 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
-                            SearchPreferenceForm, AllAuthSignupForm,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm, SearchPreferenceForm)
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, SearchPreferenceForm)
 from cookbook.helper.ingredient_parser import parse
-                            
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
