@@ -1,44 +1,42 @@
 <template>
   <div id="app" style="margin-bottom: 4vh">
-
     <div class="row">
-      <div class="col-md-2 d-none d-md-block">
-
-      </div>
-      <div class="col-xl-8 col-12">
-
-
+      <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
         <div class="row">
           <div class="col col-md-12">
+            <div class="row justify-content-center">
+              <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
+                <b-input-group>
+                  <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input"
+                           v-bind:placeholder="$t('Search')"></b-input>
+                  <b-input-group-append>
+                    <b-button v-b-toggle.collapse_advanced_search
+                              v-bind:class="{'btn-primary': !isAdvancedSettingsSet(), 'btn-danger': isAdvancedSettingsSet()}"
+                              class="shadow-none btn"><i
+                        class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i
+                        class="fas fa-caret-up"
+                        v-if="settings.advanced_search_visible"></i>
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </div>
+            </div>
 
 
-            <b-input-group class="mt-3">
-              <b-input class="form-control" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
-              <b-input-group-append>
-                <b-button v-b-toggle.collapse_advanced_search
-                          v-bind:class="{'btn-primary': !isAdvancedSettingsSet(), 'btn-danger': isAdvancedSettingsSet()}"
-                          class="shadow-none btn"><i
-                    class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i class="fas fa-caret-up"
-                                                                                              v-if="settings.advanced_search_visible"></i>
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-
-
-            <b-collapse id="collapse_advanced_search" class="mt-2" v-model="settings.advanced_search_visible">
+            <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm" v-model="settings.advanced_search_visible">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body p-4">
 
                   <div class="row">
-                    <div class="col-md-3" style="margin-top: 1vh">
+                    <div class="col-md-3">
                       <a class="btn btn-primary btn-block text-uppercase"
                          :href="resolveDjangoUrl('new_recipe')">{{ $t('New_Recipe') }}</a>
                     </div>
-                    <div class="col-md-3" style="margin-top: 1vh">
+                    <div class="col-md-3">
                       <a class="btn btn-primary btn-block text-uppercase"
                          :href="resolveDjangoUrl('data_import_url')">{{ $t('Import') }}</a>
                     </div>
-                    <div class="col-md-3" style="margin-top: 1vh">
+                    <div class="col-md-3">
                       <button class="btn btn-block text-uppercase" v-b-tooltip.hover :title="$t('show_only_internal')"
                               v-bind:class="{'btn-success':settings.search_internal, 'btn-primary':!settings.search_internal}"
                               @click="settings.search_internal = !settings.search_internal;refreshData()">
@@ -46,9 +44,9 @@
                       </button>
                     </div>
 
-                    <div class="col-md-3" style="position: relative; margin-top: 1vh">
+                    <div class="col-md-3">
                       <button id="id_settings_button" class="btn btn-primary btn-block text-uppercase"><i
-                          class="fas fa-cog"></i>
+                          class="fas fa-cog fa-lg  m-1"></i>
                       </button>
                     </div>
 
@@ -104,7 +102,7 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group style="margin-top: 1vh">
+                      <b-input-group class="mt-2">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
                                              :initial_selection="settings.search_keywords"
                                              search_function="listKeywords" label="label"
@@ -127,7 +125,7 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group style="margin-top: 1vh">
+                      <b-input-group class="mt-2">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
                                              :initial_selection="settings.search_foods"
                                              search_function="listFoods" label="name"
@@ -149,7 +147,7 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group style="margin-top: 1vh">
+                      <b-input-group class="mt-2">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="settings.search_books"
                                              search_function="listRecipeBooks" label="name"
