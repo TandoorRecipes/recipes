@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import re
+import traceback
 import uuid
 from io import BytesIO, StringIO
 from zipfile import ZipFile, BadZipFile
@@ -15,6 +16,7 @@ from django_scopes import scope
 from cookbook.forms import ImportExportBase
 from cookbook.helper.image_processing import get_filetype
 from cookbook.models import Keyword, Recipe
+from recipes.settings import DEBUG
 
 
 class Integration:
@@ -32,12 +34,7 @@ class Integration:
         self.request = request
         self.export_type = export_type
         # TODO add all import keywords under the importer root node
-        self.keyword = Keyword.add_root(
-            name=f'Import {export_type} {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}.{datetime.datetime.now().strftime("%S")}',
-            description=f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}',
-            icon='📥',
-            space=request.space,
-        )
+        self.keyword = Keyword.objects.first()
 
     def do_export(self, recipes):
         """
@@ -143,7 +140,7 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
-                                il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
+                                self.handle_exception(e, log=il, message=f'-------------------- \n ERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     elif '.json' in f['name'] or '.txt' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
@@ -157,7 +154,7 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
-                                il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
+                                self.handle_exception(e, log=il, message=f'-------------------- \n ERROR \n{e}\n--------------------\n')
                     elif '.rtk' in f['name']:
                         import_zip = ZipFile(f['file'])
                         for z in import_zip.filelist:
@@ -174,7 +171,7 @@ class Integration:
                                         il.imported_recipes += 1
                                         il.save()
                                     except Exception as e:
-                                        il.msg += f'-------------------- \n ERROR \n{e}\n--------------------\n'
+                                        self.handle_exception(e, log=il, message=f'-------------------- \n ERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
@@ -185,8 +182,9 @@ class Integration:
                 il.msg += 'ERROR ' + _(
                     'Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
             except:
-                il.msg += 'ERROR ' + _(
+                msg = 'ERROR ' + _(
                     'An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n'
+                self.handle_exception(e, log=il, message=msg)
 
             if len(self.ignored_recipes) > 0:
                 il.msg += '\n' + _(
@@ -245,3 +243,12 @@ class Integration:
             - data - string content for file to get created in export zip
         """
         raise NotImplementedError('Method not implemented in integration')
+
+    def handle_exception(self, exception, log=None, message=''):
+        if log:
+            if message:
+                log.msg += message
+            else:
+                log.msg += exception.msg
+        if DEBUG:
+            traceback.print_exc()
