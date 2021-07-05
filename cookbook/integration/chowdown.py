@@ -51,6 +51,7 @@ class Chowdown(Integration):
         recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space)
 
         for k in tags.split(','):
+            print(f'adding keyword {k.strip()}')
             keyword, created = Keyword.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
