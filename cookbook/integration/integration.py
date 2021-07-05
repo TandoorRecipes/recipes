@@ -140,7 +140,7 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
-                                self.handle_exception(e, log=il, message=f'-------------------- \n ERROR \n{e}\n--------------------\n')
+                                self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     elif '.json' in f['name'] or '.txt' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
@@ -154,7 +154,7 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
-                                self.handle_exception(e, log=il, message=f'-------------------- \n ERROR \n{e}\n--------------------\n')
+                                self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                     elif '.rtk' in f['name']:
                         import_zip = ZipFile(f['file'])
                         for z in import_zip.filelist:
@@ -171,7 +171,7 @@ class Integration:
                                         il.imported_recipes += 1
                                         il.save()
                                     except Exception as e:
-                                        self.handle_exception(e, log=il, message=f'-------------------- \n ERROR \n{e}\n--------------------\n')
+                                        self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
