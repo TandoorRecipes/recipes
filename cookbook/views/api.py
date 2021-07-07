@@ -347,6 +347,11 @@ class RecipeSchema(AutoSchema):
             "description": 'true or false. returns the results in randomized order.',
             'schema': {'type': 'string', },
         })
+        parameters.append({
+            "name": 'new', "in": "query", "required": False,
+            "description": 'true or false. returns new results first in search results',
+            'schema': {'type': 'string', },
+        })
         return parameters
 
 
@@ -592,7 +597,7 @@ def share_link(request, pk):
 def log_cooking(request, recipe_id):
     recipe = get_object_or_None(Recipe, id=recipe_id)
     if recipe:
-        log = CookLog.objects.create(created_by=request.user, recipe=recipe)
+        log = CookLog.objects.create(created_by=request.user, recipe=recipe, space=request.space)
         servings = request.GET['s'] if 's' in request.GET else None
         if servings and re.match(r'^([1-9])+$', servings):
             log.servings = int(servings)

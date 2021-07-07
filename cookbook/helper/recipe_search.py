@@ -21,6 +21,7 @@ def search_recipes(request, queryset, params):
 
     search_internal = params.get('internal', None)
     search_random = params.get('random', False)
+    search_new = params.get('new', False)
     search_last_viewed = int(params.get('last_viewed', 0))
 
     if search_last_viewed > 0:
@@ -29,9 +30,12 @@ def search_recipes(request, queryset, params):
 
         return queryset.filter(pk__in=last_viewed_recipes[len(last_viewed_recipes) - min(len(last_viewed_recipes), search_last_viewed):])
 
-    queryset = queryset.annotate(
-        new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
-                        default=Value(0), )).order_by('-new_recipe', 'name')
+    if search_new == 'true':
+        queryset = queryset.annotate(
+            new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
+                            default=Value(0), )).order_by('-new_recipe', 'name')
+    else:
+        queryset = queryset.order_by('name')
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                    'django.db.backends.postgresql']:
