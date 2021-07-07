@@ -119,6 +119,7 @@ server {
     }
 
     location / {
+        proxy_set_header Host $http_host;
         proxy_pass http://unix:/var/www/recipes/recipes.sock;
     }
 }
