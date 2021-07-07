@@ -13,6 +13,8 @@ Get the last version from the repository: `git clone https://github.com/vabene11
 
 Move it to the `/var/www` directory: `mv recipes /var/www`
 
+Change to the directory: `cd /var/www/recipes`
+
 Give the user permissions: `chown -R recipes:www-data /var/www/recipes`
 
 Create virtual env: `python3.9 -m venv /var/www/recipes`
@@ -53,6 +55,12 @@ Download the `.env` configuration file and **edit it accordingly**.
 ```shell
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O /var/www/recipes/.env
 ```
+
+Things to edit:
+- `SECRET_KEY`: use something secure.
+- `POSTGRES_HOST`: probably 127.0.0.1.
+- `POSTGRES_PASSWORD`: the password we set earlier when setting up djangodb.
+- `STATIC_URL`, `MEDIA_URL`: these will be in `/var/www/recipes`, under `static/` and `media/` respectively.
 
 ## Initialize the application
 
