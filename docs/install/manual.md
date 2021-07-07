@@ -7,16 +7,30 @@ These intructions are inspired from a standard django/gunicorn/postgresql instru
 
 ## Prerequisites
 
-*Optional*: create a virtual env and activate it
+Setup user: `sudo useradd recipes`
 
 Get the last version from the repository: `git clone https://github.com/vabene1111/recipes.git -b master`
 
-Install postgresql requirements: `sudo apt install libpq-dev postgresql`
-Install project requirements: `pip3.9 install -r requirements.txt`
+Move it to the `/var/www` directory: `mv recipes /var/www`
+
+Give the user permissions: `chown -R recipes:www-data /var/www/recipes`
+
+Create virtual env: `python3.9 -m venv /var/www/recipes`
+
+### Install postgresql requirements
+
+`sudo apt install libpq-dev postgresql`
+
+###Install project requirements
+
+Using binaries from the virtual env:
+
+`/var/www/recipes/bin/pip3.9 install -r requirements.txt`
+
 
 ## Setup postgresql
 
-Run `sudo -u postgres psql`
+`sudo -u postgres psql`
 
 In the psql console:
 
@@ -37,12 +51,12 @@ ALTER USER djangouser WITH SUPERUSER;
 
 Download the `.env` configuration file and **edit it accordingly**.
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O /var/www/recipes/.env
 ```
 
 ## Initialize the application
 
-Execute `export $(cat .env |grep "^[^#]" | xargs)` to load variables from `.env`
+Execute `export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)` to load variables from `/var/www/recipes/.env`
 
 Execute `/python3.9 manage.py migrate`
 
@@ -67,10 +81,11 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=3
+User=recipes
 Group=www-data
-WorkingDirectory=/media/data/recipes
-EnvironmentFile=/media/data/recipes/.env
-ExecStart=/opt/.pyenv/versions/3.9/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/media/data/recipes/recipes.sock recipes.wsgi:application
+WorkingDirectory=/var/www/recipes
+EnvironmentFile=/var/www/recipes/.env
+ExecStart=/var/www/recipes/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/var/www/recipes/recipes.sock recipes.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -96,15 +111,15 @@ server {
 
     # serve media files
     location /static {
-        alias /media/data/recipes/staticfiles;
+        alias /var/www/recipes/staticfiles;
     }
     
     location /media {
-        alias /media/data/recipes/mediafiles;
+        alias /var/www/recipes/mediafiles;
     }
 
     location / {
-        proxy_pass http://unix:/media/data/recipes/recipes.sock;
+        proxy_pass http://unix:/var/www/recipes/recipes.sock;
     }
 }
 ```
