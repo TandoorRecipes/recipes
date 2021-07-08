@@ -246,7 +246,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
         fields = ('id', 'name')
 
 
-class SupermarketCategoryRelationSerializer(SpacedModelSerializer):
+class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
     category = SupermarketCategorySerializer()
 
     class Meta:

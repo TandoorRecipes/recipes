@@ -41,7 +41,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -58,7 +58,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer)
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer)
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -166,6 +166,16 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
+
+
+class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategoryRelation.objects
+    serializer_class = SupermarketCategoryRelationSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
         return super().get_queryset()
 
 
