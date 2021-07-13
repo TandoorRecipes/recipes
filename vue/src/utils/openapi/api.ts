@@ -1085,6 +1085,18 @@ export interface RecipeSteps {
      * @memberof RecipeSteps
      */
     file?: StepFile | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeSteps
+     */
+    step_recipe?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeSteps
+     */
+    step_recipe_data?: string;
 }
 
 /**
@@ -1094,7 +1106,8 @@ export interface RecipeSteps {
 export enum RecipeStepsTypeEnum {
     Text = 'TEXT',
     Time = 'TIME',
-    File = 'FILE'
+    File = 'FILE',
+    Recipe = 'RECIPE'
 }
 
 /**
@@ -1490,6 +1503,18 @@ export interface Step {
      * @memberof Step
      */
     file?: StepFile | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Step
+     */
+    step_recipe?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Step
+     */
+    step_recipe_data?: string;
 }
 
 /**
@@ -1499,7 +1524,8 @@ export interface Step {
 export enum StepTypeEnum {
     Text = 'TEXT',
     Time = 'TIME',
-    File = 'FILE'
+    File = 'FILE',
+    Recipe = 'RECIPE'
 }
 
 /**
