@@ -300,6 +300,7 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
     file = UserFileViewSerializer(allow_null=True, required=False)
+    step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -311,11 +312,27 @@ class StepSerializer(WritableNestedModelSerializer):
     def get_ingredients_markdown(self, obj):
         return obj.get_instruction_render()
 
+    def get_step_recipe_data(self, obj):
+        # check if root type is recipe to prevent infinite recursion
+        # can be improved later to allow multi level embedding
+        if obj.step_recipe and type(self.parent.root) == RecipeSerializer:
+            return StepRecipeSerializer(obj.step_recipe).data
+
     class Meta:
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file',
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data'
+        )
+
+
+class StepRecipeSerializer(WritableNestedModelSerializer):
+    steps = StepSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'name', 'steps',
         )
 
 

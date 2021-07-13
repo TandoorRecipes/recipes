@@ -331,10 +331,11 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     TEXT = 'TEXT'
     TIME = 'TIME'
     FILE = 'FILE'
+    RECIPE = 'RECIPE'
 
     name = models.CharField(max_length=128, default='', blank=True)
     type = models.CharField(
-        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')),),
+        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')), (RECIPE, _('Recipe')),),
         default=TEXT,
         max_length=16
     )
@@ -344,6 +345,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     order = models.IntegerField(default=0)
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
+    step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
