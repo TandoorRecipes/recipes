@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: 2021-06-22 09:12+0000\n"
+"PO-Revision-Date: 2021-07-16 09:53+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.6.2\n"
+"X-Generator: Weblate 4.7.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:246
@@ -2098,6 +2098,7 @@ msgstr "Bekijk recept gegevens"
 #: .\cookbook\templates\url_import.html:147
 msgid "Drag recipe attributes from the right into the appropriate box below."
 msgstr ""
+"Sleep eigenschappen van het recept van rechts naar het juiste vlak beneden."
 
 #: .\cookbook\templates\url_import.html:156
 #: .\cookbook\templates\url_import.html:173
@@ -2110,23 +2111,23 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:300
 #: .\cookbook\templates\url_import.html:351
 msgid "Clear Contents"
-msgstr ""
+msgstr "Wis inhoud"
 
 #: .\cookbook\templates\url_import.html:158
 msgid "Text dragged here will be appended to the name."
-msgstr ""
+msgstr "Hierheen gesleepte tekst wordt aan de naam toegevoegd."
 
 #: .\cookbook\templates\url_import.html:175
 msgid "Text dragged here will be appended to the description."
-msgstr ""
+msgstr "Hierheen gesleepte tekst wordt aan de beschrijving toegevoegd."
 
 #: .\cookbook\templates\url_import.html:192
 msgid "Keywords dragged here will be appended to current list"
-msgstr ""
+msgstr "Hierheen gesleepte Etiketten worden aan de huidige lijst toegevoegd"
 
 #: .\cookbook\templates\url_import.html:207
 msgid "Image"
-msgstr ""
+msgstr "Afbeelding"
 
 #: .\cookbook\templates\url_import.html:239
 #, fuzzy
@@ -2135,10 +2136,8 @@ msgid "Prep Time"
 msgstr "Bereidingstijd"
 
 #: .\cookbook\templates\url_import.html:254
-#, fuzzy
-#| msgid "Time"
 msgid "Cook Time"
-msgstr "Tijd"
+msgstr "Kooktijd"
 
 #: .\cookbook\templates\url_import.html:275
 msgid "Ingredients dragged here will be appended to current list."
