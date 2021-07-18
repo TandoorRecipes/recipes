@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: 2021-07-16 09:53+0000\n"
+"PO-Revision-Date: 2021-07-19 16:40+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
@@ -453,7 +453,7 @@ msgstr "Bewerken"
 #: .\cookbook\templates\meal_plan.html:277
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr "Verwijderen"
+msgstr "Verwijder"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
@@ -1629,7 +1629,7 @@ msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
 msgstr ""
-"Om aan te sluiten bij een bestaande ruimte moet je je uitnodigingstoken "
+"Om je aan te sluiten bij een bestaande ruimte moet je jouw uitnodigingstoken "
 "invoeren of op de uitnodingslink klikken die je ontvangen hebt."
 
 #: .\cookbook\templates\no_space_info.html:48
@@ -1976,7 +1976,7 @@ msgstr "Waarschuwing"
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80 .\cookbook\templates\system.html:95
 msgid "Ok"
-msgstr "Ok"
+msgstr "Oké"
 
 #: .\cookbook\templates\system.html:51
 msgid ""
@@ -2130,10 +2130,8 @@ msgid "Image"
 msgstr "Afbeelding"
 
 #: .\cookbook\templates\url_import.html:239
-#, fuzzy
-#| msgid "Preparation Time"
 msgid "Prep Time"
-msgstr "Bereidingstijd"
+msgstr "Voorbereidingstijd"
 
 #: .\cookbook\templates\url_import.html:254
 msgid "Cook Time"
@@ -2141,50 +2139,45 @@ msgstr "Kooktijd"
 
 #: .\cookbook\templates\url_import.html:275
 msgid "Ingredients dragged here will be appended to current list."
-msgstr ""
+msgstr "Hierheen gesleepte Ingrediënten worden aan de huidige lijst toegevoegd."
 
 #: .\cookbook\templates\url_import.html:302
 msgid ""
 "Recipe instructions dragged here will be appended to current instructions."
 msgstr ""
+"Hierheen gesleepte Recept instructies worden aan de huidige lijst toegevoegd."
 
 #: .\cookbook\templates\url_import.html:325
-#, fuzzy
-#| msgid "Discovered Recipes"
 msgid "Discovered Attributes"
-msgstr "Ontdekte recepten"
+msgstr "Ontdekte Eigenschappen"
 
 #: .\cookbook\templates\url_import.html:327
 msgid ""
 "Drag recipe attributes from below into the appropriate box on the left. "
 "Click any node to display its full properties."
 msgstr ""
+"Sleep recept eigenschappen van beneden naar de juiste doos aan de "
+"linkerzijde. Klik er op om alle eigenschappen te zien."
 
 #: .\cookbook\templates\url_import.html:344
-#, fuzzy
-#| msgid "Show as header"
 msgid "Show Blank Field"
-msgstr "Laat als kop zien"
+msgstr "Toon Leeg Veld"
 
 #: .\cookbook\templates\url_import.html:349
 msgid "Blank Field"
-msgstr ""
+msgstr "Leeg Veld"
 
 #: .\cookbook\templates\url_import.html:353
 msgid "Items dragged to Blank Field will be appended."
-msgstr ""
+msgstr "Naar Leeg Veld gesleepte items worden toegevoegd."
 
 #: .\cookbook\templates\url_import.html:400
-#, fuzzy
-#| msgid "Delete Step"
 msgid "Delete Text"
-msgstr "Verwijder stap"
+msgstr "Verwijder tekst"
 
 #: .\cookbook\templates\url_import.html:413
-#, fuzzy
-#| msgid "Delete Recipe"
 msgid "Delete image"
-msgstr "Verwijder recept"
+msgstr "Verwijder afbeelding"
 
 #: .\cookbook\templates\url_import.html:429
 msgid "Recipe Name"
@@ -2260,7 +2253,7 @@ msgstr "Er is een fout opgetreden bij het synchroniseren met Opslag"
 
 #: .\cookbook\views\api.py:649
 msgid "Nothing to do."
-msgstr ""
+msgstr "Niks te doen."
 
 #: .\cookbook\views\api.py:664
 msgid "The requested site provided malformed data and cannot be read."
@@ -2281,26 +2274,24 @@ msgstr ""
 "te importeren."
 
 #: .\cookbook\views\api.py:694
-#, fuzzy
-#| msgid "The requested page could not be found."
 msgid "No useable data could be found."
-msgstr "De opgevraagde pagina kon niet gevonden worden."
+msgstr "Er is geen bruikbare data gevonden."
 
 #: .\cookbook\views\api.py:710
 msgid "I couldn't find anything to do."
-msgstr ""
+msgstr "Ik kon niks vinden om te doen."
 
 #: .\cookbook\views\data.py:30 .\cookbook\views\data.py:121
 #: .\cookbook\views\edit.py:50 .\cookbook\views\import_export.py:67
 #: .\cookbook\views\new.py:32
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Je hebt het maximaal aantal recepten voor jouw ruimte bereikt."
 
 #: .\cookbook\views\data.py:34 .\cookbook\views\data.py:125
 #: .\cookbook\views\edit.py:54 .\cookbook\views\import_export.py:71
 #: .\cookbook\views\new.py:36
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Je hebt meer gebruikers dan toegestaan in jouw ruimte."
 
 #: .\cookbook\views\data.py:103
 #, python-format
@@ -2408,57 +2399,64 @@ msgstr "Er is een fout opgetreden bij het importeren van dit recept!"
 
 #: .\cookbook\views\new.py:226
 msgid "Hello"
-msgstr ""
+msgstr "Hallo"
 
 #: .\cookbook\views\new.py:226
 msgid "You have been invited by "
-msgstr ""
+msgstr "Je bent uitgenodigd door "
 
 #: .\cookbook\views\new.py:227
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " om zijn/haar Tandoor Recepten ruimte "
 
 #: .\cookbook\views\new.py:228
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Klik om de volgende link om je account te activeren: "
 
 #: .\cookbook\views\new.py:229
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Als de linkt niet werkt, gebruik dan de volgende code om handmatig tot de "
+"ruimte toe te treden: "
 
 #: .\cookbook\views\new.py:230
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "De uitnodiging is geldig tot "
 
 #: .\cookbook\views\new.py:231
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recepten is een Open Source recepten manager. Bekijk het op GitHub "
 
 #: .\cookbook\views\new.py:234
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Tandoor Recepten uitnodiging"
 
 #: .\cookbook\views\new.py:241
 msgid "Invite link successfully send to user."
-msgstr ""
+msgstr "Uitnodigingslink succesvol verstuurd naar gebruiker."
 
 #: .\cookbook\views\new.py:244
 msgid ""
 "You have send to many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
+"Je hebt te veel e-mails verstuurd, deel de link handmatig of wacht enkele "
+"uren."
 
 #: .\cookbook\views\new.py:246
 msgid "Email to user could not be send, please share link manually."
-msgstr ""
+msgstr "E-mail aan gebruiker kon niet verzonden worden, deel de link handmatig."
 
 #: .\cookbook\views\views.py:125
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
+"Je hebt je eigen recepten ruimte succesvol aangemaakt. Start met het "
+"toevoegen van recepten of nodig anderen uit om je te vergezellen."
 
 #: .\cookbook\views\views.py:173
 msgid "You do not have the required permissions to perform this action!"
@@ -2492,14 +2490,12 @@ msgid "Malformed Invite Link supplied!"
 msgstr "Onjuiste uitnodigingslink opgegeven!"
 
 #: .\cookbook\views\views.py:441
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You are already member of a space and therefore cannot join this one."
-msgstr "Je bent niet ingelogd en kan deze pagina daarom niet bekijken!"
+msgstr "Je bent al lid van een ruimte en kan daardoor niet toetreden tot deze."
 
 #: .\cookbook\views\views.py:452
 msgid "Successfully joined space."
-msgstr ""
+msgstr "Succesvol toegetreden tot ruimte."
 
 #: .\cookbook\views\views.py:458
 msgid "Invite Link not valid or already used!"
