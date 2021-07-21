@@ -60,7 +60,7 @@ Things to edit:
 - `SECRET_KEY`: use something secure.
 - `POSTGRES_HOST`: probably 127.0.0.1.
 - `POSTGRES_PASSWORD`: the password we set earlier when setting up djangodb.
-- `STATIC_URL`, `MEDIA_URL`: these will be in `/var/www/recipes`, under `static/` and `media/` respectively.
+- `STATIC_URL`, `MEDIA_URL`: these will be in `/var/www/recipes`, under `/staticfiles/` and `/mediafiles/` respectively.
 
 ## Initialize the application
 
@@ -103,11 +103,11 @@ WantedBy=multi-user.target
 
 *Note2*: Fix the path in the `ExecStart` line to where you gunicorn and recipes are
 
-Finally, run `sudo systemctl enable gunicorn_recipes.service` and `sudo systemctl start gunicorn_recipes.service`. You can check that the service is correctly started with `systemctl status gunicorn_recipes.service`
+Finally, run `sudo systemctl enable gunicorn_recipes` and `sudo systemctl start gunicorn_recipes`. You can check that the service is correctly started with `systemctl status gunicorn_recipes`
 
 ### nginx
 
-Now we tell nginx to listen to a new port and forward that to gunicorn. `sudo nano /etc/nginx/sites-available/recipes.conf`
+Now we tell nginx to listen to a new port and forward that to gunicorn. `sudo nano /etc/nginx/conf.d/recipes.conf`
 
 And enter these lines:
 
@@ -118,11 +118,11 @@ server {
     #error_log /var/log/nginx/error.log;
 
     # serve media files
-    location /static {
+    location /staticfiles {
         alias /var/www/recipes/staticfiles;
     }
     
-    location /media {
+    location /mediafiles {
         alias /var/www/recipes/mediafiles;
     }
 
@@ -135,4 +135,4 @@ server {
 
 *Note*: Enter the correct path in static and proxy_pass lines.
 
-Enable the website `sudo ln -s /etc/nginx/sites-available/recipes.conf /etc/nginx/sites-enabled` and restart nginx : `sudo systemctl restart nginx.service`
+Reload nginx : `sudo systemctl reload nginx`
