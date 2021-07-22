@@ -120,6 +120,7 @@ def no_space(request):
                 max_users=settings.SPACE_DEFAULT_MAX_USERS,
                 allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
+
             request.user.userpreference.space = created_space
             request.user.userpreference.save()
             request.user.groups.add(Group.objects.filter(name='admin').get())
@@ -139,7 +140,7 @@ def no_space(request):
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
-        create_form = SpaceCreateForm()
+        create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
         join_form = SpaceJoinForm()
 
     return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})
