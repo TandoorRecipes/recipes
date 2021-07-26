@@ -322,6 +322,16 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategoryRelation.objects
+    serializer_class = SupermarketCategoryRelationSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
+        return super().get_queryset()
+
+
 class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     # TODO check if fuzzyfilter is conflicting - may also need to create 'tree filter' mixin
 

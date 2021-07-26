@@ -421,6 +421,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
     search_vector = SearchVectorField(null=True)
+    step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')

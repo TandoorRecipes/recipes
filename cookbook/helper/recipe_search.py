@@ -35,10 +35,11 @@ def search_recipes(request, queryset, params):
 
         return queryset.filter(pk__in=last_viewed_recipes[len(last_viewed_recipes) - min(len(last_viewed_recipes), search_last_viewed):])
 
-    queryset = queryset.annotate(
-        new_recipe=Case(When(
-            created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
-            default=Value(0), )).order_by('-new_recipe', 'name')
+    if search_new == 'true':
+        queryset = queryset.annotate(
+            new_recipe=Case(When(
+                created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
+                default=Value(0), )).order_by('-new_recipe', 'name')
 
     search_type = search_prefs.search or 'plain'
     search_sort = None
