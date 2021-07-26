@@ -27,7 +27,7 @@ def backwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0142_create_searchfields'),
+        ('cookbook', '0143_create_searchfields'),
     ]
 
     operations = [
