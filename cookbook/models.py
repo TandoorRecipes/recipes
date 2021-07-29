@@ -422,6 +422,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
     search_vector = SearchVectorField(null=True)
+    step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -840,42 +841,11 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return _(self.name)
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
-    @staticmethod
-    def get_name(self):
-        return _(self.name)
-
-
-def allSearchFields():
-    return SearchFields.objects.values_list('id')
-
-
-def nameSearchField():
-    return [SearchFields.objects.get(name='Name').id]
-
-
-class SearchPreference(models.Model, PermissionModelMixin):
-    # Search Style (validation parsleyjs.org)
-    # phrase or plain or raw (websearch and trigrams are mutually exclusive)
-    SIMPLE = 'plain'
-    PHRASE = 'phrase'
-    WEB = 'websearch'
-    RAW = 'raw'
-    SEARCH_STYLE = (
-        (SIMPLE, _('Simple')),
-        (PHRASE, _('Phrase')),
-        (WEB, _('Web')),
-        (RAW, _('Raw'))
-    )
-
-    user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    search = models.CharField(choices=SEARCH_STYLE, max_length=32, default=SIMPLE)
-
-    lookup = models.BooleanField(default=False)
-    unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
-    icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
-    istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
-    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
-    fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
+    def save(self, *args, **kwargs):
+        if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file, InMemoryUploadedFile):
+            self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
+            self.file_size_kb = round(self.file.size / 1000)
+        super(UserFile, self).save(*args, **kwargs)

@@ -6,8 +6,7 @@
       <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src=recipe_image
                        v-bind:alt="$t('Recipe_Image')"
                        top></b-card-img-lazy>
-
-      <div class="h-100 d-flex flex-column justify-content-right"
+      <div class="card-img-overlay h-100 d-flex flex-column justify-content-right"
            style="float:right; text-align: right; padding-top: 10px; padding-right: 5px">
         <a>
           <recipe-context-menu :recipe="recipe" style="float:right" v-if="recipe !== null"></recipe-context-menu>
