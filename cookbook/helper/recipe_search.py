@@ -35,10 +35,12 @@ def search_recipes(request, queryset, params):
 
         return queryset.filter(pk__in=last_viewed_recipes[len(last_viewed_recipes) - min(len(last_viewed_recipes), search_last_viewed):])
 
-    queryset = queryset.annotate(
-        new_recipe=Case(When(
-            created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
-            default=Value(0), )).order_by('-new_recipe', 'name')
+    if search_new == 'true':
+        queryset = queryset.annotate(
+            new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
+                            default=Value(0), )).order_by('-new_recipe', 'name')
+    else:
+        queryset = queryset.order_by('name')
 
     search_type = search_prefs.search or 'plain'
     search_sort = None
@@ -148,12 +150,6 @@ def search_recipes(request, queryset, params):
     elif search_sort == 'rank':
         queryset = queryset.order_by('-rank')
 
-    # kw = Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))
-    # Keyword.get_annotated_list_qs(Keyword.objects.filter(id__in=[item.id for k in kw for item in k.get_ancestors_and_self()]))
-    # print(time.time()-start, len(queryset), len(kw))
-    # Keyword.get_annotated_list_qs(
-    #     Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))
-    #     | Keyword.objects.all().filter(id__in=set([k.parent for k in Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))])))
     return queryset
 
 
