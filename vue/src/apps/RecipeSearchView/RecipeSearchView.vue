@@ -133,7 +133,7 @@
                                              :initial_selection="settings.search_keywords"
                                              search_function="listKeywords" label="label"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect>
+                                             v-bind:placeholder="$t('Keywords')" :limit="50"></generic-multiselect>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_keywords_or" name="check-button"
@@ -155,7 +155,7 @@
                                              :initial_selection="settings.search_foods"
                                              search_function="listFoods" label="name"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Ingredients')"></generic-multiselect>
+                                             v-bind:placeholder="$t('Ingredients')" :limit="20"></generic-multiselect>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_foods_or" name="check-button"
@@ -177,7 +177,7 @@
                                              :initial_selection="settings.search_books"
                                              search_function="listRecipeBooks" label="name"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Books')"></generic-multiselect>
+                                             v-bind:placeholder="$t('Books')" :limit="50"></generic-multiselect>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_books_or" name="check-button"
