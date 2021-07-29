@@ -435,6 +435,14 @@ class RecipeBookSerializer(SpacedModelSerializer):
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
+    book_content = serializers.SerializerMethodField(method_name='get_book_content', read_only=True)
+    recipe_content = serializers.SerializerMethodField(method_name='get_recipe_content', read_only=True)
+
+    def get_book_content(self, obj):
+        return RecipeBookSerializer(context={'request': self.context['request']}).to_representation(obj.book)
+
+    def get_recipe_content(self, obj):
+        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
 
     def create(self, validated_data):
         book = validated_data['book']
@@ -444,7 +452,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeBookEntry
-        fields = ('id', 'book', 'recipe',)
+        fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
 
 
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):

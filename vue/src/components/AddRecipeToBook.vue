@@ -1,21 +1,32 @@
 <template>
 
   <div>
-    <b-modal class="modal" :id="`id_modal_add_book_${modal_id}`" :title="$t('Add_to_Book')" :ok-title="$t('Add')"
-             :cancel-title="$t('Close')" @ok="addToBook()">
+    <b-modal class="modal" :id="`id_modal_add_book_${modal_id}`" :title="$t('Manage_Books')" :ok-title="$t('Add')"
+             :cancel-title="$t('Close')" @ok="addToBook()" @shown="loadBookEntries">
+
+      <table>
+        <tr v-for="be in this.recipe_book_list" v-bind:key="be.id">
+          <td>
+            <button class="btn btn-sm btn-danger" @click="removeFromBook(be)"><i class="fa fa-trash-alt"></i></button>
+          </td>
+          <td> {{ be.book_content.name }}</td>
+        </tr>
+      </table>
 
       <multiselect
+          style="margin-top: 1vh"
           v-model="selected_book"
-          :options="books"
-
-          :preserve-search="true"
+          :options="books_filtered"
+          :taggable="true"
+          @tag="createBook"
+          v-bind:tag-placeholder="$t('Create')"
           :placeholder="$t('Select_Book')"
           label="name"
           track-by="id"
           id="id_books"
           :multiple="false"
-
-          @search-change="loadBook">
+          :loading="books_loading"
+          @search-change="loadBooks">
       </multiselect>
     </b-modal>
   </div>
@@ -31,7 +42,8 @@ Vue.prototype.moment = moment
 
 import Vue from "vue";
 import {BootstrapVue} from "bootstrap-vue";
-import {apiAddRecipeBookEntry, apiLoadCookBooks, apiLogCooking} from "@/utils/api";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import {makeStandardToast, StandardToasts} from "@/utils/utils";
 
 Vue.use(BootstrapVue)
 
@@ -47,21 +59,66 @@ export default {
   data() {
     return {
       books: [],
+      books_loading: false,
+      recipe_book_list: [],
       selected_book: null,
     }
   },
+  computed: {
+    books_filtered: function () {
+      let books_filtered = []
+
+      this.books.forEach(b => {
+        if (this.recipe_book_list.filter(e => e.book === b.id).length === 0) {
+          books_filtered.push(b)
+        }
+      })
+
+      return books_filtered
+    }
+  },
   mounted() {
-    this.loadBook('')
+
   },
   methods: {
-    loadBook: function (query) {
-      apiLoadCookBooks(query).then(results => {
-        this.books = results
+    loadBooks: function (query) {
+      this.books_loading = true
+      let apiFactory = new ApiApiFactory()
+      apiFactory.listRecipeBooks({query: {query: query}}).then(results => {
+        this.books = results.data.filter(e => this.recipe_book_list.indexOf(e) === -1)
+        this.books_loading = false
       })
     },
-    addToBook() {
-      apiAddRecipeBookEntry({'recipe': this.recipe.id, 'book': this.selected_book.id})
+    createBook: function (name) {
+      let apiFactory = new ApiApiFactory()
+      apiFactory.createRecipeBook({name: name}).then(r => {
+        this.books.push(r.data)
+        this.selected_book = r.data
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+      })
     },
+    addToBook: function () {
+      let apiFactory = new ApiApiFactory()
+      apiFactory.createRecipeBookEntry({book: this.selected_book.id, recipe: this.recipe.id}).then(r => {
+        this.recipe_book_list.push(r.data)
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+      })
+    },
+    removeFromBook: function (book_entry) {
+      let apiFactory = new ApiApiFactory()
+      apiFactory.destroyRecipeBookEntry(book_entry.id).then(r => {
+        this.recipe_book_list = this.recipe_book_list.filter(e => e.id !== book_entry.id)
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+      })
+    },
+    loadBookEntries: function () {
+
+      let apiFactory = new ApiApiFactory()
+      apiFactory.listRecipeBookEntrys({query: {recipe: this.recipe.id}}).then(r => {
+        this.recipe_book_list = r.data
+        this.loadBooks('')
+      })
+    }
   }
 }
 </script>

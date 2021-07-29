@@ -2,6 +2,7 @@
 * Utility functions to call bootstrap toasts
 * */
 import {BToast} from 'bootstrap-vue'
+import i18n from "@/i18n";
 
 export const ToastMixin = {
     methods: {
@@ -20,6 +21,49 @@ export function makeToast(title, message, variant = null) {
         solid: true
     })
 }
+
+export class StandardToasts {
+    static SUCCESS_CREATE = 'SUCCESS_CREATE'
+    static SUCCESS_FETCH = 'SUCCESS_FETCH'
+    static SUCCESS_UPDATE = 'SUCCESS_UPDATE'
+    static SUCCESS_DELETE = 'SUCCESS_DELETE'
+
+    static FAIL_CREATE = 'FAIL_CREATE'
+    static FAIL_FETCH = 'FAIL_FETCH'
+    static FAIL_UPDATE = 'FAIL_UPDATE'
+    static FAIL_DELETE = 'FAIL_DELETE'
+
+    static makeStandardToast(toast) {
+        switch (toast) {
+            case StandardToasts.SUCCESS_CREATE:
+                makeToast(i18n.tc('Success'), i18n.tc('success_creating_resource'), 'success')
+                break;
+            case StandardToasts.SUCCESS_FETCH:
+                makeToast(i18n.tc('Success'), i18n.tc('success_fetching_resource'), 'success')
+                break;
+            case StandardToasts.SUCCESS_UPDATE:
+                makeToast(i18n.tc('Success'), i18n.tc('success_updating_resource'), 'success')
+                break;
+            case StandardToasts.SUCCESS_DELETE:
+                makeToast(i18n.tc('Success'), i18n.tc('success_deleting_resource'), 'success')
+                break;
+            case StandardToasts.FAIL_CREATE:
+                makeToast(i18n.tc('Failure'), i18n.tc('success_creating_resource'), 'danger')
+                break;
+            case StandardToasts.FAIL_FETCH:
+                makeToast(i18n.tc('Failure'), i18n.tc('err_fetching_resource'), 'danger')
+                break;
+            case StandardToasts.FAIL_UPDATE:
+                makeToast(i18n.tc('Failure'), i18n.tc('err_updating_resource'), 'danger')
+                break;
+            case StandardToasts.FAIL_DELETE:
+                makeToast(i18n.tc('Failure'), i18n.tc('err_deleting_resource'), 'danger')
+                break;
+
+        }
+    }
+}
+
 
 /*
 * Utility functions to use djangos gettext
