@@ -124,7 +124,7 @@ import {frac} from "@/utils/fractions";
 export function calculateAmount(amount, factor) {
     if (getUserPreference('use_fractions')) {
         let return_string = ''
-        let fraction = frac((amount * factor), 9, true)
+        let fraction = frac((amount * factor), 10, true)
 
         if (fraction[0] > 0) {
             return_string += fraction[0]
