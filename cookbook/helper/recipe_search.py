@@ -4,7 +4,7 @@ from recipes import settings
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, TrigramSimilarity
 )
-from django.db.models import Q, Subquery, Case, When, Value
+from django.db.models import Max, Q, Subquery, Case, When, Value
 from django.utils import translation
 
 from cookbook.managers import DICTIONARY
@@ -35,15 +35,16 @@ def search_recipes(request, queryset, params):
 
         return queryset.filter(pk__in=last_viewed_recipes[len(last_viewed_recipes) - min(len(last_viewed_recipes), search_last_viewed):])
 
+    orderby = []
     if search_new == 'true':
         queryset = queryset.annotate(
             new_recipe=Case(When(created_at__gte=(datetime.now() - timedelta(days=7)), then=Value(100)),
-                            default=Value(0), )).order_by('-new_recipe', 'name')
+                            default=Value(0), ))
+        orderby += ['new_recipe']
     else:
-        queryset = queryset.order_by('name')
+        queryset = queryset
 
     search_type = search_prefs.search or 'plain'
-    search_sort = None
     if len(search_string) > 0:
         unaccent_include = search_prefs.unaccent.values_list('field', flat=True)
 
@@ -109,13 +110,14 @@ def search_recipes(request, queryset, params):
                 else:
                     query_filter = f
 
-            # TODO this is kind of a dumb method to sort.  create settings to choose rank vs most often made, date created or rating
+            # TODO add order by user settings - only do search rank and annotation if rank order is configured
             search_rank = (
                 SearchRank('name_search_vector', search_query, cover_density=True)
                 + SearchRank('desc_search_vector', search_query, cover_density=True)
                 + SearchRank('steps__search_vector', search_query, cover_density=True)
             )
             queryset = queryset.filter(query_filter).annotate(rank=search_rank)
+            orderby += ['-rank']
         else:
             queryset = queryset.filter(query_filter)
 
@@ -147,8 +149,10 @@ def search_recipes(request, queryset, params):
 
     if search_random == 'true':
         queryset = queryset.order_by("?")
-    elif search_sort == 'rank':
-        queryset = queryset.order_by('-rank')
+    else:
+        # TODO add order by user settings
+        orderby += ['name']
+        queryset = queryset.order_by(*orderby)
 
     return queryset
 

@@ -450,6 +450,7 @@ export default {
       let parent = {}
       let pageSize = 200
       let keyword = String(kw.id)
+      console.log(apiClient.listRecipes)
 
       apiClient.listRecipes(
           undefined, keyword, undefined, undefined, undefined, undefined,

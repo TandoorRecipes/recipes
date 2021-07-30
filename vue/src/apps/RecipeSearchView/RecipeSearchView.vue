@@ -380,6 +380,7 @@ export default {
     refreshData: function (random) {
       this.random_search = random
       let apiClient = new ApiApiFactory()
+
       apiClient.listRecipes(
           this.settings.search_input,
           this.settings.search_keywords.map(function (A) {

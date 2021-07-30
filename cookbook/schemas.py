@@ -4,7 +4,6 @@ from rest_framework.schemas.utils import is_list_view
 
 # TODO move to separate class to cleanup
 class RecipeSchema(AutoSchema):
-
     def get_path_parameters(self, path, method):
         if not is_list_view(path, method, self.view):
             return super(RecipeSchema, self).get_path_parameters(path, method)
@@ -53,6 +52,11 @@ class RecipeSchema(AutoSchema):
         parameters.append({
             "name": 'random', "in": "query", "required": False,
             "description": 'true or false. returns the results in randomized order.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'new', "in": "query", "required": False,
+            "description": 'true or false. returns new results first in search results',
             'schema': {'type': 'string', },
         })
         return parameters
