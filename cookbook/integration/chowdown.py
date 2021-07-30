@@ -52,7 +52,7 @@ class Chowdown(Integration):
 
         for k in tags.split(','):
             print(f'adding keyword {k.strip()}')
-            keyword, created = Keyword.get_or_create(name=k.strip(), space=self.request.space)
+            keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(

@@ -453,7 +453,7 @@ export default {
 
       apiClient.listRecipes(
           undefined, keyword, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, undefined, pageSize
+          undefined, undefined, undefined, undefined, undefined, pageSize, undefined
         ).then(result => {
         if (col == 'left') {
           parent = this.findKeyword(this.keywords, kw.id)

@@ -224,7 +224,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
         validated_data['space'] = self.context['request'].space
-        obj, created = Keyword.get_or_create(**validated_data)
+        obj, created = Keyword.objects.get_or_create(**validated_data)
         return obj
 
     class Meta:

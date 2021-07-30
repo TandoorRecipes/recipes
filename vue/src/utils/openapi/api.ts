@@ -4193,13 +4193,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
          * @param {string} [internal] true or false. If only internal recipes should be returned or not.
          * @param {string} [random] true or false. returns the results in randomized order.
-         * @param {string} [_new] true or false. returns new results first in search results
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4246,10 +4245,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (random !== undefined) {
                 localVarQueryParameter['random'] = random;
-            }
-
-            if (_new !== undefined) {
-                localVarQueryParameter['new'] = _new;
             }
 
             if (page !== undefined) {
@@ -8076,14 +8071,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
          * @param {string} [internal] true or false. If only internal recipes should be returned or not.
          * @param {string} [random] true or false. returns the results in randomized order.
-         * @param {string} [_new] true or false. returns new results first in search results
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9590,14 +9584,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
          * @param {string} [internal] true or false. If only internal recipes should be returned or not.
          * @param {string} [random] true or false. returns the results in randomized order.
-         * @param {string} [_new] true or false. returns new results first in search results
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
-            return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+            return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11130,15 +11123,14 @@ export class ApiApi extends BaseAPI {
      * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
      * @param {string} [internal] true or false. If only internal recipes should be returned or not.
      * @param {string} [random] true or false. returns the results in randomized order.
-     * @param {string} [_new] true or false. returns new results first in search results
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
