@@ -19,7 +19,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 from webpack_loader.loader import WebpackLoader
-# load_dotenv()
+load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
@@ -280,14 +280,14 @@ else:
 # }
 
 # SQLite testing DB
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-        'NAME': 'db.sqlite3',
-        'CONN_MAX_AGE': 600,
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
+#         'NAME': 'db.sqlite3',
+#         'CONN_MAX_AGE': 600,
+#     }
+# }
 
 CACHES = {
     'default': {
