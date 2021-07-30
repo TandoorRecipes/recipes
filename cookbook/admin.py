@@ -18,8 +18,6 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
 
 from cookbook.managers import DICTIONARY
 
-from cookbook.managers import DICTIONARY
-
 
 class CustomUserAdmin(UserAdmin):
     def has_add_permission(self, request, obj=None):

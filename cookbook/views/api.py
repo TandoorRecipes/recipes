@@ -332,7 +332,7 @@ class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMi
         return super().get_queryset()
 
 
-class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
@@ -445,67 +445,6 @@ class RecipePagination(PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'
     max_page_size = 100
-
-
-# TODO move to separate class to cleanup
-class RecipeSchema(AutoSchema):
-
-    def get_path_parameters(self, path, method):
-        if not is_list_view(path, method, self.view):
-            return super(RecipeSchema, self).get_path_parameters(path, method)
-
-        parameters = super().get_path_parameters(path, method)
-        parameters.append({
-            "name": 'query', "in": "query", "required": False,
-            "description": 'Query string matched (fuzzy) against recipe name. In the future also fulltext search.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'keywords', "in": "query", "required": False,
-            "description": 'Id of keyword a recipe should have. For multiple repeat parameter.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'foods', "in": "query", "required": False,
-            "description": 'Id of food a recipe should have. For multiple repeat parameter.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'books', "in": "query", "required": False,
-            "description": 'Id of book a recipe should have. For multiple repeat parameter.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'keywords_or', "in": "query", "required": False,
-            "description": 'If recipe should have all (AND) or any (OR) of the provided keywords.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'foods_or', "in": "query", "required": False,
-            "description": 'If recipe should have all (AND) or any (OR) any of the provided foods.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'books_or', "in": "query", "required": False,
-            "description": 'If recipe should be in all (AND) or any (OR) any of the provided books.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'internal', "in": "query", "required": False,
-            "description": 'true or false. If only internal recipes should be returned or not.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'random', "in": "query", "required": False,
-            "description": 'true or false. returns the results in randomized order.',
-            'schema': {'type': 'string', },
-        })
-        parameters.append({
-            "name": 'new', "in": "query", "required": False,
-            "description": 'true or false. returns new results first in search results',
-            'schema': {'type': 'string', },
-        })
-        return parameters
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

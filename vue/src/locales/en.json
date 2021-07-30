@@ -97,7 +97,6 @@
   "merge_confirmation": "Replace {source} with {target}",
   "move_selection": "Select a parent to move {child} to.",
   "merge_selection": "Replace all occurences of {source} with the selected {type}.",
-  "Advanced Search Settings": "Advanced Search Settings",
   "Download": "Download",
   "Root": "Root"
 }

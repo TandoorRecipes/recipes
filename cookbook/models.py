@@ -19,7 +19,7 @@ from django.utils.translation import gettext as _
 from treebeard.mp_tree import MP_Node, MP_NodeManager
 from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
-from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
+from recipes.settings import (COMMENT_PREF_DEFAULT, DATABASES, FRACTION_PREF_DEFAULT,
                               STICKY_NAV_PREF_DEFAULT)
 
 
@@ -37,8 +37,20 @@ def get_model_name(model):
     return ('_'.join(re.findall('[A-Z][^A-Z]*', model.__name__))).lower()
 
 
-class PermissionModelMixin:
+class TreeManager(MP_NodeManager):
+    def get_or_create(self, **kwargs):
+        # model.Manager get_or_create() is not compatible with MP_Tree
+        kwargs['name'] = kwargs['name'].strip()
+        q = self.filter(name__iexact=kwargs['name'], space=kwargs['space'])
+        if len(q) != 0:
+            return q[0], False
+        else:
+            with scopes_disabled():
+                node = self.model.add_root(**kwargs)
+            return node, True
 
+
+class PermissionModelMixin:
     @staticmethod
     def get_space_key():
         return ('space',)
@@ -265,7 +277,6 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 
 class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMixin):
-    # TODO create get_or_create method
     node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
@@ -274,7 +285,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
     updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space', _manager_class=MP_NodeManager)
+    objects = ScopedManager(space='space', _manager_class=TreeManager)
 
     _full_name_separator = ' > '
 
@@ -290,19 +301,6 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
         if parent:
             return self.get_parent().id
         return None
-
-    @classmethod
-    def get_or_create(self, **kwargs):
-        # an attempt to mimic get_or_create functionality with Keywords
-        # function attempts to get the keyword,
-        # if the length of the return is 0 will add a root node
-        kwargs['name'] = kwargs['name'].strip()
-        q = self.get_tree().filter(name=kwargs['name'], space=kwargs['space'])
-        if len(q) != 0:
-            return q[0], False
-        else:
-            kw = Keyword.add_root(**kwargs)
-            return kw, True
 
     @property
     def full_name(self):
@@ -337,6 +335,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
     def get_num_children(self):
         return self.get_children().count()
 
+    # use self.objects.get_or_create() instead
     @classmethod
     def add_root(self, **kwargs):
         with scopes_disabled():

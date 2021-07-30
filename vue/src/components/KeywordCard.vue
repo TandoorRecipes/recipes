@@ -2,7 +2,7 @@
   <div row>
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
       refs="keywordCard" 
-      style="height: 10vh;" :style="{'cursor:grab' : draggle}"
+      style="height: 10vh;" :style="{'cursor:grab' : draggable}"
       @dragover.prevent
       @dragenter.prevent
       :draggable="draggable"
