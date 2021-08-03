@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-08-04 21:51+0000\n"
+"Last-Translator: Danny Tsui <dannytszho@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/zh_Hans/>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.7.2\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:246
@@ -24,7 +25,7 @@ msgstr ""
 #: .\cookbook\templates\space.html:37 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:270 .\cookbook\views\lists.py:67
 msgid "Ingredients"
-msgstr ""
+msgstr "材料"
 
 #: .\cookbook\forms.py:49
 msgid ""
@@ -82,7 +83,7 @@ msgstr ""
 #: .\cookbook\templates\forms\edit_internal_recipe.html:49
 #: .\cookbook\templates\url_import.html:154
 msgid "Name"
-msgstr ""
+msgstr "菜式名称"
 
 #: .\cookbook\forms.py:103 .\cookbook\forms.py:332
 #: .\cookbook\templates\base.html:105
@@ -91,15 +92,15 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:188
 #: .\cookbook\templates\url_import.html:573
 msgid "Keywords"
-msgstr ""
+msgstr "关键字"
 
 #: .\cookbook\forms.py:104
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "准备时间(分钟)"
 
 #: .\cookbook\forms.py:105
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "等候时间(分钟)"
 
 #: .\cookbook\forms.py:106 .\cookbook\forms.py:333
 msgid "Path"
@@ -111,7 +112,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:133
 msgid "Default"
-msgstr ""
+msgstr "预置"
 
 #: .\cookbook\forms.py:144 .\cookbook\templates\url_import.html:90
 msgid ""
@@ -121,7 +122,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:164
 msgid "New Unit"
-msgstr ""
+msgstr "新单位"
 
 #: .\cookbook\forms.py:165
 msgid "New unit that other gets replaced by."
@@ -129,15 +130,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:170
 msgid "Old Unit"
-msgstr ""
+msgstr "旧单位"
 
 #: .\cookbook\forms.py:171
 msgid "Unit that should be replaced."
-msgstr ""
+msgstr "单位应被取代."
 
 #: .\cookbook\forms.py:187
 msgid "New Food"
-msgstr ""
+msgstr "新的食品"
 
 #: .\cookbook\forms.py:188
 msgid "New food that other gets replaced by."
@@ -145,15 +146,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:193
 msgid "Old Food"
-msgstr ""
+msgstr "旧的食品"
 
 #: .\cookbook\forms.py:194
 msgid "Food that should be replaced."
-msgstr ""
+msgstr "食品应被取代."
 
 #: .\cookbook\forms.py:212
 msgid "Add your comment: "
-msgstr ""
+msgstr "发表评论: "
 
 #: .\cookbook\forms.py:253
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -171,7 +172,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:307
 msgid "Search String"
-msgstr ""
+msgstr "搜索字符串"
 
 #: .\cookbook\forms.py:334
 msgid "File ID"
@@ -198,7 +199,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:415
 msgid "Email address already taken!"
-msgstr ""
+msgstr "电子邮件地址已被注册!"
 
 #: .\cookbook\forms.py:423
 msgid ""
@@ -212,7 +213,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:449
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "接受条款细则及私隐政策"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:30
 msgid ""
@@ -259,7 +260,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:604 .\cookbook\views\delete.py:60
 #: .\cookbook\views\edit.py:199
 msgid "Import"
-msgstr ""
+msgstr "导入"
 
 #: .\cookbook\integration\integration.py:162
 msgid ""
@@ -284,15 +285,15 @@ msgstr ""
 
 #: .\cookbook\integration\paprika.py:46
 msgid "Notes"
-msgstr ""
+msgstr "说明"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Nutritional Information"
-msgstr ""
+msgstr "营养资料"
 
 #: .\cookbook\integration\paprika.py:53
 msgid "Source"
-msgstr ""
+msgstr "来源"
 
 #: .\cookbook\integration\safron.py:23
 #: .\cookbook\templates\forms\edit_internal_recipe.html:79
@@ -300,42 +301,42 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:224
 #: .\cookbook\templates\url_import.html:455
 msgid "Servings"
-msgstr ""
+msgstr "份量"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "等待时间"
 
 #: .\cookbook\integration\safron.py:27
 #: .\cookbook\templates\forms\edit_internal_recipe.html:73
 msgid "Preparation Time"
-msgstr ""
+msgstr "准备时间"
 
 #: .\cookbook\integration\safron.py:29 .\cookbook\templates\base.html:78
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr ""
+msgstr "食谱"
 
 #: .\cookbook\integration\safron.py:31
 msgid "Section"
-msgstr ""
+msgstr "节"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "早餐"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "午餐"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "晚餐"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #: .\cookbook\models.py:71
 msgid ""
@@ -346,55 +347,55 @@ msgstr ""
 #: .\cookbook\models.py:121 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:52
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: .\cookbook\models.py:122 .\cookbook\templates\base.html:92
 #: .\cookbook\templates\meal_plan.html:5 .\cookbook\views\delete.py:152
 #: .\cookbook\views\edit.py:233 .\cookbook\views\new.py:201
 msgid "Meal-Plan"
-msgstr ""
+msgstr "餐单"
 
 #: .\cookbook\models.py:123 .\cookbook\templates\base.html:89
 msgid "Books"
-msgstr ""
+msgstr "书籍"
 
 #: .\cookbook\models.py:131
 msgid "Small"
-msgstr ""
+msgstr "小"
 
 #: .\cookbook\models.py:131
 msgid "Large"
-msgstr ""
+msgstr "大"
 
 #: .\cookbook\models.py:131 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New"
-msgstr ""
+msgstr "新"
 
 #: .\cookbook\models.py:340
 #: .\cookbook\templates\forms\edit_internal_recipe.html:202
 msgid "Text"
-msgstr ""
+msgstr "文本"
 
 #: .\cookbook\models.py:340
 #: .\cookbook\templates\forms\edit_internal_recipe.html:203
 msgid "Time"
-msgstr ""
+msgstr "时间"
 
 #: .\cookbook\models.py:340
 #: .\cookbook\templates\forms\edit_internal_recipe.html:204
 #: .\cookbook\templates\forms\edit_internal_recipe.html:218
 msgid "File"
-msgstr ""
+msgstr "文件"
 
 #: .\cookbook\serializer.py:109
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "文件不能上载此空间。"
 
 #: .\cookbook\serializer.py:117
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "你已达到文件上载的上限。"
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\books.html:36
 #: .\cookbook\templates\generic\edit_template.html:6
@@ -404,7 +405,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:33
 #: .\cookbook\templates\space.html:84
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #: .\cookbook\tables.py:124 .\cookbook\tables.py:147
 #: .\cookbook\templates\books.html:38
@@ -435,7 +436,7 @@ msgstr ""
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:9
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "电子邮件地址"
 
 #: .\cookbook\templates\account\email.html:11
 msgid "The following e-mail addresses are associated with your account:"
@@ -464,7 +465,7 @@ msgstr ""
 #: .\cookbook\templates\account\email.html:42
 #: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: .\cookbook\templates\account\email.html:50
 msgid "Warning:"
@@ -505,7 +506,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:21
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
