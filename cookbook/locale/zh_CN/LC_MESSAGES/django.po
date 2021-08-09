@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: 2021-08-04 21:51+0000\n"
+"PO-Revision-Date: 2021-08-10 08:51+0000\n"
 "Last-Translator: Danny Tsui <dannytszho@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -83,7 +83,7 @@ msgstr ""
 #: .\cookbook\templates\forms\edit_internal_recipe.html:49
 #: .\cookbook\templates\url_import.html:154
 msgid "Name"
-msgstr "菜式名称"
+msgstr "名称"
 
 #: .\cookbook\forms.py:103 .\cookbook\forms.py:332
 #: .\cookbook\templates\base.html:105
@@ -104,7 +104,7 @@ msgstr "等候时间(分钟)"
 
 #: .\cookbook\forms.py:106 .\cookbook\forms.py:333
 msgid "Path"
-msgstr ""
+msgstr "路径"
 
 #: .\cookbook\forms.py:107
 msgid "Storage UID"
@@ -1942,7 +1942,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:300
 #: .\cookbook\templates\url_import.html:351
 msgid "Clear Contents"
-msgstr ""
+msgstr "清除内容"
 
 #: .\cookbook\templates\url_import.html:158
 msgid "Text dragged here will be appended to the name."
@@ -1958,15 +1958,15 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:207
 msgid "Image"
-msgstr ""
+msgstr "影像"
 
 #: .\cookbook\templates\url_import.html:239
 msgid "Prep Time"
-msgstr ""
+msgstr "准备时间"
 
 #: .\cookbook\templates\url_import.html:254
 msgid "Cook Time"
-msgstr ""
+msgstr "烹调时间"
 
 #: .\cookbook\templates\url_import.html:275
 msgid "Ingredients dragged here will be appended to current list."
@@ -1989,11 +1989,11 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:344
 msgid "Show Blank Field"
-msgstr ""
+msgstr "显示空白域"
 
 #: .\cookbook\templates\url_import.html:349
 msgid "Blank Field"
-msgstr ""
+msgstr "空白域"
 
 #: .\cookbook\templates\url_import.html:353
 msgid "Items dragged to Blank Field will be appended."
@@ -2001,33 +2001,33 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:400
 msgid "Delete Text"
-msgstr ""
+msgstr "删除文本"
 
 #: .\cookbook\templates\url_import.html:413
 msgid "Delete image"
-msgstr ""
+msgstr "删除影像"
 
 #: .\cookbook\templates\url_import.html:429
 msgid "Recipe Name"
-msgstr ""
+msgstr "菜谱名称"
 
 #: .\cookbook\templates\url_import.html:433
 msgid "Recipe Description"
-msgstr ""
+msgstr "菜谱描述"
 
 #: .\cookbook\templates\url_import.html:494
 #: .\cookbook\templates\url_import.html:526
 #: .\cookbook\templates\url_import.html:582
 msgid "Select one"
-msgstr ""
+msgstr "选择一项"
 
 #: .\cookbook\templates\url_import.html:596
 msgid "All Keywords"
-msgstr ""
+msgstr "所有关键字"
 
 #: .\cookbook\templates\url_import.html:599
 msgid "Import all keywords, not only the ones already existing."
-msgstr ""
+msgstr "导入所有关键字，并不只是现有的。"
 
 #: .\cookbook\templates\url_import.html:626
 msgid "Information"
@@ -2050,7 +2050,7 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:639
 msgid "GitHub Issues"
-msgstr ""
+msgstr "GitHub问题"
 
 #: .\cookbook\templates\url_import.html:641
 msgid "Recipe Markup Specification"
@@ -2119,12 +2119,12 @@ msgstr[1] ""
 
 #: .\cookbook\views\delete.py:72
 msgid "Monitor"
-msgstr ""
+msgstr "监测"
 
 #: .\cookbook\views\delete.py:96 .\cookbook\views\lists.py:102
 #: .\cookbook\views\new.py:98
 msgid "Storage Backend"
-msgstr ""
+msgstr "存储后端"
 
 #: .\cookbook\views\delete.py:106
 msgid ""
@@ -2138,7 +2138,7 @@ msgstr ""
 
 #: .\cookbook\views\delete.py:141
 msgid "Bookmarks"
-msgstr ""
+msgstr "书签"
 
 #: .\cookbook\views\delete.py:163 .\cookbook\views\new.py:252
 msgid "Invite Link"
@@ -2146,7 +2146,7 @@ msgstr ""
 
 #: .\cookbook\views\edit.py:119
 msgid "Food"
-msgstr ""
+msgstr "食物"
 
 #: .\cookbook\views\edit.py:128
 msgid "You cannot edit this storage!"
@@ -2154,7 +2154,7 @@ msgstr ""
 
 #: .\cookbook\views\edit.py:148
 msgid "Storage saved!"
-msgstr ""
+msgstr "存储已存储！"
 
 #: .\cookbook\views\edit.py:154
 msgid "There was an error updating this storage backend!"
@@ -2166,7 +2166,7 @@ msgstr ""
 
 #: .\cookbook\views\edit.py:261
 msgid "Changes saved!"
-msgstr ""
+msgstr "更改已保存!"
 
 #: .\cookbook\views\edit.py:265
 msgid "Error saving changes!"
@@ -2198,11 +2198,11 @@ msgstr ""
 
 #: .\cookbook\views\lists.py:53
 msgid "Discovery"
-msgstr ""
+msgstr "探索"
 
 #: .\cookbook\views\lists.py:85
 msgid "Shopping Lists"
-msgstr ""
+msgstr "购物清单"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2214,7 +2214,7 @@ msgstr ""
 
 #: .\cookbook\views\new.py:226
 msgid "Hello"
-msgstr ""
+msgstr "你好"
 
 #: .\cookbook\views\new.py:226
 msgid "You have been invited by "
@@ -2235,7 +2235,7 @@ msgstr ""
 
 #: .\cookbook\views\new.py:230
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "邀请有效期至 "
 
 #: .\cookbook\views\new.py:231
 msgid ""
@@ -2272,7 +2272,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:184
 msgid "Comment saved!"
-msgstr ""
+msgstr "评论已保存!"
 
 #: .\cookbook\views\views.py:396
 msgid ""
@@ -2283,11 +2283,11 @@ msgstr ""
 
 #: .\cookbook\views\views.py:403
 msgid "Passwords dont match!"
-msgstr ""
+msgstr "密码不匹配!"
 
 #: .\cookbook\views\views.py:419
 msgid "User has been created, please login!"
-msgstr ""
+msgstr "用户已创建，請登录！"
 
 #: .\cookbook\views\views.py:435
 msgid "Malformed Invite Link supplied!"
@@ -2295,12 +2295,12 @@ msgstr ""
 
 #: .\cookbook\views\views.py:441
 msgid "You are already member of a space and therefore cannot join this one."
-msgstr ""
+msgstr "你已是空间的成员，因此未能加入。"
 
 #: .\cookbook\views\views.py:452
 msgid "Successfully joined space."
-msgstr ""
+msgstr "成功加入空间。"
 
 #: .\cookbook\views\views.py:458
 msgid "Invite Link not valid or already used!"
-msgstr ""
+msgstr "邀请连结无效或已使用!"
