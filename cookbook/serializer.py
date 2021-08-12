@@ -349,15 +349,21 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 class RecipeBaseSerializer(WritableNestedModelSerializer):
     def get_recipe_rating(self, obj):
-        rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
-        if rating['rating__avg']:
-            return rating['rating__avg']
+        try:
+            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
+            if rating['rating__avg']:
+                return rating['rating__avg']
+        except TypeError:
+            pass
         return 0
 
     def get_recipe_last_cooked(self, obj):
-        last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
-        if last:
-            return last.created_at
+        try:
+            last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
+            if last:
+                return last.created_at
+        except TypeError:
+            pass
         return None
 
 
