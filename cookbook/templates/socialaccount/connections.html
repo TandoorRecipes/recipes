@@ -4,6 +4,14 @@
 {% block head_title %}{% trans "Account Connections" %}{% endblock %}
 
 {% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'view_settings' %}">{% trans 'Settings' %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Social' %}</li>
+        </ol>
+    </nav>
+
     <h3>{% trans "Account Connections" %}</h3>
 
     {% if form.accounts %}
@@ -46,7 +54,7 @@
 
     <h4>{% trans 'Add a 3rd Party Account' %}</h4>
 
-    <ul class="socialaccount_providers">
+    <ul class="socialaccount_providers list-unstyled">
         {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
     </ul>
 

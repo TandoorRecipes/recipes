@@ -41,7 +41,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -58,7 +58,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer)
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer)
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -169,6 +169,16 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategoryRelation.objects
+    serializer_class = SupermarketCategoryRelationSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
+        return super().get_queryset()
+
+
 class KeywordViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     """
        list:
@@ -218,12 +228,30 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
 
 class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
+    """
+        list:
+        optional parameters
+
+        - **recipe**: id of recipe - only return books for that recipe
+        - **book**: id of book - only return recipes in that book
+
+        """
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return self.queryset.filter(book__created_by=self.request.user).filter(book__space=self.request.space)
+        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space)
+
+        recipe_id = self.request.query_params.get('recipe', None)
+        if recipe_id is not None:
+            queryset = queryset.filter(recipe__pk=recipe_id)
+
+        book_id = self.request.query_params.get('book', None)
+        if book_id is not None:
+            queryset = queryset.filter(book__pk=book_id)
+
+        return queryset
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):
@@ -345,6 +373,11 @@ class RecipeSchema(AutoSchema):
         parameters.append({
             "name": 'random', "in": "query", "required": False,
             "description": 'true or false. returns the results in randomized order.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
+            "name": 'new', "in": "query", "required": False,
+            "description": 'true or false. returns new results first in search results',
             'schema': {'type': 'string', },
         })
         return parameters
@@ -592,7 +625,7 @@ def share_link(request, pk):
 def log_cooking(request, recipe_id):
     recipe = get_object_or_None(Recipe, id=recipe_id)
     if recipe:
-        log = CookLog.objects.create(created_by=request.user, recipe=recipe)
+        log = CookLog.objects.create(created_by=request.user, recipe=recipe, space=request.space)
         servings = request.GET['s'] if 's' in request.GET else None
         if servings and re.match(r'^([1-9])+$', servings):
             log.servings = int(servings)

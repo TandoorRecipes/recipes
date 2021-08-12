@@ -2,7 +2,7 @@ from decimal import Decimal
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Sum
+from django.db.models import QuerySet, Sum, Avg
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
@@ -246,7 +246,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
         fields = ('id', 'name')
 
 
-class SupermarketCategoryRelationSerializer(SpacedModelSerializer):
+class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
     category = SupermarketCategorySerializer()
 
     class Meta:
@@ -300,6 +300,7 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
     file = UserFileViewSerializer(allow_null=True, required=False)
+    step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -311,11 +312,27 @@ class StepSerializer(WritableNestedModelSerializer):
     def get_ingredients_markdown(self, obj):
         return obj.get_instruction_render()
 
+    def get_step_recipe_data(self, obj):
+        # check if root type is recipe to prevent infinite recursion
+        # can be improved later to allow multi level embedding
+        if obj.step_recipe and type(self.parent.root) == RecipeSerializer:
+            return StepRecipeSerializer(obj.step_recipe).data
+
     class Meta:
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file',
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data'
+        )
+
+
+class StepRecipeSerializer(WritableNestedModelSerializer):
+    steps = StepSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'name', 'steps',
         )
 
 
@@ -330,8 +347,30 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
         fields = ('id', 'carbohydrates', 'fats', 'proteins', 'calories', 'source')
 
 
-class RecipeOverviewSerializer(WritableNestedModelSerializer):
+class RecipeBaseSerializer(WritableNestedModelSerializer):
+    def get_recipe_rating(self, obj):
+        try:
+            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
+            if rating['rating__avg']:
+                return rating['rating__avg']
+        except TypeError:
+            pass
+        return 0
+
+    def get_recipe_last_cooked(self, obj):
+        try:
+            last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
+            if last:
+                return last.created_at
+        except TypeError:
+            pass
+        return None
+
+
+class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
+    rating = serializers.SerializerMethodField('get_recipe_rating')
+    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
 
     def create(self, validated_data):
         pass
@@ -344,22 +383,24 @@ class RecipeOverviewSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'servings', 'file_path'
+            'internal', 'servings', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
 
-class RecipeSerializer(WritableNestedModelSerializer):
+class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
+    rating = serializers.SerializerMethodField('get_recipe_rating')
+    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
 
     class Meta:
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'nutrition', 'servings', 'file_path', 'servings_text',
+            'internal', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
@@ -400,6 +441,14 @@ class RecipeBookSerializer(SpacedModelSerializer):
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
+    book_content = serializers.SerializerMethodField(method_name='get_book_content', read_only=True)
+    recipe_content = serializers.SerializerMethodField(method_name='get_recipe_content', read_only=True)
+
+    def get_book_content(self, obj):
+        return RecipeBookSerializer(context={'request': self.context['request']}).to_representation(obj.book)
+
+    def get_recipe_content(self, obj):
+        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
 
     def create(self, validated_data):
         book = validated_data['book']
@@ -409,7 +458,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeBookEntry
-        fields = ('id', 'book', 'recipe',)
+        fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
 
 
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):

@@ -37,6 +37,10 @@ export default {
     label: String,
     parent_variable: String,
     initial_selection: Array,
+    limit: {
+      type: Number,
+      default: 10,
+    }
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
@@ -50,7 +54,7 @@ export default {
     search: function (query) {
       let apiClient = new ApiApiFactory()
 
-      apiClient[this.search_function]({query: {query: query, limit: 10}}).then(result => {
+      apiClient[this.search_function]({query: {query: query, limit: this.limit}}).then(result => {
         this.objects = result.data
       })
     },

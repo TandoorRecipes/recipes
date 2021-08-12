@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Sign Up" %}</h1>
+
+    <p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your
+        {{ provider_name }} account to login to
+        {{ site_name }}. As a final step, please complete the following form:{% endblocktrans %}</p>
+
+    <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+        {% csrf_token %}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form.username |as_crispy_field }}
+        </div>
+        <div class="form-group">
+            {{ form.email |as_crispy_field }}
+        </div>
+        <div class="form-group">
+            {{ form.email2 |as_crispy_field }}
+        </div>
+        {% if TERMS_URL != '' or PRIVACY_URL != '' %}
+            <div class="form-group">
+                {{ form.terms |as_crispy_field }}
+                <small>
+                    {% trans 'I accept the follwoing' %}
+                    {% if TERMS_URL != '' %}
+                        <a href="{{ TERMS_URL }}" target="_blank"
+                           rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>
+                    {% endif %}
+                    {% if TERMS_URL != '' or PRIVACY_URL != '' %}
+                        {% trans 'and' %}
+                    {% endif %}
+                    {% if PRIVACY_URL != '' %}
+                        <a href="{{ PRIVACY_URL }}" target="_blank"
+                           rel="noreferrer nofollow">{% trans 'Privacy Policy' %}</a>
+                    {% endif %}
+                </small>
+            </div>
+        {% endif %}
+
+        {% if CAPTCHA_ENABLED %}
+            <div class="form-group">
+                {{ form.captcha.errors }}
+                {{ form.captcha }}
+            </div>
+        {% endif %}
+
+
+        <button type="submit" class="btn btn-primary">{% trans "Sign Up" %} &raquo;</button>
+    </form>
+
+{% endblock %}

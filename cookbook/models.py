@@ -66,6 +66,7 @@ class PermissionModelMixin:
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
     max_recipes = models.IntegerField(default=0)
     max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
@@ -142,7 +143,7 @@ class UserPreference(models.Model, PermissionModelMixin):
         choices=PAGES, max_length=64, default=SEARCH
     )
     search_style = models.CharField(
-        choices=SEARCH_STYLE, max_length=64, default=LARGE
+        choices=SEARCH_STYLE, max_length=64, default=NEW
     )
     show_recent = models.BooleanField(default=True)
     plan_share = models.ManyToManyField(
@@ -153,6 +154,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_auto_sync = models.IntegerField(default=5)
     sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
 
+    created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
     objects = ScopedManager(space='space')
 
@@ -329,10 +331,11 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     TEXT = 'TEXT'
     TIME = 'TIME'
     FILE = 'FILE'
+    RECIPE = 'RECIPE'
 
     name = models.CharField(max_length=128, default='', blank=True)
     type = models.CharField(
-        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')),),
+        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')), (RECIPE, _('Recipe')),),
         default=TEXT,
         max_length=16
     )
@@ -342,6 +345,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     order = models.IntegerField(default=0)
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
+    step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')

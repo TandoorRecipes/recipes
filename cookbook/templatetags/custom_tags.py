@@ -55,7 +55,7 @@ def recipe_rating(recipe, user):
     if not user.is_authenticated:
         return ''
     rating = recipe.cooklog_set \
-        .filter(created_by=user, rating__gte=0) \
+        .filter(created_by=user, rating__gt=0) \
         .aggregate(Avg('rating'))
     if rating['rating__avg']:
 
@@ -64,7 +64,7 @@ def recipe_rating(recipe, user):
             rating_stars = rating_stars + '<i class="fas fa-star fa-xs"></i>'
 
         if rating['rating__avg'] % 1 >= 0.5:
-            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'  # noqa: E501
+            rating_stars = rating_stars + '<i class="fas fa-star-half-alt fa-xs"></i>'
 
         rating_stars += '</span>'
 

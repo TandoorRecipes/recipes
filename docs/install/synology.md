@@ -4,8 +4,13 @@
 Many people appear to host this application on their Synology NAS. The following documentation was provided by 
 @therealschimmi in [this issue discussion](https://github.com/vabene1111/recipes/issues/98#issuecomment-643062907).
 
+There is also this 
+([word](https://github.com/vabene1111/recipes/files/6708738/Tandoor.on.a.Synology.Disk.Station.docx),
+[pdf](https://github.com/vabene1111/recipes/files/6901601/Tandoor.on.a.Synology.Disk.Station.pdf)) awesome and 
+very detailed guide provided by @DiversityBug.
+
 There are, as always, most likely other ways to do this but this can be used as a starting point for your 
-setup. Since i cannot test it myself feedback and improvements are always very welcome.
+setup. Since I cannot test it myself feedback and improvements are always very welcome.
 
 ## Instructions
 
@@ -15,7 +20,7 @@ Basic guide to setup `vabenee1111/recipes docker` container on Synology NAS
 
 - Install Docker through package center
 - Optional: Create a shared folder for your docker projects, they have to store data somewhere outside the containers
-- Create a folder somewhere, i suggest naming it 'recipes' and storing it in the dedicated docker folder
+- Create a folder somewhere, I suggest naming it 'recipes' and storing it in the dedicated docker folder
 - Within, create the necessary folder structure. You will need these folders:
 
 ![grafik](https://user-images.githubusercontent.com/66269214/84472395-63042580-ac87-11ea-8779-37555210e47a.png)
