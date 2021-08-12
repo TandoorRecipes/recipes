@@ -13,15 +13,15 @@
   "convert_internal": "Convert to internal recipe",
   "show_only_internal": "Show only internal recipes",
 
-
-
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
-  "Add_to_Book": "Add to Book",
   "Add_to_Shopping": "Add to Shopping",
   "Add_to_Plan": "Add to Plan",
   "Step_start_time": "Step start time",
+  "Sort_by_new": "Sort by new",
+  "Recipes_per_page": "Recipes per Page",
 
+  "Manage_Books": "Manage Books",
   "Meal_Plan": "Meal Plan",
   "Select_Book": "Select Book",
   "Recipe_Image": "Recipe Image",
@@ -51,6 +51,7 @@
   "Add": "Add",
   "New": "New",
   "Success": "Success",
+  "Failure": "Failure",
   "Ingredients": "Ingredients",
   "Supermarket": "Supermarket",
   "Categories": "Categories",
@@ -78,5 +79,6 @@
   "or": "or",
   "and": "and",
   "Information": "Information",
-  "Download": "Download"
+  "Download": "Download",
+  "Create": "Create"
 }

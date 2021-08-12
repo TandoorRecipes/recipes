@@ -14,7 +14,13 @@
 
 {% block content %}
 
-    <h3>{{ request.space.name }} <small>{% if HOSTED %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'view_space' %}">{% trans 'Space Settings' %}</a></li>
+        </ol>
+    </nav>
+
+    <h3><span class="text-muted">{% trans 'Space:' %}</span> {{ request.space.name }} <small>{% if HOSTED %}
     <a href="https://tandoor.dev/manage">{% trans 'Manage Subscription' %}</a>{% endif %}</small></h3>
 
     <br/>

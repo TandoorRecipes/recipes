@@ -44,13 +44,13 @@
 
     {% if socialaccount_providers %}
         <div class="row" style="margin-top: 2vh">
-            <div class="col-6 offset-3">
+           <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
                 <h5>{% trans "Social Login" %}</h5>
                 <span>{% trans 'You can use any of the following providers to sign in.' %}</span>
 
                 <br/>
                 <br/>
-                <ul class="socialaccount_providers">
+                <ul class="socialaccount_providers list-unstyled">
                     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
                 </ul>
 

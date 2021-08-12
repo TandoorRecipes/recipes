@@ -14,7 +14,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import Avg, Q, Sum
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -27,6 +27,7 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
                             UserCreateForm, UserNameForm, UserPreference,
                             UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
+from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
@@ -114,10 +115,12 @@ def no_space(request):
             created_space = Space.objects.create(
                 name=create_form.cleaned_data['name'],
                 created_by=request.user,
-                allow_files=settings.SPACE_DEFAULT_FILES,
+                max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
                 max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
                 max_users=settings.SPACE_DEFAULT_MAX_USERS,
+                allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
+
             request.user.userpreference.space = created_space
             request.user.userpreference.save()
             request.user.groups.add(Group.objects.filter(name='admin').get())
@@ -137,7 +140,7 @@ def no_space(request):
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
-        create_form = SpaceCreateForm()
+        create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
         join_form = SpaceJoinForm()
 
     return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})
@@ -303,8 +306,6 @@ def user_settings(request):
     up = request.user.userpreference
 
     user_name_form = UserNameForm(instance=request.user)
-    password_form = PasswordChangeForm(request.user)
-    password_form.fields['old_password'].widget.attrs.pop("autofocus", None)
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
@@ -338,12 +339,6 @@ def user_settings(request):
                 request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
-        if 'password_form' in request.POST:
-            password_form = PasswordChangeForm(request.user, request.POST)
-            if password_form.is_valid():
-                user = password_form.save()
-                update_session_auth_hash(request, user)
-
     if up:
         preference_form = UserPreferenceForm(instance=up)
     else:
@@ -355,7 +350,6 @@ def user_settings(request):
     return render(request, 'settings.html', {
         'preference_form': preference_form,
         'user_name_form': user_name_form,
-        'password_form': password_form,
         'api_token': api_token,
     })
 
@@ -551,6 +545,7 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
 
 
 def test2(request):

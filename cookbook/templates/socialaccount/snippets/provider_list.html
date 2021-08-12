@@ -1,0 +1,133 @@
+{% load i18n %}
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+    {% if provider.id == "openid" %}
+        {% for brand in provider.get_brands %}
+            <li>
+                <a title="{{ brand.name }}"
+                   class="socialaccount_provider {{ provider.id }} {{ brand.id }}"
+                   href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+                >{{ brand.name }}</a>
+            </li>
+        {% endfor %}
+    {% endif %}
+    <li CLASS="mb-1">
+        {% if provider.id  == 'discord' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn discord-login-button btn-social"><i
+                        class="fab fa-discord"></i> {% trans 'Sign in using' %} Discord
+                </button>
+            </a>
+        {% elif provider.id == 'github' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-github"><i
+                        class="fab fa-github"></i> {% trans 'Sign in using' %} Github
+                </button>
+            </a>
+        {% elif provider.id == 'reddit' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-reddit"><i
+                        class="fab fa-reddit"></i> {% trans 'Sign in using' %} Reddit
+                </button>
+            </a>
+        {% elif provider.id == 'twitter' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-twitter"><i
+                        class="fab fa-twitter"></i> {% trans 'Sign in using' %} Twitter
+                </button>
+            </a>
+        {% elif provider.id == 'dropbox' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-dropbox"><i
+                        class="fab fa-dropbox"></i> {% trans 'Sign in using' %} Dropbox
+                </button>
+            </a>
+        {% elif provider.id == 'google' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-google"><i
+                        class="fab fa-google"></i> {% trans 'Sign in using' %} Google
+                </button>
+            </a>
+        {% elif provider.id == 'facebook' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-facebook"><i
+                        class="fab fa-facebook"></i> {% trans 'Sign in using' %} Facebook
+                </button>
+            </a>
+        {% elif provider.id == 'instagram' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-instagram"><i
+                        class="fab fa-instagram"></i> {% trans 'Sign in using' %} Instagram
+                </button>
+            </a>
+        {% elif provider.id == 'flickr' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-flickr"><i
+                        class="fab fa-flickr"></i> {% trans 'Sign in using' %} Flickr
+                </button>
+            </a>
+        {% elif provider.id == 'apple' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-apple"><i
+                        class="fab fa-apple"></i> {% trans 'Sign in using' %} Apple
+                </button>
+            </a>
+        {% elif provider.id == 'pinterest' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-pinterest"><i
+                        class="fab fa-pinterest"></i> {% trans 'Sign in using' %} Pinterest
+                </button>
+            </a>
+        {% elif provider.id == 'windowslive' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-microsoft"><i
+                        class="fab fa-microsoft"></i> {% trans 'Sign in using' %} Microsoft Live
+                </button>
+            </a>
+        {% elif provider.id == 'yahoo' %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-yahoo"><i
+                        class="fab fa-yahoo"></i> {% trans 'Sign in using' %} Yahoo
+                </button>
+            </a>
+        {% else %}
+            <a title="{{ provider.name }}"
+               class="socialaccount_provider {{ provider.id }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <button class="btn btn-social btn-success"><i
+                        class="fas fa-sign-in-alt"></i> {% trans 'Sign in using' %} {{ provider.name }}
+                </button>
+            </a>
+        {% endif %}
+    </li>
+
+{% endfor %}
