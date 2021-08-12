@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-12 20:30+0200\n"
+"POT-Creation-Date: 2021-08-12 15:09+0200\n"
 "PO-Revision-Date: 2021-06-18 23:12+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
@@ -24,9 +24,9 @@ msgstr ""
 "X-Generator: Weblate 4.6.2\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
-#: .\cookbook\templates\forms\edit_internal_recipe.html:246
+#: .\cookbook\templates\forms\edit_internal_recipe.html:269
 #: .\cookbook\templates\forms\ingredients.html:34
-#: .\cookbook\templates\space.html:37 .\cookbook\templates\stats.html:28
+#: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:270 .\cookbook\views\lists.py:67
 msgid "Ingredients"
 msgstr "Ingredienti"
@@ -107,9 +107,9 @@ msgid "Name"
 msgstr "Nome"
 
 #: .\cookbook\forms.py:103 .\cookbook\forms.py:332
-#: .\cookbook\templates\base.html:105
+#: .\cookbook\templates\base.html:108 .\cookbook\templates\base.html:169
 #: .\cookbook\templates\forms\edit_internal_recipe.html:85
-#: .\cookbook\templates\space.html:33 .\cookbook\templates\stats.html:24
+#: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
 #: .\cookbook\templates\url_import.html:188
 #: .\cookbook\templates\url_import.html:573
 msgid "Keywords"
@@ -215,7 +215,7 @@ msgstr ""
 "condividere le ricette nelle impostazioni."
 
 #: .\cookbook\forms.py:384
-#: .\cookbook\templates\forms\edit_internal_recipe.html:404
+#: .\cookbook\templates\forms\edit_internal_recipe.html:427
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
@@ -245,32 +245,32 @@ msgstr ""
 msgid "Accept Terms and Privacy"
 msgstr ""
 
-#: .\cookbook\helper\AllAuthCustomAdapter.py:30
+#: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
 
-#: .\cookbook\helper\permission_helper.py:124
-#: .\cookbook\helper\permission_helper.py:144 .\cookbook\views\views.py:147
+#: .\cookbook\helper\permission_helper.py:138
+#: .\cookbook\helper\permission_helper.py:161 .\cookbook\views\views.py:151
 msgid "You are not logged in and therefore cannot view this page!"
 msgstr "Non hai fatto l'accesso e quindi non puoi visualizzare questa pagina!"
 
-#: .\cookbook\helper\permission_helper.py:127
-#: .\cookbook\helper\permission_helper.py:132
-#: .\cookbook\helper\permission_helper.py:154
-#: .\cookbook\helper\permission_helper.py:199
-#: .\cookbook\helper\permission_helper.py:213
-#: .\cookbook\helper\permission_helper.py:224
-#: .\cookbook\helper\permission_helper.py:235 .\cookbook\views\data.py:39
-#: .\cookbook\views\views.py:158 .\cookbook\views\views.py:165
-#: .\cookbook\views\views.py:253
+#: .\cookbook\helper\permission_helper.py:142
+#: .\cookbook\helper\permission_helper.py:148
+#: .\cookbook\helper\permission_helper.py:173
+#: .\cookbook\helper\permission_helper.py:218
+#: .\cookbook\helper\permission_helper.py:232
+#: .\cookbook\helper\permission_helper.py:243
+#: .\cookbook\helper\permission_helper.py:254 .\cookbook\views\data.py:40
+#: .\cookbook\views\views.py:162 .\cookbook\views\views.py:169
+#: .\cookbook\views\views.py:259
 msgid "You do not have the required permissions to view this page!"
 msgstr "Non hai i permessi necessari per visualizzare questa pagina!"
 
-#: .\cookbook\helper\permission_helper.py:148
-#: .\cookbook\helper\permission_helper.py:170
-#: .\cookbook\helper\permission_helper.py:185
+#: .\cookbook\helper\permission_helper.py:166
+#: .\cookbook\helper\permission_helper.py:189
+#: .\cookbook\helper\permission_helper.py:204
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr "Non puoi interagire con questo oggetto perché non ne hai i diritti!"
 
@@ -279,7 +279,7 @@ msgstr "Non puoi interagire con questo oggetto perché non ne hai i diritti!"
 msgid "Could not parse template code."
 msgstr "Impossibile elaborare il codice del template."
 
-#: .\cookbook\integration\integration.py:102
+#: .\cookbook\integration\integration.py:104
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
 #: .\cookbook\templates\import_response.html:7
 #: .\cookbook\templates\test.html:14 .\cookbook\templates\test.html:20
@@ -292,7 +292,7 @@ msgstr "Impossibile elaborare il codice del template."
 msgid "Import"
 msgstr "Importa"
 
-#: .\cookbook\integration\integration.py:162
+#: .\cookbook\integration\integration.py:185
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
@@ -300,17 +300,17 @@ msgstr ""
 "La procedura di import necessita di un file .zip. Hai scelto il tipo di "
 "importazione corretta per i tuoi dati?"
 
-#: .\cookbook\integration\integration.py:165
+#: .\cookbook\integration\integration.py:188
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
 
-#: .\cookbook\integration\integration.py:169
+#: .\cookbook\integration\integration.py:192
 msgid "The following recipes were ignored because they already existed:"
 msgstr "Le seguenti ricette sono state ignorate perché già esistenti:"
 
-#: .\cookbook\integration\integration.py:173
+#: .\cookbook\integration\integration.py:196
 #, python-format
 msgid "Imported %s recipes."
 msgstr "Importate %s ricette."
@@ -370,58 +370,67 @@ msgstr "Cena"
 msgid "Other"
 msgstr "Altro"
 
-#: .\cookbook\models.py:71
+#: .\cookbook\models.py:72
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
 
-#: .\cookbook\models.py:121 .\cookbook\templates\search.html:7
+#: .\cookbook\models.py:123 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:52
 msgid "Search"
 msgstr "Cerca"
 
-#: .\cookbook\models.py:122 .\cookbook\templates\base.html:92
+#: .\cookbook\models.py:124 .\cookbook\templates\base.html:92
 #: .\cookbook\templates\meal_plan.html:5 .\cookbook\views\delete.py:152
 #: .\cookbook\views\edit.py:233 .\cookbook\views\new.py:201
 msgid "Meal-Plan"
 msgstr "Piano alimentare"
 
-#: .\cookbook\models.py:123 .\cookbook\templates\base.html:89
+#: .\cookbook\models.py:125 .\cookbook\templates\base.html:89
 msgid "Books"
 msgstr "Libri"
 
-#: .\cookbook\models.py:131
+#: .\cookbook\models.py:133
 msgid "Small"
 msgstr "Piccolo"
 
-#: .\cookbook\models.py:131
+#: .\cookbook\models.py:133
 msgid "Large"
 msgstr "Grande"
 
-#: .\cookbook\models.py:131 .\cookbook\templates\generic\new_template.html:6
+#: .\cookbook\models.py:133 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New"
 msgstr "Nuovo"
 
-#: .\cookbook\models.py:340
+#: .\cookbook\models.py:338
 #: .\cookbook\templates\forms\edit_internal_recipe.html:202
 msgid "Text"
 msgstr "Testo"
 
-#: .\cookbook\models.py:340
+#: .\cookbook\models.py:338
 #: .\cookbook\templates\forms\edit_internal_recipe.html:203
 msgid "Time"
 msgstr "Tempo"
 
-#: .\cookbook\models.py:340
+#: .\cookbook\models.py:338
 #: .\cookbook\templates\forms\edit_internal_recipe.html:204
-#: .\cookbook\templates\forms\edit_internal_recipe.html:218
+#: .\cookbook\templates\forms\edit_internal_recipe.html:219
 #, fuzzy
 #| msgid "File ID"
 msgid "File"
 msgstr "ID del File"
+
+#: .\cookbook\models.py:338
+#: .\cookbook\templates\forms\edit_internal_recipe.html:205
+#: .\cookbook\templates\forms\edit_internal_recipe.html:241
+#: .\cookbook\templates\include\recipe_open_modal.html:7
+#: .\cookbook\templates\meal_plan.html:247 .\cookbook\views\delete.py:28
+#: .\cookbook\views\edit.py:273 .\cookbook\views\new.py:52
+msgid "Recipe"
+msgstr "Ricetta"
 
 #: .\cookbook\serializer.py:109
 msgid "File uploads are not enabled for this Space."
@@ -437,7 +446,7 @@ msgstr ""
 #: .\cookbook\templates\meal_plan.html:281
 #: .\cookbook\templates\recipes_table.html:82
 #: .\cookbook\templates\shopping_list.html:33
-#: .\cookbook\templates\space.html:84
+#: .\cookbook\templates\space.html:90
 msgid "Edit"
 msgstr "Modifica"
 
@@ -468,62 +477,75 @@ msgid "Report a Bug"
 msgstr "Segnala un Bug"
 
 #: .\cookbook\templates\account\email.html:6
-#: .\cookbook\templates\account\email.html:9
+#: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
 msgstr "Indirizzi email"
 
-#: .\cookbook\templates\account\email.html:11
+#: .\cookbook\templates\account\email.html:12
+#: .\cookbook\templates\account\password_change.html:11
+#: .\cookbook\templates\account\password_set.html:11
+#: .\cookbook\templates\base.html:154 .\cookbook\templates\settings.html:6
+#: .\cookbook\templates\settings.html:17
+#: .\cookbook\templates\socialaccount\connections.html:10
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: .\cookbook\templates\account\email.html:13
+msgid "Email"
+msgstr ""
+
+#: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
 msgstr ""
 
-#: .\cookbook\templates\account\email.html:28
+#: .\cookbook\templates\account\email.html:36
 msgid "Verified"
 msgstr "Verificato"
 
-#: .\cookbook\templates\account\email.html:30
+#: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
 msgstr "Non verificato"
 
-#: .\cookbook\templates\account\email.html:32
+#: .\cookbook\templates\account\email.html:40
 msgid "Primary"
 msgstr "Principale"
 
-#: .\cookbook\templates\account\email.html:39
+#: .\cookbook\templates\account\email.html:47
 #, fuzzy
 #| msgid "Make Header"
 msgid "Make Primary"
 msgstr "Crea Intestazione"
 
-#: .\cookbook\templates\account\email.html:41
+#: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
 msgstr ""
 
-#: .\cookbook\templates\account\email.html:42
-#: .\cookbook\templates\socialaccount\connections.html:36
+#: .\cookbook\templates\account\email.html:50
+#: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: .\cookbook\templates\account\email.html:50
+#: .\cookbook\templates\account\email.html:58
 #, fuzzy
 #| msgid "Warning"
 msgid "Warning:"
 msgstr "Avviso"
 
-#: .\cookbook\templates\account\email.html:50
+#: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
 
-#: .\cookbook\templates\account\email.html:56
+#: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
 msgstr ""
 
-#: .\cookbook\templates\account\email.html:61
+#: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
 msgstr ""
 
-#: .\cookbook\templates\account\email.html:71
+#: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
 msgstr ""
 
@@ -554,8 +576,7 @@ msgid ""
 "request</a>."
 msgstr ""
 
-#: .\cookbook\templates\account\login.html:8
-#: .\cookbook\templates\base.html:180
+#: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:189
 msgid "Login"
 msgstr "Login"
 
@@ -567,6 +588,8 @@ msgid "Sign In"
 msgstr "Accedi"
 
 #: .\cookbook\templates\account\login.html:32
+#: .\cookbook\templates\socialaccount\signup.html:8
+#: .\cookbook\templates\socialaccount\signup.html:57
 #, fuzzy
 #| msgid "Sign In"
 msgid "Sign Up"
@@ -600,6 +623,26 @@ msgstr "Esci"
 msgid "Are you sure you want to sign out?"
 msgstr "Sei sicuro di voler uscire?"
 
+#: .\cookbook\templates\account\password_change.html:6
+#: .\cookbook\templates\account\password_change.html:16
+#: .\cookbook\templates\account\password_change.html:21
+#, fuzzy
+#| msgid "Changes saved!"
+msgid "Change Password"
+msgstr "Modifiche salvate!"
+
+#: .\cookbook\templates\account\password_change.html:12
+#: .\cookbook\templates\account\password_set.html:12
+#: .\cookbook\templates\settings.html:52
+#, fuzzy
+#| msgid "Password Reset"
+msgid "Password"
+msgstr "Recupero password"
+
+#: .\cookbook\templates\account\password_change.html:22
+msgid "Forgot Password?"
+msgstr ""
+
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
@@ -625,6 +668,14 @@ msgid ""
 "within a few minutes."
 msgstr ""
 
+#: .\cookbook\templates\account\password_set.html:6
+#: .\cookbook\templates\account\password_set.html:16
+#: .\cookbook\templates\account\password_set.html:21
+#, fuzzy
+#| msgid "Password Reset"
+msgid "Set Password"
+msgstr "Recupero password"
+
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
 msgstr "Registrati"
@@ -636,18 +687,22 @@ msgid "Create an Account"
 msgstr "Crea il tuo account"
 
 #: .\cookbook\templates\account\signup.html:42
+#: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
 msgstr ""
 
 #: .\cookbook\templates\account\signup.html:45
+#: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
 msgstr ""
 
 #: .\cookbook\templates\account\signup.html:48
+#: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
 msgstr ""
 
 #: .\cookbook\templates\account\signup.html:52
+#: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
 msgstr ""
 
@@ -668,7 +723,7 @@ msgstr ""
 msgid "We are sorry, but the sign up is currently closed."
 msgstr ""
 
-#: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:170
+#: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:179
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
 msgstr "Documentazione API"
@@ -681,85 +736,87 @@ msgstr "Strumenti"
 msgid "Shopping"
 msgstr "Spesa"
 
-#: .\cookbook\templates\base.html:109 .\cookbook\views\delete.py:84
+#: .\cookbook\templates\base.html:101
+#: .\cookbook\templates\shopping_list.html:230
+#: .\cookbook\templates\supermarket.html:7
+msgid "Supermarket"
+msgstr "Supermercato"
+
+#: .\cookbook\templates\base.html:112 .\cookbook\views\delete.py:84
 #: .\cookbook\views\edit.py:102 .\cookbook\views\lists.py:26
 #: .\cookbook\views\new.py:78
 msgid "Keyword"
 msgstr "Parola chiave"
 
-#: .\cookbook\templates\base.html:111
+#: .\cookbook\templates\base.html:114
 msgid "Batch Edit"
 msgstr "Modifica in blocco"
 
-#: .\cookbook\templates\base.html:116
+#: .\cookbook\templates\base.html:119
 msgid "Storage Data"
 msgstr "Dati e Archiviazione"
 
-#: .\cookbook\templates\base.html:120
+#: .\cookbook\templates\base.html:123
 msgid "Storage Backends"
 msgstr "Backend Archiviazione"
 
-#: .\cookbook\templates\base.html:122
+#: .\cookbook\templates\base.html:125
 msgid "Configure Sync"
 msgstr "Configura Sincronizzazione"
 
-#: .\cookbook\templates\base.html:124
+#: .\cookbook\templates\base.html:127
 msgid "Discovered Recipes"
 msgstr "Ricette trovate"
 
-#: .\cookbook\templates\base.html:126
+#: .\cookbook\templates\base.html:129
 msgid "Discovery Log"
 msgstr "Registro ricette trovate"
 
-#: .\cookbook\templates\base.html:128 .\cookbook\templates\stats.html:10
+#: .\cookbook\templates\base.html:131 .\cookbook\templates\stats.html:10
 msgid "Statistics"
 msgstr "Statistiche"
 
-#: .\cookbook\templates\base.html:130
+#: .\cookbook\templates\base.html:133
 msgid "Units & Ingredients"
 msgstr "Unità di misura & Ingredienti"
 
-#: .\cookbook\templates\base.html:132 .\cookbook\templates\index.html:47
+#: .\cookbook\templates\base.html:135 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
 msgstr "Importa Ricetta"
 
-#: .\cookbook\templates\base.html:151 .\cookbook\templates\settings.html:6
-#: .\cookbook\templates\settings.html:16
-msgid "Settings"
-msgstr "Impostazioni"
-
-#: .\cookbook\templates\base.html:153 .\cookbook\templates\history.html:6
+#: .\cookbook\templates\base.html:156 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
 msgstr "Cronologia"
 
-#: .\cookbook\templates\base.html:155 .\cookbook\templates\space.html:7
+#: .\cookbook\templates\base.html:159 .\cookbook\templates\space.html:7
+#: .\cookbook\templates\space.html:19
 #, fuzzy
 #| msgid "Settings"
 msgid "Space Settings"
 msgstr "Impostazioni"
 
-#: .\cookbook\templates\base.html:160 .\cookbook\templates\system.html:13
+#: .\cookbook\templates\base.html:163 .\cookbook\templates\system.html:13
 msgid "System"
 msgstr "Sistema"
 
-#: .\cookbook\templates\base.html:162
+#: .\cookbook\templates\base.html:165 .\cookbook\templates\base.html:171
 msgid "Admin"
 msgstr "Amministratore"
 
-#: .\cookbook\templates\base.html:166
+#: .\cookbook\templates\base.html:175
 msgid "Markdown Guide"
 msgstr "Informazioni su Markdown"
 
-#: .\cookbook\templates\base.html:168
+#: .\cookbook\templates\base.html:177
 msgid "GitHub"
 msgstr "GitHub"
 
-#: .\cookbook\templates\base.html:172
+#: .\cookbook\templates\base.html:181
 msgid "API Browser"
 msgstr "Browser API"
 
-#: .\cookbook\templates\base.html:175
+#: .\cookbook\templates\base.html:184
 msgid "Log out"
 msgstr ""
 
@@ -862,15 +919,14 @@ msgid "Import new Recipe"
 msgstr "Importa nuova Ricetta"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
-#: .\cookbook\templates\forms\edit_internal_recipe.html:416
-#: .\cookbook\templates\forms\edit_internal_recipe.html:448
+#: .\cookbook\templates\forms\edit_internal_recipe.html:439
+#: .\cookbook\templates\forms\edit_internal_recipe.html:471
 #: .\cookbook\templates\generic\edit_template.html:23
 #: .\cookbook\templates\generic\new_template.html:23
 #: .\cookbook\templates\include\log_cooking.html:28
 #: .\cookbook\templates\meal_plan.html:325
-#: .\cookbook\templates\settings.html:44 .\cookbook\templates\settings.html:52
-#: .\cookbook\templates\settings.html:96
-#: .\cookbook\templates\settings.html:114
+#: .\cookbook\templates\settings.html:46 .\cookbook\templates\settings.html:87
+#: .\cookbook\templates\settings.html:105
 #: .\cookbook\templates\shopping_list.html:353
 msgid "Save"
 msgstr "Salva"
@@ -928,7 +984,7 @@ msgid "Proteins"
 msgstr "Proteine"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:150
-#: .\cookbook\templates\forms\edit_internal_recipe.html:481
+#: .\cookbook\templates\forms\edit_internal_recipe.html:504
 msgid "Step"
 msgstr "Step"
 
@@ -956,19 +1012,20 @@ msgstr "Nome dello Step"
 msgid "Step Type"
 msgstr "Tipo dello Step"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:212
+#: .\cookbook\templates\forms\edit_internal_recipe.html:213
 msgid "Step time in Minutes"
 msgstr "Tempo dello step in minuti"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:228
+#: .\cookbook\templates\forms\edit_internal_recipe.html:229
 #, fuzzy
 #| msgid "Select one"
 msgid "Select File"
 msgstr "Seleziona un elemento"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:229
-#: .\cookbook\templates\forms\edit_internal_recipe.html:290
-#: .\cookbook\templates\forms\edit_internal_recipe.html:314
+#: .\cookbook\templates\forms\edit_internal_recipe.html:230
+#: .\cookbook\templates\forms\edit_internal_recipe.html:252
+#: .\cookbook\templates\forms\edit_internal_recipe.html:313
+#: .\cookbook\templates\forms\edit_internal_recipe.html:337
 #: .\cookbook\templates\shopping_list.html:189
 #: .\cookbook\templates\shopping_list.html:211
 #: .\cookbook\templates\shopping_list.html:241
@@ -978,90 +1035,96 @@ msgstr "Seleziona un elemento"
 msgid "Select"
 msgstr "Seleziona"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:288
+#: .\cookbook\templates\forms\edit_internal_recipe.html:251
+#, fuzzy
+#| msgid "Delete Recipe"
+msgid "Select Recipe"
+msgstr "Elimina Ricetta"
+
+#: .\cookbook\templates\forms\edit_internal_recipe.html:311
 #: .\cookbook\templates\shopping_list.html:187
 msgid "Select Unit"
 msgstr "Seleziona unità di misura"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:289
-#: .\cookbook\templates\forms\edit_internal_recipe.html:313
+#: .\cookbook\templates\forms\edit_internal_recipe.html:312
+#: .\cookbook\templates\forms\edit_internal_recipe.html:336
 #: .\cookbook\templates\shopping_list.html:188
 #: .\cookbook\templates\shopping_list.html:210
 msgid "Create"
 msgstr "Crea"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:312
+#: .\cookbook\templates\forms\edit_internal_recipe.html:335
 #: .\cookbook\templates\shopping_list.html:209
 msgid "Select Food"
 msgstr "Seleziona alimento"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:329
+#: .\cookbook\templates\forms\edit_internal_recipe.html:352
 #: .\cookbook\templates\meal_plan.html:256
 #: .\cookbook\templates\url_import.html:542
 msgid "Note"
 msgstr "Nota"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:346
+#: .\cookbook\templates\forms\edit_internal_recipe.html:369
 msgid "Delete Ingredient"
 msgstr "Elimina Ingredienti"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:352
+#: .\cookbook\templates\forms\edit_internal_recipe.html:375
 msgid "Make Header"
 msgstr "Crea Intestazione"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:358
+#: .\cookbook\templates\forms\edit_internal_recipe.html:381
 msgid "Make Ingredient"
 msgstr "Crea Ingrediente"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:364
+#: .\cookbook\templates\forms\edit_internal_recipe.html:387
 msgid "Disable Amount"
 msgstr "Disabilita Quantità"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:370
+#: .\cookbook\templates\forms\edit_internal_recipe.html:393
 msgid "Enable Amount"
 msgstr "Abilita Quantità"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:375
+#: .\cookbook\templates\forms\edit_internal_recipe.html:398
 msgid "Copy Template Reference"
 msgstr "Copia riferimento template"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:401
+#: .\cookbook\templates\forms\edit_internal_recipe.html:424
 #: .\cookbook\templates\url_import.html:297
 #: .\cookbook\templates\url_import.html:567
 msgid "Instructions"
 msgstr "Istruzioni"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:414
-#: .\cookbook\templates\forms\edit_internal_recipe.html:445
+#: .\cookbook\templates\forms\edit_internal_recipe.html:437
+#: .\cookbook\templates\forms\edit_internal_recipe.html:468
 msgid "Save & View"
 msgstr "Salva & Mostra"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:418
-#: .\cookbook\templates\forms\edit_internal_recipe.html:451
+#: .\cookbook\templates\forms\edit_internal_recipe.html:441
+#: .\cookbook\templates\forms\edit_internal_recipe.html:474
 msgid "Add Step"
 msgstr "Aggiungi Step"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:421
-#: .\cookbook\templates\forms\edit_internal_recipe.html:455
+#: .\cookbook\templates\forms\edit_internal_recipe.html:444
+#: .\cookbook\templates\forms\edit_internal_recipe.html:478
 msgid "Add Nutrition"
 msgstr "Aggiungi nutrienti"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:423
-#: .\cookbook\templates\forms\edit_internal_recipe.html:457
+#: .\cookbook\templates\forms\edit_internal_recipe.html:446
+#: .\cookbook\templates\forms\edit_internal_recipe.html:480
 msgid "Remove Nutrition"
 msgstr "Rimuovi nutrienti"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:425
-#: .\cookbook\templates\forms\edit_internal_recipe.html:460
+#: .\cookbook\templates\forms\edit_internal_recipe.html:448
+#: .\cookbook\templates\forms\edit_internal_recipe.html:483
 msgid "View Recipe"
 msgstr "Mostra ricetta"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:427
-#: .\cookbook\templates\forms\edit_internal_recipe.html:462
+#: .\cookbook\templates\forms\edit_internal_recipe.html:450
+#: .\cookbook\templates\forms\edit_internal_recipe.html:485
 msgid "Delete Recipe"
 msgstr "Elimina Ricetta"
 
-#: .\cookbook\templates\forms\edit_internal_recipe.html:468
+#: .\cookbook\templates\forms\edit_internal_recipe.html:491
 msgid "Steps"
 msgstr "Step"
 
@@ -1087,7 +1150,7 @@ msgstr ""
 "utilizzano."
 
 #: .\cookbook\templates\forms\ingredients.html:24
-#: .\cookbook\templates\space.html:35 .\cookbook\templates\stats.html:26
+#: .\cookbook\templates\space.html:41 .\cookbook\templates\stats.html:26
 msgid "Units"
 msgstr "Unità di misura"
 
@@ -1172,12 +1235,6 @@ msgstr "Valutazione"
 msgid "Close"
 msgstr "Chiudi"
 
-#: .\cookbook\templates\include\recipe_open_modal.html:7
-#: .\cookbook\templates\meal_plan.html:247 .\cookbook\views\delete.py:28
-#: .\cookbook\views\edit.py:273 .\cookbook\views\new.py:52
-msgid "Recipe"
-msgstr "Ricetta"
-
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
 msgstr "Apri Ricetta"
@@ -1226,7 +1283,7 @@ msgid "Last viewed"
 msgstr "Recenti"
 
 #: .\cookbook\templates\index.html:87 .\cookbook\templates\meal_plan.html:178
-#: .\cookbook\templates\space.html:29 .\cookbook\templates\stats.html:22
+#: .\cookbook\templates\space.html:35 .\cookbook\templates\stats.html:22
 msgid "Recipes"
 msgstr "Ricette"
 
@@ -1661,7 +1718,7 @@ msgstr ""
 "offline perché le hai aperte di recente. Ricorda che queste informazioni "
 "potrebbero non essere aggiornate."
 
-#: .\cookbook\templates\recipe_view.html:21 .\cookbook\templates\space.html:56
+#: .\cookbook\templates\recipe_view.html:21 .\cookbook\templates\space.html:62
 #: .\cookbook\templates\stats.html:47
 msgid "Comments"
 msgstr "Commenti"
@@ -1699,67 +1756,58 @@ msgstr "Registo ricette cucinate"
 msgid "Recipe Home"
 msgstr "Pagina iniziale ricette"
 
-#: .\cookbook\templates\settings.html:23
+#: .\cookbook\templates\settings.html:25
 msgid "Account"
 msgstr "Account"
 
-#: .\cookbook\templates\settings.html:27
+#: .\cookbook\templates\settings.html:29
 msgid "Preferences"
 msgstr ""
 
-#: .\cookbook\templates\settings.html:31
+#: .\cookbook\templates\settings.html:33
 #, fuzzy
 #| msgid "Settings"
 msgid "API-Settings"
 msgstr "Impostazioni"
 
-#: .\cookbook\templates\settings.html:39
+#: .\cookbook\templates\settings.html:41
 #, fuzzy
 #| msgid "Settings"
 msgid "Name Settings"
 msgstr "Impostazioni"
 
-#: .\cookbook\templates\settings.html:47
+#: .\cookbook\templates\settings.html:49
 #, fuzzy
-#| msgid "Password Reset"
-msgid "Password Settings"
-msgstr "Recupero password"
+#| msgid "Account Connections"
+msgid "Account Settings"
+msgstr "Collegamenti dell'account"
 
-#: .\cookbook\templates\settings.html:55
+#: .\cookbook\templates\settings.html:51
 #, fuzzy
 #| msgid "Settings"
-msgid "Email Settings"
+msgid "Emails"
 msgstr "Impostazioni"
 
-#: .\cookbook\templates\settings.html:57
-msgid "Manage Email Settings"
-msgstr ""
-
-#: .\cookbook\templates\settings.html:61
+#: .\cookbook\templates\settings.html:54
+#: .\cookbook\templates\socialaccount\connections.html:11
 #, fuzzy
 #| msgid "Social Login"
 msgid "Social"
 msgstr "Login con social network"
 
-#: .\cookbook\templates\settings.html:63
-#, fuzzy
-#| msgid "Link social account"
-msgid "Manage Social Accounts"
-msgstr "Collega account social"
-
-#: .\cookbook\templates\settings.html:75
+#: .\cookbook\templates\settings.html:66
 msgid "Language"
 msgstr "Lingua"
 
-#: .\cookbook\templates\settings.html:105
+#: .\cookbook\templates\settings.html:96
 msgid "Style"
 msgstr "Stile"
 
-#: .\cookbook\templates\settings.html:125
+#: .\cookbook\templates\settings.html:116
 msgid "API Token"
 msgstr "Token API"
 
-#: .\cookbook\templates\settings.html:126
+#: .\cookbook\templates\settings.html:117
 msgid ""
 "You can use both basic authentication and token based authentication to "
 "access the REST API."
@@ -1767,7 +1815,7 @@ msgstr ""
 "Per accedere alle API REST puoi usare sia l'autenticazione base sia quella "
 "tramite token."
 
-#: .\cookbook\templates\settings.html:143
+#: .\cookbook\templates\settings.html:134
 msgid ""
 "Use the token as an Authorization header prefixed by the word token as shown "
 "in the following examples:"
@@ -1775,7 +1823,7 @@ msgstr ""
 "Usa il token come header Authorization preceduto dalla parola Token come "
 "negli esempi seguenti:"
 
-#: .\cookbook\templates\settings.html:145
+#: .\cookbook\templates\settings.html:136
 msgid "or"
 msgstr "o"
 
@@ -1817,11 +1865,6 @@ msgstr "Aggiungi voce"
 msgid "Amount"
 msgstr "Quantità"
 
-#: .\cookbook\templates\shopping_list.html:230
-#: .\cookbook\templates\supermarket.html:7
-msgid "Supermarket"
-msgstr "Supermercato"
-
 #: .\cookbook\templates\shopping_list.html:240
 msgid "Select Supermarket"
 msgstr "Seleziona supermercato"
@@ -1847,111 +1890,150 @@ msgid "List Prefix"
 msgstr "Prefisso lista"
 
 #: .\cookbook\templates\socialaccount\connections.html:4
-#: .\cookbook\templates\socialaccount\connections.html:7
+#: .\cookbook\templates\socialaccount\connections.html:15
 msgid "Account Connections"
 msgstr "Collegamenti dell'account"
 
-#: .\cookbook\templates\socialaccount\connections.html:10
+#: .\cookbook\templates\socialaccount\connections.html:18
 msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
 "Puoi accedere al tuo account usando uno dei seguenti account di terze parti:"
 
-#: .\cookbook\templates\socialaccount\connections.html:44
+#: .\cookbook\templates\socialaccount\connections.html:52
 msgid ""
 "You currently have no social network accounts connected to this account."
 msgstr "Non hai account di social network collegati a questo account."
 
-#: .\cookbook\templates\socialaccount\connections.html:47
+#: .\cookbook\templates\socialaccount\connections.html:55
 msgid "Add a 3rd Party Account"
 msgstr "Aggiungi un account di terze parti"
 
-#: .\cookbook\templates\space.html:18
+#: .\cookbook\templates\socialaccount\signup.html:5
+#, fuzzy
+#| msgid "Sign In"
+msgid "Signup"
+msgstr "Accedi"
+
+#: .\cookbook\templates\socialaccount\signup.html:10
+#, python-format
+msgid ""
+"You are about to use your\n"
+"        %(provider_name)s account to login to\n"
+"        %(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:39
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:47
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:55
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:63
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:71
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:79
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:87
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:95
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:103
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
+#: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
+#, fuzzy
+#| msgid "Sign In"
+msgid "Sign in using"
+msgstr "Accedi"
+
+#: .\cookbook\templates\space.html:23
+#, fuzzy
+#| msgid "No Space"
+msgid "Space:"
+msgstr "Nessuno spazio"
+
+#: .\cookbook\templates\space.html:24
 #, fuzzy
 #| msgid "Description"
 msgid "Manage Subscription"
 msgstr "Descrizione"
 
-#: .\cookbook\templates\space.html:26 .\cookbook\templates\stats.html:19
+#: .\cookbook\templates\space.html:32 .\cookbook\templates\stats.html:19
 msgid "Number of objects"
 msgstr "Numero di oggetti"
 
-#: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:30
+#: .\cookbook\templates\space.html:45 .\cookbook\templates\stats.html:30
 msgid "Recipe Imports"
 msgstr "Ricette importate"
 
-#: .\cookbook\templates\space.html:47 .\cookbook\templates\stats.html:38
+#: .\cookbook\templates\space.html:53 .\cookbook\templates\stats.html:38
 msgid "Objects stats"
 msgstr "Statistiche degli oggetti"
 
-#: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:41
+#: .\cookbook\templates\space.html:56 .\cookbook\templates\stats.html:41
 msgid "Recipes without Keywords"
 msgstr "Ricette senza parole chiave"
 
-#: .\cookbook\templates\space.html:52 .\cookbook\templates\stats.html:43
+#: .\cookbook\templates\space.html:58 .\cookbook\templates\stats.html:43
 msgid "External Recipes"
 msgstr "Ricette esterne"
 
-#: .\cookbook\templates\space.html:54 .\cookbook\templates\stats.html:45
+#: .\cookbook\templates\space.html:60 .\cookbook\templates\stats.html:45
 msgid "Internal Recipes"
 msgstr "Ricette interne"
 
-#: .\cookbook\templates\space.html:67
+#: .\cookbook\templates\space.html:73
 msgid "Members"
 msgstr ""
 
-#: .\cookbook\templates\space.html:71
+#: .\cookbook\templates\space.html:77
 #, fuzzy
 #| msgid "Invite Links"
 msgid "Invite User"
 msgstr "Link di invito"
 
-#: .\cookbook\templates\space.html:82
+#: .\cookbook\templates\space.html:88
 msgid "User"
 msgstr ""
 
-#: .\cookbook\templates\space.html:83
+#: .\cookbook\templates\space.html:89
 msgid "Groups"
 msgstr ""
 
-#: .\cookbook\templates\space.html:99
+#: .\cookbook\templates\space.html:105
 #, fuzzy
 #| msgid "Admin"
 msgid "admin"
 msgstr "Amministratore"
 
-#: .\cookbook\templates\space.html:100
+#: .\cookbook\templates\space.html:106
 msgid "user"
 msgstr ""
 
-#: .\cookbook\templates\space.html:101
+#: .\cookbook\templates\space.html:107
 msgid "guest"
 msgstr ""
 
-#: .\cookbook\templates\space.html:102
+#: .\cookbook\templates\space.html:108
 #, fuzzy
 #| msgid "Remove"
 msgid "remove"
 msgstr "Rimuovi"
 
-#: .\cookbook\templates\space.html:106
+#: .\cookbook\templates\space.html:112
 msgid "Update"
 msgstr ""
 
-#: .\cookbook\templates\space.html:110
+#: .\cookbook\templates\space.html:116
 #, fuzzy
 #| msgid "You cannot edit this storage!"
 msgid "You cannot edit yourself."
 msgstr "Non puoi modificare questo backend!"
 
-#: .\cookbook\templates\space.html:117
+#: .\cookbook\templates\space.html:123
 #, fuzzy
 #| msgid "There are no recipes in this book yet."
 msgid "There are no members in your space yet!"
 msgstr "Non ci sono ancora ricette in questo libro."
 
-#: .\cookbook\templates\space.html:124 .\cookbook\templates\system.html:21
+#: .\cookbook\templates\space.html:130 .\cookbook\templates\system.html:21
 #: .\cookbook\views\lists.py:115
 msgid "Invite Links"
 msgstr "Link di invito"
@@ -2259,37 +2341,37 @@ msgstr "Issues (Problemi aperti) su GitHub"
 msgid "Recipe Markup Specification"
 msgstr "Specifica di Markup della ricetta"
 
-#: .\cookbook\views\api.py:77
+#: .\cookbook\views\api.py:79
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "Il parametro updated_at non è formattato correttamente"
 
-#: .\cookbook\views\api.py:553 .\cookbook\views\views.py:295
+#: .\cookbook\views\api.py:580 .\cookbook\views\views.py:303
 msgid "This feature is not available in the demo version!"
 msgstr "Questa funzione non è disponibile nella versione demo!"
 
-#: .\cookbook\views\api.py:576
+#: .\cookbook\views\api.py:603
 msgid "Sync successful!"
 msgstr "Sincronizzazione completata con successo!"
 
-#: .\cookbook\views\api.py:581
+#: .\cookbook\views\api.py:608
 msgid "Error synchronizing with Storage"
 msgstr "Errore di sincronizzazione con questo backend"
 
-#: .\cookbook\views\api.py:649
+#: .\cookbook\views\api.py:686
 msgid "Nothing to do."
 msgstr ""
 
-#: .\cookbook\views\api.py:664
+#: .\cookbook\views\api.py:701
 msgid "The requested site provided malformed data and cannot be read."
 msgstr ""
 "Il sito richiesto ha fornito dati in formato non corretto e non può essere "
 "letto."
 
-#: .\cookbook\views\api.py:671
+#: .\cookbook\views\api.py:708
 msgid "The requested page could not be found."
 msgstr "La pagina richiesta non è stata trovata."
 
-#: .\cookbook\views\api.py:680
+#: .\cookbook\views\api.py:717
 msgid ""
 "The requested site does not provide any recognized data format to import the "
 "recipe from."
@@ -2297,29 +2379,29 @@ msgstr ""
 "Il sito richiesto non fornisce un formato di dati riconosciuto da cui "
 "importare la ricetta."
 
-#: .\cookbook\views\api.py:694
+#: .\cookbook\views\api.py:731
 #, fuzzy
 #| msgid "The requested page could not be found."
 msgid "No useable data could be found."
 msgstr "La pagina richiesta non è stata trovata."
 
-#: .\cookbook\views\api.py:710
+#: .\cookbook\views\api.py:747
 msgid "I couldn't find anything to do."
 msgstr ""
 
-#: .\cookbook\views\data.py:30 .\cookbook\views\data.py:121
+#: .\cookbook\views\data.py:31 .\cookbook\views\data.py:122
 #: .\cookbook\views\edit.py:50 .\cookbook\views\import_export.py:67
 #: .\cookbook\views\new.py:32
 msgid "You have reached the maximum number of recipes for your space."
 msgstr ""
 
-#: .\cookbook\views\data.py:34 .\cookbook\views\data.py:125
+#: .\cookbook\views\data.py:35 .\cookbook\views\data.py:126
 #: .\cookbook\views\edit.py:54 .\cookbook\views\import_export.py:71
 #: .\cookbook\views\new.py:36
 msgid "You have more users than allowed in your space."
 msgstr ""
 
-#: .\cookbook\views\data.py:103
+#: .\cookbook\views\data.py:104
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
@@ -2474,21 +2556,21 @@ msgstr ""
 msgid "Email to user could not be send, please share link manually."
 msgstr ""
 
-#: .\cookbook\views\views.py:125
+#: .\cookbook\views\views.py:129
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
 
-#: .\cookbook\views\views.py:173
+#: .\cookbook\views\views.py:177
 msgid "You do not have the required permissions to perform this action!"
 msgstr "Non hai i permessi necessari per completare questa operazione!"
 
-#: .\cookbook\views\views.py:184
+#: .\cookbook\views\views.py:188
 msgid "Comment saved!"
 msgstr "Commento salvato!"
 
-#: .\cookbook\views\views.py:396
+#: .\cookbook\views\views.py:395
 msgid ""
 "The setup page can only be used to create the first user! If you have "
 "forgotten your superuser credentials please consult the django documentation "
@@ -2498,15 +2580,15 @@ msgstr ""
 "utente! Se hai dimenticato le credenziali del tuo super utente controlla la "
 "documentazione di Django per resettare le password. "
 
-#: .\cookbook\views\views.py:403
+#: .\cookbook\views\views.py:402
 msgid "Passwords dont match!"
 msgstr "Le password non combaciano!"
 
-#: .\cookbook\views\views.py:419
+#: .\cookbook\views\views.py:418
 msgid "User has been created, please login!"
 msgstr "L'utente è stato creato e ora può essere usato per il login!"
 
-#: .\cookbook\views\views.py:435
+#: .\cookbook\views\views.py:434
 msgid "Malformed Invite Link supplied!"
 msgstr "È stato fornito un link di invito non valido!"
 
@@ -2523,6 +2605,28 @@ msgstr ""
 #: .\cookbook\views\views.py:458
 msgid "Invite Link not valid or already used!"
 msgstr "Il link di invito non è valido o è stato già usato!"
+
+#: .\cookbook\views\views.py:522
+msgid ""
+"Reporting share links is not enabled for this instance. Please notify the "
+"page administrator to report problems."
+msgstr ""
+
+#: .\cookbook\views\views.py:528
+msgid ""
+"Recipe sharing link has been disabled! For additional information please "
+"contact the page administrator."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Password Reset"
+#~ msgid "Password Settings"
+#~ msgstr "Recupero password"
+
+#, fuzzy
+#~| msgid "Link social account"
+#~ msgid "Manage Social Accounts"
+#~ msgstr "Collega account social"
 
 #~ msgid ""
 #~ "A username is not required, if left blank the new user can choose one."
