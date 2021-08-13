@@ -284,7 +284,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
-        obj, created = Food.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
+        validated_data['name'] = validated_data['name'].strip()
+        validated_data['space'] = self.context['request'].space
+        obj, created = Food.objects.get_or_create(validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -456,9 +458,11 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         book = validated_data['book']
+        recipe = validated_data['recipe']
         if not book.get_owner() == self.context['request'].user:
             raise NotFound(detail=None, code=None)
-        return super().create(validated_data)
+        obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
+        return obj
 
     class Meta:
         model = RecipeBookEntry
