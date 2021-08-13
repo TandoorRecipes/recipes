@@ -10,16 +10,20 @@
                   <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input"
                            v-bind:placeholder="$t('Search')"></b-input>
                   <b-input-group-append>
-                    <b-button class="shadow-none btn btn-light" @click="openRandom()">
+                    <b-button variant="light" 
+                      v-b-tooltip.hover :title="$t('Random Recipes')"
+                      @click="openRandom()">
                       <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
                     </b-button>
                     <b-button v-b-toggle.collapse_advanced_search
-                              v-bind:class="{'btn-primary': !isAdvancedSettingsSet(), 'btn-danger': isAdvancedSettingsSet()}"
-                              class="shadow-none btn"><i
-                        class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i
-                        class="fas fa-caret-up"
-                        v-if="settings.advanced_search_visible"></i>
+                              v-b-tooltip.hover :title="$t('Advanced Settings')"
+                              v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'"
+                    >
+                      <!-- consider changing this icon to a filter -->
+                      <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
+                      <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
                     </b-button>
+                    
                   </b-input-group-append>
                 </b-input-group>
               </div>
@@ -134,12 +138,16 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
+                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
                                              :initial_selection="settings.search_keywords"
                                              search_function="listKeywords" label="label"
                                              :tree_api="true"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect>
+                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect> -->
+                        <treeselect v-model="settings.search_keywords" :options="facets.Keywords" :flat="true"
+                                    searchNested multiple :placeholder="$t('Keywords')"  :normalizer="normalizer"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_keywords_or" name="check-button"
@@ -254,8 +262,6 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -277,6 +283,8 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 Vue.use(BootstrapVue)
 
@@ -285,10 +293,11 @@ let SETTINGS_COOKIE_NAME = 'search_settings'
 export default {
   name: 'RecipeSearchView',
   mixins: [ResolveUrlMixin],
-  components: {GenericMultiselect, RecipeCard},
+  components: {GenericMultiselect, RecipeCard, Treeselect},
   data() {
     return {
       recipes: [],
+      facets: [],
       meal_plans: [],
       last_viewed_recipes: [],
 
@@ -383,9 +392,7 @@ export default {
 
       apiClient.listRecipes(
           this.settings.search_input,
-          this.settings.search_keywords.map(function (A) {
-            return A["id"];
-          }),
+          this.settings.search_keywords,
           this.settings.search_foods.map(function (A) {
             return A["id"];
           }),
@@ -405,6 +412,7 @@ export default {
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
         this.recipes = result.data.results
+        this.facets = result.data.facets
       })
     },
     openRandom: function () {
@@ -458,6 +466,14 @@ export default {
     },
     isAdvancedSettingsSet() {
       return ((this.settings.search_keywords.length + this.settings.search_foods.length + this.settings.search_books.length) > 0)
+    },
+    normalizer(node) {
+      return {
+            id: node.id,
+            label: node.name + ' (' + node.count + ')',
+            children: node.children,
+            isDefaultExpanded: node.isDefaultExpanded
+        }
     }
   }
 }

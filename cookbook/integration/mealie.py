@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient
+from cookbook.models import Recipe, Step, Ingredient
 
 
 class Mealie(Integration):
@@ -50,7 +50,7 @@ class Mealie(Integration):
                         step.ingredients.add(Ingredient.objects.create(
                             food=f, unit=u, amount=amount, note=note, space=self.request.space,
                         ))
-                    except:
+                    except Exception:
                         pass
             recipe.steps.add(step)
 
@@ -59,7 +59,7 @@ class Mealie(Integration):
                 import_zip = ZipFile(f['file'])
                 try:
                     self.import_recipe_image(recipe, BytesIO(import_zip.read(f'recipes/{recipe_json["slug"]}/images/min-original.webp')), filetype=get_filetype(f'recipes/{recipe_json["slug"]}/images/original'))
-                except:
+                except Exception:
                     pass
 
         return recipe

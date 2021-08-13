@@ -5,7 +5,6 @@ import uuid
 from datetime import date, timedelta
 
 from annoying.fields import AutoOneToOneField
-from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.indexes import GinIndex
@@ -19,7 +18,7 @@ from django.utils.translation import gettext as _
 from treebeard.mp_tree import MP_Node, MP_NodeManager
 from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
-from recipes.settings import (COMMENT_PREF_DEFAULT, DATABASES, FRACTION_PREF_DEFAULT,
+from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
                               STICKY_NAV_PREF_DEFAULT)
 
 
@@ -277,6 +276,7 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 
 class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMixin):
+    # TODO add find and fix problem functions
     node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)

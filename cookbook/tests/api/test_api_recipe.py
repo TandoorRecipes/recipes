@@ -9,6 +9,10 @@ from cookbook.models import Food, Ingredient, Step, Recipe
 LIST_URL = 'api:recipe-list'
 DETAIL_URL = 'api:recipe-detail'
 
+# TODO need to add extensive tests against recipe search to go through all of the combinations of parameters
+# probably needs to include a far more extensive set of initial recipes to effectively test results
+# and to ensure that all parts of the code are exercised.
+# TODO should probably consider adding code coverage plugin to the test suite
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],

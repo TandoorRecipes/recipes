@@ -1,11 +1,8 @@
 import json
-import re
 
-from django.utils.translation import gettext as _
-
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient
+from cookbook.models import Recipe, Step, Ingredient
 
 
 class OpenEats(Integration):

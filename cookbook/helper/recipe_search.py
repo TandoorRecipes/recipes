@@ -4,7 +4,7 @@ from recipes import settings
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, TrigramSimilarity
 )
-from django.db.models import Max, Q, Subquery, Case, When, Value
+from django.db.models import Count, Q, Subquery, Case, When, Value
 from django.utils import translation
 
 from cookbook.managers import DICTIONARY
@@ -14,6 +14,7 @@ from cookbook.models import Food, Keyword, ViewLog
 def search_recipes(request, queryset, params):
     search_prefs = request.user.searchpreference
     search_string = params.get('query', '')
+    search_ratings = params.getlist('ratings', [])
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
     search_books = params.getlist('books', [])
@@ -27,6 +28,7 @@ def search_recipes(request, queryset, params):
     search_new = params.get('new', False)
     search_last_viewed = int(params.get('last_viewed', 0))
 
+    # TODO update this to concat with full search queryset  qs1 | qs2
     if search_last_viewed > 0:
         last_viewed_recipes = ViewLog.objects.filter(
             created_by=request.user, space=request.space,
@@ -122,11 +124,18 @@ def search_recipes(request, queryset, params):
             queryset = queryset.filter(query_filter)
 
     if len(search_keywords) > 0:
+        # TODO creating setting to include descendants of keywords a setting
         if search_keywords_or == 'true':
+            # when performing an 'or' search all descendants are included in the OR condition
+            # so descendants are appended to 
+            for kw in Keyword.objects.filter(pk__in=search_keywords):
+                search_keywords += list(kw.get_descendants().values_list('pk', flat=True))
             queryset = queryset.filter(keywords__id__in=search_keywords)
         else:
-            for k in search_keywords:
-                queryset = queryset.filter(keywords__id=k)
+            # when performing an 'and' search returned recipes should include a parent OR any of its descedants
+            # AND other keywords selected so filters are appended using keyword__id__in the list of keywords and descendants
+            for kw in Keyword.objects.filter(pk__in=search_keywords):
+                queryset = queryset.filter(keywords__id__in=list(kw.get_descendants_and_self().values_list('pk', flat=True)))
 
     if len(search_foods) > 0:
         if search_foods_or == 'true':
@@ -153,9 +162,118 @@ def search_recipes(request, queryset, params):
         # TODO add order by user settings
         orderby += ['name']
         queryset = queryset.order_by(*orderby)
-
     return queryset
 
 
-# this returns a list of keywords in the queryset and how many times it appears
-# Keyword.objects.filter(recipe__in=queryset).annotate(kw_count=Count('recipe'))
+def get_facet(qs, params):
+    facets = {}
+    ratings = params.getlist('ratings', [])
+    keyword_list = params.getlist('keywords', [])
+    ingredient_list = params.getlist('ingredient', [])
+    book_list = params.getlist('book', [])
+
+    # this returns a list of keywords in the queryset and how many times it appears
+    kws = Keyword.objects.filter(recipe__in=qs).annotate(kw_count=Count('recipe'))
+    # custom django-tree function annotates a queryset to make building a tree easier.
+    # see https://django-treebeard.readthedocs.io/en/latest/api.html#treebeard.models.Node.get_annotated_list_qs for details
+    kw_a = annotated_qs(kws, root=True, fill=True)
+
+    # TODO add rating facet
+    facets['Ratings'] = []
+    facets['Keywords'] = fill_annotated_parents(kw_a, keyword_list)
+    # TODO add food facet
+    facets['Ingredients'] = []
+    # TODO add book facet
+    facets['Books'] = []
+
+    return facets
+
+
+def fill_annotated_parents(annotation, filters):
+    tree_list = []
+    parent = []
+    i = 0
+    level = -1
+    for r in annotation:
+        expand = False
+
+        annotation[i][1]['id'] = r[0].id
+        annotation[i][1]['name'] = r[0].name
+        annotation[i][1]['count'] = getattr(r[0], 'kw_count', 0)
+        annotation[i][1]['isDefaultExpanded'] = False
+
+        if str(r[0].id) in filters:
+            expand = True
+        if r[1]['level'] < level:
+            parent = parent[:r[1]['level'] - level]
+            parent[-1] = i
+            level = r[1]['level']
+        elif r[1]['level'] > level:
+            parent.extend([i])
+            level = r[1]['level']
+        else:
+            parent[-1] = i
+        j = 0
+
+        while j < level:
+            # this causes some double counting when a recipe has both a child and an ancestor
+            annotation[parent[j]][1]['count'] += getattr(r[0], 'kw_count', 0)
+            if expand:
+                annotation[parent[j]][1]['isDefaultExpanded'] = True
+            j += 1
+        if level == 0:
+            tree_list.append(annotation[i][1])
+        elif level > 0:
+            annotation[parent[level - 1]][1].setdefault('children', []).append(annotation[i][1])
+        i += 1
+    return tree_list
+
+
+def annotated_qs(qs, root=False, fill=False):
+    """
+    Gets an annotated list from a queryset.
+
+    :param root:
+
+        Will backfill in annotation to include all parents to root node.
+
+    :param fill:
+
+        Will fill in gaps in annotation where nodes between children
+        and ancestors are not included in the queryset.
+    """
+
+    result, info = [], {}
+    start_depth, prev_depth = (None, None)
+    nodes_list = list(qs.values_list('pk', flat=True))
+    for node in qs.order_by('path'):
+        node_queue = [node]
+        while len(node_queue) > 0:
+            dirty = False
+            current_node = node_queue[-1]
+            depth = current_node.get_depth()
+            parent_id = current_node.parent
+            if root and depth > 1 and parent_id not in nodes_list:
+                parent_id = current_node.parent
+                nodes_list.append(parent_id)
+                node_queue.append(current_node.__class__.objects.get(pk=parent_id))
+                dirty = True
+
+            if fill and depth > 1 and prev_depth and depth > prev_depth and parent_id not in nodes_list:
+                nodes_list.append(parent_id)
+                node_queue.append(current_node.__class__.objects.get(pk=parent_id))
+                dirty = True
+
+            if not dirty:
+                working_node = node_queue.pop()
+                if start_depth is None:
+                    start_depth = depth
+                open = (depth and (prev_depth is None or depth > prev_depth))
+                if prev_depth is not None and depth < prev_depth:
+                    info['close'] = list(range(0, prev_depth - depth))
+                info = {'open': open, 'close': [], 'level': depth - start_depth}
+                result.append((working_node, info,))
+                prev_depth = depth
+    if start_depth and start_depth > 0:
+        info['close'] = list(range(0, prev_depth - start_depth + 1))
+    return result

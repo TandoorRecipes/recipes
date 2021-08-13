@@ -3,12 +3,10 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 from zipfile import ZipFile
 
-from django.utils.translation import gettext as _
-
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.helper.recipe_url_import import parse_servings, iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
+from cookbook.models import Recipe, Step, Ingredient, Keyword
 
 
 class RecipeKeeper(Integration):
@@ -61,7 +59,6 @@ class RecipeKeeper(Integration):
         if file.find("span", {"itemprop": "recipeSource"}).text != '':
             step.instruction += "\n\nImported from: " + file.find("span", {"itemprop": "recipeSource"}).text
             step.save()
-            source_url_added = True
 
         recipe.steps.add(step)
 
@@ -72,7 +69,7 @@ class RecipeKeeper(Integration):
                     import_zip = ZipFile(f['file'])
                     self.import_recipe_image(recipe, BytesIO(import_zip.read(file.find("img", class_="recipe-photo").get("src"))), filetype='.jpeg')
         except Exception as e:
-            pass
+            print(recipe.name, ': failed to import image ', str(e))
 
         return recipe
 

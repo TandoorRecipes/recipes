@@ -3,12 +3,12 @@ import json
 import requests
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from cookbook.helper.ingredient_parser import parse, get_unit, get_food
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry, Food, Unit
+from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry
 
 
 @group_required('user')
@@ -58,7 +58,7 @@ def hook(request, token):
                 )
             )
             return JsonResponse({'data': data['message']['text']})
-    except:
+    except Exception:
         pass
 
     return JsonResponse({})
