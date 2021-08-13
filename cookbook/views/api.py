@@ -222,7 +222,7 @@ class TreeMixin(FuzzyFilterMixin):
                     content = {'error': True, 'msg': _('Cannot merge with child object!')}
                     return Response(content, status=status.HTTP_403_FORBIDDEN)
                 ########################################################################
-                # this needs abstracted to update steps instead of recipes for food merge
+                # TODO this needs abstracted to update steps instead of recipes for food merge
                 ########################################################################
                 recipes = Recipe.objects.filter(**{"%ss" % self.basename: source}, space=self.request.space)
 
