@@ -229,7 +229,7 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space')
         ]
 
 
@@ -246,7 +246,7 @@ class Supermarket(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space')
         ]
 
 
@@ -345,7 +345,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='kw_unique_name_per_space')
         ]
         indexes = (Index(fields=['id', 'name']),)
 
@@ -362,7 +362,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space')
         ]
 
 
@@ -381,7 +381,7 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
         ]
         indexes = (Index(fields=['id', 'name']),)
 
@@ -567,7 +567,7 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['recipe', 'book'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['recipe', 'book'], name='rbe_unique_name_per_space')
         ]
 
 
