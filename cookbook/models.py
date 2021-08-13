@@ -228,8 +228,9 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+        ]
 
 
 class Supermarket(models.Model, PermissionModelMixin):
@@ -244,8 +245,9 @@ class Supermarket(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+        ]
 
 
 class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
@@ -359,8 +361,9 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+        ]
 
 
 class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixin):
@@ -377,8 +380,9 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+        ]
         indexes = (Index(fields=['id', 'name']),)
 
 
@@ -562,8 +566,9 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
             return None
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('recipe', 'book'),)
+        constraints = [
+            models.UniqueConstraint(fields=['recipe', 'book'], name='unique_name_per_space')
+        ]
 
 
 class MealType(models.Model, PermissionModelMixin):
