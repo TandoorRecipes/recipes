@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
-from PIL import Image, UnidentifiedImageError
+from PIL import UnidentifiedImageError
 from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm

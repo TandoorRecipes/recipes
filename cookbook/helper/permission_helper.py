@@ -3,8 +3,6 @@ Source: https://djangosnippets.org/snippets/1703/
 """
 from django.conf import settings
 from django.core.cache import caches
-from django.views.generic.detail import SingleObjectTemplateResponseMixin
-from django.views.generic.edit import ModelFormMixin
 
 from cookbook.models import ShareLink
 from django.contrib import messages
@@ -64,7 +62,7 @@ def is_object_owner(user, obj):
         return False
     try:
         return obj.get_owner() == user
-    except:
+    except Exception:
         return False
 
 

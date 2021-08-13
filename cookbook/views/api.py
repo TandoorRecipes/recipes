@@ -4,9 +4,9 @@ import re
 import uuid
 
 import requests
-from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
+from collections import OrderedDict
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -37,7 +37,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 
-from cookbook.helper.recipe_search import search_recipes
+from cookbook.helper.recipe_search import search_recipes, get_facet
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
@@ -326,6 +326,7 @@ class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMi
     queryset = SupermarketCategoryRelation.objects
     serializer_class = SupermarketCategoryRelationSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(supermarket__space=self.request.space)
@@ -445,6 +446,19 @@ class RecipePagination(PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'
     max_page_size = 100
+
+    def paginate_queryset(self, queryset, request, view=None):
+        self.facets = get_facet(queryset, request.query_params)
+        return super().paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data),
+            ('facets', self.facets)
+        ]))
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
