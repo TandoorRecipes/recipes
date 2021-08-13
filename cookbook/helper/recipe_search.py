@@ -127,7 +127,7 @@ def search_recipes(request, queryset, params):
         # TODO creating setting to include descendants of keywords a setting
         if search_keywords_or == 'true':
             # when performing an 'or' search all descendants are included in the OR condition
-            # so descendants are appended to 
+            # so descendants are appended to filter all at once
             for kw in Keyword.objects.filter(pk__in=search_keywords):
                 search_keywords += list(kw.get_descendants().values_list('pk', flat=True))
             queryset = queryset.filter(keywords__id__in=search_keywords)

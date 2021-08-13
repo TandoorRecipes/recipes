@@ -62,7 +62,6 @@ class RecipeSchema(AutoSchema):
         return parameters
 
 
-# TODO move to separate class to cleanup
 class TreeSchema(AutoSchema):
 
     def get_path_parameters(self, path, method):
