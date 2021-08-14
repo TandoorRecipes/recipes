@@ -23,7 +23,8 @@ class Mealie(Integration):
             name=recipe_json['name'].strip(), description=description,
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        # TODO parse times (given in PT2H3M )
+        # TODO parse times (given in PT2H3M ) 
+        # @vabene check recipe_url_import.iso_duration_to_minutes  I think it does what you are looking for
 
         ingredients_added = False
         for s in recipe_json['recipe_instructions']:
