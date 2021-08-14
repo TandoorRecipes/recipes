@@ -25,6 +25,7 @@ class NextcloudCookbook(Integration):
             servings=recipe_json['recipeYield'], space=self.request.space)
 
         # TODO parse times (given in PT2H3M )
+        # @vabene check recipe_url_import.iso_duration_to_minutes  I think it does what you are looking for
         # TODO parse keywords
 
         ingredients_added = False
