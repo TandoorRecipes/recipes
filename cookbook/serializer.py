@@ -211,9 +211,9 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def get_image(self, obj):
-        recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        if len(recipes) == 0 and obj.has_children():
-            recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        recipes = obj.recipe_set.all().exclude(image__isnull=True).exclude(image__exact='')
+        if len(recipes) == 0:
+            recipes = Recipe.objects.filter(keywords__in=obj.get_tree()).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -288,6 +288,26 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
 
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
+    image = serializers.SerializerMethodField('get_image')
+    #numrecipe = serializers.SerializerMethodField('count_recipes')
+
+    # TODO check if it is a recipe and get that image first
+    def get_image(self, obj):
+        if obj.recipe:
+            recipes = Recipe.objects.filter(id=obj.recipe).exclude(image__isnull=True).exclude(image__exact='')
+            if len(recipes) == 0:
+                return recipes.image.url
+        recipes = Recipe.objects.filter(steps__ingredients__food=obj).exclude(image__isnull=True).exclude(image__exact='')
+        if len(recipes) == 0:
+            recipes = Recipe.objects.filter(keywords__in=obj.get_tree()).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        # if len(recipes) != 0:
+        #     return random.choice(recipes).image.url
+        # else:
+        #     return None
+        return None
+
+    # def count_recipes(self, obj):
+    #     return obj.recipe_set.all().count()
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -305,7 +325,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category')
+        fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category', 'image')
 
 
 class IngredientSerializer(WritableNestedModelSerializer):
