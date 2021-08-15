@@ -12,7 +12,6 @@ from cookbook.models import Food, Keyword, Recipe, ViewLog
 
 
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
-# TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
 def search_recipes(request, queryset, params):
     search_prefs = request.user.searchpreference
     search_string = params.get('query', '')

@@ -48,8 +48,6 @@ class TreeManager(MP_NodeManager):
 
 
 class TreeModel(MP_Node):
-    objects = ScopedManager(space='space', _manager_class=TreeManager)
-
     _full_name_separator = ' > '
 
     def __str__(self):
@@ -344,7 +342,9 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
     description = models.TextField(default="", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space', _manager_class=TreeManager)
 
     class Meta:
         constraints = [
@@ -353,7 +353,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
         indexes = (Index(fields=['id', 'name']),)
 
 
-class Unit(ExportModelOperationsMixin('unit'), TreeModel, PermissionModelMixin):
+class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
 
@@ -369,7 +369,9 @@ class Unit(ExportModelOperationsMixin('unit'), TreeModel, PermissionModelMixin):
         ]
 
 
-class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixin):
+class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
+    # TODO add find and fix problem functions
+    node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -377,7 +379,7 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
     description = models.TextField(default='', blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='space', _manager_class=TreeManager)
 
     def __str__(self):
         return self.name
