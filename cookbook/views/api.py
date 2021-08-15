@@ -12,8 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import ManyToManyField, Q
-from django.db.models.fields.related_descriptors import ManyToManyDescriptor
+from django.db.models import Q
+from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
 from django.shortcuts import redirect, get_object_or_404
@@ -135,9 +135,63 @@ class FuzzyFilterMixin(ViewSetMixin):
         return self.queryset
 
 
-class TreeMixin(FuzzyFilterMixin):
+class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
+    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'],)
+    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    def merge(self, request, pk, target):
+        self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
+
+        try:
+            source = self.model.objects.get(pk=pk, space=self.request.space)
+        except (self.model.DoesNotExist):
+            content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        if int(target) == source.id:
+            content = {'error': True, 'msg': _('Cannot merge with the same object!')}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+        else:
+            try:
+                target = self.model.objects.get(pk=target, space=self.request.space)
+            except (self.model.DoesNotExist):
+                content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                if target in source.get_descendants_and_self():
+                    content = {'error': True, 'msg': _('Cannot merge with child object!')}
+                    return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+                for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
+                    linkManager = getattr(source, link.get_accessor_name())
+                    related = linkManager.all()
+                    # link to foreign relationship could be OneToMany or ManyToMany
+                    if link.one_to_many:
+                        for r in related:
+                            setattr(r, link.field.name, target)
+                            r.save()
+                    elif link.many_to_many:
+                        for r in related:
+                            getattr(r, link.field.name).add(target)
+                            getattr(r, link.field.name).remove(source)
+                            r.save()
+                    else:
+                        # a new scenario exists and needs to be handled
+                        raise NotImplementedError
+                children = source.get_children().exclude(id=target.id)
+                for c in children:
+                    c.move(target, 'sorted-child')
+                content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
+                source.delete()
+                return Response(content, status=status.HTTP_200_OK)
+            except Exception:
+                content = {'error': True, 'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TreeMixin(MergeMixin, FuzzyFilterMixin):
     model = None
-    related_models = [{'model': None, 'field': None}]
     schema = TreeSchema()
 
     def get_queryset(self):
@@ -201,57 +255,6 @@ class TreeMixin(FuzzyFilterMixin):
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
             content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'],)
-    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-    def merge(self, request, pk, target):
-        self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
-
-        try:
-            source = self.model.objects.get(pk=pk, space=self.request.space)
-        except (self.model.DoesNotExist):
-            content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
-            return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-        if int(target) == source.id:
-            content = {'error': True, 'msg': _('Cannot merge with the same object!')}
-            return Response(content, status=status.HTTP_403_FORBIDDEN)
-
-        else:
-            try:
-                target = self.model.objects.get(pk=target, space=self.request.space)
-            except (self.model.DoesNotExist):
-                content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
-                return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-            try:
-                if target in source.get_descendants_and_self():
-                    content = {'error': True, 'msg': _('Cannot merge with child object!')}
-                    return Response(content, status=status.HTTP_403_FORBIDDEN)
-
-                for model in self.related_models:
-                    if isinstance(getattr(model['model'], model['field']), ManyToManyDescriptor):
-                        related = model['model'].objects.filter(**{model['field'] + "__id": source.id}, space=self.request.space)
-                    else:
-                        related = model['model'].objects.filter(**{model['field']: source}, space=self.request.space)
-
-                    for r in related:
-                        try:
-                            getattr(r, model['field']).add(target)
-                            getattr(r, model['field']).remove(source)
-                            r.save()
-                        except AttributeError:
-                            setattr(r, model['field'], target)
-                            r.save()
-                    children = source.get_children().exclude(id=target.id)
-                    for c in children:
-                        c.move(target, 'sorted-child')
-                content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
-                source.delete()
-                return Response(content, status=status.HTTP_200_OK)
-            except Exception:
-                content = {'error': True, 'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -349,7 +352,6 @@ class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMi
 class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
-    related_models = [{'model': Recipe, 'field': 'keywords'}]
     serializer_class = KeywordSerializer
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
@@ -368,7 +370,6 @@ class UnitViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
     model = Food
-    related_models = [{'model': Ingredient, 'field': 'food'}]
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
