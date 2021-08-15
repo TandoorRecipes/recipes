@@ -1,10 +1,12 @@
 import json
-
 import pytest
-from django.urls import reverse
-from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient
+from django.contrib import auth
+from django_scopes import scopes_disabled
+from django.urls import reverse
+
+
+from cookbook.models import Food, Ingredient, ShoppingList, ShoppingListEntry
 
 #    ------------------ IMPORTANT -------------------
 #
@@ -47,23 +49,52 @@ def obj_3(space_2):
 
 
 @pytest.fixture()
-def step_1_s1(obj_1, space_1):
+def ing_1_s1(obj_1, space_1):
     return Ingredient.objects.create(food=obj_1, space=space_1)
 
 
 @pytest.fixture()
-def step_2_s1(obj_2, space_1):
+def ing_2_s1(obj_2, space_1):
     return Ingredient.objects.create(food=obj_2, space=space_1)
 
 
 @pytest.fixture()
-def step_3_s2(obj_3, space_2):
+def ing_3_s2(obj_3, space_2):
     return Ingredient.objects.create(food=obj_3, space=space_2)
 
 
 @pytest.fixture()
-def step_1_1_s1(obj_1_1, space_1):
+def ing_1_1_s1(obj_1_1, space_1):
     return Ingredient.objects.create(food=obj_1_1, space=space_1)
+
+
+@pytest.fixture()
+def sle_1_s1(obj_1, u1_s1, space_1):
+    e = ShoppingListEntry.objects.create(food=obj_1)
+    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
+    s.entries.add(e)
+    return e
+
+
+@pytest.fixture()
+def sle_2_s1(obj_2, u1_s1, space_1):
+    return ShoppingListEntry.objects.create(food=obj_2)
+
+
+@pytest.fixture()
+def sle_3_s2(obj_3, u1_s2, space_2):
+    e = ShoppingListEntry.objects.create(food=obj_3)
+    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s2), space=space_2, )
+    s.entries.add(e)
+    return e
+
+
+@pytest.fixture()
+def sle_1_1_s1(obj_1_1, u1_s1, space_1):
+    e = ShoppingListEntry.objects.create(food=obj_1_1)
+    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
+    s.entries.add(e)
+    return e
 
 
 @pytest.mark.parametrize("arg", [
@@ -264,7 +295,8 @@ def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
 def test_merge(
     u1_s1,
     obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3,
-    step_1_s1, step_2_s1, step_3_s2, step_1_1_s1,
+    ing_1_s1, ing_2_s1, ing_3_s2, ing_1_1_s1,
+    sle_1_s1, sle_2_s1, sle_3_s2, sle_1_1_s1,
     space_1
 ):
     with scopes_disabled():
@@ -277,8 +309,13 @@ def test_merge(
         assert obj_3.ingredient_set.count() == 1
         assert obj_1_1.ingredient_set.count() == 1
         assert obj_1_1_1.ingredient_set.count() == 0
+        assert obj_1.shoppinglistentry_set.count() == 1
+        assert obj_2.shoppinglistentry_set.count() == 1
+        assert obj_3.shoppinglistentry_set.count() == 1
+        assert obj_1_1.shoppinglistentry_set.count() == 1
+        assert obj_1_1_1.shoppinglistentry_set.count() == 0
 
-    # merge food with no children and no ingredient with another food, only HTTP put method should work
+    # merge food with no children and no ingredient/shopping list entry with another food, only HTTP put method should work
     url = reverse(MERGE_URL, args=[obj_1_1_1.id, obj_2.id])
     r = u1_s1.get(url)
     assert r.status_code == 405
@@ -301,8 +338,12 @@ def test_merge(
         assert obj_2.ingredient_set.count() == 1
         assert obj_3.ingredient_set.count() == 1
         assert obj_1_1.ingredient_set.count() == 1
+        assert obj_1.shoppinglistentry_set.count() == 1
+        assert obj_2.shoppinglistentry_set.count() == 1
+        assert obj_3.shoppinglistentry_set.count() == 1
+        assert obj_1_1.shoppinglistentry_set.count() == 1
 
-    # merge food with children to another food
+    # merge food (with connected ingredient/shoppinglistentry) with children to another food
     r = u1_s1.put(reverse(MERGE_URL, args=[obj_1.id, obj_2.id]))
     assert r.status_code == 200
     with scopes_disabled():
@@ -314,6 +355,9 @@ def test_merge(
         assert obj_2.ingredient_set.count() == 2
         assert obj_3.ingredient_set.count() == 1
         assert obj_1_1.ingredient_set.count() == 1
+        assert obj_2.shoppinglistentry_set.count() == 2
+        assert obj_3.shoppinglistentry_set.count() == 1
+        assert obj_1_1.shoppinglistentry_set.count() == 1
 
     # attempt to merge with non-existent parent
     r = u1_s1.put(
