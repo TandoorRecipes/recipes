@@ -12,7 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Q, Value, When
+from django.db.models import ManyToManyField, Q
+from django.db.models.fields.related_descriptors import ManyToManyDescriptor
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
 from django.shortcuts import redirect, get_object_or_404
@@ -136,6 +137,7 @@ class FuzzyFilterMixin(ViewSetMixin):
 
 class TreeMixin(FuzzyFilterMixin):
     model = None
+    related_models = [{'model': None, 'field': None}]
     schema = TreeSchema()
 
     def get_queryset(self):
@@ -155,7 +157,7 @@ class TreeMixin(FuzzyFilterMixin):
         elif tree:
             if tree.isnumeric():
                 try:
-                    self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self()
+                    self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self().filter(space=self.request.space)
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
         else:
@@ -226,18 +228,24 @@ class TreeMixin(FuzzyFilterMixin):
                 if target in source.get_descendants_and_self():
                     content = {'error': True, 'msg': _('Cannot merge with child object!')}
                     return Response(content, status=status.HTTP_403_FORBIDDEN)
-                ########################################################################
-                # TODO this needs abstracted to update steps instead of recipes for food merge
-                ########################################################################
-                recipes = Recipe.objects.filter(**{"%ss" % self.basename: source}, space=self.request.space)
 
-                for r in recipes:
-                    getattr(r, self.basename + 's').add(target)
-                    getattr(r, self.basename + 's').remove(source)
-                    r.save()
-                children = source.get_children().exclude(id=target.id)
-                for c in children:
-                    c.move(target, 'sorted-child')
+                for model in self.related_models:
+                    if isinstance(getattr(model['model'], model['field']), ManyToManyDescriptor):
+                        related = model['model'].objects.filter(**{model['field'] + "__id": source.id}, space=self.request.space)
+                    else:
+                        related = model['model'].objects.filter(**{model['field']: source}, space=self.request.space)
+
+                    for r in related:
+                        try:
+                            getattr(r, model['field']).add(target)
+                            getattr(r, model['field']).remove(source)
+                            r.save()
+                        except AttributeError:
+                            setattr(r, model['field'], target)
+                            r.save()
+                    children = source.get_children().exclude(id=target.id)
+                    for c in children:
+                        c.move(target, 'sorted-child')
                 content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
@@ -341,6 +349,7 @@ class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMi
 class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
+    related_models = [{'model': Recipe, 'field': 'keywords'}]
     serializer_class = KeywordSerializer
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
@@ -356,10 +365,13 @@ class UnitViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
         return super().get_queryset()
 
 
-class FoodViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
+class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
+    model = Food
+    related_models = [{'model': Ingredient, 'field': 'food'}]
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
 
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
