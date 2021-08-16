@@ -145,7 +145,7 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
             source = self.model.objects.get(pk=pk, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         if int(target) == source.id:
             content = {'error': True, 'msg': _('Cannot merge with the same object!')}
@@ -156,7 +156,7 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                 target = self.model.objects.get(pk=target, space=self.request.space)
             except (self.model.DoesNotExist):
                 content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+                return Response(content, status=status.HTTP_404_NOT_FOUND)
 
             try:
                 if target in source.get_descendants_and_self():
@@ -205,7 +205,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
                 if root == 0:
-                    self.queryset = self.model.get_root_nodes()
+                    self.queryset = self.model.get_root_nodes() | self.model.objects.filter(depth=0, space=self.request.space)
                 else:
                     self.queryset = self.model.objects.get(id=root).get_children()
         elif tree:
