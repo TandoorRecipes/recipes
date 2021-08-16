@@ -102,5 +102,8 @@
   "merge_selection": "Replace all occurences of {source} with the selected {type}.",
   "Advanced Search Settings": "Advanced Search Settings",
   "Download": "Download",
-  "Root": "Root"
+  "Root": "Root",
+  "Ignore_Shopping": "Ignore Shopping",
+  "Shopping_Category": "Shopping Category",
+  "Edit_Food": "Edit Food"
 }

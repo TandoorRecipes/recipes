@@ -135,10 +135,6 @@ urlpatterns = [
          name='web_manifest'),
 ]
 
-# generic_models = (
-#     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
-#     Comment, RecipeBookEntry, Keyword, Food, ShoppingList, InviteLink
-# )
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
     Comment, RecipeBookEntry, ShoppingList, InviteLink

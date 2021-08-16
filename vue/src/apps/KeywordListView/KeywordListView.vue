@@ -194,7 +194,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import _debounce from 'lodash/debounce'
 
-import {ResolveUrlMixin} from "@/utils/utils";
+import {ToastMixin} from "@/utils/utils";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import KeywordCard from "@/components/KeywordCard";
@@ -212,7 +212,7 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'KeywordListView',
-  mixins: [ResolveUrlMixin],
+  mixins: [ToastMixin],
   components: {TwemojiTextarea, KeywordCard, GenericMultiselect, InfiniteLoading},
   computed: {
     // move with generic modals
@@ -263,15 +263,6 @@ export default {
     }, 700)
   },
   methods: {
-    makeToast: function (title, message, variant = null) {
-        //TODO remove duplicate function in favor of central one
-        this.$bvToast.toast(message, {
-            title: title,
-            variant: variant,
-            toaster: 'b-toaster-top-center',
-            solid: true
-        })
-    },
     resetSearch: function () {
       if (this.search_input !== '') {
         this.search_input = ''
