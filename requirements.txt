@@ -35,7 +35,7 @@ recipe-scrapers==13.3.5
 django-scopes==1.2.0
 pytest==6.2.4
 pytest-django==4.4.0
-django-cors-headers==3.7.0
+django-cors-headers==3.8.0
 django-storages==1.11.1
 boto3==1.18.9
 django-prometheus==2.1.0
