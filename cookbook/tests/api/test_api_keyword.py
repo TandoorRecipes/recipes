@@ -167,7 +167,6 @@ def test_add(arg, request, u1_s2):
         assert r.status_code == 404
 
 
-@pytest.mark.django_db(transaction=True)
 def test_add_duplicate(u1_s1, u1_s2, obj_1, obj_3):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
@@ -255,13 +254,13 @@ def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
     r = u1_s1.put(
         reverse(MOVE_URL, args=[obj_1.id, 9999])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # attempt to move to wrong space
     r = u1_s1.put(
         reverse(MOVE_URL, args=[obj_1_1.id, obj_3.id])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
@@ -327,13 +326,13 @@ def test_merge(
     r = u1_s1.put(
         reverse(MERGE_URL, args=[obj_1_1.id, 9999])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # attempt to move to wrong space
     r = u1_s1.put(
         reverse(MERGE_URL, args=[obj_2.id, obj_3.id])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # attempt to merge with child
     r = u1_s1.put(

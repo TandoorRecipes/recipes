@@ -8,7 +8,6 @@ from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, NotFound
-from treebeard.mp_tree import MP_NodeQuerySet
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              MealPlan, MealType, NutritionInformation, Recipe,
@@ -47,7 +46,7 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if (type(data) == QuerySet and data.query.is_sliced) or type(data) == MP_NodeQuerySet:
+        if (type(data) == QuerySet and data.query.is_sliced):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
@@ -209,9 +208,9 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def get_image(self, obj):
-        recipes = obj.recipe_set.all().exclude(image__isnull=True).exclude(image__exact='')
+        recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
         if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=Keyword.get_tree(obj)).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -223,6 +222,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
+        validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
         obj, created = Keyword.objects.get_or_create(**validated_data)
         return obj
@@ -231,7 +231,7 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         # list_serializer_class = SpaceFilterSerializer
         model = Keyword
         fields = ('id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'numchild',)
+        read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):

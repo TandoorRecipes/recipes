@@ -144,18 +144,18 @@ class TreeMixin(FuzzyFilterMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
                 if root == 0:
-                    self.queryset = self.model.get_root_nodes().filter(space=self.request.space)
+                    self.queryset = self.model.get_root_nodes() | self.model.objects.filter(depth=0)
                 else:
-                    self.queryset = self.model.objects.get(id=root).get_children().filter(space=self.request.space)
+                    self.queryset = self.model.objects.get(id=root).get_children()
         elif tree:
             if tree.isnumeric():
                 try:
-                    self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self().filter(space=self.request.space)
+                    self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self()
                 except Keyword.DoesNotExist:
                     self.queryset = self.model.objects.none()
         else:
             return super().get_queryset()
-        return self.queryset
+        return self.queryset.filter(space=self.request.space)
 
     @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'],)
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
@@ -166,7 +166,7 @@ class TreeMixin(FuzzyFilterMixin):
             child = self.model.objects.get(pk=pk, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {child} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         parent = int(parent)
         # parent 0 is root of the tree
@@ -184,7 +184,7 @@ class TreeMixin(FuzzyFilterMixin):
             parent = self.model.objects.get(pk=parent, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {parent} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         try:
             with scopes_disabled():
@@ -204,7 +204,7 @@ class TreeMixin(FuzzyFilterMixin):
             source = self.model.objects.get(pk=pk, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         if int(target) == source.id:
             content = {'error': True, 'msg': _('Cannot merge with the same object!')}
@@ -215,7 +215,7 @@ class TreeMixin(FuzzyFilterMixin):
                 target = self.model.objects.get(pk=target, space=self.request.space)
             except (self.model.DoesNotExist):
                 content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+                return Response(content, status=status.HTTP_404_NOT_FOUND)
 
             try:
                 if target in source.get_descendants_and_self():
