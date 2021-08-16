@@ -159,11 +159,15 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
+                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
                                              :initial_selection="settings.search_foods"
                                              search_function="listFoods" label="name"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Ingredients')" :limit="20"></generic-multiselect>
+                                             v-bind:placeholder="$t('Ingredients')"></generic-multiselect> -->
+                        <treeselect v-model="settings.search_foods" :options="facets.Foods" :flat="true"
+                                    searchNested multiple :placeholder="$t('Ingredients')"  :normalizer="normalizer"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_foods_or" name="check-button"
@@ -376,9 +380,7 @@ export default {
       apiClient.listRecipes(
           this.settings.search_input,
           this.settings.search_keywords,
-          this.settings.search_foods.map(function (A) {
-            return A["id"];
-          }),
+          this.settings.search_foods,
           this.settings.search_books.map(function (A) {
             return A["id"];
           }),

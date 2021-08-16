@@ -6,7 +6,6 @@
 
       </div>
       <div class="col-xl-8 col-12">
-        <!-- TODO only show scollbars in split mode, but this doesn't interact well with infinite scroll, maybe a different component? -->
         <div class="container-fluid d-flex flex-column flex-grow-1" :class="{'vh-100' : show_split}">
           <!-- expanded options box -->
           <div class="row flex-shrink-0">
@@ -17,7 +16,7 @@
                     <div class="row">
                       <div class="col-md-3" style="margin-top: 1vh">
                           <div class="btn btn-primary btn-block text-uppercase" @click="startAction({'action':'new'})">
-                            {{ this.$t('New_Keyword') }}
+                            {{ this.$t('New_Food') }}
                           </div>
                       </div>
 
@@ -68,13 +67,13 @@
           <!-- only show scollbars in split mode, but this doesn't interact well with infinite scroll, maybe a different componenet? -->
           <div class="row" :class="{'overflow-hidden' : show_split}" style="margin-top: 2vh">
             <div class="col col-md" :class="{'mh-100 overflow-auto' : show_split}">
-              <keyword-card 
-                v-for="k in keywords"
-                v-bind:key="k.id"
-                :keyword="k" 
+              <food-card 
+                v-for="f in foods"
+                v-bind:key="f.id"
+                :food="f" 
                 :draggable="true"
                 @item-action="startAction($event, 'left')" 
-              ></keyword-card>
+              ></food-card>
               <infinite-loading
                 :identifier='left' 
                 @infinite="infiniteHandler($event, 'left')" 
@@ -83,13 +82,13 @@
             </div>
             <!-- right side keyword cards -->
             <div class="col col-md mh-100 overflow-auto " v-if="show_split">
-              <keyword-card 
-                v-for="k in keywords2"
-                v-bind:key="k.id"
-                :keyword="k" 
+              <food-card 
+                v-for="f in foods2"
+                v-bind:key="f.id"
+                :food="f" 
                 draggable="true"
                 @item-action="startAction($event, 'right')"
-              ></keyword-card>
+              ></food-card>
               <infinite-loading  
                 :identifier='right' 
                 @infinite="infiniteHandler($event, 'right')" 
@@ -197,7 +196,7 @@ import _debounce from 'lodash/debounce'
 import {ResolveUrlMixin} from "@/utils/utils";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
-import KeywordCard from "@/components/KeywordCard";
+import FoodCard from "@/components/FoodCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -211,9 +210,9 @@ import EmojiGroups from '@kevinfaguiar/vue-twemoji-picker/emoji-data/emoji-group
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'KeywordListView',
+  name: 'FoodListView',
   mixins: [ResolveUrlMixin],
-  components: {TwemojiTextarea, KeywordCard, GenericMultiselect, InfiniteLoading},
+  components: {TwemojiTextarea, FoodCard, GenericMultiselect, InfiniteLoading},
   computed: {
     // move with generic modals
     emojiDataAll() {
@@ -226,8 +225,8 @@ export default {
   },
   data() {
     return {
-      keywords: [],
-      keywords2: [],
+      foods: [],
+      foods2: [],
       show_split: false,
       search_input: '',
       search_input2: '',
@@ -253,12 +252,12 @@ export default {
   watch: {
     search_input: _debounce(function() {
       this.left_page = 0
-      this.keywords = []
+      this.foods = []
       this.left += 1
     }, 700),
     search_input2: _debounce(function() {
       this.right_page = 0
-      this.keywords2 = []
+      this.foods2 = []
       this.right += 1
     }, 700)
   },
@@ -277,14 +276,14 @@ export default {
         this.search_input = ''
       } else {
         this.left_page = 0
-        this.keywords =  []
+        this.foods =  []
         this.left += 1
       }
       if (this.search_input2 !== '') {
         this.search_input2 = ''
       } else {
         this.right_page = 0
-        this.keywords2 = []
+        this.foods2 = []
         this.right += 1
       }
       
@@ -334,22 +333,22 @@ export default {
       }
 
     },
-    saveKeyword: function () {
+    saveFood: function () {
       let apiClient = new ApiApiFactory()
-      let kw = {
+      let food = {
         name: this.this_item.name,
         description: this.this_item.description,
         icon: this.this_item.icon,
       }
       if (!this.this_item.id) { // if there is no item id assume its a new item
-        apiClient.createKeyword(kw).then(result => {
-          // place all new keywords at the top of the list - could sort instead
-          this.keywords = [result.data].concat(this.keywords)
+        apiClient.createFood(food).then(result => {
+          // place all new foods at the top of the list - could sort instead
+          this.foods = [result.data].concat(this.foods)
           // this creates a deep copy to make sure that columns stay independent
           if (this.show_split){
-            this.keywords2 = [JSON.parse(JSON.stringify(result.data))].concat(this.keywords2)
+            this.foods2 = [JSON.parse(JSON.stringify(result.data))].concat(this.foods2)
           } else {
-            this.keywords2 = []
+            this.foods2 = []
           }
           this.this_item={}
         }).catch((err) => {
@@ -357,7 +356,7 @@ export default {
           this.this_item = {}
         })
       } else {
-        apiClient.partialUpdateKeyword(this.this_item.id, kw).then(result => {
+        apiClient.partialUpdateFood(this.this_item.id, food).then(result => {
           this.refreshCard(this.this_item.id)
           this.this_item={}
         }).catch((err) => {
@@ -366,10 +365,10 @@ export default {
         })
       }
     },
-    delKeyword: function (id) {
+    delFood: function (id) {
       let apiClient = new ApiApiFactory()
       
-      apiClient.destroyKeyword(id).then(response => {
+      apiClient.destroyFood(id).then(response => {
         this.destroyCard(id)
       }).catch((err) => {
         console.log(err)
@@ -377,22 +376,22 @@ export default {
       })
       
     },
-    moveKeyword: function (source_id, target_id) {
+    moveFood: function (source_id, target_id) {
       let apiClient = new ApiApiFactory()
-      apiClient.moveKeyword(String(source_id), String(target_id)).then(result => {
+      apiClient.moveFood(String(source_id), String(target_id)).then(result => {
         if (target_id === 0) {
-          let kw = this.findKeyword(this.keywords, source_id) || this.findKeyword(this.keywords2, source_id)
-          kw.parent = null
+          let food = this.findFood(this.foods, source_id) || this.findFood(this.foods2, source_id)
+          food.parent = null
 
           if (this.show_split){
             this.destroyCard(source_id) // order matters, destroy old card before adding it back in at root
             
-            this.keywords = [kw].concat(this.keywords)
-            this.keywords2 = [JSON.parse(JSON.stringify(kw))].concat(this.keywords2)
+            this.foods = [food].concat(this.foods)
+            this.foods2 = [JSON.parse(JSON.stringify(food))].concat(this.foods2)
           } else {
             this.destroyCard(source_id)
-            this.keywords = [kw].concat(this.keywords)
-            this.keywords2 = []
+            this.foods = [food].concat(this.foods)
+            this.foods2 = []
           }
         } else {
           this.destroyCard(source_id)
@@ -406,9 +405,9 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    mergeKeyword: function (source_id, target_id) {
+    mergeFood: function (source_id, target_id) {
       let apiClient = new ApiApiFactory()
-      apiClient.mergeKeyword(String(source_id), String(target_id)).then(result => {
+      apiClient.mergeFood(String(source_id), String(target_id)).then(result => {
         this.destroyCard(source_id)
         this.refreshCard(target_id)
       }).catch((err) => {
@@ -416,21 +415,21 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    // TODO: DRY the listKeyword functions (refresh, get children, infinityHandler ) can probably all be consolidated into a single function
-    getChildren: function(col, kw){
+    // TODO: DRY the listFood functions (refresh, get children, infinityHandler ) can probably all be consolidated into a single function
+    getChildren: function(col, food){
       let apiClient = new ApiApiFactory()
       let parent = {}
       let query = undefined
       let page = undefined
-      let root = kw.id
+      let root = food.id
       let tree = undefined
       let pageSize = 200
 
-      apiClient.listKeywords(query, root, tree, page, pageSize).then(result => {
+      apiClient.listFoods(query, root, tree, page, pageSize).then(result => {
         if (col == 'left') {
-          parent = this.findKeyword(this.keywords, kw.id)
+          parent = this.findFood(this.keywords, food.id)
         } else if (col == 'right'){
-          parent = this.findKeyword(this.keywords2, kw.id)
+          parent = this.findFood(this.keywords2, food.id)
         }
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
@@ -443,21 +442,20 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    getRecipes: function(col, kw){
+    getRecipes: function(col, food){
       let apiClient = new ApiApiFactory()
       let parent = {}
       let pageSize = 200
-      let keyword = String(kw.id)
       console.log(apiClient.listRecipes)
 
       apiClient.listRecipes(
-          undefined, keyword, undefined, undefined, undefined, undefined,
+          undefined, undefined, String(food.id), undefined, undefined, undefined,
           undefined, undefined, undefined, undefined, undefined, pageSize, undefined
         ).then(result => {
         if (col == 'left') {
-          parent = this.findKeyword(this.keywords, kw.id)
+          parent = this.findFood(this.foods, food.id)
         } else if (col == 'right'){
-          parent = this.findKeyword(this.keywords2, kw.id)
+          parent = this.findFood(this.foods2, food.id)
         }
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
@@ -475,12 +473,12 @@ export default {
       let apiClient = new ApiApiFactory()
       let idx = undefined
       let idx2 = undefined
-      apiClient.retrieveKeyword(id).then(result => {
-        target = this.findKeyword(this.keywords, id) || this.findKeyword(this.keywords2, id)
+      apiClient.retrieveFood(id).then(result => {
+        target = this.findFood(this.foods, id) || this.findFood(this.foods2, id)
         
         if (target.parent) {
-          let parent = this.findKeyword(this.keywords, target.parent)
-          let parent2 = this.findKeyword(this.keywords2, target.parent)
+          let parent = this.findFood(this.foods, target.parent)
+          let parent2 = this.findFood(this.foods2, target.parent)
 
           if (parent) {
             if (parent.expanded){
@@ -496,26 +494,26 @@ export default {
             }
           }
         } else {
-          idx = this.keywords.indexOf(this.keywords.find(kw => kw.id === target.id))
-          idx2 = this.keywords2.indexOf(this.keywords2.find(kw => kw.id === target.id))
-          Vue.set(this.keywords, idx, result.data)
-          Vue.set(this.keywords2, idx2, JSON.parse(JSON.stringify(result.data)))
+          idx = this.foods.indexOf(this.foods.find(food => food.id === target.id))
+          idx2 = this.foods2.indexOf(this.foods2.find(food => food.id === target.id))
+          Vue.set(this.foods, idx, result.data)
+          Vue.set(this.foods2, idx2, JSON.parse(JSON.stringify(result.data)))
         }
         
       })
     },
-    findKeyword: function(kw_list, id){
-      if (kw_list.length == 0) {
+    findFood: function(food_list, id){
+      if (food_list.length == 0) {
         return false
       }
-      let keyword = kw_list.filter(kw => kw.id == id)
-      if (keyword.length == 1) {
-        return keyword[0]
-      } else if (keyword.length == 0) {
-        for (const k of kw_list.filter(kw => kw.expanded == true)) {
-          keyword = this.findKeyword(k.children, id)
-          if (keyword) {
-            return keyword
+      let food = food_list.filter(fd => fd.id == id)
+      if (food.length == 1) {
+        return food[0]
+      } else if (food.length == 0) {
+        for (const f of food_list.filter(fd => fd.expanded == true)) {
+          food = this.findFood(f.children, id)
+          if (food) {
+            return food
           }
         }
         
@@ -546,20 +544,20 @@ export default {
         root = 0
       }
 
-      apiClient.listKeywords(query, root, tree, page, pageSize).then(result => {
+      apiClient.listFoods(query, root, tree, page, pageSize).then(result => {
         if (result.data.results.length){
           if (col ==='left') {
             this.left_page+=1
-            this.keywords = this.keywords.concat(result.data.results)
+            this.foods = this.foods.concat(result.data.results)
             $state.loaded();
-            if (this.keywords.length >= result.data.count) {
+            if (this.foods.length >= result.data.count) {
               $state.complete();
             }
           } else if (col ==='right') {
             this.right_page+=1
-            this.keywords2 = this.keywords2.concat(result.data.results)
+            this.foods2 = this.foods2.concat(result.data.results)
             $state.loaded();
-            if (this.keywords2.length >= result.data.count) {
+            if (this.foods2.length >= result.data.count) {
               $state.complete();
             }
           }
@@ -574,18 +572,18 @@ export default {
       })
     },
     destroyCard: function(id) {
-      let kw = this.findKeyword(this.keywords, id)
-      let kw2 = this.findKeyword(this.keywords2, id)
+      let fd = this.findFood(this.foods, id)
+      let fd2 = this.findFood(this.foods2, id)
       let p_id = undefined
-      if (kw) {
-        p_id = kw.parent
-      } else if (kw2) {
-        p_id = kw2.parent
+      if (fd) {
+        p_id = fd.parent
+      } else if (fd2) {
+        p_id = fd2.parent
       }
 
       if (p_id) {
-        let parent = this.findKeyword(this.keywords, p_id)
-        let parent2 = this.findKeyword(this.keywords2, p_id)
+        let parent = this.findFood(this.foods, p_id)
+        let parent2 = this.findFood(this.v2, p_id)
         if (parent){
           Vue.set(parent, 'numchild', parent.numchild - 1)
           if (parent.expanded) {
@@ -601,8 +599,8 @@ export default {
           }
         }
       }
-      this.keywords = this.keywords.filter(kw => kw.id != id)
-      this.keywords2 = this.keywords2.filter(kw => kw.id != id)
+      this.foods = this.foods.filter(kw => kw.id != id)
+      this.foods2 = this.foods2.filter(kw => kw.id != id)
     }
   }
 }

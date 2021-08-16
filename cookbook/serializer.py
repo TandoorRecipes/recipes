@@ -47,7 +47,7 @@ class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
         if (type(data) == QuerySet and data.query.is_sliced):
-            # if query is sliced it came from api request not nested serializer
+            # if query is sliced or if is a MP_NodeQuerySet it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
             data = data.filter(userpreference__space=self.context['request'].space)
@@ -211,9 +211,9 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def get_image(self, obj):
-        recipes = obj.recipe_set.all().exclude(image__isnull=True).exclude(image__exact='')
+        recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
         if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=obj.get_tree()).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -292,16 +292,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     numrecipe = serializers.SerializerMethodField('count_recipes')
 
     def get_image(self, obj):
-        if obj.recipe:
-            recipes = Recipe.objects.filter(id=obj.recipe).exclude(image__isnull=True).exclude(image__exact='')
-            if len(recipes) == 0:
-                return recipes.image.url
+        if obj.recipe and obj.space == obj.recipe.space:
+            if obj.recipe.image and obj.recipe.image != '':
+                return obj.recipe.image.url
         # if food is not also a recipe, look for recipe images that use the food
-        recipes = Recipe.objects.filter(steps__ingredients__food=obj).exclude(image__isnull=True).exclude(image__exact='')
+        recipes = Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
         # if no recipes found - check whole tree
         if len(recipes) == 0:
-            recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_tree()).exclude(image__isnull=True).exclude(image__exact='')
+            recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
         if len(recipes) != 0:
             return random.choice(recipes).image.url
@@ -309,7 +308,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
             return None
 
     def count_recipes(self, obj):
-        return Recipe.objects.filter(steps__ingredients__food=obj).count()
+        return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
