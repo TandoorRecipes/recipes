@@ -65,6 +65,11 @@ export default {
         apiClient[this.search_function](query, root, tree, page, pageSize).then(result => {
           this.objects = this.sticky_options.concat(result.data.results)
         })
+      } else if (this.search_function === 'listRecipes') {
+        apiClient[this.search_function](query, undefined, undefined, undefined, undefined, undefined,
+          undefined, undefined, undefined, undefined, undefined, 25, undefined).then(result => {
+          this.objects = this.sticky_options.concat(result.data.results)
+        })
       } else {
         apiClient[this.search_function]({query: {query: query, limit: this.limit}}).then(result => {
           this.objects = this.sticky_options.concat(result.data)

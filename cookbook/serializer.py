@@ -47,7 +47,7 @@ class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
         if (type(data) == QuerySet and data.query.is_sliced):
-            # if query is sliced or if is a MP_NodeQuerySet it came from api request not nested serializer
+            # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
             data = data.filter(userpreference__space=self.context['request'].space)
@@ -212,8 +212,8 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def get_image(self, obj):
         recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        if len(recipes) == 0 and obj.has_children():
+            recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -297,10 +297,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
                 return obj.recipe.image.url
         # if food is not also a recipe, look for recipe images that use the food
         recipes = Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-
         # if no recipes found - check whole tree
-        if len(recipes) == 0:
-            recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+        if len(recipes) == 0 and obj.has_children():
+            recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
         if len(recipes) != 0:
             return random.choice(recipes).image.url

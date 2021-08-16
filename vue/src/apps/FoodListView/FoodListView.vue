@@ -80,7 +80,7 @@
                 spinner="waveDots">
               </infinite-loading>
             </div>
-            <!-- right side keyword cards -->
+            <!-- right side food cards -->
             <div class="col col-md mh-100 overflow-auto " v-if="show_split">
               <food-card 
                 v-for="f in foods2"
@@ -108,51 +108,56 @@
     <!-- TODO Modals can probably be made generic and moved to component -->
     <!-- edit modal -->
     <b-modal class="modal" 
-      :id="'id_modal_keyword_edit'"
-      @shown="prepareEmoji"
-      :title="this.$t('Edit_Keyword')" 
+      :id="'id_modal_food_edit'"
+      :title="this.$t('Edit_Food')" 
       :ok-title="this.$t('Save')"
       :cancel-title="this.$t('Cancel')" 
-      @ok="saveKeyword">
+      @ok="saveFood">
       <form>
-        <label for="id_keyword_name_edit">{{ this.$t('Name') }}</label>
-        <input class="form-control" type="text" id="id_keyword_name_edit" v-model="this_item.name">
-        <label for="id_keyword_description_edit">{{ this.$t('Description') }}</label>
-        <input class="form-control" type="text" id="id_keyword_description_edit" v-model="this_item.description">
-        <label for="id_keyword_icon_edit">{{ this.$t('Icon') }}</label>
-        <twemoji-textarea 
-          id="id_keyword_icon_edit"
-          ref="_edit"
-          :emojiData="emojiDataAll" 
-          :emojiGroups="emojiGroups"
-          triggerType="hover" 
-          recentEmojisFeat="true"
-          recentEmojisStorage="local"
-          @contentChanged="setIcon"
-           />
+        <label for="id_food_name_edit">{{ this.$t('Name') }}</label>
+        <input class="form-control" type="text" id="id_food_name_edit" v-model="this_item.name">
+        <label for="id_food_description_edit">{{ this.$t('Description') }}</label>
+        <input class="form-control" type="text" id="id_food_description_edit" v-model="this_item.description">
+        <label for="id_food_recipe_edit">{{ this.$t('Recipe') }}</label>
+        <generic-multiselect 
+          @change="this_item.recipe=$event.val"
+          label="name"
+          :initial_selection="this_item.recipe"
+          search_function="listRecipes" 
+          :multiple="false"
+          :sticky_options="[{'id': null,'name': $t('None')}]"
+          style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+          :placeholder="this.$t('Search')">
+        </generic-multiselect>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="id_food_ignore_edit" v-model="this_item.ignore_shopping">
+          <label class="form-check-label" for="id_food_ignore_edit">{{ this.$t('Ignore_Shopping') }}</label>
+        </div>
+        <label for="id_food_category_edit">{{ this.$t('Shopping_Category') }}</label>
+        <input class="form-control" type="text" id="id_food_category_edit" >
       </form>
     </b-modal>
     <!-- delete modal -->
     <b-modal class="modal" 
-      :id="'id_modal_keyword_delete'"
-      :title="this.$t('Delete_Keyword')" 
+      :id="'id_modal_food_delete'"
+      :title="this.$t('Delete_Food')" 
       :ok-title="this.$t('Delete')"
       :cancel-title="this.$t('Cancel')" 
-      @ok="delKeyword(this_item.id)">
+      @ok="delFood(this_item.id)">
       {{this.$t("delete_confimation", {'kw': this_item.name})}} {{this_item.name}}
     </b-modal>
     <!-- move modal -->
     <b-modal class="modal" 
-      :id="'id_modal_keyword_move'"
-      :title="this.$t('Move_Keyword')" 
+      :id="'id_modal_food_move'"
+      :title="this.$t('Move_Food')" 
       :ok-title="this.$t('Move')"
       :cancel-title="this.$t('Cancel')" 
-      @ok="moveKeyword(this_item.id, this_item.target.id)">
+      @ok="moveFood(this_item.id, this_item.target.id)">
       {{ this.$t("move_selection", {'child': this_item.name}) }}
       <generic-multiselect 
         @change="this_item.target=$event.val"
         label="name"
-        search_function="listKeywords" 
+        search_function="listFood" 
         :multiple="false"
         :sticky_options="[{'id': 0,'name': $t('Root')}]"
         :tree_api="true"
@@ -162,16 +167,16 @@
     </b-modal>
     <!-- merge modal -->
     <b-modal class="modal" 
-      :id="'id_modal_keyword_merge'"
-      :title="this.$t('Merge_Keyword')" 
+      :id="'id_modal_food_merge'"
+      :title="this.$t('Merge_Food')" 
       :ok-title="this.$t('Merge')"
       :cancel-title="this.$t('Cancel')" 
-      @ok="mergeKeyword(this_item.id, this_item.target.id)">
-      {{ this.$t("merge_selection", {'source': this_item.name, 'type': this.$t('keyword')}) }}
+      @ok="mergeFood(this_item.id, this_item.target.id)">
+      {{ this.$t("merge_selection", {'source': this_item.name, 'type': this.$t('food')}) }}
       <generic-multiselect 
         @change="this_item.target=$event.val"
         label="name"
-        search_function="listKeywords" 
+        search_function="listFoods" 
         :multiple="false"
         :tree_api="true"
         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
@@ -193,36 +198,19 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import _debounce from 'lodash/debounce'
 
-import {ResolveUrlMixin} from "@/utils/utils";
+import {ToastMixin} from "@/utils/utils";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import FoodCard from "@/components/FoodCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import InfiniteLoading from 'vue-infinite-loading';
 
-// would move with modals if made generic
-import {TwemojiTextarea} from '@kevinfaguiar/vue-twemoji-picker';
-// TODO add localization
-import EmojiAllData from '@kevinfaguiar/vue-twemoji-picker/emoji-data/en/emoji-all-groups.json';
-import EmojiGroups from '@kevinfaguiar/vue-twemoji-picker/emoji-data/emoji-groups.json';
-// end move with generic modals
-
 Vue.use(BootstrapVue)
 
 export default {
   name: 'FoodListView',
-  mixins: [ResolveUrlMixin],
-  components: {TwemojiTextarea, FoodCard, GenericMultiselect, InfiniteLoading},
-  computed: {
-    // move with generic modals
-    emojiDataAll() {
-      return EmojiAllData;
-    },
-    emojiGroups() {
-      return EmojiGroups;
-    }
-    // end move with generic modals
-  },
+  mixins: [ToastMixin],
+  components: {FoodCard, GenericMultiselect, InfiniteLoading},
   data() {
     return {
       foods: [],
@@ -241,7 +229,9 @@ export default {
         'id': -1,
         'name': '',
         'description': '',
-        'icon': '',
+        'recipe': null,
+        'ignore_shopping': '',
+        'supermarket_category': null,
         'target': {
           'id': -1,
           'name': ''
@@ -262,15 +252,6 @@ export default {
     }, 700)
   },
   methods: {
-    makeToast: function (title, message, variant = null) {
-        //TODO remove duplicate function in favor of central one
-        this.$bvToast.toast(message, {
-            title: title,
-            variant: variant,
-            toaster: 'b-toaster-top-center',
-            solid: true
-        })
-    },
     resetSearch: function () {
       if (this.search_input !== '') {
         this.search_input = ''
@@ -295,26 +276,26 @@ export default {
 
       if (e.action == 'delete') {
         this.this_item = source
-        this.$bvModal.show('id_modal_keyword_delete')
+        this.$bvModal.show('id_modal_food_delete')
       } else if (e.action == 'new') {
         this.this_item = {}
-        this.$bvModal.show('id_modal_keyword_edit')
+        this.$bvModal.show('id_modal_food_edit')
       } else if (e.action  == 'edit') {
         this.this_item = source
-        this.$bvModal.show('id_modal_keyword_edit')
+        this.$bvModal.show('id_modal_food_edit')
       } else if (e.action  === 'move') {
         this.this_item = source
         if (target == null) {
-          this.$bvModal.show('id_modal_keyword_move')
+          this.$bvModal.show('id_modal_food_move')
         } else {
-          this.moveKeyword(source.id, target.id)
+          this.moveFood(source.id, target.id)
         }
       } else if (e.action  === 'merge') {
         this.this_item = source
         if (target == null) {
-          this.$bvModal.show('id_modal_keyword_merge')
+          this.$bvModal.show('id_modal_food_merge')
         } else {
-          this.mergeKeyword(e.source.id, e.target.id)
+          this.mergeFood(e.source.id, e.target.id)
         }
       } else if (e.action === 'get-children') {
         if (source.expanded) {
@@ -335,13 +316,14 @@ export default {
     },
     saveFood: function () {
       let apiClient = new ApiApiFactory()
-      let food = {
-        name: this.this_item.name,
-        description: this.this_item.description,
-        icon: this.this_item.icon,
-      }
+      console.log(this.this_item, !this.this_item.id)
+      // let food = {
+      //   name: this.this_item.name,
+      //   description: this.this_item.description,
+      //   icon: this.this_item.icon,
+      // }
       if (!this.this_item.id) { // if there is no item id assume its a new item
-        apiClient.createFood(food).then(result => {
+        apiClient.createFood(this.this_item).then(result => {
           // place all new foods at the top of the list - could sort instead
           this.foods = [result.data].concat(this.foods)
           // this creates a deep copy to make sure that columns stay independent
@@ -356,7 +338,7 @@ export default {
           this.this_item = {}
         })
       } else {
-        apiClient.partialUpdateFood(this.this_item.id, food).then(result => {
+        apiClient.partialUpdateFood(this.this_item.id, this.this_item).then(result => {
           this.refreshCard(this.this_item.id)
           this.this_item={}
         }).catch((err) => {
@@ -427,9 +409,9 @@ export default {
 
       apiClient.listFoods(query, root, tree, page, pageSize).then(result => {
         if (col == 'left') {
-          parent = this.findFood(this.keywords, food.id)
+          parent = this.findFood(this.foods, food.id)
         } else if (col == 'right'){
-          parent = this.findFood(this.keywords2, food.id)
+          parent = this.findFood(this.foods2, food.id)
         }
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
