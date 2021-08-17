@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-17 08:44+0200\n"
-"PO-Revision-Date: 2021-08-12 13:09+0000\n"
+"PO-Revision-Date: 2021-08-19 11:28+0000\n"
 "Last-Translator: Afaren <Afaren@outlook.com>\n"
-"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/fr/>\n"
+"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,7 +230,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:409
 msgid "Maximum number of users for this space reached."
-msgstr "Nombre maximum d'utilisateurs atteint pour cet espace."
+msgstr "Nombre maximum d'utilisateurs atteint pour ce groupe."
 
 #: .\cookbook\forms.py:415
 msgid "Email address already taken!"
@@ -388,7 +388,7 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
-"Le stockage maximal de fichiers pour l'espace en Mo. Mettre 0 pour ne pas "
+"Le stockage maximal de fichiers pour ce groupe en Mo. Mettre 0 pour ne pas "
 "avoir de limite et -1 pour empêcher le téléversement de fichiers."
 
 #: .\cookbook\models.py:123 .\cookbook\templates\search.html:7
@@ -418,7 +418,7 @@ msgstr "Grand"
 #: .\cookbook\templates\generic\new_template.html:14
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New"
-msgstr "Nouveau"
+msgstr "Nouveau/Nouvelle"
 
 #: .\cookbook\models.py:338
 #: .\cookbook\templates\forms\edit_internal_recipe.html:202
@@ -447,7 +447,7 @@ msgstr "Recette"
 
 #: .\cookbook\serializer.py:109
 msgid "File uploads are not enabled for this Space."
-msgstr "Le téléversement de fichiers n'est pas autorisé pour cet espace."
+msgstr "Le téléversement de fichiers n'est pas autorisé pour ce groupe."
 
 #: .\cookbook\serializer.py:117
 msgid "You have reached your file upload limit."
@@ -504,10 +504,8 @@ msgid "Settings"
 msgstr "Paramètres"
 
 #: .\cookbook\templates\account\email.html:13
-#, fuzzy
-#| msgid "Add E-mail"
 msgid "Email"
-msgstr "Ajouter une adresse mail"
+msgstr "Adresse mail"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
@@ -641,24 +639,18 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
 #: .\cookbook\templates\account\password_change.html:21
-#, fuzzy
-#| msgid "Reset My Password"
 msgid "Change Password"
-msgstr "Réinitialiser le mot de passe"
+msgstr "Modifier le mot de passe"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:52
-#, fuzzy
-#| msgid "Password Reset"
 msgid "Password"
-msgstr "Réinitialiser le mot de passe"
+msgstr "Mot de passe"
 
 #: .\cookbook\templates\account\password_change.html:22
-#, fuzzy
-#| msgid "Lost your password?"
 msgid "Forgot Password?"
-msgstr "Mot de passe perdu ?"
+msgstr "Mot de passe oublié ?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
@@ -691,10 +683,8 @@ msgstr ""
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
-#, fuzzy
-#| msgid "Reset My Password"
 msgid "Set Password"
-msgstr "Réinitialiser le mot de passe"
+msgstr "Ajouter un mot de passe"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
@@ -810,7 +800,7 @@ msgstr "Historique"
 #: .\cookbook\templates\base.html:159 .\cookbook\templates\space.html:7
 #: .\cookbook\templates\space.html:19
 msgid "Space Settings"
-msgstr "Paramètres d'espaces"
+msgstr "Paramètres de groupe"
 
 #: .\cookbook\templates\base.html:163 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1046,10 +1036,8 @@ msgid "Select"
 msgstr "Sélectionner"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:251
-#, fuzzy
-#| msgid "Delete Recipe"
 msgid "Select Recipe"
-msgstr "Supprimer la recette"
+msgstr "Sélectionner la recette"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:311
 #: .\cookbook\templates\shopping_list.html:187
@@ -1664,7 +1652,7 @@ msgstr ""
 #: .\cookbook\templates\no_space_info.html:6
 #: .\cookbook\templates\no_space_info.html:13
 msgid "No Space"
-msgstr "Pas d'espace"
+msgstr "Pas de groupe"
 
 #: .\cookbook\templates\no_space_info.html:17
 msgid ""
@@ -1672,44 +1660,44 @@ msgid ""
 "more people."
 msgstr ""
 "Recettes, aliments, listes de courses et plus encore sont organisés en "
-"espaces d'une ou plusieurs personnes."
+"groupes d'une ou plusieurs personnes."
 
 #: .\cookbook\templates\no_space_info.html:18
 msgid ""
 "You can either be invited into an existing space or create your own one."
-msgstr "Vous pouvez être invité dans un espace existant ou en créer un."
+msgstr "Vous pouvez être invité dans un groupe existant ou en créer un."
 
 #: .\cookbook\templates\no_space_info.html:31
 #: .\cookbook\templates\no_space_info.html:40
 msgid "Join Space"
-msgstr "Rejoindre un espace"
+msgstr "Rejoindre un groupe"
 
 #: .\cookbook\templates\no_space_info.html:34
 msgid "Join an existing space."
-msgstr "Rejoindre un espace déjà existant."
+msgstr "Rejoindre un groupe déjà existant."
 
 #: .\cookbook\templates\no_space_info.html:35
 msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
 msgstr ""
-"Pour rejoindre un espace déjà existant, entrez le token d'invitation ou "
-"cliquez sur le lien d'invitation que le créateur de l'espace vous a envoyé."
+"Pour rejoindre un groupe déjà existant, entrez le token d'invitation ou "
+"cliquez sur le lien d'invitation que le créateur du groupe vous a envoyé."
 
 #: .\cookbook\templates\no_space_info.html:48
 #: .\cookbook\templates\no_space_info.html:56
 msgid "Create Space"
-msgstr "Créer un espace"
+msgstr "Créer un groupe"
 
 #: .\cookbook\templates\no_space_info.html:51
 msgid "Create your own recipe space."
-msgstr "Créer votre propre espace de recettes."
+msgstr "Créer votre propre groupe de partage de recettes."
 
 #: .\cookbook\templates\no_space_info.html:52
 msgid "Start your own recipe space and invite other users to it."
 msgstr ""
-"Créez votre propre espace de recettes et invitez d'autres utilisateurs à "
-"l'utiliser."
+"Créez votre propre groupe de partage de recettes et invitez d'autres "
+"utilisateurs à l'utiliser."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
@@ -1783,16 +1771,12 @@ msgid "Name Settings"
 msgstr "Paramètres de noms"
 
 #: .\cookbook\templates\settings.html:49
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Account Settings"
-msgstr "Comptes connectés"
+msgstr "Paramètres de compte"
 
 #: .\cookbook\templates\settings.html:51
-#, fuzzy
-#| msgid "Add E-mail"
 msgid "Emails"
-msgstr "Ajouter une adresse mail"
+msgstr "Adresses mail"
 
 #: .\cookbook\templates\settings.html:54
 #: .\cookbook\templates\socialaccount\connections.html:11
@@ -1919,8 +1903,6 @@ msgid "Add a 3rd Party Account"
 msgstr "Ajouter un compte tiers"
 
 #: .\cookbook\templates\socialaccount\signup.html:5
-#, fuzzy
-#| msgid "Sign Up"
 msgid "Signup"
 msgstr "S'inscrire"
 
@@ -1931,6 +1913,9 @@ msgid ""
 "        %(provider_name)s account to login to\n"
 "        %(site_name)s. As a final step, please complete the following form:"
 msgstr ""
+"Vous êtes sur le point d'utiliser votre compte %(provider_name)s pour vous "
+"connecter à %(site_name)s. Pour finaliser la requête, veuillez compléter le "
+"formulaire suivant :"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -1946,16 +1931,12 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign in using"
-msgstr "Connexion"
+msgstr "Se connecter avec"
 
 #: .\cookbook\templates\space.html:23
-#, fuzzy
-#| msgid "No Space"
 msgid "Space:"
-msgstr "Pas d'espace"
+msgstr "Groupe :"
 
 #: .\cookbook\templates\space.html:24
 msgid "Manage Subscription"
@@ -2027,7 +2008,7 @@ msgstr "Vous ne pouvez pas modifier cela vous-même."
 
 #: .\cookbook\templates\space.html:123
 msgid "There are no members in your space yet!"
-msgstr "Il n'y a pas encore de membres dans votre espace !"
+msgstr "Il n'y a pas encore de membres dans votre groupe !"
 
 #: .\cookbook\templates\space.html:130 .\cookbook\templates\system.html:21
 #: .\cookbook\views\lists.py:115
@@ -2381,13 +2362,13 @@ msgstr "Je n'ai rien trouvé à faire."
 #: .\cookbook\views\edit.py:50 .\cookbook\views\import_export.py:67
 #: .\cookbook\views\new.py:32
 msgid "You have reached the maximum number of recipes for your space."
-msgstr "Vous avez atteint le nombre maximum de recettes pour votre espace."
+msgstr "Vous avez atteint le nombre maximum de recettes pour votre groupe."
 
 #: .\cookbook\views\data.py:35 .\cookbook\views\data.py:126
 #: .\cookbook\views\edit.py:54 .\cookbook\views\import_export.py:71
 #: .\cookbook\views\new.py:36
 msgid "You have more users than allowed in your space."
-msgstr "Vous avez plus d'utilisateurs qu'autorisés dans votre espace."
+msgstr "Vous avez plus d'utilisateurs qu'autorisés dans votre groupe."
 
 #: .\cookbook\views\data.py:104
 #, python-format
@@ -2506,7 +2487,7 @@ msgstr "Vous avez été invité par "
 
 #: .\cookbook\views\new.py:227
 msgid " to join their Tandoor Recipes space "
-msgstr " pour rejoindre leur espace Tandoor Recipes "
+msgstr " pour rejoindre leur groupe Tandoor Recipes "
 
 #: .\cookbook\views\new.py:228
 msgid "Click the following link to activate your account: "
@@ -2517,7 +2498,7 @@ msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
 "Si le lien ne fonctionne pas, utilisez le code suivant manuellement pour "
-"rejoindre l'espace : "
+"rejoindre le groupe : "
 
 #: .\cookbook\views\new.py:230
 msgid "The invitation is valid until "
@@ -2557,8 +2538,9 @@ msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
-"Vous avez réussi à créer votre propre espace de recettes. Commencez à "
-"ajoutez des recettes ou invitez d'autres personnes à vous rejoindre."
+"Vous avez réussi à créer votre propre groupe de partage de recettes. "
+"Commencez à ajoutez des recettes ou invitez d'autres personnes à vous "
+"rejoindre."
 
 #: .\cookbook\views\views.py:177
 msgid "You do not have the required permissions to perform this action!"
@@ -2594,11 +2576,11 @@ msgstr "Le lien d'invitation fourni est mal formé !"
 #: .\cookbook\views\views.py:441
 msgid "You are already member of a space and therefore cannot join this one."
 msgstr ""
-"Vous êtes déjà membre d'un espace, ainsi, vous ne pouvez rejoindre celui-ci."
+"Vous êtes déjà membre d'un groupe, ainsi, vous ne pouvez rejoindre celui-ci."
 
 #: .\cookbook\views\views.py:452
 msgid "Successfully joined space."
-msgstr "Vous avez bien rejoint l'espace."
+msgstr "Vous avez bien rejoint le groupe."
 
 #: .\cookbook\views\views.py:458
 msgid "Invite Link not valid or already used!"
@@ -2609,12 +2591,16 @@ msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
+"Le signalement de liens partagés n'est pas autorisé pour cette installation. "
+"Veuillez contacter l'administrateur de la page pour signaler le problème."
 
 #: .\cookbook\views\views.py:528
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+"Les liens partagés de recettes ont été désactivés ! Pour plus "
+"d'informations, veuillez contacter l'administrateur de la page."
 
 #~ msgid "Password Settings"
 #~ msgstr "Paramètres de mots de passe"
