@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='food',
             name='depth',
-            field=models.PositiveIntegerField(default=0),
+            field=models.PositiveIntegerField(default=1),
             preserve_default=False,
         ),
         migrations.AddField(
