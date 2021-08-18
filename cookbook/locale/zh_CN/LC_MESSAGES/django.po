@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-17 08:44+0200\n"
-"PO-Revision-Date: 2021-08-10 08:51+0000\n"
+"PO-Revision-Date: 2021-08-19 11:28+0000\n"
 "Last-Translator: Danny Tsui <dannytszho@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -31,35 +31,36 @@ msgstr "材料"
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
-msgstr ""
+msgstr "顶部导航栏的颜色。并非所有的颜色都适用于所有的主题，只要试一试就可以了!"
 
 #: .\cookbook\forms.py:51
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr ""
+msgstr "在配方中插入新原料时使用的默认单位。"
 
 #: .\cookbook\forms.py:53
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
-msgstr ""
+msgstr "启用对原料数量的分数支持（例如自动将小数转换为分数）"
 
 #: .\cookbook\forms.py:56
+#, fuzzy
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
-msgstr ""
+msgstr "默认情况下，新创建的膳食计划/购物清单条目应与之共享的用户。"
 
 #: .\cookbook\forms.py:58
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "在搜索页面上显示最近查看的菜谱。"
 
 #: .\cookbook\forms.py:59
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "四舍五入成分的小数点数目。"
 
 #: .\cookbook\forms.py:60
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "如果你希望能够在菜谱下面创建并看到评论。"
 
 #: .\cookbook\forms.py:62
 msgid ""
@@ -68,16 +69,18 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"设置为0将禁用自动同步。当查看购物清单时，清单会每隔几秒钟更新一次，以同步其他人可能做出的改变。在与多人一起购物时很有用，但可能会消耗一点移动数据。如果低"
+"于实例限制，它将在保存时被重置。"
 
 #: .\cookbook\forms.py:65
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "使导航条粘在页面的顶部。"
 
 #: .\cookbook\forms.py:81
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
-msgstr ""
+msgstr "这两个字段都是可选的。如果没有给出,将显示用户名"
 
 #: .\cookbook\forms.py:102 .\cookbook\forms.py:331
 #: .\cookbook\templates\forms\edit_internal_recipe.html:49
@@ -108,7 +111,7 @@ msgstr "路径"
 
 #: .\cookbook\forms.py:107
 msgid "Storage UID"
-msgstr ""
+msgstr "存储 UID"
 
 #: .\cookbook\forms.py:133
 msgid "Default"
@@ -118,15 +121,16 @@ msgstr "预置"
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
-msgstr ""
+msgstr "為了防止與現有菜谱同名的重複菜谱被忽略。勾选此框以导入所有内容。"
 
 #: .\cookbook\forms.py:164
 msgid "New Unit"
 msgstr "新单位"
 
 #: .\cookbook\forms.py:165
+#, fuzzy
 msgid "New unit that other gets replaced by."
-msgstr ""
+msgstr "新的单位被其他取代."
 
 #: .\cookbook\forms.py:170
 msgid "Old Unit"
@@ -141,8 +145,9 @@ msgid "New Food"
 msgstr "新的食品"
 
 #: .\cookbook\forms.py:188
+#, fuzzy
 msgid "New food that other gets replaced by."
-msgstr ""
+msgstr "新食品被其他取代."
 
 #: .\cookbook\forms.py:193
 msgid "Old Food"
@@ -158,7 +163,7 @@ msgstr "发表评论: "
 
 #: .\cookbook\forms.py:253
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "dropbox留空和为nextcloud输入应用密码。"
 
 #: .\cookbook\forms.py:260
 msgid "Leave empty for nextcloud and enter api token for dropbox."
@@ -176,15 +181,15 @@ msgstr "搜索字符串"
 
 #: .\cookbook\forms.py:334
 msgid "File ID"
-msgstr ""
+msgstr "文件编号"
 
 #: .\cookbook\forms.py:370
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "你必须至少提供一份菜谱或一个标题。"
 
 #: .\cookbook\forms.py:383
 msgid "You can list default users to share recipes with in the settings."
-msgstr ""
+msgstr "你可以在设置中列出默认用户来分享食谱。"
 
 #: .\cookbook\forms.py:384
 #: .\cookbook\templates\forms\edit_internal_recipe.html:427
@@ -195,7 +200,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:409
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "已达到该空间的最大用户数。"
 
 #: .\cookbook\forms.py:415
 msgid "Email address already taken!"
@@ -205,11 +210,11 @@ msgstr "电子邮件地址已被注册!"
 msgid ""
 "An email address is not required but if present the invite link will be send "
 "to the user."
-msgstr ""
+msgstr "电子邮件地址不是必需的，但如果存在，邀请链接将被发送给用户。"
 
 #: .\cookbook\forms.py:438
 msgid "Name already taken."
-msgstr ""
+msgstr "名字已被占用。"
 
 #: .\cookbook\forms.py:449
 msgid "Accept Terms and Privacy"
@@ -219,12 +224,12 @@ msgstr "接受条款细则及私隐政策"
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
-msgstr ""
+msgstr "为了防止垃圾邮件，所要求的电子邮件没有被发送。请等待几分钟后再试。"
 
 #: .\cookbook\helper\permission_helper.py:138
 #: .\cookbook\helper\permission_helper.py:161 .\cookbook\views\views.py:151
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "你没有登录，因此不能查看这个页面!"
 
 #: .\cookbook\helper\permission_helper.py:142
 #: .\cookbook\helper\permission_helper.py:148
@@ -236,18 +241,19 @@ msgstr ""
 #: .\cookbook\views\views.py:162 .\cookbook\views\views.py:169
 #: .\cookbook\views\views.py:259
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "你没有必要的权限来查看这个页面!"
 
 #: .\cookbook\helper\permission_helper.py:166
 #: .\cookbook\helper\permission_helper.py:189
 #: .\cookbook\helper\permission_helper.py:204
+#, fuzzy
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "你不能与这个对象进行互动，因为它不属于你！"
 
 #: .\cookbook\helper\template_helper.py:60
 #: .\cookbook\helper\template_helper.py:62
 msgid "Could not parse template code."
-msgstr ""
+msgstr "无法解析模板代码。"
 
 #: .\cookbook\integration\integration.py:104
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
@@ -266,22 +272,22 @@ msgstr "导入"
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
-msgstr ""
+msgstr "输入者需要一个.zip文件。你为你的数据选择了正确的导入器类型吗？"
 
 #: .\cookbook\integration\integration.py:188
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
-msgstr ""
+msgstr "在导入过程中发生了一个意外的错误。请确认你已经上传了一个有效的文件。"
 
 #: .\cookbook\integration\integration.py:192
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "以下菜谱被忽略了，因为它们已经存在了："
 
 #: .\cookbook\integration\integration.py:196
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "导入了%s菜谱。"
 
 #: .\cookbook\integration\paprika.py:46
 msgid "Notes"
@@ -342,7 +348,7 @@ msgstr "其他"
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
-msgstr ""
+msgstr "空间的最大文件存储量，单位为MB。0表示无限制，-1表示禁止文件上传。"
 
 #: .\cookbook\models.py:123 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:52
@@ -396,7 +402,7 @@ msgstr "文件"
 #: .\cookbook\templates\meal_plan.html:247 .\cookbook\views\delete.py:28
 #: .\cookbook\views\edit.py:273 .\cookbook\views\new.py:52
 msgid "Recipe"
-msgstr ""
+msgstr "菜谱"
 
 #: .\cookbook\serializer.py:109
 msgid "File uploads are not enabled for this Space."
@@ -424,23 +430,23 @@ msgstr "编辑"
 #: .\cookbook\templates\meal_plan.html:277
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "404 错误"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr ""
+msgstr "找不到你要找的页面。"
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "带我回家"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "报告一个错误"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
@@ -454,31 +460,33 @@ msgstr "电子邮件地址"
 #: .\cookbook\templates\settings.html:17
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "电子邮件"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "以下电子邮件地址与您的账户相关联："
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "已验证"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "未验证"
 
 #: .\cookbook\templates\account\email.html:40
+#, fuzzy
 msgid "Primary"
-msgstr ""
+msgstr "初选"
 
 #: .\cookbook\templates\account\email.html:47
+#, fuzzy
 msgid "Make Primary"
-msgstr ""
+msgstr "做出初选"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
@@ -586,10 +594,8 @@ msgstr ""
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
 #: .\cookbook\templates\account\password_change.html:21
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Change Password"
-msgstr "更改已保存!"
+msgstr "更改密码"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
