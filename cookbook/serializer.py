@@ -1,9 +1,11 @@
+import json
 import random
 from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
 from django.contrib.auth.models import User
-from django.db.models import Avg, QuerySet, Sum
+from django.db.models import Avg, Manager, QuerySet, Sum
+from django.urls import reverse
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
@@ -54,6 +56,24 @@ class SpaceFilterSerializer(serializers.ListSerializer):
         else:
             data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
+
+
+# custom related field, sends details on read, accepts primary key on write
+# class RelatedFieldAlternative(serializers.PrimaryKeyRelatedField):
+#     def __init__(self, **kwargs):
+#         self.serializer = kwargs.pop('serializer', None)
+#         if self.serializer is not None and not issubclass(self.serializer, serializers.Serializer):
+#             raise TypeError('"serializer" is not a valid serializer class')
+
+#         super().__init__(**kwargs)
+
+#     def use_pk_only_optimization(self):
+#         return False if self.serializer else True
+
+#     def to_representation(self, instance):
+#         if self.serializer:
+#             return self.serializer(instance, context=self.context).data
+#         return super().to_representation(instance)
 
 
 class SpacedModelSerializer(serializers.ModelSerializer):
@@ -286,8 +306,21 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'category_to_supermarket')
 
 
+class RecipeSimpleSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField('get_url')
+
+    def get_url(self, obj):
+        return reverse('view_recipe', args=[obj.id])
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'url')
+        read_only_fields = ['id', 'name', 'url']
+
+
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
+    # RelatedFieldAlternative adds details of related object on read, accepts PK on write
+    # this approach prevents adding *new* objects when updating Food, SupermarketCategory must be created elsewhere
     image = serializers.SerializerMethodField('get_image')
     numrecipe = serializers.SerializerMethodField('count_recipes')
 
@@ -309,6 +342,19 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def count_recipes(self, obj):
         return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        # turns a GET of food.recipe into a dict of data while allowing a PATCH/PUT of an integer to update a food with a recipe
+        recipe = RecipeSimpleSerializer(instance.recipe, allow_null=True).data
+        supermarket_category = SupermarketCategorySerializer(instance.supermarket_category, allow_null=True).data
+        response['recipe'] = recipe if recipe else None
+        # the SupermarketCategorySerializer returns a dict instead of None when the column is null
+        if supermarket_category == {'name': ''} or None:
+            response['supermarket_category'] = None
+        else:
+            response['supermarket_category'] = supermarket_category
+        return response
+
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
@@ -321,7 +367,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe')
+        fields = ('id', 'name', 'description', 'recipe', 'ignore_shopping', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe')
         read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 

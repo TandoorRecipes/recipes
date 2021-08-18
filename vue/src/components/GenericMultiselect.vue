@@ -44,11 +44,20 @@ export default {
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
-      this.selected_objects = newVal
+      if (this.multiple) {
+        this.selected_objects = newVal
+      } else if (this.selected_objects != newVal?.[0]) {
+        // when not using multiple selections need to convert array to value
+        this.selected_objects = newVal?.[0] ?? null
+      }
     },
   },
   mounted() {
     this.search('')
+    // when not using multiple selections need to convert array to value
+    if (!this.multiple & this.selected_objects != this.initial_selection?.[0]) {
+        this.selected_objects = this.initial_selection?.[0] ?? null
+      }
   },
   methods: {
     search: function (query) {
