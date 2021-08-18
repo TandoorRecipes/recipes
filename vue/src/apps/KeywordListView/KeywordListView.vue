@@ -568,11 +568,7 @@ export default {
       let kw = this.findKeyword(this.keywords, id)
       let kw2 = this.findKeyword(this.keywords2, id)
       let p_id = undefined
-      if (kw) {
-        p_id = kw.parent
-      } else if (kw2) {
-        p_id = kw2.parent
-      }
+      p_id = kw?.parent ?? kw2.parent
 
       if (p_id) {
         let parent = this.findKeyword(this.keywords, p_id)

@@ -132,7 +132,7 @@ export default {
       let source = JSON.parse(e.dataTransfer.getData('source'))
       if (source.id != this.keyword.id){
         this.source = source
-        let menuLocation = {getBoundingClientRect: this.generateLocation(e.pageX, e.pageY),}
+        let menuLocation = {getBoundingClientRect: this.generateLocation(e.clientX, e.clientY),}
         this.show_menu = true
         let popper = createPopper(
           menuLocation, 

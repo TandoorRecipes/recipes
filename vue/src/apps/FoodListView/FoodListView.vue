@@ -167,7 +167,7 @@
       <generic-multiselect 
         @change="this_item.target=$event.val"
         label="name"
-        search_function="listFood" 
+        search_function="listFoods" 
         :multiple="false"
         :sticky_options="[{'id': 0,'name': $t('Root')}]"
         :tree_api="true"
@@ -186,7 +186,7 @@
       <generic-multiselect 
         @change="this_item.target=$event.val"
         label="name"
-        search_function="listFoods" 
+        search_function="listFoods"
         :multiple="false"
         :tree_api="true"
         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
@@ -279,7 +279,6 @@ export default {
         this.foods2 = []
         this.right += 1
       }
-      
     },
     // TODO should model actions be included with the context menu?  the card? a seperate mixin avaible to all?
     startAction: function(e, col) {
@@ -294,7 +293,6 @@ export default {
         this.$bvModal.show('id_modal_food_edit')
       } else if (e.action  == 'edit') {
         this.this_item = source
-        console.log('start edit', this.this_item)
         this.$bvModal.show('id_modal_food_edit')
       } else if (e.action  === 'move') {
         this.this_item = source
@@ -325,11 +323,9 @@ export default {
           this.getRecipes(col, source)
         }
       }
-
     },
     saveFood: function () {
       let apiClient = new ApiApiFactory()
-      console.log('this item', this.this_item.supermarket_category?.id, this.this_item.supermarket_category?.id ?? null)
       let food = {
         name: this.this_item.name,
         description: this.this_item.description,
@@ -337,7 +333,6 @@ export default {
         ignore_shopping: this.this_item.ignore_shopping,
         supermarket_category: this.this_item.supermarket_category?.id ?? null,
       }
-      console.log('food', food)
       if (!this.this_item.id) { // if there is no item id assume its a new item
         apiClient.createFood(food).then(result => {
           // place all new foods at the top of the list - could sort instead
@@ -365,14 +360,12 @@ export default {
     },
     delFood: function (id) {
       let apiClient = new ApiApiFactory()
-      
       apiClient.destroyFood(id).then(response => {
         this.destroyCard(id)
       }).catch((err) => {
         console.log(err)
         this.this_item = {}
       })
-      
     },
     moveFood: function (source_id, target_id) {
       let apiClient = new ApiApiFactory()
@@ -380,10 +373,8 @@ export default {
         if (target_id === 0) {
           let food = this.findFood(this.foods, source_id) || this.findFood(this.foods2, source_id)
           food.parent = null
-
           if (this.show_split){
             this.destroyCard(source_id) // order matters, destroy old card before adding it back in at root
-            
             this.foods = [food].concat(this.foods)
             this.foods2 = [JSON.parse(JSON.stringify(food))].concat(this.foods2)
           } else {
@@ -395,7 +386,6 @@ export default {
           this.destroyCard(source_id)
           this.refreshCard(target_id)
         }
-        
       }).catch((err) => {
         // TODO none of the error checking works because the openapi generated functions don't throw an error?  
         // or i'm capturing it incorrectly
@@ -434,7 +424,6 @@ export default {
           Vue.set(parent, 'expanded', true)
           Vue.set(parent, 'show_recipes', false)
         }
-        
       }).catch((err) => {
         console.log(err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
@@ -568,36 +557,32 @@ export default {
         $state.complete();
       })
     },
-    destroyCard: function(id) {
-      let fd = this.findFood(this.foods, id)
-      let fd2 = this.findFood(this.foods2, id)
-      let p_id = undefined
-      if (fd) {
-        p_id = fd.parent
-      } else if (fd2) {
-        p_id = fd2.parent
-      }
+      destroyCard: function(id) {
+        let fd = this.findFood(this.foods, id)
+        let fd2 = this.findFood(this.foods2, id)
+        let p_id = undefined
+        p_id = fd?.parent ?? fd2.parent
 
-      if (p_id) {
-        let parent = this.findFood(this.foods, p_id)
-        let parent2 = this.findFood(this.v2, p_id)
-        if (parent){
-          Vue.set(parent, 'numchild', parent.numchild - 1)
-          if (parent.expanded) {
-            let idx = parent.children.indexOf(parent.children.find(kw => kw.id === id))
-            Vue.delete(parent.children, idx)
+        if (p_id) {
+          let parent = this.findFood(this.foods, p_id)
+          let parent2 = this.findFood(this.foods2, p_id)
+          if (parent){
+            Vue.set(parent, 'numchild', parent.numchild - 1)
+            if (parent.expanded) {
+              let idx = parent.children.indexOf(parent.children.find(kw => kw.id === id))
+              Vue.delete(parent.children, idx)
+            }
+          }
+          if (parent2){
+            Vue.set(parent2, 'numchild', parent2.numchild - 1)
+            if (parent2.expanded) {
+              let idx = parent2.children.indexOf(parent2.children.find(kw => kw.id === id))
+              Vue.delete(parent2.children, idx)
+            }
           }
         }
-        if (parent2){
-          Vue.set(parent2, 'numchild', parent2.numchild - 1)
-          if (parent2.expanded) {
-            let idx = parent2.children.indexOf(parent2.children.find(kw => kw.id === id))
-            Vue.delete(parent2.children, idx)
-          }
-        }
-      }
-      this.foods = this.foods.filter(kw => kw.id != id)
-      this.foods2 = this.foods2.filter(kw => kw.id != id)
+        this.foods = this.foods.filter(kw => kw.id != id)
+        this.foods2 = this.foods2.filter(kw => kw.id != id)
     },
   }
 }

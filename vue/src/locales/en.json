@@ -105,5 +105,7 @@
   "Root": "Root",
   "Ignore_Shopping": "Ignore Shopping",
   "Shopping_Category": "Shopping Category",
-  "Edit_Food": "Edit Food"
+  "Edit_Food": "Edit Food",
+  "Move_Food": "Move Food",
+  "New_Food": "New Food"
 }
