@@ -205,7 +205,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
                 if root == 0:
-                    self.queryset = self.model.get_root_nodes() | self.model.objects.filter(depth=0, space=self.request.space)
+                    self.queryset = self.model.get_root_nodes()
                 else:
                     self.queryset = self.model.objects.get(id=root).get_children()
         elif tree:
