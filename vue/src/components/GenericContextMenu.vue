@@ -1,5 +1,4 @@
 <template>
-  <div>
     <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
       <template #button-content>
           <i class="fas fa-ellipsis-v" ></i>
@@ -21,7 +20,6 @@
       </b-dropdown-item>
 
     </b-dropdown>
-  </div>
 </template>
 
 <script>

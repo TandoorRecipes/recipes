@@ -119,10 +119,11 @@
         <label for="id_food_description_edit">{{ this.$t('Description') }}</label>
         <input class="form-control" type="text" id="id_food_description_edit" v-model="this_item.description">
         <label for="id_food_recipe_edit">{{ this.$t('Recipe') }}</label>
+        <!-- TODO initial selection isn't working and I don't know why -->
         <generic-multiselect 
           @change="this_item.recipe=$event.val"
           label="name"
-          :initial_selection="this_item.recipe"
+          :initial_selection="[this_item.recipe]"  
           search_function="listRecipes" 
           :multiple="false"
           :sticky_options="[{'id': null,'name': $t('None')}]"
@@ -134,7 +135,16 @@
           <label class="form-check-label" for="id_food_ignore_edit">{{ this.$t('Ignore_Shopping') }}</label>
         </div>
         <label for="id_food_category_edit">{{ this.$t('Shopping_Category') }}</label>
-        <input class="form-control" type="text" id="id_food_category_edit" >
+        <generic-multiselect 
+          @change="this_item.supermarket_category=$event.val"
+          label="name"
+          :initial_selection="[this_item.supermarket_category]"  
+          search_function="listSupermarketCategorys" 
+          :multiple="false"
+          :sticky_options="[{'id': null,'name': $t('None')}]"
+          style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+          :placeholder="this.$t('Shopping_Category')">
+        </generic-multiselect>
       </form>
     </b-modal>
     <!-- delete modal -->
@@ -223,6 +233,7 @@ export default {
       right: +new Date(),
       isDirtyRight: false,
       left_page: 0,
+      update_recipe: [],
       left: +new Date(),
       isDirtyLeft: false,
       this_item: {
@@ -230,8 +241,9 @@ export default {
         'name': '',
         'description': '',
         'recipe': null,
-        'ignore_shopping': '',
-        'supermarket_category': null,
+        'recipe_full': undefined, 
+        'ignore_shopping': false,
+        'supermarket_category': undefined,
         'target': {
           'id': -1,
           'name': ''
@@ -282,6 +294,7 @@ export default {
         this.$bvModal.show('id_modal_food_edit')
       } else if (e.action  == 'edit') {
         this.this_item = source
+        console.log('start edit', this.this_item)
         this.$bvModal.show('id_modal_food_edit')
       } else if (e.action  === 'move') {
         this.this_item = source
@@ -316,14 +329,17 @@ export default {
     },
     saveFood: function () {
       let apiClient = new ApiApiFactory()
-      console.log(this.this_item, !this.this_item.id)
-      // let food = {
-      //   name: this.this_item.name,
-      //   description: this.this_item.description,
-      //   icon: this.this_item.icon,
-      // }
+      console.log('this item', this.this_item.supermarket_category?.id, this.this_item.supermarket_category?.id ?? null)
+      let food = {
+        name: this.this_item.name,
+        description: this.this_item.description,
+        recipe: this.this_item.recipe?.id ?? null,
+        ignore_shopping: this.this_item.ignore_shopping,
+        supermarket_category: this.this_item.supermarket_category?.id ?? null,
+      }
+      console.log('food', food)
       if (!this.this_item.id) { // if there is no item id assume its a new item
-        apiClient.createFood(this.this_item).then(result => {
+        apiClient.createFood(food).then(result => {
           // place all new foods at the top of the list - could sort instead
           this.foods = [result.data].concat(this.foods)
           // this creates a deep copy to make sure that columns stay independent
@@ -338,7 +354,7 @@ export default {
           this.this_item = {}
         })
       } else {
-        apiClient.partialUpdateFood(this.this_item.id, this.this_item).then(result => {
+        apiClient.partialUpdateFood(this.this_item.id, food).then(result => {
           this.refreshCard(this.this_item.id)
           this.this_item={}
         }).catch((err) => {
@@ -428,7 +444,6 @@ export default {
       let apiClient = new ApiApiFactory()
       let parent = {}
       let pageSize = 200
-      console.log(apiClient.listRecipes)
 
       apiClient.listRecipes(
           undefined, undefined, String(food.id), undefined, undefined, undefined,
@@ -583,7 +598,7 @@ export default {
       }
       this.foods = this.foods.filter(kw => kw.id != id)
       this.foods2 = this.foods2.filter(kw => kw.id != id)
-    }
+    },
   }
 }
 
