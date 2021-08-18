@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-17 08:44+0200\n"
-"PO-Revision-Date: 2021-06-18 23:12+0000\n"
+"PO-Revision-Date: 2021-08-19 11:28+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.6.2\n"
+"X-Generator: Weblate 4.7.2\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:269
@@ -225,11 +225,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:409
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "È stato raggiunto il numero massimo di utenti per questo spazio."
 
 #: .\cookbook\forms.py:415
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Questo indirizzo email è già in uso!"
 
 #: .\cookbook\forms.py:423
 msgid ""
@@ -2028,10 +2028,8 @@ msgid "You cannot edit yourself."
 msgstr "Non puoi modificare questo backend!"
 
 #: .\cookbook\templates\space.html:123
-#, fuzzy
-#| msgid "There are no recipes in this book yet."
 msgid "There are no members in your space yet!"
-msgstr "Non ci sono ancora ricette in questo libro."
+msgstr "Non ci sono ancora ricette in questo spazio!"
 
 #: .\cookbook\templates\space.html:130 .\cookbook\templates\system.html:21
 #: .\cookbook\views\lists.py:115
