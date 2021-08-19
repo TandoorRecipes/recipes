@@ -68,32 +68,36 @@
           <!-- only show scollbars in split mode, but this doesn't interact well with infinite scroll, maybe a different componenet? -->
           <div class="row" :class="{'overflow-hidden' : show_split}" style="margin-top: 2vh">
             <div class="col col-md" :class="{'mh-100 overflow-auto' : show_split}">
-              <keyword-card 
-                v-for="k in keywords"
-                v-bind:key="k.id"
-                :keyword="k" 
+              <generic-horizontal-card v-for="kw in keywords" v-bind:key="kw.id"
+                :model=kw
+                model_name="Keyword"
                 :draggable="true"
+                :merge="true"
+                :move="true"
                 @item-action="startAction($event, 'left')" 
-              ></keyword-card>
+              />
               <infinite-loading
                 :identifier='left' 
                 @infinite="infiniteHandler($event, 'left')" 
                 spinner="waveDots">
+                <template v-slot:no-more><span/></template>
               </infinite-loading>
             </div>
             <!-- right side keyword cards -->
             <div class="col col-md mh-100 overflow-auto " v-if="show_split">
-              <keyword-card 
-                v-for="k in keywords2"
-                v-bind:key="k.id"
-                :keyword="k" 
-                draggable="true"
-                @item-action="startAction($event, 'right')"
-              ></keyword-card>
+              <generic-horizontal-card v-for="kw in keywords2" v-bind:key="kw.id"
+                :model=kw
+                model_name="Keyword"
+                :draggable="true"
+                :merge="true"
+                :move="true"
+                @item-action="startAction($event, 'left')" 
+              />
               <infinite-loading  
                 :identifier='right' 
                 @infinite="infiniteHandler($event, 'right')" 
                 spinner="waveDots">
+                <template v-slot:no-more><span/></template>
               </infinite-loading>
             </div>
           </div>
@@ -197,7 +201,7 @@ import _debounce from 'lodash/debounce'
 import {ToastMixin} from "@/utils/utils";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
-import KeywordCard from "@/components/KeywordCard";
+import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -213,7 +217,7 @@ Vue.use(BootstrapVue)
 export default {
   name: 'KeywordListView',
   mixins: [ToastMixin],
-  components: {TwemojiTextarea, KeywordCard, GenericMultiselect, InfiniteLoading},
+  components: {TwemojiTextarea, GenericHorizontalCard, GenericMultiselect, InfiniteLoading},
   computed: {
     // move with generic modals
     emojiDataAll() {
@@ -309,8 +313,8 @@ export default {
           this.mergeKeyword(e.source.id, e.target.id)
         }
       } else if (e.action === 'get-children') {
-        if (source.expanded) {
-          Vue.set(source, 'expanded', false)
+        if (source.show_children) {
+          Vue.set(source, 'show_children', false)
         } else {
           this.this_item = source
           this.getChildren(col, source)
@@ -425,7 +429,7 @@ export default {
         }
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
-          Vue.set(parent, 'expanded', true)
+          Vue.set(parent, 'show_children', true)
           Vue.set(parent, 'show_recipes', false)
         }
         
@@ -453,7 +457,7 @@ export default {
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
           Vue.set(parent, 'show_recipes', true)
-          Vue.set(parent, 'expanded', false)
+          Vue.set(parent, 'show_children', false)
         }
         
       }).catch((err) => {
@@ -474,13 +478,13 @@ export default {
           let parent2 = this.findKeyword(this.keywords2, target.parent)
 
           if (parent) {
-            if (parent.expanded){
+            if (parent.show_children){
               idx = parent.children.indexOf(parent.children.find(kw => kw.id === target.id))
               Vue.set(parent.children, idx, result.data)
             }
           }
           if (parent2){
-            if (parent2.expanded){
+            if (parent2.show_children){
               idx2 = parent2.children.indexOf(parent2.children.find(kw => kw.id === target.id))
               // deep copy to force columns to be indepedent
               Vue.set(parent2.children, idx2, JSON.parse(JSON.stringify(result.data)))
@@ -503,7 +507,7 @@ export default {
       if (keyword.length == 1) {
         return keyword[0]
       } else if (keyword.length == 0) {
-        for (const k of kw_list.filter(kw => kw.expanded == true)) {
+        for (const k of kw_list.filter(kw => kw.show_children == true)) {
           keyword = this.findKeyword(k.children, id)
           if (keyword) {
             return keyword
@@ -575,14 +579,14 @@ export default {
         let parent2 = this.findKeyword(this.keywords2, p_id)
         if (parent){
           Vue.set(parent, 'numchild', parent.numchild - 1)
-          if (parent.expanded) {
+          if (parent.show_children) {
             let idx = parent.children.indexOf(parent.children.find(kw => kw.id === id))
             Vue.delete(parent.children, idx)
           }
         }
         if (parent2){
           Vue.set(parent2, 'numchild', parent2.numchild - 1)
-          if (parent2.expanded) {
+          if (parent2.show_children) {
             let idx = parent2.children.indexOf(parent2.children.find(kw => kw.id === id))
             Vue.delete(parent2.children, idx)
           }
