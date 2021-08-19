@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-17 08:44+0200\n"
-"PO-Revision-Date: 2021-08-19 11:28+0000\n"
+"PO-Revision-Date: 2021-08-20 19:28+0000\n"
 "Last-Translator: Danny Tsui <dannytszho@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -490,7 +490,7 @@ msgstr "做出初选"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "重新发送验证"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\socialaccount\connections.html:44
@@ -499,30 +499,30 @@ msgstr "移除"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "警告:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
-msgstr ""
+msgstr "你目前没有设置任何电子邮件地址。你真的应该添加一个电子邮件地址，这样你就可以收到通知，重置你的密码，等等。"
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "添加电子邮件地址"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "添加电子邮件"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "你真的想删除选定的电子邮件地址吗？"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "确认电子邮件地址"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -548,48 +548,48 @@ msgstr ""
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:189
 msgid "Login"
-msgstr ""
+msgstr "登录"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
 #: .\cookbook\templates\account\signup.html:69
 #: .\cookbook\templates\account\signup_closed.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "登入"
 
 #: .\cookbook\templates\account\login.html:32
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "注册"
 
 #: .\cookbook\templates\account\login.html:36
 #: .\cookbook\templates\account\login.html:37
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "重置我的密码"
 
 #: .\cookbook\templates\account\login.html:37
 msgid "Lost your password?"
-msgstr ""
+msgstr "遗失密码？"
 
 #: .\cookbook\templates\account\login.html:48
 msgid "Social Login"
-msgstr ""
+msgstr "社交登录"
 
 #: .\cookbook\templates\account\login.html:49
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "你可以使用以下任何一个供应商来登录。"
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "登出"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "你确定你要登出吗？"
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
@@ -601,126 +601,126 @@ msgstr "更改密码"
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:52
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "忘记密码？"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:10
 msgid "Password Reset"
-msgstr ""
+msgstr "密码重置"
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
-msgstr ""
+msgstr "忘记密码了吗？请在下面输入你的电子邮件地址，我们将向你发送一封电子邮件，允许你重新设置密码。"
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr ""
+msgstr "该实例上的密码重置被禁用。"
 
 #: .\cookbook\templates\account\password_reset_done.html:16
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
+msgstr "我们已经向您发送了一封电子邮件。如果你在几分钟内没有收到，请联系我们。"
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "设置密码"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr ""
+msgstr "注册"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "创建账户"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "我接受以下"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "条款及细则"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "和"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "隐私政策"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "创建用户"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "已有账户？"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "注册关闭"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "我们很抱歉，但目前注册已经结束。"
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:179
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr ""
+msgstr "API文档"
 
 #: .\cookbook\templates\base.html:85
 msgid "Utensils"
-msgstr ""
+msgstr "厨具"
 
 #: .\cookbook\templates\base.html:95
 msgid "Shopping"
-msgstr ""
+msgstr "购物"
 
 #: .\cookbook\templates\base.html:101
 #: .\cookbook\templates\shopping_list.html:230
 #: .\cookbook\templates\supermarket.html:7
 msgid "Supermarket"
-msgstr ""
+msgstr "超市"
 
 #: .\cookbook\templates\base.html:112 .\cookbook\views\delete.py:84
 #: .\cookbook\views\edit.py:102 .\cookbook\views\lists.py:26
 #: .\cookbook\views\new.py:78
 msgid "Keyword"
-msgstr ""
+msgstr "关键词"
 
 #: .\cookbook\templates\base.html:114
 msgid "Batch Edit"
-msgstr ""
+msgstr "批量编辑"
 
 #: .\cookbook\templates\base.html:119
 msgid "Storage Data"
-msgstr ""
+msgstr "存储数据"
 
 #: .\cookbook\templates\base.html:123
 msgid "Storage Backends"
-msgstr ""
+msgstr "存储后端"
 
 #: .\cookbook\templates\base.html:125
 msgid "Configure Sync"
-msgstr ""
+msgstr "配置同步"
 
 #: .\cookbook\templates\base.html:127
 msgid "Discovered Recipes"
