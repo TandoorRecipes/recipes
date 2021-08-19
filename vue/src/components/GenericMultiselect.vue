@@ -66,7 +66,7 @@ export default {
         let page = 1
         let root = undefined
         let tree = undefined
-        let pageSize = 10
+        let pageSize = 25
 
         if (query === '') {
           query = undefined

@@ -1,7 +1,6 @@
 <template>
   <div row>
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
-      refs="foodCard" 
       style="height: 10vh;" :style="{'cursor:grab' : draggable}"
       @dragover.prevent
       @dragenter.prevent
@@ -12,55 +11,63 @@
       @drop="handleDragDrop($event)">
       <b-row no-gutters style="height:inherit;">  
         <b-col no-gutters md="3" style="height:inherit;">
-          <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="food_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
+          <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="model_image" v-bind:alt="text.image_alt"></b-card-img-lazy>
         </b-col>
         <b-col no-gutters md="9" style="height:inherit;">
             <b-card-body class="m-0 py-0" style="height:inherit;">
               <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
-                    <h5 class="m-0 mt-1 text-truncate">{{ food.name }}</h5>
-                    <div class= "m-0 text-truncate">{{ food.description }}</div>
+                    <h5 class="m-0 mt-1 text-truncate">{{ model[title] }}</h5>
+                    <div class= "m-0 text-truncate">{{ model[subtitle] }}</div>
                     <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
-                      <div v-if="food.numchild !=0" class="mx-2 btn btn-link btn-sm" 
-                        style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':food})">
-                          <div v-if="!food.expanded">{{food.numchild}} {{$t('Foods')}}</div>
-                          <div v-else>{{$t('Hide Foods')}}</div>
+                      <div v-if="model[child_count] !=0" class="mx-2 btn btn-link btn-sm" 
+                        style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':model})">
+                          <div v-if="!model.show_children">{{ model[child_count] }} {{ model_name }}</div>
+                          <div v-else>{{ text.hide_children }}</div>
                       </div>
-                      <div class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
-                        v-on:click="$emit('item-action',{'action':'get-recipes','source':food})">
-                        <div v-if="!food.show_recipes">{{food.numrecipe}} {{$t('Recipes')}}</div>
-                        <div v-else>{{$t('Hide Recipes')}}</div>
+                      <div v-if="model[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
+                        v-on:click="$emit('item-action',{'action':'get-recipes','source':model})">
+                        <div v-if="!model.show_recipes">{{ model[recipe_count] }} {{$t('Recipes')}}</div>
+                        <div v-else>{{$t('Hide_Recipes')}}</div>
                       </div>
                     </div>
               </b-card-text>
             </b-card-body>
         </b-col>
         <div class="card-img-overlay justify-content-right h-25 m-0 p-0 text-right">
-          <b-button v-if="food.recipe" v-b-tooltip.hover :title="food.recipe.name" 
-            class=" btn fas fa-book-open p-0 border-0" variant="link" :href="food.recipe.url"/>
+          <slot name="upper-right"></slot>
+          
           <generic-context-menu  class="p-0"
-            :show_merge="true"
-            :show_move="true"
-            @item-action="$emit('item-action', {'action': $event, 'source': food})">
+            :show_merge="merge"
+            :show_move="move"
+            @item-action="$emit('item-action', {'action': $event, 'source': model})">
           </generic-context-menu>
         </div>
       </b-row> 
     </b-card>
-    <!-- recursively add child foods -->
-    <div class="row" v-if="food.expanded">
+    <!-- recursively add child cards -->
+    <div class="row" v-if="model.show_children">
       <div class="col-md-11 offset-md-1">
-        <food-card v-for="child in food.children" 
-          :food="child"
-          v-bind:key="child.id"
-          draggable="true"
+        <generic-horizontal-card v-for="child in model[children]" v-bind:key="child.id"
+          :draggable="draggable"
+          :model="child"
+          :model_name="model_name"
+          :title="title"
+          :subtitle="subtitle"
+          :child_count="child_count"
+          :children="children"
+          :recipe_count="recipe_count"
+          :recipes="recipes"
+          :merge="merge"
+          :move="move"
           @item-action="$emit('item-action', $event)">
-        </food-card>
+        </generic-horizontal-card>
       </div>
     </div>
     <!-- conditionally view recipes -->
-    <div class="row" v-if="food.show_recipes">
+    <div class="row" v-if="model.show_recipes">
       <div class="col-md-11 offset-md-1">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
-          <recipe-card v-for="r in food.recipes" 
+          <recipe-card v-for="r in model[recipes]" 
             v-bind:key="r.id"
             :recipe="r">
           </recipe-card>
@@ -69,11 +76,11 @@
     </div>
     <!-- this should be made a generic component, would also require mixin for functions that generate the popup  and put in parent container-->  
     <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:999; cursor:pointer">
-      <b-list-group-item action v-on:click="$emit('item-action',{'action': 'move', 'target': food, 'source': source}); closeMenu()">
-        {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':food.name})}}
+      <b-list-group-item v-if="move" action v-on:click="$emit('item-action',{'action': 'move', 'target': model, 'source': source}); closeMenu()">
+        {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':model.name})}}
       </b-list-group-item>
-      <b-list-group-item action v-on:click="$emit('item-action',{'action': 'merge', 'target': food, 'source': source}); closeMenu()">
-        {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':food.name}) }}
+      <b-list-group-item v-if="merge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': model, 'source': source}); closeMenu()">
+        {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':model.name}) }}
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
         {{$t('Cancel')}}
@@ -91,36 +98,50 @@ import { mixin as clickaway } from 'vue-clickaway';
 import { createPopper } from '@popperjs/core';
 
 export default {
-  name: "FoodCard",
+  name: "GenericHorizontalCard",
   components: { GenericContextMenu, RecipeCard },
   mixins: [clickaway],
   props: {
-    food: Object,
-    draggable: {type: Boolean, default: false}
+    model: Object,
+    model_name: {type: String, default: 'Blank Model'},  // TODO update translations to handle plural translations
+    draggable: {type: Boolean, default: false},
+    title: {type: String, default: 'name'},
+    subtitle: {type: String, default: 'description'},
+    child_count: {type: String, default: 'numchild'},
+    children: {type: String, default: 'children'},
+    recipe_count: {type: String, default: 'numrecipe'},
+    recipes: {type: String, default: 'recipes'},
+    merge: {type: Boolean, default: false},
+    move: {type: Boolean, default: false},
   },
   data() {
     return {
-      food_image: '',
+      model_image: '',
       over: false,
       show_menu: false,
       dragMenu: undefined,
       isError: false,
-      source: {},
-      target: {}
+      source: {'id': undefined, 'name': undefined},
+      target: {'id': undefined, 'name': undefined},
+      text: {
+          'image_alt': '',
+          'hide_children': '',
+      }
     }
   },
   mounted() {
-    if (this.food == null || this.food.image == null) {
-      this.food_image = window.IMAGE_PLACEHOLDER
-    } else {
-      this.food_image = this.food.image
-    }
+    this.model_image = this.model?.image ?? window.IMAGE_PLACEHOLDER
     this.dragMenu = this.$refs.tooltip
+    this.text.image_alt = this.$t(this.model_name + '_Image'),
+    this.hide_children = this.$t('Hide_' + this.model_name)
   },
   methods: {
+    emitAction: function(m) {
+
+    },
     handleDragStart: function(e) {
       this.isError = false
-      e.dataTransfer.setData('source', JSON.stringify(this.food))
+      e.dataTransfer.setData('source', JSON.stringify(this.model))
     },
     handleDragEnter: function(e) {
       if (!e.currentTarget.contains(e.relatedTarget) && e.relatedTarget != null) {
@@ -134,7 +155,7 @@ export default {
     },
     handleDragDrop: function(e) {
       let source = JSON.parse(e.dataTransfer.getData('source'))
-      if (source.id != this.food.id){
+      if (source.id != this.model.id){
         this.source = source
         let menuLocation = {getBoundingClientRect: this.generateLocation(e.clientX, e.clientY),}
         this.show_menu = true
@@ -161,7 +182,7 @@ export default {
         })
         popper.update()
         this.over = false
-        this.$emit({'action': 'drop', 'target': this.food, 'source': this.source})
+        this.$emit({'action': 'drop', 'target': this.model, 'source': this.source})
       } else {
         this.isError = true
       }

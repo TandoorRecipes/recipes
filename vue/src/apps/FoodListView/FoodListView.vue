@@ -67,32 +67,46 @@
           <!-- only show scollbars in split mode, but this doesn't interact well with infinite scroll, maybe a different componenet? -->
           <div class="row" :class="{'overflow-hidden' : show_split}" style="margin-top: 2vh">
             <div class="col col-md" :class="{'mh-100 overflow-auto' : show_split}">
-              <food-card 
-                v-for="f in foods"
-                v-bind:key="f.id"
-                :food="f" 
+              <generic-horizontal-card v-for="f in foods" v-bind:key="f.id"
+                :model=f
+                model_name="Food"
                 :draggable="true"
+                :merge="true"
+                :move="true"
                 @item-action="startAction($event, 'left')" 
-              ></food-card>
+              >
+                <template v-slot:upper-right>
+                  <b-button v-if="f.recipe" v-b-tooltip.hover :title="f.recipe.name" 
+                    class=" btn fas fa-book-open p-0 border-0" variant="link" :href="f.recipe.url"/>
+                </template>
+              </generic-horizontal-card>
               <infinite-loading
                 :identifier='left' 
                 @infinite="infiniteHandler($event, 'left')" 
                 spinner="waveDots">
+                <template v-slot:no-more><span/></template>
               </infinite-loading>
             </div>
             <!-- right side food cards -->
             <div class="col col-md mh-100 overflow-auto " v-if="show_split">
-              <food-card 
-                v-for="f in foods2"
-                v-bind:key="f.id"
-                :food="f" 
-                draggable="true"
-                @item-action="startAction($event, 'right')"
-              ></food-card>
+              <generic-horizontal-card v-for="f in foods" v-bind:key="f.id"
+                :model=f
+                model_name="Food"
+                :draggable="true"
+                :merge="true"
+                :move="true"
+                @item-action="startAction($event, 'left')" 
+              >
+                <template v-slot:upper-right>
+                  <b-button v-if="f.recipe" v-b-tooltip.hover :title="f.recipe.name" 
+                    class=" btn fas fa-book-open p-0 border-0" variant="link" :href="f.recipe.url"/>
+                </template>
+              </generic-horizontal-card>
               <infinite-loading  
                 :identifier='right' 
                 @infinite="infiniteHandler($event, 'right')" 
                 spinner="waveDots">
+                <template v-slot:no-more><span/></template>
               </infinite-loading>
             </div>
           </div>
@@ -211,7 +225,8 @@ import _debounce from 'lodash/debounce'
 import {ToastMixin} from "@/utils/utils";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
-import FoodCard from "@/components/FoodCard";
+// import FoodCard from "@/components/FoodCard";
+import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -220,7 +235,7 @@ Vue.use(BootstrapVue)
 export default {
   name: 'FoodListView',
   mixins: [ToastMixin],
-  components: {FoodCard, GenericMultiselect, InfiniteLoading},
+  components: {GenericHorizontalCard, GenericMultiselect, InfiniteLoading},
   data() {
     return {
       foods: [],
@@ -282,9 +297,8 @@ export default {
     },
     // TODO should model actions be included with the context menu?  the card? a seperate mixin avaible to all?
     startAction: function(e, col) {
-      let target = e.target || null
-      let source = e.source || null
-
+      let target = e?.target
+      let source = e?.source
       if (e.action == 'delete') {
         this.this_item = source
         this.$bvModal.show('id_modal_food_delete')
@@ -309,13 +323,14 @@ export default {
           this.mergeFood(e.source.id, e.target.id)
         }
       } else if (e.action === 'get-children') {
-        if (source.expanded) {
-          Vue.set(source, 'expanded', false)
+        if (source.show_children) {
+          Vue.set(source, 'show_children', false)
         } else {
           this.this_item = source
           this.getChildren(col, source)
         }
       } else if (e.action === 'get-recipes') {
+        
         if (source.show_recipes) {
           Vue.set(source, 'show_recipes', false)
         } else {
@@ -421,7 +436,7 @@ export default {
         }
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
-          Vue.set(parent, 'expanded', true)
+          Vue.set(parent, 'show_children', true)
           Vue.set(parent, 'show_recipes', false)
         }
       }).catch((err) => {
@@ -446,7 +461,7 @@ export default {
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
           Vue.set(parent, 'show_recipes', true)
-          Vue.set(parent, 'expanded', false)
+          Vue.set(parent, 'show_children', false)
         }
         
       }).catch((err) => {
@@ -467,13 +482,13 @@ export default {
           let parent2 = this.findFood(this.foods2, target.parent)
 
           if (parent) {
-            if (parent.expanded){
+            if (parent.show_children){
               idx = parent.children.indexOf(parent.children.find(kw => kw.id === target.id))
               Vue.set(parent.children, idx, result.data)
             }
           }
           if (parent2){
-            if (parent2.expanded){
+            if (parent2.show_children){
               idx2 = parent2.children.indexOf(parent2.children.find(kw => kw.id === target.id))
               // deep copy to force columns to be indepedent
               Vue.set(parent2.children, idx2, JSON.parse(JSON.stringify(result.data)))
@@ -496,7 +511,7 @@ export default {
       if (food.length == 1) {
         return food[0]
       } else if (food.length == 0) {
-        for (const f of food_list.filter(fd => fd.expanded == true)) {
+        for (const f of food_list.filter(fd => fd.show_children == true)) {
           food = this.findFood(f.children, id)
           if (food) {
             return food
@@ -557,32 +572,32 @@ export default {
         $state.complete();
       })
     },
-      destroyCard: function(id) {
-        let fd = this.findFood(this.foods, id)
-        let fd2 = this.findFood(this.foods2, id)
-        let p_id = undefined
-        p_id = fd?.parent ?? fd2.parent
+    destroyCard: function(id) {
+      let fd = this.findFood(this.foods, id)
+      let fd2 = this.findFood(this.foods2, id)
+      let p_id = undefined
+      p_id = fd?.parent ?? fd2.parent
 
-        if (p_id) {
-          let parent = this.findFood(this.foods, p_id)
-          let parent2 = this.findFood(this.foods2, p_id)
-          if (parent){
-            Vue.set(parent, 'numchild', parent.numchild - 1)
-            if (parent.expanded) {
-              let idx = parent.children.indexOf(parent.children.find(kw => kw.id === id))
-              Vue.delete(parent.children, idx)
-            }
-          }
-          if (parent2){
-            Vue.set(parent2, 'numchild', parent2.numchild - 1)
-            if (parent2.expanded) {
-              let idx = parent2.children.indexOf(parent2.children.find(kw => kw.id === id))
-              Vue.delete(parent2.children, idx)
-            }
+      if (p_id) {
+        let parent = this.findFood(this.foods, p_id)
+        let parent2 = this.findFood(this.foods2, p_id)
+        if (parent){
+          Vue.set(parent, 'numchild', parent.numchild - 1)
+          if (parent.show_children) {
+            let idx = parent.children.indexOf(parent.children.find(kw => kw.id === id))
+            Vue.delete(parent.children, idx)
           }
         }
-        this.foods = this.foods.filter(kw => kw.id != id)
-        this.foods2 = this.foods2.filter(kw => kw.id != id)
+        if (parent2){
+          Vue.set(parent2, 'numchild', parent2.numchild - 1)
+          if (parent2.show_children) {
+            let idx = parent2.children.indexOf(parent2.children.find(kw => kw.id === id))
+            Vue.delete(parent2.children, idx)
+          }
+        }
+      }
+      this.foods = this.foods.filter(kw => kw.id != id)
+      this.foods2 = this.foods2.filter(kw => kw.id != id)
     },
   }
 }
