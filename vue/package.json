@@ -10,6 +10,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@kevinfaguiar/vue-twemoji-picker": "^5.7.4",
+    "@riophae/vue-treeselect": "^0.4.0",
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.14.0",

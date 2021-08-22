@@ -1,9 +1,7 @@
-import base64
 import json
 from io import BytesIO
 
 import requests
-from rest_framework.renderers import JSONRenderer
 
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration

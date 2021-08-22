@@ -6,6 +6,7 @@ from cookbook.helper.mdx_urlize import UrlizeExtension
 from jinja2 import Template, TemplateSyntaxError, UndefinedError
 from gettext import gettext as _
 
+
 class IngredientObject(object):
     amount = ""
     unit = ""

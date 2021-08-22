@@ -1,7 +1,5 @@
 import datetime
 import json
-import os
-import re
 import traceback
 import uuid
 from io import BytesIO, StringIO
@@ -16,7 +14,7 @@ from django_scopes import scope
 from cookbook.forms import ImportExportBase
 from cookbook.helper.image_processing import get_filetype
 from cookbook.models import Keyword, Recipe
-from recipes.settings import DEBUG
+from recipes.settings import DATABASES, DEBUG
 
 
 class Integration:
@@ -33,8 +31,29 @@ class Integration:
         """
         self.request = request
         self.export_type = export_type
-        # TODO add all import keywords under the importer root node
-        self.keyword = Keyword.objects.first()
+        name = f'Import {export_type}'
+        description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
+        icon = '📥'
+        count = Keyword.objects.filter(name__icontains=name, space=request.space).count()
+        if count != 0:
+            pk = Keyword.objects.filter(name__icontains=name, space=request.space).order_by('id').first().id
+            name = name + " " + str(pk)
+
+        if DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+            parent = Keyword.objects.get_or_create(name='Import', space=request.space)
+            parent.add_child(
+                name=name,
+                description=description,
+                icon=icon,
+                space=request.space
+            )
+        else:
+            self.keyword = Keyword.objects.create(
+                name=name,
+                description=description,
+                icon=icon,
+                space=request.space
+            )
 
     def do_export(self, recipes):
         """
@@ -181,7 +200,7 @@ class Integration:
             except BadZipFile:
                 il.msg += 'ERROR ' + _(
                     'Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
-            except:
+            except Exception as e:
                 msg = 'ERROR ' + _(
                     'An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n'
                 self.handle_exception(e, log=il, message=msg)

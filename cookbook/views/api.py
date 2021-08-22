@@ -4,9 +4,9 @@ import re
 import uuid
 
 import requests
-from PIL import Image
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
+from collections import OrderedDict
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -37,13 +37,13 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 
-from cookbook.helper.recipe_search import search_recipes
+from cookbook.helper.recipe_search import search_recipes, get_facet
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -61,7 +61,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer)
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer)
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -144,18 +144,18 @@ class TreeMixin(FuzzyFilterMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
                 if root == 0:
-                    self.queryset = self.model.get_root_nodes().filter(space=self.request.space)
+                    self.queryset = self.model.get_root_nodes() | self.model.objects.filter(depth=0)
                 else:
-                    self.queryset = self.model.objects.get(id=root).get_children().filter(space=self.request.space)
+                    self.queryset = self.model.objects.get(id=root).get_children()
         elif tree:
             if tree.isnumeric():
                 try:
-                    self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self().filter(space=self.request.space)
+                    self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self()
                 except Keyword.DoesNotExist:
                     self.queryset = self.model.objects.none()
         else:
             return super().get_queryset()
-        return self.queryset
+        return self.queryset.filter(space=self.request.space)
 
     @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'],)
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
@@ -166,7 +166,7 @@ class TreeMixin(FuzzyFilterMixin):
             child = self.model.objects.get(pk=pk, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {child} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         parent = int(parent)
         # parent 0 is root of the tree
@@ -184,7 +184,7 @@ class TreeMixin(FuzzyFilterMixin):
             parent = self.model.objects.get(pk=parent, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {parent} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         try:
             with scopes_disabled():
@@ -204,7 +204,7 @@ class TreeMixin(FuzzyFilterMixin):
             source = self.model.objects.get(pk=pk, space=self.request.space)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         if int(target) == source.id:
             content = {'error': True, 'msg': _('Cannot merge with the same object!')}
@@ -215,14 +215,14 @@ class TreeMixin(FuzzyFilterMixin):
                 target = self.model.objects.get(pk=target, space=self.request.space)
             except (self.model.DoesNotExist):
                 content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+                return Response(content, status=status.HTTP_404_NOT_FOUND)
 
             try:
                 if target in source.get_descendants_and_self():
                     content = {'error': True, 'msg': _('Cannot merge with child object!')}
                     return Response(content, status=status.HTTP_403_FORBIDDEN)
                 ########################################################################
-                # this needs abstracted to update steps instead of recipes for food merge
+                # TODO this needs abstracted to update steps instead of recipes for food merge
                 ########################################################################
                 recipes = Recipe.objects.filter(**{"%ss" % self.basename: source}, space=self.request.space)
 
@@ -322,9 +322,18 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
-    # TODO check if fuzzyfilter is conflicting - may also need to create 'tree filter' mixin
+class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = SupermarketCategoryRelation.objects
+    serializer_class = SupermarketCategoryRelationSerializer
+    permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
 
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
+        return super().get_queryset()
+
+
+class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
@@ -437,6 +446,19 @@ class RecipePagination(PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'
     max_page_size = 100
+
+    def paginate_queryset(self, queryset, request, view=None):
+        self.facets = get_facet(queryset, request.query_params)
+        return super().paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data),
+            ('facets', self.facets)
+        ]))
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -679,7 +701,7 @@ def share_link(request, pk):
 def log_cooking(request, recipe_id):
     recipe = get_object_or_None(Recipe, id=recipe_id)
     if recipe:
-        log = CookLog.objects.create(created_by=request.user, recipe=recipe)
+        log = CookLog.objects.create(created_by=request.user, recipe=recipe, space=request.space)
         servings = request.GET['s'] if 's' in request.GET else None
         if servings and re.match(r'^([1-9])+$', servings):
             log.servings = int(servings)

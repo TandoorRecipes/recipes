@@ -8,7 +8,7 @@
         <h2>{{ $t('Supermarket') }}</h2>
 
         <multiselect v-model="selected_supermarket" track-by="id" label="name"
-                     :options="supermarkets">
+                     :options="supermarkets" @input="selectedSupermarketChanged">
         </multiselect>
 
         <b-button class="btn btn-primary btn-block" style="margin-top: 1vh" v-b-modal.modal-supermarket>
@@ -25,12 +25,14 @@
     <div class="row">
       <div class="col col-md-6">
         <h4>{{ $t('Categories') }}
-          <button class="btn btn-success btn-sm">{{ $t('New') }}</button>
+          <button class="btn btn-success btn-sm" @click="selected_category = {new:true, name:''}"
+                  v-b-modal.modal-category>{{ $t('New') }}
+          </button>
         </h4>
 
-        <draggable :list="categories" group="supermarket_categories"
+        <draggable :list="selectable_categories" group="supermarket_categories"
                    :empty-insert-threshold="10">
-          <div v-for="c in categories" :key="c.id">
+          <div v-for="c in selectable_categories" :key="c.id">
             <button class="btn btn-block btn-sm btn-primary" style="margin-top: 0.5vh">{{ c.name }}</button>
 
           </div>
@@ -41,9 +43,9 @@
       <div class="col col-md-6">
         <h4>{{ $t('Selected') }} {{ $t('Categories') }}</h4>
 
-        <draggable :list="selected_categories" group="supermarket_categories"
-                   :empty-insert-threshold="10">
-          <div v-for="c in selected_categories" :key="c.id">
+        <draggable :list="supermarket_categories" group="supermarket_categories"
+                   :empty-insert-threshold="10" @change="selectedCategoriesChanged">
+          <div v-for="c in supermarket_categories" :key="c.id">
             <button class="btn btn-block btn-sm btn-primary" style="margin-top: 0.5vh">{{ c.name }}</button>
 
           </div>
@@ -61,9 +63,9 @@
     </b-modal>
 
     <b-modal id="modal-category" v-bind:title="$t('Category')" @ok="categoryModalOk()">
-      <label v-if="selected_supermarket !== undefined">
+      <label v-if="selected_category !== undefined">
         {{ $t('Name') }}
-        <b-input v-model="selected_supermarket.name"></b-input>
+        <b-input v-model="selected_category.name"></b-input>
 
       </label>
     </b-modal>
@@ -107,12 +109,15 @@ export default {
       categories: [],
 
       selected_supermarket: {},
-      selected_categories: [],
+      selected_category: {},
+
+
+      selectable_categories: [],
+      supermarket_categories: [],
     }
   },
   mounted() {
     this.$i18n.locale = window.CUSTOM_LOCALE
-    console.log('LOADED')
     this.loadInitial()
   },
   methods: {
@@ -123,7 +128,44 @@ export default {
       })
       apiClient.listSupermarketCategorys().then(results => {
         this.categories = results.data
+        this.selectable_categories = this.categories
       })
+    },
+    selectedCategoriesChanged: function (data) {
+      let apiClient = new ApiApiFactory()
+
+      if ('removed' in data) {
+        let relation = this.selected_supermarket.category_to_supermarket.filter((el) => el.category.id === data.removed.element.id)[0]
+        apiClient.destroySupermarketCategoryRelation(relation.id)
+      }
+
+      if ('added' in data) {
+        apiClient.createSupermarketCategoryRelation({
+          category: data.added.element,
+          supermarket: this.selected_supermarket.id, order: 0
+        }).then(results => {
+          this.selected_supermarket.category_to_supermarket.push(results.data)
+        })
+      }
+
+      if ('moved' in data || 'added' in data) {
+        this.supermarket_categories.forEach( (element,index) =>{
+          let relation = this.selected_supermarket.category_to_supermarket.filter((el) => el.category.id === element.id)[0]
+          console.log(relation)
+          apiClient.partialUpdateSupermarketCategoryRelation(relation.id, {order: index})
+        })
+      }
+    },
+    selectedSupermarketChanged: function (supermarket, id) {
+      this.supermarket_categories = []
+      this.selectable_categories = this.categories
+
+      for (let i of supermarket.category_to_supermarket) {
+        this.supermarket_categories.push(i.category)
+        this.selectable_categories = this.selectable_categories.filter(function (el) {
+          return el.id !== i.category.id
+        });
+      }
     },
     supermarketModalOk: function () {
       let apiClient = new ApiApiFactory()
@@ -139,14 +181,13 @@ export default {
     },
     categoryModalOk: function () {
       let apiClient = new ApiApiFactory()
-      if (this.selected_supermarket.new) {
-        apiClient.createSupermarket({name: this.selected_supermarket.name}).then(results => {
-          this.selected_supermarket = undefined
+      if (this.selected_category.new) {
+        apiClient.createSupermarketCategory({name: this.selected_category.name}).then(results => {
+          this.selected_category = {}
           this.loadInitial()
         })
       } else {
-        apiClient.partialUpdateSupermarket(this.selected_supermarket.id, {name: this.selected_supermarket.name})
-
+        apiClient.partialUpdateSupermarketCategory(this.selected_category.id, {name: this.selected_category.name})
       }
     }
   }

@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient
+from cookbook.models import Recipe, Step, Ingredient
 
 
 class NextcloudCookbook(Integration):
@@ -25,6 +25,7 @@ class NextcloudCookbook(Integration):
             servings=recipe_json['recipeYield'], space=self.request.space)
 
         # TODO parse times (given in PT2H3M )
+        # @vabene check recipe_url_import.iso_duration_to_minutes  I think it does what you are looking for
         # TODO parse keywords
 
         ingredients_added = False

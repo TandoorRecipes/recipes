@@ -1,4 +1,3 @@
-import json
 import re
 from io import BytesIO
 from zipfile import ZipFile
@@ -6,7 +5,7 @@ from zipfile import ZipFile
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
+from cookbook.models import Recipe, Step, Ingredient, Keyword
 
 
 class Chowdown(Integration):
@@ -52,7 +51,7 @@ class Chowdown(Integration):
 
         for k in tags.split(','):
             print(f'adding keyword {k.strip()}')
-            keyword, created = Keyword.get_or_create(name=k.strip(), space=self.request.space)
+            keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(

@@ -1,12 +1,11 @@
 from django.contrib.postgres.aggregates import StringAgg
 from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, SearchVector, TrigramSimilarity,
+    SearchQuery, SearchRank, SearchVector,
 )
 from django.db import models
 from django.db.models import Q
 from django.utils import translation
 
-# TODO move this somewhere else and delete this file
 DICTIONARY = {
     # TODO find custom dictionaries - maybe from here https://www.postgresql.org/message-id/CAF4Au4x6X_wSXFwsQYE8q5o0aQZANrvYjZJ8uOnsiHDnOVPPEg%40mail.gmail.com
     # 'hy': 'Armenian',
@@ -22,8 +21,6 @@ DICTIONARY = {
 }
 
 
-# TODO add search highlighting
-# TODO add language support
 # TODO add schedule index rebuild
 class RecipeSearchManager(models.Manager):
     def search(self, search_text, space):

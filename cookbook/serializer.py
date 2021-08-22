@@ -47,7 +47,7 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if (type(data) == QuerySet and data.query.is_sliced) or type(data) == MP_NodeQuerySet:
+        if (type(data) == QuerySet and data.query.is_sliced):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
@@ -209,29 +209,30 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return str(obj)
 
     def get_image(self, obj):
-        recipes = obj.recipe_set.all().exclude(image__isnull=True).exclude(image__exact='')
+        recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
         if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=Keyword.get_tree(obj)).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
             return None
 
     def count_recipes(self, obj):
-        return obj.recipe_set.all().count()
+        return obj.recipe_set.filter(space=self.context['request'].space).all().count()
 
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
+        validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
-        obj, created = Keyword.get_or_create(**validated_data)
+        obj, created = Keyword.objects.get_or_create(**validated_data)
         return obj
 
     class Meta:
         # list_serializer_class = SpaceFilterSerializer
         model = Keyword
         fields = ('id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'numchild',)
+        read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
@@ -264,7 +265,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
         fields = ('id', 'name')
 
 
-class SupermarketCategoryRelationSerializer(SpacedModelSerializer):
+class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
     category = SupermarketCategorySerializer()
 
     class Meta:
@@ -284,7 +285,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
-        obj, created = Food.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
+        validated_data['name'] = validated_data['name'].strip()
+        validated_data['space'] = self.context['request'].space
+        obj, created = Food.objects.get_or_create(validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -318,6 +321,7 @@ class StepSerializer(WritableNestedModelSerializer):
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
     file = UserFileViewSerializer(allow_null=True, required=False)
+    step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -329,11 +333,27 @@ class StepSerializer(WritableNestedModelSerializer):
     def get_ingredients_markdown(self, obj):
         return obj.get_instruction_render()
 
+    def get_step_recipe_data(self, obj):
+        # check if root type is recipe to prevent infinite recursion
+        # can be improved later to allow multi level embedding
+        if obj.step_recipe and type(self.parent.root) == RecipeSerializer:
+            return StepRecipeSerializer(obj.step_recipe).data
+
     class Meta:
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file',
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data'
+        )
+
+
+class StepRecipeSerializer(WritableNestedModelSerializer):
+    steps = StepSerializer(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'name', 'steps',
         )
 
 
@@ -439,9 +459,11 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         book = validated_data['book']
+        recipe = validated_data['recipe']
         if not book.get_owner() == self.context['request'].user:
             raise NotFound(detail=None, code=None)
-        return super().create(validated_data)
+        obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
+        return obj
 
     class Meta:
         model = RecipeBookEntry

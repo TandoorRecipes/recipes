@@ -10,13 +10,20 @@
                   <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input"
                            v-bind:placeholder="$t('Search')"></b-input>
                   <b-input-group-append>
-                    <b-button v-b-toggle.collapse_advanced_search
-                              v-bind:class="{'btn-primary': !isAdvancedSettingsSet(), 'btn-danger': isAdvancedSettingsSet()}"
-                              class="shadow-none btn"><i
-                        class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i><i
-                        class="fas fa-caret-up"
-                        v-if="settings.advanced_search_visible"></i>
+                    <b-button variant="light" 
+                      v-b-tooltip.hover :title="$t('Random Recipes')"
+                      @click="openRandom()">
+                      <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
                     </b-button>
+                    <b-button v-b-toggle.collapse_advanced_search
+                              v-b-tooltip.hover :title="$t('Advanced Settings')"
+                              v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'"
+                    >
+                      <!-- consider changing this icon to a filter -->
+                      <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
+                      <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
+                    </b-button>
+                    
                   </b-input-group-append>
                 </b-input-group>
               </div>
@@ -74,6 +81,21 @@
                       </b-form-group>
 
                       <b-form-group
+                          v-bind:label="$t('Recipes_per_page')"
+                          label-for="popover-input-page-count"
+                          label-cols="6"
+                          class="mb-3">
+                        <b-form-input
+                            type="number"
+                            v-model="settings.page_count"
+                            id="popover-input-page-count"
+                            size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+
+
+
+                      <b-form-group
                           v-bind:label="$t('Meal_Plan')"
                           label-for="popover-input-2"
                           label-cols="6"
@@ -85,6 +107,24 @@
                             size="sm"
                         ></b-form-checkbox>
                       </b-form-group>
+
+                      <b-form-group
+                          v-bind:label="$t('Sort_by_new')"
+                          label-for="popover-input-3"
+                          label-cols="6"
+                          class="mb-3">
+                        <b-form-checkbox
+                            switch
+                            v-model="settings.sort_by_new"
+                            id="popover-input-3"
+                            size="sm"
+                        ></b-form-checkbox>
+                      </b-form-group>
+                    </div>
+                    <div class="row" style="margin-top: 1vh">
+                      <div class="col-12">
+                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t('Advanced Search Settings') }}</a>
+                      </div>
                     </div>
                     <div class="row" style="margin-top: 1vh">
                       <div class="col-12">
@@ -103,12 +143,16 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
+                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
                                              :initial_selection="settings.search_keywords"
                                              search_function="listKeywords" label="label"
                                              :tree_api="true"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect>
+                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect> -->
+                        <treeselect v-model="settings.search_keywords" :options="facets.Keywords" :flat="true"
+                                    searchNested multiple :placeholder="$t('Keywords')"  :normalizer="normalizer"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_keywords_or" name="check-button"
@@ -179,7 +223,7 @@
         <div class="row">
           <div class="col col-md-12 text-right" style="margin-top: 2vh">
             <span class="text-muted">
-            {{ $t('Page') }} {{ settings.pagination_page }}/{{ pagination_count }} <a href="#" @click="resetSearch"><i
+            {{ $t('Page') }} {{ settings.pagination_page }}/{{ Math.ceil(pagination_count/settings.page_count) }} <a href="#" @click="resetSearch"><i
                 class="fas fa-times-circle"></i> {{ $t('Reset') }}</a>
             </span>
           </div>
@@ -187,10 +231,10 @@
 
         <div class="row">
           <div class="col col-md-12">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 0.8rem;" >
 
               <template
-                  v-if="settings.search_input === '' && settings.search_keywords.length === 0 &&  settings.search_foods.length === 0  && settings.search_books.length === 0">
+                  v-if="settings.search_input === '' && settings.search_keywords.length === 0 &&  settings.search_foods.length === 0  && settings.search_books.length === 0 && this.settings.pagination_page === 1 && !random_search">
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
@@ -204,12 +248,12 @@
           </div>
         </div>
 
-        <div class="row" style="margin-top: 2vh">
+        <div class="row" style="margin-top: 2vh" v-if="!random_search">
           <div class="col col-md-12">
             <b-pagination pills
                           v-model="settings.pagination_page"
                           :total-rows="pagination_count"
-                          per-page="25"
+                          :per-page="settings.page_count"
                           @change="pageChange"
                           align="center">
 
@@ -223,8 +267,6 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -246,6 +288,8 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 Vue.use(BootstrapVue)
 
@@ -254,10 +298,11 @@ let SETTINGS_COOKIE_NAME = 'search_settings'
 export default {
   name: 'RecipeSearchView',
   mixins: [ResolveUrlMixin],
-  components: {GenericMultiselect, RecipeCard},
+  components: {GenericMultiselect, RecipeCard, Treeselect},
   data() {
     return {
       recipes: [],
+      facets: [],
       meal_plans: [],
       last_viewed_recipes: [],
 
@@ -275,11 +320,13 @@ export default {
         advanced_search_visible: false,
         show_meal_plan: true,
         recently_viewed: 5,
-
+        sort_by_new: true,
         pagination_page: 1,
+        page_count: 25,
       },
 
       pagination_count: 0,
+      random_search: false,
     }
 
   },
@@ -339,15 +386,18 @@ export default {
     'settings.search_input': _debounce(function () {
       this.refreshData(false)
     }, 300),
+    'settings.page_count': _debounce(function () {
+      this.refreshData(false)
+    }, 300),
   },
   methods: {
-    refreshData: function (page_load) {
+    refreshData: function (random) {
+      this.random_search = random
       let apiClient = new ApiApiFactory()
+
       apiClient.listRecipes(
           this.settings.search_input,
-          this.settings.search_keywords.map(function (A) {
-            return A["id"];
-          }),
+          this.settings.search_keywords,
           this.settings.search_foods.map(function (A) {
             return A["id"];
           }),
@@ -359,13 +409,19 @@ export default {
           this.settings.search_books_or,
 
           this.settings.search_internal,
-          undefined,
+          random,
+          this.settings.sort_by_new,
           this.settings.pagination_page,
+          this.settings.page_count
       ).then(result => {
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
         this.recipes = result.data.results
+        this.facets = result.data.facets
       })
+    },
+    openRandom: function () {
+      this.refreshData(true)
     },
     loadMealPlan: function () {
       let apiClient = new ApiApiFactory()
@@ -389,7 +445,7 @@ export default {
       let apiClient = new ApiApiFactory()
       if (this.settings.recently_viewed > 0) {
         apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, undefined, undefined, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
+            undefined, undefined, undefined, this.settings.sort_by_new, 1, this.settings.recently_viewed, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
           this.last_viewed_recipes = result.data.results
         })
       } else {
@@ -411,10 +467,18 @@ export default {
     },
     pageChange: function (page) {
       this.settings.pagination_page = page
-      this.refreshData()
+      this.refreshData(false)
     },
     isAdvancedSettingsSet() {
       return ((this.settings.search_keywords.length + this.settings.search_foods.length + this.settings.search_books.length) > 0)
+    },
+    normalizer(node) {
+      return {
+            id: node.id,
+            label: node.name + ' (' + node.count + ')',
+            children: node.children,
+            isDefaultExpanded: node.isDefaultExpanded
+        }
     }
   }
 }

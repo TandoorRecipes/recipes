@@ -6,7 +6,7 @@
 
       </div>
       <div class="col-xl-8 col-12">
-        <!-- TODO only show scollbars in split mode, but this doesn't interact well with infinite scroll, maybe a different componenet? -->
+        <!-- TODO only show scollbars in split mode, but this doesn't interact well with infinite scroll, maybe a different component? -->
         <div class="container-fluid d-flex flex-column flex-grow-1" :class="{'vh-100' : show_split}">
         <!-- <div class="container-fluid d-flex flex-column flex-grow-1 vh-100">  -->
           <!-- expanded options box -->
@@ -450,10 +450,11 @@ export default {
       let parent = {}
       let pageSize = 200
       let keyword = String(kw.id)
+      console.log(apiClient.listRecipes)
 
       apiClient.listRecipes(
           undefined, keyword, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, undefined, pageSize
+          undefined, undefined, undefined, undefined, undefined, pageSize, undefined
         ).then(result => {
         if (col == 'left') {
           parent = this.findKeyword(this.keywords, kw.id)
