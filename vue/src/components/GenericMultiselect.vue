@@ -69,7 +69,7 @@ export default {
           this.objects = this.sticky_options.concat(result.data.results)
         })
       } else {
-        apiClient[this.search_function]({query: {query: query, limit: 10}}).then(result => {
+        apiClient[this.search_function]({query: {query: query, limit: this.limit}}).then(result => {
           this.objects = this.sticky_options.concat(result.data)
         })
       }
