@@ -69,13 +69,13 @@
     <!-- this should be made a generic component, would also require mixin for functions that generate the popup  and put in parent container-->  
     <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:999; cursor:pointer">
       <b-list-group-item action v-on:click="$emit('item-action',{'action': 'move', 'target': keyword, 'source': source}); closeMenu()">
-        {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':keyword.name})}}
+        <i class="fas fa-expand-arrows-alt fa-fw"></i> {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':keyword.name})}}
       </b-list-group-item>
       <b-list-group-item action v-on:click="$emit('item-action',{'action': 'merge', 'target': keyword, 'source': source}); closeMenu()">
-        {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':keyword.name}) }}
+        <i class="fas fa-compress-arrows-alt fa-fw"></i> {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':keyword.name}) }}
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
-        {{$t('Cancel')}}
+        <i class="fas fa-times fa-fw"></i> {{$t('Cancel')}}
       </b-list-group-item>
     </b-list-group>
   </div>

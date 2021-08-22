@@ -13,11 +13,11 @@
       </b-dropdown-item>
 
       <b-dropdown-item v-on:click="$emit('item-action', 'move')" v-if="show_move">
-        <i class="fas fa-trash-alt fa-fw"></i> {{ $t('Move') }}
+        <i class="fas fa-expand-arrows-alt fa-fw"></i> {{ $t('Move') }}
       </b-dropdown-item>
       
       <b-dropdown-item v-if="show_merge" v-on:click="$emit('item-action', 'merge')">
-        <i class="fas fa-trash-alt fa-fw"></i> {{ $t('Merge') }}
+        <i class="fas fa-compress-arrows-alt fa-fw"></i> {{ $t('Merge') }}
       </b-dropdown-item>
 
     </b-dropdown>
