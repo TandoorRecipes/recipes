@@ -31,17 +31,15 @@ class Integration:
         """
         self.request = request
         self.export_type = export_type
-        name = f'Import {export_type}'
+
         description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
         icon = '📥'
-        count = Keyword.objects.filter(name__icontains=name, space=request.space).count()
-        if count != 0:
-            pk = Keyword.objects.filter(name__icontains=name, space=request.space).order_by('id').first().id
-            name = name + " " + str(pk)
+        count = Keyword.objects.filter(name__icontains='Import', space=request.space).count()
+        name = f'Import {count + 1}'
 
         if DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-            parent = Keyword.objects.get_or_create(name='Import', space=request.space)
-            parent.add_child(
+            parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
+            self.keyword = parent.add_child(
                 name=name,
                 description=description,
                 icon=icon,
