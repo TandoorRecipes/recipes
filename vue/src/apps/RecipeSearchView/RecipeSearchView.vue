@@ -356,7 +356,7 @@ export default {
         this.settings.search_keywords = []
         for (let x of urlParams.getAll('keyword')) {
           let keyword = {id: x, name: 'loading'}
-          this.settings.search_keywords.push(keyword)
+          this.settings.search_keywords.push(keyword.id)
           apiClient.retrieveKeyword(x).then(result => {
             this.$set(this.settings.search_keywords, this.settings.search_keywords.indexOf(keyword), result.data)
           })
