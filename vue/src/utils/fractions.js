@@ -1,6 +1,6 @@
 /* frac.js (C) 2012-present SheetJS -- http://sheetjs.com */
 
-/*https://developer.aliyun.com/mirror/npm/package/frac/v/0.3.0 Apache license*/
+/* https://www.npmjs.com/package/frac Apache license*/
 export function frac(x, D, mixed) {
     var n1 = Math.floor(x), d1 = 1;
     var n2 = n1 + 1, d2 = 1;

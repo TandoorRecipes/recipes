@@ -372,12 +372,30 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
 
 class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
+    """
+        list:
+        optional parameters
+
+        - **recipe**: id of recipe - only return books for that recipe
+        - **book**: id of book - only return recipes in that book
+
+        """
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        return self.queryset.filter(book__created_by=self.request.user).filter(book__space=self.request.space)
+        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space)
+
+        recipe_id = self.request.query_params.get('recipe', None)
+        if recipe_id is not None:
+            queryset = queryset.filter(recipe__pk=recipe_id)
+
+        book_id = self.request.query_params.get('book', None)
+        if book_id is not None:
+            queryset = queryset.filter(book__pk=book_id)
+
+        return queryset
 
 
 class MealPlanViewSet(viewsets.ModelViewSet):

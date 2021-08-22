@@ -370,15 +370,21 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 class RecipeBaseSerializer(WritableNestedModelSerializer):
     def get_recipe_rating(self, obj):
-        rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
-        if rating['rating__avg']:
-            return rating['rating__avg']
+        try:
+            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
+            if rating['rating__avg']:
+                return rating['rating__avg']
+        except TypeError:
+            pass
         return 0
 
     def get_recipe_last_cooked(self, obj):
-        last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
-        if last:
-            return last.created_at
+        try:
+            last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
+            if last:
+                return last.created_at
+        except TypeError:
+            pass
         return None
 
 
@@ -456,6 +462,14 @@ class RecipeBookSerializer(SpacedModelSerializer):
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
+    book_content = serializers.SerializerMethodField(method_name='get_book_content', read_only=True)
+    recipe_content = serializers.SerializerMethodField(method_name='get_recipe_content', read_only=True)
+
+    def get_book_content(self, obj):
+        return RecipeBookSerializer(context={'request': self.context['request']}).to_representation(obj.book)
+
+    def get_recipe_content(self, obj):
+        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
 
     def create(self, validated_data):
         book = validated_data['book']
@@ -467,7 +481,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeBookEntry
-        fields = ('id', 'book', 'recipe',)
+        fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
 
 
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):

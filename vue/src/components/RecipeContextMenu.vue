@@ -17,7 +17,7 @@
 
         <a href="#">
           <button class="dropdown-item" @click="$bvModal.show(`id_modal_add_book_${modal_id}`)">
-            <i class="fas fa-bookmark fa-fw"></i> {{ $t('Add_to_Book') }}
+            <i class="fas fa-bookmark fa-fw"></i> {{ $t('Manage_Books') }}
           </button>
         </a>
 
