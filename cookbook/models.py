@@ -160,7 +160,7 @@ class UserPreference(models.Model, PermissionModelMixin):
         choices=PAGES, max_length=64, default=SEARCH
     )
     search_style = models.CharField(
-        choices=SEARCH_STYLE, max_length=64, default=LARGE
+        choices=SEARCH_STYLE, max_length=64, default=NEW
     )
     show_recent = models.BooleanField(default=True)
     plan_share = models.ManyToManyField(

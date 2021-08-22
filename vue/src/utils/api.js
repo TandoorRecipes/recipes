@@ -37,23 +37,6 @@ export function apiLogCooking(cook_log) {
     })
 }
 
-export function apiLoadCookBooks(query) {
-    return axios.get(resolveDjangoUrl('api:recipebook-list') + '?query=' + query).then((response) => {
-        return response.data
-    }).catch((err) => {
-        //handleError(err, 'There was an error loading a resource!', 'danger')
-    })
-}
-
-export function apiAddRecipeBookEntry(entry) {
-    return axios.post(resolveDjangoUrl('api:recipebookentry-list',), entry).then((response) => {
-        makeToast('Saved', 'Recipe Book entry saved!', 'success')
-    }).catch((err) => {
-        handleError(err, 'There was an error creating a resource!', 'danger')
-    })
-}
-
-
 function handleError(error, message) {
     if ('response' in error) {
         console.log(error.response)
