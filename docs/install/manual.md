@@ -7,16 +7,32 @@ These intructions are inspired from a standard django/gunicorn/postgresql instru
 
 ## Prerequisites
 
-*Optional*: create a virtual env and activate it
+Setup user: `sudo useradd recipes`
 
 Get the last version from the repository: `git clone https://github.com/vabene1111/recipes.git -b master`
 
-Install postgresql requirements: `sudo apt install libpq-dev postgresql`
-Install project requirements: `pip3.9 install -r requirements.txt`
+Move it to the `/var/www` directory: `mv recipes /var/www`
+
+Change to the directory: `cd /var/www/recipes`
+
+Give the user permissions: `chown -R recipes:www-data /var/www/recipes`
+
+Create virtual env: `python3.9 -m venv /var/www/recipes`
+
+### Install postgresql requirements
+
+`sudo apt install libpq-dev postgresql`
+
+###Install project requirements
+
+Using binaries from the virtual env:
+
+`/var/www/recipes/bin/pip3.9 install -r requirements.txt`
+
 
 ## Setup postgresql
 
-Run `sudo -u postgres psql`
+`sudo -u postgres psql`
 
 In the psql console:
 
@@ -37,12 +53,18 @@ ALTER USER djangouser WITH SUPERUSER;
 
 Download the `.env` configuration file and **edit it accordingly**.
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
+wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O /var/www/recipes/.env
 ```
+
+Things to edit:
+- `SECRET_KEY`: use something secure.
+- `POSTGRES_HOST`: probably 127.0.0.1.
+- `POSTGRES_PASSWORD`: the password we set earlier when setting up djangodb.
+- `STATIC_URL`, `MEDIA_URL`: these will be in `/var/www/recipes`, under `/staticfiles/` and `/mediafiles/` respectively.
 
 ## Initialize the application
 
-Execute `export $(cat .env |grep "^[^#]" | xargs)` to load variables from `.env`
+Execute `export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)` to load variables from `/var/www/recipes/.env`
 
 Execute `/python3.9 manage.py migrate`
 
@@ -67,10 +89,11 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=3
+User=recipes
 Group=www-data
-WorkingDirectory=/media/data/recipes
-EnvironmentFile=/media/data/recipes/.env
-ExecStart=/opt/.pyenv/versions/3.9/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/media/data/recipes/recipes.sock recipes.wsgi:application
+WorkingDirectory=/var/www/recipes
+EnvironmentFile=/var/www/recipes/.env
+ExecStart=/var/www/recipes/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/var/www/recipes/recipes.sock recipes.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -80,11 +103,11 @@ WantedBy=multi-user.target
 
 *Note2*: Fix the path in the `ExecStart` line to where you gunicorn and recipes are
 
-Finally, run `sudo systemctl enable gunicorn_recipes.service` and `sudo systemctl start gunicorn_recipes.service`. You can check that the service is correctly started with `systemctl status gunicorn_recipes.service`
+Finally, run `sudo systemctl enable gunicorn_recipes` and `sudo systemctl start gunicorn_recipes`. You can check that the service is correctly started with `systemctl status gunicorn_recipes`
 
 ### nginx
 
-Now we tell nginx to listen to a new port and forward that to gunicorn. `sudo nano /etc/nginx/sites-available/recipes.conf`
+Now we tell nginx to listen to a new port and forward that to gunicorn. `sudo nano /etc/nginx/conf.d/recipes.conf`
 
 And enter these lines:
 
@@ -95,20 +118,21 @@ server {
     #error_log /var/log/nginx/error.log;
 
     # serve media files
-    location /static {
-        alias /media/data/recipes/staticfiles;
+    location /staticfiles {
+        alias /var/www/recipes/staticfiles;
     }
     
-    location /media {
-        alias /media/data/recipes/mediafiles;
+    location /mediafiles {
+        alias /var/www/recipes/mediafiles;
     }
 
     location / {
-        proxy_pass http://unix:/media/data/recipes/recipes.sock;
+        proxy_set_header Host $http_host;
+        proxy_pass http://unix:/var/www/recipes/recipes.sock;
     }
 }
 ```
 
 *Note*: Enter the correct path in static and proxy_pass lines.
 
-Enable the website `sudo ln -s /etc/nginx/sites-available/recipes.conf /etc/nginx/sites-enabled` and restart nginx : `sudo systemctl restart nginx.service`
+Reload nginx : `sudo systemctl reload nginx`

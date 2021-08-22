@@ -15,18 +15,15 @@ import os
 import re
 
 from django.contrib import messages
-from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import gettext_lazy as _
-from dotenv import load_dotenv
-from webpack_loader.loader import WebpackLoader
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
-DEMO = bool(int(os.getenv('DEMO', False)))
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
@@ -275,6 +272,16 @@ else:
 #         'USER': 'postgres',
 #         'PASSWORD': 'postgres', # set to local pw
 #         'NAME': 'postgres',
+#         'CONN_MAX_AGE': 600,
+#     }
+# }
+
+# SQLite testing DB
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
+#         'NAME': 'db.sqlite3',
 #         'CONN_MAX_AGE': 600,
 #     }
 # }

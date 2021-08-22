@@ -1,9 +1,9 @@
 <template>
 
   <div>
-    <hr/>
+    <hr />
 
-    <template v-if="step.type === 'TEXT'">
+    <template v-if="step.type === 'TEXT' || step.type === 'RECIPE'">
       <div class="row" v-if="recipe.steps.length > 1">
         <div class="col col-md-8">
           <h5 class="text-primary">
@@ -22,15 +22,21 @@
         </div>
         <div class="col col-md-4" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
-                    class="shadow-none d-print-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
+                    class="shadow-none d-print-none"
+                    :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
           </b-button>
         </div>
       </div>
 
+    </template>
+
+    <template v-if="step.type === 'TEXT'">
+
       <b-collapse id="collapse-1" v-model="details_visible">
         <div class="row">
-          <div class="col col-md-4" v-if="step.ingredients.length > 0 && recipe.steps.length > 1">
+          <div class="col col-md-4"
+               v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
             <table class="table table-sm">
               <!-- eslint-disable vue/no-v-for-template-key-on-child -->
               <template v-for="i in step.ingredients">
@@ -65,7 +71,8 @@
 
         <div class="col-md-2" style="text-align: right">
           <b-button @click="details_visible = !details_visible" style="border: none; background: none"
-                    class="shadow-none d-print-none" :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
+                    class="shadow-none d-print-none"
+                    :class="{ 'text-primary': details_visible, 'text-success': !details_visible}">
             <i class="far fa-check-circle"></i>
           </b-button>
         </div>
@@ -89,10 +96,28 @@
             <img :src="step.file.file" style="max-width: 50vw; max-height: 50vh">
           </div>
           <div v-else>
-            <a :href="step.file.file" target="_blank" rel="noreferrer nofollow">{{ $t('Download') }} {{ $t('File') }}</a>
+            <a :href="step.file.file" target="_blank" rel="noreferrer nofollow">{{ $t('Download') }} {{
+                $t('File')
+              }}</a>
           </div>
         </template>
       </div>
+    </div>
+
+
+    <div class="card" v-if="step.type === 'RECIPE' && step.step_recipe_data !== null">
+ <b-collapse id="collapse-1" v-model="details_visible">
+      <div class="card-body">
+        <h2 class="card-title">
+          <a :href="resolveDjangoUrl('view_recipe',step.step_recipe_data.id)">{{ step.step_recipe_data.name }}</a>
+        </h2>
+        <div v-for="(sub_step, index) in step.step_recipe_data.steps" v-bind:key="`substep_${sub_step.id}`">
+          <Step :recipe="step.step_recipe_data" :step="sub_step" :ingredient_factor="ingredient_factor" :index="index"
+                :start_time="start_time" :force_ingredients="true"></Step>
+        </div>
+      </div>
+    </b-collapse>
+
     </div>
 
 
@@ -139,6 +164,8 @@ import {GettextMixin} from "@/utils/utils";
 import CompileComponent from "@/components/CompileComponent";
 import Vue from "vue";
 import moment from "moment";
+import Keywords from "@/components/Keywords";
+import {ResolveUrlMixin} from "@/utils/utils";
 
 Vue.prototype.moment = moment
 
@@ -146,6 +173,7 @@ export default {
   name: 'Step',
   mixins: [
     GettextMixin,
+    ResolveUrlMixin,
   ],
   components: {
     Ingredient,
@@ -157,6 +185,10 @@ export default {
     index: Number,
     recipe: Object,
     start_time: String,
+    force_ingredients: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

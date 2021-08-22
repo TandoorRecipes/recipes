@@ -15,6 +15,8 @@ from django.db.models import Avg, Q
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
+from django.db.models import Avg, Q, Sum
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -27,6 +29,8 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
                             UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, SearchPreferenceForm)
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
+                            SearchPreferenceForm)
 from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
@@ -122,6 +126,7 @@ def no_space(request):
                 max_users=settings.SPACE_DEFAULT_MAX_USERS,
                 allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
+
             request.user.userpreference.space = created_space
             request.user.userpreference.save()
             request.user.groups.add(Group.objects.filter(name='admin').get())
@@ -141,7 +146,7 @@ def no_space(request):
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
-        create_form = SpaceCreateForm()
+        create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
         join_form = SpaceJoinForm()
 
     return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})

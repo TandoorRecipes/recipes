@@ -1,16 +1,14 @@
 import re
 import json
-import base64
 import requests
 from io import BytesIO
 from zipfile import ZipFile
 import imghdr
-from django.utils.translation import gettext as _
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import parse, get_food, get_unit
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient, Keyword
+from cookbook.models import Recipe, Step, Ingredient, Keyword
 
 
 class RecetteTek(Integration):
@@ -108,7 +106,7 @@ class RecetteTek(Integration):
                     recipe.keywords.add(k)
             recipe.save()
         except Exception as e:
-            pass
+            print(recipe.name, ': failed to parse keywords ', str(e))
 
         # TODO: Parse Nutritional Information
 
@@ -123,7 +121,7 @@ class RecetteTek(Integration):
             else:
                 if file['originalPicture'] != '':
                     response = requests.get(file['originalPicture'])
-                    if imghdr.what(BytesIO(response.content)) != None:
+                    if imghdr.what(BytesIO(response.content)) is not None:
                         self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
                     else:
                         raise Exception("Original image failed to download.")

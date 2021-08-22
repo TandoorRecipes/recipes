@@ -27,5 +27,5 @@ class Command(BaseCommand):
                 Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B', config=language))
 
                 self.stdout.write(self.style.SUCCESS(_('Recipe index rebuild complete.')))
-        except:
+        except Exception:
             self.stdout.write(self.style.ERROR(_('Recipe index rebuild failed.')))

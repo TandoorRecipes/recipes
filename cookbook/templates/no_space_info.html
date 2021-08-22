@@ -32,7 +32,7 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{% trans 'Join an existing space.' %}</h5>
-                            <p class="card-text">{% trans 'To join an existing space either enter your invite token or click on the invite link the space owner send you.' %}</p>
+                            <p class="card-text" style="height: 64px">{% trans 'To join an existing space either enter your invite token or click on the invite link the space owner send you.' %}</p>
 
                             <form method="POST" action="{% url 'view_no_space' %}">
                                 {% csrf_token %}
@@ -49,7 +49,7 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{% trans 'Create your own recipe space.' %}</h5>
-                            <p class="card-text">{% trans 'Start your own recipe space and invite other users to it.' %}</p>
+                            <p class="card-text" style="height: 64px">{% trans 'Start your own recipe space and invite other users to it.' %}</p>
                             <form method="POST" action="{% url 'view_no_space' %}">
                                 {% csrf_token %}
                                 {{ create_form | crispy }}

@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
-from PIL import Image, UnidentifiedImageError
+from PIL import UnidentifiedImageError
 from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
@@ -150,12 +150,8 @@ def import_url(request):
 
         all_keywords = Keyword.get_tree()
         for kw in data['keywords']:
-            q = all_keywords.filter(name=kw['text'], space=request.space)
-            if len(q) != 0:
-                recipe.keywords.add(q[0])
-            elif data['all_keywords']:
-                k = Keyword.add_root(name=kw['text'], space=request.space)
-                recipe.keywords.add(k)
+            k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
+            recipe.keywords.add(k)
 
         for ing in data['recipeIngredient']:
             ingredient = Ingredient(space=request.space,)

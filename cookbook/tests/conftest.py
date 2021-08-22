@@ -7,7 +7,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User, Group
 from django_scopes import scopes_disabled
 
-from cookbook.models import Space, Recipe, Step, Ingredient, Food, Unit, Storage
+from cookbook.models import Space, Recipe, Step, Ingredient, Food, Unit
 
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures

@@ -73,6 +73,7 @@
     }
 
     $('#id_log_rating').on("input", () => {
+        let rating = $('#id_log_rating')
         $('#id_rating_show').html(rating.val() + '/5')
     });
 

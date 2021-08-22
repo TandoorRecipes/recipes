@@ -7,6 +7,15 @@ from django_scopes import scopes_disabled
 from cookbook.models import Keyword
 from cookbook.tests.conftest import get_random_recipe
 
+#    ------------------ IMPORTANT -------------------
+#
+#  if changing any capabilities associated with keywords
+#  you will need to ensure that it is tested against both
+#  SqlLite and PostgresSQL
+#  adding load_env() to settings.py will enable Postgress access
+#
+#    ------------------ IMPORTANT -------------------
+
 LIST_URL = 'api:keyword-list'
 DETAIL_URL = 'api:keyword-detail'
 MOVE_URL = 'api:keyword-move'
@@ -16,7 +25,7 @@ MERGE_URL = 'api:keyword-merge'
 # TODO are there better ways to manage these fixtures?
 @pytest.fixture()
 def obj_1(space_1):
-    return Keyword.add_root(name='test_1', space=space_1)
+    return Keyword.objects.get_or_create(name='test_1', space=space_1)[0]
 
 
 @pytest.fixture()
@@ -31,12 +40,12 @@ def obj_1_1_1(obj_1_1, space_1):
 
 @pytest.fixture
 def obj_2(space_1):
-    return Keyword.add_root(name='test_2', space=space_1)
+    return Keyword.objects.get_or_create(name='test_2', space=space_1)[0]
 
 
 @pytest.fixture()
 def obj_3(space_2):
-    return Keyword.add_root(name='test_3', space=space_2)
+    return Keyword.objects.get_or_create(name='test_3', space=space_2)[0]
 
 
 @pytest.fixture()
@@ -158,7 +167,6 @@ def test_add(arg, request, u1_s2):
         assert r.status_code == 404
 
 
-@pytest.mark.django_db(transaction=True)
 def test_add_duplicate(u1_s1, u1_s2, obj_1, obj_3):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
@@ -246,13 +254,13 @@ def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
     r = u1_s1.put(
         reverse(MOVE_URL, args=[obj_1.id, 9999])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # attempt to move to wrong space
     r = u1_s1.put(
         reverse(MOVE_URL, args=[obj_1_1.id, obj_3.id])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
@@ -318,13 +326,13 @@ def test_merge(
     r = u1_s1.put(
         reverse(MERGE_URL, args=[obj_1_1.id, 9999])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # attempt to move to wrong space
     r = u1_s1.put(
         reverse(MERGE_URL, args=[obj_2.id, obj_3.id])
     )
-    assert r.status_code == 400
+    assert r.status_code == 404
 
     # attempt to merge with child
     r = u1_s1.put(

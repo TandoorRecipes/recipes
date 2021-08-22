@@ -16,7 +16,7 @@ class Paprika(Integration):
         raise NotImplementedError('Method not implemented in storage integration')
 
     def get_recipe_from_file(self, file):
-        with  gzip.open(file, 'r') as recipe_zip:
+        with gzip.open(file, 'r') as recipe_zip:
             recipe_json = json.loads(recipe_zip.read().decode("utf-8"))
 
             recipe = Recipe.objects.create(

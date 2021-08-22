@@ -37,8 +37,20 @@ def get_model_name(model):
     return ('_'.join(re.findall('[A-Z][^A-Z]*', model.__name__))).lower()
 
 
-class PermissionModelMixin:
+class TreeManager(MP_NodeManager):
+    def get_or_create(self, **kwargs):
+        # model.Manager get_or_create() is not compatible with MP_Tree
+        kwargs['name'] = kwargs['name'].strip()
+        q = self.filter(name__iexact=kwargs['name'], space=kwargs['space'])
+        if len(q) != 0:
+            return q[0], False
+        else:
+            with scopes_disabled():
+                node = self.model.add_root(**kwargs)
+            return node, True
 
+
+class PermissionModelMixin:
     @staticmethod
     def get_space_key():
         return ('space',)
@@ -217,8 +229,9 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space')
+        ]
 
 
 class Supermarket(models.Model, PermissionModelMixin):
@@ -233,8 +246,9 @@ class Supermarket(models.Model, PermissionModelMixin):
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space')
+        ]
 
 
 class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
@@ -265,7 +279,7 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 
 class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMixin):
-    # TODO create get_or_create method
+    # TODO add find and fix problem functions
     node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
@@ -274,7 +288,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
     updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space', _manager_class=MP_NodeManager)
+    objects = ScopedManager(space='space', _manager_class=TreeManager)
 
     _full_name_separator = ' > '
 
@@ -290,19 +304,6 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
         if parent:
             return self.get_parent().id
         return None
-
-    @classmethod
-    def get_or_create(self, **kwargs):
-        # an attempt to mimic get_or_create functionality with Keywords
-        # function attempts to get the keyword,
-        # if the length of the return is 0 will add a root node
-        kwargs['name'] = kwargs['name'].strip()
-        q = self.get_tree().filter(name=kwargs['name'], space=kwargs['space'])
-        if len(q) != 0:
-            return q[0], False
-        else:
-            kw = Keyword.add_root(**kwargs)
-            return kw, True
 
     @property
     def full_name(self):
@@ -337,6 +338,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
     def get_num_children(self):
         return self.get_children().count()
 
+    # use self.objects.get_or_create() instead
     @classmethod
     def add_root(self, **kwargs):
         with scopes_disabled():
@@ -344,7 +346,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='kw_unique_name_per_space')
         ]
         indexes = (Index(fields=['id', 'name']),)
 
@@ -360,8 +362,9 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space')
+        ]
 
 
 class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixin):
@@ -378,8 +381,9 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
         return self.name
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('space', 'name'),)
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
+        ]
         indexes = (Index(fields=['id', 'name']),)
 
 
@@ -407,10 +411,11 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     TEXT = 'TEXT'
     TIME = 'TIME'
     FILE = 'FILE'
+    RECIPE = 'RECIPE'
 
     name = models.CharField(max_length=128, default='', blank=True)
     type = models.CharField(
-        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')),),
+        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')), (RECIPE, _('Recipe')),),
         default=TEXT,
         max_length=16
     )
@@ -421,6 +426,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
     search_vector = SearchVectorField(null=True)
+    step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -561,8 +567,9 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
             return None
 
     class Meta:
-        # TODO according to this https://docs.djangoproject.com/en/3.1/ref/models/options/#unique-together should not be used
-        unique_together = (('recipe', 'book'),)
+        constraints = [
+            models.UniqueConstraint(fields=['recipe', 'book'], name='rbe_unique_name_per_space')
+        ]
 
 
 class MealType(models.Model, PermissionModelMixin):

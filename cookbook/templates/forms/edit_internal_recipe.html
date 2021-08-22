@@ -202,6 +202,7 @@
                                 <option value="TEXT">{% trans 'Text' %}</option>
                                 <option value="TIME">{% trans 'Time' %}</option>
                                 <option value="FILE">{% trans 'File' %}</option>
+                                <option value="RECIPE">{% trans 'Recipe' %}</option>
                             </select>
                         </div>
                     </div>
@@ -214,7 +215,7 @@
                                    :id="'id_step_' + step.id + '_time'">
                         </div>
 
-                        <div class="col-md-9">
+                        <div class="col-md-9" v-if="step.type === 'FILE'">
                             <label :for="'id_step_' + step.id + '_file'">{% trans 'File' %}</label>
                             <multiselect
                                     v-tabindex
@@ -233,6 +234,28 @@
                                     :multiple="false"
                                     :loading="files_loading"
                                     @search-change="searchFiles">
+                            </multiselect>
+                        </div>
+
+                        <div class="col-md-9" v-if="step.type === 'RECIPE'">
+                            <label :for="'id_step_' + step.id + '_recipe'">{% trans 'Recipe' %}</label>
+                            <multiselect
+                                    v-tabindex
+                                    ref="step_recipe"
+                                    v-model="step.step_recipe"
+                                    :options="recipes.map(recipe => recipe.id)"
+                                    :close-on-select="true"
+                                    :clear-on-select="true"
+                                    :allow-empty="true"
+                                    :preserve-search="true"
+                                    placeholder="{% trans 'Select Recipe' %}"
+                                    select-label="{% trans 'Select' %}"
+                                    :id="'id_step_' + step.id + '_recipe'"
+                                    :custom-label="opt => recipes.find(x => x.id == opt).name"
+
+                                    :multiple="false"
+                                    :loading="recipes_loading"
+                                    @search-change="searchRecipes">
                             </multiselect>
                         </div>
                     </div>
@@ -524,6 +547,8 @@
                 units_loading: false,
                 files: [],
                 files_loading: false,
+                recipes: [],
+                recipes_loading: false,
                 message: '',
             },
             directives: {
@@ -550,6 +575,7 @@
                 this.searchFoods('')
                 this.searchKeywords('')
                 this.searchFiles('')
+                this.searchRecipes('')
 
                 this._keyListener = function (e) {
                     if (e.code === "Space" && e.ctrlKey) {
@@ -717,6 +743,16 @@
                     this.$http.get("{% url 'api:userfile-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                         this.files = response.data
                         this.files_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
+                },
+                searchRecipes: function (query) {
+                    this.recipes_loading = true
+                    this.$http.get("{% url 'api:recipe-list' %}" + '?query=' + query + '&limit=10').then((response) => {
+                        this.recipes = response.data.results
+                        this.recipes_loading = false
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
