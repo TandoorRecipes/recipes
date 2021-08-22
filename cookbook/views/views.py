@@ -11,10 +11,6 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Avg, Q
-from django.db.models import Sum
-from django.http import HttpResponseRedirect
-from django.http import JsonResponse
 from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -28,7 +24,6 @@ from rest_framework.authtoken.models import Token
 from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, SearchPreferenceForm)
                             UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
                             SearchPreferenceForm)
 from cookbook.helper.ingredient_parser import parse
