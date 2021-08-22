@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0143_create_searchfields'),
+        ('cookbook', '0144_create_searchfields'),
     ]
 
     operations = [

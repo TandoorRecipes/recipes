@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0146_keyword_to_tree'),
+        ('cookbook', '0147_keyword_to_tree'),
     ]
 
     operations = [
