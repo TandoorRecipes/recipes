@@ -108,5 +108,7 @@
   "Edit_Food": "Edit Food",
   "Move_Food": "Move Food",
   "New_Food": "New Food",
-  "Hide_Foods": "Hide Food"
+  "Hide_Food": "Hide Food",
+  "Delete_Food": "Delete Food",
+  "No_ID": "ID not found, cannot delete."
 }
