@@ -74,7 +74,7 @@
       </div>
     </div>
     <!-- this should be made a generic component, would also require mixin for functions that generate the popup and put in parent container-->  
-    <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:999; cursor:pointer">
+    <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:9999; cursor:pointer">
       <b-list-group-item v-if="move" action v-on:click="$emit('item-action',{'action': 'move', 'target': model, 'source': source}); closeMenu()">
         {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':model.name})}}
       </b-list-group-item>
@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import GenericContextMenu from "@/components/GenericContextMenu";
 import RecipeCard from "@/components/RecipeCard";
 import { mixin as clickaway } from 'vue-clickaway';
@@ -111,9 +110,8 @@ export default {
     children: {type: String, default: 'children'},
     recipe_count: {type: String, default: 'numrecipe'},
     recipes: {type: String, default: 'recipes'},
-    merge: {type: Boolean, default: false},
     move: {type: Boolean, default: false},
-    tree: {type: Boolean, default: false},
+    merge: {type: Boolean, default: false},
   },
   data() {
     return {
@@ -125,8 +123,8 @@ export default {
       source: {'id': undefined, 'name': undefined},
       target: {'id': undefined, 'name': undefined},
       text: {
-          'hide_children': '',
-      }
+        'hide_children': '',
+      },
     }
   },
   mounted() {
@@ -135,9 +133,6 @@ export default {
     this.text.hide_children = this.$t('Hide_' + this.model_name)
   },
   methods: {
-    emitAction: function(m) {
-
-    },
     handleDragStart: function(e) {
       this.isError = false
       e.dataTransfer.setData('source', JSON.stringify(this.model))
@@ -199,38 +194,6 @@ export default {
     closeMenu: function(){
       this.show_menu = false
     },
-    deleteObject: function(id, model, callback) {
-      let apiClient = new ApiApiFactory()
-      let promise = apiClient['destroy' + model](id).then(() => {
-      }).catch((err) => {
-        console.log(err)
-        this.makeToast(this.$t('Error'), err.bodyText, 'danger')
-      })
-      callback(promise)
-    },
-    async listObjects(model, options) {
-      let apiClient = new ApiApiFactory()
-      let query = options?.query ?? ''
-      let page = options?.page ?? 1
-      let root = options?.root ?? undefined
-      let tree = options?.tree ?? undefined
-      let pageSize = options?.pageSize ?? 25
-
-      if (this.tree) {
-        if (query === '') {
-          query = undefined
-          root = 0
-        }
-        await apiClient.listFoods(query, root, tree, page, pageSize).then((result) => {
-          return result
-        })
-      } else {
-        await apiClient.listFoods(query, page, pageSize).then((result) => {
-          return result
-        })
-      }
-    }
-
   }
 }
 </script>

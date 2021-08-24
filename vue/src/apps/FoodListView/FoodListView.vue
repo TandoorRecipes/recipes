@@ -2,8 +2,6 @@
   <div id="app" style="margin-bottom: 4vh">
     <generic-split-lists
       :list_name="this_model"
-      :load_more_left="load_more_left"
-      :load_more_right="load_more_right"
       @reset="resetList"
       @get-list="getFoods"
       @item-action="startAction" 
@@ -14,7 +12,6 @@
           :model=f
           :model_name="this_model"
           :draggable="true"
-          :tree="true"
           :merge="true"
           :move="true"
           @item-action="startAction($event, 'left')" 
@@ -30,7 +27,6 @@
           :model=f
           :model_name="this_model"
           :draggable="true"
-          :tree="true"
           :merge="true"
           :move="true"
           @item-action="startAction($event, 'right')" 
@@ -136,18 +132,13 @@
 
 <script>
 
-import axios from "axios";
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-
 import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {ToastMixin} from "@/utils/utils";
+import {ToastMixin, ApiMixin, CardMixin} from "@/utils/utils";
 
-import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import GenericSplitLists from "@/components/GenericSplitLists";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
@@ -156,7 +147,7 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'FoodListView',
-  mixins: [ToastMixin, GenericSplitLists, GenericHorizontalCard],
+  mixins: [ToastMixin, ApiMixin, CardMixin],
   components: {GenericHorizontalCard, GenericMultiselect, GenericSplitLists},
   data() {
     return {
@@ -250,75 +241,42 @@ export default {
       }
     },
     getFoods: function(params, callback) {
-      let apiClient = new ApiApiFactory()
-      let query = options?.query ?? ''
-      let page = options?.page ?? 1
-      let root = options?.root ?? undefined
-      let tree = options?.tree ?? undefined
-      let pageSize = options?.pageSize ?? 25
-
-      if (query === '') {
-        query = undefined
-        root = 0
-      }
-      //  delete above
-      let options = {
-        'query': params?.query ?? '',
-        'page': params?.page ?? 1,
-        'root' : params?.id ?? undefined
-      }
       let column = params?.column ?? 'left'
 
-      // let promise = this.listObjects(this.this_model, options).then(result => {
-      let promise = apiClient.listFoods(query, root, tree, page, pageSize).then((result) => {
+      this.genericAPI(this.this_model, 'list', params).then((result) => {
         if (result.data.results.length){
           if (column ==='left') {
-            this.foods = this.foods.concat(result.data.results)
-            if (this.foods?.length < result.data.count) {
-              this.load_more_left = true
-            } else {
-              this.load_more_left = false
-            }
-            
+            this.foods = this.foods.concat(result.data.results)            
           } else if (column ==='right') {
             this.foods2 = this.foods2.concat(result.data.results)
-
-            if (this.foods2?.length < result.data.count) {
-              this.load_more_right = true
-            } else {
-              this.load_more_right = false
-            }
           }
+          // are the total elements less than the length of the array? if so, stop loading
+          callback(result.data.count > (column==="left" ? this.foods.length : this.foods2.length))
         } else {
-          if (column ==='left') {
-            this.load_more_left = false
-          } else if (column ==='right') {
-            this.load_more_right = false
-          }
+          callback(false) // stop loading
           console.log('no data returned')
         }
-        callback(promise)
+        // return true if total objects are still less than the length of the list
+        callback(result.data.count < (column==="left" ? this.foods.length : this.foods2.length)) 
       }).catch((err) => {
         console.log(err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
+    getThis: function(id, callback){
+      return this.genericAPI(this.this_model, 'retrieve', {'id': id}) 
+    },
     saveFood: function () {
-      let apiClient = new ApiApiFactory()
-      let food = {
-        name: this.this_item.name,
-        description: this.this_item.description,
-        recipe: this.this_item.recipe?.id ?? null,
-        ignore_shopping: this.this_item.ignore_shopping,
-        supermarket_category: this.this_item.supermarket_category?.id ?? null,
-      }
-      if (!this.this_item.id) { // if there is no item id assume its a new item
-        apiClient.createFood(food).then(result => {
+      let food = {...this.this_item}
+      food.supermarket_category = this.this_item.supermarket_category?.id ?? null
+      food.recipe = this.this_item.recipe?.id ?? null
+      if (!food?.id) { // if there is no item id assume it's a new item
+        this.genericAPI(this.this_model, 'create', food).then((result) => {
           // place all new foods at the top of the list - could sort instead
           this.foods = [result.data].concat(this.foods)
           // this creates a deep copy to make sure that columns stay independent
           if (this.show_split){
-            this.foods2 = [JSON.parse(JSON.stringify(result.data))].concat(this.foods2)
+            this.foods2 = [...this.foods]
           } else {
             this.foods2 = []
           }
@@ -326,8 +284,8 @@ export default {
           console.log(err)
         })
       } else {
-        apiClient.partialUpdateFood(this.this_item.id, food).then(result => {
-          this.refreshCard(this.this_item.id)
+        this.genericAPI(this.this_model, 'updatePartial', food).then((result) => {
+          this.refreshObject(this.this_item.id)
         }).catch((err) => {
           console.log(err)
         })
@@ -335,18 +293,16 @@ export default {
       this.this_item = {...this.blank_item}
     },
     moveFood: function (source_id, target_id) {
-      let apiClient = new ApiApiFactory()
-      apiClient.moveFood(String(source_id), String(target_id)).then(result => {
+      this.genericAPI(this.this_model, 'move', {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
-          let food = this.findCard(this.foods, source_id) || this.findCard(this.foods2, source_id)
+          let food = this.findCard(source_id, this.foods) || this.findCard(source_id, this.foods2)
+          this.foods = [food].concat(this.destroyCard(source_id, this.foods)) // order matters, destroy old card before adding it back in at root
+          this.foods2 = [...[food]].concat(this.destroyCard(source_id, this.foods2)) // order matters, destroy old card before adding it back in at root
           food.parent = null
-          this.foods = [food].concat(this.destroyCard(source_id, this.foods))
-          this.foods2 = [...food].concat(this.destroyCard(source_id, this.foods2)) // order matters, destroy old card before adding it back in at root
-
         } else {
           this.foods = this.destroyCard(source_id, this.foods)
           this.foods2 = this.destroyCard(source_id, this.foods2)
-          this.refreshCard(target_id)
+          this.refreshObject(target_id)
         }
       }).catch((err) => {
         // TODO none of the error checking works because the openapi generated functions don't throw an error?  
@@ -356,31 +312,23 @@ export default {
       })
     },
     mergeFood: function (source_id, target_id) {
-      let apiClient = new ApiApiFactory()
-      apiClient.mergeFood(String(source_id), String(target_id)).then(result => {
-        // this.destroyCard(source_id)
-        this.refreshCard(target_id)
+      this.genericAPI(this.this_model, 'merge', {'source': source_id, 'target': target_id}).then((result) => {
+        this.foods = this.destroyCard(source_id, this.foods)
+        this.foods2 = this.destroyCard(source_id, this.foods2)
+        this.refreshObject(target_id)
       }).catch((err) => {
         console.log('Error', err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    // TODO: DRY the listFood functions (refresh, get children, infinityHandler ) can probably all be consolidated into a single function
     getChildren: function(col, food){
-      let apiClient = new ApiApiFactory()
       let parent = {}
-      let query = undefined
-      let page = undefined
-      let root = food.id
-      let tree = undefined
-      let pageSize = 200
-
-      apiClient.listFoods(query, root, tree, page, pageSize).then(result => {
-        if (col == 'left') {
-          parent = this.findCard(this.foods, food.id)
-        } else if (col == 'right'){
-          parent = this.findCard(this.foods2, food.id)
-        }
+      let options = {
+        'root': food.id,
+        'pageSize': 200
+      }
+      this.genericAPI(this.this_model, 'list', options).then((result) => {
+        parent = this.findCard(food.id, col === 'left' ? this.foods : this.foods2)
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
           Vue.set(parent, 'show_children', true)
@@ -392,19 +340,14 @@ export default {
       })
     },
     getRecipes: function(col, food){
-      let apiClient = new ApiApiFactory()
       let parent = {}
-      let pageSize = 200
+      let options = {
+        'foods': food.id,
+        'pageSize': 200
+      }
 
-      apiClient.listRecipes(
-          undefined, undefined, String(food.id), undefined, undefined, undefined,
-          undefined, undefined, undefined, undefined, undefined, pageSize, undefined
-        ).then(result => {
-        if (col == 'left') {
-          parent = this.findCard(this.foods, food.id)
-        } else if (col == 'right'){
-          parent = this.findCard(this.foods2, food.id)
-        }
+      this.genericAPI('recipe', 'list', options).then((result) => {
+        parent = this.findCard(food.id, col === 'left' ? this.foods : this.foods2)
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
           Vue.set(parent, 'show_recipes', true)
@@ -416,38 +359,10 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    refreshCard: function(id){
-      let target = {}
-      let apiClient = new ApiApiFactory()
-      let idx = undefined
-      let idx2 = undefined
-      apiClient.retrieveFood(id).then(result => {
-        target = this.findCard(this.foods, id) || this.findCard(this.foods2, id)
-        
-        if (target.parent) {
-          let parent = this.findCard(this.foods, target.parent)
-          let parent2 = this.findCard(this.foods2, target.parent)
-
-          if (parent) {
-            if (parent.show_children){
-              idx = parent.children.indexOf(parent.children.find(kw => kw.id === target.id))
-              Vue.set(parent.children, idx, result.data)
-            }
-          }
-          if (parent2){
-            if (parent2.show_children){
-              idx2 = parent2.children.indexOf(parent2.children.find(kw => kw.id === target.id))
-              // deep copy to force columns to be indepedent
-              Vue.set(parent2.children, idx2, JSON.parse(JSON.stringify(result.data)))
-            }
-          }
-        } else {
-          idx = this.foods.indexOf(this.foods.find(food => food.id === target.id))
-          idx2 = this.foods2.indexOf(this.foods2.find(food => food.id === target.id))
-          Vue.set(this.foods, idx, result.data)
-          Vue.set(this.foods2, idx2, JSON.parse(JSON.stringify(result.data)))
-        }
-        
+    refreshObject: function(id){
+      this.getThis(id).then(result => {
+        this.refreshCard(result.data, this.foods)
+        this.refreshCard({...result.data}, this.foods2)
       })
     },
     // this would move with modals with mixin?
@@ -461,14 +376,14 @@ export default {
       this.this_item.icon = icon
     },
     deleteThis: function(id, model) {
-      const result = new Promise((callback) => this.deleteObject(id, model, callback))
-      result.then(() => {
+      this.genericAPI(this.this_model, 'destroy', {'id': id}).then((result) => {
         this.foods = this.destroyCard(id, this.foods)
         this.foods2 = this.destroyCard(id, this.foods2)
-      })
-      
+      }).catch((err) => {
+        console.log(err)
+        this.makeToast(this.$t('Error'), err.bodyText, 'danger')
+      }) 
     },
-    
   }
 }
 
