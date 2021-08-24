@@ -108,11 +108,6 @@ export default {
     list_name: {type: String, default: 'Blank List'},  // TODO update translations to handle plural translations
     left_list: {type:Array, default(){return []}},
     right_list: {type:Array, default(){return []}},
-    load_more_left: {type: Boolean, default: false},
-    load_more_right: {type: Boolean, default: false},
-    //merge: {type: Boolean, default: false},
-    //move: {type: Boolean, default: false},
-    //action: Object
   },
   data() {
     return {
@@ -120,8 +115,8 @@ export default {
       show_split: false,
       search_right: '',
       search_left: '',
-      right_page: 1,
-      left_page: 1,
+      right_page: 0,
+      left_page: 0,
       right: +new Date(),
       left: +new Date(),
       isDirtyright: false,
@@ -175,54 +170,17 @@ export default {
             'page': (col==='left') ? this.left_page + 1 : this.right_page + 1,
             'column': col
         }
-        const result = new Promise((callback) => this.$emit('get-list', params, callback))
-        result.then((result) => {
-            console.log(result)
+        new Promise((callback) => this.$emit('get-list', params, callback)).then((result) => {
             this[col+'_page']+=1
             $state.loaded();
-            if (!this['load_more_' + col]) {
+            if (!result) { // callback needs to return true if handler should continue loading more data
                 $state.complete();
             }
         }).catch(() => {
             $state.complete();
         })
     },
-    findCard: function(card_list, id){
-      let card_length = card_list?.length ?? 0
-      if (card_length == 0) {
-        return false
-      }
-      let cards = card_list.filter(obj => obj.id == id)
-      if (cards.length == 1) {
-        return cards[0]
-      } else if (cards.length == 0) {
-        for (const o of card_list.filter(o => o.show_children == true)) {
-          cards = this.findCard(o.children, id)
-          if (cards) {
-            return cards
-          }
-        }
-      } else {
-        console.log('something terrible happened')
-      }
-    },
-    destroyCard: function(id, cardList) {
-      let card = this.findCard(cardList, id)
-      let card_id = undefined
-      let p_id = card?.parent ?? undefined
-
-      if (p_id) {
-        let parent = this.findCard(cardList, p_id)
-        if (parent){
-          Vue.set(parent, 'numchild', parent.numchild - 1)
-          if (parent.show_children) {
-            let idx = parent.children.indexOf(parent.children.find(x => x.id === id))
-            Vue.delete(parent.children, idx)
-          }
-        }
-      }
-      return cardList.filter(kw => kw.id != id)
-    },
+    
   }
 }
 
