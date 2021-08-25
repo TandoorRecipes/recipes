@@ -109,9 +109,9 @@ urlpatterns = [
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
 
-    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this still needed?
-    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this still needed?
-    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
+    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated?
+    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
+    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
 
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
