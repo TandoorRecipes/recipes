@@ -19,7 +19,7 @@
                               v-b-tooltip.hover :title="$t('Advanced Settings')"
                               v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'"
                     >
-                      <!-- consider changing this icon to a filter -->
+                      <!-- TODO consider changing this icon to a filter -->
                       <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
                       <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
                     </b-button>
@@ -270,7 +270,7 @@ Vue.use(VueCookies)
 
 import {ResolveUrlMixin} from "@/utils/utils";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner"; // is this deprecated?
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
@@ -320,7 +320,20 @@ export default {
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-        this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
+        let cookie_val = this.$cookies.get(SETTINGS_COOKIE_NAME)
+        for (let i of Object.keys(cookie_val)) {
+          this.$set(this.settings, i, cookie_val[i]) 
+        }
+        // @vabene - I think you need Vue.set but am not sure what you were observing to validate
+        //TODO i have no idea why the above code does not suffice to update the
+        //TODO pagination UI element as $set should update all values reactively but it does not
+        setTimeout(function () {
+          this.$set(this.settings, 'pagination_page', 0)
+        }.bind(this), 50)
+        setTimeout(function () {
+          this.$set(this.settings, 'pagination_page', cookie_val['pagination_page'])
+        }.bind(this), 51)
+
       }
 
       let urlParams = new URLSearchParams(window.location.search);

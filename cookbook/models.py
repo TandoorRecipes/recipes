@@ -749,7 +749,8 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating', 'created_by']),)
+        # TODO add created_by
+        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating']),)
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
@@ -764,7 +765,8 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['recipe', '-created_at', 'created_by']),)
+        # TODO add created_by
+        indexes = (Index(fields=['recipe', '-created_at']),)
 
 
 class ImportLog(models.Model, PermissionModelMixin):
