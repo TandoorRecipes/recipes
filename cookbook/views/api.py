@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Q
+from django.db.models import Case, Q, Value, When
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
 from django.shortcuts import redirect, get_object_or_404
@@ -106,10 +106,19 @@ class FuzzyFilterMixin(ViewSetMixin):
 
         if query is not None and query not in ["''", '']:
             if fuzzy:
-                self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2).order_by("-trigram")
+                self.queryset = (
+                    self.queryset
+                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                    .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
+                    .order_by('-exact').order_by("-trigram")
+                )
             else:
-                # TODO have this check unaccent search settings?
-                self.queryset = self.queryset.filter(name__icontains=query)
+                # TODO have this check unaccent search settings or other search preferences?
+                self.queryset = (
+                    self.queryset
+                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                    .filter(name__icontains=query).order_by('-exact')
+                )
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
@@ -466,7 +475,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(queryset, request.query_params)
+        self.facets = get_facet(queryset, request.query_params, request.space)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):
