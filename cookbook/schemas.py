@@ -63,7 +63,6 @@ class RecipeSchema(AutoSchema):
 
 
 class TreeSchema(AutoSchema):
-
     def get_path_parameters(self, path, method):
         if not is_list_view(path, method, self.view):
             return super(TreeSchema, self).get_path_parameters(path, method)
@@ -85,5 +84,4 @@ class TreeSchema(AutoSchema):
             "description": 'Return all self and children of {} with ID [int].'.format(api_name),
             'schema': {'type': 'int', },
         })
-
         return parameters

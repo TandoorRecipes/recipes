@@ -113,11 +113,8 @@ class FuzzyFilterMixin(ViewSetMixin):
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
-                self.queryset = (
-                    self.queryset
-                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
-                    .filter(name__icontains=query).order_by('-exact')
-                )
+                # TODO for some querysets exact matches are sorted beyond pagesize, need to find better solution
+                self.queryset = self.queryset.filter(name__istartswith=query) | self.queryset.filter(name__icontains=query)
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
@@ -152,14 +149,14 @@ class TreeMixin(FuzzyFilterMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
                 if root == 0:
-                    self.queryset = self.model.get_root_nodes() | self.model.objects.filter(depth=0)
+                    self.queryset = self.model.get_root_nodes()
                 else:
                     self.queryset = self.model.objects.get(id=root).get_children()
         elif tree:
             if tree.isnumeric():
                 try:
                     self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self()
-                except Keyword.DoesNotExist:
+                except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
         else:
             return super().get_queryset()
@@ -470,7 +467,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(queryset, request)
+        self.facets = get_facet(queryset, request.query_params, request.space)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):

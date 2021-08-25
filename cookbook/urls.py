@@ -109,9 +109,9 @@ urlpatterns = [
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
 
-    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
-    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
-    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
+    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated?
+    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
+    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
 
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
@@ -137,7 +137,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
-    Comment, RecipeBookEntry, Keyword, Food, ShoppingList, InviteLink
+    Comment, RecipeBookEntry, Food, ShoppingList, InviteLink
 )
 
 for m in generic_models:
