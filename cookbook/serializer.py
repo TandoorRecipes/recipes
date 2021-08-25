@@ -3,12 +3,11 @@ from decimal import Decimal
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Sum, Avg
+from django.db.models import Avg, QuerySet, Sum
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, NotFound
-from treebeard.mp_tree import MP_NodeQuerySet
 
 from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              MealPlan, MealType, NutritionInformation, Recipe,
@@ -210,8 +209,8 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def get_image(self, obj):
         recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        if len(recipes) == 0 and obj.has_children():
+            recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -229,7 +228,6 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return obj
 
     class Meta:
-        # list_serializer_class = SpaceFilterSerializer
         model = Keyword
         fields = ('id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at', 'updated_at')
         read_only_fields = ('id', 'numchild', 'parent', 'image')

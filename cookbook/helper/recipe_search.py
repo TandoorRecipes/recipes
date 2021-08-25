@@ -11,6 +11,8 @@ from cookbook.managers import DICTIONARY
 from cookbook.models import Food, Keyword, ViewLog
 
 
+# TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
+# TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
 def search_recipes(request, queryset, params):
     search_prefs = request.user.searchpreference
     search_string = params.get('query', '')
@@ -19,6 +21,7 @@ def search_recipes(request, queryset, params):
     search_foods = params.getlist('foods', [])
     search_books = params.getlist('books', [])
 
+    # TODO I think default behavior should be 'AND' which is how most sites operate with facet/filters based on results
     search_keywords_or = params.get('keywords_or', True)
     search_foods_or = params.get('foods_or', True)
     search_books_or = params.get('books_or', True)
@@ -124,12 +127,12 @@ def search_recipes(request, queryset, params):
             queryset = queryset.filter(query_filter)
 
     if len(search_keywords) > 0:
-        # TODO creating setting to include descendants of keywords a setting
         if search_keywords_or == 'true':
             # when performing an 'or' search all descendants are included in the OR condition
             # so descendants are appended to filter all at once
-            for kw in Keyword.objects.filter(pk__in=search_keywords):
-                search_keywords += list(kw.get_descendants().values_list('pk', flat=True))
+            # TODO creating setting to include descendants of keywords a setting
+            # for kw in Keyword.objects.filter(pk__in=search_keywords):
+            #     search_keywords += list(kw.get_descendants().values_list('pk', flat=True))
             queryset = queryset.filter(keywords__id__in=search_keywords)
         else:
             # when performing an 'and' search returned recipes should include a parent OR any of its descedants
@@ -165,24 +168,31 @@ def search_recipes(request, queryset, params):
     return queryset
 
 
-def get_facet(qs, params):
+def get_facet(qs, params, space):
+    # NOTE facet counts for tree models include self AND descendants
     facets = {}
     ratings = params.getlist('ratings', [])
     keyword_list = params.getlist('keywords', [])
-    ingredient_list = params.getlist('ingredient', [])
+    ingredient_list = params.getlist('foods', [])
     book_list = params.getlist('book', [])
+    search_keywords_or = params.get('keywords_or', True)
+    search_foods_or = params.get('foods_or', True)
+    search_books_or = params.get('books_or', True)
 
-    # this returns a list of keywords in the queryset and how many times it appears
-    kws = Keyword.objects.filter(recipe__in=qs).annotate(kw_count=Count('recipe'))
+    # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
+    if search_keywords_or:
+        keywords = Keyword.objects.filter(space=space).annotate(recipe_count=Count('recipe'))
+    else:
+        keywords = Keyword.objects.filter(recipe__in=qs, space=space).annotate(recipe_count=Count('recipe'))
     # custom django-tree function annotates a queryset to make building a tree easier.
     # see https://django-treebeard.readthedocs.io/en/latest/api.html#treebeard.models.Node.get_annotated_list_qs for details
-    kw_a = annotated_qs(kws, root=True, fill=True)
+    kw_a = annotated_qs(keywords, root=True, fill=True)
 
     # TODO add rating facet
     facets['Ratings'] = []
     facets['Keywords'] = fill_annotated_parents(kw_a, keyword_list)
     # TODO add food facet
-    facets['Ingredients'] = []
+    facets['Foods'] = []
     # TODO add book facet
     facets['Books'] = []
 
@@ -199,7 +209,7 @@ def fill_annotated_parents(annotation, filters):
 
         annotation[i][1]['id'] = r[0].id
         annotation[i][1]['name'] = r[0].name
-        annotation[i][1]['count'] = getattr(r[0], 'kw_count', 0)
+        annotation[i][1]['count'] = getattr(r[0], 'recipe_count', 0)
         annotation[i][1]['isDefaultExpanded'] = False
 
         if str(r[0].id) in filters:
@@ -217,7 +227,7 @@ def fill_annotated_parents(annotation, filters):
 
         while j < level:
             # this causes some double counting when a recipe has both a child and an ancestor
-            annotation[parent[j]][1]['count'] += getattr(r[0], 'kw_count', 0)
+            annotation[parent[j]][1]['count'] += getattr(r[0], 'recipe_count', 0)
             if expand:
                 annotation[parent[j]][1]['isDefaultExpanded'] = True
             j += 1

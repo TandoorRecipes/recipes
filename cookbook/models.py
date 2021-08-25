@@ -5,7 +5,6 @@ import uuid
 from datetime import date, timedelta
 
 from annoying.fields import AutoOneToOneField
-from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.indexes import GinIndex
@@ -38,16 +37,14 @@ def get_model_name(model):
 
 
 class TreeManager(MP_NodeManager):
+    # model.Manager get_or_create() is not compatible with MP_Tree
     def get_or_create(self, **kwargs):
-        # model.Manager get_or_create() is not compatible with MP_Tree
         kwargs['name'] = kwargs['name'].strip()
-        q = self.filter(name__iexact=kwargs['name'], space=kwargs['space'])
-        if len(q) != 0:
-            return q[0], False
-        else:
+        try:
+            return self.get(name__iexact=kwargs['name'], space=kwargs['space']), False
+        except self.model.DoesNotExist:
             with scopes_disabled():
-                node = self.model.add_root(**kwargs)
-            return node, True
+                return self.model.add_root(**kwargs), True
 
 
 class PermissionModelMixin:

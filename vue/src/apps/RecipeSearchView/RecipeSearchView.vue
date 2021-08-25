@@ -143,12 +143,6 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
-                                             :initial_selection="settings.search_keywords"
-                                             search_function="listKeywords" label="label"
-                                             :tree_api="true"
-                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect> -->
                         <treeselect v-model="settings.search_keywords" :options="facets.Keywords" :flat="true"
                                     searchNested multiple :placeholder="$t('Keywords')"  :normalizer="normalizer"
                                     @input="refreshData(false)"
