@@ -27,7 +27,7 @@ def backwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0147_auto_20210813_1829'),
+        ('cookbook', '0149_fix_leading_trailing_spaces'),
     ]
 
     operations = [

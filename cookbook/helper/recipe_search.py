@@ -196,11 +196,11 @@ def get_facet(qs, params, space):
 
     # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
     if search_keywords_or:
-        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True),space=space])).annotate(recipe_count=Count('ingredient'))
+        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True),space=space)).annotate(recipe_count=Count('ingredient'))
     else:
         foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True))).annotate(recipe_count=Count('ingredient'))
     food_a = annotated_qs(foods, root=True, fill=True)
-    
+
 
     # TODO add rating facet
     facets['Ratings'] = []
