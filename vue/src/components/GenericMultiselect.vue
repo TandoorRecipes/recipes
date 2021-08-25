@@ -36,10 +36,7 @@ export default {
     search_function: String,
     label: String,
     parent_variable: {type: String, default: undefined},
-    limit: {
-      type: Number,
-      default: 10,
-    },
+    limit: {type: Number, default: 10,},
     sticky_options: {type:Array, default(){return []}},
     initial_selection: {type:Array, default(){return []}},
     multiple: {type: Boolean, default: true},
