@@ -80,7 +80,7 @@ module.exports = {
                     },
                 },
             },
-            // TODO make this conditional on .env DEBUG = TRUE
+            // TODO make this conditional on .env DEBUG = FALSE
             config.optimization.minimize(true)
         );
 

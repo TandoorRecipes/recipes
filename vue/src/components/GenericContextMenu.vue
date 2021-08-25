@@ -27,7 +27,7 @@
 <script>
 
 export default {
-  name: 'KeywordContextMenu',
+  name: 'GenericContextMenu',
   props: {
     show_edit: {type: Boolean, default: true},
     show_delete: {type: Boolean, default: true},
