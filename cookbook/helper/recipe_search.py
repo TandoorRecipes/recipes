@@ -185,15 +185,22 @@ def get_facet(qs, params, space):
     search_foods_or = params.get('foods_or', True)
     search_books_or = params.get('books_or', True)
 
-    # this returns a list of keywords in the queryset and how many times it appears
-    keywords = Keyword.objects.filter(recipe__in=qs).annotate(recipe_count=Count('recipe'))
+    # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
+    if search_keywords_or:
+        keywords = Keyword.objects.filter(space=space).annotate(recipe_count=Count('recipe'))
+    else:
+        keywords = Keyword.objects.filter(recipe__in=qs, space=space).annotate(recipe_count=Count('recipe'))
     # custom django-tree function annotates a queryset to make building a tree easier.
     # see https://django-treebeard.readthedocs.io/en/latest/api.html#treebeard.models.Node.get_annotated_list_qs for details
     kw_a = annotated_qs(keywords, root=True, fill=True)
 
-    # return list of foods in the recipe queryset and how many times they appear
-    foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True))).annotate(recipe_count=Count('ingredient'))
+    # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
+    if search_keywords_or:
+        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True),space=space])).annotate(recipe_count=Count('ingredient'))
+    else:
+        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True))).annotate(recipe_count=Count('ingredient'))
     food_a = annotated_qs(foods, root=True, fill=True)
+    
 
     # TODO add rating facet
     facets['Ratings'] = []

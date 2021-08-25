@@ -159,11 +159,6 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
-                                             :initial_selection="settings.search_foods"
-                                             search_function="listFoods" label="name"
-                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Ingredients')"></generic-multiselect> -->
                         <treeselect v-model="settings.search_foods" :options="facets.Foods" :flat="true"
                                     searchNested multiple :placeholder="$t('Ingredients')"  :normalizer="normalizer"
                                     @input="refreshData(false)"

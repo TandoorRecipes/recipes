@@ -84,9 +84,8 @@ module.exports = {
                     },
                 },
             },
-        },
-        // TODO make this conditional on .env DEBUG = TRUE
-        // config.optimization.minimize(false)
+            // TODO make this conditional on .env DEBUG = FALSE
+            config.optimization.minimize(true)
         );
 
         //TODO somehow remov them as they are also added to the manifest config of the service worker
