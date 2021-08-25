@@ -1,10 +1,9 @@
-import json
 import random
 from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
 from django.contrib.auth.models import User
-from django.db.models import Avg, Manager, QuerySet, Sum
+from django.db.models import Avg, QuerySet, Sum
 from django.urls import reverse
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
@@ -56,24 +55,6 @@ class SpaceFilterSerializer(serializers.ListSerializer):
         else:
             data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
-
-
-# custom related field, sends details on read, accepts primary key on write
-# class RelatedFieldAlternative(serializers.PrimaryKeyRelatedField):
-#     def __init__(self, **kwargs):
-#         self.serializer = kwargs.pop('serializer', None)
-#         if self.serializer is not None and not issubclass(self.serializer, serializers.Serializer):
-#             raise TypeError('"serializer" is not a valid serializer class')
-
-#         super().__init__(**kwargs)
-
-#     def use_pk_only_optimization(self):
-#         return False if self.serializer else True
-
-#     def to_representation(self, instance):
-#         if self.serializer:
-#             return self.serializer(instance, context=self.context).data
-#         return super().to_representation(instance)
 
 
 class SpacedModelSerializer(serializers.ModelSerializer):
@@ -319,8 +300,6 @@ class RecipeSimpleSerializer(serializers.ModelSerializer):
 
 
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    # RelatedFieldAlternative adds details of related object on read, accepts PK on write
-    # this approach prevents adding *new* objects when updating Food, SupermarketCategory must be created elsewhere
     image = serializers.SerializerMethodField('get_image')
     numrecipe = serializers.SerializerMethodField('count_recipes')
 
@@ -460,19 +439,21 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
             pass
         return None
 
-    # TODO make days of new recipe a setting
-    def is_recipe_new(self, obj):
-        if obj.created_at > (timezone.now() - timedelta(days=7)):
-            return True
-        else:
-            return False
+    def get_recipe_last_viewed(self, obj):
+        try:
+            last = obj.viewlog_set.filter(created_by=self.context['request'].user).last()
+            if last:
+                return last.created_at
+        except TypeError:
+            pass
+        return None
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
     rating = serializers.SerializerMethodField('get_recipe_rating')
     last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
-    new = serializers.SerializerMethodField('is_recipe_new')
+    last_viewed = serializers.SerializerMethodField('get_recipe_last_viewed')
 
     def create(self, validated_data):
         pass
@@ -485,7 +466,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new'
+            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'last_viewed',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 

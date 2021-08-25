@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value
 from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
@@ -114,8 +114,11 @@ class FuzzyFilterMixin(ViewSetMixin):
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
-                # TODO for some querysets exact matches are sorted beyond pagesize, need to find better solution
-                self.queryset = self.queryset.filter(name__istartswith=query) | self.queryset.filter(name__icontains=query)
+                self.queryset = (
+                    self.queryset
+                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                    .filter(name__icontains=query).order_by('-exact')
+                )
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
