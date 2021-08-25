@@ -127,11 +127,6 @@
                       </div>
                     </div>
                     <div class="row" style="margin-top: 1vh">
-                      <div class="col-12">
-                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t('Advanced Search Settings') }}</a>
-                      </div>
-                    </div>
-                    <div class="row" style="margin-top: 1vh">
                       <div class="col-12" style="text-align: right">
                         <b-button size="sm" variant="secondary" style="margin-right:8px"
                                   @click="$root.$emit('bv::hide::popover')">{{ $t('Close') }}
@@ -143,12 +138,6 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
-                                             :initial_selection="settings.search_keywords"
-                                             search_function="listKeywords" label="label"
-                                             :tree_api="true"
-                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect> -->
                         <treeselect v-model="settings.search_keywords" :options="facets.Keywords" :flat="true"
                                     searchNested multiple :placeholder="$t('Keywords')"  :normalizer="normalizer"
                                     @input="refreshData(false)"
@@ -348,7 +337,6 @@ export default {
 
       }
 
-
       let urlParams = new URLSearchParams(window.location.search);
       let apiClient = new ApiApiFactory()
 
@@ -384,6 +372,8 @@ export default {
       this.loadRecentlyViewed()
     },
     'settings.search_input': _debounce(function () {
+      this.settings.pagination_page = 1
+      this.pagination_count = 0
       this.refreshData(false)
     }, 300),
     'settings.page_count': _debounce(function () {
@@ -438,8 +428,6 @@ export default {
       } else {
         this.meal_plans = []
       }
-
-
     },
     loadRecentlyViewed: function () {
       let apiClient = new ApiApiFactory()
