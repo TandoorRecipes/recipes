@@ -287,7 +287,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
-        obj, created = Food.objects.get_or_create(validated_data)
+        obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 
     def update(self, instance, validated_data):
