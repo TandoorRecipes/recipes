@@ -226,11 +226,14 @@
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
-              </template>
-              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
+
+                <recipe-card v-for="r in recipes" v-bind:key="`rv_${r.id}`" :recipe="r"
                              :footer_text="isRecentOrNew(r)[0]" 
                              :footer_icon="isRecentOrNew(r)[1]">
-              </recipe-card>
+                </recipe-card>
+              </template>
+
+              <!-- <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card> -->
             </div>
           </div>
         </div>
@@ -320,20 +323,7 @@ export default {
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-        let cookie_val = this.$cookies.get(SETTINGS_COOKIE_NAME)
-        for (let i of Object.keys(cookie_val)) {
-          this.$set(this.settings, i, cookie_val[i]) 
-        }
-        // @vabene - I think you need Vue.set but am not sure what you were observing to validate
-        //TODO i have no idea why the above code does not suffice to update the
-        //TODO pagination UI element as $set should update all values reactively but it does not
-        setTimeout(function () {
-          this.$set(this.settings, 'pagination_page', 0)
-        }.bind(this), 50)
-        setTimeout(function () {
-          this.$set(this.settings, 'pagination_page', cookie_val['pagination_page'])
-        }.bind(this), 51)
-
+        this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
       }
 
       let urlParams = new URLSearchParams(window.location.search);
