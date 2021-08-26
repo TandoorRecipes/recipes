@@ -5,6 +5,7 @@ from gettext import gettext as _
 from django.contrib.auth.models import User
 from django.db.models import Avg, QuerySet, Sum
 from django.urls import reverse
+from django.utils import timezone
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
 from rest_framework import serializers
@@ -439,21 +440,19 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
             pass
         return None
 
-    def get_recipe_last_viewed(self, obj):
-        try:
-            last = obj.viewlog_set.filter(created_by=self.context['request'].user).last()
-            if last:
-                return last.created_at
-        except TypeError:
-            pass
-        return None
+    # TODO make days of new recipe a setting
+    def is_recipe_new(self, obj):
+        if obj.created_at > (timezone.now() - timedelta(days=7)):
+            return True
+        else:
+            return False
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
     rating = serializers.SerializerMethodField('get_recipe_rating')
     last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
-    last_viewed = serializers.SerializerMethodField('get_recipe_last_viewed')
+    new = serializers.SerializerMethodField('is_recipe_new')
 
     def create(self, validated_data):
         pass
@@ -466,7 +465,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'last_viewed',
+            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new'
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 

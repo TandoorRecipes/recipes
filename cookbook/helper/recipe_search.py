@@ -36,21 +36,22 @@ def search_recipes(request, queryset, params):
     if search_last_viewed > 0:
         last_viewed_recipes = ViewLog.objects.filter(
             created_by=request.user, space=request.space,
-            created_at__gte=datetime.now() - timedelta(days=14)
+            created_at__gte=datetime.now() - timedelta(days=14)  # TODO make recent days a setting
         ).order_by('-pk').values_list('recipe__pk', flat=True)
         last_viewed_recipes = list(dict.fromkeys(last_viewed_recipes))[:search_last_viewed]  # removes duplicates from list prior to slicing
 
-        return queryset.annotate(last_view=Max('viewlog__pk')).annotate(new=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0))).filter(new__gt=0).order_by('-new')
+        # return queryset.annotate(last_view=Max('viewlog__pk')).annotate(new=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0))).filter(new__gt=0).order_by('-new')
         # queryset that only annotates most recent view (higher pk = lastest view)
-        # TODO queryset.annotate(last_view=Max('viewlog__pk')).annotate(new=Case(When(pk__in=last_viewed_recipes, then=Value(100)), default=Value(0))).order_by('-new')
+        queryset = queryset.annotate(last_view=Max('viewlog__pk')).annotate(recent=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0)))
+        orderby += ['-recent']
 
-    orderby = []
-    # TODO create setting for default ordering - most cooked, rating, 
+    # TODO create setting for default ordering - most cooked, rating,
     # TODO create options for live sorting
+    # TODO make days of new recipe a setting
     if search_new == 'true':
         queryset = (
             queryset.annotate(new_recipe=Case(
-                When(created_at__gte=(datetime.now() - timedelta(days=81)), then=('pk')), default=Value(0),))
+                When(created_at__gte=(datetime.now() - timedelta(days=7)), then=('pk')), default=Value(0),))
         )
         orderby += ['-new_recipe']
 
@@ -173,31 +174,31 @@ def search_recipes(request, queryset, params):
     return queryset
 
 
-def get_facet(qs, params, space):
+def get_facet(qs, request):
     # NOTE facet counts for tree models include self AND descendants
     facets = {}
-    ratings = params.getlist('ratings', [])
-    keyword_list = params.getlist('keywords', [])
-    food_list = params.getlist('foods', [])
-    book_list = params.getlist('book', [])
-    search_keywords_or = params.get('keywords_or', True)
-    search_foods_or = params.get('foods_or', True)
-    search_books_or = params.get('books_or', True)
+    ratings = request.query_params.getlist('ratings', [])
+    keyword_list = request.query_params.getlist('keywords', [])
+    food_list = request.query_params.getlist('foods', [])
+    book_list = request.query_params.getlist('book', [])
+    search_keywords_or = request.query_params.get('keywords_or', True)
+    search_foods_or = request.query_params.get('foods_or', True)
+    search_books_or = request.query_params.get('books_or', True)
 
     # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
     if search_keywords_or:
-        keywords = Keyword.objects.filter(space=space).annotate(recipe_count=Count('recipe'))
+        keywords = Keyword.objects.filter(space=request.space).annotate(recipe_count=Count('recipe'))
     else:
-        keywords = Keyword.objects.filter(recipe__in=qs, space=space).annotate(recipe_count=Count('recipe'))
+        keywords = Keyword.objects.filter(recipe__in=qs, space=request.space).annotate(recipe_count=Count('recipe'))
     # custom django-tree function annotates a queryset to make building a tree easier.
     # see https://django-treebeard.readthedocs.io/en/latest/api.html#treebeard.models.Node.get_annotated_list_qs for details
     kw_a = annotated_qs(keywords, root=True, fill=True)
 
     # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
     if search_foods_or:
-        foods = Food.objects.filter(space=space).annotate(recipe_count=Count('ingredient'))
+        foods = Food.objects.filter(space=request.space).annotate(recipe_count=Count('ingredient'))
     else:
-        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True)), space=space).annotate(recipe_count=Count('ingredient'))
+        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True)), space=request.space).annotate(recipe_count=Count('ingredient'))
     food_a = annotated_qs(foods, root=True, fill=True)
 
     # TODO add rating facet
