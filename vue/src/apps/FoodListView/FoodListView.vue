@@ -1,5 +1,8 @@
 <template>
   <div id="app" style="margin-bottom: 4vh">
+    <generic-modal-form 
+    :model="this_model"
+    :action="this_action"/>
     <generic-split-lists
       :list_name="this_model"
       @reset="resetList"
@@ -127,6 +130,7 @@
         :placeholder="this.$t('Search')">
       </generic-multiselect>
     </b-modal>
+    
   </div>
 </template>
 
@@ -142,16 +146,18 @@ import {ToastMixin, ApiMixin, CardMixin} from "@/utils/utils";
 import GenericSplitLists from "@/components/GenericSplitLists";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
+import GenericModalForm from "@/components/Modals/GenericModalForm";
 
 Vue.use(BootstrapVue)
 
 export default {
   name: 'FoodListView',
   mixins: [ToastMixin, ApiMixin, CardMixin],
-  components: {GenericHorizontalCard, GenericMultiselect, GenericSplitLists},
+  components: {GenericHorizontalCard, GenericMultiselect, GenericSplitLists, GenericModalForm},
   data() {
     return {
       this_model: 'Food',
+      this_action:'',
       foods: [],
       foods2: [],
       load_more_left: true,
