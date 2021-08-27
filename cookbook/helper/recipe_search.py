@@ -218,7 +218,7 @@ def fill_annotated_parents(annotation, filters):
 
         annotation[i][1]['id'] = r[0].id
         annotation[i][1]['name'] = r[0].name
-        annotation[i][1]['count'] = getattr(r[0], 'kw_count', 0)
+        annotation[i][1]['count'] = getattr(r[0], 'recipe_count', 0)
         annotation[i][1]['isDefaultExpanded'] = False
 
         if str(r[0].id) in filters:
@@ -236,7 +236,7 @@ def fill_annotated_parents(annotation, filters):
 
         while j < level:
             # this causes some double counting when a recipe has both a child and an ancestor
-            annotation[parent[j]][1]['count'] += getattr(r[0], 'kw_count', 0)
+            annotation[parent[j]][1]['count'] += getattr(r[0], 'recipe_count', 0)
             if expand:
                 annotation[parent[j]][1]['isDefaultExpanded'] = True
             j += 1

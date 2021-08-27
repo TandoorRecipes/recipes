@@ -98,7 +98,6 @@ class DefaultPagination(PageNumberPagination):
 
 
 class FuzzyFilterMixin(ViewSetMixin):
-
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
         query = self.request.query_params.get('query', None)
@@ -364,10 +363,6 @@ class FoodViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     queryset = Food.objects
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
 
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
