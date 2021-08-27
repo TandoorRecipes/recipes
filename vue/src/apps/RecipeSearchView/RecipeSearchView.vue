@@ -226,14 +226,11 @@
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
-
-                <recipe-card v-for="r in recipes" v-bind:key="`rv_${r.id}`" :recipe="r"
+              </template>
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
                              :footer_text="isRecentOrNew(r)[0]" 
                              :footer_icon="isRecentOrNew(r)[1]">
-                </recipe-card>
-              </template>
-
-              <!-- <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card> -->
+              </recipe-card>
             </div>
           </div>
         </div>
