@@ -108,6 +108,19 @@
                         ></b-form-checkbox>
                       </b-form-group>
 
+                      <b-form-group v-if="settings.show_meal_plan"
+                          v-bind:label="$t('Meal_Plan_Days')"
+                          label-for="popover-input-5"
+                          label-cols="6"
+                          class="mb-3">
+                        <b-form-input
+                            type="number"
+                            v-model="settings.meal_plan_days"
+                            id="popover-input-5"
+                            size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+
                       <b-form-group
                           v-bind:label="$t('Sort_by_new')"
                           label-for="popover-input-3"
@@ -306,6 +319,7 @@ export default {
         search_books_or: true,
         advanced_search_visible: false,
         show_meal_plan: true,
+        meal_plan_days: 0,
         recently_viewed: 5,
         sort_by_new: true,
         pagination_page: 1,
@@ -354,6 +368,9 @@ export default {
     'settings.show_meal_plan': function () {
       this.loadMealPlan()
     },
+    'settings.meal_plan_days': function () {
+      this.loadMealPlan()
+    },
     'settings.recently_viewed': function () {
       // this.loadRecentlyViewed()
       this.refreshData(false)
@@ -390,25 +407,28 @@ export default {
           this.settings.page_count,
           {query: {last_viewed: this.settings.recently_viewed}}
       ).then(result => {
-        
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
-        this.recipes = result.data.results
+        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
         this.facets = result.data.facets
-        console.log(this.recipes)
       })
     },
     openRandom: function () {
       this.refreshData(true)
     },
+    removeDuplicates: function(data, key) {
+      return [
+        ...new Map(data.map(item => [key(item), item])).values()
+      ]
+    },
     loadMealPlan: function () {
       let apiClient = new ApiApiFactory()
-
+      // TODO setting to change days to look for meal plans
       if (this.settings.show_meal_plan) {
         apiClient.listMealPlans({
           query: {
             from_date: moment().format('YYYY-MM-DD'),
-            to_date: moment().format('YYYY-MM-DD')
+            to_date: moment().add(this.settings.meal_plan_days, 'days').format('YYYY-MM-DD')
           }
         }).then(result => {
           this.meal_plans = result.data
