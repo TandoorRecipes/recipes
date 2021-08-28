@@ -1,25 +1,23 @@
 <template>
     <div>
-        <!-- <modal name=modal style="z-index: 9999"
-          :draggable="true"
-          :resizable="false"
-          :scrollable="true"
-          :minHeight="300"
-          :minWidth="100"
-          height="auto"
-          :shiftX=".5"
-          :shiftY=".1"
-        >  -->
       <b-modal class="modal" id="modal" >
         <template v-slot:modal-title><h4>{{model}} {{action}}</h4></template>
         <div v-for="(f, i) in fields" v-bind:key=i>
           <p v-if="f.type=='instruction'">{{f.label}}</p>
           <lookup-input v-if="f.type=='lookup'"
-            :label="f.label"/> <!-- TODO add ability to create new items associated with lookup -->
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"
+            @change="changeValue"/> <!-- TODO add ability to create new items associated with lookup -->
           <checkbox-input v-if="f.type=='checkbox'"
-            :label="f.label"/>
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"/>
           <text-input v-if="f.type=='text'"
-            :label="f.label"/>
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"
+            :placeholder="f.placeholder"/>
         </div>
         
         <template  v-slot:modal-footer>
@@ -49,22 +47,39 @@ export default {
   },
   data() {
     return {
+      new_item: {},
       action: '',
       fields: [
         {'label': 'This is a long set of instructions that tell you to be careful with what you do next or really bad things are likely to happen.',
-          'type': 'instruction'},
-        {'label': 'first',
-          'type': 'text'},
-        {'label': 'second',
-        'type': 'lookup'},
-        {'label': 'third',
-        'type': 'checkbox'},
-        {'label': 'fourth',
-        'type': 'checkbox'},
-        {'label': 'fifth',
-        'type': 'lookup'},
-        {'label': 'sixth',
-        'type': 'text'}
+          'type': 'instruction',
+          'value': undefined},
+        {'field': 'name',
+          'label': 'first',
+          'type': 'text',
+          'value': undefined,
+          'placeholder': 'do the thing'},
+        {'field': 'shopping',
+          'label': 'second',
+          'type': 'lookup',
+          'value': undefined},
+        {'field': 'isreal',
+          'label': 'third',
+          'type': 'checkbox',
+          'value': undefined},
+        {'field': 'ignore',
+          'label': 'fourth',
+          'type': 'checkbox',
+          'value': undefined},
+        {'field': 'another_category',
+          'label': 'fifth',
+          'type': 'lookup',
+          'value': undefined},
+        {'field': 'description',
+          'label': 'sixth',
+          'type': 'text',
+          'value': undefined,
+          'placeholder': 'also, do the thing'
+        }
       ],
       buttons: {
         'new':{'label': this.$t('Save')},
@@ -75,9 +90,9 @@ export default {
       }
     }
   },
-  // mounted() {
-
-  // },
+  mounted() {
+    this.$root.$on('change', this.changeValue);  // modal is outside Vue instance(?) so have to listen at root of component
+  },
   computed: {
     buttonLabel() {
       return this.buttons[this.action].label;
@@ -96,8 +111,21 @@ export default {
         this.$bvModal.show('modal')
       },
       doAction: function(){
-        this.$bvModal.hide('modal')
-        alert('i did it')
+        console.log(this.new_item)
+        let alert_text = ''
+        for (const [k, v] of Object.entries(this.fields)) {
+          if (v.type !== 'instruction'){
+            alert_text = alert_text + v.field + ": " + this.new_item[v.field] + "\n"
+          }
+        }
+        this.$nextTick(function() {this.$bvModal.hide('modal')})
+        setTimeout(() => {}, 0) // confirm that the 
+        alert(alert_text)
+        console.log(this.model_values)
+      },
+      changeValue: function(field, value) {
+        this.new_item[field] = value
+        console.log('catch value', field, value)
       }
   }
 }
