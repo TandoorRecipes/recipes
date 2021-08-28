@@ -4,6 +4,7 @@
             v-bind:label="label"
             class="mb-3">
         <generic-multiselect 
+          @change="new_value=$event.val"
           label="name"
           :initial_selection="[]"  
           search_function="listSupermarketCategorys" 
@@ -22,10 +23,24 @@ export default {
   name: 'LookupInput',
   components: {GenericMultiselect},
   props: {
+    field: {type: String, default: 'You Forgot To Set Field Name'},
     label: {type: String, default: 'Lookup Field'},
-    show_delete: {type: Boolean, default: true},
+    value: {type: Object, default () {return {}}},
     show_move: {type: Boolean, default: false},
     show_merge: {type: Boolean, default: false},
+  },
+  data() {
+    return {
+      new_value: undefined,
+    }
+  },
+  mounted() {
+    this.new_value = this.value.id
+  },
+  watch: {
+    'new_value': function () {
+      this.$root.$emit('change', this.field, this.new_value)
+    },
   },
   methods: {
       Button: function(e) {
