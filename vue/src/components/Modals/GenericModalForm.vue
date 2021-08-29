@@ -107,6 +107,7 @@ export default {
   },
   methods: {
       Button: function(e) {
+        console.log(typeof({}), typeof([]), typeof('this'), typeof(1))
         this.action='new'
         this.$bvModal.show('modal')
       },
