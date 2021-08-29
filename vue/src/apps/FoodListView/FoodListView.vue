@@ -1,10 +1,10 @@
 <template>
   <div id="app" style="margin-bottom: 4vh">
     <generic-modal-form 
-    :model="this_model"
+    :model="this_model.name"
     :action="this_action"/>
     <generic-split-lists
-      :list_name="this_model"
+      :list_name="this_model.name"
       @reset="resetList"
       @get-list="getFoods"
       @item-action="startAction" 
@@ -13,7 +13,7 @@
         <generic-horizontal-card 
           v-for="f in foods" v-bind:key="f.id"
           :model=f
-          :model_name="this_model"
+          :model_name="this_model.name"
           :draggable="true"
           :merge="true"
           :move="true"
@@ -28,7 +28,7 @@
       <template v-slot:cards-right>
         <generic-horizontal-card v-for="f in foods2" v-bind:key="f.id"
           :model=f
-          :model_name="this_model"
+          :model_name="this_model.name"
           :draggable="true"
           :merge="true"
           :move="true"
@@ -90,7 +90,7 @@
       :title="this.$t('Delete_Food')" 
       :ok-title="this.$t('Delete')"
       :cancel-title="this.$t('Cancel')" 
-      @ok="deleteThis(this_item.id, this_model)">
+      @ok="deleteThis(this_item.id)">
       {{this.$t("delete_confimation", {'kw': this_item.name})}} 
     </b-modal>
     <!-- move modal -->
@@ -141,7 +141,9 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {ToastMixin, ApiMixin, CardMixin} from "@/utils/utils";
+import {ApiMixin, CardMixin, ToastMixin} from "@/utils/utils";
+import {Models, Actions} from "@/utils/models";
+import {StandardToasts} from "@/utils/utils";
 
 import GenericSplitLists from "@/components/GenericSplitLists";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
@@ -152,11 +154,11 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'FoodListView',
-  mixins: [ToastMixin, ApiMixin, CardMixin],
+  mixins: [ApiMixin, CardMixin, ToastMixin],
   components: {GenericHorizontalCard, GenericMultiselect, GenericSplitLists, GenericModalForm},
   data() {
     return {
-      this_model: 'Food',
+      this_model: Models.FOOD, 
       this_action:'',
       foods: [],
       foods2: [],
@@ -249,7 +251,7 @@ export default {
     getFoods: function(params, callback) {
       let column = params?.column ?? 'left'
 
-      this.genericAPI(this.this_model, 'list', params).then((result) => {
+      this.genericAPI(this.this_model, Actions.LIST, params).then((result) => {
         if (result.data.results.length){
           if (column ==='left') {
             this.foods = this.foods.concat(result.data.results)            
@@ -266,18 +268,18 @@ export default {
         callback(result.data.count < (column==="left" ? this.foods.length : this.foods2.length)) 
       }).catch((err) => {
         console.log(err)
-        this.makeToast(this.$t('Error'), err.bodyText, 'danger')
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
       })
     },
     getThis: function(id, callback){
-      return this.genericAPI(this.this_model, 'retrieve', {'id': id}) 
+      return this.genericAPI(this.this_model, Actions.FETCH, {'id': id}) 
     },
     saveFood: function () {
       let food = {...this.this_item}
       food.supermarket_category = this.this_item.supermarket_category?.id ?? null
       food.recipe = this.this_item.recipe?.id ?? null
       if (!food?.id) { // if there is no item id assume it's a new item
-        this.genericAPI(this.this_model, 'create', food).then((result) => {
+        this.genericAPI(this.this_model, Actions.CREATE, food).then((result) => {
           // place all new foods at the top of the list - could sort instead
           this.foods = [result.data].concat(this.foods)
           // this creates a deep copy to make sure that columns stay independent
@@ -286,20 +288,24 @@ export default {
           } else {
             this.foods2 = []
           }
+          StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
         }).catch((err) => {
           console.log(err)
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
         })
       } else {
-        this.genericAPI(this.this_model, 'updatePartial', food).then((result) => {
-          this.refreshObject(this.this_item.id)
+        this.genericAPI(this.this_model, Actions.UPDATE, food).then((result) => {
+          this.refreshObject(food.id)
+          StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch((err) => {
           console.log(err)
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
         })
       }
       this.this_item = {...this.blank_item}
     },
     moveFood: function (source_id, target_id) {
-      this.genericAPI(this.this_model, 'move', {'source': source_id, 'target': target_id}).then((result) => {
+      this.genericAPI(this.this_model, Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
           let food = this.findCard(source_id, this.foods) || this.findCard(source_id, this.foods2)
           this.foods = [food].concat(this.destroyCard(source_id, this.foods)) // order matters, destroy old card before adding it back in at root
@@ -310,6 +316,8 @@ export default {
           this.foods2 = this.destroyCard(source_id, this.foods2)
           this.refreshObject(target_id)
         }
+        // TODO make standard toast
+        this.makeToast(this.$t('Success'), 'Succesfully moved food', 'success')
       }).catch((err) => {
         // TODO none of the error checking works because the openapi generated functions don't throw an error?  
         // or i'm capturing it incorrectly
@@ -318,7 +326,7 @@ export default {
       })
     },
     mergeFood: function (source_id, target_id) {
-      this.genericAPI(this.this_model, 'merge', {'source': source_id, 'target': target_id}).then((result) => {
+      this.genericAPI(this.this_model, Actions.MERGE, {'source': source_id, 'target': target_id}).then((result) => {
         this.foods = this.destroyCard(source_id, this.foods)
         this.foods2 = this.destroyCard(source_id, this.foods2)
         this.refreshObject(target_id)
@@ -326,6 +334,8 @@ export default {
         console.log('Error', err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
+      // TODO make standard toast
+        this.makeToast(this.$t('Success'), 'Succesfully merged food', 'success')
     },
     getChildren: function(col, food){
       let parent = {}
@@ -333,7 +343,7 @@ export default {
         'root': food.id,
         'pageSize': 200
       }
-      this.genericAPI(this.this_model, 'list', options).then((result) => {
+      this.genericAPI(this.this_model, Actions.LIST, options).then((result) => {
         parent = this.findCard(food.id, col === 'left' ? this.foods : this.foods2)
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
@@ -352,7 +362,7 @@ export default {
         'pageSize': 200
       }
 
-      this.genericAPI('recipe', 'list', options).then((result) => {
+      this.genericAPI(Models.RECIPE, Actions.LIST, options).then((result) => {
         parent = this.findCard(food.id, col === 'left' ? this.foods : this.foods2)
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
@@ -366,6 +376,7 @@ export default {
       })
     },
     refreshObject: function(id){
+      console.log('refresh object', id)
       this.getThis(id).then(result => {
         this.refreshCard(result.data, this.foods)
         this.refreshCard({...result.data}, this.foods2)
@@ -382,12 +393,13 @@ export default {
       this.this_item.icon = icon
     },
     deleteThis: function(id, model) {
-      this.genericAPI(this.this_model, 'destroy', {'id': id}).then((result) => {
+      this.genericAPI(this.this_model, Actions.DELETE, {'id': id}).then((result) => {
         this.foods = this.destroyCard(id, this.foods)
         this.foods2 = this.destroyCard(id, this.foods2)
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
       }).catch((err) => {
         console.log(err)
-        this.makeToast(this.$t('Error'), err.bodyText, 'danger')
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
       }) 
     },
   }

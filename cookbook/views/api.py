@@ -66,7 +66,6 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
 
 
 class StandardFilterMixin(ViewSetMixin):
-
     def get_queryset(self):
         queryset = self.queryset
         query = self.request.query_params.get('query', None)

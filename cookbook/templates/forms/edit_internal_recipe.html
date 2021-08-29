@@ -730,7 +730,6 @@
                 searchKeywords: function (query) {
                     this.keywords_loading = true
                     this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        console.log(response.data)
                         this.keywords = response.data.results;
                         this.keywords_loading = false
                     }).catch((err) => {
@@ -780,7 +779,7 @@
                 searchFoods: function (query) {
                     this.foods_loading = true
                     this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.foods = response.data
+                        this.foods = response.data.results
 
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {
