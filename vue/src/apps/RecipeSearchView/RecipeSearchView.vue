@@ -195,7 +195,7 @@
                       <b-input-group class="mt-2">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="settings.search_books"
-                                             search_function="listRecipeBooks" label="name"
+                                             :model="models.RECIPE_BOOK"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')" :limit="50"></generic-multiselect>
                         <b-input-group-append>
@@ -282,6 +282,7 @@ import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
 
 import {ResolveUrlMixin} from "@/utils/utils";
+import {Models} from "@/utils/models";
 
 import LoadingSpinner from "@/components/LoadingSpinner"; // is this deprecated?
 
@@ -328,6 +329,7 @@ export default {
 
       pagination_count: 0,
       random_search: false,
+      models: Models
     }
 
   },
@@ -353,7 +355,7 @@ export default {
 
       this.loadMealPlan()
       // this.loadRecentlyViewed()
-      // this.refreshData(false) // this gets triggered when the cookies get loaded
+      this.refreshData(false) // this gets triggered when the cookies get loaded
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE

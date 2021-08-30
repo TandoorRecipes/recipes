@@ -4,19 +4,19 @@
             v-bind:label="label"
             class="mb-3">
         <generic-multiselect 
-          @change="new_value=$event.val"
-          label="name"
+          @change="new_value=$event.val['id']"
           :initial_selection="[]"  
-          search_function="listSupermarketCategorys" 
+          :model="model"
           :multiple="false"
-          :sticky_options="[{'id': null,'name': $t('None')}]"
+          :sticky_options="sticky_options"
           style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-          :placeholder="$t('Shopping_Category')">
+          :placeholder="modelName">
         </generic-multiselect>
     </div>
 </template>
 
 <script>
+import Vue from "vue";
 import GenericMultiselect from "@/components/GenericMultiselect";
 
 export default {
@@ -24,10 +24,10 @@ export default {
   components: {GenericMultiselect},
   props: {
     field: {type: String, default: 'You Forgot To Set Field Name'},
-    label: {type: String, default: 'Lookup Field'},
+    label: {type: String, default: ''},
     value: {type: Object, default () {return {}}},
-    show_move: {type: Boolean, default: false},
-    show_merge: {type: Boolean, default: false},
+    model: {type: Object, default () {return {}}},
+    sticky_options: {type:Array, default(){return []}},
   },
   data() {
     return {
@@ -36,6 +36,11 @@ export default {
   },
   mounted() {
     this.new_value = this.value.id
+  },
+  computed: {
+    modelName() {
+      return this?.model?.name  ?? this.$t('Search')
+    }
   },
   watch: {
     'new_value': function () {

@@ -157,7 +157,7 @@
       <generic-multiselect 
         @change="this_item.target=$event.val"
         label="name"
-        search_function="listKeywords" 
+        :models="models.KEYWORD"
         :multiple="false"
         :sticky_options="[{'id': 0,'name': $t('Root')}]"
         :tree_api="true"
@@ -175,8 +175,7 @@
       {{ this.$t("merge_selection", {'source': this_item.name, 'type': this.$t('keyword')}) }}
       <generic-multiselect 
         @change="this_item.target=$event.val"
-        label="name"
-        search_function="listKeywords" 
+        :model="models.KEYWORD" 
         :multiple="false"
         :tree_api="true"
         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
@@ -213,6 +212,7 @@ import EmojiGroups from '@kevinfaguiar/vue-twemoji-picker/emoji-data/emoji-group
 // end move with generic modals
 
 Vue.use(BootstrapVue)
+import {Models} from "@/utils/models";
 
 export default {
   name: 'KeywordListView',
@@ -232,6 +232,7 @@ export default {
     return {
       keywords: [],
       keywords2: [],
+      models: Models,
       show_split: false,
       search_input: '',
       search_input2: '',
