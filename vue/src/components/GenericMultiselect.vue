@@ -6,7 +6,7 @@
       :clear-on-select="true"
       :hide-selected="true"
       :preserve-search="true"
-      :placeholder="placeholder"
+      :placeholder="lookupPlaceholder"
       :label="label"
       track-by="id"
       :multiple="multiple"
@@ -19,7 +19,8 @@
 <script>
 
 import Multiselect from 'vue-multiselect'
-import {ApiApiFactory} from "@/utils/openapi/api";
+import {genericAPI} from "@/utils/utils";
+import {Actions} from "@/utils/models";
 
 export default {
   name: "GenericMultiselect",
@@ -32,15 +33,14 @@ export default {
     }
   },
   props: {
-    placeholder: String,
-    search_function: String,
-    label: String,
+    placeholder: {type: String, default: undefined},
+    model: {type: Object, default () {return {}}},
+    label: {type: String, default: 'name'},
     parent_variable: {type: String, default: undefined},
     limit: {type: Number, default: 10,},
     sticky_options: {type:Array, default(){return []}},
     initial_selection: {type:Array, default(){return []}},
-    multiple: {type: Boolean, default: true},
-    tree_api: {type: Boolean, default: false} // api requires params that are unique to TreeMixin
+    multiple: {type: Boolean, default: true}
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
@@ -59,31 +59,21 @@ export default {
         this.selected_objects = this.initial_selection?.[0] ?? null
       }
   },
+  computed: {
+    lookupPlaceholder() {
+      return this.placeholder || this.model.name || this.$t('Search')
+    },
+  },
   methods: {
     search: function (query) {
-      let apiClient = new ApiApiFactory()
-      if (this.tree_api) {
-        let page = 1
-        let root = undefined
-        let tree = undefined
-        let pageSize = 10
-
-        if (query === '') {
-          query = undefined
-        }
-        apiClient[this.search_function](query, root, tree, page, pageSize).then(result => {
-          this.objects = this.sticky_options.concat(result.data.results)
-        })
-      } else if (this.search_function === 'listRecipes') {
-        apiClient[this.search_function](query, undefined, undefined, undefined, undefined, undefined,
-          undefined, undefined, undefined, undefined, undefined, 25, undefined).then(result => {
-          this.objects = this.sticky_options.concat(result.data.results)
-        })
-      } else {
-        apiClient[this.search_function]({query: {query: query, limit: this.limit}}).then(result => {
-          this.objects = this.sticky_options.concat(result.data)
-        })
+      let options = {
+        'page': 1,
+        'pageSize': 10,
+        'query': query
       }
+      genericAPI(this.model, Actions.LIST, options).then((result) => {
+        this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
+      })
     },
     selectionChanged: function () {
       this.$emit('change', {var: this.parent_variable, val: this.selected_objects})

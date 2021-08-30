@@ -180,6 +180,7 @@ class UnitMergeForm(forms.Form):
         self.fields['old_unit'].queryset = Unit.objects.filter(space=space).all()
 
 
+# TODO Deprecated
 class FoodMergeForm(forms.Form):
     prefix = 'food'
 

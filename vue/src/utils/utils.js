@@ -161,50 +161,37 @@ import {ApiApiFactory} from "@/utils/openapi/api.ts";  // TODO: is it possible t
 import axios from "axios";
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-export const ApiMixin = {
-    methods: {
-        /**
-         * constructs OpenAPI Generator function using named parameters
-         * @param {string} model string to define which model API to use
-         * @param {string} api string to define which of the API functions to use
-         * @param {object} options dictionary to define all of the parameters necessary to use API
-         */
-        genericAPI: function(model, action, options) {
-            let setup = getConfig(model, action)
-            let func = setup.function
-            let config = setup?.config ?? {}
-            let params = setup?.params ?? []
-            console.log('config', config, 'params', params)
-            let parameters = []
+export function genericAPI(model, action, options) {
+    let setup = getConfig(model, action)
+    let func = setup.function
+    let config = setup?.config ?? {}
+    let params = setup?.params ?? []
+    let parameters = []
 
-            let this_value = undefined
-            params.forEach(function (item, index) {
-                if (Array.isArray(item)) {
-                    this_value = {}
-                    // if the value is an array, convert it to a dictionary of key:value
-                    // filtered based on OPTIONS passed
-                    // maybe map/reduce is better?
-                    for (const [k, v] of Object.entries(options)) {
-                        if (item.includes(k)) {
-                            this_value[k] = formatParam(config?.[k], v)
-                        }
-                    }
-                } else {
-                    this_value = options?.[item] ?? undefined
-                    if (this_value) {this_value = formatParam(config?.[item], this_value)}
+    let this_value = undefined
+    params.forEach(function (item, index) {
+        if (Array.isArray(item)) {
+            this_value = {}
+            // if the value is an array, convert it to a dictionary of key:value
+            // filtered based on OPTIONS passed
+            // maybe map/reduce is better?
+            for (const [k, v] of Object.entries(options)) {
+                if (item.includes(k)) {
+                    this_value[k] = formatParam(config?.[k], v)
                 }
-                // if no value is found so far, get the default if it exists
-                if (!this_value) {
-                    this_value = getDefault(config?.[item], options)
-                }
-                parameters.push(this_value)
-            });
-    
-            console.log(func, 'parameters', parameters, 'passed options', options)
-            let apiClient = new ApiApiFactory()
-            return apiClient[func](...parameters)
-        },
-    }
+            }
+        } else {
+            this_value = options?.[item] ?? undefined
+            if (this_value) {this_value = formatParam(config?.[item], this_value)}
+        }
+        // if no value is found so far, get the default if it exists
+        if (!this_value) {
+            this_value = getDefault(config?.[item], options)
+        }
+        parameters.push(this_value)
+    });
+    let apiClient = new ApiApiFactory()
+    return apiClient[func](...parameters)
 }
 
 // /*
@@ -258,7 +245,6 @@ function getDefault(config, options) {
     }
     return value
 }
-
 function getConfig(model, action) {
     let f = action.function
     // if not defined partialUpdate will use params from create
@@ -268,21 +254,84 @@ function getConfig(model, action) {
     
     let config = {
         'name': model.name,
-        'function': f + model.name + action?.suffix
+        'apiName': model.apiName,
     }
     // spread operator merges dictionaries - last item in list takes precedence
     config = {...config, ...action, ...model.model_type?.[f], ...model?.[f]}
     // nested dictionaries are not merged - so merge again on any nested keys
     config.config = {...action?.config, ...model.model_type?.[f]?.config, ...model?.[f]?.config}
-    config.function = config.function + config.name + (config?.suffix ?? '')  // parens are required to force optional chaining to evaluate before concat
+    config['function'] = f + config.apiName + (config?.suffix ?? '')  // parens are required to force optional chaining to evaluate before concat
     return config
 }
 
+// /*
+// * functions for Generic Modal Forms
+// * */
+export function getForm(model, action, item1, item2) {
+    let f = action.function
+    let config = {...action?.form, ...model.model_type?.[f]?.form, ...model?.[f]?.form}
+    // if not defined partialUpdate will use form from create 
+    if (f === 'partialUpdate' && Object.keys(config).length == 0) {
+        console.log('create form',Actions.CREATE?.form)
+        config = {...Actions.CREATE?.form, ...model.model_type?.['create']?.form, ...model?.['create']?.form}
+        config['title'] = {...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title}
+    }
+    let form = {'fields': []}
+    let value = ''
+    for (const [k, v] of Object.entries(config)) {
+        if (v?.function){
+            switch(v.function) {
+                case 'translate':
+                    value = formTranslate(v, model, item1, item2)
+            }
+        } else {
+            value = v
+        }
+        if (value?.form_field) {
+            form.fields.push(
+                {
+                    ...value,
+                    ...{
+                        'label': formTranslate(value?.label, model, item1, item2),
+                        'placeholder': formTranslate(value?.placeholder, model, item1, item2)
+                    }                   
+                }
+            )
+        } else {
+            form[k] = value
+        }
+    }
+    console.log('utils form', form)
+    return form
+
+}
+function formTranslate(translate, model, item1, item2) {
+    if (typeof(translate) !== 'object') {return translate}
+    let phrase = translate.phrase
+    let options = {}
+    let obj = undefined
+    translate?.params.forEach(function (x, index) {
+        switch(x.from){
+            case 'item1':
+                obj = item1
+                break;
+            case 'item2':
+                obj = item2
+                break;
+            case 'model':
+                obj = model
+        }
+        options[x.token] = obj[x.attribute]
+    })
+    return i18n.t(phrase, options)
+
+}
 
 // /*
 // * Utility functions to use manipulate nested components
 // * */
 import Vue from 'vue'
+import { Actions } from './models';
 export const CardMixin = {
     methods: {
         findCard: function(id, card_list){
@@ -335,7 +384,6 @@ export const CardMixin = {
                 }
             } else {
                 idx = card_list.indexOf(card_list.find(x => x.id === target.id))
-                console.log(card_list, idx, obj)
                 Vue.set(card_list, idx, obj)
             }
         },
