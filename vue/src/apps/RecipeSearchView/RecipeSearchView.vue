@@ -355,7 +355,7 @@ export default {
 
       this.loadMealPlan()
       // this.loadRecentlyViewed()
-      this.refreshData(false) // this gets triggered when the cookies get loaded
+      // this.refreshData(false) // this gets triggered whenthe cookies get loaded
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE
@@ -409,10 +409,12 @@ export default {
           this.settings.page_count,
           {query: {last_viewed: this.settings.recently_viewed}}
       ).then(result => {
+        
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
         this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
         this.facets = result.data.facets
+        console.log(this.recipes)
       })
     },
     openRandom: function () {
