@@ -111,11 +111,14 @@ class UserFileSerializer(serializers.ModelSerializer):
             raise ValidationError(_('File uploads are not enabled for this Space.'))
 
         try:
-            current_file_size_mb = UserFile.objects.filter(space=self.context['request'].space).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+            current_file_size_mb = \
+                UserFile.objects.filter(space=self.context['request'].space).aggregate(Sum('file_size_kb'))[
+                    'file_size_kb__sum'] / 1000
         except TypeError:
             current_file_size_mb = 0
 
-        if (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5) > self.context['request'].space.max_file_storage_mb != 0:
+        if (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5) > self.context[
+            'request'].space.max_file_storage_mb != 0:
             raise ValidationError(_('You have reached your file upload limit.'))
 
     def create(self, validated_data):
@@ -211,7 +214,8 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def get_image(self, obj):
         recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
         if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(
+                image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -231,14 +235,17 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     class Meta:
         # list_serializer_class = SpaceFilterSerializer
         model = Keyword
-        fields = ('id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at', 'updated_at')
+        fields = (
+            'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
+            'updated_at')
         read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
-        obj, created = Unit.objects.get_or_create(name=validated_data['name'].strip(), space=self.context['request'].space)
+        obj, created = Unit.objects.get_or_create(name=validated_data['name'].strip(),
+                                                  space=self.context['request'].space)
         return obj
 
     def update(self, instance, validated_data):
@@ -254,7 +261,8 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     def create(self, validated_data):
-        obj, created = SupermarketCategory.objects.get_or_create(name=validated_data['name'], space=self.context['request'].space)
+        obj, created = SupermarketCategory.objects.get_or_create(name=validated_data['name'],
+                                                                 space=self.context['request'].space)
         return obj
 
     def update(self, instance, validated_data):
@@ -287,7 +295,11 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
+        supermarket = validated_data.pop('supermarket_category')
         obj, created = Food.objects.get_or_create(**validated_data)
+        if supermarket:
+            obj.supermarket_category, created = SupermarketCategory.objects.get_or_create(name=supermarket['name'], space=self.context['request'].space)
+            obj.save()
         return obj
 
     def update(self, instance, validated_data):
@@ -371,7 +383,8 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 class RecipeBaseSerializer(WritableNestedModelSerializer):
     def get_recipe_rating(self, obj):
         try:
-            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(Avg('rating'))
+            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(
+                Avg('rating'))
             if rating['rating__avg']:
                 return rating['rating__avg']
         except TypeError:
@@ -613,7 +626,8 @@ class ImportLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ImportLog
-        fields = ('id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
+        fields = (
+            'id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
 
 
