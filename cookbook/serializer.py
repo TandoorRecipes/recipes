@@ -338,7 +338,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
-        supermarket = validated_data.pop('supermarket_category')
+        supermarket = validated_data.pop('supermarket_category', None)
         obj, created = Food.objects.get_or_create(**validated_data)
         if supermarket:
             obj.supermarket_category, created = SupermarketCategory.objects.get_or_create(name=supermarket['name'], space=self.context['request'].space)
