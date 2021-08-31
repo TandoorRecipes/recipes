@@ -127,11 +127,6 @@
                       </div>
                     </div>
                     <div class="row" style="margin-top: 1vh">
-                      <div class="col-12">
-                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t('Advanced Search Settings') }}</a>
-                      </div>
-                    </div>
-                    <div class="row" style="margin-top: 1vh">
                       <div class="col-12" style="text-align: right">
                         <b-button size="sm" variant="secondary" style="margin-right:8px"
                                   @click="$root.$emit('bv::hide::popover')">{{ $t('Close') }}
@@ -143,12 +138,6 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <!-- <generic-multiselect @change="genericSelectChanged" parent_variable="search_keywords"
-                                             :initial_selection="settings.search_keywords"
-                                             search_function="listKeywords" label="label"
-                                             :tree_api="true"
-                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Keywords')"></generic-multiselect> -->
                         <treeselect v-model="settings.search_keywords" :options="facets.Keywords" :flat="true"
                                     searchNested multiple :placeholder="$t('Keywords')"  :normalizer="normalizer"
                                     @input="refreshData(false)"
@@ -238,12 +227,11 @@
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
-
-                <recipe-card v-for="r in last_viewed_recipes" v-bind:key="`rv_${r.id}`" :recipe="r"
-                             v-bind:footer_text="$t('Recently_Viewed')" footer_icon="fas fa-eye"></recipe-card>
               </template>
-
-              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
+                             :footer_text="isRecentOrNew(r)[0]" 
+                             :footer_icon="isRecentOrNew(r)[1]">
+              </recipe-card>
             </div>
           </div>
         </div>
@@ -333,21 +321,8 @@ export default {
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-        let cookie_val = this.$cookies.get(SETTINGS_COOKIE_NAME)
-        for (let i of Object.keys(cookie_val)) {
-          this.$set(this.settings, i, cookie_val[i])
-        }
-        //TODO i have no idea why the above code does not suffice to update the
-        //TODO pagination UI element as $set should update all values reactively but it does not
-        setTimeout(function () {
-          this.$set(this.settings, 'pagination_page', 0)
-        }.bind(this), 50)
-        setTimeout(function () {
-          this.$set(this.settings, 'pagination_page', cookie_val['pagination_page'])
-        }.bind(this), 51)
-
+        this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
       }
-
 
       let urlParams = new URLSearchParams(window.location.search);
       let apiClient = new ApiApiFactory()
@@ -364,8 +339,8 @@ export default {
       }
 
       this.loadMealPlan()
-      this.loadRecentlyViewed()
-      this.refreshData(false)
+      // this.loadRecentlyViewed()
+      // this.refreshData(false) // this gets triggered when the cookies get loaded
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE
@@ -381,9 +356,12 @@ export default {
       this.loadMealPlan()
     },
     'settings.recently_viewed': function () {
-      this.loadRecentlyViewed()
+      // this.loadRecentlyViewed()
+      this.refreshData(false)
     },
     'settings.search_input': _debounce(function () {
+      this.settings.pagination_page = 1
+      this.pagination_count = 0
       this.refreshData(false)
     }, 300),
     'settings.page_count': _debounce(function () {
@@ -412,12 +390,15 @@ export default {
           random,
           this.settings.sort_by_new,
           this.settings.pagination_page,
-          this.settings.page_count
+          this.settings.page_count,
+          {query: {last_viewed: this.settings.recently_viewed}}
       ).then(result => {
+        
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
         this.recipes = result.data.results
         this.facets = result.data.facets
+        console.log(this.recipes)
       })
     },
     openRandom: function () {
@@ -438,20 +419,19 @@ export default {
       } else {
         this.meal_plans = []
       }
-
-
     },
-    loadRecentlyViewed: function () {
-      let apiClient = new ApiApiFactory()
-      if (this.settings.recently_viewed > 0) {
-        apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, this.settings.sort_by_new, 1, this.settings.recently_viewed, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
-          this.last_viewed_recipes = result.data.results
-        })
-      } else {
-        this.last_viewed_recipes = []
-      }
-    },
+    // DEPRECATED: intergrated into standard FTS queryset
+    // loadRecentlyViewed: function () {
+    //   let apiClient = new ApiApiFactory()
+    //   if (this.settings.recently_viewed > 0) {
+    //     apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
+    //         undefined, undefined, undefined, this.settings.sort_by_new, 1, this.settings.recently_viewed, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
+    //       this.last_viewed_recipes = result.data.results
+    //     })
+    //   } else {
+    //     this.last_viewed_recipes = []
+    //   }
+    // },
     genericSelectChanged: function (obj) {
       this.settings[obj.var] = obj.val
       this.refreshData(false)
@@ -479,6 +459,17 @@ export default {
             children: node.children,
             isDefaultExpanded: node.isDefaultExpanded
         }
+    },
+    isRecentOrNew: function(x) {
+      let recent_recipe = [this.$t('Recently_Viewed'), "fas fa-eye"]
+      let new_recipe = [this.$t('New_Recipe'), "fas fa-splotch"]
+      if (x.new) {
+        return new_recipe
+      } else if (this.facets.Recent.includes(x.id)) {
+        return recent_recipe
+      } else {
+        return [undefined, undefined]
+      }
     }
   }
 }

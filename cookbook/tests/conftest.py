@@ -1,5 +1,6 @@
 import copy
 import inspect
+import random
 import uuid
 
 import pytest
@@ -79,6 +80,74 @@ def get_random_recipe(space_1, u1_s1):
         )
 
     return r
+
+
+def get_random_json_recipe():
+    return {
+        "name": str(uuid.uuid4()),
+        "description": str(uuid.uuid4()),
+        "keywords": [{"name": str(uuid.uuid4())}, {"name": str(uuid.uuid4())}],
+        "steps": [
+            {
+                "instruction": str(uuid.uuid4()),
+                "ingredients": [
+                    {"food": {"name": str(uuid.uuid4())}, "unit": {"name": str(uuid.uuid4())}, "amount": random.randint(0, 10)},
+                    {"food": {"name": str(uuid.uuid4())}, "unit": {"name": str(uuid.uuid4())}, "amount": random.randint(0, 10)},
+                ],
+            }
+        ],
+        "working_time": random.randint(0, 120),
+        "waiting_time": random.randint(0, 120),
+    }
+
+
+def validate_recipe(expected, recipe):
+    expected_lists = {}
+    target_lists = {}
+    # file and url are metadata not related to the recipe
+    [expected.pop(k) for k in ['file', 'url'] if k in expected]
+    # if a key is a list remove it to deal with later
+    lists = [k for k, v in expected.items() if type(v) == list]
+    for k in lists:
+        expected_lists[k] = expected.pop(k)
+        target_lists[k] = recipe.pop(k)
+    try:
+        # recipe dicts will have additional keys (IDs, default values, etc)
+        # this will check for an exact match from expected key:value to a superset of key:value pairs
+        assert expected.items() <= recipe.items()
+    except AssertionError:
+        for key in expected:
+            if expected[key] != recipe[key]:
+                print('Expected : ', expected[key], ' got: ', recipe[key])
+
+    # this is later, it may or may not work with keys that have list values
+    # it also may or may not work on complex nested dicts
+    for key in expected_lists:
+        for k in expected_lists[key]:
+            try:
+                assert any([dict_compare(k, i) for i in target_lists[key]])
+            except AssertionError:
+                for result in [dict_compare(k, i, details=True) for i in target_lists[key]]:
+                    print('Added Keys: ', result[0])
+                    print('Removed Keys', result[1])
+                    print('Modified Value Keys', result[2])
+                    print('Modified Dictionary Keys', result[3])
+
+
+def dict_compare(d1, d2, details=False):
+    d1_keys = set(d1.keys())
+    d2_keys = set(d2.keys())
+    shared = d1_keys.intersection(d2_keys)
+    sub_dicts = [i for i, j in d1.items() if type(j) == dict]
+    not_dicts = shared - set(sub_dicts)
+    added = d1_keys - d2_keys
+    removed = d2_keys - d1_keys
+    modified = {o: (d1[o], d2[o]) for o in not_dicts if d1[o] != d2[o]}
+    modified_dicts = {o: (d1[o], d2[o]) for o in sub_dicts if not d1[o].items() <= d2[o].items()}
+    if details:
+        return added, removed, modified, modified_dicts
+    else:
+        return any([not added, not removed, not modified, not modified_dicts])
 
 
 @pytest.fixture
