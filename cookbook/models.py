@@ -5,7 +5,6 @@ import uuid
 from datetime import date, timedelta
 
 from annoying.fields import AutoOneToOneField
-from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.indexes import GinIndex
@@ -745,7 +744,7 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating']),)
+        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating', 'created_by']),)
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
@@ -760,7 +759,7 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['recipe', '-created_at']),)
+        indexes = (Index(fields=['recipe', '-created_at', 'created_by']),)
 
 
 class ImportLog(models.Model, PermissionModelMixin):
