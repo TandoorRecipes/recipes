@@ -8,7 +8,7 @@ from django.db.models import Count, Max, Q, Subquery, Case, When, Value
 from django.utils import translation
 
 from cookbook.managers import DICTIONARY
-from cookbook.models import Food, Keyword, ViewLog
+from cookbook.models import Food, Keyword, Recipe, ViewLog
 
 
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
