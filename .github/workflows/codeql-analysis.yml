@@ -8,9 +8,8 @@ on:
 
 jobs:
   CodeQL-Build:
-
+    if: github.repository_owner == 'vabene1111'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
