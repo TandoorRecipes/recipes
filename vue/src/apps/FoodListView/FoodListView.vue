@@ -3,131 +3,52 @@
     <generic-modal-form 
     :model="this_model"
     :action="this_action"
-    :item1="foods[5]"
-    :item2="undefined"
-    :show="true"/> <!-- TODO make this based on method -->
+    :item1="this_item"
+    :item2="this_target"
+    :show="show_modal"
+    @finish-action="finishAction"/>
     <generic-split-lists
       :list_name="this_model.name"
       @reset="resetList"
-      @get-list="getFoods"
+      @get-list="getItems"
       @item-action="startAction" 
     >
       <template v-slot:cards-left>
         <generic-horizontal-card 
-          v-for="f in foods" v-bind:key="f.id"
-          :model=f
-          :model_name="this_model.name"
+          v-for="i in items_left" v-bind:key="i.id"
+          :item=i
+          :item_type="this_model.name"
           :draggable="true"
           :merge="true"
           :move="true"
           @item-action="startAction($event, 'left')" 
         >
+            <!-- foods can also be a recipe, show link to the recipe if it exists -->
             <template v-slot:upper-right>
-              <b-button v-if="f.recipe" v-b-tooltip.hover :title="f.recipe.name" 
-                class=" btn fas fa-book-open p-0 border-0" variant="link" :href="f.recipe.url"/>
+              <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name" 
+                class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
             </template>
         </generic-horizontal-card>
       </template>
       <template v-slot:cards-right>
-        <generic-horizontal-card v-for="f in foods2" v-bind:key="f.id"
-          :model=f
-          :model_name="this_model.name"
+        <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id"
+          :item=i
+          :item_type="this_model.name"
           :draggable="true"
           :merge="true"
           :move="true"
           @item-action="startAction($event, 'right')" 
         >
+          <!-- foods can also be a recipe, show link to the recipe if it exists -->
           <template v-slot:upper-right>
-            <b-button v-if="f.recipe" v-b-tooltip.hover :title="f.recipe.name" 
-              class=" btn fas fa-book-open p-0 border-0" variant="link" :href="f.recipe.url"/>
+            <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name" 
+              class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
           </template>
         </generic-horizontal-card>
       </template>
     </generic-split-lists>
     
-    <!-- TODO Modals can probably be made generic and moved to component -->
-    <!-- edit modal -->
-    <b-modal class="modal" 
-      :id="'id_modal_food_edit'"
-      :title="this.$t('Edit_Food')" 
-      :ok-title="this.$t('Save')"
-      :cancel-title="this.$t('Cancel')" 
-      @ok="saveFood">
-      <form>
-        <label for="id_food_name_edit">{{ this.$t('Name') }}</label>
-        <input class="form-control" type="text" id="id_food_name_edit" v-model="this_item.name">
-        <label for="id_food_description_edit">{{ this.$t('Description') }}</label>
-        <input class="form-control" type="text" id="id_food_description_edit" v-model="this_item.description">
-        <label for="id_food_recipe_edit">{{ this.$t('Recipe') }}</label>
-        <!-- TODO initial selection isn't working and I don't know why -->
-        <generic-multiselect 
-          @change="this_item.recipe=$event.val"
-          :initial_selection="[this_item.recipe]"  
-          :model="recipe"
-          :multiple="false"
-          :sticky_options="[{'id': null,'name': $t('None')}]"
-          style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-          :placeholder="this.$t('Search')">
-        </generic-multiselect>
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="id_food_ignore_edit" v-model="this_item.ignore_shopping">
-          <label class="form-check-label" for="id_food_ignore_edit">{{ this.$t('Ignore_Shopping') }}</label>
-        </div>
-        <label for="id_food_category_edit">{{ this.$t('Shopping_Category') }}</label>
-        <generic-multiselect 
-          @change="this_item.supermarket_category=$event.val"
-          :model="models.SHOPPING_CATEGORY"
-          :initial_selection="[this_item.supermarket_category]"  
-          search_function="listSupermarketCategorys" 
-          :multiple="false"
-          :sticky_options="[{'id': null,'name': $t('None')}]"
-          style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-          :placeholder="this.$t('Shopping_Category')">
-        </generic-multiselect>
-      </form>
-    </b-modal>
-    <!-- delete modal -->
-    <b-modal class="modal" 
-      :id="'id_modal_food_delete'"
-      :title="this.$t('Delete_Food')" 
-      :ok-title="this.$t('Delete')"
-      :cancel-title="this.$t('Cancel')" 
-      @ok="deleteThis(this_item.id)">
-      {{this.$t("delete_confimation", {'kw': this_item.name})}} 
-    </b-modal>
-    <!-- move modal -->
-    <b-modal class="modal" 
-      :id="'id_modal_food_move'"
-      :title="this.$t('Move_Food')" 
-      :ok-title="this.$t('Move')"
-      :cancel-title="this.$t('Cancel')" 
-      @ok="moveFood(this_item.id, this_item.target.id)">
-      {{ this.$t("move_selection", {'child': this_item.name}) }}
-      <generic-multiselect 
-        @change="this_item.target=$event.val"
-        :model="this_model" 
-        :multiple="false"
-        :sticky_options="[{'id': 0,'name': $t('Root')}]"
-        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-      >
-      </generic-multiselect>
-    </b-modal>
-    <!-- merge modal -->
-    <b-modal class="modal" 
-      :id="'id_modal_food_merge'"
-      :title="this.$t('merge_title', {'type': 'Food'})" 
-      :ok-title="this.$t('Merge')"
-      :cancel-title="this.$t('Cancel')" 
-      @ok="mergeFood(this_item.id, this_item.target.id)">
-      {{ this.$t("merge_selection", {'source': this_item.name, 'type': this.$t('food')}) }}
-      <generic-multiselect 
-        @change="this_item.target=$event.val"
-        :model="this_model"
-        :multiple="false"
-        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-        :placeholder="this.$t('Search')">
-      </generic-multiselect>
-    </b-modal>
+    
     
   </div>
 </template>
@@ -145,90 +66,72 @@ import {StandardToasts} from "@/utils/utils";
 
 import GenericSplitLists from "@/components/GenericSplitLists";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
-import GenericMultiselect from "@/components/GenericMultiselect";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
 
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'FoodListView',
+  name: 'FoodListView', // TODO: make generic name
   mixins: [CardMixin, ToastMixin],
-  components: {GenericHorizontalCard, GenericMultiselect, GenericSplitLists, GenericModalForm},
+  components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
     return {
-      this_model: Models.FOOD,    //TODO: mounted method to calcuate
-      this_action: Actions.UPDATE,  //TODO: based on what we are doing
-      models: Models,
-      foods: [],
-      foods2: [],
+      items_left: [],
+      items_right: [],
       load_more_left: true,
       load_more_right: true,
-      blank_item: {
-        'id': undefined,
-        'name': '',
-        'description': '',
-        'recipe': null,
-        'recipe_full': undefined, 
-        'ignore_shopping': false,
-        'supermarket_category': undefined,
-        'target': {
-          'id': undefined,
-          'name': ''
-        },
-      },
-      this_item: {
-        'id': undefined,
-        'name': '',
-        'description': '',
-        'recipe': null,
-        'recipe_full': undefined, 
-        'ignore_shopping': false,
-        'supermarket_category': undefined,
-        'target': {
-          'id': undefined,
-          'name': ''
-        },
-      },
+      this_model: Models.FOOD,    //TODO: mounted method to calcuate
+      this_action: undefined,
+      this_item: {},
+      this_target: {},
+      models: Models,
+      show_modal:false
     }
   },
   methods: {
-    // TODO should model actions be included with the context menu?  the card? a seperate mixin avaible to all?
     resetList: function(e) {
       if (e.column === 'left') {
-        this.foods = []
+        this.items_left = []
       } else if (e.column === 'right') {
-        this.foods2 = []
+        this.items_right = []
       }
     },
     startAction: function(e, param) {
-      let source = e?.source ?? this.blank_item
+      let source = e?.source ?? {}
       let target = e?.target ?? undefined
       this.this_item = source
-      this.this_item.target = target || undefined
+      this.this_target = target
 
       switch (e.action) {
         case 'delete':
-          this.$bvModal.show('id_modal_food_delete')
+          this.this_action = Actions.DELETE
+          this.show_modal = true
           break;
         case 'new':
-          this.this_item = {...this.blank_item}
-          this.$bvModal.show('id_modal_food_edit')
+          this.this_action = Actions.CREATE
+          this.show_modal = true
           break;
         case 'edit':
-          this.$bvModal.show('id_modal_food_edit')
+          this.this_item = e.source
+          this.this_action = Actions.UPDATE
+          this.show_modal = true
           break;
         case 'move':
           if (target == null) {
-            this.$bvModal.show('id_modal_food_move')
+            this.this_item = e.source
+            this.this_action = Actions.MOVE
+            this.show_modal = true
           } else {
-            this.moveFood(source.id, target.id)
+            this.moveThis(source.id, target.id)
           }
           break;
         case 'merge':
           if (target == null) {
-            this.$bvModal.show('id_modal_food_merge')
+            this.this_item = e.source
+            this.this_action = Actions.MERGE
+            this.show_modal = true
           } else {
-            this.mergeFood(e.source.id, e.target.id)
+            this.mergeThis(e.source.id, e.target.id)
           }
           break;
         case 'get-children':
@@ -247,25 +150,51 @@ export default {
           break;
       }
     },
-    getFoods: function(params, callback) {
+    finishAction: function(e) {
+      let update = undefined
+      if (e !== 'cancel') {
+        switch(this.this_action) {
+          case Actions.DELETE:
+            this.deleteThis(this.this_item.id)
+            break;
+          case Actions.CREATE:
+            this.saveThis(e.form_data)
+            break;
+          case Actions.UPDATE:
+            update = e.form_data
+            update.id = this.this_item.id
+            this.saveThis(update)
+            break;
+          case Actions.MERGE:
+            this.mergeThis(this.this_item.id, e.form_data.target)
+            break;
+          case Actions.MOVE:
+            this.moveThis(this.this_item.id, e.form_data.target)
+            break;
+        }
+      }
+      this.clearState()
+    },
+    getItems: function(params, callback) {
       let column = params?.column ?? 'left'
-
       // TODO: does this need to be a callback?
       genericAPI(this.this_model, Actions.LIST, params).then((result) => {
         if (result.data.results.length){
           if (column ==='left') {
-            this.foods = this.foods.concat(result.data.results)            
+            // if paginated results are in result.data.results otherwise just result.data
+            this.items_left = this.items_left.concat(result.data?.results ?? result.data)            
           } else if (column ==='right') {
-            this.foods2 = this.foods2.concat(result.data.results)
+            this.items_right = this.items_right.concat(result.data?.results ?? result.data)
           }
           // are the total elements less than the length of the array? if so, stop loading
-          callback(result.data.count > (column==="left" ? this.foods.length : this.foods2.length))
+          callback(result.data.count > (column==="left" ? this.items_left.length : this.items_right.length))
         } else {
           callback(false) // stop loading
           console.log('no data returned')
         }
         // return true if total objects are still less than the length of the list
-        callback(result.data.count < (column==="left" ? this.foods.length : this.foods2.length)) 
+        // TODO this needs generalized to handle non-paginated data
+        callback(result.data.count < (column==="left" ? this.items_left.length : this.items_right.length)) 
 
       }).catch((err) => {
         console.log(err)
@@ -275,50 +204,52 @@ export default {
     getThis: function(id, callback){
       return genericAPI(this.this_model, Actions.FETCH, {'id': id}) 
     },
-    saveFood: function () {
-      let food = {...this.this_item}
-      food.supermarket_category = this.this_item.supermarket_category?.id ?? null
-      food.recipe = this.this_item.recipe?.id ?? null
-      if (!food?.id) { // if there is no item id assume it's a new item
-        genericAPI(this.this_model, Actions.CREATE, food).then((result) => {
-          // place all new foods at the top of the list - could sort instead
-          this.foods = [result.data].concat(this.foods)
+    saveThis: function (thisItem) {
+      if (!thisItem?.id) { // if there is no item id assume it's a new item
+        genericAPI(this.this_model, Actions.CREATE, thisItem).then((result) => {
+          // place all new items at the top of the list - could sort instead
+          this.items_left = [result.data].concat(this.items_left)
           // this creates a deep copy to make sure that columns stay independent
-          if (this.show_split){
-            this.foods2 = [...this.foods]
-          } else {
-            this.foods2 = []
-          }
+          this.items_right = [{...result.data}].concat(this.items_right)
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
         }).catch((err) => {
           console.log(err)
           StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
         })
       } else {
-        genericAPI(this.this_model, Actions.UPDATE, food).then((result) => {
-          this.refreshObject(food.id)
+        genericAPI(this.this_model, Actions.UPDATE, thisItem).then((result) => {
+          this.refreshThis(thisItem.id)
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch((err) => {
           console.log(err)
           StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
         })
       }
-      this.this_item = {...this.blank_item}
     },
-    moveFood: function (source_id, target_id) {
+    moveThis: function (source_id, target_id) {
+      if (source_id === target_id) {
+        this.makeToast(this.$t('Error'), this.$t('Cannot move item to itself'), 'danger')
+        this.clearState()
+        return
+      }
+      if (!source_id || !target_id) {
+        this.makeToast(this.$t('Warning'), this.$t('Nothing to do'), 'warning')
+        this.clearState()
+        return
+      }
       genericAPI(this.this_model, Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
-          let food = this.findCard(source_id, this.foods) || this.findCard(source_id, this.foods2)
-          this.foods = [food].concat(this.destroyCard(source_id, this.foods)) // order matters, destroy old card before adding it back in at root
-          this.foods2 = [...[food]].concat(this.destroyCard(source_id, this.foods2)) // order matters, destroy old card before adding it back in at root
-          food.parent = null
+          let item = this.findCard(source_id, this.items_left) || this.findCard(source_id, this.items_right)
+          this.items_left = [item].concat(this.destroyCard(source_id, this.items_left)) // order matters, destroy old card before adding it back in at root
+          this.items_right = [...[item]].concat(this.destroyCard(source_id, this.items_right)) // order matters, destroy old card before adding it back in at root
+          item.parent = null
         } else {
-          this.foods = this.destroyCard(source_id, this.foods)
-          this.foods2 = this.destroyCard(source_id, this.foods2)
-          this.refreshObject(target_id)
+          this.items_left = this.destroyCard(source_id, this.items_left)
+          this.items_right = this.destroyCard(source_id, this.items_right)
+          this.refreshThis(target_id)
         }
         // TODO make standard toast
-        this.makeToast(this.$t('Success'), 'Succesfully moved food', 'success')
+        this.makeToast(this.$t('Success'), 'Succesfully moved resource', 'success')
       }).catch((err) => {
         // TODO none of the error checking works because the openapi generated functions don't throw an error?  
         // or i'm capturing it incorrectly
@@ -326,26 +257,38 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    mergeFood: function (source_id, target_id) {
+    mergeThis: function (source_id, target_id) {
+      if (source_id === target_id) {
+        this.makeToast(this.$t('Error'), this.$t('Cannot merge item with itself'), 'danger')
+        this.clearState()
+        return
+      }
+      if (!source_id || !target_id) {
+        this.makeToast(this.$t('Warning'), this.$t('Nothing to do'), 'warning')
+        this.clearState()
+        return
+      }
       genericAPI(this.this_model, Actions.MERGE, {'source': source_id, 'target': target_id}).then((result) => {
-        this.foods = this.destroyCard(source_id, this.foods)
-        this.foods2 = this.destroyCard(source_id, this.foods2)
-        this.refreshObject(target_id)
+        this.items_left = this.destroyCard(source_id, this.items_left)
+        this.items_right = this.destroyCard(source_id, this.items_right)
+        this.refreshThis(target_id)
+        // TODO make standard toast
+        this.makeToast(this.$t('Success'), 'Succesfully merged resource', 'success')
       }).catch((err) => {
+        //TODO error checking not working with OpenAPI methods
         console.log('Error', err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
-      // TODO make standard toast
-        this.makeToast(this.$t('Success'), 'Succesfully merged food', 'success')
+      
     },
-    getChildren: function(col, food){
+    getChildren: function(col, item){
       let parent = {}
       let options = {
-        'root': food.id,
+        'root': item.id,
         'pageSize': 200
       }
       genericAPI(this.this_model, Actions.LIST, options).then((result) => {
-        parent = this.findCard(food.id, col === 'left' ? this.foods : this.foods2)
+        parent = this.findCard(item.id, col === 'left' ? this.items_left : this.items_right)
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
           Vue.set(parent, 'show_children', true)
@@ -358,13 +301,13 @@ export default {
     },
     getRecipes: function(col, food){
       let parent = {}
+      // TODO: make this generic
       let options = {
         'foods': food.id,
         'pageSize': 200
       }
-
       genericAPI(Models.RECIPE, Actions.LIST, options).then((result) => {
-        parent = this.findCard(food.id, col === 'left' ? this.foods : this.foods2)
+        parent = this.findCard(food.id, col === 'left' ? this.items_left : this.items_right)
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
           Vue.set(parent, 'show_recipes', true)
@@ -376,32 +319,28 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    refreshObject: function(id){
+    refreshThis: function(id){
       this.getThis(id).then(result => {
-        this.refreshCard(result.data, this.foods)
-        this.refreshCard({...result.data}, this.foods2)
+        this.refreshCard(result.data, this.items_left)
+        this.refreshCard({...result.data}, this.items_right)
       })
     },
-    // this would move with modals with mixin?
-    prepareEmoji: function() {
-      this.$refs._edit.addText(this.this_item.icon || ''); 
-      this.$refs._edit.blur()
-      document.getElementById('btn-emoji-default').disabled = true;
-    },
-    // this would move with modals with mixin?
-    setIcon: function(icon) {
-      this.this_item.icon = icon
-    },
-    deleteThis: function(id, model) {
+    deleteThis: function(id) {
       genericAPI(this.this_model, Actions.DELETE, {'id': id}).then((result) => {
-        this.foods = this.destroyCard(id, this.foods)
-        this.foods2 = this.destroyCard(id, this.foods2)
+        this.items_left = this.destroyCard(id, this.items_left)
+        this.items_right = this.destroyCard(id, this.items_right)
         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
       }).catch((err) => {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
       }) 
     },
+    clearState: function() {
+      this.show_modal = false
+      this.this_action = undefined
+      this.this_item = undefined
+      this.this_target = undefined
+    }
   }
 }
 

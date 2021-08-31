@@ -1,3 +1,4 @@
+from cookbook.models import SearchFields
 from django.db import migrations
 
 

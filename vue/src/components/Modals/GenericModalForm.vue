@@ -1,6 +1,6 @@
 <template>
     <div>
-      <b-modal class="modal" id="modal" >
+      <b-modal class="modal" id="modal" @hidden="cancelAction">
         <template v-slot:modal-title><h4>{{form.title}}</h4></template>
         <div v-for="(f, i) in form.fields" v-bind:key=i>
           <p v-if="f.type=='instruction'">{{f.label}}</p>
@@ -10,7 +10,8 @@
             :field="f.field"
             :model="listModel(f.list)"
             :sticky_options="f.sticky_options || undefined"
-            @change="changeValue"/> <!-- TODO add ability to create new items associated with lookup -->
+            @change="storeValue"/> <!-- TODO add ability to create new items associated with lookup -->
+          <!-- TODO: add emoji field -->
           <checkbox-input v-if="f.type=='checkbox'"
             :label="f.label"
             :value="f.value"
@@ -23,11 +24,10 @@
         </div>
         
         <template  v-slot:modal-footer>
-          <b-button class="float-right mx-1" variant="secondary" v-on:click="$bvModal.hide('modal')">{{$t('Cancel')}}</b-button>
+          <b-button class="float-right mx-1" variant="secondary" v-on:click="cancelAction">{{$t('Cancel')}}</b-button>
           <b-button class="float-right mx-1" variant="primary" v-on:click="doAction">{{form.ok_label}}</b-button>
         </template>
       </b-modal>
-        <b-button v-on:click="Button">ok</b-button>
     </div>
 </template>
 
@@ -55,19 +55,13 @@ export default {
   },
   data() {
     return {
-      new_item: {},
+      form_data: {},
       form: {},
-      buttons: {
-        'new':{'label': this.$t('Save')},
-        'delete':{'label': this.$t('Delete')},
-        'edit':{'label': this.$t('Save')},
-        'move':{'label': this.$t('Move')},
-        'merge':{'label': this.$t('Merge')}
-      }
+      dirty: false
     }
   },
   mounted() {
-    this.$root.$on('change', this.changeValue);  // modal is outside Vue instance(?) so have to listen at root of component
+    this.$root.$on('change', this.storeValue);  // modal is outside Vue instance(?) so have to listen at root of component
   },
   computed: {
     buttonLabel() {
@@ -78,30 +72,27 @@ export default {
     'show': function () {
       if (this.show) {
         this.form = getForm(this.model, this.action, this.item1, this.item2)
+        this.dirty = true
         this.$bvModal.show('modal')
+      } else {
+        this.$bvModal.hide('modal')
+        this.form_data = {}
       }
     },
   },
   methods: {
-      Button: function(e) {
-        this.form = getForm(this.model, this.action, this.item1, this.item2)
-        console.log(this.form)
-        this.$bvModal.show('modal')
-      },
       doAction: function(){
-        let alert_text = ''
-        for (const [k, v] of Object.entries(this.form.fields)) {
-          if (v.type !== 'instruction'){
-            alert_text = alert_text + v.field + ": " + this.new_item[v.field] + "\n"
-          }
-        }
-        this.$nextTick(function() {this.$bvModal.hide('modal')})
-        setTimeout(() => {}, 0) // confirm that the 
-        alert(alert_text)
+        this.dirty = false
+        this.$emit('finish-action', {'form_data': this.form_data })
       },
-      changeValue: function(field, value) {
-        // console.log('catch change', field, value)
-        this.new_item[field] = value
+      cancelAction: function() {
+        if (this.dirty) {
+          this.dirty = false
+          this.$emit('finish-action', 'cancel')
+        }
+      },
+      storeValue: function(field, value) {
+        this.form_data[field] = value
       },
       listModel: function(m) {
         if (m === 'self') {
