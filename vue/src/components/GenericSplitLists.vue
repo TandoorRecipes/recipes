@@ -76,7 +76,7 @@
                 <template v-slot:no-more><span/></template>
               </infinite-loading>
             </div>
-            <!-- right side food cards -->
+            <!-- right side cards -->
             <div class="col col-md mh-100 overflow-auto" v-if="show_split">
               <slot name="cards-right"></slot>
               <infinite-loading
@@ -119,8 +119,6 @@ export default {
       left_page: 0,
       right: +new Date(),
       left: +new Date(),
-      isDirtyright: false,
-      isDirtyleft: false,
       text: {
           'new': '',
           'name': '',
@@ -133,7 +131,6 @@ export default {
   mounted() {
     this.dragMenu = this.$refs.tooltip
     this.text.new = this.$t('New_' + this.list_name)
-    this.text.name = this.$t(this.list_name)
   },
   watch: {
     search_right: _debounce(function() {
@@ -170,6 +167,7 @@ export default {
             'page': (col==='left') ? this.left_page + 1 : this.right_page + 1,
             'column': col
         }
+        // TODO: change this to be an emit and watch a prop to determine if loaded or complete
         new Promise((callback) => this.$emit('get-list', params, callback)).then((result) => {
             this[col+'_page']+=1
             $state.loaded();

@@ -48,7 +48,7 @@ export class StandardToasts {
                 makeToast(i18n.tc('Success'), i18n.tc('success_deleting_resource'), 'success')
                 break;
             case StandardToasts.FAIL_CREATE:
-                makeToast(i18n.tc('Failure'), i18n.tc('success_creating_resource'), 'danger')
+                makeToast(i18n.tc('Failure'), i18n.tc('err_creating_resource'), 'danger')
                 break;
             case StandardToasts.FAIL_FETCH:
                 makeToast(i18n.tc('Failure'), i18n.tc('err_fetching_resource'), 'danger')
@@ -167,7 +167,6 @@ export function genericAPI(model, action, options) {
     let config = setup?.config ?? {}
     let params = setup?.params ?? []
     let parameters = []
-
     let this_value = undefined
     params.forEach(function (item, index) {
         if (Array.isArray(item)) {
@@ -181,8 +180,7 @@ export function genericAPI(model, action, options) {
                 }
             }
         } else {
-            this_value = options?.[item] ?? undefined
-            if (this_value) {this_value = formatParam(config?.[item], this_value)}
+            this_value = formatParam(config?.[item], options?.[item] ?? undefined)
         }
         // if no value is found so far, get the default if it exists
         if (!this_value) {
@@ -272,7 +270,6 @@ export function getForm(model, action, item1, item2) {
     let config = {...action?.form, ...model.model_type?.[f]?.form, ...model?.[f]?.form}
     // if not defined partialUpdate will use form from create 
     if (f === 'partialUpdate' && Object.keys(config).length == 0) {
-        console.log('create form',Actions.CREATE?.form)
         config = {...Actions.CREATE?.form, ...model.model_type?.['create']?.form, ...model?.['create']?.form}
         config['title'] = {...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title}
     }
@@ -288,6 +285,7 @@ export function getForm(model, action, item1, item2) {
             value = v
         }
         if (value?.form_field) {
+            value['value'] = item1?.[value?.field] ?? undefined
             form.fields.push(
                 {
                     ...value,
@@ -301,7 +299,6 @@ export function getForm(model, action, item1, item2) {
             form[k] = value
         }
     }
-    console.log('utils form', form)
     return form
 
 }
@@ -374,7 +371,7 @@ export const CardMixin = {
             let idx = undefined
             target = this.findCard(obj.id, card_list)
             
-            if (target.parent) {
+            if (target?.parent) {
                 let parent = this.findCard(target.parent, card_list)
                 if (parent) {
                     if (parent.show_children){
@@ -382,7 +379,7 @@ export const CardMixin = {
                         Vue.set(parent.children, idx, obj)
                     }
                 }
-            } else {
+            } else if (target) {
                 idx = card_list.indexOf(card_list.find(x => x.id === target.id))
                 Vue.set(card_list, idx, obj)
             }

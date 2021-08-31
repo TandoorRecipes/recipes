@@ -242,6 +242,9 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
                 content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        elif parent == child.id:
+            content = {'error': True, 'msg': _('Cannot move an object to itself!')}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         try:
             parent = self.model.objects.get(pk=parent, space=self.request.space)

@@ -43,6 +43,17 @@ export class Models {
                     ]
                 }
             }
+        },
+        'move': {
+            'form': {
+                'target': {
+                    'form_field': true,
+                    'type': 'lookup',
+                    'field': 'target',
+                    'list': 'self',
+                    'sticky_options': [{'id': 0,'name': i18n.t('tree_root')}]
+                }
+            }
         }
     }
 
