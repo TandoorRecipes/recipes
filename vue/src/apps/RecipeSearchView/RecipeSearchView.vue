@@ -348,7 +348,7 @@ export default {
   watch: {
     settings: {
       handler() {
-        this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, -1)
+        this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, '4h')
       },
       deep: true
     },
