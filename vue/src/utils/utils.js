@@ -161,35 +161,47 @@ import {ApiApiFactory} from "@/utils/openapi/api.ts";  // TODO: is it possible t
 import axios from "axios";
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-export function genericAPI(model, action, options) {
-    let setup = getConfig(model, action)
-    let func = setup.function
-    let config = setup?.config ?? {}
-    let params = setup?.params ?? []
-    let parameters = []
-    let this_value = undefined
-    params.forEach(function (item, index) {
-        if (Array.isArray(item)) {
-            this_value = {}
-            // if the value is an array, convert it to a dictionary of key:value
-            // filtered based on OPTIONS passed
-            // maybe map/reduce is better?
-            for (const [k, v] of Object.entries(options)) {
-                if (item.includes(k)) {
-                    this_value[k] = formatParam(config?.[k], v)
+import { Actions, Models } from './models';
+
+export const ApiMixin = {
+    data() {
+        return {
+            Models: Models,
+            Actions: Actions
+        }
+    },
+    methods: {
+        genericAPI: function(model, action, options) {
+            let setup = getConfig(model, action)
+            let func = setup.function
+            let config = setup?.config ?? {}
+            let params = setup?.params ?? []
+            let parameters = []
+            let this_value = undefined
+            params.forEach(function (item, index) {
+                if (Array.isArray(item)) {
+                    this_value = {}
+                    // if the value is an array, convert it to a dictionary of key:value
+                    // filtered based on OPTIONS passed
+                    // maybe map/reduce is better?
+                    for (const [k, v] of Object.entries(options)) {
+                        if (item.includes(k)) {
+                            this_value[k] = formatParam(config?.[k], v)
+                        }
+                    }
+                } else {
+                    this_value = formatParam(config?.[item], options?.[item] ?? undefined)
                 }
-            }
-        } else {
-            this_value = formatParam(config?.[item], options?.[item] ?? undefined)
+                // if no value is found so far, get the default if it exists
+                if (this_value === undefined) {
+                    this_value = getDefault(config?.[item], options)
+                }
+                parameters.push(this_value)
+            });
+            let apiClient = new ApiApiFactory()
+            return apiClient[func](...parameters)
         }
-        // if no value is found so far, get the default if it exists
-        if (!this_value) {
-            this_value = getDefault(config?.[item], options)
-        }
-        parameters.push(this_value)
-    });
-    let apiClient = new ApiApiFactory()
-    return apiClient[func](...parameters)
+    }
 }
 
 // /*
@@ -202,7 +214,9 @@ function formatParam(config, value) {
                 case 'type':
                     switch(v) {
                         case 'string':
-                            value = String(value)
+                            if (value !== undefined){
+                                value = String(value)
+                            }
                             break;
                         case 'integer':
                             value = parseInt(value)
@@ -328,7 +342,6 @@ function formTranslate(translate, model, item1, item2) {
 // * Utility functions to use manipulate nested components
 // * */
 import Vue from 'vue'
-import { Actions } from './models';
 export const CardMixin = {
     methods: {
         findCard: function(id, card_list){

@@ -19,14 +19,15 @@
 <script>
 
 import Multiselect from 'vue-multiselect'
-import {genericAPI} from "@/utils/utils";
-import {Actions} from "@/utils/models";
+import {ApiMixin} from "@/utils/utils";
 
 export default {
   name: "GenericMultiselect",
   components: {Multiselect},
+  mixins: [ApiMixin],
   data() {
     return {
+      // this.Models and this.Actions inherited from ApiMixin
       loading: false,
       objects: [],
       selected_objects: [],
@@ -65,13 +66,14 @@ export default {
     },
   },
   methods: {
+    // this.genericAPI inherited from ApiMixin
     search: function (query) {
       let options = {
         'page': 1,
         'pageSize': 10,
         'query': query
       }
-      genericAPI(this.model, Actions.LIST, options).then((result) => {
+      this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
         this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
       })
     },

@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import Vue from "vue";
 import GenericMultiselect from "@/components/GenericMultiselect";
 
 export default {

@@ -1,5 +1,5 @@
 <template>
-    <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
+    <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret style="boundary:window">
       <template #button-content>
           <i class="fas fa-ellipsis-v" ></i>
       </template>

@@ -278,6 +278,8 @@ def annotated_qs(qs, root=False, fill=False):
             dirty = False
             current_node = node_queue[-1]
             depth = current_node.get_depth()
+            # TODO if node is at the wrong depth for some reason this fails
+            # either create a 'fix node' page, or automatically move the node to the root
             parent_id = current_node.parent
             if root and depth > 1 and parent_id not in nodes_list:
                 parent_id = current_node.parent

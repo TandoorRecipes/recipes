@@ -1,13 +1,14 @@
 <template>
   <div id="app" style="margin-bottom: 4vh">
-    <generic-modal-form 
+    <!-- v-if prevents component from loading before this_model has been assigned -->
+    <generic-modal-form v-if="this_model"
     :model="this_model"
     :action="this_action"
     :item1="this_item"
     :item2="this_target"
     :show="show_modal"
     @finish-action="finishAction"/>
-    <generic-split-lists
+    <generic-split-lists v-if="this_model"
       :list_name="this_model.name"
       @reset="resetList"
       @get-list="getItems"
@@ -60,8 +61,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {CardMixin, ToastMixin, genericAPI} from "@/utils/utils";
-import {Models, Actions} from "@/utils/models";
+import {CardMixin, ToastMixin, ApiMixin} from "@/utils/utils";
 import {StandardToasts} from "@/utils/utils";
 
 import GenericSplitLists from "@/components/GenericSplitLists";
@@ -72,23 +72,27 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'FoodListView', // TODO: make generic name
-  mixins: [CardMixin, ToastMixin],
+  mixins: [CardMixin, ToastMixin, ApiMixin],
   components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
     return {
+      // this.Models and this.Actions inherited from ApiMixin
       items_left: [],
       items_right: [],
       load_more_left: true,
       load_more_right: true,
-      this_model: Models.FOOD,    //TODO: mounted method to calcuate
+      this_model: undefined,
       this_action: undefined,
       this_item: {},
       this_target: {},
-      models: Models,
       show_modal:false
     }
   },
+  mounted() {
+    this.this_model = this.Models.FOOD  //TODO: mounted method to calcuate
+  },
   methods: {
+    // this.genericAPI inherited from ApiMixin
     resetList: function(e) {
       if (e.column === 'left') {
         this.items_left = []
@@ -104,22 +108,22 @@ export default {
 
       switch (e.action) {
         case 'delete':
-          this.this_action = Actions.DELETE
+          this.this_action = this.Actions.DELETE
           this.show_modal = true
           break;
         case 'new':
-          this.this_action = Actions.CREATE
+          this.this_action = this.Actions.CREATE
           this.show_modal = true
           break;
         case 'edit':
           this.this_item = e.source
-          this.this_action = Actions.UPDATE
+          this.this_action = this.Actions.UPDATE
           this.show_modal = true
           break;
         case 'move':
           if (target == null) {
             this.this_item = e.source
-            this.this_action = Actions.MOVE
+            this.this_action = this.Actions.MOVE
             this.show_modal = true
           } else {
             this.moveThis(source.id, target.id)
@@ -128,7 +132,7 @@ export default {
         case 'merge':
           if (target == null) {
             this.this_item = e.source
-            this.this_action = Actions.MERGE
+            this.this_action = this.Actions.MERGE
             this.show_modal = true
           } else {
             this.mergeThis(e.source.id, e.target.id)
@@ -154,21 +158,21 @@ export default {
       let update = undefined
       if (e !== 'cancel') {
         switch(this.this_action) {
-          case Actions.DELETE:
+          case this.Actions.DELETE:
             this.deleteThis(this.this_item.id)
             break;
-          case Actions.CREATE:
+          case this.Actions.CREATE:
             this.saveThis(e.form_data)
             break;
-          case Actions.UPDATE:
+          case this.Actions.UPDATE:
             update = e.form_data
             update.id = this.this_item.id
             this.saveThis(update)
             break;
-          case Actions.MERGE:
+          case this.Actions.MERGE:
             this.mergeThis(this.this_item.id, e.form_data.target)
             break;
-          case Actions.MOVE:
+          case this.Actions.MOVE:
             this.moveThis(this.this_item.id, e.form_data.target)
             break;
         }
@@ -178,7 +182,7 @@ export default {
     getItems: function(params, callback) {
       let column = params?.column ?? 'left'
       // TODO: does this need to be a callback?
-      genericAPI(this.this_model, Actions.LIST, params).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         if (result.data.results.length){
           if (column ==='left') {
             // if paginated results are in result.data.results otherwise just result.data
@@ -187,6 +191,7 @@ export default {
             this.items_right = this.items_right.concat(result.data?.results ?? result.data)
           }
           // are the total elements less than the length of the array? if so, stop loading
+          // TODO: generalize this to handle results in result.data
           callback(result.data.count > (column==="left" ? this.items_left.length : this.items_right.length))
         } else {
           callback(false) // stop loading
@@ -202,11 +207,11 @@ export default {
       })
     },
     getThis: function(id, callback){
-      return genericAPI(this.this_model, Actions.FETCH, {'id': id}) 
+      return this.genericAPI(this.this_model, this.Actions.FETCH, {'id': id}) 
     },
     saveThis: function (thisItem) {
       if (!thisItem?.id) { // if there is no item id assume it's a new item
-        genericAPI(this.this_model, Actions.CREATE, thisItem).then((result) => {
+        this.genericAPI(this.this_model, this.Actions.CREATE, thisItem).then((result) => {
           // place all new items at the top of the list - could sort instead
           this.items_left = [result.data].concat(this.items_left)
           // this creates a deep copy to make sure that columns stay independent
@@ -217,7 +222,7 @@ export default {
           StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
         })
       } else {
-        genericAPI(this.this_model, Actions.UPDATE, thisItem).then((result) => {
+        this.genericAPI(this.this_model, this.Actions.UPDATE, thisItem).then((result) => {
           this.refreshThis(thisItem.id)
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch((err) => {
@@ -232,12 +237,12 @@ export default {
         this.clearState()
         return
       }
-      if (!source_id || !target_id) {
+      if (source_id === undefined || target_id === undefined) {
         this.makeToast(this.$t('Warning'), this.$t('Nothing to do'), 'warning')
         this.clearState()
         return
       }
-      genericAPI(this.this_model, Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
           let item = this.findCard(source_id, this.items_left) || this.findCard(source_id, this.items_right)
           this.items_left = [item].concat(this.destroyCard(source_id, this.items_left)) // order matters, destroy old card before adding it back in at root
@@ -268,7 +273,7 @@ export default {
         this.clearState()
         return
       }
-      genericAPI(this.this_model, Actions.MERGE, {'source': source_id, 'target': target_id}).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.MERGE, {'source': source_id, 'target': target_id}).then((result) => {
         this.items_left = this.destroyCard(source_id, this.items_left)
         this.items_right = this.destroyCard(source_id, this.items_right)
         this.refreshThis(target_id)
@@ -287,7 +292,7 @@ export default {
         'root': item.id,
         'pageSize': 200
       }
-      genericAPI(this.this_model, Actions.LIST, options).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.LIST, options).then((result) => {
         parent = this.findCard(item.id, col === 'left' ? this.items_left : this.items_right)
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
@@ -306,7 +311,7 @@ export default {
         'foods': food.id,
         'pageSize': 200
       }
-      genericAPI(Models.RECIPE, Actions.LIST, options).then((result) => {
+      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, options).then((result) => {
         parent = this.findCard(food.id, col === 'left' ? this.items_left : this.items_right)
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
@@ -326,7 +331,7 @@ export default {
       })
     },
     deleteThis: function(id) {
-      genericAPI(this.this_model, Actions.DELETE, {'id': id}).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.DELETE, {'id': id}).then((result) => {
         this.items_left = this.destroyCard(id, this.items_left)
         this.items_right = this.destroyCard(id, this.items_right)
         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)

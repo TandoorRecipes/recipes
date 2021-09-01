@@ -46,12 +46,11 @@ export default {
   name: 'GenericModalForm',
   components: {CheckboxInput, LookupInput, TextInput},
   props: {
-    model: {type: Object, default: function() {}},
-    action: {type: Object, default: function() {}},
+    model: {required: true, type: Object, default: function() {}},
+    action: {required: true, type: Object, default: function() {}},
     item1: {type: Object, default: function() {}},
     item2: {type: Object, default: function() {}},
-    // action: {type: String, default: ''},
-    show: {type: Boolean, default: false},
+    show: {required: true, type: Boolean, default: false},
   },
   data() {
     return {

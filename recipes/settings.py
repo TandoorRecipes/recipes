@@ -16,8 +16,8 @@ import re
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
