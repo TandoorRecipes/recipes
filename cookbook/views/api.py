@@ -193,8 +193,8 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
 
 
 class TreeMixin(MergeMixin, FuzzyFilterMixin):
-    model = None
     schema = TreeSchema()
+    model = None
 
     def get_queryset(self):
         root = self.request.query_params.get('root', None)

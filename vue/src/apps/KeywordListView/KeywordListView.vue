@@ -69,8 +69,8 @@
           <div class="row" :class="{'overflow-hidden' : show_split}" style="margin-top: 2vh">
             <div class="col col-md" :class="{'mh-100 overflow-auto' : show_split}">
               <generic-horizontal-card v-for="kw in keywords" v-bind:key="kw.id"
-                :model=kw
-                model_name="Keyword"
+                :item=kw
+                item_type="Keyword"
                 :draggable="true"
                 :merge="true"
                 :move="true"
@@ -86,12 +86,12 @@
             <!-- right side keyword cards -->
             <div class="col col-md mh-100 overflow-auto " v-if="show_split">
               <generic-horizontal-card v-for="kw in keywords2" v-bind:key="kw.id"
-                :model=kw
-                model_name="Keyword"
+                :item=kw
+                item_type="Keyword"
                 :draggable="true"
                 :merge="true"
                 :move="true"
-                @item-action="startAction($event, 'left')" 
+                @item-action="startAction($event, 'right')" 
               />
               <infinite-loading  
                 :identifier='right' 
@@ -147,26 +147,25 @@
       {{this.$t("delete_confimation", {'kw': this_item.name})}} {{this_item.name}}
     </b-modal>
     <!-- move modal -->
-    <b-modal class="modal" 
+    <b-modal class="modal" v-if="models"
       :id="'id_modal_keyword_move'"
       :title="this.$t('Move_Keyword')" 
       :ok-title="this.$t('Move')"
       :cancel-title="this.$t('Cancel')" 
       @ok="moveKeyword(this_item.id, this_item.target.id)">
       {{ this.$t("move_selection", {'child': this_item.name}) }}
-      <generic-multiselect 
+      <generic-multiselect
         @change="this_item.target=$event.val"
         label="name"
-        :models="models.KEYWORD"
+        :model="models.KEYWORD"
         :multiple="false"
         :sticky_options="[{'id': 0,'name': $t('Root')}]"
-        :tree_api="true"
         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
         :placeholder="this.$t('Search')">
       </generic-multiselect>
     </b-modal>
     <!-- merge modal -->
-    <b-modal class="modal" 
+    <b-modal class="modal" v-if="models"
       :id="'id_modal_keyword_merge'"
       :title="this.$t('Merge_Keyword')" 
       :ok-title="this.$t('Merge')"
@@ -177,7 +176,6 @@
         @change="this_item.target=$event.val"
         :model="models.KEYWORD" 
         :multiple="false"
-        :tree_api="true"
         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
         :placeholder="this.$t('Search')">
       </generic-multiselect>
@@ -444,7 +442,6 @@ export default {
       let parent = {}
       let pageSize = 200
       let keyword = String(kw.id)
-      console.log(apiClient.listRecipes)
 
       apiClient.listRecipes(
           undefined, keyword, undefined, undefined, undefined, undefined,
@@ -500,25 +497,25 @@ export default {
         
       })
     },
-    findKeyword: function(kw_list, id){
-      if (kw_list.length == 0) {
-        return false
-      }
-      let keyword = kw_list.filter(kw => kw.id == id)
-      if (keyword.length == 1) {
-        return keyword[0]
-      } else if (keyword.length == 0) {
-        for (const k of kw_list.filter(kw => kw.show_children == true)) {
-          keyword = this.findKeyword(k.children, id)
-          if (keyword) {
-            return keyword
+    findKeyword: function(card_list, id){
+          let card_length = card_list?.length ?? 0
+          if (card_length == 0) {
+            return false
           }
-        }
-        
-      } else {
-        console.log('something terrible happened')
-      }
-    },
+          let cards = card_list.filter(obj => obj.id == id)
+          if (cards.length == 1) {
+            return cards[0]
+          } else if (cards.length == 0) {
+            for (const c of card_list.filter(x => x.show_children == true)) {
+              cards = this.findKeyword(c.children, id)
+              if (cards) {
+                return cards
+              }
+            }
+          } else {
+            console.log('something terrible happened')
+          }
+        },
     // this would move with modals with mixin?
     prepareEmoji: function() {
       this.$refs._edit.addText(this.this_item.icon || ''); 

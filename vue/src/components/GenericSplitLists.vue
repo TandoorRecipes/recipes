@@ -146,20 +146,8 @@ export default {
   },
   methods: {
     resetSearch: function () {
-      if (this.search_right !== '') {
-        this.search_right = ''
-      } else {
-        this.left_page = 1
-        this.$emit('reset', {'column':'left'})
-        this.left += 1
-      }
-      if (this.search_left !== '') {
-        this.search_left = ''
-      } else {
-        this.right_page = 1
-        this.$emit('reset', {'column':'right'})
-        this.right += 1
-      }
+      this.search_right = ''
+      this.search_left = ''
     },
     infiniteHandler: function($state, col) { 
         let params = {
@@ -169,7 +157,7 @@ export default {
         }
         // TODO: change this to be an emit and watch a prop to determine if loaded or complete
         new Promise((callback) => this.$emit('get-list', params, callback)).then((result) => {
-            this[col+'_page']+=1
+            this[col+'_page'] += 1
             $state.loaded();
             if (!result) { // callback needs to return true if handler should continue loading more data
                 $state.complete();
@@ -178,7 +166,6 @@ export default {
             $state.complete();
         })
     },
-    
   }
 }
 

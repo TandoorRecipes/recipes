@@ -192,7 +192,7 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group class="mt-2">
+                      <b-input-group class="mt-2" v-if="models">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="settings.search_books"
                                              :model="models.RECIPE_BOOK"
@@ -355,7 +355,7 @@ export default {
 
       this.loadMealPlan()
       // this.loadRecentlyViewed()
-      // this.refreshData(false) // this gets triggered whenthe cookies get loaded
+      // this.refreshData(false) // this gets triggered when the cookies get loaded
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE
@@ -414,7 +414,6 @@ export default {
         this.pagination_count = result.data.count
         this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
         this.facets = result.data.facets
-        console.log(this.recipes)
       })
     },
     openRandom: function () {
@@ -427,7 +426,6 @@ export default {
     },
     loadMealPlan: function () {
       let apiClient = new ApiApiFactory()
-      // TODO setting to change days to look for meal plans
       if (this.settings.show_meal_plan) {
         apiClient.listMealPlans({
           query: {
