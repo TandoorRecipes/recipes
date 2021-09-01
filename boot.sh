@@ -1,6 +1,8 @@
 #!/bin/sh
 source venv/bin/activate
 
+TANDOOR_PORT="${TANDOOR_PORT:-8080}"
+
 echo "Updating database"
 python manage.py migrate
 python manage.py collectstatic_js_reverse
@@ -9,4 +11,4 @@ echo "Done"
 
 chmod -R 755 /opt/recipes/mediafiles
 
-exec gunicorn -b :8080 --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
+exec gunicorn -b :$TANDOOR_PORT --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
