@@ -90,11 +90,11 @@
     "Recipes": "Ricette",
     "Move": "Sposta",
     "Merge": "Unisci",
-    "Parent": "",
-    "delete_confimation": "",
-    "move_confirmation": "",
+    "Parent": "Primario",
+    "delete_confimation": "Sei sicuro di voler eliminare {kw} e tutti gli elementi dipendenti?",
+    "move_confirmation": "Sposta {child} al primario {parent}",
     "merge_confirmation": "Sostituisci {source} con {target}",
-    "move_selection": "",
+    "move_selection": "Scegli un primario dove spostare {child}.",
     "merge_selection": "Sostituisci tutte le voci di {source} con il {type} selezionato.",
     "Root": "Radice"
 }
