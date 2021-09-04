@@ -1,7 +1,6 @@
 <template>
   <div row>
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
-      refs="keywordCard" 
       style="height: 10vh;" :style="{'cursor:grab' : draggable}"
       @dragover.prevent
       @dragenter.prevent
@@ -12,70 +11,81 @@
       @drop="handleDragDrop($event)">
       <b-row no-gutters style="height:inherit;">  
         <b-col no-gutters md="3" style="height:inherit;">
-          <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="keyword_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
+          <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
         </b-col>
         <b-col no-gutters md="9" style="height:inherit;">
             <b-card-body class="m-0 py-0" style="height:inherit;">
               <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
-                    <h5 class="m-0 mt-1 text-truncate">{{ keyword.name }}</h5>
-                    <div class= "m-0 text-truncate">{{ keyword.description }}</div>
+                    <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
+                    <div class= "m-0 text-truncate">{{ item[subtitle] }}</div>
                     <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
-                      <div v-if="keyword.numchild !=0" class="mx-2 btn btn-link btn-sm" 
-                        style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':keyword})">
-                          <div v-if="!keyword.expanded">{{keyword.numchild}} {{$t('Keywords')}}</div>
-                          <div v-else>{{$t('Hide Keywords')}}</div>
+                      <div v-if="item[child_count] !=0" class="mx-2 btn btn-link btn-sm" 
+                        style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':item})">
+                          <div v-if="!item.show_children">{{ item[child_count] }} {{ item_type }}</div>
+                          <div v-else>{{ text.hide_children }}</div>
                       </div>
-                      <div class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
-                        v-on:click="$emit('item-action',{'action':'get-recipes','source':keyword})">
-                        <div v-if="!keyword.show_recipes">{{keyword.numrecipe}} {{$t('Recipes')}}</div>
-                        <div v-else>{{$t('Hide Recipes')}}</div>
+                      <div v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
+                        v-on:click="$emit('item-action',{'action':'get-recipes','source':item})">
+                        <div v-if="!item.show_recipes">{{ item[recipe_count] }} {{$t('Recipes')}}</div>
+                        <div v-else>{{$t('Hide_Recipes')}}</div>
                       </div>
                     </div>
               </b-card-text>
             </b-card-body>
         </b-col>
         <div class="card-img-overlay justify-content-right h-25 m-0 p-0 text-right">
-          <generic-context-menu class="p-0"
-            :show_merge="true"
-            :show_move="true"
-            @item-action="$emit('item-action', {'action': $event, 'source': keyword})">
+          <slot name="upper-right"></slot>
+          <generic-context-menu  class="p-0"
+            :show_merge="merge"
+            :show_move="move"
+            @item-action="$emit('item-action', {'action': $event, 'source': item})">
           </generic-context-menu>
         </div>
       </b-row> 
     </b-card>
-    <!-- recursively add child keywords -->
-    <div class="row" v-if="keyword.expanded">
+    <!-- recursively add child cards -->
+    <div class="row" v-if="item.show_children">
       <div class="col-md-11 offset-md-1">
-        <keyword-card v-for="child in keyword.children" 
-          :keyword="child"
-          v-bind:key="child.id"
-          draggable="true"
+        <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id"
+          :draggable="draggable"
+          :item="child"
+          :item_type="item_type"
+          :title="title"
+          :subtitle="subtitle"
+          :child_count="child_count"
+          :children="children"
+          :recipe_count="recipe_count"
+          :recipes="recipes"
+          :merge="merge"
+          :move="move"
           @item-action="$emit('item-action', $event)">
-        </keyword-card>
+        </generic-horizontal-card>
       </div>
     </div>
     <!-- conditionally view recipes -->
-    <div class="row" v-if="keyword.show_recipes">
+    <div class="row" v-if="item.show_recipes">
       <div class="col-md-11 offset-md-1">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
-          <recipe-card v-for="r in keyword.recipes" 
+          <recipe-card v-for="r in item[recipes]" 
             v-bind:key="r.id"
             :recipe="r">
           </recipe-card>
         </div>
       </div>
     </div>
-    <!-- this should be made a generic component, would also require mixin for functions that generate the popup  and put in parent container-->  
-    <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:999; cursor:pointer">
-      <b-list-group-item action v-on:click="$emit('item-action',{'action': 'move', 'target': keyword, 'source': source}); closeMenu()">
-        <i class="fas fa-expand-arrows-alt fa-fw"></i> {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':keyword.name})}}
+    <!-- this should be made a generic component, would also require mixin for functions that generate the popup and put in parent container-->  
+    <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:9999; cursor:pointer">
+      <b-list-group-item v-if="move" action v-on:click="$emit('item-action',{'action': 'move', 'target': item, 'source': source}); closeMenu()">
+        <i class="fas fa-expand-arrows-alt fa-fw"></i> {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':item.name})}}
       </b-list-group-item>
-      <b-list-group-item action v-on:click="$emit('item-action',{'action': 'merge', 'target': keyword, 'source': source}); closeMenu()">
-        <i class="fas fa-compress-arrows-alt fa-fw"></i> {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':keyword.name}) }}
+      <b-list-group-item v-if="merge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': item, 'source': source}); closeMenu()">
+        <i class="fas fa-compress-arrows-alt fa-fw"></i> {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':item.name}) }}
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
-        <i class="fas fa-times fa-fw"></i> {{$t('Cancel')}}
+        {{$t('Cancel')}}
       </b-list-group-item>
+      <!-- TODO add to shopping list -->
+      <!-- TODO add to and/or manage pantry -->
     </b-list-group>
   </div>
 </template>
@@ -87,36 +97,45 @@ import { mixin as clickaway } from 'vue-clickaway';
 import { createPopper } from '@popperjs/core';
 
 export default {
-  name: "KeywordCard",
+  name: "GenericHorizontalCard",
   components: { GenericContextMenu, RecipeCard },
   mixins: [clickaway],
   props: {
-    keyword: Object,
-    draggable: {type: Boolean, default: false}
+    item: Object,
+    item_type: {type: String, default: 'Blank Item Type'},  // TODO update translations to handle plural translations
+    draggable: {type: Boolean, default: false},
+    title: {type: String, default: 'name'},
+    subtitle: {type: String, default: 'description'},
+    child_count: {type: String, default: 'numchild'},
+    children: {type: String, default: 'children'},
+    recipe_count: {type: String, default: 'numrecipe'},
+    recipes: {type: String, default: 'recipes'},
+    move: {type: Boolean, default: false},
+    merge: {type: Boolean, default: false},
   },
   data() {
     return {
-      keyword_image: '',
+      item_image: '',
       over: false,
       show_menu: false,
       dragMenu: undefined,
       isError: false,
-      source: {},
-      target: {}
+      source: {'id': undefined, 'name': undefined},
+      target: {'id': undefined, 'name': undefined},
+      text: {
+        'hide_children': '',
+      },
     }
   },
   mounted() {
-    if (this.keyword == null || this.keyword.image == null) {
-      this.keyword_image = window.IMAGE_PLACEHOLDER
-    } else {
-      this.keyword_image = this.keyword.image
-    }
+    this.item_image = this.item?.image ?? window.IMAGE_PLACEHOLDER
     this.dragMenu = this.$refs.tooltip
+    this.text.hide_children = this.$t('Hide_' + this.item_type)
   },
   methods: {
     handleDragStart: function(e) {
       this.isError = false
-      e.dataTransfer.setData('source', JSON.stringify(this.keyword))
+      e.dataTransfer.setData('source', JSON.stringify(this.item))
     },
     handleDragEnter: function(e) {
       if (!e.currentTarget.contains(e.relatedTarget) && e.relatedTarget != null) {
@@ -130,7 +149,7 @@ export default {
     },
     handleDragDrop: function(e) {
       let source = JSON.parse(e.dataTransfer.getData('source'))
-      if (source.id != this.keyword.id){
+      if (source.id != this.item.id){
         this.source = source
         let menuLocation = {getBoundingClientRect: this.generateLocation(e.clientX, e.clientY),}
         this.show_menu = true
@@ -157,7 +176,7 @@ export default {
         })
         popper.update()
         this.over = false
-        this.$emit({'action': 'drop', 'target': this.keyword, 'source': this.source})
+        this.$emit({'action': 'drop', 'target': this.item, 'source': this.source})
       } else {
         this.isError = true
       }
@@ -174,7 +193,7 @@ export default {
     },
     closeMenu: function(){
       this.show_menu = false
-    }
+    },
   }
 }
 </script>

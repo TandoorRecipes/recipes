@@ -19,7 +19,7 @@
                               v-b-tooltip.hover :title="$t('Advanced Settings')"
                               v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'"
                     >
-                      <!-- consider changing this icon to a filter -->
+                      <!-- TODO consider changing this icon to a filter -->
                       <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
                       <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
                     </b-button>
@@ -108,6 +108,19 @@
                         ></b-form-checkbox>
                       </b-form-group>
 
+                      <b-form-group v-if="settings.show_meal_plan"
+                          v-bind:label="$t('Meal_Plan_Days')"
+                          label-for="popover-input-5"
+                          label-cols="6"
+                          class="mb-3">
+                        <b-form-input
+                            type="number"
+                            v-model="settings.meal_plan_days"
+                            id="popover-input-5"
+                            size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+
                       <b-form-group
                           v-bind:label="$t('Sort_by_new')"
                           label-for="popover-input-3"
@@ -159,11 +172,10 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
-                                             :initial_selection="settings.search_foods"
-                                             search_function="listFoods" label="name"
-                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Ingredients')" :limit="20"></generic-multiselect>
+                        <treeselect v-model="settings.search_foods" :options="facets.Foods" :flat="true"
+                                    searchNested multiple :placeholder="$t('Ingredients')"  :normalizer="normalizer"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_foods_or" name="check-button"
@@ -180,10 +192,10 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group class="mt-2">
+                      <b-input-group class="mt-2" v-if="models">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="settings.search_books"
-                                             search_function="listRecipeBooks" label="name"
+                                             :model="models.RECIPE_BOOK"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')" :limit="50"></generic-multiselect>
                         <b-input-group-append>
@@ -270,8 +282,9 @@ import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
 
 import {ResolveUrlMixin} from "@/utils/utils";
+import {Models} from "@/utils/models";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner"; // is this deprecated?
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
@@ -307,6 +320,7 @@ export default {
         search_books_or: true,
         advanced_search_visible: false,
         show_meal_plan: true,
+        meal_plan_days: 0,
         recently_viewed: 5,
         sort_by_new: true,
         pagination_page: 1,
@@ -315,6 +329,7 @@ export default {
 
       pagination_count: 0,
       random_search: false,
+      models: Models
     }
 
   },
@@ -355,6 +370,9 @@ export default {
     'settings.show_meal_plan': function () {
       this.loadMealPlan()
     },
+    'settings.meal_plan_days': function () {
+      this.loadMealPlan()
+    },
     'settings.recently_viewed': function () {
       // this.loadRecentlyViewed()
       this.refreshData(false)
@@ -376,9 +394,7 @@ export default {
       apiClient.listRecipes(
           this.settings.search_input,
           this.settings.search_keywords,
-          this.settings.search_foods.map(function (A) {
-            return A["id"];
-          }),
+          this.settings.search_foods,
           this.settings.search_books.map(function (A) {
             return A["id"];
           }),
@@ -396,22 +412,25 @@ export default {
         
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
-        this.recipes = result.data.results
+        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
         this.facets = result.data.facets
-        console.log(this.recipes)
       })
     },
     openRandom: function () {
       this.refreshData(true)
     },
+    removeDuplicates: function(data, key) {
+      return [
+        ...new Map(data.map(item => [key(item), item])).values()
+      ]
+    },
     loadMealPlan: function () {
       let apiClient = new ApiApiFactory()
-
       if (this.settings.show_meal_plan) {
         apiClient.listMealPlans({
           query: {
             from_date: moment().format('YYYY-MM-DD'),
-            to_date: moment().format('YYYY-MM-DD')
+            to_date: moment().add(this.settings.meal_plan_days, 'days').format('YYYY-MM-DD')
           }
         }).then(result => {
           this.meal_plans = result.data

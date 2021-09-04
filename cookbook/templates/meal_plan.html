@@ -517,7 +517,7 @@
                     }
 
                     this.$http.get(url).then((response) => {
-                        this.recipes = response.data.results;
+                        this.recipes = this.removeDuplicates(response.data.results, recipe => recipe.id);
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
@@ -584,6 +584,11 @@
                         console.log("deleteEntry error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
+                },
+                removeDuplicates: function(data, key) {
+                    return [
+                        ...new Map(data.map(item => [key(item), item])).values()
+                    ]
                 },
                 updatePlanTypes: function () {
                     let promise_list = []
