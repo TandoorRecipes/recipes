@@ -119,6 +119,7 @@ class FuzzyFilterMixin(ViewSetMixin):
                     .filter(name__icontains=query).order_by('-exact')
                 )
 
+
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
             try:
@@ -485,7 +486,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(queryset, request)
+        self.facets = get_facet(queryset, request.query_params, request.space)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):

@@ -174,6 +174,7 @@ def search_recipes(request, queryset, params):
     return queryset
 
 
+
 def get_facet(qs, request):
     # NOTE facet counts for tree models include self AND descendants
     facets = {}
