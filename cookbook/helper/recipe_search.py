@@ -51,7 +51,7 @@ def search_recipes(request, queryset, params):
     if search_new == 'true':
         queryset = (
             queryset.annotate(new_recipe=Case(
-                When(created_at__gte=(datetime.now() - timedelta(days=7)), then=('pk')), default=Value(0),))
+                When(created_at__gte=(datetime.now() - timedelta(days=7)), then=('pk')), default=Value(0), ))
         )
         orderby += ['-new_recipe']
 
@@ -123,9 +123,9 @@ def search_recipes(request, queryset, params):
 
             # TODO add order by user settings - only do search rank and annotation if rank order is configured
             search_rank = (
-                SearchRank('name_search_vector', search_query, cover_density=True)
-                + SearchRank('desc_search_vector', search_query, cover_density=True)
-                + SearchRank('steps__search_vector', search_query, cover_density=True)
+                    SearchRank('name_search_vector', search_query, cover_density=True)
+                    + SearchRank('desc_search_vector', search_query, cover_density=True)
+                    + SearchRank('steps__search_vector', search_query, cover_density=True)
             )
             queryset = queryset.filter(query_filter).annotate(rank=search_rank)
             orderby += ['-rank']
@@ -174,7 +174,6 @@ def search_recipes(request, queryset, params):
     return queryset
 
 
-
 def get_facet(qs, request):
     # NOTE facet counts for tree models include self AND descendants
     facets = {}
@@ -210,9 +209,9 @@ def get_facet(qs, request):
     # TODO add book facet
     facets['Books'] = []
     facets['Recent'] = ViewLog.objects.filter(
-                            created_by=request.user, space=request.space,
-                            created_at__gte=datetime.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
-                        ).values_list('recipe__pk', flat=True)
+        created_by=request.user, space=request.space,
+        created_at__gte=datetime.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
+    ).values_list('recipe__pk', flat=True)
     return facets
 
 

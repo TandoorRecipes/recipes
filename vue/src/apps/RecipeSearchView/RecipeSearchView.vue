@@ -337,6 +337,7 @@ export default {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
         this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
+        this.refreshData(false)
       }
 
       let urlParams = new URLSearchParams(window.location.search);
