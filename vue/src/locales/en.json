@@ -120,5 +120,6 @@
   "edit_title": "Edit {type}",
   "Name": "Name",
   "Description": "Description",
-  "Recipe": "Recipe"
+  "Recipe": "Recipe",
+  "tree_root": "Root of Tree"
 }

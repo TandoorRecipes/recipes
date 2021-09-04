@@ -73,7 +73,6 @@ export default {
     'show': function () {
       if (this.show) {
         this.form = getForm(this.model, this.action, this.item1, this.item2)
-        console.log(this.form)
         this.dirty = true
         this.$bvModal.show('modal')
       } else {
