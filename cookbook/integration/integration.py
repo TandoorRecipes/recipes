@@ -46,7 +46,7 @@ class Integration:
                 space=request.space
             )
         else:
-            self.keyword = Keyword.objects.create(
+            self.keyword, created = Keyword.objects.get_or_create(
                 name=name,
                 description=description,
                 icon=icon,
@@ -220,8 +220,8 @@ class Integration:
         :param import_duplicates: if duplicates should be imported
         """
         if Recipe.objects.filter(space=self.request.space, name=recipe.name).count() > 1 and not import_duplicates:
-            recipe.delete()
             self.ignored_recipes.append(recipe.name)
+            recipe.delete()
 
     @staticmethod
     def import_recipe_image(recipe, image_file, filetype='.jpeg'):

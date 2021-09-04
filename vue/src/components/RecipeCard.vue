@@ -39,10 +39,10 @@
 
 
           <b-badge pill variant="info" v-if="!recipe.internal">{{ $t('External') }}</b-badge>
-          <b-badge pill variant="success"
+          <!-- <b-badge pill variant="success"
                    v-if="Date.parse(recipe.created_at) > new Date(Date.now() - (7 * (1000 * 60 * 60 * 24)))">
             {{ $t('New') }}
-          </b-badge>
+          </b-badge> -->
 
         </template>
         <template v-else>{{ meal_plan.note }}</template>

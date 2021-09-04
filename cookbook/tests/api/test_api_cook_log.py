@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Keyword, CookLog
+from cookbook.models import CookLog
 
 LIST_URL = 'api:cooklog-list'
 DETAIL_URL = 'api:cooklog-detail'
