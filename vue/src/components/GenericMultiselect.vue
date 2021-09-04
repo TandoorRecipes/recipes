@@ -4,12 +4,14 @@
       :options="objects"
       :close-on-select="true"
       :clear-on-select="true"
-      :hide-selected="true"
+      :hide-selected="multiple"
       :preserve-search="true"
       :placeholder="lookupPlaceholder"
       :label="label"
       track-by="id"
       :multiple="multiple"
+      :taggable="create_new"
+      :tag-placeholder="createText"
       :loading="loading"
       @search-change="search"
       @input="selectionChanged">
@@ -41,7 +43,9 @@ export default {
     limit: {type: Number, default: 10,},
     sticky_options: {type:Array, default(){return []}},
     initial_selection: {type:Array, default(){return []}},
-    multiple: {type: Boolean, default: true}
+    multiple: {type: Boolean, default: true},
+    create_new: {type: Boolean, default: false}, // TODO: this will create option to add new drop-downs
+    create_text: {type: String, default: 'You Forgot to Add a Tag Placeholder'},
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
@@ -63,6 +67,9 @@ export default {
   computed: {
     lookupPlaceholder() {
       return this.placeholder || this.model.name || this.$t('Search')
+    },
+    createText() {
+      return this.create_text
     },
   },
   methods: {
