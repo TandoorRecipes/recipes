@@ -29,6 +29,10 @@ const pages = {
         entry: './src/apps/KeywordListView/main.js',
         chunks: ['chunk-vendors']
     },
+    'food_list_view': {
+        entry: './src/apps/FoodListView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {
@@ -80,7 +84,7 @@ module.exports = {
                     },
                 },
             },
-            // TODO make this conditional on .env DEBUG = TRUE
+            // TODO make this conditional on .env DEBUG = FALSE
             config.optimization.minimize(true)
         );
 

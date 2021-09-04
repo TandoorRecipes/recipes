@@ -62,7 +62,7 @@ def get_random_recipe(space_1, u1_s1):
         s1.ingredients.add(
             Ingredient.objects.create(
                 amount=1,
-                food=Food.objects.create(name=uuid.uuid4(), space=space_1, ),
+                food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
                 unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
                 note=uuid.uuid4(),
                 space=space_1,
@@ -72,7 +72,7 @@ def get_random_recipe(space_1, u1_s1):
         s2.ingredients.add(
             Ingredient.objects.create(
                 amount=1,
-                food=Food.objects.create(name=uuid.uuid4(), space=space_1, ),
+                food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
                 unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
                 note=uuid.uuid4(),
                 space=space_1,

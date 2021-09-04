@@ -194,11 +194,18 @@ def get_facet(qs, request):
     # see https://django-treebeard.readthedocs.io/en/latest/api.html#treebeard.models.Node.get_annotated_list_qs for details
     kw_a = annotated_qs(keywords, root=True, fill=True)
 
+    # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
+    if search_foods_or:
+        foods = Food.objects.filter(space=request.space).annotate(recipe_count=Count('ingredient'))
+    else:
+        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True)), space=request.space).annotate(recipe_count=Count('ingredient'))
+    food_a = annotated_qs(foods, root=True, fill=True)
+
     # TODO add rating facet
     facets['Ratings'] = []
     facets['Keywords'] = fill_annotated_parents(kw_a, keyword_list)
     # TODO add food facet
-    facets['Foods'] = []
+    facets['Foods'] = fill_annotated_parents(food_a, food_list)
     # TODO add book facet
     facets['Books'] = []
     facets['Recent'] = ViewLog.objects.filter(
@@ -271,6 +278,8 @@ def annotated_qs(qs, root=False, fill=False):
             dirty = False
             current_node = node_queue[-1]
             depth = current_node.get_depth()
+            # TODO if node is at the wrong depth for some reason this fails
+            # either create a 'fix node' page, or automatically move the node to the root
             parent_id = current_node.parent
             if root and depth > 1 and parent_id not in nodes_list:
                 parent_id = current_node.parent

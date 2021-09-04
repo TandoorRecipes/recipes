@@ -3,7 +3,8 @@ from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
 from django.contrib.auth.models import User
-from django.db.models import QuerySet, Sum, Avg
+from django.db.models import Avg, QuerySet, Sum
+from django.urls import reverse
 from django.utils import timezone
 from drf_writable_nested import (UniqueFieldsMixin,
                                  WritableNestedModelSerializer)
@@ -213,9 +214,8 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def get_image(self, obj):
         recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        if len(recipes) == 0:
-            recipes = Recipe.objects.filter(keywords__in=obj.get_tree(), space=obj.space).exclude(
-                image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        if len(recipes) == 0 and obj.has_children():
+            recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         if len(recipes) != 0:
             return random.choice(recipes).image.url
         else:
@@ -233,7 +233,6 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         return obj
 
     class Meta:
-        # list_serializer_class = SpaceFilterSerializer
         model = Keyword
         fields = (
             'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
@@ -289,13 +288,57 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'category_to_supermarket')
 
 
+class RecipeSimpleSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField('get_url')
+
+    def get_url(self, obj):
+        return reverse('view_recipe', args=[obj.id])
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'url')
+        read_only_fields = ['id', 'name', 'url']
+
+
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
+    image = serializers.SerializerMethodField('get_image')
+    numrecipe = serializers.SerializerMethodField('count_recipes')
+
+    def get_image(self, obj):
+        if obj.recipe and obj.space == obj.recipe.space:
+            if obj.recipe.image and obj.recipe.image != '':
+                return obj.recipe.image.url
+        # if food is not also a recipe, look for recipe images that use the food
+        recipes = Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+        # if no recipes found - check whole tree
+        if len(recipes) == 0 and obj.has_children():
+            recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+
+        if len(recipes) != 0:
+            return random.choice(recipes).image.url
+        else:
+            return None
+
+    def count_recipes(self, obj):
+        return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        # turns a GET of food.recipe into a dict of data while allowing a PATCH/PUT of an integer to update a food with a recipe
+        recipe = RecipeSimpleSerializer(instance.recipe, allow_null=True).data
+        supermarket_category = SupermarketCategorySerializer(instance.supermarket_category, allow_null=True).data
+        response['recipe'] = recipe if recipe else None
+        # the SupermarketCategorySerializer returns a dict instead of None when the column is null
+        if supermarket_category == {'name': ''} or None:
+            response['supermarket_category'] = None
+        else:
+            response['supermarket_category'] = supermarket_category
+        return response
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
-        supermarket = validated_data.pop('supermarket_category')
+        supermarket = validated_data.pop('supermarket_category', None)
         obj, created = Food.objects.get_or_create(**validated_data)
         if supermarket:
             obj.supermarket_category, created = SupermarketCategory.objects.get_or_create(name=supermarket['name'], space=self.context['request'].space)
@@ -308,7 +351,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'recipe', 'ignore_shopping', 'supermarket_category')
+        fields = ('id', 'name', 'description', 'recipe', 'ignore_shopping', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe')
+        read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 
 class IngredientSerializer(WritableNestedModelSerializer):

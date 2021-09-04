@@ -6,7 +6,7 @@
       :clear-on-select="true"
       :hide-selected="true"
       :preserve-search="true"
-      :placeholder="placeholder"
+      :placeholder="lookupPlaceholder"
       :label="label"
       track-by="id"
       :multiple="multiple"
@@ -19,60 +19,63 @@
 <script>
 
 import Multiselect from 'vue-multiselect'
-import {ApiApiFactory} from "@/utils/openapi/api";
+import {ApiMixin} from "@/utils/utils";
 
 export default {
   name: "GenericMultiselect",
   components: {Multiselect},
+  mixins: [ApiMixin],
   data() {
     return {
+      // this.Models and this.Actions inherited from ApiMixin
       loading: false,
       objects: [],
       selected_objects: [],
     }
   },
   props: {
-    placeholder: String,
-    search_function: String,
-    label: String,
+    placeholder: {type: String, default: undefined},
+    model: {type: Object, default () {return {}}},
+    label: {type: String, default: 'name'},
     parent_variable: {type: String, default: undefined},
-    limit: {
-      type: Number,
-      default: 10,
-    },
+    limit: {type: Number, default: 10,},
     sticky_options: {type:Array, default(){return []}},
     initial_selection: {type:Array, default(){return []}},
-    multiple: {type: Boolean, default: true},
-    tree_api: {type: Boolean, default: false} // api requires params that are unique to TreeMixin
+    multiple: {type: Boolean, default: true}
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
-      this.selected_objects = newVal
+      if (this.multiple) {
+        this.selected_objects = newVal
+      } else if (this.selected_objects != newVal?.[0]) {
+        // when not using multiple selections need to convert array to value
+        this.selected_objects = newVal?.[0] ?? null
+      }
     },
   },
   mounted() {
     this.search('')
+    // when not using multiple selections need to convert array to value
+    if (!this.multiple & this.selected_objects != this.initial_selection?.[0]) {
+        this.selected_objects = this.initial_selection?.[0] ?? null
+      }
+  },
+  computed: {
+    lookupPlaceholder() {
+      return this.placeholder || this.model.name || this.$t('Search')
+    },
   },
   methods: {
+    // this.genericAPI inherited from ApiMixin
     search: function (query) {
-      let apiClient = new ApiApiFactory()
-      if (this.tree_api) {
-        let page = 1
-        let root = undefined
-        let tree = undefined
-        let pageSize = 10
-
-        if (query === '') {
-          query = undefined
-        }
-        apiClient[this.search_function](query, root, tree, page, pageSize).then(result => {
-          this.objects = this.sticky_options.concat(result.data.results)
-        })
-      } else {
-        apiClient[this.search_function]({query: {query: query, limit: this.limit}}).then(result => {
-          this.objects = this.sticky_options.concat(result.data)
-        })
+      let options = {
+        'page': 1,
+        'pageSize': 10,
+        'query': query
       }
+      this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
+        this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
+      })
     },
     selectionChanged: function () {
       this.$emit('change', {var: this.parent_variable, val: this.selected_objects})
