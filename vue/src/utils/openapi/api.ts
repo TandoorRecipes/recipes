@@ -137,6 +137,30 @@ export interface Food {
      * @memberof Food
      */
     supermarket_category?: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
+    image?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Food
+     */
+    numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
+    numrecipe?: string;
 }
 /**
  * 
@@ -403,10 +427,72 @@ export interface InlineResponse2001 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<RecipeOverview>}
+     * @type {Array<Food>}
      * @memberof InlineResponse2001
      */
+    results?: Array<Food>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse2002
+ */
+export interface InlineResponse2002 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2002
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2002
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2002
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeOverview>}
+     * @memberof InlineResponse2002
+     */
     results?: Array<RecipeOverview>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse2003
+ */
+export interface InlineResponse2003 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2003
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<SupermarketCategoryRelation>}
+     * @memberof InlineResponse2003
+     */
+    results?: Array<SupermarketCategoryRelation>;
 }
 /**
  * 
@@ -1692,6 +1778,30 @@ export interface StepFood {
      * @memberof StepFood
      */
     supermarket_category?: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof StepFood
+     */
+    image?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StepFood
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepFood
+     */
+    numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof StepFood
+     */
+    numrecipe?: string;
 }
 /**
  * 
@@ -3927,10 +4037,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [query] Query string matched against food name.
+         * @param {number} [root] Return first level children of food with ID [int].  Integer 0 will return root foods.
+         * @param {number} [tree] Return all self and children of food with ID [int].
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFoods: async (options: any = {}): Promise<RequestArgs> => {
+        listFoods: async (query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3942,6 +4057,26 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
+
+            if (root !== undefined) {
+                localVarQueryParameter['root'] = root;
+            }
+
+            if (tree !== undefined) {
+                localVarQueryParameter['tree'] = tree;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -4418,10 +4553,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategoryRelations: async (options: any = {}): Promise<RequestArgs> => {
+        listSupermarketCategoryRelations: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket-category-relation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4433,6 +4570,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -4708,6 +4853,47 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {string} target 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergeFood: async (id: string, target: string, food?: Food, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('mergeFood', 'id', id)
+            // verify required parameter 'target' is not null or undefined
+            assertParamExists('mergeFood', 'target', target)
+            const localVarPath = `/api/food/{id}/merge/{target}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"target"}}`, encodeURIComponent(String(target)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this keyword.
          * @param {string} target 
          * @param {Keyword} [keyword] 
@@ -4741,6 +4927,47 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {string} parent 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        moveFood: async (id: string, parent: string, food?: Food, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('moveFood', 'id', id)
+            // verify required parameter 'parent' is not null or undefined
+            assertParamExists('moveFood', 'parent', parent)
+            const localVarPath = `/api/food/{id}/move/{parent}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7990,11 +8217,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [query] Query string matched against food name.
+         * @param {number} [root] Return first level children of food with ID [int].  Integer 0 will return root foods.
+         * @param {number} [tree] Return all self and children of food with ID [int].
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFoods(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Food>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listFoods(options);
+        async listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listFoods(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8082,7 +8314,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2002>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -8133,11 +8365,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSupermarketCategoryRelations(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategoryRelation>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategoryRelations(options);
+        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategoryRelations(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8223,6 +8457,18 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {string} target 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mergeFood(id: string, target: string, food?: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mergeFood(id, target, food, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this keyword.
          * @param {string} target 
          * @param {Keyword} [keyword] 
@@ -8231,6 +8477,18 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.mergeKeyword(id, target, keyword, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {string} parent 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async moveFood(id: string, parent: string, food?: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.moveFood(id, parent, food, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9512,11 +9770,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [query] Query string matched against food name.
+         * @param {number} [root] Return first level children of food with ID [int].  Integer 0 will return root foods.
+         * @param {number} [tree] Return all self and children of food with ID [int].
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFoods(options?: any): AxiosPromise<Array<Food>> {
-            return localVarFp.listFoods(options).then((request) => request(axios, basePath));
+        listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+            return localVarFp.listFoods(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9596,7 +9859,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2002> {
             return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -9641,11 +9904,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategoryRelations(options?: any): AxiosPromise<Array<SupermarketCategoryRelation>> {
-            return localVarFp.listSupermarketCategoryRelations(options).then((request) => request(axios, basePath));
+        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
+            return localVarFp.listSupermarketCategoryRelations(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9721,6 +9986,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {string} target 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergeFood(id: string, target: string, food?: Food, options?: any): AxiosPromise<Food> {
+            return localVarFp.mergeFood(id, target, food, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this keyword.
          * @param {string} target 
          * @param {Keyword} [keyword] 
@@ -9729,6 +10005,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
             return localVarFp.mergeKeyword(id, target, keyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {string} parent 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        moveFood(id: string, parent: string, food?: Food, options?: any): AxiosPromise<Food> {
+            return localVarFp.moveFood(id, parent, food, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11036,12 +11323,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [query] Query string matched against food name.
+     * @param {number} [root] Return first level children of food with ID [int].  Integer 0 will return root foods.
+     * @param {number} [tree] Return all self and children of food with ID [int].
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listFoods(options?: any) {
-        return ApiApiFp(this.configuration).listFoods(options).then((request) => request(this.axios, this.basePath));
+    public listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listFoods(query, root, tree, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11193,12 +11485,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listSupermarketCategoryRelations(options?: any) {
-        return ApiApiFp(this.configuration).listSupermarketCategoryRelations(options).then((request) => request(this.axios, this.basePath));
+    public listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listSupermarketCategoryRelations(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11293,6 +11587,19 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this food.
+     * @param {string} target 
+     * @param {Food} [food] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public mergeFood(id: string, target: string, food?: Food, options?: any) {
+        return ApiApiFp(this.configuration).mergeFood(id, target, food, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this keyword.
      * @param {string} target 
      * @param {Keyword} [keyword] 
@@ -11302,6 +11609,19 @@ export class ApiApi extends BaseAPI {
      */
     public mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any) {
         return ApiApiFp(this.configuration).mergeKeyword(id, target, keyword, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food.
+     * @param {string} parent 
+     * @param {Food} [food] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public moveFood(id: string, parent: string, food?: Food, options?: any) {
+        return ApiApiFp(this.configuration).moveFood(id, parent, food, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

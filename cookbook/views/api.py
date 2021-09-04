@@ -12,7 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Q
+from django.db.models import Case, Q, Value, When
+from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
 from django.shortcuts import redirect, get_object_or_404
@@ -65,7 +66,6 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
 
 
 class StandardFilterMixin(ViewSetMixin):
-
     def get_queryset(self):
         queryset = self.queryset
         query = self.request.query_params.get('query', None)
@@ -98,7 +98,6 @@ class DefaultPagination(PageNumberPagination):
 
 
 class FuzzyFilterMixin(ViewSetMixin):
-
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
         query = self.request.query_params.get('query', None)
@@ -106,11 +105,20 @@ class FuzzyFilterMixin(ViewSetMixin):
 
         if query is not None and query not in ["''", '']:
             if fuzzy:
-                self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2).order_by("-trigram")
+                self.queryset = (
+                    self.queryset
+                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                    .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
+                    .order_by('-exact').order_by("-trigram")
+                )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
-                # TODO for some querysets exact matches are sorted beyond pagesize, need to find better solution
-                self.queryset = self.queryset.filter(name__istartswith=query) | self.queryset.filter(name__icontains=query)
+                self.queryset = (
+                    self.queryset
+                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                    .filter(name__icontains=query).order_by('-exact')
+                )
+
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
@@ -130,9 +138,64 @@ class FuzzyFilterMixin(ViewSetMixin):
         return self.queryset
 
 
-class TreeMixin(FuzzyFilterMixin):
-    model = None
+class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
+    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'],)
+    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    def merge(self, request, pk, target):
+        self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
+
+        try:
+            source = self.model.objects.get(pk=pk, space=self.request.space)
+        except (self.model.DoesNotExist):
+            content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+        if int(target) == source.id:
+            content = {'error': True, 'msg': _('Cannot merge with the same object!')}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+        else:
+            try:
+                target = self.model.objects.get(pk=target, space=self.request.space)
+            except (self.model.DoesNotExist):
+                content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
+                return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                if target in source.get_descendants_and_self():
+                    content = {'error': True, 'msg': _('Cannot merge with child object!')}
+                    return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+                for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
+                    linkManager = getattr(source, link.get_accessor_name())
+                    related = linkManager.all()
+                    # link to foreign relationship could be OneToMany or ManyToMany
+                    if link.one_to_many:
+                        for r in related:
+                            setattr(r, link.field.name, target)
+                            r.save()
+                    elif link.many_to_many:
+                        for r in related:
+                            getattr(r, link.field.name).add(target)
+                            getattr(r, link.field.name).remove(source)
+                            r.save()
+                    else:
+                        # a new scenario exists and needs to be handled
+                        raise NotImplementedError
+                children = source.get_children().exclude(id=target.id)
+                for c in children:
+                    c.move(target, 'sorted-child')
+                content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
+                source.delete()
+                return Response(content, status=status.HTTP_200_OK)
+            except Exception:
+                content = {'error': True, 'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TreeMixin(MergeMixin, FuzzyFilterMixin):
     schema = TreeSchema()
+    model = None
 
     def get_queryset(self):
         root = self.request.query_params.get('root', None)
@@ -180,6 +243,9 @@ class TreeMixin(FuzzyFilterMixin):
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
                 content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        elif parent == child.id:
+            content = {'error': True, 'msg': _('Cannot move an object to itself!')}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         try:
             parent = self.model.objects.get(pk=parent, space=self.request.space)
@@ -195,51 +261,6 @@ class TreeMixin(FuzzyFilterMixin):
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
             content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'],)
-    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-    def merge(self, request, pk, target):
-        self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
-
-        try:
-            source = self.model.objects.get(pk=pk, space=self.request.space)
-        except (self.model.DoesNotExist):
-            content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
-            return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-        if int(target) == source.id:
-            content = {'error': True, 'msg': _('Cannot merge with the same object!')}
-            return Response(content, status=status.HTTP_403_FORBIDDEN)
-
-        else:
-            try:
-                target = self.model.objects.get(pk=target, space=self.request.space)
-            except (self.model.DoesNotExist):
-                content = {'error': True, 'msg': _(f'No {self.basename} with id {target} exists')}
-                return Response(content, status=status.HTTP_404_NOT_FOUND)
-
-            try:
-                if target in source.get_descendants_and_self():
-                    content = {'error': True, 'msg': _('Cannot merge with child object!')}
-                    return Response(content, status=status.HTTP_403_FORBIDDEN)
-                ########################################################################
-                # TODO this needs abstracted to update steps instead of recipes for food merge
-                ########################################################################
-                recipes = Recipe.objects.filter(**{"%ss" % self.basename: source}, space=self.request.space)
-
-                for r in recipes:
-                    getattr(r, self.basename + 's').add(target)
-                    getattr(r, self.basename + 's').remove(source)
-                    r.save()
-                children = source.get_children().exclude(id=target.id)
-                for c in children:
-                    c.move(target, 'sorted-child')
-                content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
-                source.delete()
-                return Response(content, status=status.HTTP_200_OK)
-            except Exception:
-                content = {'error': True, 'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
-                return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -352,14 +373,12 @@ class UnitViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
         return super().get_queryset()
 
 
-class FoodViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
+class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
+    model = Food
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
+    pagination_class = DefaultPagination
 
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):

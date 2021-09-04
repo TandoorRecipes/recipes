@@ -19,7 +19,7 @@
                               v-b-tooltip.hover :title="$t('Advanced Settings')"
                               v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'"
                     >
-                      <!-- consider changing this icon to a filter -->
+                      <!-- TODO consider changing this icon to a filter -->
                       <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
                       <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
                     </b-button>
@@ -108,6 +108,19 @@
                         ></b-form-checkbox>
                       </b-form-group>
 
+                      <b-form-group v-if="settings.show_meal_plan"
+                          v-bind:label="$t('Meal_Plan_Days')"
+                          label-for="popover-input-5"
+                          label-cols="6"
+                          class="mb-3">
+                        <b-form-input
+                            type="number"
+                            v-model="settings.meal_plan_days"
+                            id="popover-input-5"
+                            size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+
                       <b-form-group
                           v-bind:label="$t('Sort_by_new')"
                           label-for="popover-input-3"
@@ -120,11 +133,6 @@
                             size="sm"
                         ></b-form-checkbox>
                       </b-form-group>
-                    </div>
-                    <div class="row" style="margin-top: 1vh">
-                      <div class="col-12">
-                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t('Advanced Search Settings') }}</a>
-                      </div>
                     </div>
                     <div class="row" style="margin-top: 1vh">
                       <div class="col-12">
@@ -164,11 +172,10 @@
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
-                        <generic-multiselect @change="genericSelectChanged" parent_variable="search_foods"
-                                             :initial_selection="settings.search_foods"
-                                             search_function="listFoods" label="name"
-                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                             v-bind:placeholder="$t('Ingredients')" :limit="20"></generic-multiselect>
+                        <treeselect v-model="settings.search_foods" :options="facets.Foods" :flat="true"
+                                    searchNested multiple :placeholder="$t('Ingredients')"  :normalizer="normalizer"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
                         <b-input-group-append>
                           <b-input-group-text>
                             <b-form-checkbox v-model="settings.search_foods_or" name="check-button"
@@ -185,10 +192,10 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group class="mt-2">
+                      <b-input-group class="mt-2" v-if="models">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="settings.search_books"
-                                             search_function="listRecipeBooks" label="name"
+                                             :model="models.RECIPE_BOOK"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')" :limit="50"></generic-multiselect>
                         <b-input-group-append>
@@ -232,12 +239,11 @@
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
-
-                <recipe-card v-for="r in last_viewed_recipes" v-bind:key="`rv_${r.id}`" :recipe="r"
-                             v-bind:footer_text="$t('Recently_Viewed')" footer_icon="fas fa-eye"></recipe-card>
               </template>
-
-              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"></recipe-card>
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
+                             :footer_text="isRecentOrNew(r)[0]" 
+                             :footer_icon="isRecentOrNew(r)[1]">
+              </recipe-card>
             </div>
           </div>
         </div>
@@ -276,8 +282,9 @@ import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
 
 import {ResolveUrlMixin} from "@/utils/utils";
+import {Models} from "@/utils/models";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner"; // is this deprecated?
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
@@ -313,6 +320,7 @@ export default {
         search_books_or: true,
         advanced_search_visible: false,
         show_meal_plan: true,
+        meal_plan_days: 0,
         recently_viewed: 5,
         sort_by_new: true,
         pagination_page: 1,
@@ -321,27 +329,15 @@ export default {
 
       pagination_count: 0,
       random_search: false,
+      models: Models
     }
 
   },
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-        let cookie_val = this.$cookies.get(SETTINGS_COOKIE_NAME)
-        for (let i of Object.keys(cookie_val)) {
-          this.$set(this.settings, i, cookie_val[i])
-        }
-        //TODO i have no idea why the above code does not suffice to update the
-        //TODO pagination UI element as $set should update all values reactively but it does not
-        setTimeout(function () {
-          this.$set(this.settings, 'pagination_page', 0)
-        }.bind(this), 50)
-        setTimeout(function () {
-          this.$set(this.settings, 'pagination_page', cookie_val['pagination_page'])
-        }.bind(this), 51)
-
+        this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
       }
-
 
       let urlParams = new URLSearchParams(window.location.search);
       let apiClient = new ApiApiFactory()
@@ -358,8 +354,8 @@ export default {
       }
 
       this.loadMealPlan()
-      this.loadRecentlyViewed()
-      this.refreshData(false)
+      // this.loadRecentlyViewed()
+      // this.refreshData(false) // this gets triggered when the cookies get loaded
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE
@@ -367,17 +363,23 @@ export default {
   watch: {
     settings: {
       handler() {
-        this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, -1)
+        this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, '4h')
       },
       deep: true
     },
     'settings.show_meal_plan': function () {
       this.loadMealPlan()
     },
+    'settings.meal_plan_days': function () {
+      this.loadMealPlan()
+    },
     'settings.recently_viewed': function () {
-      this.loadRecentlyViewed()
+      // this.loadRecentlyViewed()
+      this.refreshData(false)
     },
     'settings.search_input': _debounce(function () {
+      this.settings.pagination_page = 1
+      this.pagination_count = 0
       this.refreshData(false)
     }, 300),
     'settings.page_count': _debounce(function () {
@@ -392,9 +394,7 @@ export default {
       apiClient.listRecipes(
           this.settings.search_input,
           this.settings.search_keywords,
-          this.settings.search_foods.map(function (A) {
-            return A["id"];
-          }),
+          this.settings.search_foods,
           this.settings.search_books.map(function (A) {
             return A["id"];
           }),
@@ -406,25 +406,31 @@ export default {
           random,
           this.settings.sort_by_new,
           this.settings.pagination_page,
-          this.settings.page_count
+          this.settings.page_count,
+          {query: {last_viewed: this.settings.recently_viewed}}
       ).then(result => {
+        
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
-        this.recipes = result.data.results
+        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
         this.facets = result.data.facets
       })
     },
     openRandom: function () {
       this.refreshData(true)
     },
+    removeDuplicates: function(data, key) {
+      return [
+        ...new Map(data.map(item => [key(item), item])).values()
+      ]
+    },
     loadMealPlan: function () {
       let apiClient = new ApiApiFactory()
-
       if (this.settings.show_meal_plan) {
         apiClient.listMealPlans({
           query: {
             from_date: moment().format('YYYY-MM-DD'),
-            to_date: moment().format('YYYY-MM-DD')
+            to_date: moment().add(this.settings.meal_plan_days, 'days').format('YYYY-MM-DD')
           }
         }).then(result => {
           this.meal_plans = result.data
@@ -432,20 +438,19 @@ export default {
       } else {
         this.meal_plans = []
       }
-
-
     },
-    loadRecentlyViewed: function () {
-      let apiClient = new ApiApiFactory()
-      if (this.settings.recently_viewed > 0) {
-        apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, this.settings.sort_by_new, 1, this.settings.recently_viewed, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
-          this.last_viewed_recipes = result.data.results
-        })
-      } else {
-        this.last_viewed_recipes = []
-      }
-    },
+    // DEPRECATED: intergrated into standard FTS queryset
+    // loadRecentlyViewed: function () {
+    //   let apiClient = new ApiApiFactory()
+    //   if (this.settings.recently_viewed > 0) {
+    //     apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
+    //         undefined, undefined, undefined, this.settings.sort_by_new, 1, this.settings.recently_viewed, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
+    //       this.last_viewed_recipes = result.data.results
+    //     })
+    //   } else {
+    //     this.last_viewed_recipes = []
+    //   }
+    // },
     genericSelectChanged: function (obj) {
       this.settings[obj.var] = obj.val
       this.refreshData(false)
@@ -473,6 +478,17 @@ export default {
             children: node.children,
             isDefaultExpanded: node.isDefaultExpanded
         }
+    },
+    isRecentOrNew: function(x) {
+      let recent_recipe = [this.$t('Recently_Viewed'), "fas fa-eye"]
+      let new_recipe = [this.$t('New_Recipe'), "fas fa-splotch"]
+      if (x.new) {
+        return new_recipe
+      } else if (this.facets.Recent.includes(x.id)) {
+        return recent_recipe
+      } else {
+        return [undefined, undefined]
+      }
     }
   }
 }

@@ -87,7 +87,7 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),
+    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),  # TODO is this still needed?
 
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
@@ -137,7 +137,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
-    Comment, RecipeBookEntry, Food, ShoppingList, InviteLink
+    Comment, RecipeBookEntry, ShoppingList, InviteLink
 )
 
 for m in generic_models:
@@ -176,7 +176,7 @@ for m in generic_models:
             )
         )
 
-tree_models = [Keyword]
+tree_models = [Keyword, Food]
 for m in tree_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

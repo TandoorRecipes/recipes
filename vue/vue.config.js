@@ -29,6 +29,10 @@ const pages = {
         entry: './src/apps/KeywordListView/main.js',
         chunks: ['chunk-vendors']
     },
+    'food_list_view': {
+        entry: './src/apps/FoodListView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {
