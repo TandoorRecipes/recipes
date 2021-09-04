@@ -1,5 +1,5 @@
 <template>
-  <div row>
+  <div row style="margin: 4px">
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
       style="height: 10vh;" :style="{'cursor:grab' : draggable}"
       @dragover.prevent

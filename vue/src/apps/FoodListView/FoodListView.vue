@@ -2,55 +2,51 @@
   <div id="app" style="margin-bottom: 4vh">
     <!-- v-if prevents component from loading before this_model has been assigned -->
     <generic-modal-form v-if="this_model"
-    :model="this_model"
-    :action="this_action"
-    :item1="this_item"
-    :item2="this_target"
-    :show="show_modal"
-    @finish-action="finishAction"/>
+                        :model="this_model"
+                        :action="this_action"
+                        :item1="this_item"
+                        :item2="this_target"
+                        :show="show_modal"
+                        @finish-action="finishAction"/>
     <generic-split-lists v-if="this_model"
-      :list_name="this_model.name"
-      @reset="resetList"
-      @get-list="getItems"
-      @item-action="startAction" 
-    >
+                         :list_name="this_model.name"
+                         @reset="resetList"
+                         @get-list="getItems"
+                         @item-action="startAction">
       <template v-slot:cards-left>
-        <generic-horizontal-card 
-          v-for="i in items_left" v-bind:key="i.id"
-          :item=i
-          :item_type="this_model.name"
-          :draggable="true"
-          :merge="true"
-          :move="true"
-          @item-action="startAction($event, 'left')" 
-        >
-            <!-- foods can also be a recipe, show link to the recipe if it exists -->
-            <template v-slot:upper-right>
-              <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name" 
-                class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
-            </template>
+        <generic-horizontal-card
+            v-for="i in items_left" v-bind:key="i.id"
+            :item=i
+            :item_type="this_model.name"
+            :draggable="true"
+            :merge="true"
+            :move="true"
+            @item-action="startAction($event, 'left')">
+          <!-- foods can also be a recipe, show link to the recipe if it exists -->
+          <template v-slot:upper-right>
+            <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
+                      class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
+          </template>
         </generic-horizontal-card>
       </template>
       <template v-slot:cards-right>
         <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id"
-          :item=i
-          :item_type="this_model.name"
-          :draggable="true"
-          :merge="true"
-          :move="true"
-          @item-action="startAction($event, 'right')" 
-        >
+                                 :item=i
+                                 :item_type="this_model.name"
+                                 :draggable="true"
+                                 :merge="true"
+                                 :move="true"
+                                 @item-action="startAction($event, 'right')">
           <!-- foods can also be a recipe, show link to the recipe if it exists -->
           <template v-slot:upper-right>
-            <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name" 
-              class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
+            <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
+                      class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
           </template>
         </generic-horizontal-card>
       </template>
     </generic-split-lists>
-    
-    
-    
+
+
   </div>
 </template>
 
@@ -85,7 +81,7 @@ export default {
       this_action: undefined,
       this_item: {},
       this_target: {},
-      show_modal:false
+      show_modal: false
     }
   },
   mounted() {
@@ -93,14 +89,14 @@ export default {
   },
   methods: {
     // this.genericAPI inherited from ApiMixin
-    resetList: function(e) {
+    resetList: function (e) {
       if (e.column === 'left') {
         this.items_left = []
       } else if (e.column === 'right') {
         this.items_right = []
       }
     },
-    startAction: function(e, param) {
+    startAction: function (e, param) {
       let source = e?.source ?? {}
       let target = e?.target ?? undefined
       this.this_item = source
@@ -154,10 +150,10 @@ export default {
           break;
       }
     },
-    finishAction: function(e) {
+    finishAction: function (e) {
       let update = undefined
       if (e !== 'cancel') {
-        switch(this.this_action) {
+        switch (this.this_action) {
           case this.Actions.DELETE:
             this.deleteThis(this.this_item.id)
             break;
@@ -179,35 +175,35 @@ export default {
       }
       this.clearState()
     },
-    getItems: function(params, callback) {
+    getItems: function (params, callback) {
       let column = params?.column ?? 'left'
       // TODO: does this need to be a callback?
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
-        if (result.data.results.length){
-          if (column ==='left') {
+        if (result.data.results.length) {
+          if (column === 'left') {
             // if paginated results are in result.data.results otherwise just result.data
-            this.items_left = this.items_left.concat(result.data?.results ?? result.data)            
-          } else if (column ==='right') {
+            this.items_left = this.items_left.concat(result.data?.results ?? result.data)
+          } else if (column === 'right') {
             this.items_right = this.items_right.concat(result.data?.results ?? result.data)
           }
           // are the total elements less than the length of the array? if so, stop loading
           // TODO: generalize this to handle results in result.data
-          callback(result.data.count > (column==="left" ? this.items_left.length : this.items_right.length))
+          callback(result.data.count > (column === "left" ? this.items_left.length : this.items_right.length))
         } else {
           callback(false) // stop loading
           console.log('no data returned')
         }
         // return true if total objects are still less than the length of the list
         // TODO this needs generalized to handle non-paginated data
-        callback(result.data.count < (column==="left" ? this.items_left.length : this.items_right.length)) 
+        callback(result.data.count < (column === "left" ? this.items_left.length : this.items_right.length))
 
       }).catch((err) => {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
       })
     },
-    getThis: function(id, callback){
-      return this.genericAPI(this.this_model, this.Actions.FETCH, {'id': id}) 
+    getThis: function (id, callback) {
+      return this.genericAPI(this.this_model, this.Actions.FETCH, {'id': id})
     },
     saveThis: function (thisItem) {
       if (!thisItem?.id) { // if there is no item id assume it's a new item
@@ -273,7 +269,10 @@ export default {
         this.clearState()
         return
       }
-      this.genericAPI(this.this_model, this.Actions.MERGE, {'source': source_id, 'target': target_id}).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.MERGE, {
+        'source': source_id,
+        'target': target_id
+      }).then((result) => {
         this.items_left = this.destroyCard(source_id, this.items_left)
         this.items_right = this.destroyCard(source_id, this.items_right)
         this.refreshThis(target_id)
@@ -284,9 +283,9 @@ export default {
         console.log('Error', err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
-      
+
     },
-    getChildren: function(col, item){
+    getChildren: function (col, item) {
       let parent = {}
       let options = {
         'root': item.id,
@@ -304,7 +303,7 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    getRecipes: function(col, food){
+    getRecipes: function (col, food) {
       let parent = {}
       // TODO: make this generic
       let options = {
@@ -318,19 +317,19 @@ export default {
           Vue.set(parent, 'show_recipes', true)
           Vue.set(parent, 'show_children', false)
         }
-        
+
       }).catch((err) => {
         console.log(err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    refreshThis: function(id){
+    refreshThis: function (id) {
       this.getThis(id).then(result => {
         this.refreshCard(result.data, this.items_left)
         this.refreshCard({...result.data}, this.items_right)
       })
     },
-    deleteThis: function(id) {
+    deleteThis: function (id) {
       this.genericAPI(this.this_model, this.Actions.DELETE, {'id': id}).then((result) => {
         this.items_left = this.destroyCard(id, this.items_left)
         this.items_right = this.destroyCard(id, this.items_right)
@@ -338,9 +337,9 @@ export default {
       }).catch((err) => {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
-      }) 
+      })
     },
-    clearState: function() {
+    clearState: function () {
       this.show_modal = false
       this.this_action = undefined
       this.this_item = undefined
