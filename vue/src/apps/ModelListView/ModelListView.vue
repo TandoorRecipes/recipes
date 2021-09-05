@@ -28,6 +28,11 @@
           <template v-slot:upper-right>
             <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
                       class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
+            <!-- keywords can have icons - if it exists, display it -->
+            <b-button v-if="i.icon"
+                      class=" btn p-0 border-0" variant="link">
+                      {{i.icon}}
+            </b-button>
           </template>
         </generic-horizontal-card>
       </template>
@@ -98,11 +103,8 @@ export default {
   methods: {
     // this.genericAPI inherited from ApiMixin
     resetList: function (e) {
-      if (e.column === 'left') {
-        this.items_left = []
-      } else if (e.column === 'right') {
-        this.items_right = []
-      }
+      this.items_right = []
+      this.items_left = []
     },
     startAction: function (e, param) {
       let source = e?.source ?? {}
@@ -205,10 +207,11 @@ export default {
     saveThis: function (thisItem) {
       if (!thisItem?.id) { // if there is no item id assume it's a new item
         this.genericAPI(this.this_model, this.Actions.CREATE, thisItem).then((result) => {
-          // place all new items at the top of the list - could sort instead
-          this.items_left = [result.data].concat(this.items_left)
+          // look for and destroy any existing cards to prevent duplicates in the GET case of get_or_create         
+          // then place all new items at the top of the list - could sort instead
+          this.items_left = [result.data].concat(this.destroyCard(result?.data?.id, this.items_left))
           // this creates a deep copy to make sure that columns stay independent
-          this.items_right = [{...result.data}].concat(this.items_right)
+          this.items_right = [{...result.data}].concat(this.destroyCard(result?.data?.id, this.items_right))
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
         }).catch((err) => {
           console.log(err)
@@ -230,14 +233,15 @@ export default {
         this.clearState()
         return
       }
-      if (source_id === undefined || target_id === undefined) {
+      let item = this.findCard(source_id, this.items_left) || this.findCard(source_id, this.items_right)
+      if (source_id === undefined || target_id === undefined || item?.parent == target_id) {
         this.makeToast(this.$t('Warning'), this.$t('Nothing to do'), 'warning')
         this.clearState()
         return
       }
       this.genericAPI(this.this_model, this.Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
-          let item = this.findCard(source_id, this.items_left) || this.findCard(source_id, this.items_right)
+          
           this.items_left = [item].concat(this.destroyCard(source_id, this.items_left)) // order matters, destroy old card before adding it back in at root
           this.items_right = [...[item]].concat(this.destroyCard(source_id, this.items_right)) // order matters, destroy old card before adding it back in at root
           item.parent = null

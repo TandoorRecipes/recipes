@@ -172,6 +172,11 @@ export default {
     resetSearch: function () {
       this.search_right = ''
       this.search_left = ''
+      this.right_page = 0
+      this.left_page = 0
+      this.right += 1
+      this.left += 1
+      this.$emit('reset')
     },
     infiniteHandler: function($state, col) { 
         let params = {
