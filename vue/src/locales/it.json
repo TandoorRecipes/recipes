@@ -94,7 +94,9 @@
     "delete_confimation": "Sei sicuro di voler eliminare {kw} e tutti gli elementi dipendenti?",
     "move_confirmation": "Sposta {child} al primario {parent}",
     "merge_confirmation": "Sostituisci {source} con {target}",
-    "move_selection": "Scegli un primario dove spostare {child}.",
+    "move_selection": "Scegli un primario {type} dove spostare {source}.",
     "merge_selection": "Sostituisci tutte le voci di {source} con il {type} selezionato.",
-    "Root": "Radice"
+    "Root": "Radice",
+    "Ignore_Shopping": "Ignora lista della spesa",
+    "delete_confirmation": "Sei sicuro di voler eliminare {source}?"
 }
