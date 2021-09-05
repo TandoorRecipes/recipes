@@ -10,14 +10,14 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 from django_scopes import scopes_disabled
 
-from cookbook.forms import (CommentForm, ExternalRecipeForm, FoodForm,
-                            FoodMergeForm, KeywordForm, MealPlanForm,
+from cookbook.forms import (CommentForm, ExternalRecipeForm,
+                            FoodMergeForm, MealPlanForm,
                             RecipeBookForm, StorageForm, SyncForm,
                             UnitMergeForm)
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                OwnerRequiredMixin,
                                                group_required)
-from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
+from cookbook.models import (Comment, Ingredient, MealPlan,
                              MealType, Recipe, RecipeBook, RecipeImport,
                              Storage, Sync, UserPreference)
 from cookbook.provider.dropbox import Dropbox
@@ -86,38 +86,38 @@ class SyncUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
         return context
 
 
-class KeywordUpdate(GroupRequiredMixin, UpdateView):
-    groups_required = ['user']
-    template_name = "generic/edit_template.html"
-    model = Keyword
-    form_class = KeywordForm
+# class KeywordUpdate(GroupRequiredMixin, UpdateView):
+#     groups_required = ['user']
+#     template_name = "generic/edit_template.html"
+#     model = Keyword
+#     form_class = KeywordForm
 
-    # TODO add msg box
+#     # TODO add msg box
 
-    def get_success_url(self):
-        return reverse('list_keyword')
+#     def get_success_url(self):
+#         return reverse('list_keyword')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _("Keyword")
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = _("Keyword")
+#         return context
 
 
-class FoodUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
-    groups_required = ['user']
-    template_name = "generic/edit_template.html"
-    model = Food
-    form_class = FoodForm
+# class FoodUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
+#     groups_required = ['user']
+#     template_name = "generic/edit_template.html"
+#     model = Food
+#     form_class = FoodForm
 
-    # TODO add msg box
+#     # TODO add msg box
 
-    def get_success_url(self):
-        return reverse('edit_food', kwargs={'pk': self.object.pk})
+#     def get_success_url(self):
+#         return reverse('edit_food', kwargs={'pk': self.object.pk})
 
-    def get_context_data(self, **kwargs):
-        context = super(FoodUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Food")
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super(FoodUpdate, self).get_context_data(**kwargs)
+#         context['title'] = _("Food")
+#         return context
 
 
 @group_required('admin')
@@ -279,6 +279,7 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
         return context
 
 
+# TODO deprecate
 @group_required('user')
 def edit_ingredients(request):
     if request.method == "POST":

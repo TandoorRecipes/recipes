@@ -67,7 +67,7 @@ import GenericModalForm from "@/components/Modals/GenericModalForm";
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'FoodListView', // TODO: make generic name
+  name: 'ModelListView', // TODO: make generic name
   mixins: [CardMixin, ToastMixin, ApiMixin],
   components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
@@ -85,7 +85,8 @@ export default {
     }
   },
   mounted() {
-    this.this_model = this.Models.FOOD  //TODO: mounted method to calcuate
+    let path = (window.location.pathname).split('/')
+    this.this_model = this.Models[path[path.length - 2].toUpperCase()]
   },
   methods: {
     // this.genericAPI inherited from ApiMixin

@@ -11,7 +11,7 @@ from cookbook.helper import dal
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
                      Storage, Sync, SyncLog, get_model_name)
-from .views import api, data, delete, edit, import_export, lists, trees, new, views, telegram
+from .views import api, data, delete, edit, import_export, lists, new, views, telegram
 
 router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
@@ -87,7 +87,7 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),  # TODO is this still needed?
+    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),  # TODO deprecate?
 
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
@@ -176,12 +176,12 @@ for m in generic_models:
             )
         )
 
-tree_models = [Keyword, Food]
-for m in tree_models:
+vue_models = [Keyword, Food]
+for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')
 
-    if c := getattr(trees, py_name, None):
+    if c := getattr(lists, py_name, None):
         urlpatterns.append(
             path(
                 f'list/{url_name}/', c, name=f'list_{py_name}'
