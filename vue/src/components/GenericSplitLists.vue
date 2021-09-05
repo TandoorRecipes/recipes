@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import Vue from 'vue' // maybe not needed?
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import _debounce from 'lodash/debounce'
 import InfiniteLoading from 'vue-infinite-loading';

@@ -2,9 +2,8 @@
 {% load render_bundle from webpack_loader %}
 {% load static %}
 {% load i18n %}
-{% load l10n %}
-{% comment %} TODO Can this be combined with Keyword template? {% endcomment %}
-{% block title %}{% trans 'Food' %}{% endblock %}
+{% comment %} {% load l10n %} {% endcomment %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content_fluid %}
 
@@ -17,15 +16,15 @@
 
 
 {% block script %}
-    {% if debug %}
+    {% comment %} {% if debug %}
         <script src="{% url 'js_reverse' %}"></script>
     {% else %}
         <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
-    {% endif %}
+    {% endif %} {% endcomment %}
 
     <script type="application/javascript">
         window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
     </script>
 
-    {% render_bundle 'food_list_view' %}
+    {% render_bundle 'model_list_view' %}
 {% endblock %}
