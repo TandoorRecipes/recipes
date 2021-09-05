@@ -94,6 +94,7 @@ export default {
     }
   },
   methods: {
+    // TODO: convert this to genericAPI
     clickUrl: function () {
       if (this.recipe !== null) {
         return resolveDjangoUrl('view_recipe', this.recipe.id)

@@ -10,6 +10,8 @@
                         @finish-action="finishAction"/>
     <generic-split-lists v-if="this_model"
                          :list_name="this_model.name"
+                         :right_counts="right_counts"
+                         :left_counts="left_counts"
                          @reset="resetList"
                          @get-list="getItems"
                          @item-action="startAction">
@@ -67,7 +69,9 @@ import GenericModalForm from "@/components/Modals/GenericModalForm";
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'ModelListView', // TODO: make generic name
+  // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available 
+  // or i'm capturing it incorrectly
+  name: 'ModelListView',
   mixins: [CardMixin, ToastMixin, ApiMixin],
   components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
@@ -75,18 +79,21 @@ export default {
       // this.Models and this.Actions inherited from ApiMixin
       items_left: [],
       items_right: [],
-      load_more_left: true,
-      load_more_right: true,
+      right_counts: {'max': 9999, 'current': 0},
+      left_counts: {'max': 9999, 'current': 0},
       this_model: undefined,
       this_action: undefined,
+      this_recipe_param: undefined,
       this_item: {},
       this_target: {},
       show_modal: false
     }
   },
   mounted() {
-    let path = (window.location.pathname).split('/')
-    this.this_model = this.Models[path[path.length - 2].toUpperCase()]
+    // value is passed from lists.py
+    let model_config = JSON.parse(document.getElementById('model_config').textContent)
+    this.this_model = this.Models[model_config?.model]
+    this.this_recipe_param = model_config?.recipe_param
   },
   methods: {
     // this.genericAPI inherited from ApiMixin
@@ -176,28 +183,17 @@ export default {
       }
       this.clearState()
     },
-    getItems: function (params, callback) {
+    getItems: function (params) {
       let column = params?.column ?? 'left'
-      // TODO: does this need to be a callback?
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         if (result.data.results.length) {
-          if (column === 'left') {
-            // if paginated results are in result.data.results otherwise just result.data
-            this.items_left = this.items_left.concat(result.data?.results ?? result.data)
-          } else if (column === 'right') {
-            this.items_right = this.items_right.concat(result.data?.results ?? result.data)
-          }
-          // are the total elements less than the length of the array? if so, stop loading
-          // TODO: generalize this to handle results in result.data
-          callback(result.data.count > (column === "left" ? this.items_left.length : this.items_right.length))
+          this['items_' + column] = this['items_' + column].concat(result.data?.results)
+          this[column + '_counts']['current'] = this['items_' + column].length
+          this[column + '_counts']['max'] = result.data.count
+          
         } else {
-          callback(false) // stop loading
           console.log('no data returned')
         }
-        // return true if total objects are still less than the length of the list
-        // TODO this needs generalized to handle non-paginated data
-        callback(result.data.count < (column === "left" ? this.items_left.length : this.items_right.length))
-
       }).catch((err) => {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
@@ -253,8 +249,6 @@ export default {
         // TODO make standard toast
         this.makeToast(this.$t('Success'), 'Succesfully moved resource', 'success')
       }).catch((err) => {
-        // TODO none of the error checking works because the openapi generated functions don't throw an error?  
-        // or i'm capturing it incorrectly
         console.log(err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
@@ -293,7 +287,7 @@ export default {
         'pageSize': 200
       }
       this.genericAPI(this.this_model, this.Actions.LIST, options).then((result) => {
-        parent = this.findCard(item.id, col === 'left' ? this.items_left : this.items_right)
+        parent = this.findCard(item.id, this['items_' + col])
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
           Vue.set(parent, 'show_children', true)
@@ -304,15 +298,14 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    getRecipes: function (col, food) {
+    getRecipes: function (col, item) {
       let parent = {}
       // TODO: make this generic
-      let options = {
-        'foods': food.id,
-        'pageSize': 200
-      }
+      let options = {'pageSize': 200}
+      options[this.this_recipe_param] = item.id
+
       this.genericAPI(this.Models.RECIPE, this.Actions.LIST, options).then((result) => {
-        parent = this.findCard(food.id, col === 'left' ? this.items_left : this.items_right)
+        parent = this.findCard(item.id, this['items_' + col])
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
           Vue.set(parent, 'show_recipes', true)

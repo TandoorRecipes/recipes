@@ -16,11 +16,13 @@
 
 
 {% block script %}
-    {% comment %} {% if debug %}
+    {{ config | json_script:"model_config" }}
+    
+    {% if debug %}
         <script src="{% url 'js_reverse' %}"></script>
     {% else %}
         <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
-    {% endif %} {% endcomment %}
+    {% endif %}
 
     <script type="application/javascript">
         window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
