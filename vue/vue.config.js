@@ -25,10 +25,6 @@ const pages = {
         entry: './src/apps/UserFileView/main.js',
         chunks: ['chunk-vendors']
     },
-    'keyword_list_view': {
-        entry: './src/apps/KeywordListView/main.js',
-        chunks: ['chunk-vendors']
-    },
     'model_list_view': {
         entry: './src/apps/ModelListView/main.js',
         chunks: ['chunk-vendors']
@@ -85,7 +81,7 @@ module.exports = {
                 },
             },
             // TODO make this conditional on .env DEBUG = FALSE
-            config.optimization.minimize(false)
+            config.optimization.minimize(true)
         );
 
         //TODO somehow remov them as they are also added to the manifest config of the service worker

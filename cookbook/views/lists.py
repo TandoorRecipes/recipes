@@ -105,7 +105,17 @@ def invite_link(request):
 
 @group_required('user')
 def keyword(request):
-    return render(request, 'model/keyword_template.html', {"title": _("Keywords")})
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Keywords"),
+            "config": {
+                'model': "KEYWORD",
+                'recipe_param': 'keywords'
+            }
+        }
+    )
 
 
 @group_required('user')

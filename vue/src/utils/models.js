@@ -108,7 +108,33 @@ export class Models {
     static KEYWORD = {
         'name': i18n.t('Keyword'),              // *OPTIONAL: parameters will be built model -> model_type -> default
         'apiName': 'Keyword',  
-        'model_type': this.TREE
+        'model_type': this.TREE,
+        'create': {
+            // if not defined partialUpdate will use the same parameters, prepending 'id'
+            'params': [['name', 'description', 'icon']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                },
+                'icon': {
+                    'form_field': true,
+                    'type': 'emoji',
+                    'field': 'icon',
+                    'label': i18n.t('Icon')
+                },
+            }
+        },
     }
     static UNIT = {}
     static RECIPE = {}

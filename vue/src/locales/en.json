@@ -121,5 +121,6 @@
   "Name": "Name",
   "Description": "Description",
   "Recipe": "Recipe",
-  "tree_root": "Root of Tree"
+  "tree_root": "Root of Tree",
+  "Icon": "Icon"
 }
