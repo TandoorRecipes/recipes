@@ -4,6 +4,7 @@
         <template v-slot:modal-title><h4>{{form.title}}</h4></template>
         <div v-for="(f, i) in form.fields" v-bind:key=i>
           <p v-if="f.type=='instruction'">{{f.label}}</p>
+          <!-- this lookup is single selection -->
           <lookup-input v-if="f.type=='lookup'"
             :label="f.label"
             :value="f.value"
@@ -12,6 +13,7 @@
             :sticky_options="f.sticky_options || undefined"
             @change="storeValue"/> <!-- TODO add ability to create new items associated with lookup -->
           <!-- TODO: add emoji field -->
+          <!-- TODO: add multi-selection input list -->
           <checkbox-input v-if="f.type=='checkbox'"
             :label="f.label"
             :value="f.value"

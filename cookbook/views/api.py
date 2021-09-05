@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Q, Value, When
+from django.db.models import Case, ProtectedError, Q, Value, When
 from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
@@ -380,6 +380,13 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
 
+    def destroy(self, *args, **kwargs):
+        try:
+            return (super().destroy(self, *args, **kwargs))
+        except ProtectedError as e:
+            content = {'error': True, 'msg': e.args[0]}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
@@ -486,7 +493,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(queryset, request.query_params, request.space)
+        self.facets = get_facet(queryset, request)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):

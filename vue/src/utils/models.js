@@ -99,7 +99,7 @@ export class Models {
                     'type': 'lookup',
                     'field': 'supermarket_category',
                     'list': 'SHOPPING_CATEGORY',
-                    'label': i18n.t('Shopping_Category')
+                    'label': i18n.t('Shopping_Category'),
                 },
             }
         },
