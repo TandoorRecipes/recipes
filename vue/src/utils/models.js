@@ -137,10 +137,9 @@ export class Models {
         },
     }
     static UNIT = {
-        'name': i18n.t('Unit'),              // *OPTIONAL: parameters will be built model -> model_type -> default
+        'name': i18n.t('Unit'),
         'apiName': 'Unit', 
         'create': {
-            // if not defined partialUpdate will use the same parameters, prepending 'id'
             'params': [['name', 'description']],
             'form': {
                 'name': {
