@@ -4394,6 +4394,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
          * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
          * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [units] Id of unit a recipe should have.
          * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
          * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
          * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
@@ -4406,7 +4407,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: string, foods?: string, units?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4429,6 +4430,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (foods !== undefined) {
                 localVarQueryParameter['foods'] = foods;
+            }
+
+            if (units !== undefined) {
+                localVarQueryParameter['units'] = units;
             }
 
             if (books !== undefined) {
@@ -4780,12 +4785,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [query] Query string matched against unit name.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUnits: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listUnits: async (query?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/unit/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4797,6 +4803,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -8425,6 +8435,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
          * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
          * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [units] Id of unit a recipe should have.
          * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
          * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
          * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
@@ -8437,8 +8448,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: string, foods?: string, units?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, units, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8535,13 +8546,14 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [query] Query string matched against unit name.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUnits(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listUnits(page, pageSize, options);
+        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUnits(query, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9984,6 +9996,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
          * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
          * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [units] Id of unit a recipe should have.
          * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
          * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
          * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
@@ -9996,8 +10009,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
-            return localVarFp.listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: string, foods?: string, units?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
+            return localVarFp.listRecipes(query, keywords, foods, units, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10083,13 +10096,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [query] Query string matched against unit name.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUnits(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
-            return localVarFp.listUnits(page, pageSize, options).then((request) => request(axios, basePath));
+        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+            return localVarFp.listUnits(query, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11566,6 +11580,7 @@ export class ApiApi extends BaseAPI {
      * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
      * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
      * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
+     * @param {number} [units] Id of unit a recipe should have.
      * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
      * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
      * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
@@ -11579,8 +11594,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(query?: string, keywords?: string, foods?: string, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: string, foods?: string, units?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, units, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11687,14 +11702,15 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [query] Query string matched against unit name.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listUnits(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listUnits(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listUnits(query?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listUnits(query, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

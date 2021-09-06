@@ -21,8 +21,8 @@
             :item=i
             :item_type="this_model.name"
             :draggable="true"
-            :merge="true"
-            :move="true"
+            :merge="this_model['merge'] !== false"
+            :move="this_model['move'] !== false"
             @item-action="startAction($event, 'left')">
           <!-- foods can also be a recipe, show link to the recipe if it exists -->
           <template v-slot:upper-right>
@@ -41,8 +41,8 @@
                                  :item=i
                                  :item_type="this_model.name"
                                  :draggable="true"
-                                 :merge="true"
-                                 :move="true"
+                                 :merge="this_model['merge'] !== false"
+                                 :move="this_model['move'] !== false"
                                  @item-action="startAction($event, 'right')">
           <!-- foods can also be a recipe, show link to the recipe if it exists -->
           <template v-slot:upper-right>

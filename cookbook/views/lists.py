@@ -146,7 +146,7 @@ def unit(request):
             "title": _("Units"),
             "config": {
                 'model': "UNIT",         # *REQUIRED* name of the model in models.js
-                # 'recipe_param': 'units'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+                'recipe_param': 'units'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
             }
         }
     )

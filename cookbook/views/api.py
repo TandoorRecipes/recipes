@@ -48,7 +48,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import RecipeSchema, TreeSchema
+from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookSerializer,
@@ -98,6 +98,8 @@ class DefaultPagination(PageNumberPagination):
 
 
 class FuzzyFilterMixin(ViewSetMixin):
+    schema = FilterSchema()
+
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
         query = self.request.query_params.get('query', None)

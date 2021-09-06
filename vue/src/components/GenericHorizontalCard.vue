@@ -19,7 +19,7 @@
                     <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
                     <div class= "m-0 text-truncate">{{ item[subtitle] }}</div>
                     <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
-                      <div v-if="item[child_count] !=0" class="mx-2 btn btn-link btn-sm" 
+                      <div v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" 
                         style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':item})">
                           <div v-if="!item.show_children">{{ item[child_count] }} {{ item_type }}</div>
                           <div v-else>{{ text.hide_children }}</div>
@@ -112,6 +112,7 @@ export default {
     recipes: {type: String, default: 'recipes'},
     move: {type: Boolean, default: false},
     merge: {type: Boolean, default: false},
+    tree: {type: Boolean, default: false},
   },
   data() {
     return {
