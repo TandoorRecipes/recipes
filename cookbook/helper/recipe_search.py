@@ -20,6 +20,7 @@ def search_recipes(request, queryset, params):
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
     search_books = params.getlist('books', [])
+    search_units = params.get('units', None)
 
     # TODO I think default behavior should be 'AND' which is how most sites operate with facet/filters based on results
     search_keywords_or = params.get('keywords_or', True)
@@ -159,6 +160,10 @@ def search_recipes(request, queryset, params):
         else:
             for k in search_books:
                 queryset = queryset.filter(recipebookentry__book__id=k)
+    
+    # probably only useful in Unit list view, so keeping it simple
+    if search_units:
+        queryset = queryset.filter(steps__ingredients__unit__id=search_units)
 
     if search_internal == 'true':
         queryset = queryset.filter(internal=True)
