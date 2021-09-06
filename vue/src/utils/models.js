@@ -136,7 +136,31 @@ export class Models {
             }
         },
     }
-    static UNIT = {}
+    static UNIT = {
+        'name': i18n.t('Unit'),              // *OPTIONAL: parameters will be built model -> model_type -> default
+        'apiName': 'Unit', 
+        'create': {
+            // if not defined partialUpdate will use the same parameters, prepending 'id'
+            'params': [['name', 'description']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                }
+            }
+        },
+        'move': false
+    }
     static RECIPE = {}
     static SHOPPING_LIST = {}
     static RECIPE_BOOK = {

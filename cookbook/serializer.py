@@ -118,8 +118,10 @@ class UserFileSerializer(serializers.ModelSerializer):
         except TypeError:
             current_file_size_mb = 0
 
-        if (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5) > self.context[
-            'request'].space.max_file_storage_mb != 0:
+        if (
+            (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
+            > self.context['request'].space.max_file_storage_mb != 0
+        ):
             raise ValidationError(_('You have reached your file upload limit.'))
 
     def create(self, validated_data):
@@ -241,10 +243,24 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
 
 class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_image')
+    numrecipe = serializers.SerializerMethodField('count_recipes')
+
+    def get_image(self, obj):
+        recipes = Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+
+        if len(recipes) != 0:
+            return random.choice(recipes).image.url
+        else:
+            return None
+
+    def count_recipes(self, obj):
+        return Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).count()
 
     def create(self, validated_data):
-        obj, created = Unit.objects.get_or_create(name=validated_data['name'].strip(),
-                                                  space=self.context['request'].space)
+        validated_data['name'] = validated_data['name'].strip()
+        validated_data['space'] = self.context['request'].space
+        obj, created = Unit.objects.get_or_create(**validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -253,8 +269,8 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'description')
-        read_only_fields = ('id',)
+        fields = ('id', 'name', 'description', 'numrecipe', 'image')
+        read_only_fields = ('id', 'numrecipe', 'image')
 
 
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):

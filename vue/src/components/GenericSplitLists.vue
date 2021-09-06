@@ -176,7 +176,7 @@ export default {
       this.left_page = 0
       this.right += 1
       this.left += 1
-      this.$emit('reset')
+      // this.$emit('reset')  doublecheck if this is necessary
     },
     infiniteHandler: function($state, col) { 
         let params = {
