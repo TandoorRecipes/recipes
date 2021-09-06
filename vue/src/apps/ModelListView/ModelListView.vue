@@ -103,8 +103,9 @@ export default {
   methods: {
     // this.genericAPI inherited from ApiMixin
     resetList: function (e) {
-      this.items_right = []
-      this.items_left = []
+      this['items_' + e.column] = []
+      this[e.column + '_counts'].max = 9999 + Math.random()
+      this[e.column + '_counts'].current = 0
     },
     startAction: function (e, param) {
       let source = e?.source ?? {}
@@ -192,8 +193,9 @@ export default {
           this['items_' + column] = this['items_' + column].concat(result.data?.results)
           this[column + '_counts']['current'] = this['items_' + column].length
           this[column + '_counts']['max'] = result.data.count
-          
         } else {
+          this[column + '_counts']['current'] = 0
+          this[column + '_counts']['max'] = 0
           console.log('no data returned')
         }
       }).catch((err) => {

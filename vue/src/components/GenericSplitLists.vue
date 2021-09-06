@@ -74,6 +74,7 @@
                 @infinite="infiniteHandler($event, 'left')" 
                 spinner="waveDots">
                 <template v-slot:no-more><span/></template>
+                <template v-slot:no-results><span>{{$t('No_Results')}}</span></template>
               </infinite-loading>
             </div>
             <!-- right side cards -->
@@ -84,6 +85,7 @@
                 @infinite="infiniteHandler($event, 'right')" 
                 spinner="waveDots">
                 <template v-slot:no-more><span/></template>
+                <template v-slot:no-results><span>{{$t('No_Results')}}</span></template>
               </infinite-loading>
             </div>
           </div>
@@ -150,33 +152,42 @@ export default {
     right_counts: {
       deep: true,
       handler(newVal, oldVal) {
+        if (newVal.current > 0) {
+          this.right_state.loaded()
+        }
         if (newVal.current >= newVal.max) {
           this.right_state.complete()
-        } else {
-          this.right_state.loaded()
         }
       }
     },
     left_counts: {
       deep: true,
       handler(newVal, oldVal) {
+        if (newVal.current > 0) {
+          this.left_state.loaded()
+        }
         if (newVal.current >= newVal.max) {
           this.left_state.complete()
-        } else {
-          this.left_state.loaded()
         }
       }
     }
   },
   methods: {
     resetSearch: function () {
-      this.search_right = ''
-      this.search_left = ''
-      this.right_page = 0
-      this.left_page = 0
-      this.right += 1
-      this.left += 1
-      // this.$emit('reset')  doublecheck if this is necessary
+      if (this.search_right == '') {
+        this.right_page = 0
+        this.right += 1
+        this.$emit('reset', {'column':'right'})
+      } else {
+        this.search_right = ''
+      }
+      if (this.search_left == '') {
+        this.left_page = 0
+        this.left += 1
+        this.$emit('reset', {'column':'left'})
+      } else {
+        this.search_left = ''
+      }
     },
     infiniteHandler: function($state, col) { 
         let params = {
