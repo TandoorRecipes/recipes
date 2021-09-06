@@ -104,8 +104,7 @@ class TreeModel(MP_Node):
 
     class Meta:
         abstract = True
-        
-        
+
 
 class PermissionModelMixin:
     @staticmethod

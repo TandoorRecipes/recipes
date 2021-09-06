@@ -760,7 +760,7 @@
                 searchUnits: function (query) {
                     this.units_loading = true
                     this.$http.get("{% url 'api:unit-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.units = response.data;
+                        this.units = response.data.results;
 
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {

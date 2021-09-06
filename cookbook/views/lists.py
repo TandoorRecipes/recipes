@@ -133,3 +133,20 @@ def food(request):
             }
         }
     )
+
+
+@group_required('user')
+def unit(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Units"),
+            "config": {
+                'model': "UNIT",         # *REQUIRED* name of the model in models.js
+                # 'recipe_param': 'units'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+            }
+        }
+    )
