@@ -160,7 +160,6 @@ export class Models {
         },
         'move': false
     }
-    static RECIPE = {}
     static SHOPPING_LIST = {}
     static RECIPE_BOOK = {
         'name': i18n.t('Recipe_Book'),
