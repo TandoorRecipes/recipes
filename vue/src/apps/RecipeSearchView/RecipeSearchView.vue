@@ -395,6 +395,7 @@ export default {
           this.settings.search_input,
           this.settings.search_keywords,
           this.settings.search_foods,
+          undefined,
           this.settings.search_books.map(function (A) {
             return A["id"];
           }),
