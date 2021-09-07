@@ -119,7 +119,6 @@ class FuzzyFilterMixin(ViewSetMixin):
                     .filter(name__icontains=query).order_by('-exact')
                 )
 
-
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
             try:
@@ -319,6 +318,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SyncLog.objects
     serializer_class = SyncLogSerializer
     permission_classes = [CustomIsAdmin, ]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return self.queryset.filter(sync__space=self.request.space)
@@ -598,35 +598,31 @@ class ViewLogViewSet(viewsets.ModelViewSet):
     queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
     permission_classes = [CustomIsOwner]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space).all()
-        if self.request.method == 'GET':
-            return self.queryset[:5]
-        else:
-            return self.queryset
+        # working backwards from the test - this is supposed to be limited to user view logs only??
+        return self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
 
 
 class CookLogViewSet(viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner]  # CustomIsShared? since ratings are in the cooklog?
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space).all()
-        if self.request.method == 'GET':
-            return self.queryset[:5]
-        else:
-            return self.queryset
+        return self.queryset.filter(space=self.request.space)
 
 
 class ImportLogViewSet(viewsets.ModelViewSet):
     queryset = ImportLog.objects
     serializer_class = ImportLogSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space).all()
+        return self.queryset.filter(space=self.request.space)
 
 
 class BookmarkletImportViewSet(viewsets.ModelViewSet):
