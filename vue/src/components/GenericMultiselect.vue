@@ -10,11 +10,12 @@
       :label="label"
       track-by="id"
       :multiple="multiple"
-      :taggable="create_new"
-      :tag-placeholder="createText"
+      :taggable="allow_create"
+      :tag-placeholder="create_placeholder"
       :loading="loading"
       @search-change="search"
-      @input="selectionChanged">
+      @input="selectionChanged"
+      @tag="addNew">
   </multiselect>
 </template>
 
@@ -44,32 +45,21 @@ export default {
     sticky_options: {type:Array, default(){return []}},
     initial_selection: {type:Array, default(){return []}},
     multiple: {type: Boolean, default: true},
-    create_new: {type: Boolean, default: false}, // TODO: this will create option to add new drop-downs
-    create_text: {type: String, default: 'You Forgot to Add a Tag Placeholder'},
+    allow_create: {type: Boolean, default: false}, // TODO: this will create option to add new drop-downs
+    create_placeholder: {type: String, default: 'You Forgot to Add a Tag Placeholder'},
   },
   watch: {
     initial_selection: function (newVal, oldVal) { // watch it
-      if (this.multiple) {
-        this.selected_objects = newVal
-      } else if (this.selected_objects != newVal?.[0]) {
-        // when not using multiple selections need to convert array to value
-        this.selected_objects = newVal?.[0] ?? null
-      }
+      this.selected_objects = newVal
     },
   },
   mounted() {
     this.search('')
-    // when not using multiple selections need to convert array to value
-    if (!this.multiple & this.selected_objects != this.initial_selection?.[0]) {
-        this.selected_objects = this.initial_selection?.[0] ?? null
-      }
+    this.selected_objects = this.initial_selection
   },
   computed: {
     lookupPlaceholder() {
       return this.placeholder || this.model.name || this.$t('Search')
-    },
-    createText() {
-      return this.create_text
     },
   },
   methods: {
@@ -85,7 +75,19 @@ export default {
       })
     },
     selectionChanged: function () {
-      this.$emit('change', {var: this.parent_variable, val: this.selected_objects})
+      if (this.multiple) {
+        this.$emit('change', {var: this.parent_variable, val: this.selected_objects})
+      } else {
+        // if not multiple listener is expecting a single object, not an array
+        this.$emit('change', {var: this.parent_variable, val: this.selected_objects?.[0] ?? null})
+      }
+      
+    },
+    addNew(e) {
+      this.$emit('new', e)
+      // could refactor as Promise - seems unecessary
+      setTimeout(() => {  this.search(''); }, 750);
+      
     }
   }
 }

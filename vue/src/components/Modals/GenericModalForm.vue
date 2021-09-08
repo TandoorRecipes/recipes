@@ -1,6 +1,6 @@
 <template>
     <div>
-      <b-modal class="modal" id="modal" @hidden="cancelAction">
+      <b-modal :id="'modal_'+id" @hidden="cancelAction">
         <template v-slot:modal-title><h4>{{form.title}}</h4></template>
         <div v-for="(f, i) in form.fields" v-bind:key=i>
           <p v-if="f.type=='instruction'">{{f.label}}</p>
@@ -11,6 +11,7 @@
             :field="f.field"
             :model="listModel(f.list)"
             :sticky_options="f.sticky_options || undefined"
+            :create_new="f.allow_create"
             @change="storeValue"/> <!-- TODO add ability to create new items associated with lookup -->
           <!-- TODO: add multi-selection input list -->
           <checkbox-input v-if="f.type=='checkbox'"
@@ -53,21 +54,24 @@ export default {
   name: 'GenericModalForm',
   components: {CheckboxInput, LookupInput, TextInput, EmojiInput},
   props: {
-    model: {required: true, type: Object, default: function() {}},
-    action: {required: true, type: Object, default: function() {}},
-    item1: {type: Object, default: function() {}},
-    item2: {type: Object, default: function() {}},
+    model: {required: true, type: Object},
+    action: {required: true, type: Object},
+    item1: {type: Object, default () {return undefined}},
+    item2: {type: Object, default () {return undefined}},
     show: {required: true, type: Boolean, default: false},
   },
   data() {
     return {
+      id: undefined,
       form_data: {},
       form: {},
       dirty: false
     }
   },
   mounted() {
-    this.$root.$on('change', this.storeValue);  // modal is outside Vue instance(?) so have to listen at root of component
+    this.id = Math.random()
+    this.$root.$on('change', this.storeValue);  // boostrap modal placed at document so have to listen at root of component
+    
   },
   computed: {
     buttonLabel() {
@@ -79,9 +83,9 @@ export default {
       if (this.show) {
         this.form = getForm(this.model, this.action, this.item1, this.item2)
         this.dirty = true
-        this.$bvModal.show('modal')
+        this.$bvModal.show('modal_' + this.id)
       } else {
-        this.$bvModal.hide('modal')
+        this.$bvModal.hide('modal_' + this.id)
         this.form_data = {}
       }
     },
