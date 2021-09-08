@@ -10,7 +10,7 @@
                   <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input"
                            v-bind:placeholder="$t('Search')"></b-input>
                   <b-input-group-append>
-                    <b-button variant="light" 
+                    <b-button variant="light"
                       v-b-tooltip.hover :title="$t('Random Recipes')"
                       @click="openRandom()">
                       <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
@@ -23,7 +23,7 @@
                       <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
                       <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
                     </b-button>
-                    
+
                   </b-input-group-append>
                 </b-input-group>
               </div>
@@ -241,7 +241,7 @@
                              footer_icon="far fa-calendar-alt"></recipe-card>
               </template>
               <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
-                             :footer_text="isRecentOrNew(r)[0]" 
+                             :footer_text="isRecentOrNew(r)[0]"
                              :footer_icon="isRecentOrNew(r)[1]">
               </recipe-card>
             </div>
@@ -347,7 +347,7 @@ export default {
         this.settings.search_keywords = []
         for (let x of urlParams.getAll('keyword')) {
           let keyword = {id: x, name: 'loading'}
-          this.settings.search_keywords.push(keyword.id)
+          this.settings.search_keywords.push(Number.parseInt(keyword.id))
           apiClient.retrieveKeyword(x).then(result => {
             this.$set(this.settings.search_keywords, this.settings.search_keywords.indexOf(keyword), result.data)
           })
@@ -411,7 +411,7 @@ export default {
           this.settings.page_count,
           {query: {last_viewed: this.settings.recently_viewed}}
       ).then(result => {
-        
+
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
         this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
