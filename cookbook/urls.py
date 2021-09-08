@@ -87,7 +87,7 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),
+    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),  # TODO is this still needed?
 
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
@@ -109,9 +109,9 @@ urlpatterns = [
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
 
-    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
-    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),
-    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),
+    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated?
+    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
+    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
 
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
@@ -137,7 +137,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
-    Comment, RecipeBookEntry, Keyword, Food, ShoppingList, InviteLink
+    Comment, RecipeBookEntry, ShoppingList, InviteLink
 )
 
 for m in generic_models:
@@ -176,7 +176,7 @@ for m in generic_models:
             )
         )
 
-tree_models = [Keyword]
+tree_models = [Keyword, Food]
 for m in tree_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

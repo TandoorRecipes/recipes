@@ -1,10 +1,11 @@
 import json
-
 import pytest
+
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
 from cookbook.models import Recipe
+from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
 
 LIST_URL = 'api:recipe-list'
 DETAIL_URL = 'api:recipe-detail'
@@ -49,18 +50,19 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
 def test_update(arg, request, recipe_1_s1):
     with scopes_disabled():
         c = request.getfixturevalue(arg[0])
+        j = get_random_json_recipe()
         r = c.patch(
             reverse(
                 DETAIL_URL,
                 args={recipe_1_s1.id}
             ),
-            {'name': 'new'},
+            j,
             content_type='application/json'
         )
         response = json.loads(r.content)
         assert r.status_code == arg[1]
         if r.status_code == 200:
-            assert response['name'] == 'new'
+            validate_recipe(j, json.loads(r.content))
 
 
 @pytest.mark.parametrize("arg", [
@@ -70,22 +72,24 @@ def test_update(arg, request, recipe_1_s1):
     ['a1_s1', 201],
 ])
 def test_add(arg, request, u1_s2):
-    c = request.getfixturevalue(arg[0])
-    r = c.post(
-        reverse(LIST_URL),
-        {'name': 'test', 'waiting_time': 0, 'working_time': 0, 'keywords': [], 'steps': []},
-        content_type='application/json'
-    )
-    response = json.loads(r.content)
-    print(r.content)
-    assert r.status_code == arg[1]
-    if r.status_code == 201:
-        # id can change when running multiple tests, changed to validate name
-        assert response['name'] == 'test'
-        r = c.get(reverse(DETAIL_URL, args={response['id']}))
-        assert r.status_code == 200
-        r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))
-        assert r.status_code == 404
+    x = 0
+    while x < 2:
+        c = request.getfixturevalue(arg[0])
+        j = get_random_json_recipe()
+        r = c.post(
+            reverse(LIST_URL), j, content_type='application/json'
+        )
+        response = json.loads(r.content)
+        print(r.content)
+        assert r.status_code == arg[1]
+        if r.status_code == 201:
+            # id can change when running multiple tests, changed to validate name
+            validate_recipe(j, json.loads(r.content))
+            r = c.get(reverse(DETAIL_URL, args={response['id']}))
+            assert r.status_code == 200
+            r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))
+            assert r.status_code == 404
+        x += 1
 
 
 def test_delete(u1_s1, u1_s2, recipe_1_s1):

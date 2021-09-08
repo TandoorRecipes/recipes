@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-17 08:44+0200\n"
-"PO-Revision-Date: 2021-07-19 16:40+0000\n"
+"PO-Revision-Date: 2021-08-24 18:28+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7.1\n"
+"X-Generator: Weblate 4.7.2\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:269
@@ -495,10 +495,8 @@ msgid "Settings"
 msgstr "Instellingen"
 
 #: .\cookbook\templates\account\email.html:13
-#, fuzzy
-#| msgid "Add E-mail"
 msgid "Email"
-msgstr "E-mail toevoegen"
+msgstr "E-mail"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
@@ -634,22 +632,16 @@ msgstr "Weet je zeker dat je uit wil loggen?"
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
 #: .\cookbook\templates\account\password_change.html:21
-#, fuzzy
-#| msgid "Reset My Password"
 msgid "Change Password"
-msgstr "Reset wachtwoord"
+msgstr "Wijzig wachtwoord"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:52
-#, fuzzy
-#| msgid "Password Reset"
 msgid "Password"
-msgstr "Wachtwoord reset"
+msgstr "Wachtwoord"
 
 #: .\cookbook\templates\account\password_change.html:22
-#, fuzzy
-#| msgid "Lost your password?"
 msgid "Forgot Password?"
 msgstr "Wachtwoord vergeten?"
 
@@ -683,10 +675,8 @@ msgstr ""
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
-#, fuzzy
-#| msgid "Reset My Password"
 msgid "Set Password"
-msgstr "Reset wachtwoord"
+msgstr "Stel een wachtwoord in"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
@@ -1040,10 +1030,8 @@ msgid "Select"
 msgstr "Selecteer"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:251
-#, fuzzy
-#| msgid "Delete Recipe"
 msgid "Select Recipe"
-msgstr "Verwijder recept"
+msgstr "Selecteer recept"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:311
 #: .\cookbook\templates\shopping_list.html:187
@@ -1777,16 +1765,12 @@ msgid "Name Settings"
 msgstr "Naam instellingen"
 
 #: .\cookbook\templates\settings.html:49
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Account Settings"
-msgstr "Account verbindingen"
+msgstr "Account instellingen"
 
 #: .\cookbook\templates\settings.html:51
-#, fuzzy
-#| msgid "Add E-mail"
 msgid "Emails"
-msgstr "E-mail toevoegen"
+msgstr "E-mails"
 
 #: .\cookbook\templates\settings.html:54
 #: .\cookbook\templates\socialaccount\connections.html:11
@@ -1911,10 +1895,8 @@ msgid "Add a 3rd Party Account"
 msgstr "Voeg account van een 3e partij toe"
 
 #: .\cookbook\templates\socialaccount\signup.html:5
-#, fuzzy
-#| msgid "Sign Up"
 msgid "Signup"
-msgstr "Registreer"
+msgstr "Registratie"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -1923,6 +1905,9 @@ msgid ""
 "        %(provider_name)s account to login to\n"
 "        %(site_name)s. As a final step, please complete the following form:"
 msgstr ""
+"Je staat op het punt om met je\n"
+"%(provider_name)s account in te loggen op\n"
+"%(site_name)s. Vul als laatste stap het volgende formulier in:"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -1938,16 +1923,12 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign in using"
-msgstr "Log in"
+msgstr "Log in met"
 
 #: .\cookbook\templates\space.html:23
-#, fuzzy
-#| msgid "No Space"
 msgid "Space:"
-msgstr "Geen ruimte"
+msgstr "Ruimte:"
 
 #: .\cookbook\templates\space.html:24
 msgid "Manage Subscription"
@@ -2601,12 +2582,16 @@ msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
+"Het rapporteren van gedeelde links is niet geactiveerd voor deze instantie. "
+"Rapporteer problemen bij de beheerder van de pagina."
 
 #: .\cookbook\views\views.py:528
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+"Links voor het delen van recepten zijn gedeactiveerd. Neem contact op met de "
+"paginabeheerder voor aanvullende informatie."
 
 #~ msgid "Password Settings"
 #~ msgstr "Wachtwoord instellingen"

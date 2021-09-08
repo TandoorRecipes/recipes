@@ -252,7 +252,6 @@
                                     select-label="{% trans 'Select' %}"
                                     :id="'id_step_' + step.id + '_recipe'"
                                     :custom-label="opt => recipes.find(x => x.id == opt).name"
-
                                     :multiple="false"
                                     :loading="recipes_loading"
                                     @search-change="searchRecipes">
@@ -615,6 +614,13 @@
                     this.$http.get("{% url 'api:recipe-detail' recipe.pk %}").then((response) => {
                         this.recipe = response.data;
                         this.loading = false
+
+                        //TODO workaround function until view is properly refactored, loads name of selected sub recipe so the input can find its label
+                        this.recipe.steps.forEach(s => {
+                            if (s.step_recipe != null) {
+                                this.recipes.push(s.step_recipe_data)
+                            }
+                        })
                     }).catch((err) => {
                         this.loading = false
                         console.log(err)
@@ -730,7 +736,6 @@
                 searchKeywords: function (query) {
                     this.keywords_loading = true
                     this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        console.log(response.data)
                         this.keywords = response.data.results;
                         this.keywords_loading = false
                     }).catch((err) => {
@@ -780,7 +785,7 @@
                 searchFoods: function (query) {
                     this.foods_loading = true
                     this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.foods = response.data
+                        this.foods = response.data.results
 
                         if (this.recipe !== undefined) {
                             for (let s of this.recipe.steps) {

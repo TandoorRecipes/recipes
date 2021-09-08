@@ -11,7 +11,7 @@
       @dragleave="handleDragLeave($event)"
       @drop="handleDragDrop($event)">
       <b-row no-gutters style="height:inherit;">  
-        <b-col no-gutters md="3" style="justify-content: center; height:inherit;">
+        <b-col no-gutters md="3" style="height:inherit;">
           <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="keyword_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
         </b-col>
         <b-col no-gutters md="9" style="height:inherit;">
@@ -34,9 +34,8 @@
               </b-card-text>
             </b-card-body>
         </b-col>
-        <div class="card-img-overlay h-100 d-flex flex-column justify-content-right"
-              style="float:right; text-align: right; padding-top: 10px; padding-right: 5px">
-          <generic-context-menu style="float:right" 
+        <div class="card-img-overlay justify-content-right h-25 m-0 p-0 text-right">
+          <generic-context-menu class="p-0"
             :show_merge="true"
             :show_move="true"
             @item-action="$emit('item-action', {'action': $event, 'source': keyword})">
@@ -133,7 +132,7 @@ export default {
       let source = JSON.parse(e.dataTransfer.getData('source'))
       if (source.id != this.keyword.id){
         this.source = source
-        let menuLocation = {getBoundingClientRect: this.generateLocation(e.pageX, e.pageY),}
+        let menuLocation = {getBoundingClientRect: this.generateLocation(e.clientX, e.clientY),}
         this.show_menu = true
         let popper = createPopper(
           menuLocation, 
