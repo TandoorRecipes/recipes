@@ -12,7 +12,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.db.models import Index
+from django.db.models import Index, ProtectedError
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from treebeard.mp_tree import MP_Node, MP_NodeManager
@@ -385,6 +385,12 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    def delete(self):
+        if len(self.ingredient_set.all().exclude(step=None)) > 0:
+            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
+        else:
+            return super().delete()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
@@ -393,7 +399,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
-    food = models.ForeignKey(Food, on_delete=models.PROTECT, null=True, blank=True)
+    # a pre-delete signal on Food checks if the Ingredient is part of a Step, if it is raises a ProtectedError instead of cascading the delete
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)

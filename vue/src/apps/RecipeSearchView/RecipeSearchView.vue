@@ -356,7 +356,7 @@ export default {
 
       this.loadMealPlan()
       // this.loadRecentlyViewed()
-      // this.refreshData(false) // this gets triggered when the cookies get loaded
+      this.refreshData(false)
     })
 
     this.$i18n.locale = window.CUSTOM_LOCALE
