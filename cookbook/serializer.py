@@ -119,8 +119,8 @@ class UserFileSerializer(serializers.ModelSerializer):
             current_file_size_mb = 0
 
         if (
-            (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
-            > self.context['request'].space.max_file_storage_mb != 0
+                (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
+                > self.context['request'].space.max_file_storage_mb != 0
         ):
             raise ValidationError(_('You have reached your file upload limit.'))
 
@@ -318,6 +318,7 @@ class RecipeSimpleSerializer(serializers.ModelSerializer):
 
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
+    recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     image = serializers.SerializerMethodField('get_image')
     numrecipe = serializers.SerializerMethodField('count_recipes')
 
@@ -339,18 +340,18 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def count_recipes(self, obj):
         return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
 
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        # turns a GET of food.recipe into a dict of data while allowing a PATCH/PUT of an integer to update a food with a recipe
-        recipe = RecipeSimpleSerializer(instance.recipe, allow_null=True).data
-        supermarket_category = SupermarketCategorySerializer(instance.supermarket_category, allow_null=True).data
-        response['recipe'] = recipe if recipe else None
-        # the SupermarketCategorySerializer returns a dict instead of None when the column is null
-        if supermarket_category == {'name': ''} or None:
-            response['supermarket_category'] = None
-        else:
-            response['supermarket_category'] = supermarket_category
-        return response
+    # def to_representation(self, instance):
+    #     response = super().to_representation(instance)
+    #     # turns a GET of food.recipe into a dict of data while allowing a PATCH/PUT of an integer to update a food with a recipe
+    #     recipe = RecipeSimpleSerializer(instance.recipe, allow_null=True).data
+    #     supermarket_category = SupermarketCategorySerializer(instance.supermarket_category, allow_null=True).data
+    #     response['recipe'] = recipe if recipe else None
+    #     # the SupermarketCategorySerializer returns a dict instead of None when the column is null
+    #     if supermarket_category == {'name': ''} or None:
+    #         response['supermarket_category'] = None
+    #     else:
+    #         response['supermarket_category'] = supermarket_category
+    #     return response
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()

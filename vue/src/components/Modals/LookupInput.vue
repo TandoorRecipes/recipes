@@ -44,7 +44,7 @@ export default {
   },
   watch: {
     'new_value': function () {
-      this.$root.$emit('change', this.field, this.new_value?.id ?? null)
+      this.$root.$emit('change', this.field, this.new_value ?? null)
     },
   },
 }
