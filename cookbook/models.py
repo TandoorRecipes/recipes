@@ -5,7 +5,6 @@ import uuid
 from datetime import date, timedelta
 
 from annoying.fields import AutoOneToOneField
-from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.indexes import GinIndex
@@ -13,7 +12,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.db.models import Index
+from django.db.models import Index, ProtectedError
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from treebeard.mp_tree import MP_Node, MP_NodeManager
@@ -38,16 +37,73 @@ def get_model_name(model):
 
 
 class TreeManager(MP_NodeManager):
+    # model.Manager get_or_create() is not compatible with MP_Tree
     def get_or_create(self, **kwargs):
-        # model.Manager get_or_create() is not compatible with MP_Tree
         kwargs['name'] = kwargs['name'].strip()
-        q = self.filter(name__iexact=kwargs['name'], space=kwargs['space'])
-        if len(q) != 0:
-            return q[0], False
-        else:
+        try:
+            return self.get(name__iexact=kwargs['name'], space=kwargs['space']), False
+        except self.model.DoesNotExist:
             with scopes_disabled():
-                node = self.model.add_root(**kwargs)
-            return node, True
+                return self.model.add_root(**kwargs), True
+
+
+class TreeModel(MP_Node):
+    _full_name_separator = ' > '
+
+    def __str__(self):
+        if self.icon:
+            return f"{self.icon} {self.name}"
+        else:
+            return f"{self.name}"
+
+    @property
+    def parent(self):
+        parent = self.get_parent()
+        if parent:
+            return self.get_parent().id
+        return None
+
+    @property
+    def full_name(self):
+        """
+        Returns a string representation of a tree node and it's ancestors,
+        e.g. 'Cuisine > Asian > Chinese > Catonese'.
+        """
+        names = [node.name for node in self.get_ancestors_and_self()]
+        return self._full_name_separator.join(names)
+
+    def get_ancestors_and_self(self):
+        """
+        Gets ancestors and includes itself. Use treebeard's get_ancestors
+        if you don't want to include the node itself. It's a separate
+        function as it's commonly used in templates.
+        """
+        if self.is_root():
+            return [self]
+        return list(self.get_ancestors()) + [self]
+
+    def get_descendants_and_self(self):
+        """
+        Gets descendants and includes itself. Use treebeard's get_descendants
+        if you don't want to include the node itself. It's a separate
+        function as it's commonly used in templates.
+        """
+        return self.get_tree(self)
+
+    def has_children(self):
+        return self.get_num_children() > 0
+
+    def get_num_children(self):
+        return self.get_children().count()
+
+    # use self.objects.get_or_create() instead
+    @classmethod
+    def add_root(self, **kwargs):
+        with scopes_disabled():
+            return super().add_root(**kwargs)
+
+    class Meta:
+        abstract = True
 
 
 class PermissionModelMixin:
@@ -278,7 +334,7 @@ class SyncLog(models.Model, PermissionModelMixin):
         return f"{self.created_at}:{self.sync} - {self.status}"
 
 
-class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMixin):
+class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelMixin):
     # TODO add find and fix problem functions
     node_order_by = ['name']
     name = models.CharField(max_length=64)
@@ -289,60 +345,6 @@ class Keyword(ExportModelOperationsMixin('keyword'), MP_Node, PermissionModelMix
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
-
-    _full_name_separator = ' > '
-
-    def __str__(self):
-        if self.icon:
-            return f"{self.icon} {self.name}"
-        else:
-            return f"{self.name}"
-
-    @property
-    def parent(self):
-        parent = self.get_parent()
-        if parent:
-            return self.get_parent().id
-        return None
-
-    @property
-    def full_name(self):
-        """
-        Returns a string representation of the keyword and it's ancestors,
-        e.g. 'Cuisine > Asian > Chinese > Catonese'.
-        """
-        names = [keyword.name for keyword in self.get_ancestors_and_self()]
-        return self._full_name_separator.join(names)
-
-    def get_ancestors_and_self(self):
-        """
-        Gets ancestors and includes itself. Use treebeard's get_ancestors
-        if you don't want to include the keyword itself. It's a separate
-        function as it's commonly used in templates.
-        """
-        if self.is_root():
-            return [self]
-        return list(self.get_ancestors()) + [self]
-
-    def get_descendants_and_self(self):
-        """
-        Gets descendants and includes itself. Use treebeard's get_descendants
-        if you don't want to include the keyword itself. It's a separate
-        function as it's commonly used in templates.
-        """
-        return self.get_tree(self)
-
-    def has_children(self):
-        return self.get_num_children() > 0
-
-    def get_num_children(self):
-        return self.get_children().count()
-
-    # use self.objects.get_or_create() instead
-    @classmethod
-    def add_root(self, **kwargs):
-        with scopes_disabled():
-            return super().add_root(**kwargs)
 
     class Meta:
         constraints = [
@@ -367,7 +369,9 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
         ]
 
 
-class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixin):
+class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
+    # TODO add find and fix problem functions
+    node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -375,10 +379,16 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
     description = models.TextField(default='', blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='space', _manager_class=TreeManager)
 
     def __str__(self):
         return self.name
+
+    def delete(self):
+        if len(self.ingredient_set.all().exclude(step=None)) > 0:
+            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
+        else:
+            return super().delete()
 
     class Meta:
         constraints = [
@@ -388,7 +398,8 @@ class Food(ExportModelOperationsMixin('food'), models.Model, PermissionModelMixi
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
-    food = models.ForeignKey(Food, on_delete=models.PROTECT, null=True, blank=True)
+    # a pre-delete signal on Food checks if the Ingredient is part of a Step, if it is raises a ProtectedError instead of cascading the delete
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
@@ -745,7 +756,7 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating']),)
+        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating', 'created_by']),)
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
@@ -760,7 +771,7 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['recipe', '-created_at']),)
+        indexes = (Index(fields=['recipe', '-created_at', 'created_by']),)
 
 
 class ImportLog(models.Model, PermissionModelMixin):

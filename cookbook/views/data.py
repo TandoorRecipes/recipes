@@ -148,7 +148,6 @@ def import_url(request):
 
         recipe.steps.add(step)
 
-        all_keywords = Keyword.get_tree()
         for kw in data['keywords']:
             k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
             recipe.keywords.add(k)

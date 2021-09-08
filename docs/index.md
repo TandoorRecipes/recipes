@@ -16,6 +16,7 @@
 ## Coming Next
 - Heirarchical Ingredients
 - Faceted Search
+- Search filter by rating
 - What Can I Make Now?
 - Better ingredient/unit matching on import
 - Custom word replacement on import (e.g. 'grams' automatically imported as 'g')

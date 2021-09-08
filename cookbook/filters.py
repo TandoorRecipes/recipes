@@ -1,5 +1,7 @@
 import django_filters
 from django.conf import settings
+from django.contrib.postgres.search import TrigramSimilarity
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 

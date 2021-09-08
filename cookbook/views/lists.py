@@ -56,10 +56,8 @@ def food(request):
 
 @group_required('user')
 def shopping_list(request):
-    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(
-        Q(created_by=request.user)
-        | Q(shared=request.user), space=request.space
-    ).all().order_by('finished', 'created_at'))
+    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(space=request.space).filter(
+        Q(created_by=request.user) | Q(shared=request.user)).all().order_by('finished', 'created_at'))
 
     table = ShoppingListTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
@@ -94,7 +92,8 @@ def storage(request):
 
 @group_required('admin')
 def invite_link(request):
-    table = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
+    table = InviteLinkTable(
+        InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {

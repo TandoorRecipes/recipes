@@ -22,7 +22,6 @@ MOVE_URL = 'api:keyword-move'
 MERGE_URL = 'api:keyword-merge'
 
 
-# TODO are there better ways to manage these fixtures?
 @pytest.fixture()
 def obj_1(space_1):
     return Keyword.objects.get_or_create(name='test_1', space=space_1)[0]
@@ -50,28 +49,22 @@ def obj_3(space_2):
 
 @pytest.fixture()
 def recipe_1_s1(obj_1, recipe_1_s1, space_1):
-    recipe_1_s1.keywords.add(obj_1.id)
-    return recipe_1_s1
+    return recipe_1_s1.keywords.add(obj_1)
 
 
 @pytest.fixture()
 def recipe_2_s1(obj_2, recipe_2_s1, space_1):
-    recipe_2_s1.keywords.add(obj_2.id)
-    return recipe_1_s1
+    return recipe_2_s1.keywords.add(obj_2)
 
 
 @pytest.fixture()
 def recipe_3_s2(u1_s2, obj_3, space_2):
-    r = get_random_recipe(space_2, u1_s2)
-    r.keywords.add(obj_3.id)
-    return r
+    return get_random_recipe(space_2, u1_s2).keywords.add(obj_3)
 
 
 @pytest.fixture()
 def recipe_1_1_s1(u1_s1, obj_1_1, space_1):
-    r = get_random_recipe(space_1, u1_s1)
-    r.keywords.add(obj_1_1.id)
-    return r
+    return get_random_recipe(space_1, u1_s1).keywords.add(obj_1_1)
 
 
 @pytest.mark.parametrize("arg", [
@@ -352,7 +345,6 @@ def test_merge(
 
 
 def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
-
     # should return root objects in the space (obj_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root=0').content)
     assert len(response['results']) == 2
@@ -367,7 +359,6 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
 
 
 def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
-
     with scopes_disabled():
         obj_2.move(obj_1, 'sorted-child')
     # should return full tree starting at obj_1 (obj_1_1_1, obj_2), ignoring query filters
