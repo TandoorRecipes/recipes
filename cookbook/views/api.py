@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Q, Value, When
+from django.db.models import Case, ProtectedError, Q, Value, When
 from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django_scopes import scopes_disabled
@@ -379,6 +379,13 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
+
+    def destroy(self, *args, **kwargs):
+        try:
+            return (super().destroy(self, *args, **kwargs))
+        except ProtectedError as e:
+            content = {'error': True, 'msg': e.args[0]}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):

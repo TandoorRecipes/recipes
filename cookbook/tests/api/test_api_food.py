@@ -243,6 +243,42 @@ def test_delete(u1_s1, u1_s2, obj_1, obj_1_1, obj_1_1_1):
         assert Food.find_problems() == ([], [], [], [], [])
 
 
+def test_integrity(u1_s1, recipe_1_s1):
+    with scopes_disabled():
+        assert Food.objects.count() == 10
+        assert Ingredient.objects.count() == 10
+        f_1 = Food.objects.first()
+
+    # deleting food will fail because food is part of recipe
+    r = u1_s1.delete(
+        reverse(
+            DETAIL_URL,
+            args={f_1.id}
+        )
+    )
+    assert r.status_code == 403
+
+    with scopes_disabled():
+        i_1 = f_1.ingredient_set.first()
+        # remove Ingredient that references Food from recipe step
+        i_1.step_set.first().ingredients.remove(i_1)
+        assert Food.objects.count() == 10
+        assert Ingredient.objects.count() == 10
+    
+    # deleting food will succeed because its not part of recipe and delete will cascade to Ingredient
+    r = u1_s1.delete(
+        reverse(
+            DETAIL_URL,
+            args={f_1.id}
+        )
+    )
+    assert r.status_code == 204
+    
+    with scopes_disabled():
+        assert Food.objects.count() == 9
+        assert Ingredient.objects.count() == 9
+
+
 def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
     url = reverse(MOVE_URL, args=[obj_1_1.id, obj_2.id])
     with scopes_disabled():
