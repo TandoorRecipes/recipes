@@ -47,10 +47,5 @@ export default {
       this.$root.$emit('change', this.field, this.new_value?.id ?? null)
     },
   },
-  methods: {
-      Button: function(e) {
-        this.$bvModal.show('modal')
-      }
-  }
 }
 </script>

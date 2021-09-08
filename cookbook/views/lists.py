@@ -5,11 +5,11 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
-from cookbook.filters import FoodFilter, ShoppingListFilter
+from cookbook.filters import ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import (Food, InviteLink, RecipeImport,
+from cookbook.models import (InviteLink, RecipeImport,
                              ShoppingList, Storage, SyncLog)
-from cookbook.tables import (ImportLogTable, IngredientTable, InviteLinkTable,
+from cookbook.tables import (ImportLogTable, InviteLinkTable,
                              RecipeImportTable, ShoppingListTable, StorageTable)
 
 
@@ -40,18 +40,18 @@ def recipe_import(request):
     )
 
 
-@group_required('user')
-def food(request):
-    f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
+# @group_required('user')
+# def food(request):
+#     f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
 
-    table = IngredientTable(f.qs)
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+#     table = IngredientTable(f.qs)
+#     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(
-        request,
-        'generic/list_template.html',
-        {'title': _("Ingredients"), 'table': table, 'filter': f}
-    )
+#     return render(
+#         request,
+#         'generic/list_template.html',
+#         {'title': _("Ingredients"), 'table': table, 'filter': f}
+#     )
 
 
 @group_required('user')
@@ -101,3 +101,52 @@ def invite_link(request):
         'table': table,
         'create_url': 'new_invite_link'
     })
+
+
+@group_required('user')
+def keyword(request):
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Keywords"),
+            "config": {
+                'model': "KEYWORD",
+                'recipe_param': 'keywords'
+            }
+        }
+    )
+
+
+@group_required('user')
+def food(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Foods"),
+            "config": {
+                'model': "FOOD",         # *REQUIRED* name of the model in models.js
+                'recipe_param': 'foods'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+            }
+        }
+    )
+
+
+@group_required('user')
+def unit(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Units"),
+            "config": {
+                'model': "UNIT",         # *REQUIRED* name of the model in models.js
+                'recipe_param': 'units'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+            }
+        }
+    )

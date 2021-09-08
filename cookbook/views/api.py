@@ -48,7 +48,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import RecipeSchema, TreeSchema
+from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookSerializer,
@@ -98,6 +98,8 @@ class DefaultPagination(PageNumberPagination):
 
 
 class FuzzyFilterMixin(ViewSetMixin):
+    schema = FilterSchema()
+
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
         query = self.request.query_params.get('query', None)
@@ -164,7 +166,12 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                 if target in source.get_descendants_and_self():
                     content = {'error': True, 'msg': _('Cannot merge with child object!')}
                     return Response(content, status=status.HTTP_403_FORBIDDEN)
+                isTree = True
+            except AttributeError:
+                # AttributeError probably means its not a tree, so can safely ignore
+                isTree = False
 
+            try:
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
                     related = linkManager.all()
@@ -181,9 +188,10 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                     else:
                         # a new scenario exists and needs to be handled
                         raise NotImplementedError
-                children = source.get_children().exclude(id=target.id)
-                for c in children:
-                    c.move(target, 'sorted-child')
+                if isTree:
+                    children = source.get_children().exclude(id=target.id)
+                    for c in children:
+                        c.move(target, 'sorted-child')
                 content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
@@ -363,14 +371,12 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
 
-class UnitViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
+class UnitViewSet(viewsets.ModelViewSet, MergeMixin, FuzzyFilterMixin):
     queryset = Unit.objects
+    model = Unit
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser]
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
+    pagination_class = DefaultPagination
 
 
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):

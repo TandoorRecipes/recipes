@@ -61,12 +61,12 @@ with scopes_disabled():
             model = Recipe
             fields = ['name', 'keywords', 'foods', 'internal']
 
-    class FoodFilter(django_filters.FilterSet):
-        name = django_filters.CharFilter(lookup_expr='icontains')
+    # class FoodFilter(django_filters.FilterSet):
+    #     name = django_filters.CharFilter(lookup_expr='icontains')
 
-        class Meta:
-            model = Food
-            fields = ['name']
+    #     class Meta:
+    #         model = Food
+    #         fields = ['name']
 
     class ShoppingListFilter(django_filters.FilterSet):
 

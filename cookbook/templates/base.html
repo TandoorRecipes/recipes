@@ -97,6 +97,9 @@
                     <a class="dropdown-item" href="{% url 'list_food' %}"><i
                             class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
                     </a>
+                    <a class="dropdown-item" href="{% url 'list_unit' %}"><i
+                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units' %}
+                    </a>
                     <a class="dropdown-item" href="{% url 'view_supermarket' %}"><i
                             class="fas fa-store-alt fa-fw"></i> {% trans 'Supermarket' %}
                     </a>
@@ -110,6 +113,28 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
                             class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
+                    <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
+                            class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
+                </div>
+            </li>
+            {% comment %} should food and units be moved to the keyword dropdown and rename that?
+                    feels like the original intent of the organization of these menus has shifted maybe something like this?{% endcomment %}
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_food,list_unit,list_keyword,data_batch_edit' %}active{% endif %}">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-blender"></i> {% trans 'Gadgets' %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'list_food' %}"><i
+                            class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'list_unit' %}"><i
+                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units' %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
+                            class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
+                    {% comment %} does this funcionatliy need moved to the keyword list page? 
+                    the Recipe Search might be better? {% endcomment %}
                     <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
                             class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
                 </div>
@@ -129,8 +154,8 @@
                             class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
                     <a class="dropdown-item" href="{% url 'data_stats' %}"><i
                             class="fas fa-chart-line fa-fw"></i> {% trans 'Statistics' %}</a>
-                    <a class="dropdown-item" href="{% url 'edit_food' %}"><i
-                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units & Ingredients' %}</a>
+                    {% comment %} <a class="dropdown-item" href="{% url 'edit_food' %}"><i
+                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units & Ingredients' %}</a> {% endcomment %}
                     <a class="dropdown-item" href="{% url 'data_import_url' %}"><i
                             class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
 

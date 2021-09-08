@@ -10,6 +10,8 @@
                         @finish-action="finishAction"/>
     <generic-split-lists v-if="this_model"
                          :list_name="this_model.name"
+                         :right_counts="right_counts"
+                         :left_counts="left_counts"
                          @reset="resetList"
                          @get-list="getItems"
                          @item-action="startAction">
@@ -19,13 +21,18 @@
             :item=i
             :item_type="this_model.name"
             :draggable="true"
-            :merge="true"
-            :move="true"
+            :merge="this_model['merge'] !== false"
+            :move="this_model['move'] !== false"
             @item-action="startAction($event, 'left')">
           <!-- foods can also be a recipe, show link to the recipe if it exists -->
           <template v-slot:upper-right>
             <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
                       class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
+            <!-- keywords can have icons - if it exists, display it -->
+            <b-button v-if="i.icon"
+                      class=" btn p-0 border-0" variant="link">
+                      {{i.icon}}
+            </b-button>
           </template>
         </generic-horizontal-card>
       </template>
@@ -34,8 +41,8 @@
                                  :item=i
                                  :item_type="this_model.name"
                                  :draggable="true"
-                                 :merge="true"
-                                 :move="true"
+                                 :merge="this_model['merge'] !== false"
+                                 :move="this_model['move'] !== false"
                                  @item-action="startAction($event, 'right')">
           <!-- foods can also be a recipe, show link to the recipe if it exists -->
           <template v-slot:upper-right>
@@ -67,7 +74,9 @@ import GenericModalForm from "@/components/Modals/GenericModalForm";
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'FoodListView', // TODO: make generic name
+  // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available 
+  // or i'm capturing it incorrectly
+  name: 'ModelListView',
   mixins: [CardMixin, ToastMixin, ApiMixin],
   components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
@@ -75,26 +84,28 @@ export default {
       // this.Models and this.Actions inherited from ApiMixin
       items_left: [],
       items_right: [],
-      load_more_left: true,
-      load_more_right: true,
+      right_counts: {'max': 9999, 'current': 0},
+      left_counts: {'max': 9999, 'current': 0},
       this_model: undefined,
       this_action: undefined,
+      this_recipe_param: undefined,
       this_item: {},
       this_target: {},
       show_modal: false
     }
   },
   mounted() {
-    this.this_model = this.Models.FOOD  //TODO: mounted method to calcuate
+    // value is passed from lists.py
+    let model_config = JSON.parse(document.getElementById('model_config').textContent)
+    this.this_model = this.Models[model_config?.model]
+    this.this_recipe_param = model_config?.recipe_param
   },
   methods: {
     // this.genericAPI inherited from ApiMixin
     resetList: function (e) {
-      if (e.column === 'left') {
-        this.items_left = []
-      } else if (e.column === 'right') {
-        this.items_right = []
-      }
+      this['items_' + e.column] = []
+      this[e.column + '_counts'].max = 9999 + Math.random()
+      this[e.column + '_counts'].current = 0
     },
     startAction: function (e, param) {
       let source = e?.source ?? {}
@@ -175,28 +186,18 @@ export default {
       }
       this.clearState()
     },
-    getItems: function (params, callback) {
+    getItems: function (params) {
       let column = params?.column ?? 'left'
-      // TODO: does this need to be a callback?
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         if (result.data.results.length) {
-          if (column === 'left') {
-            // if paginated results are in result.data.results otherwise just result.data
-            this.items_left = this.items_left.concat(result.data?.results ?? result.data)
-          } else if (column === 'right') {
-            this.items_right = this.items_right.concat(result.data?.results ?? result.data)
-          }
-          // are the total elements less than the length of the array? if so, stop loading
-          // TODO: generalize this to handle results in result.data
-          callback(result.data.count > (column === "left" ? this.items_left.length : this.items_right.length))
+          this['items_' + column] = this['items_' + column].concat(result.data?.results)
+          this[column + '_counts']['current'] = this['items_' + column].length
+          this[column + '_counts']['max'] = result.data.count
         } else {
-          callback(false) // stop loading
+          this[column + '_counts']['current'] = 0
+          this[column + '_counts']['max'] = 0
           console.log('no data returned')
         }
-        // return true if total objects are still less than the length of the list
-        // TODO this needs generalized to handle non-paginated data
-        callback(result.data.count < (column === "left" ? this.items_left.length : this.items_right.length))
-
       }).catch((err) => {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
@@ -208,10 +209,11 @@ export default {
     saveThis: function (thisItem) {
       if (!thisItem?.id) { // if there is no item id assume it's a new item
         this.genericAPI(this.this_model, this.Actions.CREATE, thisItem).then((result) => {
-          // place all new items at the top of the list - could sort instead
-          this.items_left = [result.data].concat(this.items_left)
+          // look for and destroy any existing cards to prevent duplicates in the GET case of get_or_create         
+          // then place all new items at the top of the list - could sort instead
+          this.items_left = [result.data].concat(this.destroyCard(result?.data?.id, this.items_left))
           // this creates a deep copy to make sure that columns stay independent
-          this.items_right = [{...result.data}].concat(this.items_right)
+          this.items_right = [{...result.data}].concat(this.destroyCard(result?.data?.id, this.items_right))
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
         }).catch((err) => {
           console.log(err)
@@ -233,14 +235,15 @@ export default {
         this.clearState()
         return
       }
-      if (source_id === undefined || target_id === undefined) {
+      let item = this.findCard(source_id, this.items_left) || this.findCard(source_id, this.items_right)
+      if (source_id === undefined || target_id === undefined || item?.parent == target_id) {
         this.makeToast(this.$t('Warning'), this.$t('Nothing to do'), 'warning')
         this.clearState()
         return
       }
       this.genericAPI(this.this_model, this.Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
-          let item = this.findCard(source_id, this.items_left) || this.findCard(source_id, this.items_right)
+          
           this.items_left = [item].concat(this.destroyCard(source_id, this.items_left)) // order matters, destroy old card before adding it back in at root
           this.items_right = [...[item]].concat(this.destroyCard(source_id, this.items_right)) // order matters, destroy old card before adding it back in at root
           item.parent = null
@@ -252,8 +255,6 @@ export default {
         // TODO make standard toast
         this.makeToast(this.$t('Success'), 'Succesfully moved resource', 'success')
       }).catch((err) => {
-        // TODO none of the error checking works because the openapi generated functions don't throw an error?  
-        // or i'm capturing it incorrectly
         console.log(err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
@@ -292,7 +293,7 @@ export default {
         'pageSize': 200
       }
       this.genericAPI(this.this_model, this.Actions.LIST, options).then((result) => {
-        parent = this.findCard(item.id, col === 'left' ? this.items_left : this.items_right)
+        parent = this.findCard(item.id, this['items_' + col])
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
           Vue.set(parent, 'show_children', true)
@@ -303,15 +304,14 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    getRecipes: function (col, food) {
+    getRecipes: function (col, item) {
       let parent = {}
       // TODO: make this generic
-      let options = {
-        'foods': food.id,
-        'pageSize': 200
-      }
+      let options = {'pageSize': 200}
+      options[this.this_recipe_param] = item.id
+
       this.genericAPI(this.Models.RECIPE, this.Actions.LIST, options).then((result) => {
-        parent = this.findCard(food.id, col === 'left' ? this.items_left : this.items_right)
+        parent = this.findCard(item.id, this['items_' + col])
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)
           Vue.set(parent, 'show_recipes', true)
