@@ -64,7 +64,7 @@
           </div>
 
           <!-- only show scollbars in split mode -->
-          <!-- weird behavior when switching to split mode, infinite scoll doesn't trigger if 
+          <!-- TODO: weird behavior when switching to split mode, infinite scoll doesn't trigger if 
                 bottom of page is in viewport can trigger by scrolling page (not column) up  -->
           <div class="row" :class="{'overflow-hidden' : show_split}">
             <div class="col col-md" :class="{'mh-100 overflow-auto' : show_split}">
@@ -74,6 +74,7 @@
                 @infinite="infiniteHandler($event, 'left')" 
                 spinner="waveDots">
                 <template v-slot:no-more><span/></template>
+                <template v-slot:no-results><span>{{$t('No_Results')}}</span></template>
               </infinite-loading>
             </div>
             <!-- right side cards -->
@@ -84,6 +85,7 @@
                 @infinite="infiniteHandler($event, 'right')" 
                 spinner="waveDots">
                 <template v-slot:no-more><span/></template>
+                <template v-slot:no-results><span>{{$t('No_Results')}}</span></template>
               </infinite-loading>
             </div>
           </div>
@@ -96,18 +98,20 @@
 </template>
 
 <script>
-import Vue from 'vue' // maybe not needed?
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import _debounce from 'lodash/debounce'
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
+  // TODO: this should be simplified into a Generic Infinitely Scrolling List and added as two components when split lists desired
   name: 'GenericSplitLists',
   components: {InfiniteLoading},
   props: {
     list_name: {type: String, default: 'Blank List'},  // TODO update translations to handle plural translations
-    left_list: {type:Array, default(){return []}},
+    left_list: {type: Array, default(){return []}},
+    left_counts: {type: Object},
     right_list: {type:Array, default(){return []}},
+    right_counts: {type: Object},
   },
   data() {
     return {
@@ -117,6 +121,8 @@ export default {
       search_left: '',
       right_page: 0,
       left_page: 0,
+      right_state: undefined,
+      left_state: undefined,
       right: +new Date(),
       left: +new Date(),
       text: {
@@ -143,11 +149,45 @@ export default {
       this.$emit('reset', {'column':'right'})
       this.right += 1
     }, 700),
+    right_counts: {
+      deep: true,
+      handler(newVal, oldVal) {
+        if (newVal.current > 0) {
+          this.right_state.loaded()
+        }
+        if (newVal.current >= newVal.max) {
+          this.right_state.complete()
+        }
+      }
+    },
+    left_counts: {
+      deep: true,
+      handler(newVal, oldVal) {
+        if (newVal.current > 0) {
+          this.left_state.loaded()
+        }
+        if (newVal.current >= newVal.max) {
+          this.left_state.complete()
+        }
+      }
+    }
   },
   methods: {
     resetSearch: function () {
-      this.search_right = ''
-      this.search_left = ''
+      if (this.search_right == '') {
+        this.right_page = 0
+        this.right += 1
+        this.$emit('reset', {'column':'right'})
+      } else {
+        this.search_right = ''
+      }
+      if (this.search_left == '') {
+        this.left_page = 0
+        this.left += 1
+        this.$emit('reset', {'column':'left'})
+      } else {
+        this.search_left = ''
+      }
     },
     infiniteHandler: function($state, col) { 
         let params = {
@@ -155,16 +195,9 @@ export default {
             'page': (col==='left') ? this.left_page + 1 : this.right_page + 1,
             'column': col
         }
-        // TODO: change this to be an emit and watch a prop to determine if loaded or complete
-        new Promise((callback) => this.$emit('get-list', params, callback)).then((result) => {
-            this[col+'_page'] += 1
-            $state.loaded();
-            if (!result) { // callback needs to return true if handler should continue loading more data
-                $state.complete();
-            }
-        }).catch(() => {
-            $state.complete();
-        })
+        this[col+'_state'] = $state
+        this.$emit('get-list', params)
+        this[col+'_page'] += 1
     },
   }
 }

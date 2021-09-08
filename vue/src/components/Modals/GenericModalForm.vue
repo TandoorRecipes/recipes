@@ -12,7 +12,6 @@
             :model="listModel(f.list)"
             :sticky_options="f.sticky_options || undefined"
             @change="storeValue"/> <!-- TODO add ability to create new items associated with lookup -->
-          <!-- TODO: add emoji field -->
           <!-- TODO: add multi-selection input list -->
           <checkbox-input v-if="f.type=='checkbox'"
             :label="f.label"
@@ -23,6 +22,11 @@
             :value="f.value"
             :field="f.field"
             :placeholder="f.placeholder"/>
+          <emoji-input v-if="f.type=='emoji'"
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"
+            @change="storeValue"/>
         </div>
         
         <template  v-slot:modal-footer>
@@ -43,10 +47,11 @@ import {Models} from "@/utils/models";
 import CheckboxInput from "@/components/Modals/CheckboxInput";
 import LookupInput from "@/components/Modals/LookupInput";
 import TextInput from "@/components/Modals/TextInput";
+import EmojiInput from "@/components/Modals/EmojiInput";
 
 export default {
   name: 'GenericModalForm',
-  components: {CheckboxInput, LookupInput, TextInput},
+  components: {CheckboxInput, LookupInput, TextInput, EmojiInput},
   props: {
     model: {required: true, type: Object, default: function() {}},
     action: {required: true, type: Object, default: function() {}},

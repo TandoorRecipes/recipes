@@ -108,10 +108,58 @@ export class Models {
     static KEYWORD = {
         'name': i18n.t('Keyword'),              // *OPTIONAL: parameters will be built model -> model_type -> default
         'apiName': 'Keyword',  
-        'model_type': this.TREE
+        'model_type': this.TREE,
+        'create': {
+            // if not defined partialUpdate will use the same parameters, prepending 'id'
+            'params': [['name', 'description', 'icon']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                },
+                'icon': {
+                    'form_field': true,
+                    'type': 'emoji',
+                    'field': 'icon',
+                    'label': i18n.t('Icon')
+                },
+            }
+        },
     }
-    static UNIT = {}
-    static RECIPE = {}
+    static UNIT = {
+        'name': i18n.t('Unit'),
+        'apiName': 'Unit', 
+        'create': {
+            'params': [['name', 'description']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                }
+            }
+        },
+        'move': false
+    }
     static SHOPPING_LIST = {}
     static RECIPE_BOOK = {
         'name': i18n.t('Recipe_Book'),
@@ -126,7 +174,7 @@ export class Models {
         'name': i18n.t('Recipe'),
         'apiName': 'Recipe',
         'list': {
-            'params': ['query', 'keywords', 'foods', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
+            'params': ['query', 'keywords', 'foods', 'units', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
             'config': {
                 'foods': {'type':'string'},
                 'keywords': {'type': 'string'},

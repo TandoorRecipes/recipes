@@ -6,12 +6,11 @@ from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from emoji_picker.widgets import EmojiPickerTextInput
-from treebeard.forms import MoveNodeForm
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
-                     UserPreference, SupermarketCategory, MealType, Space,
+                     UserPreference, MealType, Space,
                      SearchPreference)
 
 
@@ -219,31 +218,31 @@ class CommentForm(forms.ModelForm):
         }
 
 
-class KeywordForm(MoveNodeForm):
-    class Meta:
-        model = Keyword
-        fields = ('name', 'icon', 'description')
-        exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
-        widgets = {'icon': EmojiPickerTextInput}
+# class KeywordForm(MoveNodeForm):
+#     class Meta:
+#         model = Keyword
+#         fields = ('name', 'icon', 'description')
+#         exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
+#         widgets = {'icon': EmojiPickerTextInput}
 
 
-class FoodForm(forms.ModelForm):
+# class FoodForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
-        self.fields['supermarket_category'].queryset = SupermarketCategory.objects.filter(space=space).all()
+#     def __init__(self, *args, **kwargs):
+#         space = kwargs.pop('space')
+#         super().__init__(*args, **kwargs)
+#         self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
+#         self.fields['supermarket_category'].queryset = SupermarketCategory.objects.filter(space=space).all()
 
-    class Meta:
-        model = Food
-        fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
-        widgets = {'recipe': SelectWidget}
+#     class Meta:
+#         model = Food
+#         fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
+#         widgets = {'recipe': SelectWidget}
 
-        field_classes = {
-            'recipe': SafeModelChoiceField,
-            'supermarket_category': SafeModelChoiceField,
-        }
+#         field_classes = {
+#             'recipe': SafeModelChoiceField,
+#             'supermarket_category': SafeModelChoiceField,
+#         }
 
 
 class StorageForm(forms.ModelForm):

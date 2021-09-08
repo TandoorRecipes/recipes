@@ -908,7 +908,7 @@
                 searchKeywords: function (query) {
                     this.keywords_loading = true
                     this.$http.get("{% url 'api:keyword-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.keywords = response.data;
+                        this.keywords = response.data.results;
                         this.keywords_loading = false
                     }).catch((err) => {
                         console.log(err)
@@ -919,7 +919,7 @@
                 searchUnits: function (query) { //TODO move to central component
                     this.units_loading = true
                     this.$http.get("{% url 'api:unit-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.units = response.data;
+                        this.units = response.data.results;
                         this.units_loading = false
                     }).catch((err) => {
                         this.makeToast(gettext('Error'), gettext("There was an error loading a resource!") + err.bodyText, 'danger')
@@ -928,7 +928,7 @@
                 searchFoods: function (query) { //TODO move to central component
                     this.foods_loading = true
                     this.$http.get("{% url 'api:food-list' %}" + '?query=' + query + '&limit=10').then((response) => {
-                        this.foods = response.data
+                        this.foods = response.data.results
                         this.foods_loading = false
                     }).catch((err) => {
                         this.makeToast(gettext('Error'), gettext("There was an error loading a resource!") + err.bodyText, 'danger')
