@@ -224,7 +224,7 @@ export default {
           this.refreshThis(thisItem.id)
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch((err) => {
-          console.log(err)
+          console.log(err, err.response)
           StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
         })
       }
