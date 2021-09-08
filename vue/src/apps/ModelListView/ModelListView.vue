@@ -48,6 +48,11 @@
           <template v-slot:upper-right>
             <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
                       class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
+            <!-- keywords can have icons - if it exists, display it -->
+            <b-button v-if="i.icon"
+                      class=" btn p-0 border-0" variant="link">
+                      {{i.icon}}
+            </b-button>
           </template>
         </generic-horizontal-card>
       </template>
@@ -177,10 +182,10 @@ export default {
             this.saveThis(update)
             break;
           case this.Actions.MERGE:
-            this.mergeThis(this.this_item.id, e.form_data.target)
+            this.mergeThis(this.this_item.id, e.form_data.target.id)
             break;
           case this.Actions.MOVE:
-            this.moveThis(this.this_item.id, e.form_data.target)
+            this.moveThis(this.this_item.id, e.form_data.target.id)
             break;
         }
       }
