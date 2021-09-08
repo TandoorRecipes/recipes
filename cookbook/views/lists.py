@@ -57,7 +57,7 @@ def recipe_import(request):
 @group_required('user')
 def shopping_list(request):
     f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(space=request.space).filter(
-        Q(created_by=request.user) | Q(shared=request.user)).all().order_by('finished', 'created_at'))
+        Q(created_by=request.user) | Q(shared=request.user)).distinct().all().order_by('finished', 'created_at'))
 
     table = ShoppingListTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
