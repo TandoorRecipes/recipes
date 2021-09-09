@@ -69,7 +69,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {CardMixin, ToastMixin, ApiMixin} from "@/utils/utils";
+import {CardMixin, ApiMixin} from "@/utils/utils";
 import {StandardToasts} from "@/utils/utils";
 
 import GenericSplitLists from "@/components/GenericSplitLists";
@@ -82,7 +82,7 @@ export default {
   // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available 
   // or i'm capturing it incorrectly
   name: 'ModelListView',
-  mixins: [CardMixin, ToastMixin, ApiMixin],
+  mixins: [CardMixin, ApiMixin],
   components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
     return {
