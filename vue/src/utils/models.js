@@ -100,6 +100,7 @@ export class Models {
                     'field': 'supermarket_category',
                     'list': 'SHOPPING_CATEGORY',
                     'label': i18n.t('Shopping_Category'),
+                    'allow_create': true
                 },
             }
         },
@@ -167,7 +168,26 @@ export class Models {
     }
     static SHOPPING_CATEGORY = {
         'name': i18n.t('Shopping_Category'),
-        'apiName': 'SupermarketCategory', 
+        'apiName': 'SupermarketCategory',
+        'create': {
+            'params': [['name', 'description']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                }
+            }
+        },
     }
     
     static RECIPE = {

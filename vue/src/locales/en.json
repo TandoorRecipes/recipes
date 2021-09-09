@@ -125,5 +125,9 @@
   "Icon": "Icon",
   "Unit": "Unit",
   "No_Results": "No Results",
-  "New_Unit": "New Unit"
+  "New_Unit": "New Unit",
+  "Create_New_Shopping Category": "Create New Shopping Category",
+  "Create_New_Food": "Add New Food",
+  "Create_New_Keyword": "Add New Keyword",
+  "Create_New_Unit": "Add New Unit"
 }

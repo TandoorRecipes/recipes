@@ -149,10 +149,13 @@ def search_recipes(request, queryset, params):
 
     if len(search_foods) > 0:
         if search_foods_or == 'true':
+            # TODO creating setting to include descendants of food a setting
             queryset = queryset.filter(steps__ingredients__food__id__in=search_foods)
         else:
-            for k in search_foods:
-                queryset = queryset.filter(steps__ingredients__food__id=k)
+            # when performing an 'and' search returned recipes should include a parent OR any of its descedants
+            # AND other foods selected so filters are appended using steps__ingredients__food__id__in the list of foods and descendants
+            for fd in Food.objects.filter(pk__in=search_foods):
+                queryset = queryset.filter(steps__ingredients__food__id__in=list(fd.get_descendants_and_self().values_list('pk', flat=True)))
 
     if len(search_books) > 0:
         if search_books_or == 'true':
