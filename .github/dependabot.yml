@@ -20,6 +20,6 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "montly"
+      interval: "monthly"
     allow:
       - dependency-name: "boto3"
