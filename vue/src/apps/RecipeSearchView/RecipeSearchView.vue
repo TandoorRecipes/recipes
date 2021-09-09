@@ -93,8 +93,6 @@
                         ></b-form-input>
                       </b-form-group>
 
-
-
                       <b-form-group
                           v-bind:label="$t('Meal_Plan')"
                           label-for="popover-input-2"
@@ -148,6 +146,7 @@
                     </div>
                   </b-popover>
 
+                  <!-- keywords filter -->
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
@@ -169,6 +168,7 @@
                     </div>
                   </div>
 
+                  <!-- foods filter -->
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
@@ -190,6 +190,7 @@
                     </div>
                   </div>
 
+                  <!-- books filter -->
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2" v-if="models">
@@ -206,6 +207,28 @@
                               <span class="text-uppercase" v-if="settings.search_books_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
                             </b-form-checkbox>
+                          </b-input-group-text>
+                        </b-input-group-append>
+                      </b-input-group>
+                    </div>
+                  </div>
+
+                  <!-- ratings filter -->
+                  <div class="row">
+                    <div class="col-12">
+                      <b-input-group class="mt-2" v-if="models">
+                        <treeselect v-model="settings.search_ratings" :options="ratingOptions" :flat="true"
+                                    :placeholder="$t('Ratings')" :searchable="false"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
+                        <b-input-group-append>
+                          <b-input-group-text style="width:85px">
+                            <!-- <b-form-checkbox v-model="settings.search_books_or" name="check-button"
+                                             @change="refreshData(false)"
+                                             class="shadow-none" tyle="width: 100%" switch>
+                              <span class="text-uppercase" v-if="settings.search_books_or">{{ $t('or') }}</span>
+                              <span class="text-uppercase" v-else>{{ $t('and') }}</span>
+                            </b-form-checkbox> -->
                           </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
@@ -314,6 +337,7 @@ export default {
         search_keywords: [],
         search_foods: [],
         search_books: [],
+        search_ratings: undefined,
 
         search_keywords_or: true,
         search_foods_or: true,
@@ -333,11 +357,22 @@ export default {
     }
 
   },
+  computed: {
+    ratingOptions: function () {
+      return [
+        {'id': 5, 'label': '⭐⭐⭐⭐⭐' + ' (' + (this.facets.Ratings?.['5.0'] ?? 0) + ')' },
+        {'id': 4, 'label': '⭐⭐⭐⭐ ' + this.$t('and_up') + ' (' + (this.facets.Ratings?.['4.0'] ?? 0) + ')' },
+        {'id': 3, 'label': '⭐⭐⭐ ' + this.$t('and_up') + ' (' + (this.facets.Ratings?.['3.0'] ?? 0) + ')' },
+        {'id': 2, 'label': '⭐⭐ ' + this.$t('and_up') + ' (' + (this.facets.Ratings?.['2.0'] ?? 0) + ')' },
+        {'id': 1, 'label': '⭐ ' + this.$t("and_up") + ' (' + (this.facets.Ratings?.['1.0'] ?? 0) + ')' },
+        {'id': -1, 'label': this.$t('Unrated') + ' (' + (this.facets.Ratings?.['0.0'] ?? 0 )+ ')'},
+      ]
+    }
+  },
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
         this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
-        this.refreshData(false)
       }
 
       let urlParams = new URLSearchParams(window.location.search);
@@ -397,6 +432,7 @@ export default {
           this.settings.search_keywords,
           this.settings.search_foods,
           undefined,
+          this.settings.search_ratings,
           this.settings.search_books.map(function (A) {
             return A["id"];
           }),
@@ -463,6 +499,7 @@ export default {
       this.settings.search_keywords = []
       this.settings.search_foods = []
       this.settings.search_books = []
+      this.settings.search_ratings = undefined
       this.settings.pagination_page = 1
       this.refreshData(false)
     },
