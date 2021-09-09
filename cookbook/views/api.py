@@ -109,16 +109,16 @@ class FuzzyFilterMixin(ViewSetMixin):
             if fuzzy:
                 self.queryset = (
                     self.queryset
-                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
-                    .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
-                    .order_by('-exact').order_by("-trigram")
+                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                        .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
+                        .order_by('-exact').order_by("-trigram")
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 self.queryset = (
                     self.queryset
-                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
-                    .filter(name__icontains=query).order_by('-exact')
+                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                        .filter(name__icontains=query).order_by('-exact')
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -140,7 +140,7 @@ class FuzzyFilterMixin(ViewSetMixin):
 
 
 class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
-    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'],)
+    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def merge(self, request, pk, target):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
@@ -228,7 +228,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             return super().get_queryset()
         return self.queryset.filter(space=self.request.space)
 
-    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'],)
+    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def move(self, request, pk, parent):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
@@ -418,7 +418,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space)
+        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space).distinct()
 
         recipe_id = self.request.query_params.get('recipe', None)
         if recipe_id is not None:
@@ -574,7 +574,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(
             Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
-            shoppinglist__space=self.request.space).all()
+            shoppinglist__space=self.request.space).distinct().all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
@@ -585,7 +585,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(
             Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
-            shoppinglist__space=self.request.space).all()
+            shoppinglist__space=self.request.space).distinct().all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
