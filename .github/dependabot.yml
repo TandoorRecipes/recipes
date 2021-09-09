@@ -13,13 +13,13 @@ updates:
     - dependency-name: "boto3"
 
   - package-ecosystem: "npm"
-      directory: "/vue/"
-      schedule:
-        interval: "weekly"
-
+    directory: "/vue/"
+    schedule:
+      interval: "weekly"
+ 
   - package-ecosystem: "pip"
-      directory: "/"
-      schedule:
-        interval: "montly"
-      allow:
-        - dependency-name: "boto3"
+    directory: "/"
+    schedule:
+      interval: "montly"
+    allow:
+      - dependency-name: "boto3"
