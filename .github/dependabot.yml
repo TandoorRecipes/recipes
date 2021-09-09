@@ -8,18 +8,9 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
-    ignore:
-    - dependency-name: "boto3"
+      interval: "monthly"
 
   - package-ecosystem: "npm"
     directory: "/vue/"
     schedule:
-      interval: "weekly"
- 
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
       interval: "monthly"
-    allow:
-      - dependency-name: "boto3"
