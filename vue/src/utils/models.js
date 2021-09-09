@@ -194,7 +194,7 @@ export class Models {
         'name': i18n.t('Recipe'),
         'apiName': 'Recipe',
         'list': {
-            'params': ['query', 'keywords', 'foods', 'units', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
+            'params': ['query', 'keywords', 'foods', 'units', 'rating', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
             'config': {
                 'foods': {'type':'string'},
                 'keywords': {'type': 'string'},
