@@ -1,12 +1,12 @@
 from collections import Counter
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from recipes import settings
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, TrigramSimilarity
 )
 from django.db.models import Avg, Case, Count, Func, Max, Q, Subquery, Value, When
-from django.utils import translation
+from django.utils import timezone, translation
 
 from cookbook.managers import DICTIONARY
 from cookbook.models import Food, Keyword, ViewLog
@@ -14,7 +14,7 @@ from cookbook.models import Food, Keyword, ViewLog
 
 class Round(Func):
     function = 'ROUND'
-    template='%(function)s(%(expressions)s, 0)'
+    template = '%(function)s(%(expressions)s, 0)'
 
 
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
@@ -28,15 +28,6 @@ def search_recipes(request, queryset, params):
     search_books = params.getlist('books', [])
     search_units = params.get('units', None)
 
-    filtered_search = (
-        len(search_string) > 0
-        or search_rating != 0
-        or len(search_keywords) > 0
-        or len(search_foods) > 0
-        or len(search_books) > 0
-        or search_units is not None
-    )
-
     # TODO I think default behavior should be 'AND' which is how most sites operate with facet/filters based on results
     search_keywords_or = params.get('keywords_or', True)
     search_foods_or = params.get('foods_or', True)
@@ -49,10 +40,10 @@ def search_recipes(request, queryset, params):
     orderby = []
 
     # only sort by recent not otherwise filtering/sorting
-    if search_last_viewed > 0 and not filtered_search:
+    if search_last_viewed > 0:
         last_viewed_recipes = ViewLog.objects.filter(
             created_by=request.user, space=request.space,
-            created_at__gte=datetime.now() - timedelta(days=14)  # TODO make recent days a setting
+            created_at__gte=timezone.now() - timedelta(days=14)  # TODO make recent days a setting
         ).order_by('-pk').values_list('recipe__pk', flat=True)
         last_viewed_recipes = list(dict.fromkeys(last_viewed_recipes))[:search_last_viewed]  # removes duplicates from list prior to slicing
 
@@ -67,10 +58,9 @@ def search_recipes(request, queryset, params):
     if search_new == 'true':
         queryset = (
             queryset.annotate(new_recipe=Case(
-                When(created_at__gte=(datetime.now() - timedelta(days=7)), then=('pk')), default=Value(0), ))
+                When(created_at__gte=(timezone.now() - timedelta(days=7)), then=('pk')), default=Value(0), ))
         )
-    # only sort by new recipes if not otherwise filtering/sorting
-    if not filtered_search:
+        # only sort by new recipes if not otherwise filtering/sorting
         orderby += ['-new_recipe']
 
     search_type = search_prefs.search or 'plain'
@@ -240,7 +230,7 @@ def get_facet(qs, request):
     facets['Books'] = []
     facets['Recent'] = ViewLog.objects.filter(
         created_by=request.user, space=request.space,
-        created_at__gte=datetime.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
+        created_at__gte=timezone.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
     ).values_list('recipe__pk', flat=True)
     return facets
 

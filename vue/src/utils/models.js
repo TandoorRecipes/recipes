@@ -203,6 +203,15 @@ export class Models {
         },
 
     }
+
+    static MEAL_PLAN = {
+        'name': i18n.t('Meal_Plan'),
+        'apiName': 'MealPlan',
+        'list': {
+            'params': ['options'],
+        },
+
+    }
 }
 
 
