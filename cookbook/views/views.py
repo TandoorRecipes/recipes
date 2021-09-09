@@ -604,7 +604,12 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
-    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
+
+    with scopes_disabled():
+        result = ShoppingList.objects.filter(
+            Q(created_by=request.user) | Q(shared=request.user)).filter(
+            space=request.space).values().distinct()
+    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
 
 
 def test2(request):
