@@ -5,7 +5,21 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "pip"
+    directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    ignore:
+    - dependency-name: "boto3"
+
+  - package-ecosystem: "pip"
+      directory: "/"
+      schedule:
+        interval: "montly"
+      allow:
+        - dependency-name: "boto3"
+
+  - package-ecosystem: "npm"
+      directory: "/vue/"
+      schedule:
+        interval: "weekly"
