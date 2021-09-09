@@ -12,14 +12,14 @@ updates:
     ignore:
     - dependency-name: "boto3"
 
+  - package-ecosystem: "npm"
+      directory: "/vue/"
+      schedule:
+        interval: "weekly"
+
   - package-ecosystem: "pip"
       directory: "/"
       schedule:
         interval: "montly"
       allow:
         - dependency-name: "boto3"
-
-  - package-ecosystem: "npm"
-      directory: "/vue/"
-      schedule:
-        interval: "weekly"
