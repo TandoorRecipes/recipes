@@ -384,6 +384,10 @@ export const CardMixin = {
             let idx = undefined
             target = this.findCard(obj.id, card_list)
             
+            if (target) {
+                idx = card_list.indexOf(card_list.find(x => x.id === target.id))
+                Vue.set(card_list, idx, obj)
+            }
             if (target?.parent) {
                 let parent = this.findCard(target.parent, card_list)
                 if (parent) {
@@ -392,9 +396,6 @@ export const CardMixin = {
                         Vue.set(parent.children, idx, obj)
                     }
                 }
-            } else if (target) {
-                idx = card_list.indexOf(card_list.find(x => x.id === target.id))
-                Vue.set(card_list, idx, obj)
             }
         },
     }
