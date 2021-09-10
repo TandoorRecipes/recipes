@@ -436,7 +436,7 @@ export default {
         'query': this.settings.search_input,
         'keywords': this.settings.search_keywords,
         'foods': this.settings.search_foods,
-        'ratings': this.settings.search_ratings,
+        'rating': this.settings.search_ratings,
         'books': this.settings.search_books.map(function (A) {
           return A["id"];
         }),
