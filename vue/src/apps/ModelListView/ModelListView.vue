@@ -19,42 +19,16 @@
         <generic-horizontal-card
             v-for="i in items_left" v-bind:key="i.id"
             :item=i
-            :item_type="this_model.name"
+            :model="this_model"
             :draggable="true"
-            :merge="this_model['merge'] !== false"
-            :move="this_model['move'] !== false"
-            @item-action="startAction($event, 'left')">
-          <!-- foods can also be a recipe, show link to the recipe if it exists -->
-          <template v-slot:upper-right>
-            <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
-                      class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
-            <!-- keywords can have icons - if it exists, display it -->
-            <b-button v-if="i.icon"
-                      class=" btn p-0 border-0" variant="link">
-                      {{i.icon}}
-            </b-button>
-          </template>
-        </generic-horizontal-card>
+            @item-action="startAction($event, 'left')"/>
       </template>
       <template v-slot:cards-right>
         <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id"
                                  :item=i
-                                 :item_type="this_model.name"
+                                 :model="this_model"
                                  :draggable="true"
-                                 :merge="this_model['merge'] !== false"
-                                 :move="this_model['move'] !== false"
-                                 @item-action="startAction($event, 'right')">
-          <!-- foods can also be a recipe, show link to the recipe if it exists -->
-          <template v-slot:upper-right>
-            <b-button v-if="i.recipe" v-b-tooltip.hover :title="i.recipe.name"
-                      class=" btn fas fa-book-open p-0 border-0" variant="link" :href="i.recipe.url"/>
-            <!-- keywords can have icons - if it exists, display it -->
-            <b-button v-if="i.icon"
-                      class=" btn p-0 border-0" variant="link">
-                      {{i.icon}}
-            </b-button>
-          </template>
-        </generic-horizontal-card>
+                                 @item-action="startAction($event, 'right')"/>
       </template>
     </generic-split-lists>
 
@@ -70,7 +44,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {CardMixin, ApiMixin} from "@/utils/utils";
-import {StandardToasts} from "@/utils/utils";
+import {StandardToasts, ToastMixin} from "@/utils/utils";
 
 import GenericSplitLists from "@/components/GenericSplitLists";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
@@ -82,7 +56,7 @@ export default {
   // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available 
   // or i'm capturing it incorrectly
   name: 'ModelListView',
-  mixins: [CardMixin, ApiMixin],
+  mixins: [CardMixin, ApiMixin, ToastMixin],
   components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
   data() {
     return {
@@ -196,11 +170,11 @@ export default {
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         if (result.data.results.length) {
           this['items_' + column] = this['items_' + column].concat(result.data?.results)
-          this[column + '_counts']['current'] = this['items_' + column].length
           this[column + '_counts']['max'] = result.data.count
+          this[column + '_counts']['current'] = this['items_' + column].length
         } else {
-          this[column + '_counts']['current'] = 0
           this[column + '_counts']['max'] = 0
+          this[column + '_counts']['current'] = 0
           console.log('no data returned')
         }
       }).catch((err) => {
@@ -248,7 +222,6 @@ export default {
       }
       this.genericAPI(this.this_model, this.Actions.MOVE, {'source': source_id, 'target': target_id}).then((result) => {
         if (target_id === 0) {
-          
           this.items_left = [item].concat(this.destroyCard(source_id, this.items_left)) // order matters, destroy old card before adding it back in at root
           this.items_right = [...[item]].concat(this.destroyCard(source_id, this.items_right)) // order matters, destroy old card before adding it back in at root
           item.parent = null

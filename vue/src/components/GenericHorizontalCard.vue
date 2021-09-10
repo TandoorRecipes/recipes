@@ -21,7 +21,7 @@
                     <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
                       <div v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" 
                         style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':item})">
-                          <div v-if="!item.show_children">{{ item[child_count] }} {{ item_type }}</div>
+                          <div v-if="!item.show_children">{{ item[child_count] }} {{ itemName }}</div>
                           <div v-else>{{ text.hide_children }}</div>
                       </div>
                       <div v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
@@ -34,10 +34,10 @@
             </b-card-body>
         </b-col>
         <div class="card-img-overlay justify-content-right h-25 m-0 p-0 text-right">
-          <slot name="upper-right"></slot>
+          <badges :item="item" :model="model"/>
           <generic-context-menu  class="p-0"
-            :show_merge="merge"
-            :show_move="move"
+            :show_merge="useMerge"
+            :show_move="useMove"
             @item-action="$emit('item-action', {'action': $event, 'source': item})">
           </generic-context-menu>
         </div>
@@ -49,15 +49,13 @@
         <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id"
           :draggable="draggable"
           :item="child"
-          :item_type="item_type"
+          :model="model"
           :title="title"
           :subtitle="subtitle"
           :child_count="child_count"
           :children="children"
           :recipe_count="recipe_count"
           :recipes="recipes"
-          :merge="merge"
-          :move="move"
           @item-action="$emit('item-action', $event)">
         </generic-horizontal-card>
       </div>
@@ -75,10 +73,10 @@
     </div>
     <!-- this should be made a generic component, would also require mixin for functions that generate the popup and put in parent container-->  
     <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:9999; cursor:pointer">
-      <b-list-group-item v-if="move" action v-on:click="$emit('item-action',{'action': 'move', 'target': item, 'source': source}); closeMenu()">
+      <b-list-group-item v-if="useMove" action v-on:click="$emit('item-action',{'action': 'move', 'target': item, 'source': source}); closeMenu()">
         <i class="fas fa-expand-arrows-alt fa-fw"></i> {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':item.name})}}
       </b-list-group-item>
-      <b-list-group-item v-if="merge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': item, 'source': source}); closeMenu()">
+      <b-list-group-item v-if="useMerge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': item, 'source': source}); closeMenu()">
         <i class="fas fa-compress-arrows-alt fa-fw"></i> {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':item.name}) }}
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
@@ -92,27 +90,25 @@
 
 <script>
 import GenericContextMenu from "@/components/GenericContextMenu";
+import Badges from "@/components/Badges";
 import RecipeCard from "@/components/RecipeCard";
 import { mixin as clickaway } from 'vue-clickaway';
 import { createPopper } from '@popperjs/core';
 
 export default {
   name: "GenericHorizontalCard",
-  components: { GenericContextMenu, RecipeCard },
+  components: { GenericContextMenu, RecipeCard, Badges},
   mixins: [clickaway],
   props: {
-    item: Object,
-    item_type: {type: String, default: 'Blank Item Type'},  // TODO update translations to handle plural translations
+    item: {type: Object},
+    model: {type: Object},
     draggable: {type: Boolean, default: false},
-    title: {type: String, default: 'name'},
+    title: {type: String, default: 'name'},  // this and the following props can probably be moved to model.js and made computed values
     subtitle: {type: String, default: 'description'},
     child_count: {type: String, default: 'numchild'},
     children: {type: String, default: 'children'},
     recipe_count: {type: String, default: 'numrecipe'},
-    recipes: {type: String, default: 'recipes'},
-    move: {type: Boolean, default: false},
-    merge: {type: Boolean, default: false},
-    tree: {type: Boolean, default: false},
+    recipes: {type: String, default: 'recipes'}
   },
   data() {
     return {
@@ -131,7 +127,18 @@ export default {
   mounted() {
     this.item_image = this.item?.image ?? window.IMAGE_PLACEHOLDER
     this.dragMenu = this.$refs.tooltip
-    this.text.hide_children = this.$t('Hide_' + this.item_type)
+    this.text.hide_children = this.$t('Hide_' + this.itemName)
+  },
+  computed: {
+    itemName: function() {
+      return this.model?.name ?? "You Forgot To Set Model Name in model.js"
+    },
+    useMove: function() {
+      return this.model['move'] !== false
+    },
+    useMerge: function() {
+      return this.model['merge'] !== false
+    }
   },
   methods: {
     handleDragStart: function(e) {

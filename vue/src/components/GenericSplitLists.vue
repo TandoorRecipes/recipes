@@ -43,7 +43,7 @@
             <!-- search box -->
             <div class="col col-md">
               <b-input-group class="mt-3">
-                <b-input class="form-control" v-model="search_right" 
+                <b-input class="form-control" v-model="search_left" 
                         v-bind:placeholder="this.text.search"></b-input>
                 <b-input-group-append>
                   <b-button v-b-toggle.collapse_advanced variant="primary" class="shadow-none">
@@ -57,7 +57,7 @@
             <!-- split side search -->
             <div class="col col-md" v-if="show_split">
               <b-input-group class="mt-3">
-                <b-input class="form-control" v-model="search_left" 
+                <b-input class="form-control" v-model="search_right" 
                         v-bind:placeholder="this.text.search"></b-input>
               </b-input-group>
             </div>
@@ -123,6 +123,8 @@ export default {
       left_page: 0,
       right_state: undefined,
       left_state: undefined,
+      right_dirty: false,
+      left_dirty: false,
       right: +new Date(),
       left: +new Date(),
       text: {
@@ -139,12 +141,22 @@ export default {
     this.text.new = this.$t('New_' + this.list_name)
   },
   watch: {
-    search_right: _debounce(function() {
+    search_left: _debounce(function() {
+      if (this.left_dirty) {
+        //prevents running twice if search is reset
+        this.left_dirty = false
+        return
+      }
       this.left_page = 0
       this.$emit('reset', {'column':'left'})
       this.left += 1
     }, 700),
-    search_left: _debounce(function() {
+    search_right: _debounce(function(newVal, oldVal) {
+      if (this.right_dirty) {
+        //prevents running twice if search is reset
+        this.right_dirty = false
+        return
+      }
       this.right_page = 0
       this.$emit('reset', {'column':'right'})
       this.right += 1
@@ -174,20 +186,17 @@ export default {
   },
   methods: {
     resetSearch: function () {
-      if (this.search_right == '') {
+        this.right_dirty = true
+        this.search_right = ''
         this.right_page = 0
         this.right += 1
         this.$emit('reset', {'column':'right'})
-      } else {
-        this.search_right = ''
-      }
-      if (this.search_left == '') {
+
+        this.left_dirty = true
+        this.search_left = ''
         this.left_page = 0
         this.left += 1
         this.$emit('reset', {'column':'left'})
-      } else {
-        this.search_left = ''
-      }
     },
     infiniteHandler: function($state, col) { 
         let params = {
