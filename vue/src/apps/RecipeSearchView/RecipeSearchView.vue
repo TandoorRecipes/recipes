@@ -262,7 +262,7 @@
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
               </template>
-              <recipe-card v-for="r in recipesNotInMealPlan" v-bind:key="r.id" :recipe="r" 
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r" 
                              :footer_text="isRecentOrNew(r)[0]"
                              :footer_icon="isRecentOrNew(r)[1]">
               </recipe-card>
@@ -381,15 +381,6 @@ export default {
         return true
       }
     },
-    recipesNotInMealPlan: function () {
-      if (!this.searchFiltered){
-        let mealPlans = []
-        this.meal_plans.forEach(x => mealPlans.push(x.recipe.id))
-        return this.recipes.filter(recipe => !mealPlans.includes(recipe.id))
-      } else {
-        return this.recipes
-      }
-    }
   },
   mounted() {
     this.$nextTick(function () {
@@ -464,8 +455,15 @@ export default {
       this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then(result => {
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
-        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
+        
         this.facets = result.data.facets
+        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
+        if (!this.searchFiltered){
+          // if meal plans are being shown - filter out any meal plan recipes from the recipe list
+          let mealPlans = []
+          this.meal_plans.forEach(x => mealPlans.push(x.recipe.id))
+          this.recipes = this.recipes.filter(recipe => !mealPlans.includes(recipe.id))
+        }
       })
     },
     openRandom: function () {
