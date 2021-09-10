@@ -200,7 +200,7 @@ export default {
     },
     infiniteHandler: function($state, col) { 
         let params = {
-            'query': (col==='left') ? this.search_right : this.search_left,
+            'query': (col==='left') ? this.search_left : this.search_right,
             'page': (col==='left') ? this.left_page + 1 : this.right_page + 1,
             'column': col
         }
