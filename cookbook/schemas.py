@@ -30,6 +30,11 @@ class RecipeSchema(AutoSchema):
             'schema': {'type': 'int', },
         })
         parameters.append({
+            "name": 'rating', "in": "query", "required": False,
+            "description": 'Id of unit a recipe should have.',
+            'schema': {'type': 'int', },
+        })
+        parameters.append({
             "name": 'books', "in": "query", "required": False,
             "description": 'Id of book a recipe should have. For multiple repeat parameter.',
             'schema': {'type': 'string', },
