@@ -98,5 +98,15 @@
     "merge_selection": "Sostituisci tutte le voci di {source} con il {type} selezionato.",
     "Root": "Radice",
     "Ignore_Shopping": "Ignora lista della spesa",
-    "delete_confirmation": "Sei sicuro di voler eliminare {source}?"
+    "delete_confirmation": "Sei sicuro di voler eliminare {source}?",
+    "Description": "Descrizione",
+    "Icon": "Icona",
+    "Unit": "Unità",
+    "No_ID": "ID non trovato, non è possibile eliminare.",
+    "Recipe_Book": "Libro di Ricette",
+    "create_title": "Nuovo {type}",
+    "edit_title": "Modifica {type}",
+    "Name": "Nome",
+    "Recipe": "Ricetta",
+    "delete_title": "Elimina {type}"
 }
