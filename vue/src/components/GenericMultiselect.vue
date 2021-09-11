@@ -75,12 +75,7 @@ export default {
       })
     },
     selectionChanged: function () {
-      if (this.multiple) {
-        this.$emit('change', {var: this.parent_variable, val: this.selected_objects})
-      } else {
-        // if not multiple listener is expecting a single object, not an array
-        this.$emit('change', {var: this.parent_variable, val: this.selected_objects?.[0] ?? null})
-      }
+      this.$emit('change', {var: this.parent_variable, val: this.selected_objects})
       
     },
     addNew(e) {
