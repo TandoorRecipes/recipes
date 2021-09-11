@@ -1,14 +1,20 @@
-from datetime import datetime, timedelta
+from collections import Counter
+from datetime import timedelta
 
 from recipes import settings
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, TrigramSimilarity
 )
-from django.db.models import Count, Max, Q, Subquery, Case, When, Value
-from django.utils import translation
+from django.db.models import Avg, Case, Count, Func, Max, Q, Subquery, Value, When
+from django.utils import timezone, translation
 
 from cookbook.managers import DICTIONARY
-from cookbook.models import Food, Keyword, Recipe, ViewLog
+from cookbook.models import Food, Keyword, ViewLog
+
+
+class Round(Func):
+    function = 'ROUND'
+    template = '%(function)s(%(expressions)s, 0)'
 
 
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
@@ -16,7 +22,7 @@ from cookbook.models import Food, Keyword, Recipe, ViewLog
 def search_recipes(request, queryset, params):
     search_prefs = request.user.searchpreference
     search_string = params.get('query', '')
-    search_ratings = params.getlist('ratings', [])
+    search_rating = int(params.get('rating', 0))
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
     search_books = params.getlist('books', [])
@@ -33,11 +39,11 @@ def search_recipes(request, queryset, params):
     search_last_viewed = int(params.get('last_viewed', 0))
     orderby = []
 
-    # TODO update this to concat with full search queryset  qs1 | qs2
+    # only sort by recent not otherwise filtering/sorting
     if search_last_viewed > 0:
         last_viewed_recipes = ViewLog.objects.filter(
             created_by=request.user, space=request.space,
-            created_at__gte=datetime.now() - timedelta(days=14)  # TODO make recent days a setting
+            created_at__gte=timezone.now() - timedelta(days=14)  # TODO make recent days a setting
         ).order_by('-pk').values_list('recipe__pk', flat=True)
         last_viewed_recipes = list(dict.fromkeys(last_viewed_recipes))[:search_last_viewed]  # removes duplicates from list prior to slicing
 
@@ -52,8 +58,9 @@ def search_recipes(request, queryset, params):
     if search_new == 'true':
         queryset = (
             queryset.annotate(new_recipe=Case(
-                When(created_at__gte=(datetime.now() - timedelta(days=7)), then=('pk')), default=Value(0), ))
+                When(created_at__gte=(timezone.now() - timedelta(days=7)), then=('pk')), default=Value(0), ))
         )
+        # only sort by new recipes if not otherwise filtering/sorting
         orderby += ['-new_recipe']
 
     search_type = search_prefs.search or 'plain'
@@ -135,8 +142,6 @@ def search_recipes(request, queryset, params):
 
     if len(search_keywords) > 0:
         if search_keywords_or == 'true':
-            # when performing an 'or' search all descendants are included in the OR condition
-            # so descendants are appended to filter all at once
             # TODO creating setting to include descendants of keywords a setting
             # for kw in Keyword.objects.filter(pk__in=search_keywords):
             #     search_keywords += list(kw.get_descendants().values_list('pk', flat=True))
@@ -163,7 +168,14 @@ def search_recipes(request, queryset, params):
         else:
             for k in search_books:
                 queryset = queryset.filter(recipebookentry__book__id=k)
-    
+
+    if search_rating:
+        queryset = queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=request.user, then='cooklog__rating'), default=Value(0)))))
+        if search_rating == -1:
+            queryset = queryset.filter(rating=0)
+        else:
+            queryset = queryset.filter(rating__gte=search_rating)
+
     # probably only useful in Unit list view, so keeping it simple
     if search_units:
         queryset = queryset.filter(steps__ingredients__unit__id=search_units)
@@ -185,7 +197,6 @@ def search_recipes(request, queryset, params):
 def get_facet(qs, request):
     # NOTE facet counts for tree models include self AND descendants
     facets = {}
-    ratings = request.query_params.getlist('ratings', [])
     keyword_list = request.query_params.getlist('keywords', [])
     food_list = request.query_params.getlist('foods', [])
     book_list = request.query_params.getlist('book', [])
@@ -209,16 +220,17 @@ def get_facet(qs, request):
         foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True)), space=request.space).annotate(recipe_count=Count('ingredient'))
     food_a = annotated_qs(foods, root=True, fill=True)
 
+    rating_qs = qs.annotate(rating=Round(Avg(Case(When(cooklog__created_by=request.user, then='cooklog__rating'), default=Value(0)))))
+
     # TODO add rating facet
-    facets['Ratings'] = []
+    facets['Ratings'] = dict(Counter(r.rating for r in rating_qs))
     facets['Keywords'] = fill_annotated_parents(kw_a, keyword_list)
-    # TODO add food facet
     facets['Foods'] = fill_annotated_parents(food_a, food_list)
     # TODO add book facet
     facets['Books'] = []
     facets['Recent'] = ViewLog.objects.filter(
         created_by=request.user, space=request.space,
-        created_at__gte=datetime.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
+        created_at__gte=timezone.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
     ).values_list('recipe__pk', flat=True)
     return facets
 
@@ -266,13 +278,11 @@ def fill_annotated_parents(annotation, filters):
 def annotated_qs(qs, root=False, fill=False):
     """
     Gets an annotated list from a queryset.
-
     :param root:
 
         Will backfill in annotation to include all parents to root node.
 
     :param fill:
-
         Will fill in gaps in annotation where nodes between children
         and ancestors are not included in the queryset.
     """

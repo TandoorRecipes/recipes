@@ -214,12 +214,23 @@ function formatParam(config, value) {
                 case 'type':
                     switch(v) {
                         case 'string':
-                            if (value !== undefined){
+                            if (Array.isArray(value)) {
+                                let tmpValue = []
+                                value.forEach(x => tmpValue.push(String(x)))
+                                value = tmpValue
+                            } else if (value !== undefined) {
                                 value = String(value)
                             }
                             break;
                         case 'integer':
-                            value = parseInt(value)
+                            if (Array.isArray(value)) {
+                                let tmpValue = []
+                                value.forEach(x => tmpValue.push(parseInt(x)))
+                                value = tmpValue
+                            } else if (value !== undefined) {
+                                value = parseInt(value)
+                            }
+                            break;
                     }
                     break;
             }
