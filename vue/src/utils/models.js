@@ -62,6 +62,9 @@ export class Models {
         'name': i18n.t('Food'),              // *OPTIONAL* : parameters will be built model -> model_type -> default
         'apiName': 'Food',                   // *REQUIRED* : the name that is used in api.ts for this model
         'model_type': this.TREE,             // *OPTIONAL* : model specific params for api, if not present will attempt modeltype_create then default_create
+        'badges': {
+            'linked_recipe': true
+        },
         // REQUIRED: unordered array of fields that can be set during create
         'create': {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
@@ -110,6 +113,9 @@ export class Models {
         'name': i18n.t('Keyword'),              // *OPTIONAL: parameters will be built model -> model_type -> default
         'apiName': 'Keyword',  
         'model_type': this.TREE,
+        'badges': {
+            'icon': true
+        },
         'create': {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
             'params': [['name', 'description', 'icon']],

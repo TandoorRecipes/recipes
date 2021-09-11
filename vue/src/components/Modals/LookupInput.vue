@@ -57,7 +57,7 @@ export default {
         return this.new_value
       } else if (!this.new_value) {
         return []
-      } else if (this.new_value.id) {
+      } else if (typeof(this.new_value) === 'object') {
         return [this.new_value]
       } else {
         return [{'id': -1, 'name': this.new_value}]
@@ -83,8 +83,6 @@ export default {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
       })
-      this.show_modal = false
-      
     },
   }
 }

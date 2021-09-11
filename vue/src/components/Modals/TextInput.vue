@@ -37,9 +37,6 @@ export default {
     },
   },
   methods: {
-      Button: function(e) {
-        this.$bvModal.show('modal')
-      }
   }
 }
 </script>
