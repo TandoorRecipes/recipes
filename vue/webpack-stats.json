@@ -33,6 +33,10 @@
       "name": "js/recipe_search_view.js",
       "path": "js/recipe_search_view.js"
     },
+    "css/recipe_view.css": {
+      "name": "css/recipe_view.css",
+      "path": "css/recipe_view.css"
+    },
     "js/recipe_view.js": {
       "name": "js/recipe_view.js",
       "path": "js/recipe_view.js"
@@ -87,6 +91,7 @@
     "recipe_view": [
       "css/chunk-vendors.css",
       "js/chunk-vendors.js",
+      "css/recipe_view.css",
       "js/recipe_view.js"
     ],
     "offline_view": [
