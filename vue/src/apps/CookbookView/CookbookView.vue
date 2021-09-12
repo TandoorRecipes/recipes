@@ -23,7 +23,9 @@
         </b-card>
       </div>
 
-      <cookbook-slider :recipes="recipes"></cookbook-slider>
+      <transition name="slide-fade">
+        <cookbook-slider :recipes="recipes" :book="book" v-if="current_book === book.id"></cookbook-slider>
+      </transition>
     </div>
   </div>
 </template>
@@ -46,7 +48,8 @@ export default {
     return {
       cookbooks: [],
       book_background: window.IMAGE_BOOK,
-      recipes: []
+      recipes: [],
+      current_book: undefined
     }
   },
   mounted() {
@@ -64,6 +67,8 @@ export default {
     openBook: function (book) {
       let apiClient = new ApiApiFactory()
 
+      this.current_book = book
+      console.log(this.current_book)
       apiClient.listRecipeBookEntrys({options: {book: book.id}}).then(result => {
         this.recipes = result.data
       })
@@ -86,6 +91,18 @@ export default {
 </script>
 
 <style>
+.slide-fade-enter-active {
+  transition: all .6s ease;
+}
 
+.slide-fade-leave-active {
+  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
 
+.slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active below version 2.1.8 */
+{
+  transform: translateX(10px);
+  opacity: 0;
+}
 </style>
