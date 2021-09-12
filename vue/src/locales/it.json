@@ -108,5 +108,15 @@
     "edit_title": "Modifica {type}",
     "Name": "Nome",
     "Recipe": "Ricetta",
-    "delete_title": "Elimina {type}"
+    "delete_title": "Elimina {type}",
+    "Unrated": "Senza valutazione",
+    "New_Unit": "Nuova unità di misura",
+    "move_title": "Sposta {type}",
+    "Food": "Alimento",
+    "Delete_Food": "Elimina alimento",
+    "Edit_Food": "Modifica alimento",
+    "Move_Food": "Sposta alimento",
+    "New_Food": "Nuovo alimento",
+    "Hide_Food": "Nascondi alimento",
+    "merge_title": "Unisci {type}"
 }
