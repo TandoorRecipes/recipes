@@ -2,41 +2,41 @@
 
   <tr @click="$emit('checked-state-changed', ingredient)">
     <template v-if="ingredient.is_header">
-        <td colspan="5">
-          <b>{{ ingredient.note }}</b>
-        </td>
+      <td colspan="5">
+        <b>{{ ingredient.note }}</b>
+      </td>
     </template>
     <template v-else>
-        <td class="d-print-none">
-          <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
-          <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
-        </td>
-        <td>
-          <span v-if="ingredient.amount !== 0" v-html="calculateAmount(ingredient.amount)"></span>
-        </td>
-        <td>
-          <span v-if="ingredient.unit !== null && !ingredient.no_amount">{{ ingredient.unit.name }}</span>
-        </td>
-        <td>
-          <template v-if="ingredient.food !== null">
-            <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe)" v-if="ingredient.food.recipe !== null"
-               target="_blank" rel="noopener noreferrer">{{ ingredient.food.name }}</a>
-            <span v-if="ingredient.food.recipe === null">{{ ingredient.food.name }}</span>
-          </template>
-        </td>
-        <td>
-          <div v-if="ingredient.note">
+      <td class="d-print-non" v-if="detailed">
+        <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
+        <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
+      </td>
+      <td>
+        <span v-if="ingredient.amount !== 0" v-html="calculateAmount(ingredient.amount)"></span>
+      </td>
+      <td>
+        <span v-if="ingredient.unit !== null && !ingredient.no_amount">{{ ingredient.unit.name }}</span>
+      </td>
+      <td>
+        <template v-if="ingredient.food !== null">
+          <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe)" v-if="ingredient.food.recipe !== null"
+             target="_blank" rel="noopener noreferrer">{{ ingredient.food.name }}</a>
+          <span v-if="ingredient.food.recipe === null">{{ ingredient.food.name }}</span>
+        </template>
+      </td>
+      <td v-if="detailed">
+        <div v-if="ingredient.note">
           <span v-b-popover.hover="ingredient.note"
                 class="d-print-none"> <i class="far fa-comment"></i>
           </span>
 
-            <div class="d-none d-print-block">
-              <i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}
-            </div>
+          <div class="d-none d-print-block">
+            <i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}
           </div>
-        </td>
+        </div>
+      </td>
     </template>
-   </tr>
+  </tr>
 
 </template>
 
@@ -51,6 +51,10 @@ export default {
     ingredient_factor: {
       type: Number,
       default: 1,
+    },
+    detailed: {
+      type: Boolean,
+      default: true
     }
   },
   mixins: [

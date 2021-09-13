@@ -213,20 +213,7 @@ def recipe_view(request, pk, share=None):
 
 @group_required('user')
 def books(request):
-    book_list = []
-
-    recipe_books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user),
-                                             space=request.space).distinct().all()
-
-    for b in recipe_books:
-        book_list.append(
-            {
-                'book': b,
-                'recipes': RecipeBookEntry.objects.filter(book=b).all()
-            }
-        )
-
-    return render(request, 'books.html', {'book_list': book_list})
+    return render(request, 'books.html', {})
 
 
 @group_required('user')

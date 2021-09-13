@@ -1,81 +1,34 @@
 {% extends "base.html" %}
-{% load custom_tags %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
 {% load i18n %}
+{% load l10n %}
 
 {% block title %}{% trans 'Recipe Books' %}{% endblock %}
 
+{% block content_fluid %}
 
-{% block content %}
-    <div class="row">
-        <div class="col col-md-9">
-            <h2>{% trans 'Recipe Books' %}</h2>
-        </div>
-        <div class="col col-md-3" style="text-align: right">
-            <a href="{% url 'new_recipe_book' %}" class="btn btn-success"><i
-                    class="fas fa-plus-circle"></i> {% trans 'New Book' %}</a>
-        </div>
+    <div id="app" >
+        <cookbook-view></cookbook-view>
     </div>
-    <br/>
-    <br/>
-    {% for b in book_list %}
-        <div class="row">
-            <div class="col-12">
-                <div class="card" style="margin-top: 2px">
-                    <div class="card-body">
-                        <h5 class="card-title">{% if b.book.icon %}{{ b.book.icon }} {% endif %}{{ b.book.name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{% if b.book.created_by != request.user %}
-                            {% trans 'by' %} {{ b.book.created_by.get_user_name }}
-                        {% endif %}</h6>
 
-                        {% if b.book.description %}
-                            <p class="card-text">{{ b.book.description }}</p>
-                        {% endif %}
-                        <a data-toggle="collapse" href="#collapse_{{ b.book.pk }}" role="button" aria-expanded="false"
-                           aria-controls="collapse_{{ b.book.pk }}" class="card-link">{% trans 'Toggle Recipes' %}</a>
-                        {% if b.book.created_by == request.user or request.user.is_superuser %}
-                            <a href="{% url 'edit_recipe_book' b.book.pk %}" class="card-link">{% trans 'Edit' %}</a>
-                            <a href="{% url 'delete_recipe_book' b.book.pk %}"
-                               class="card-link">{% trans 'Delete' %}</a>
-                        {% endif %}
-                    </div>
-                    <div class="collapse" id="collapse_{{ b.book.pk }}">
-                        {% if b.recipes %}
-                            <ul class="list-group list-group-flush">
-                                {% for r in b.recipes %}
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-10">
-                                                {% recipe_last r.recipe request.user as last_cooked %}
-                                                <a href="{% url 'view_recipe' r.recipe.pk %}">{{ r.recipe.name }}</a>
-                                                {% recipe_rating r.recipe request.user as rating %}
-                                                {{ rating|safe }}
-                                                {% if last_cooked %}
-                                                    &nbsp;
-                                                    <span class="badge badge-primary">{% trans 'Last cooked' %} {{ last_cooked|date }}</span>
-                                                {% endif %}
 
-                                            </div>
-                                            {% if b.book.created_by == request.user or request.user.is_superuser %}
-                                                <div class="col-2" style="text-align: right">
-                                                    <a href="{% url 'delete_recipe_book_entry' r.pk %}"
-                                                       class="pull-right"><i class="fas fa-trash-alt"></i></a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <div class="card-body">
-                                <p>
-                                    {% trans 'There are no recipes in this book yet.' %}
-                                </p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+{% endblock %}
 
+
+{% block script %}
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
+
+    <script type="application/javascript">
+        window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
+        window.IMAGE_BOOK = "{% static 'assets/book.svg' %}"
+
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+    </script>
+
+    {% render_bundle 'cookbook_view' %}
 {% endblock %}
