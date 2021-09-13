@@ -22,7 +22,7 @@ export class Models {
                         'operator': 'not_exist',
                         'true': 0,
                         'false': undefined
-                        }
+                    }
                 },
                 'tree': {'default': undefined},
             },
@@ -34,10 +34,10 @@ export class Models {
                     'type': 'instruction',
                     'function': 'translate',
                     'phrase': "del_confimation_tree",
-                    'params':[
+                    'params': [
                         {
                             'token': 'source',
-                            'from':'item1',
+                            'from': 'item1',
                             'attribute': "name"
                         }
                     ]
@@ -51,7 +51,7 @@ export class Models {
                     'type': 'lookup',
                     'field': 'target',
                     'list': 'self',
-                    'sticky_options': [{'id': 0,'name': i18n.t('tree_root')}]
+                    'sticky_options': [{'id': 0, 'name': i18n.t('tree_root')}]
                 }
             }
         }
@@ -111,7 +111,7 @@ export class Models {
     }
     static KEYWORD = {
         'name': i18n.t('Keyword'),              // *OPTIONAL: parameters will be built model -> model_type -> default
-        'apiName': 'Keyword',  
+        'apiName': 'Keyword',
         'model_type': this.TREE,
         'badges': {
             'icon': true
@@ -145,7 +145,7 @@ export class Models {
     }
     static UNIT = {
         'name': i18n.t('Unit'),
-        'apiName': 'Unit', 
+        'apiName': 'Unit',
         'create': {
             'params': [['name', 'description']],
             'form': {
@@ -170,7 +170,32 @@ export class Models {
     static SHOPPING_LIST = {}
     static RECIPE_BOOK = {
         'name': i18n.t('Recipe_Book'),
-        'apiName': 'RecipeBook',  
+        'apiName': 'RecipeBook',
+        'create': {
+            'params': [['name', 'description', 'icon']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                },
+                'icon': {
+                    'form_field': true,
+                    'type': 'emoji',
+                    'field': 'icon',
+                    'label': i18n.t('Icon')
+                },
+            }
+        },
     }
     static SHOPPING_CATEGORY = {
         'name': i18n.t('Shopping_Category'),
@@ -195,14 +220,14 @@ export class Models {
             }
         },
     }
-    
+
     static RECIPE = {
         'name': i18n.t('Recipe'),
         'apiName': 'Recipe',
         'list': {
             'params': ['query', 'keywords', 'foods', 'units', 'rating', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
             'config': {
-                'foods': {'type':'string'},
+                'foods': {'type': 'string'},
                 'keywords': {'type': 'string'},
                 'books': {'type': 'string'},
             }
@@ -228,11 +253,11 @@ export class Actions {
             'title': {
                 'function': 'translate',
                 'phrase': 'create_title',
-                'params' : [
+                'params': [
                     {
                         'token': 'type',
                         'from': 'model',
-                        'attribute':'name'
+                        'attribute': 'name'
                     }
                 ],
             },
@@ -245,11 +270,11 @@ export class Actions {
         "form_title": {
             'function': 'translate',
             'phrase': 'edit_title',
-            'params' : [
+            'params': [
                 {
                     'token': 'type',
                     'from': 'model',
-                    'attribute':'name'
+                    'attribute': 'name'
                 }
             ],
         },
@@ -261,11 +286,11 @@ export class Actions {
             'title': {
                 'function': 'translate',
                 'phrase': 'delete_title',
-                'params' : [
+                'params': [
                     {
                         'token': 'type',
                         'from': 'model',
-                        'attribute':'name'
+                        'attribute': 'name'
                     }
                 ],
             },
@@ -276,10 +301,10 @@ export class Actions {
                 'label': {
                     'function': 'translate',
                     'phrase': "delete_confirmation",
-                    'params':[
+                    'params': [
                         {
                             'token': 'source',
-                            'from':'item1',
+                            'from': 'item1',
                             'attribute': "name"
                         }
                     ]
@@ -312,11 +337,11 @@ export class Actions {
             'title': {
                 'function': 'translate',
                 'phrase': 'merge_title',
-                'params' : [
+                'params': [
                     {
                         'token': 'type',
                         'from': 'model',
-                        'attribute':'name'
+                        'attribute': 'name'
                     }
                 ],
             },
@@ -327,15 +352,15 @@ export class Actions {
                 'label': {
                     'function': 'translate',
                     'phrase': "merge_selection",
-                    'params':[
+                    'params': [
                         {
                             'token': 'source',
-                            'from':'item1',
+                            'from': 'item1',
                             'attribute': "name"
                         },
                         {
                             'token': 'type',
-                            'from':'model',
+                            'from': 'model',
                             'attribute': "name"
                         },
                     ]
@@ -360,11 +385,11 @@ export class Actions {
             'title': {
                 'function': 'translate',
                 'phrase': 'move_title',
-                'params' : [
+                'params': [
                     {
                         'token': 'type',
                         'from': 'model',
-                        'attribute':'name'
+                        'attribute': 'name'
                     }
                 ],
             },
@@ -375,20 +400,20 @@ export class Actions {
                 'label': {
                     'function': 'translate',
                     'phrase': "move_selection",
-                    'params':[
+                    'params': [
                         {
                             'token': 'source',
-                            'from':'item1',
+                            'from': 'item1',
                             'attribute': "name"
                         },
                         {
                             'token': 'type',
-                            'from':'model',
+                            'from': 'model',
                             'attribute': "name"
                         },
                     ]
                 }
-                
+
             },
             'target': {
                 'form_field': true,
@@ -397,6 +422,6 @@ export class Actions {
                 'list': 'self'
             }
         }
-        
+
     }
 }

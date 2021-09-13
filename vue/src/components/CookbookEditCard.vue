@@ -2,7 +2,7 @@
   <b-card no-body v-hover>
     <b-card-header class="p-4">
       <h5>{{ book_copy.icon }}&nbsp;{{ book_copy.name }}
-        <span class="float-right" @click="editOrSave"><i
+        <span class="float-right text-primary" @click="editOrSave"><i
             class="fa" v-bind:class="{ 'fa-pen': !editing, 'fa-save': editing }"
             aria-hidden="true"></i></span></h5>
     </b-card-header>
@@ -24,6 +24,8 @@
 
         </textarea>
       </div>
+      <button v-if="editing" class="btn btn-danger" @click="deleteBook">{{$t('Delete')}}</button>
+      <button v-if="editing" class="btn btn-primary float-right" @click="editOrSave">{{$t('Save')}}</button>
       <b-card-text style="text-overflow: ellipsis;" v-if="!editing">
         {{ book_copy.description }}
       </b-card-text>
@@ -97,6 +99,18 @@ export default {
         this.users = result.data
       })
     },
+    deleteBook: function () {
+      if (confirm(this.$t('delete_confirmation', {source: this.book.name}))) {
+        let apiClient = new ApiApiFactory()
+
+        apiClient.destroyRecipeBook(this.book.id).then(result => {
+          this.$emit('refresh')
+          StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+        }).catch(error => {
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+        })
+      }
+    }
   }
 }
 </script>

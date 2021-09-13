@@ -19,7 +19,7 @@
       <div class="col-md-5">
         <transition name="flip" mode="out-in">
           <cookbook-edit-card :book="book" v-if="current_page === 1"
-                              v-on:editing="cookbook_editing = $event"></cookbook-edit-card>
+                              v-on:editing="cookbook_editing = $event" v-on:refresh="$emit('refresh')"></cookbook-edit-card>
         </transition>
         <transition name="flip" mode="out-in">
           <recipe-card :recipe="display_recipes[0].recipe_content"
