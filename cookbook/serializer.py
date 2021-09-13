@@ -550,7 +550,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         return RecipeBookSerializer(context={'request': self.context['request']}).to_representation(obj.book)
 
     def get_recipe_content(self, obj):
-        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
+        return RecipeSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
 
     def create(self, validated_data):
         book = validated_data['book']

@@ -124,6 +124,9 @@ export function resolveDjangoUrl(url, params = null) {
 * */
 
 export function getUserPreference(pref) {
+    if(window.USER_PREF === undefined) {
+        return undefined;
+    }
     return window.USER_PREF[pref]
 }
 
