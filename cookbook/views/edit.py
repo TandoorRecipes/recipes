@@ -56,9 +56,7 @@ def internal_recipe_update(request, pk):
 
     recipe_instance = get_object_or_404(Recipe, pk=pk, space=request.space)
 
-    return render(
-        request, 'edit_internal_recipe_v2.html', {'recipe': recipe_instance}
-    )
+    return render(request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance})
 
 
 class SpaceFormMixing(FormMixin):
