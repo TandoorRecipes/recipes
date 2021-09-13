@@ -1127,3 +1127,16 @@
     color: #000;
     background-color: #fff;
 }
+
+@media (min-width: 992px) {
+    .dropdown-menu-center {
+        right: auto;
+        left: 50%;
+        -webkit-transform: translate(-50%, 0);
+        -o-transform: translate(-50%, 0);
+        transform: translate(-50%, 0);
+    }
+    .dropdown-menu-center-large {
+        min-width: 22rem;
+    }
+}

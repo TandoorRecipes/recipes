@@ -89,22 +89,6 @@
                 <a class="nav-link" href="{% url 'view_books' %}"><i
                         class="fas fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,view_history' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'list_storage' %}"><i
-                            class="fas fa-database fa-fw"></i> {% trans 'Storage Backends' %}</a>
-
-                    <a class="dropdown-item" href="{% url 'list_recipe_import' %}"><i
-                            class="far fa-file-alt fa-fw"></i> {% trans 'Discovered Recipes' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_sync_log' %}"><i
-                            class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_sync' %}"><i
-                            class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
-                </div>
-            </li>
         </ul>
 
         <ul class="navbar-nav ml-auto">
@@ -112,29 +96,101 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
-
-
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-mortar-pestle"></i> {% trans 'Drawer' %}
+                        <i class="fas fa-toolbox"></i>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
-                                class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
-                        <a class="dropdown-item" href="{% url 'list_food' %}"><i
-                                class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
-                        </a>
-                        <a class="dropdown-item" href="{% url 'list_unit' %}"><i
-                                class="fas fa-balance-scale fa-fw"></i> {% trans 'Units' %}
-                        </a>
-                        <a class="dropdown-item" href="{% url 'view_supermarket' %}"><i
-                                class="fas fa-store-alt fa-fw"></i> {% trans 'Supermarket' %}
-                        </a>
-                        <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
-                                class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
-                        <a class="dropdown-item" href="{% url 'view_history' %}"><i
-                                class="fas fa-history"></i> {% trans 'History' %}</a>
+                    <div class="dropdown-menu dropdown-menu-center dropdown-menu-center-large">
+                        <div class="row">
+                            <div class="col-4">
+                                <a href="{% url 'list_keyword' %}" class="p-1">
+                                    <div class="card p-0 no-gutters">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-tags fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                            {% trans 'Keyword' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_food' %}" class="p-1">
+                                    <div class="card p-0 no-gutters">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-leaf fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                            {% trans 'Ingredients' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_unit' %}" class="p-1">
+                                    <div class="card p-0 no-gutters">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-balance-scale fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                            {% trans 'Units' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <a href="{% url 'view_supermarket' %}" class="p-1">
+                                    <div class="card p-0 no-gutters">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-store-alt fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                            {% trans 'Supermarket' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'data_batch_edit' %}" class="p-1">
+                                    <div class="card p-0 no-gutters">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-edit fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                            {% trans 'Batch Edit' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'view_history' %}" class="p-1">
+                                    <div class="card p-0 no-gutters">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-history fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                            {% trans 'History' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'data_import_url,new_recipe' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"><i
+                            class="fas fa-plus"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-center"
+                         aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'data_import_url' %}"><i
+                                class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
+                        <a class="dropdown-item " href="{% url 'new_recipe' %}"><i
+                                class="fas fa-plus"></i> {% trans 'Create' %}</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
