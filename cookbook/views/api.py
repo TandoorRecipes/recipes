@@ -548,9 +548,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if obj.get_space() != request.space:
             raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
 
-        serializer = self.serializer_class(
-            obj, data=request.data, partial=True
-        )
+        serializer = self.serializer_class(obj, data=request.data, partial=True)
 
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
@@ -558,8 +556,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            img, filetype = handle_image(request, obj.image)
-            obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
+            if serializer.validated_data == {}:
+                obj.image = None
+            else:
+                img, filetype = handle_image(request, obj.image)
+                obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
             obj.save()
 
             return Response(serializer.data)

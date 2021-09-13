@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>{{ $t('Edit') }} {{ $t('Recipe') }}</h3>
+    <h3>{{ $t('Edit_Recipe') }}</h3>
 
     <loading-spinner :size="25" v-if="!recipe"></loading-spinner>
 
@@ -12,7 +12,7 @@
           <input class="form-control" id="id_name" v-model="recipe.name">
         </div>
       </div>
-      <div class="row">
+      <div class="row pt-2">
         <div class="col-12">
           <label for="id_description">
             {{ $t('Description') }}
@@ -25,12 +25,30 @@
       <br/>
 
       <div class="row">
-        <div class="col-md-6">
-          <img :src="recipe.image.url" id="id_image"
-               class="img img-fluid img-responsive"
-               style="max-height: 20vh" v-if="recipe.image.url">
-          <input class="mt-2" type="file" @change="imageChanged">
+
+        <div class="col-md-6" style="max-height: 50vh">
+
+          <input id="id_file_upload" ref="file_upload" type="file" hidden @change="uploadImage($event.target.files[0])">
+
+          <div class="h-100 w-100 border border-primary rounded"
+               style="border-width: 2px!important; border-style: dashed!important;"
+               @drop.prevent="uploadImage($event.dataTransfer.files[0])"
+               @dragover.prevent
+               @click="($refs.file_upload).click()">
+
+            <i class="far fa-image fa-10x text-primary"
+               style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+               v-if="!recipe.image"></i>
+
+            <img :src="recipe.image" id="id_image"
+                 class="img img-fluid img-responsive"
+                 style="object-fit: cover; height: 100%" v-if="recipe.image">
+          </div>
+          <button style="bottom:10px;left:30px;position: absolute;" class="btn btn-danger" @click="deleteImage"
+                  v-if="recipe.image">{{ $t('Delete') }}
+          </button>
         </div>
+
         <div class="col-md-6">
           <label for="id_name"> {{ $t('Preparation') }} {{ $t('Time') }}</label>
           <input class="form-control" id="id_prep_time" v-model="recipe.working_time">
@@ -197,7 +215,6 @@
               <div class="col-md-9" v-if="step.type === 'FILE'">
                 <label :for="'id_step_' + step.id + '_file'">{{ $t('File') }}</label>
                 <multiselect
-                    v-tabindex
                     ref="file"
                     v-model="step.file"
                     :options="files"
@@ -219,7 +236,6 @@
               <div class="col-md-9" v-if="step.type === 'RECIPE'">
                 <label :for="'id_step_' + step.id + '_recipe'">{{ $t('Recipe') }}</label>
                 <multiselect
-                    v-tabindex
                     ref="step_recipe"
                     v-model="step.step_recipe"
                     :options="recipes.map(recipe => recipe.id)"
@@ -278,7 +294,6 @@
                                      v-if="!ingredient.is_header">
                                   <multiselect
                                       v-if="!ingredient.no_amount"
-                                      v-tabindex
                                       ref="unit"
                                       v-model="ingredient.unit"
                                       :options="units"
@@ -302,7 +317,6 @@
                                 <div class="col-lg-4 col-md-6 small-padding"
                                      v-if="!ingredient.is_header">
                                   <multiselect
-                                      v-tabindex
                                       ref="food"
                                       v-model="ingredient.food"
                                       :options="foods"
@@ -417,21 +431,40 @@
         </div>
       </draggable>
 
-      <div class="row" style="margin-top: 1vh; margin-bottom: 8vh" v-if="recipe !== undefined">
-        <div class="col-12">
-          <button type="button" @click="updateRecipe(true)"
-                  class="btn btn-success shadow-none">{{ $t('Save_and_View') }}
-          </button>
-          <button type="button" @click="updateRecipe(false)"
-                  class="btn btn-info shadow-none">{{ $t('Save') }}
-          </button>
+      <div class="row pt-2">
+        <div class="col-md-12 text-center">
           <button type="button" @click="addStep()"
-                  class="btn btn-primary shadow-none">{{ $t('Add_Step') }}
+                  class="btn btn-success shadow-none ">{{ $t('Add_Step') }}
           </button>
-          <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
-             class="btn btn-secondary shadow-none">{{ $t('View') }}</a>
+        </div>
+      </div>
+
+
+      <br/>
+      <br/>
+      <br/>
+
+      <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background:white;"
+           v-if="recipe !== undefined">
+
+        <div class="col-md-3 col-6">
           <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-             class="btn btn-danger shadow-none">{{ $t('Delete') }}</a>
+             class="btn btn-block btn-danger shadow-none">{{ $t('Delete') }}</a>
+        </div>
+        <div class="col-md-3 col-6">
+          <a :href="resolveDjangoUrl('view_recipe', recipe.id)">
+            <button class="btn btn-block btn-primary shadow-none">{{ $t('View') }}</button>
+          </a>
+        </div>
+        <div class="col-md-3 col-6">
+          <button type="button" @click="updateRecipe(false)"
+                  class="btn btn-sm btn-block btn-info shadow-none">{{ $t('Save') }}
+          </button>
+        </div>
+        <div class="col-md-3 col-6">
+          <button type="button" @click="updateRecipe(true)"
+                  class="btn btn-sm btn-block btn-success shadow-none">{{ $t('Save_and_View') }}
+          </button>
         </div>
 
       </div>
@@ -448,6 +481,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import draggable from 'vuedraggable'
 import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/utils/utils";
 import Multiselect from "vue-multiselect";
 import {ApiApiFactory} from "@/utils/openapi/api";
@@ -474,7 +508,7 @@ Vue.use(BootstrapVue)
 export default {
   name: 'RecipeSearchView',
   mixins: [ResolveUrlMixin, ApiMixin],
-  components: {Multiselect, LoadingSpinner},
+  components: {Multiselect, LoadingSpinner, draggable},
   data() {
     return {
       recipe_id: window.RECIPE_ID,
@@ -537,6 +571,9 @@ export default {
     }
   },
   methods: {
+    test: function (event) {
+      console.log(event)
+    },
     warnPageLeave: function (event) {
       if (this.recipe_changed) {
         event.returnValue = ''
@@ -585,27 +622,27 @@ export default {
         StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
       })
     },
-    imageChanged: function (event) {
-      let apiFactory = new ApiApiFactory()
-
-      if (event.target.files && event.target.files[0]) {
-        let fd = new FormData()
-        fd.append('image', event.target.files[0])
-        apiFactory.imageRecipe("{% url 'api:recipe-detail' recipe.pk %}" + 'image/', fd, {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
-
-          console.log(response)
+    uploadImage: function (file) {
+      let apiClient = new ApiApiFactory()
+      if (file !== undefined) {
+        apiClient.imageRecipe(this.recipe.id, file).then(request => {
+          this.recipe.image = request.data.image
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
-        }).catch((err) => {
-          console.log(err)
+        }).catch(err => {
           StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+          console.log(err.request, err.response)
         })
-
-        let reader = new FileReader();
-        reader.onload = function (e) {
-          //TODO load new image to view
-        }
-        reader.readAsDataURL(event.target.files[0]);
       }
+    },
+    deleteImage: function () {
+      let apiClient = new ApiApiFactory()
+      apiClient.imageRecipe(this.recipe.id, undefined).then(request => {
+        this.recipe.image = null
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+      }).catch(err => {
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+        console.log(err.request, err.response)
+      })
     },
     addStep: function () { //TODO see if default can be generated from options request
       this.recipe.steps.push(
@@ -781,5 +818,9 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
-
+.small-padding {
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-top: 2px;
+}
 </style>
