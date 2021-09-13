@@ -7,6 +7,8 @@
   "success_creating_resource": "Successfully created a resource!",
   "success_updating_resource": "Successfully updated a resource!",
   "success_deleting_resource": "Successfully deleted a resource!",
+  "step_time_minutes": "Step time in minutes",
+  "confirm_delete": "Are you sure you want to delete this {object}?",
 
   "import_running": "Import running, please wait!",
   "all_fields_optional": "All fields are optional and can be left empty.",
@@ -21,6 +23,10 @@
   "Step_start_time": "Step start time",
   "Sort_by_new": "Sort by new",
   "Recipes_per_page": "Recipes per Page",
+  "Show_as_header": "Show as header",
+  "Hide_as_header": "Hide as header",
+  "Copy_template_reference": "Copy template reference",
+  "Save_and_View": "Save & View",
 
   "Manage_Books": "Manage Books",
   "Meal_Plan": "Meal Plan",
@@ -37,10 +43,20 @@
   "New_Keyword": "New Keyword",
   "Delete_Keyword": "Delete Keyword",
   "Edit_Keyword": "Edit Keyword",
+  "Edit_Recipe": "Edit Recipe",
   "Move_Keyword": "Move Keyword",
   "Merge_Keyword": "Merge Keyword",
   "Hide_Keywords": "Hide Keywords",
   "Hide_Recipes": "Hide Recipes",
+  "Move_Up": "Move up",
+  "Move_Down": "Move down",
+  "Step_Name": "Step Name",
+  "Step_Type": "Step Type",
+  "Make_Header": "Make_Header",
+  "Make_Ingredient": "Make_Ingredient",
+  "Enable_Amount": "Enable Amount",
+  "Disable_Amount": "Disable Amount",
+  "Add_Step": "Add Step",
 
   "Keywords": "Keywords",
   "Books": "Books",
@@ -59,6 +75,7 @@
   "Link": "Link",
   "Add": "Add",
   "New": "New",
+  "Note": "Note",
   "Success": "Success",
   "Failure": "Failure",
   "Ingredients": "Ingredients",
@@ -131,5 +148,8 @@
   "Create_New_Keyword": "Add New Keyword",
   "Create_New_Unit": "Add New Unit",
   "and_up": "& Up",
-  "Unrated": "Unrated"
+  "Instructions": "Instructions",
+  "Unrated": "Unrated",
+  "Time": "Time",
+  "Text": "Text"
 }
