@@ -3,47 +3,55 @@
   "assets": {
     "../../templates/sw.js": {
       "name": "../../templates/sw.js",
-      "path": "../../templates/sw.js"
+      "path": "..\\..\\templates\\sw.js"
     },
     "css/chunk-vendors.css": {
       "name": "css/chunk-vendors.css",
-      "path": "css/chunk-vendors.css"
+      "path": "css\\chunk-vendors.css"
     },
     "js/chunk-vendors.js": {
       "name": "js/chunk-vendors.js",
-      "path": "js/chunk-vendors.js"
+      "path": "js\\chunk-vendors.js"
+    },
+    "css/cookbook_view.css": {
+      "name": "css/cookbook_view.css",
+      "path": "css\\cookbook_view.css"
+    },
+    "js/cookbook_view.js": {
+      "name": "js/cookbook_view.js",
+      "path": "js\\cookbook_view.js"
     },
     "js/import_response_view.js": {
       "name": "js/import_response_view.js",
-      "path": "js/import_response_view.js"
+      "path": "js\\import_response_view.js"
     },
     "css/model_list_view.css": {
       "name": "css/model_list_view.css",
-      "path": "css/model_list_view.css"
+      "path": "css\\model_list_view.css"
     },
     "js/model_list_view.js": {
       "name": "js/model_list_view.js",
-      "path": "js/model_list_view.js"
+      "path": "js\\model_list_view.js"
     },
     "js/offline_view.js": {
       "name": "js/offline_view.js",
-      "path": "js/offline_view.js"
+      "path": "js\\offline_view.js"
     },
     "js/recipe_search_view.js": {
       "name": "js/recipe_search_view.js",
-      "path": "js/recipe_search_view.js"
+      "path": "js\\recipe_search_view.js"
     },
     "js/recipe_view.js": {
       "name": "js/recipe_view.js",
-      "path": "js/recipe_view.js"
+      "path": "js\\recipe_view.js"
     },
     "js/supermarket_view.js": {
       "name": "js/supermarket_view.js",
-      "path": "js/supermarket_view.js"
+      "path": "js\\supermarket_view.js"
     },
     "js/user_file_view.js": {
       "name": "js/user_file_view.js",
-      "path": "js/user_file_view.js"
+      "path": "js\\user_file_view.js"
     },
     "recipe_search_view.html": {
       "name": "recipe_search_view.html",
@@ -72,6 +80,10 @@
     "model_list_view.html": {
       "name": "model_list_view.html",
       "path": "model_list_view.html"
+    },
+    "cookbook_view.html": {
+      "name": "cookbook_view.html",
+      "path": "cookbook_view.html"
     },
     "manifest.json": {
       "name": "manifest.json",
@@ -114,6 +126,12 @@
       "js/chunk-vendors.js",
       "css/model_list_view.css",
       "js/model_list_view.js"
+    ],
+    "cookbook_view": [
+      "css/chunk-vendors.css",
+      "js/chunk-vendors.js",
+      "css/cookbook_view.css",
+      "js/cookbook_view.js"
     ]
   }
 }
