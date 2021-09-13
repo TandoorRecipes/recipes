@@ -276,8 +276,9 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     def create(self, validated_data):
-        obj, created = SupermarketCategory.objects.get_or_create(name=validated_data['name'],
-                                                                 space=self.context['request'].space)
+        validated_data['name'] = validated_data['name'].strip()
+        validated_data['space'] = self.context['request'].space
+        obj, created = SupermarketCategory.objects.get_or_create(**validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -285,7 +286,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
 
     class Meta:
         model = SupermarketCategory
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'description')
 
 
 class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
@@ -301,7 +302,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
 
     class Meta:
         model = Supermarket
-        fields = ('id', 'name', 'category_to_supermarket')
+        fields = ('id', 'name', 'description', 'category_to_supermarket')
 
 
 class RecipeSimpleSerializer(serializers.ModelSerializer):

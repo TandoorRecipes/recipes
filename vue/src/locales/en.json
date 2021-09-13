@@ -14,7 +14,7 @@
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
   "show_only_internal": "Show only internal recipes",
-  "show_split_screen": "Show split view",
+  "show_split_screen": "Split View",
 
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
@@ -46,7 +46,7 @@
   "Edit_Recipe": "Edit Recipe",
   "Move_Keyword": "Move Keyword",
   "Merge_Keyword": "Merge Keyword",
-  "Hide_Keywords": "Hide Keywords",
+  "Hide_Keywords": "Hide Keyword",
   "Hide_Recipes": "Hide Recipes",
   "Move_Up": "Move up",
   "Move_Down": "Move down",
