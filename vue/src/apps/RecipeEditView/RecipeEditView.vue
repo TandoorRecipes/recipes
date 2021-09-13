@@ -101,14 +101,14 @@
       <draggable :list="recipe.steps" group="steps"
                  :empty-insert-threshold="10" handle=".handle" @sort="sortSteps()">
 
-        <div v-for="[step, step_index] in recipe.steps" style="margin-top: 1vh" class="card" v-bind:key="step_index">
+        <div v-for="(step, step_index) in recipe.steps" style="margin-top: 1vh" class="card" v-bind:key="step_index">
 
           <div class="card-body" :id="`id_card_step_${step_index}`">
             <div class="row">
               <div class="col-11">
                 <h4 class="handle" :id="'id_step_' + step_index">
-                  <i class="fas fa-paragraph" v-if="step.type == 'TEXT'"></i>
-                  <i class="fas fa-clock" v-if="step.type == 'TIME'"></i>
+                  <i class="fas fa-paragraph" v-if="step.type === 'TEXT'"></i>
+                  <i class="fas fa-clock" v-if="step.type === 'TIME'"></i>
                   <template v-if="step.name !== ''">{{ step.name }}</template>
                   <template v-else>{{ $t('Step') }} {{ step_index + 1 }}</template>
 
@@ -238,7 +238,7 @@
                         <draggable :list="step.ingredients" group="ingredients"
                                    :empty-insert-threshold="10" handle=".handle"
                                    @sort="sortIngredients(step)">
-                          <div v-for="[ingredient, index] in step.ingredients"
+                          <div v-for="(ingredient, index) in step.ingredients"
                                :key="ingredient.id">
 
                             <hr class="d-md-none"/>
@@ -390,6 +390,8 @@
               </div>
             </div>
           </div>
+
+
         </div>
       </draggable>
 
