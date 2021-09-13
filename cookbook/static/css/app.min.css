@@ -1131,10 +1131,10 @@
 @media (min-width: 992px) {
     .dropdown-menu-center {
         right: auto;
-        left: 60%;
-        -webkit-transform: translate(-60%, 0);
-        -o-transform: translate(-60%, 0);
-        transform: translate(-60%, 0);
+        left: 65%;
+        -webkit-transform: translate(-65%, 0);
+        -o-transform: translate(-65%, 0);
+        transform: translate(-65%, 0);
     }
     .dropdown-menu-center-large {
         min-width: 28rem;
