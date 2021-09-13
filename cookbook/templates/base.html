@@ -89,22 +89,6 @@
                 <a class="nav-link" href="{% url 'view_books' %}"><i
                         class="fas fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,view_history' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'list_storage' %}"><i
-                            class="fas fa-database fa-fw"></i> {% trans 'Storage Backends' %}</a>
-
-                    <a class="dropdown-item" href="{% url 'list_recipe_import' %}"><i
-                            class="far fa-file-alt fa-fw"></i> {% trans 'Discovered Recipes' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_sync_log' %}"><i
-                            class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_sync' %}"><i
-                            class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
-                </div>
-            </li>
         </ul>
 
         <ul class="navbar-nav ml-auto">
@@ -112,9 +96,7 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
-
-
-                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history,data_sync' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-mortar-pestle"></i> {% trans 'Drawer' %}
@@ -135,6 +117,8 @@
                                 class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
                         <a class="dropdown-item" href="{% url 'view_history' %}"><i
                                 class="fas fa-history"></i> {% trans 'History' %}</a>
+                        <a class="dropdown-item" href="{% url 'data_sync' %}"><i
+                                class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
