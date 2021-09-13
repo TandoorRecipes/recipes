@@ -1,18 +1,18 @@
 <template>
   <div id="app" class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1 offset">
     <div class="mb-3" v-for="book in cookbooks" v-bind:key="book.id">
-      <div class="row mb-3">
-        <b-card class="d-flex flex-column" v-hover
+      <div class="row">
+        <div class="col-md-12">
+          <b-card class="d-flex flex-column" v-hover
                 v-on:click="openBook(book.id)">
           <b-row no-gutters style="height:inherit;">
-            <b-col no-gutters md="3" style="height:inherit;">
-              <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="item_image"
-                               v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
+            <b-col no-gutters md="2" style="height:inherit;">
+              <h3>{{book.icon}}</h3>
             </b-col>
-            <b-col no-gutters md="9" style="height:inherit;">
+            <b-col no-gutters md="10" style="height:inherit;">
               <b-card-body class="m-0 py-0" style="height:inherit;">
-                <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
-                  <h5 class="m-0 mt-1 text-truncate">{{ book.name }}</h5>
+                <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
+                  <h5 class="m-0 mt-1 text-truncate">{{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span> </h5>
                   <div class="m-0 text-truncate">{{ book.description }}</div>
                   <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
                   </div>
@@ -21,10 +21,12 @@
             </b-col>
           </b-row>
         </b-card>
+        </div>
       </div>
 
+      <loading-spinner v-if="current_book === book.id && loading" ></loading-spinner>
       <transition name="slide-fade">
-        <cookbook-slider :recipes="recipes" :book="book" v-if="current_book === book.id"></cookbook-slider>
+        <cookbook-slider :recipes="recipes" :book="book" v-if="current_book === book.id && !loading"></cookbook-slider>
       </transition>
     </div>
   </div>
@@ -37,19 +39,21 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import {ApiApiFactory} from "../../utils/openapi/api";
 import CookbookSlider from "../../components/CookbookSlider";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 Vue.use(BootstrapVue)
 
 export default {
   name: 'CookbookView',
   mixins: [],
-  components: {CookbookSlider},
+  components: {LoadingSpinner, CookbookSlider},
   data() {
     return {
       cookbooks: [],
       book_background: window.IMAGE_BOOK,
       recipes: [],
-      current_book: undefined
+      current_book: undefined,
+      loading: false,
     }
   },
   mounted() {
@@ -65,12 +69,18 @@ export default {
       })
     },
     openBook: function (book) {
+      if(book === this.current_book) {
+        this.current_book = undefined
+        this.recipes = []
+        return
+      }
+      this.loading = true
       let apiClient = new ApiApiFactory()
 
       this.current_book = book
-      console.log(this.current_book)
-      apiClient.listRecipeBookEntrys({options: {book: book.id}}).then(result => {
+      apiClient.listRecipeBookEntrys({query: {book: book}}).then(result => {
         this.recipes = result.data
+        this.loading = false
       })
     }
   },
@@ -93,10 +103,6 @@ export default {
 <style>
 .slide-fade-enter-active {
   transition: all .6s ease;
-}
-
-.slide-fade-leave-active {
-  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 
 .slide-fade-enter, .slide-fade-leave-to
