@@ -43,6 +43,7 @@
   "New_Keyword": "New Keyword",
   "Delete_Keyword": "Delete Keyword",
   "Edit_Keyword": "Edit Keyword",
+  "Edit_Recipe": "Edit Recipe",
   "Move_Keyword": "Move Keyword",
   "Merge_Keyword": "Merge Keyword",
   "Hide_Keywords": "Hide Keywords",
@@ -55,7 +56,7 @@
   "Make_Ingredient": "Make_Ingredient",
   "Enable_Amount": "Enable Amount",
   "Disable_Amount": "Disable Amount",
-  "Add_Step": "Add_Step",
+  "Add_Step": "Add Step",
 
   "Keywords": "Keywords",
   "Books": "Books",
