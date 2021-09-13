@@ -359,7 +359,7 @@ class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMi
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space).order_by('order')
         return super().get_queryset()
 
 

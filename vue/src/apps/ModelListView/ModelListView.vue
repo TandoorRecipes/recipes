@@ -1,37 +1,80 @@
 <template>
-  <div id="app" style="margin-bottom: 4vh">
-    <!-- v-if prevents component from loading before this_model has been assigned -->
+  <div id="app" style="margin-bottom: 4vh" v-if="this_model">
     <generic-modal-form v-if="this_model"
-                        :model="this_model"
-                        :action="this_action"
-                        :item1="this_item"
-                        :item2="this_target"
-                        :show="show_modal"
-                        @finish-action="finishAction"/>
-    <generic-split-lists v-if="this_model"
-                         :list_name="this_model.name"
-                         :right_counts="right_counts"
-                         :left_counts="left_counts"
-                         @reset="resetList"
-                         @get-list="getItems"
-                         @item-action="startAction">
-      <template v-slot:cards-left>
-        <generic-horizontal-card
-            v-for="i in items_left" v-bind:key="i.id"
-            :item=i
-            :model="this_model"
-            :draggable="true"
-            @item-action="startAction($event, 'left')"/>
-      </template>
-      <template v-slot:cards-right>
-        <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id"
-                                 :item=i
-                                 :model="this_model"
-                                 :draggable="true"
-                                 @item-action="startAction($event, 'right')"/>
-      </template>
-    </generic-split-lists>
+                              :model="this_model"
+                              :action="this_action"
+                              :item1="this_item"
+                              :item2="this_target"
+                              :show="show_modal"
+                              @finish-action="finishAction"/>
 
+    <div class="row">
+      <div class="col-md-2 d-none d-md-block">
+      </div>
+      <div class="col-xl-8 col-12">
+        <div class="container-fluid d-flex flex-column flex-grow-1">
+          <div class="row">
+            <div class="col-md-6" style="margin-top: 1vh">
+              <h3>
+                  <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
+                  <model-menu/>
+                  <span>{{this.this_model.name}}</span>
+                  <span><b-button variant="link" size="lg" @click="startAction({'action':'new'})"><i class="fas fa-plus-circle"></i></b-button></span>
+              </h3>
+            </div>
+            <div class="col-md-3" />
+            <div class="col-md-3" style="position: relative; margin-top: 1vh">
+              <b-form-checkbox v-model="show_split" name="check-button" v-if="paginated"
+                              class="shadow-none"
+                              style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
+                {{ $t('show_split_screen') }}
+              </b-form-checkbox>
+            </div>
+          </div>
+
+          <div class="row" >
+            <div class="col" :class="{'col-md-6' : show_split}">
+              <!-- model isn't paginated and loads in one API call -->
+              <div v-if="!paginated">
+                <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id"
+                        :item=i
+                        :model="this_model"
+                        @item-action="startAction($event, 'left')"/>
+              </div> 
+              <!-- model is paginated and needs managed -->
+              <generic-infinite-cards v-if="paginated"
+                                  :card_counts="left_counts"
+                                  :scroll="show_split"
+                                  @search="getItems($event, 'left')"
+                                  @reset="resetList('left')">
+                <template v-slot:cards>
+                  <generic-horizontal-card 
+                      v-for="i in items_left" v-bind:key="i.id"
+                      :item=i
+                      :model="this_model"
+                      @item-action="startAction($event, 'left')"/>
+                </template>
+              </generic-infinite-cards>
+            </div>
+            <div class="col col-md-6" v-if="show_split">
+              <generic-infinite-cards v-if="this_model"
+                                  :card_counts="right_counts"
+                                  :scroll="show_split"
+                                  @search="getItems($event, 'right')"
+                                  @reset="resetList('right')">
+                <template v-slot:cards>
+                  <generic-horizontal-card
+                      v-for="i in items_right" v-bind:key="i.id"
+                      :item=i
+                      :model="this_model"
+                      @item-action="startAction($event, 'right')"/>
+                </template>
+              </generic-infinite-cards>
+            </div>
+
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -46,9 +89,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import {CardMixin, ApiMixin} from "@/utils/utils";
 import {StandardToasts, ToastMixin} from "@/utils/utils";
 
-import GenericSplitLists from "@/components/GenericSplitLists";
+import GenericInfiniteCards from "@/components/GenericInfiniteCards";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
+import ModelMenu from "@/components/ModelMenu";
 
 Vue.use(BootstrapVue)
 
@@ -57,7 +101,7 @@ export default {
   // or i'm capturing it incorrectly
   name: 'ModelListView',
   mixins: [CardMixin, ApiMixin, ToastMixin],
-  components: {GenericHorizontalCard, GenericSplitLists, GenericModalForm},
+  components: {GenericHorizontalCard, GenericModalForm, GenericInfiniteCards, ModelMenu},
   data() {
     return {
       // this.Models and this.Actions inherited from ApiMixin
@@ -66,11 +110,14 @@ export default {
       right_counts: {'max': 9999, 'current': 0},
       left_counts: {'max': 9999, 'current': 0},
       this_model: undefined,
+      model_menu: undefined,
       this_action: undefined,
       this_recipe_param: undefined,
       this_item: {},
       this_target: {},
-      show_modal: false
+      show_modal: false,
+      show_split: false,
+      paginated: false,
     }
   },
   mounted() {
@@ -78,6 +125,13 @@ export default {
     let model_config = JSON.parse(document.getElementById('model_config').textContent)
     this.this_model = this.Models[model_config?.model]
     this.this_recipe_param = model_config?.recipe_param
+    this.paginated = this.this_model?.paginated ?? false
+    this.$nextTick(() => {
+      if (!this.paginated) {
+        this.getItems()
+      }
+    })
+    
   },
   methods: {
     // this.genericAPI inherited from ApiMixin
@@ -165,13 +219,14 @@ export default {
       }
       this.clearState()
     },
-    getItems: function (params) {
-      let column = params?.column ?? 'left'
+    getItems: function (params, col) {
+      let column = col || 'left'
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
-        if (result.data.results.length) {
-          this['items_' + column] = this['items_' + column].concat(result.data?.results)
-          this[column + '_counts']['max'] = result.data.count
-          this[column + '_counts']['current'] = this['items_' + column].length
+        let results = result.data?.results ?? result.data
+        if (results?.length) {
+          this['items_' + column] = this['items_' + column].concat(results)
+          this[column + '_counts']['max'] = result.data?.count ?? 0
+          this[column + '_counts']['current'] = this['items_' + column]?.length
         } else {
           this[column + '_counts']['max'] = 0
           this[column + '_counts']['current'] = 0

@@ -146,7 +146,39 @@ def unit(request):
             "title": _("Units"),
             "config": {
                 'model': "UNIT",         # *REQUIRED* name of the model in models.js
-                'recipe_param': 'units'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+                'recipe_param': 'units', # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+            }
+        }
+    )
+
+
+@group_required('user')
+def supermarket(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Supermarkets"),
+            "config": {
+                'model': "SUPERMARKET",         # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def supermarket_category(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Shopping Categories"),
+            "config": {
+                'model': "SHOPPING_CATEGORY",         # *REQUIRED* name of the model in models.js
             }
         }
     )
