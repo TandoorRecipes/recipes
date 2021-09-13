@@ -1,12 +1,12 @@
 <template>
   <div id="app" style="margin-bottom: 4vh" v-if="this_model">
     <generic-modal-form v-if="this_model"
-                              :model="this_model"
-                              :action="this_action"
-                              :item1="this_item"
-                              :item2="this_target"
-                              :show="show_modal"
-                              @finish-action="finishAction"/>
+                        :model="this_model"
+                        :action="this_action"
+                        :item1="this_item"
+                        :item2="this_target"
+                        :show="show_modal"
+                        @finish-action="finishAction"/>
 
     <div class="row">
       <div class="col-md-2 d-none d-md-block">
@@ -16,39 +16,40 @@
           <div class="row">
             <div class="col-md-6" style="margin-top: 1vh">
               <h3>
-                  <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
-                  <model-menu/>
-                  <span>{{this.this_model.name}}</span>
-                  <span><b-button variant="link" size="lg" @click="startAction({'action':'new'})"><i class="fas fa-plus-circle"></i></b-button></span>
+                <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
+                <model-menu/>
+                <span>{{ this.this_model.name }}</span>
+                <span><b-button variant="link" size="lg" @click="startAction({'action':'new'})"><i
+                    class="fas fa-plus-circle"></i></b-button></span>
               </h3>
             </div>
-            <div class="col-md-3" />
+            <div class="col-md-3"/>
             <div class="col-md-3" style="position: relative; margin-top: 1vh">
               <b-form-checkbox v-model="show_split" name="check-button" v-if="paginated"
-                              class="shadow-none"
-                              style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
+                               class="shadow-none"
+                               style="position:relative;top: 50%;  transform: translateY(-50%);" switch>
                 {{ $t('show_split_screen') }}
               </b-form-checkbox>
             </div>
           </div>
 
-          <div class="row" >
+          <div class="row">
             <div class="col" :class="{'col-md-6' : show_split}">
               <!-- model isn't paginated and loads in one API call -->
               <div v-if="!paginated">
                 <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id"
-                        :item=i
-                        :model="this_model"
-                        @item-action="startAction($event, 'left')"/>
-              </div> 
+                                         :item=i
+                                         :model="this_model"
+                                         @item-action="startAction($event, 'left')"/>
+              </div>
               <!-- model is paginated and needs managed -->
               <generic-infinite-cards v-if="paginated"
-                                  :card_counts="left_counts"
-                                  :scroll="show_split"
-                                  @search="getItems($event, 'left')"
-                                  @reset="resetList('left')">
+                                      :card_counts="left_counts"
+                                      :scroll="show_split"
+                                      @search="getItems($event, 'left')"
+                                      @reset="resetList('left')">
                 <template v-slot:cards>
-                  <generic-horizontal-card 
+                  <generic-horizontal-card
                       v-for="i in items_left" v-bind:key="i.id"
                       :item=i
                       :model="this_model"
@@ -58,10 +59,10 @@
             </div>
             <div class="col col-md-6" v-if="show_split">
               <generic-infinite-cards v-if="this_model"
-                                  :card_counts="right_counts"
-                                  :scroll="show_split"
-                                  @search="getItems($event, 'right')"
-                                  @reset="resetList('right')">
+                                      :card_counts="right_counts"
+                                      :scroll="show_split"
+                                      @search="getItems($event, 'right')"
+                                      @reset="resetList('right')">
                 <template v-slot:cards>
                   <generic-horizontal-card
                       v-for="i in items_right" v-bind:key="i.id"
@@ -72,10 +73,10 @@
               </generic-infinite-cards>
             </div>
 
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -131,7 +132,7 @@ export default {
         this.getItems()
       }
     })
-    
+
   },
   methods: {
     // this.genericAPI inherited from ApiMixin

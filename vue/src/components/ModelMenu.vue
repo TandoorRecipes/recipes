@@ -3,7 +3,7 @@
     <span>
         <b-dropdown variant="link" toggle-class="text-decoration-none text-dark shadow-none" no-caret style="boundary:window">
         <template #button-content>
-            <i class="fas fa-chevron-down">
+          <i class="fas fa-chevron-down"></i>
         </template>
         <b-dropdown-item :href="resolveDjangoUrl('list_food')">
             <i class="fas fa-leaf fa-fw"></i> {{ Models['FOOD'].name }}
