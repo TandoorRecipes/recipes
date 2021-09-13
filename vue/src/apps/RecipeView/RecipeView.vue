@@ -155,7 +155,6 @@
 <script>
 import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
-
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {apiLoadRecipe} from "@/utils/api";
