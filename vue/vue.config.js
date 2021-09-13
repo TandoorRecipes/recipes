@@ -29,10 +29,14 @@ const pages = {
         entry: './src/apps/ModelListView/main.js',
         chunks: ['chunk-vendors']
     },
+    'edit_internal_recipe': {
+        entry: './src/apps/RecipeEditView/main.js',
+        chunks: ['chunk-vendors']
+    },
     'cookbook_view': {
         entry: './src/apps/CookbookView/main.js',
         chunks: ['chunk-vendors']
-    },
+    }
 }
 
 module.exports = {
