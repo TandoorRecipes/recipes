@@ -99,7 +99,7 @@
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-toolbox"></i>
+                        <i class="fas fa-toolbox fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-center dropdown-menu-center-large">
                         <div class="row">
@@ -109,7 +109,7 @@
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-tags fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
                                             {% trans 'Keyword' %}
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-leaf fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
                                             {% trans 'Ingredients' %}
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-balance-scale fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
                                             {% trans 'Units' %}
                                         </div>
                                     </div>
@@ -147,7 +147,7 @@
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-store-alt fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
                                             {% trans 'Supermarket' %}
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-edit fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
                                             {% trans 'Batch Edit' %}
                                         </div>
                                     </div>
@@ -171,7 +171,7 @@
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-history fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
                                             {% trans 'History' %}
                                         </div>
                                     </div>
@@ -183,7 +183,7 @@
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'data_import_url,new_recipe' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
-                            class="fas fa-plus"></i>
+                            class="fas fa-plus fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-center"
                          aria-labelledby="navbarDropdownMenuLink">

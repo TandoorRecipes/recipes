@@ -1131,12 +1131,12 @@
 @media (min-width: 992px) {
     .dropdown-menu-center {
         right: auto;
-        left: 50%;
-        -webkit-transform: translate(-50%, 0);
-        -o-transform: translate(-50%, 0);
-        transform: translate(-50%, 0);
+        left: 60%;
+        -webkit-transform: translate(-60%, 0);
+        -o-transform: translate(-60%, 0);
+        transform: translate(-60%, 0);
     }
     .dropdown-menu-center-large {
-        min-width: 22rem;
+        min-width: 28rem;
     }
 }
