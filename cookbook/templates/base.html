@@ -73,85 +73,36 @@
     {% endif %}
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if request.resolver_match.url_name in 'view_search,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe,data_import_url' %}active{% endif %}">
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_search' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_search' %}"><i
-                        class="fas fa-book"></i> {% trans 'Cookbook' %}<span
-                        class="sr-only">(current)</span></a>
+                        class="fas fa-book"></i> {% trans 'Cookbook' %}</a>
             </li>
-
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_food,view_plan_entry' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-mortar-pestle"></i> {% trans 'Utensils' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'view_books' %}"><i
-                            class="fas fa-bookmark fa-fw"></i> {% trans 'Books' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'view_plan' %}"><i
-                            class="fas fa-calendar fa-fw"></i> {% trans 'Meal-Plan' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_shopping_list' %}"><i
-                            class="fas fa-shopping-cart fa-fw"></i> {% trans 'Shopping' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_food' %}"><i
-                            class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_unit' %}"><i
-                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'view_supermarket' %}"><i
-                            class="fas fa-store-alt fa-fw"></i> {% trans 'Supermarket' %}
-                    </a>
-                </div>
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_plan' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'view_plan' %}"><i
+                        class="fas fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,data_batch_edit' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-tags"></i> {% trans 'Keywords' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
-                            class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
-                            class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
-                </div>
+            <li class="nav-item {% if request.resolver_match.url_name in 'list_shopping_list,view_shopping' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'list_shopping_list' %}"><i
+                        class="fas fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
             </li>
-            {% comment %} should food and units be moved to the keyword dropdown and rename that?
-                    feels like the original intent of the organization of these menus has shifted maybe something like this?{% endcomment %}
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_food,list_unit,list_keyword,data_batch_edit' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-blender"></i> {% trans 'Gadgets' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'list_food' %}"><i
-                            class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_unit' %}"><i
-                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
-                            class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
-                    {% comment %} does this funcionatliy need moved to the keyword list page? 
-                    the Recipe Search might be better? {% endcomment %}
-                    <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
-                            class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
-                </div>
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_books' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'view_books' %}"><i
+                        class="fas fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_food,edit_storage' %}active{% endif %}">
+            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,view_history' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'list_storage' %}"><i
                             class="fas fa-database fa-fw"></i> {% trans 'Storage Backends' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_sync' %}"><i
-                            class="fas fa-sync-alt fa-fw"></i> {% trans 'Configure Sync' %}</a>
+
                     <a class="dropdown-item" href="{% url 'list_recipe_import' %}"><i
                             class="far fa-file-alt fa-fw"></i> {% trans 'Discovered Recipes' %}</a>
                     <a class="dropdown-item" href="{% url 'list_sync_log' %}"><i
                             class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
+                    <a class="dropdown-item" href="{% url 'data_sync' %}"><i
+                            class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                 </div>
             </li>
         </ul>
@@ -161,6 +112,31 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
+
+
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-mortar-pestle"></i> {% trans 'Drawer' %}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
+                                class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
+                        <a class="dropdown-item" href="{% url 'list_food' %}"><i
+                                class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
+                        </a>
+                        <a class="dropdown-item" href="{% url 'list_unit' %}"><i
+                                class="fas fa-balance-scale fa-fw"></i> {% trans 'Units' %}
+                        </a>
+                        <a class="dropdown-item" href="{% url 'view_supermarket' %}"><i
+                                class="fas fa-store-alt fa-fw"></i> {% trans 'Supermarket' %}
+                        </a>
+                        <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
+                                class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
+                        <a class="dropdown-item" href="{% url 'view_history' %}"><i
+                                class="fas fa-history"></i> {% trans 'History' %}</a>
+                    </div>
+                </li>
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
@@ -170,8 +146,6 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'view_settings' %}"><i
                                 class="fas fa-user-cog fa-fw"></i> {% trans 'Settings' %}</a>
-                        <a class="dropdown-item" href="{% url 'view_history' %}"><i
-                                class="fas fa-history"></i> {% trans 'History' %}</a>
                         {% if request.user == request.space.created_by %}
                             <a class="dropdown-item" href="{% url 'view_space' %}"><i
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
@@ -195,6 +169,8 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'account_logout' %}"><i
                                 class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Log out' %}</a>
+                        <a class="dropdown-item" href="{% url 'data_sync' %}"><i
+                                class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                     </div>
                 </li>
             {% else %}
