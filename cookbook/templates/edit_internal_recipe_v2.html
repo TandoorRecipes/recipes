@@ -12,7 +12,7 @@
 
 {% block content %}
 
-    <div id="app" >
+    <div id="app">
         <edit-internal-recipe></edit-internal-recipe>
     </div>
 
@@ -30,7 +30,7 @@
     <script type="application/javascript">
 
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
-
+        window.RECIPE_ID = {{ recipe.pk }}
 
     </script>
 
