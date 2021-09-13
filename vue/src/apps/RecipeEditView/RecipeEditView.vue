@@ -66,32 +66,47 @@
         </div>
       </div>
 
+
       <template v-if="recipe !== undefined">
-        <div class="row" v-if="recipe.nutrition" style="margin-top: 1vh">
+        <div class="row pt-2">
           <div class="col-md-12">
             <div class="card border-grey">
-              <div class="card-body">
-                <h4 class="card-title">{{ $t('Nutrition') }}</h4>
-                <div class="dropdown-menu dropdown-menu-right"
-                     aria-labelledby="dropdownMenuLink">
-                  <button class="dropdown-item" @click="removeStep(step)"><i
-                      class="fa fa-trash fa-fw"></i> {{ $t('Delete') }}
-                  </button>
-
+              <div class="card-header" style="display: table">
+                <div class="row">
+                  <div class="col-md-9 d-table">
+                    <h5 class="d-table-cell align-middle">{{ $t('Nutrition') }}</h5>
+                  </div>
+                  <div class="col-md-3">
+                    <button type="button" @click="addNutrition()"
+                            class="btn btn-sm btn-light shadow-none float-right" v-b-toggle.id_nutrition_collapse
+                            v-if="recipe.nutrition === null"><i class="fas fa-plus-circle"></i>
+                    </button>
+                    <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
+                            v-b-toggle.id_nutrition_collapse
+                            class="btn btn-sm btn-light shadow-none float-right"><i class="fas fa-minus-circle"></i>
+                    </button>
+                  </div>
                 </div>
 
-                <label for="id_name"> {{ $t('Calories') }}</label>
-                <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
-
-                <label for="id_name"> {{ $t('Carbohydrates') }}</label>
-                <input class="form-control" id="id_carbohydrates" v-model="recipe.nutrition.carbohydrates">
-
-                <label for="id_name"> {{ $t('Fats') }}</label>
-                <input class="form-control" id="id_fats" v-model="recipe.nutrition.fats">
-                <label for="id_name"> {{ $t('Proteins') }}</label>
-                <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins">
-                <br/>
               </div>
+
+              <b-collapse id="id_nutrition_collapse" class="mt-2">
+                <div class="card-body " v-if="recipe.nutrition">
+                  <label for="id_name"> {{ $t('Calories') }}</label>
+                  <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
+
+                  <label for="id_name"> {{ $t('Carbohydrates') }}</label>
+                  <input class="form-control" id="id_carbohydrates" v-model="recipe.nutrition.carbohydrates">
+
+                  <label for="id_name"> {{ $t('Fats') }}</label>
+                  <input class="form-control" id="id_fats" v-model="recipe.nutrition.fats">
+
+                  <label for="id_name"> {{ $t('Proteins') }}</label>
+                  <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins">
+                </div>
+              </b-collapse>
+
+
             </div>
           </div>
         </div>
@@ -384,8 +399,15 @@
             <div class="row">
               <div class="col-md-12">
                 <label :for="'id_instruction_' + step.id">{{ $t('Instructions') }}</label>
-                <b-form-textarea class="form-control" rows="2" max-rows="20" v-model="step.instruction"
-                                 :id="'id_instruction_' + step.id"></b-form-textarea>
+                <v-md-editor
+                    v-model="step.instruction"
+                    height="30vh"
+                    left-toolbar="undo redo | h bold italic strikethrough quote | ul ol table hr | link image code"
+                    right-toolbar="preview sync-scroll fullscreen"
+                    :id="'id_instruction_' + step.id"
+                    mode="edit"
+                ></v-md-editor>
+
                 <!-- TODO markdown DOCS link and markdown editor -->
               </div>
             </div>
@@ -405,13 +427,6 @@
           </button>
           <button type="button" @click="addStep()"
                   class="btn btn-primary shadow-none">{{ $t('Add_Step') }}
-          </button>
-          <button type="button" @click="addNutrition()"
-                  class="btn btn-primary shadow-none"
-                  v-if="recipe.nutrition === null">{{ $t('Nutrition') }}
-          </button>
-          <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
-                  class="btn btn-warning shadow-none">{{ $t('Nutrition') }}
           </button>
           <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
              class="btn btn-secondary shadow-none">{{ $t('View') }}</a>
@@ -437,6 +452,22 @@ import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/uti
 import Multiselect from "vue-multiselect";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+import VueMarkdownEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
+import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+import Prism from 'prismjs';
+
+VueMarkdownEditor.use(vuepressTheme, {
+  Prism,
+});
+
+import enUS from '@kangc/v-md-editor/lib/lang/en-US';
+
+VueMarkdownEditor.lang.use('en-US', enUS);
+
+Vue.use(VueMarkdownEditor);
 
 Vue.use(BootstrapVue)
 
@@ -646,7 +677,7 @@ export default {
       let apiFactory = new ApiApiFactory()
 
       this.keywords_loading = true
-      apiFactory.listKeywords( query).then((response) => {
+      apiFactory.listKeywords(query).then((response) => {
         this.keywords = response.data.results;
         this.keywords_loading = false
       }).catch((err) => {
@@ -668,7 +699,7 @@ export default {
     },
     searchRecipes: function (query) {
       this.recipes_loading = true
-      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, {query:query}).then(result => {
+      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, {query: query}).then(result => {
         this.recipes = result.data.results
         this.recipes_loading = false
       }).catch((err) => {
@@ -701,7 +732,7 @@ export default {
       let apiFactory = new ApiApiFactory()
 
       this.foods_loading = true
-      apiFactory.listFoods( query).then((response) => {
+      apiFactory.listFoods(query).then((response) => {
         this.foods = response.data.results
 
         if (this.recipe !== undefined) {
