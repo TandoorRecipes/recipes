@@ -413,7 +413,7 @@
           <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
                   class="btn btn-warning shadow-none">{{ $t('Nutrition') }}
           </button>
-          <a :href="resolveDjangoUrl('view_recipe', recipe.id)" @click="addStep()"
+          <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
              class="btn btn-secondary shadow-none">{{ $t('View') }}</a>
           <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
              class="btn btn-danger shadow-none">{{ $t('Delete') }}</a>
@@ -433,7 +433,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/utils/utils";
+import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/utils/utils";
 import Multiselect from "vue-multiselect";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -442,7 +442,7 @@ Vue.use(BootstrapVue)
 
 export default {
   name: 'RecipeSearchView',
-  mixins: [ResolveUrlMixin],
+  mixins: [ResolveUrlMixin, ApiMixin],
   components: {Multiselect, LoadingSpinner},
   data() {
     return {
@@ -646,7 +646,7 @@ export default {
       let apiFactory = new ApiApiFactory()
 
       this.keywords_loading = true
-      apiFactory.listKeywords({query: {query: query}}).then((response) => {
+      apiFactory.listKeywords( query).then((response) => {
         this.keywords = response.data.results;
         this.keywords_loading = false
       }).catch((err) => {
@@ -667,11 +667,9 @@ export default {
       })
     },
     searchRecipes: function (query) {
-      let apiFactory = new ApiApiFactory()
-
       this.recipes_loading = true
-      apiFactory.listRecipes({query: {query: query}}).then((response) => {
-        this.recipes = response.data.results
+      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, {query:query}).then(result => {
+        this.recipes = result.data.results
         this.recipes_loading = false
       }).catch((err) => {
         console.log(err)
@@ -682,7 +680,7 @@ export default {
       let apiFactory = new ApiApiFactory()
 
       this.units_loading = true
-      apiFactory.listUnits({query: {query: query}}).then((response) => {
+      apiFactory.listUnits(query).then((response) => {
         this.units = response.data.results;
 
         if (this.recipe !== undefined) {
@@ -703,7 +701,7 @@ export default {
       let apiFactory = new ApiApiFactory()
 
       this.foods_loading = true
-      apiFactory.listFoods({query: {query: query}}).then((response) => {
+      apiFactory.listFoods( query).then((response) => {
         this.foods = response.data.results
 
         if (this.recipe !== undefined) {
