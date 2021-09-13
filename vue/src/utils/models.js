@@ -62,9 +62,13 @@ export class Models {
         'name': i18n.t('Food'),              // *OPTIONAL* : parameters will be built model -> model_type -> default
         'apiName': 'Food',                   // *REQUIRED* : the name that is used in api.ts for this model
         'model_type': this.TREE,             // *OPTIONAL* : model specific params for api, if not present will attempt modeltype_create then default_create
+        'paginated': true,
+        'move': true,
+        'merge': true,
         'badges': {
-            'linked_recipe': true
+            'linked_recipe': true,
         },
+        'tags': [{'field': 'supermarket_category', 'label': 'name', 'color': 'info'}],
         // REQUIRED: unordered array of fields that can be set during create
         'create': {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
@@ -113,6 +117,9 @@ export class Models {
         'name': i18n.t('Keyword'),              // *OPTIONAL: parameters will be built model -> model_type -> default
         'apiName': 'Keyword',
         'model_type': this.TREE,
+        'paginated': true,
+        'move': true,
+        'merge': true,
         'badges': {
             'icon': true
         },
@@ -146,6 +153,7 @@ export class Models {
     static UNIT = {
         'name': i18n.t('Unit'),
         'apiName': 'Unit',
+        'paginated': true,
         'create': {
             'params': [['name', 'description']],
             'form': {
@@ -165,7 +173,7 @@ export class Models {
                 }
             }
         },
-        'move': false
+        'merge': true
     }
     static SHOPPING_LIST = {}
     static RECIPE_BOOK = {
@@ -217,6 +225,53 @@ export class Models {
                     'label': i18n.t('Description'),
                     'placeholder': ''
                 }
+            }
+        },
+    }
+    static SHOPPING_CATEGORY_RELATION = {
+        'name': i18n.t('Shopping_Category'),
+        'apiName': 'SupermarketCategory',
+        'create': {
+            'params': [['category', 'supermarket', 'order']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                }
+            }
+        },
+    }
+    static SUPERMARKET = {
+        'name': i18n.t('Supermarket'),
+        'apiName': 'Supermarket',
+        'tags': [{'field': 'category_to_supermarket', 'label': 'category::name', 'color': 'info'}],
+        'create': {
+            'params': [['name', 'description', 'category_to_supermarket']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                },
             }
         },
     }
