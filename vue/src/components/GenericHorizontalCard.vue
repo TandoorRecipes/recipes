@@ -1,34 +1,39 @@
 <template>
   <div row style="margin: 4px">
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
-      style="height: 10vh;" :style="{'cursor:grab' : draggable}"
+      :style="{'cursor:grab' : useDrag}"
       @dragover.prevent
       @dragenter.prevent
-      :draggable="draggable"
+      :draggable="useDrag"
       @dragstart="handleDragStart($event)"
       @dragenter="handleDragEnter($event)"
       @dragleave="handleDragLeave($event)"
       @drop="handleDragDrop($event)">
-      <b-row no-gutters style="height:inherit;">  
-        <b-col no-gutters md="3" style="height:inherit;">
-          <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
+      <b-row no-gutters >  
+        <b-col no-gutters class="col-sm-3">
+          <b-card-img-lazy style="object-fit: cover; height: 6em;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
         </b-col>
-        <b-col no-gutters md="9" style="height:inherit;">
-            <b-card-body class="m-0 py-0" style="height:inherit;">
+        <b-col no-gutters class="col-sm-9">
+            <b-card-body class="m-0 py-0">
               <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                     <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
                     <div class= "m-0 text-truncate">{{ item[subtitle] }}</div>
-                    <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
-                      <div v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" 
+                    <!-- <span>{{this_item[itemTags.field]}}</span> -->
+                    <generic-pill v-for="x in itemTags" :key="x.field"
+                      :item_list="item[x.field]"
+                      :label="x.label"
+                      :color="x.color"/>
+                    <div class="mt-auto mb-1" align="right">
+                      <span v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" 
                         style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':item})">
                           <div v-if="!item.show_children">{{ item[child_count] }} {{ itemName }}</div>
                           <div v-else>{{ text.hide_children }}</div>
-                      </div>
-                      <div v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
+                      </span>
+                      <span v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
                         v-on:click="$emit('item-action',{'action':'get-recipes','source':item})">
                         <div v-if="!item.show_recipes">{{ item[recipe_count] }} {{$t('Recipes')}}</div>
                         <div v-else>{{$t('Hide_Recipes')}}</div>
-                      </div>
+                      </span>
                     </div>
               </b-card-text>
             </b-card-body>
@@ -45,24 +50,17 @@
     </b-card>
     <!-- recursively add child cards -->
     <div class="row" v-if="item.show_children">
-      <div class="col-md-11 offset-md-1">
+      <div class="col-md-10 offset-md-2">
         <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id"
-          :draggable="draggable"
           :item="child"
           :model="model"
-          :title="title"
-          :subtitle="subtitle"
-          :child_count="child_count"
-          :children="children"
-          :recipe_count="recipe_count"
-          :recipes="recipes"
           @item-action="$emit('item-action', $event)">
         </generic-horizontal-card>
       </div>
     </div>
     <!-- conditionally view recipes -->
     <div class="row" v-if="item.show_recipes">
-      <div class="col-md-11 offset-md-1">
+      <div class="col-md-10 offset-md-2">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
           <recipe-card v-for="r in item[recipes]" 
             v-bind:key="r.id"
@@ -91,19 +89,19 @@
 <script>
 import GenericContextMenu from "@/components/GenericContextMenu";
 import Badges from "@/components/Badges";
+import GenericPill from "@/components/GenericPill";
 import RecipeCard from "@/components/RecipeCard";
 import { mixin as clickaway } from 'vue-clickaway';
 import { createPopper } from '@popperjs/core';
 
 export default {
   name: "GenericHorizontalCard",
-  components: { GenericContextMenu, RecipeCard, Badges},
+  components: { GenericContextMenu, RecipeCard, Badges, GenericPill},
   mixins: [clickaway],
   props: {
     item: {type: Object},
     model: {type: Object},
-    draggable: {type: Boolean, default: false},
-    title: {type: String, default: 'name'},  // this and the following props can probably be moved to model.js and made computed values
+    title: {type: String, default: 'name'},  // this and the following props need to be moved to model.js and made computed values
     subtitle: {type: String, default: 'description'},
     child_count: {type: String, default: 'numchild'},
     children: {type: String, default: 'children'},
@@ -134,10 +132,16 @@ export default {
       return this.model?.name ?? "You Forgot To Set Model Name in model.js"
     },
     useMove: function() {
-      return this.model['move'] !== false
+      return (this.model?.['move'] ?? false) ? true : false
     },
     useMerge: function() {
-      return this.model['merge'] !== false
+      return (this.model?.['merge'] ?? false) ? true : false
+    },
+    useDrag: function() {
+      return this.useMove || this.useMerge
+    },
+    itemTags: function() {
+      return this.model?.tags ?? []
     }
   },
   methods: {
