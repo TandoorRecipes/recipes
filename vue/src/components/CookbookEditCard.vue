@@ -5,6 +5,7 @@
         <span class="float-right text-primary" @click="editOrSave"><i
             class="fa" v-bind:class="{ 'fa-pen': !editing, 'fa-save': editing }"
             aria-hidden="true"></i></span></h5>
+      <b-badge class="font-weight-normal mr-1" v-for="u in book_copy.shared" v-bind:key="u.id" variant="primary" pill>{{u.username}}</b-badge>
     </b-card-header>
     <b-card-body class="p-4">
       <div class="form-group" v-if="editing">
@@ -34,6 +35,7 @@
       <b-card-text style="text-overflow: ellipsis;" v-if="!editing">
         {{ book_copy.description }}
       </b-card-text>
+
     </b-card-body>
   </b-card>
 </template>
