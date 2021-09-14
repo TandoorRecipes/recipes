@@ -13,10 +13,7 @@
                placeholder="Name" v-model="book_copy.name">
       </div>
       <div class="form-group" v-if="editing">
-        <label for="inputIcon1">{{ $t('Icon') }}</label>
-        <input class="form-control" id="inputIcon1"
-               placeholder="Name" v-model="book_copy.icon">
-        <emoji-input :field="'icon'" :label="'icon'" :value="book_copy.icon"></emoji-input>
+        <emoji-input :field="'icon'" :label="$t('Icon')" :value="book_copy.icon"></emoji-input>
       </div>
       <div class="form-group" v-if="editing">
         <label for="inputDesc1">{{ $t('Description') }}</label>
@@ -24,8 +21,16 @@
 
         </textarea>
       </div>
-      <button v-if="editing" class="btn btn-danger" @click="deleteBook">{{$t('Delete')}}</button>
-      <button v-if="editing" class="btn btn-primary float-right" @click="editOrSave">{{$t('Save')}}</button>
+      <div class="form-group" v-if="editing">
+        <label for="inputDesc1">{{ $t('Share') }}</label>
+        <generic-multiselect @change="book_copy.shared = $event.val" parent_variable="book.shared"
+                             :initial_selection="book.shared" :label="'username'"
+                             :model="Models.USER_NAME"
+                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                             v-bind:placeholder="$t('Share')" :limit="50"></generic-multiselect>
+      </div>
+      <button v-if="editing" class="btn btn-danger" @click="deleteBook">{{ $t('Delete') }}</button>
+      <button v-if="editing" class="btn btn-primary float-right" @click="editOrSave">{{ $t('Save') }}</button>
       <b-card-text style="text-overflow: ellipsis;" v-if="!editing">
         {{ book_copy.description }}
       </b-card-text>
@@ -34,13 +39,15 @@
 </template>
 
 <script>
-import {ApiApiFactory} from "../utils/openapi/api";
-import {StandardToasts} from "../utils/utils";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
 import EmojiInput from "./Modals/EmojiInput";
+import GenericMultiselect from "@/components/GenericMultiselect";
 
 export default {
   name: "CookbookEditCard",
-  components: {EmojiInput},
+  components: {EmojiInput, GenericMultiselect},
+  mixins: [ApiMixin],
   props: {
     book: Object
   },
@@ -110,7 +117,7 @@ export default {
           StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
         })
       }
-    }
+    },
   }
 }
 </script>
