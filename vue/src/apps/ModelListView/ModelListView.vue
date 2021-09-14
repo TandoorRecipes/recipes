@@ -256,7 +256,11 @@ export default {
         })
       } else {
         this.genericAPI(this.this_model, this.Actions.UPDATE, thisItem).then((result) => {
-          this.refreshThis(thisItem.id)
+          // using form data to refresh the card
+          // when there are complicated functions (SuperMarket Relations) the actions don't 
+          // always complete first.  TODO: wrap all that in a Promise and wait for it to complete before using refreshThis instead
+          this.refreshCard(thisItem, this.items_left)
+          this.refreshCard({...thisItem}, this.items_right)
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch((err) => {
           console.log(err, err.response)

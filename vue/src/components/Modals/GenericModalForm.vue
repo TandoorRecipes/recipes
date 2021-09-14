@@ -6,12 +6,8 @@
           <p v-if="f.type=='instruction'">{{f.label}}</p>
           <!-- this lookup is single selection -->
           <lookup-input v-if="f.type=='lookup'"
-            :label="f.label"
-            :value="f.value"
-            :field="f.field"
+            :form="f"
             :model="listModel(f.list)"
-            :sticky_options="f.sticky_options || undefined"
-            :create_new="f.allow_create"
             @change="storeValue"/> <!-- TODO add ability to create new items associated with lookup -->
           <!-- TODO: add multi-selection input list -->
           <checkbox-input v-if="f.type=='checkbox'"
@@ -65,7 +61,8 @@ export default {
       id: undefined,
       form_data: {},
       form: {},
-      dirty: false
+      dirty: false,
+      special_handling: false
     }
   },
   mounted() {
@@ -93,7 +90,7 @@ export default {
   methods: {
       doAction: function(){
         this.dirty = false
-        this.$emit('finish-action', {'form_data': this.form_data })
+        this.$emit('finish-action', {'form_data': this.detectOverride(this.form_data) })
       },
       cancelAction: function() {
         if (this.dirty) {
@@ -110,6 +107,14 @@ export default {
         } else {
           return Models[m]
         }
+      },
+      detectOverride: function(form) {
+        for (const [k, v] of Object.entries(form)) {
+          if (form[k].__override__) {
+            form[k] = form[k].__override__
+          }
+        }
+        return form
       }
   }
 }
