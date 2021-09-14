@@ -202,7 +202,6 @@ export default {
       let update = undefined
       switch (e?.action) {
         case 'save':
-          console.log(e.form_data)
           this.saveThis(e.form_data)
           break;
       }
