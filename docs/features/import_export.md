@@ -35,7 +35,7 @@ Overview of the capabilities of the different integrations.
 | MealMaster     | ✔️      | ❌      |  ❌        |
 | RezKonv     | ✔️      | ❌      |  ❌        |
 | OpenEats     | ✔️      | ❌      |  ⌚        |
-| OpenEats     | ✔️      | ❌      |  ✔        |
+| Plantoeat     | ✔️      | ❌      |  ✔        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 

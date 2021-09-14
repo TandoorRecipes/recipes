@@ -41,7 +41,6 @@ class TreeManager(MP_NodeManager):
     def get_or_create(self, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
         try:
-            print(f'checking name {kwargs["name"]}')
             return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
             with scopes_disabled():
