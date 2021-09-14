@@ -57,6 +57,7 @@ urlpatterns = [
     path('search/v2/', views.search_v2, name='view_search_v2'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
+    path('plan_new/', views.meal_plan_new, name='view_plan_new'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),

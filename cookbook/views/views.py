@@ -220,6 +220,9 @@ def books(request):
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
 
+@group_required('user')
+def meal_plan_new(request):
+    return render(request, 'meal_plan_new.html', {})
 
 @group_required('user')
 def supermarket(request):

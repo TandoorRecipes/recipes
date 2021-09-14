@@ -26,6 +26,7 @@
     "vue-infinite-loading": "^2.4.5",
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.1.2",
+    "vue-simple-calendar": "^5.0.1",
     "vue-template-compiler": "^2.6.14",
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",
