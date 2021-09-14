@@ -73,7 +73,7 @@ def import_recipe(request):
 
     if request.method == "POST":
         form = ImportForm(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_valid() and request.FILES != {}:
             try:
                 integration = get_integration(request, form.cleaned_data['type'])
 

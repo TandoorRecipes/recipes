@@ -341,22 +341,14 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def count_recipes(self, obj):
         return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
 
-    # def to_representation(self, instance):
-    #     response = super().to_representation(instance)
-    #     # turns a GET of food.recipe into a dict of data while allowing a PATCH/PUT of an integer to update a food with a recipe
-    #     recipe = RecipeSimpleSerializer(instance.recipe, allow_null=True).data
-    #     supermarket_category = SupermarketCategorySerializer(instance.supermarket_category, allow_null=True).data
-    #     response['recipe'] = recipe if recipe else None
-    #     # the SupermarketCategorySerializer returns a dict instead of None when the column is null
-    #     if supermarket_category == {'name': ''} or None:
-    #         response['supermarket_category'] = None
-    #     else:
-    #         response['supermarket_category'] = supermarket_category
-    #     return response
-
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
+        # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
+        if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
+            validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
+                name=validated_data.pop('supermarket_category')['name'],
+                space=self.context['request'].space)
         obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 

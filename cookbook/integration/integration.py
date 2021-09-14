@@ -158,6 +158,7 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
+                                traceback.print_exc()
                                 self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     elif '.json' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name']:
