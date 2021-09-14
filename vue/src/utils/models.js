@@ -254,7 +254,7 @@ export class Models {
     static SUPERMARKET = {
         'name': i18n.t('Supermarket'),
         'apiName': 'Supermarket',
-        'tags': [{'field': 'category_to_supermarket', 'label': 'category::name', 'color': 'info'}],
+        'ordered_tags': [{'field': 'category_to_supermarket', 'label': 'category::name', 'color': 'info'}],
         'create': {
             'params': [['name', 'description', 'category_to_supermarket']],
             'form': {
