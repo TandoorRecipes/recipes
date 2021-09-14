@@ -58,7 +58,7 @@ class Paprika(Integration):
                 instruction=instructions, space=self.request.space,
             )
 
-            if len(recipe_json['description'].strip()) > 500:
+            if 'description' in recipe_json and len(recipe_json['description'].strip()) > 500:
                 step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
 
             if 'categories' in recipe_json:
