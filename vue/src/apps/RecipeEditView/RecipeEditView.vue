@@ -22,10 +22,8 @@
 
         </div>
       </div>
-      <br/>
 
-      <div class="row">
-
+      <div class="row pt-2">
         <div class="col-md-6" style="max-height: 50vh">
 
           <input id="id_file_upload" ref="file_upload" type="file" hidden @change="uploadImage($event.target.files[0])">
@@ -587,14 +585,13 @@ export default {
         this.recipe = response.data;
         this.loading = false
 
-
         //TODO workaround function until view is properly refactored, loads name of selected sub recipe so the input can find its label
         this.recipe.steps.forEach(s => {
           if (s.step_recipe != null) {
             this.recipes.push(s.step_recipe_data)
           }
         })
-        console.log('after step loop')
+
       }).catch((err) => {
         this.loading = false
         console.log(err)
@@ -627,6 +624,7 @@ export default {
       if (file !== undefined) {
         apiClient.imageRecipe(this.recipe.id, file).then(request => {
           this.recipe.image = request.data.image
+          this.recipe_changed = false
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch(err => {
           StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
@@ -635,14 +633,17 @@ export default {
       }
     },
     deleteImage: function () {
-      let apiClient = new ApiApiFactory()
-      apiClient.imageRecipe(this.recipe.id, undefined).then(request => {
-        this.recipe.image = null
-        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
-      }).catch(err => {
-        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
-        console.log(err.request, err.response)
-      })
+      if (confirm(this.$t('delete_confirmation', {}))) {
+        let apiClient = new ApiApiFactory()
+        apiClient.imageRecipe(this.recipe.id, undefined).then(request => {
+          this.recipe.image = null
+          this.recipe_changed = false
+          StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+        }).catch(err => {
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+          console.log(err.request, err.response)
+        })
+      }
     },
     addStep: function () { //TODO see if default can be generated from options request
       this.recipe.steps.push(
@@ -663,7 +664,7 @@ export default {
       step.ingredients.push({
         'food': null,
         'unit': {
-          'name': '{{request.user.userpreference.default_unit}}'
+          'name': window.DEFAULT_UNIT
         },
         'amount': 0,
         'note': '',
@@ -818,9 +819,15 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
+
 .small-padding {
   padding-left: 2px;
   padding-right: 2px;
   margin-top: 2px;
 }
+
+textarea {
+  border: 0 !important;
+}
+
 </style>
