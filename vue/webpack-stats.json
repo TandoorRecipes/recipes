@@ -33,6 +33,14 @@
       "name": "js/import_response_view.js",
       "path": "js\\import_response_view.js"
     },
+    "css/meal_plan_view.css": {
+      "name": "css/meal_plan_view.css",
+      "path": "css\\meal_plan_view.css"
+    },
+    "js/meal_plan_view.js": {
+      "name": "js/meal_plan_view.js",
+      "path": "js\\meal_plan_view.js"
+    },
     "css/model_list_view.css": {
       "name": "css/model_list_view.css",
       "path": "css\\model_list_view.css"
@@ -105,6 +113,10 @@
       "name": "cookbook_view.html",
       "path": "cookbook_view.html"
     },
+    "meal_plan_view.html": {
+      "name": "meal_plan_view.html",
+      "path": "meal_plan_view.html"
+    },
     "manifest.json": {
       "name": "manifest.json",
       "path": "manifest.json"
@@ -160,6 +172,12 @@
       "js/chunk-vendors.js",
       "css/cookbook_view.css",
       "js/cookbook_view.js"
+    ],
+    "meal_plan_view": [
+      "css/chunk-vendors.css",
+      "js/chunk-vendors.js",
+      "css/meal_plan_view.css",
+      "js/meal_plan_view.js"
     ]
   }
 }

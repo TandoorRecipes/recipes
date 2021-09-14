@@ -36,6 +36,10 @@ const pages = {
     'cookbook_view': {
         entry: './src/apps/CookbookView/main.js',
         chunks: ['chunk-vendors']
+    },
+    'meal_plan_view': {
+        entry: './src/apps/MealPlanView/main.js',
+        chunks: ['chunk-vendors']
     }
 }
 
