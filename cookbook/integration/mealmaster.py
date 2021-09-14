@@ -8,12 +8,10 @@ from cookbook.models import Recipe, Step, Ingredient, Keyword
 class MealMaster(Integration):
 
     def get_recipe_from_file(self, file):
-        print('------------ getting recipe')
         servings = 1
         ingredients = []
         directions = []
         for line in file.replace('\r', '').split('\n'):
-            print('testing line')
             if not line.startswith('MMMMM') and line.strip != '':
                 if 'Title:' in line:
                     title = line.replace('Title:', '').strip()
