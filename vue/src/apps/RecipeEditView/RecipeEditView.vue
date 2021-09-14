@@ -339,7 +339,8 @@
                                      v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
                                   <input class="form-control"
                                          v-model="ingredient.note"
-                                         v-bind:placeholder="$t('Note')">
+                                         v-bind:placeholder="$t('Note')"
+                                         v-on:keydown.tab="event => {if(step.ingredients.indexOf(ingredient) === (step.ingredients.length -1)){event.preventDefault();addIngredient(step)}}">
                                 </div>
                               </div>
 
@@ -455,12 +456,12 @@
           </a>
         </div>
         <div class="col-md-3 col-6">
-          <button type="button" @click="updateRecipe(false)"
+          <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover :title="`${$t('Key_Ctrl')} + S`"
                   class="btn btn-sm btn-block btn-info shadow-none">{{ $t('Save') }}
           </button>
         </div>
         <div class="col-md-3 col-6">
-          <button type="button" @click="updateRecipe(true)"
+          <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
                   class="btn btn-sm btn-block btn-success shadow-none">{{ $t('Save_and_View') }}
           </button>
         </div>
@@ -537,28 +538,14 @@ export default {
     this.searchRecipes('')
 
 
-    //TODO find out what this did and fix it
-    // this._keyListener = function (e) {
-    //   if (e.code === "Space" && e.ctrlKey) {
-    //     e.preventDefault(); // present "Save Page" from getting triggered.
-    //
-    //     for (el of e.path) {
-    //       if (el.id !== undefined && el.id.includes('id_card_step_')) {
-    //         let step = this.recipe.steps[el.id.replace('id_card_step_', '')]
-    //         this.addIngredient(step)
-    //       }
-    //     }
-    //   }
-    // };
-    // document.addEventListener('keydown', this._keyListener.bind(this));
-
     this.$i18n.locale = window.CUSTOM_LOCALE
   },
   created() {
+    window.addEventListener('keydown', this.keyboardListener);
     window.addEventListener('beforeunload', this.warnPageLeave)
   },
   beforeUnmount() {
-    document.removeEventListener('keydown', this._keyListener);
+    window.removeEventListener('keydown', this.keyboardListener);
   },
   watch: {
     recipe: {
@@ -569,8 +556,25 @@ export default {
     }
   },
   methods: {
-    test: function (event) {
-      console.log(event)
+    keyboardListener: function (e) {
+      if (e.code === "Space" && e.ctrlKey) {
+        e.preventDefault(); // present "Save Page" from getting triggered.
+
+        for (let el of e.path) {
+          if (el.id !== undefined && el.id.includes('id_card_step_')) {
+            let step = this.recipe.steps[el.id.replace('id_card_step_', '')]
+            this.addIngredient(step)
+          }
+        }
+      }
+      if (e.code === "KeyS" && e.ctrlKey && !e.shiftKey) {
+        e.preventDefault();
+        this.updateRecipe(false)
+      }
+      if (e.code === "KeyS" && e.ctrlKey && e.shiftKey) {
+        e.preventDefault();
+        this.updateRecipe(true)
+      }
     },
     warnPageLeave: function (event) {
       if (this.recipe_changed) {
@@ -674,7 +678,6 @@ export default {
       })
       this.sortIngredients(step)
       this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).focus())
-
     },
     removeIngredient: function (step, ingredient) {
       if (confirm(this.$t('confirm_delete', {object: this.$t('Ingredient')}))) {
@@ -826,7 +829,7 @@ export default {
   margin-top: 2px;
 }
 
-textarea {
+textarea:not(.form-control) {
   border: 0 !important;
 }
 

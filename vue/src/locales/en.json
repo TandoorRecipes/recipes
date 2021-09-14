@@ -9,13 +9,11 @@
   "success_deleting_resource": "Successfully deleted a resource!",
   "step_time_minutes": "Step time in minutes",
   "confirm_delete": "Are you sure you want to delete this {object}?",
-
   "import_running": "Import running, please wait!",
   "all_fields_optional": "All fields are optional and can be left empty.",
   "convert_internal": "Convert to internal recipe",
   "show_only_internal": "Show only internal recipes",
   "show_split_screen": "Split View",
-
   "Log_Recipe_Cooking": "Log Recipe Cooking",
   "External_Recipe_Image": "External Recipe Image",
   "Add_to_Shopping": "Add to Shopping",
@@ -27,7 +25,6 @@
   "Hide_as_header": "Hide as header",
   "Copy_template_reference": "Copy template reference",
   "Save_and_View": "Save & View",
-
   "Manage_Books": "Manage Books",
   "Meal_Plan": "Meal Plan",
   "Select_Book": "Select Book",
@@ -57,7 +54,6 @@
   "Enable_Amount": "Enable Amount",
   "Disable_Amount": "Disable Amount",
   "Add_Step": "Add Step",
-
   "Keywords": "Keywords",
   "Books": "Books",
   "Proteins": "Proteins",
@@ -150,6 +146,8 @@
   "and_up": "& Up",
   "Instructions": "Instructions",
   "Unrated": "Unrated",
+  "Key_Ctrl": "Ctrl",
+  "Key_Shift": "Shift",
   "Time": "Time",
   "Text": "Text"
 }
