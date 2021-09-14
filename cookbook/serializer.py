@@ -521,7 +521,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RecipeBookSerializer(SpacedModelSerializer):
+class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+    shared = UserNameSerializer(many=True)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user

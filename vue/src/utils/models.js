@@ -290,6 +290,15 @@ export class Models {
 
     }
 
+    static USER_NAME = {
+        'name': i18n.t('User'),
+        'apiName': 'User',
+        'list': {
+            'params': ['filter_list'],
+        },
+
+    }
+
     static MEAL_PLAN = {
         'name': i18n.t('Meal_Plan'),
         'apiName': 'MealPlan',
