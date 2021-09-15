@@ -35,11 +35,11 @@
     },
     "css/meal_plan_view.css": {
       "name": "css/meal_plan_view.css",
-      "path": "css\\meal_plan_view.css"
+      "path": "css/meal_plan_view.css"
     },
     "js/meal_plan_view.js": {
       "name": "js/meal_plan_view.js",
-      "path": "js\\meal_plan_view.js"
+      "path": "js/meal_plan_view.js"
     },
     "css/model_list_view.css": {
       "name": "css/model_list_view.css",
