@@ -38,10 +38,11 @@
               <!-- model isn't paginated and loads in one API call -->
               <div v-if="!paginated">
                 <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id"
-                                         :item=i
-                                         :model="this_model"
-                                         @item-action="startAction($event, 'left')"/>
-              </div>
+                        :item=i
+                        :model="this_model"
+                        @item-action="startAction($event, 'left')"
+                        @finish-action="finishAction"/>
+              </div> 
               <!-- model is paginated and needs managed -->
               <generic-infinite-cards v-if="paginated"
                                       :card_counts="left_counts"
@@ -53,7 +54,8 @@
                       v-for="i in items_left" v-bind:key="i.id"
                       :item=i
                       :model="this_model"
-                      @item-action="startAction($event, 'left')"/>
+                      @item-action="startAction($event, 'left')"
+                      @finish-action="finishAction"/>
                 </template>
               </generic-infinite-cards>
             </div>
@@ -68,7 +70,8 @@
                       v-for="i in items_right" v-bind:key="i.id"
                       :item=i
                       :model="this_model"
-                      @item-action="startAction($event, 'right')"/>
+                      @item-action="startAction($event, 'right')"
+                      @finish-action="finishAction"/>
                 </template>
               </generic-infinite-cards>
             </div>
@@ -197,6 +200,11 @@ export default {
     },
     finishAction: function (e) {
       let update = undefined
+      switch (e?.action) {
+        case 'save':
+          this.saveThis(e.form_data)
+          break;
+      }
       if (e !== 'cancel') {
         switch (this.this_action) {
           case this.Actions.DELETE:
@@ -256,7 +264,11 @@ export default {
         })
       } else {
         this.genericAPI(this.this_model, this.Actions.UPDATE, thisItem).then((result) => {
-          this.refreshThis(thisItem.id)
+          // using form data to refresh the card
+          // when there are complicated functions (SuperMarket Relations) the actions don't 
+          // always complete first.  TODO: wrap all that in a Promise and wait for it to complete before using refreshThis instead
+          this.refreshCard(thisItem, this.items_left)
+          this.refreshCard({...thisItem}, this.items_right)
           StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         }).catch((err) => {
           console.log(err, err.response)
