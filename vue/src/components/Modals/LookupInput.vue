@@ -86,7 +86,9 @@ export default {
     'new_value': function () {
       let x = this?.new_value
       // pass the unflattened attributes that can be restored when ready to save/update
-      x['__override__'] = this.unflattenItem(this?.new_value)
+      if (this.form?.ordered) {
+        x['__override__'] = this.unflattenItem(this?.new_value)
+      }
       this.$root.$emit('change', this.form.field, x)
     },
   },
