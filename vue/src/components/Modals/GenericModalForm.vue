@@ -19,6 +19,12 @@
             :value="f.value"
             :field="f.field"
             :placeholder="f.placeholder"/>
+          <choice-input v-if="f.type=='choice'"
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"
+            :options="f.options"
+            :placeholder="f.placeholder"/>
           <emoji-input v-if="f.type=='emoji'"
             :label="f.label"
             :value="f.value"
@@ -45,10 +51,11 @@ import CheckboxInput from "@/components/Modals/CheckboxInput";
 import LookupInput from "@/components/Modals/LookupInput";
 import TextInput from "@/components/Modals/TextInput";
 import EmojiInput from "@/components/Modals/EmojiInput";
+import ChoiceInput from "@/components/Modals/ChoiceInput";
 
 export default {
   name: 'GenericModalForm',
-  components: {CheckboxInput, LookupInput, TextInput, EmojiInput},
+  components: {CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput},
   props: {
     model: {required: true, type: Object},
     action: {required: true, type: Object},

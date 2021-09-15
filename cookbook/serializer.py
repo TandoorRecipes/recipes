@@ -17,7 +17,7 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
                              ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Sync, SyncLog,
                              Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket,
-                             SupermarketCategoryRelation, ImportLog, BookmarkletImport, UserFile)
+                             SupermarketCategoryRelation, ImportLog, BookmarkletImport, UserFile, Automation)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -680,6 +680,20 @@ class ImportLogSerializer(serializers.ModelSerializer):
         model = ImportLog
         fields = (
             'id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
+
+
+class AutomationSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = Automation
+        fields = (
+            'id', 'type', 'name', 'description', 'param_1', 'param_2', 'param_3', 'disabled', 'created_by',)
         read_only_fields = ('created_by',)
 
 

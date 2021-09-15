@@ -289,6 +289,64 @@ export class Models {
         },
     }
 
+    static AUTOMATION = {
+        'name': i18n.t('Automation'),
+        'apiName': 'Automation',
+        'paginated': true,
+        'create': {
+            'params': [['name', 'description', 'type', 'param_1', 'param_2', 'param_3']],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'description': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'description',
+                    'label': i18n.t('Description'),
+                    'placeholder': ''
+                },
+                'type': {
+                    'form_field': true,
+                    'type': 'choice',
+                    'options': [
+                        {value: 'FOOD_ALIAS', text: i18n.t('Food_Alias')},
+                        {value: 'UNIT_ALIAS', text: i18n.t('Unit_Alias')},
+                        {value: 'KEYWORD_ALIAS', text: i18n.t('Keyword_Alias')},
+                    ],
+                    'field': 'type',
+                    'label': i18n.t('Type'),
+                    'placeholder': ''
+                },
+                'param_1': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'param_1',
+                    'label': i18n.t('Parameter') + ' 1',
+                    'placeholder': ''
+                },
+                'param_2': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'param_2',
+                    'label': i18n.t('Parameter') + ' 2',
+                    'placeholder': ''
+                },
+                'param_3': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'param_3',
+                    'label': i18n.t('Parameter') + ' 3',
+                    'placeholder': ''
+                },
+            }
+        },
+    }
+
     static RECIPE = {
         'name': i18n.t('Recipe'),
         'apiName': 'Recipe',
