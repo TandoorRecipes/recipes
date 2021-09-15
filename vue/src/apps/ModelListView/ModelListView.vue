@@ -97,6 +97,7 @@ import GenericInfiniteCards from "@/components/GenericInfiniteCards";
 import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
 import ModelMenu from "@/components/ModelMenu";
+import {ApiApiFactory} from "@/utils/openapi/api";
 
 Vue.use(BootstrapVue)
 
@@ -179,9 +180,18 @@ export default {
             this.this_action = this.Actions.MERGE
             this.show_modal = true
           } else {
-            this.mergeThis(e.source.id, e.target.id)
+            this.mergeThis(e.source, e.target, false)
           }
           break;
+        case 'merge-automate':
+          if (target == null) {
+            this.this_item = e.source
+            this.this_action = this.Actions.MERGE
+            this.show_modal = true
+          } else {
+            this.mergeThis(e.source, e.target, true)
+          }
+          break
         case 'get-children':
           if (source.show_children) {
             Vue.set(source, 'show_children', false)
@@ -219,7 +229,7 @@ export default {
             this.saveThis(update)
             break;
           case this.Actions.MERGE:
-            this.mergeThis(this.this_item.id, e.form_data.target.id)
+            this.mergeThis(this.this_item, e.form_data.target, false)
             break;
           case this.Actions.MOVE:
             this.moveThis(this.this_item.id, e.form_data.target.id)
@@ -305,7 +315,9 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
     },
-    mergeThis: function (source_id, target_id) {
+    mergeThis: function (source, target, automate) {
+      let source_id = source.id
+      let target_id = target.id
       if (source_id === target_id) {
         this.makeToast(this.$t('Error'), this.$t('Cannot merge item with itself'), 'danger')
         this.clearState()
@@ -330,6 +342,28 @@ export default {
         console.log('Error', err)
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
+
+      if (automate){
+        let apiClient = new ApiApiFactory()
+
+        let automation = {
+          name: `Merge ${source.name} with ${target.name}`,
+          param_1: source.name,
+          param_2: target.id
+        }
+
+        if (this.this_model === this.Models.FOOD){
+          automation.type = 'FOOD_ALIAS'
+        }
+        if (this.this_model === this.Models.UNIT){
+          automation.type = 'UNIT_ALIAS'
+        }
+        if (this.this_model === this.Models.KEYWORD){
+          automation.type = 'KEYWORD_ALIAS'
+        }
+
+        apiClient.createAutomation(automation)
+      }
 
     },
     getChildren: function (col, item) {
