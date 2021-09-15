@@ -4,7 +4,7 @@
             <div class="col col-md">
             <!-- search box -->
                 <b-input-group class="mt-3">
-                    <b-input class="form-control" type="search" v-model="search_left" 
+                    <b-input class="form-control" type="search" v-model="search" 
                             v-bind:placeholder="this.text.search"></b-input>
                 </b-input-group>
             </div>

@@ -141,9 +141,9 @@ export default {
   methods: {
     // this.genericAPI inherited from ApiMixin
     resetList: function (e) {
-      this['items_' + e.column] = []
-      this[e.column + '_counts'].max = 9999 + Math.random()
-      this[e.column + '_counts'].current = 0
+      this['items_' + e] = []
+      this[e + '_counts'].max = 9999 + Math.random()
+      this[e + '_counts'].current = 0
     },
     startAction: function (e, param) {
       let source = e?.source ?? {}
