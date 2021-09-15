@@ -1,6 +1,6 @@
 <template>
   <span>
-    <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret style="boundary:window">
+    <b-dropdown variant="link" toggle-class="text-decoration-none" right  no-caret style="boundary:window">
       <template #button-content>
           <i class="fas fa-ellipsis-v" ></i>
       </template>
@@ -18,6 +18,10 @@
       
       <b-dropdown-item v-if="show_merge" v-on:click="$emit('item-action', 'merge')">
         <i class="fas fa-compress-arrows-alt fa-fw"></i> {{ $t('Merge') }}
+      </b-dropdown-item>
+
+      <b-dropdown-item v-if="show_merge" v-on:click="$emit('item-action', 'merge-automate')">
+        <i class="fas fa-robot fa-fw"></i> {{$t('Merge')}} & {{$t('Automate')}}
       </b-dropdown-item>
 
     </b-dropdown>

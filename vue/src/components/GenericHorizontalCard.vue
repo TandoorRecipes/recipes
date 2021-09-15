@@ -80,13 +80,16 @@
     <!-- this should be made a generic component, would also require mixin for functions that generate the popup and put in parent container-->  
     <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:9999; cursor:pointer">
       <b-list-group-item v-if="useMove" action v-on:click="$emit('item-action',{'action': 'move', 'target': item, 'source': source}); closeMenu()">
-        <i class="fas fa-expand-arrows-alt fa-fw"></i> {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':item.name})}}
+        <i class="fas fa-expand-arrows-alt fa-fw"></i> <b>{{$t('Move')}}</b>: <span v-html="$t('move_confirmation', {'child': source.name,'parent':item.name})"></span>
       </b-list-group-item>
       <b-list-group-item v-if="useMerge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': item, 'source': source}); closeMenu()">
-        <i class="fas fa-compress-arrows-alt fa-fw"></i> {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':item.name}) }}
+        <i class="fas fa-compress-arrows-alt fa-fw"></i> <b>{{$t('Merge')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span>
+      </b-list-group-item>
+      <b-list-group-item v-if="useMerge" action v-on:click="$emit('item-action',{'action': 'merge-automate', 'target': item, 'source': source}); closeMenu()">
+       <i class="fas fa-robot fa-fw"></i> <b>{{$t('Merge')}} & {{$t('Automate')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span> {{$t('create_rule')}}
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
-        {{$t('Cancel')}}
+        <i class="fas fa-times fa-fw"></i> <b>{{$t('Cancel')}}</b>
       </b-list-group-item>
       <!-- TODO add to shopping list -->
       <!-- TODO add to and/or manage pantry -->
