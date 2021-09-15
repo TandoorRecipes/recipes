@@ -226,7 +226,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                     self.queryset = self.model.objects.none()
         else:
             return super().get_queryset()
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space).order_by('name')
 
     @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
