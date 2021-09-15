@@ -44,7 +44,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation, Automation)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -62,7 +62,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer)
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer, AutomationSerializer)
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -653,6 +653,16 @@ class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser]
     parser_classes = [MultiPartParser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space).all()
+        return super().get_queryset()
+
+
+class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = Automation.objects
+    serializer_class = AutomationSerializer
+    permission_classes = [CustomIsUser]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()

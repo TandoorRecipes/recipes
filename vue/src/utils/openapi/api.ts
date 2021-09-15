@@ -24,6 +24,78 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface Automation
+ */
+export interface Automation {
+    /**
+     * 
+     * @type {number}
+     * @memberof Automation
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    type: AutomationTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    param_1?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    param_2?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    param_3?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Automation
+     */
+    disabled?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Automation
+     */
+    created_by?: string;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum AutomationTypeEnum {
+    FoodAlias = 'FOOD_ALIAS',
+    UnitAlias = 'UNIT_ALIAS',
+    KeywordAlias = 'KEYWORD_ALIAS'
+}
+
+/**
+ * 
+ * @export
  * @interface BookmarkletImport
  */
 export interface BookmarkletImport {
@@ -211,6 +283,12 @@ export interface FoodSupermarketCategory {
      * @memberof FoodSupermarketCategory
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodSupermarketCategory
+     */
+    description?: string | null;
 }
 /**
  * 
@@ -1113,10 +1191,10 @@ export interface RecipeBook {
     icon?: string | null;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<ShoppingListShared>}
      * @memberof RecipeBook
      */
-    shared?: Array<number>;
+    shared: Array<ShoppingListShared>;
     /**
      * 
      * @type {string}
@@ -1775,6 +1853,12 @@ export interface ShoppingListSupermarket {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof ShoppingListSupermarket
+     */
+    description?: string | null;
+    /**
+     * 
      * @type {Array<ShoppingListSupermarketCategoryToSupermarket>}
      * @memberof ShoppingListSupermarket
      */
@@ -1798,6 +1882,12 @@ export interface ShoppingListSupermarketCategory {
      * @memberof ShoppingListSupermarketCategory
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListSupermarketCategory
+     */
+    description?: string | null;
 }
 /**
  * 
@@ -2191,6 +2281,12 @@ export interface Supermarket {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof Supermarket
+     */
+    description?: string | null;
+    /**
+     * 
      * @type {Array<ShoppingListSupermarketCategoryToSupermarket>}
      * @memberof Supermarket
      */
@@ -2214,6 +2310,12 @@ export interface SupermarketCategory {
      * @memberof SupermarketCategory
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategory
+     */
+    description?: string | null;
 }
 /**
  * 
@@ -2569,6 +2671,39 @@ export interface ViewLog {
  */
 export const ApiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAutomation: async (automation?: Automation, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/automation/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {BookmarkletImport} [bookmarkletImport] 
@@ -3377,6 +3512,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(viewLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyAutomation: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyAutomation', 'id', id)
+            const localVarPath = `/api/automation/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4211,6 +4379,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAutomations: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/automation/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5363,6 +5560,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateAutomation: async (id: string, automation?: Automation, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateAutomation', 'id', id)
+            const localVarPath = `/api/automation/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this bookmarklet import.
          * @param {BookmarkletImport} [bookmarkletImport] 
          * @param {*} [options] Override http request option.
@@ -6273,6 +6507,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveAutomation: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveAutomation', 'id', id)
+            const localVarPath = `/api/automation/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this bookmarklet import.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7123,6 +7390,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAutomation: async (id: string, automation?: Automation, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateAutomation', 'id', id)
+            const localVarPath = `/api/automation/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8051,6 +8355,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createAutomation(automation?: Automation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createAutomation(automation, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {BookmarkletImport} [bookmarkletImport] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8290,6 +8604,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async createViewLog(viewLog?: ViewLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createViewLog(viewLog, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyAutomation(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyAutomation(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8541,6 +8865,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async imageRecipe(id: string, image?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.imageRecipe(id, image, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listAutomations(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Automation>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAutomations(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8876,6 +9209,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateAutomation(id: string, automation?: Automation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateAutomation(id, automation, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this bookmarklet import.
          * @param {BookmarkletImport} [bookmarkletImport] 
          * @param {*} [options] Override http request option.
@@ -9143,6 +9487,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveAutomation(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveAutomation(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this bookmarklet import.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9399,6 +9753,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveViewLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveViewLog(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateAutomation(id: string, automation?: Automation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateAutomation(id, automation, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9680,6 +10045,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
     return {
         /**
          * 
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAutomation(automation?: Automation, options?: any): AxiosPromise<Automation> {
+            return localVarFp.createAutomation(automation, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {BookmarkletImport} [bookmarkletImport] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9896,6 +10270,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         createViewLog(viewLog?: ViewLog, options?: any): AxiosPromise<ViewLog> {
             return localVarFp.createViewLog(viewLog, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyAutomation(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyAutomation(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10122,6 +10505,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         imageRecipe(id: string, image?: any, options?: any): AxiosPromise<RecipeImage> {
             return localVarFp.imageRecipe(id, image, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAutomations(options?: any): AxiosPromise<Array<Automation>> {
+            return localVarFp.listAutomations(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10425,6 +10816,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateAutomation(id: string, automation?: Automation, options?: any): AxiosPromise<Automation> {
+            return localVarFp.partialUpdateAutomation(id, automation, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this bookmarklet import.
          * @param {BookmarkletImport} [bookmarkletImport] 
          * @param {*} [options] Override http request option.
@@ -10668,6 +11069,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveAutomation(id: string, options?: any): AxiosPromise<Automation> {
+            return localVarFp.retrieveAutomation(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this bookmarklet import.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10899,6 +11309,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveViewLog(id: string, options?: any): AxiosPromise<ViewLog> {
             return localVarFp.retrieveViewLog(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAutomation(id: string, automation?: Automation, options?: any): AxiosPromise<Automation> {
+            return localVarFp.updateAutomation(id, automation, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11153,6 +11573,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
  * @extends {BaseAPI}
  */
 export class ApiApi extends BaseAPI {
+    /**
+     * 
+     * @param {Automation} [automation] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createAutomation(automation?: Automation, options?: any) {
+        return ApiApiFp(this.configuration).createAutomation(automation, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {BookmarkletImport} [bookmarkletImport] 
@@ -11418,6 +11849,17 @@ export class ApiApi extends BaseAPI {
      */
     public createViewLog(viewLog?: ViewLog, options?: any) {
         return ApiApiFp(this.configuration).createViewLog(viewLog, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this automation.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyAutomation(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyAutomation(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11694,6 +12136,16 @@ export class ApiApi extends BaseAPI {
      */
     public imageRecipe(id: string, image?: any, options?: any) {
         return ApiApiFp(this.configuration).imageRecipe(id, image, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listAutomations(options?: any) {
+        return ApiApiFp(this.configuration).listAutomations(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12060,6 +12512,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this automation.
+     * @param {Automation} [automation] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateAutomation(id: string, automation?: Automation, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateAutomation(id, automation, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this bookmarklet import.
      * @param {BookmarkletImport} [bookmarkletImport] 
      * @param {*} [options] Override http request option.
@@ -12351,6 +12815,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this automation.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveAutomation(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveAutomation(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this bookmarklet import.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -12633,6 +13108,18 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveViewLog(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveViewLog(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this automation.
+     * @param {Automation} [automation] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateAutomation(id: string, automation?: Automation, options?: any) {
+        return ApiApiFp(this.configuration).updateAutomation(id, automation, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

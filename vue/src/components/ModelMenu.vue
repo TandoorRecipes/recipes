@@ -1,7 +1,8 @@
 <template>
-    <!-- <b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button> -->
-    <span>
-        <b-dropdown variant="link" toggle-class="text-decoration-none text-dark shadow-none" no-caret style="boundary:window">
+  <!-- <b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button> -->
+  <span>
+        <b-dropdown variant="link" toggle-class="text-decoration-none text-dark shadow-none" no-caret
+                    style="boundary:window">
         <template #button-content>
           <i class="fas fa-chevron-down"></i>
         </template>
@@ -25,6 +26,10 @@
             <i class="fas fa-cubes fa-fw"></i> {{ Models['SHOPPING_CATEGORY'].name }}
         </b-dropdown-item>
 
+          <b-dropdown-item :href="resolveDjangoUrl('list_automation')">
+            <i class="fas fa-cogs fa-fw"></i> {{ Models['AUTOMATION'].name }}
+        </b-dropdown-item>
+
         </b-dropdown>
     </span>
 </template>
@@ -45,16 +50,16 @@ export default {
   name: 'ModelMenu',
   mixins: [ResolveUrlMixin],
   data() {
-      return {
-          Models: Models
-      } 
+    return {
+      Models: Models
+    }
   },
   mounted() {
   },
   methods: {
-      gotoURL: function(model) {
-          return
-      }
+    gotoURL: function (model) {
+      return
+    }
   }
 }
 

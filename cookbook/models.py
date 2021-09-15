@@ -865,3 +865,27 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
             self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
             self.file_size_kb = round(self.file.size / 1000)
         super(UserFile, self).save(*args, **kwargs)
+
+
+class Automation(ExportModelOperationsMixin('automations'), models.Model, PermissionModelMixin):
+    FOOD_ALIAS = 'FOOD_ALIAS'
+    UNIT_ALIAS = 'UNIT_ALIAS'
+    KEYWORD_ALIAS = 'KEYWORD_ALIAS'
+
+    type = models.CharField(max_length=128,
+                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),))
+    name = models.CharField(max_length=128, default='')
+    description = models.TextField(blank=True, null=True)
+
+    param_1 = models.CharField(max_length=128, blank=True, null=True)
+    param_2 = models.CharField(max_length=128, blank=True, null=True)
+    param_3 = models.CharField(max_length=128, blank=True, null=True)
+
+    disabled = models.BooleanField(default=False)
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)

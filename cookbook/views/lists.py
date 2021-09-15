@@ -128,7 +128,7 @@ def food(request):
         {
             "title": _("Foods"),
             "config": {
-                'model': "FOOD",         # *REQUIRED* name of the model in models.js
+                'model': "FOOD",  # *REQUIRED* name of the model in models.js
                 'recipe_param': 'foods'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
             }
         }
@@ -145,8 +145,8 @@ def unit(request):
         {
             "title": _("Units"),
             "config": {
-                'model': "UNIT",         # *REQUIRED* name of the model in models.js
-                'recipe_param': 'units', # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+                'model': "UNIT",  # *REQUIRED* name of the model in models.js
+                'recipe_param': 'units',  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
             }
         }
     )
@@ -162,7 +162,7 @@ def supermarket(request):
         {
             "title": _("Supermarkets"),
             "config": {
-                'model': "SUPERMARKET",         # *REQUIRED* name of the model in models.js
+                'model': "SUPERMARKET",  # *REQUIRED* name of the model in models.js
             }
         }
     )
@@ -178,7 +178,23 @@ def supermarket_category(request):
         {
             "title": _("Shopping Categories"),
             "config": {
-                'model': "SHOPPING_CATEGORY",         # *REQUIRED* name of the model in models.js
+                'model': "SHOPPING_CATEGORY",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def automation(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Automations"),
+            "config": {
+                'model': "AUTOMATION",  # *REQUIRED* name of the model in models.js
             }
         }
     )

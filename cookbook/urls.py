@@ -10,7 +10,7 @@ from cookbook.helper import dal
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
-                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, get_model_name)
+                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, get_model_name, Automation)
 from .views import api, data, delete, edit, import_export, lists, new, views, telegram
 
 router = routers.DefaultRouter()
@@ -40,6 +40,7 @@ router.register(r'supermarket-category-relation', api.SupermarketCategoryRelatio
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 router.register(r'user-file', api.UserFileViewSet)
+router.register(r'automation', api.AutomationViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -177,7 +178,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')
