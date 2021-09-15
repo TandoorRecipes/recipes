@@ -17,7 +17,7 @@ export function makeToast(title, message, variant = null) {
     toaster.$bvToast.toast(message, {
         title: title,
         variant: variant,
-        toaster: 'b-toaster-top-center',
+        toaster: 'b-toaster-bottom-right',
         solid: true
     })
 }
