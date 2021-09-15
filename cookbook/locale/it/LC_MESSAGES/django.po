@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-09-02 11:06+0000\n"
+"PO-Revision-Date: 2021-09-15 11:07+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -247,6 +247,8 @@ msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
+"Seleziona il metodo di ricerca.  Clicca<a href=\"/docs/search/\">qui</a> per "
+"avere maggiori informazioni."
 
 #: .\cookbook\forms.py:488
 msgid ""
@@ -285,10 +287,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\forms.py:497
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Cerca"
+msgstr "Metodo di ricerca"
 
 #: .\cookbook\forms.py:498
 msgid "Fuzzy Lookups"
@@ -296,7 +296,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:499
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignora accento"
 
 #: .\cookbook\forms.py:500
 msgid "Partial Match"
@@ -304,7 +304,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:501
 msgid "Starts Wtih"
-msgstr ""
+msgstr "Inizia con"
 
 #: .\cookbook\forms.py:502
 #, fuzzy
@@ -313,10 +313,8 @@ msgid "Fuzzy Search"
 msgstr "Cerca"
 
 #: .\cookbook\forms.py:503
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Testo"
+msgstr "Full Text"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -500,7 +498,7 @@ msgstr "Nuovo"
 
 #: .\cookbook\models.py:389
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " è parte dello step di una ricetta e non può essere eliminato"
 
 #: .\cookbook\models.py:429
 msgid "Text"
@@ -523,19 +521,19 @@ msgstr "Ricetta"
 
 #: .\cookbook\models.py:836 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Semplice"
 
 #: .\cookbook\models.py:837 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Frase"
 
 #: .\cookbook\models.py:838 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: .\cookbook\models.py:839 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Raw"
 
 #: .\cookbook\serializer.py:112
 msgid "File uploads are not enabled for this Space."
@@ -939,7 +937,7 @@ msgstr "Il percorso deve essere nel formato seguente"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
-msgstr ""
+msgstr "Gestisci archiviazione esterna"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
@@ -1050,7 +1048,7 @@ msgstr "Sei sicuro di volere eliminare %(title)s: <b>%(object)s</b>"
 
 #: .\cookbook\templates\generic\delete_template.html:23
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
