@@ -1,14 +1,15 @@
 <template>
   <div row style="margin: 4px">
+    <!-- @[useDrag&&`dragover`] <== this syntax completely shuts off draggable  -->
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
       :style="{'cursor:grab' : useDrag}"
-      @dragover.prevent
-      @dragenter.prevent
       :draggable="useDrag"
-      @dragstart="handleDragStart($event)"
-      @dragenter="handleDragEnter($event)"
-      @dragleave="handleDragLeave($event)"
-      @drop="handleDragDrop($event)">
+      @[useDrag&&`dragover`].prevent
+      @[useDrag&&`dragenter`].prevent
+      @[useDrag&&`dragstart`]="handleDragStart($event)"
+      @[useDrag&&`dragenter`]="handleDragEnter($event)"
+      @[useDrag&&`dragleave`]="handleDragLeave($event)"
+      @[useDrag&&`drop`]="handleDragDrop($event)">
       <b-row no-gutters >  
         <b-col no-gutters class="col-sm-3">
           <b-card-img-lazy style="object-fit: cover; height: 6em;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
@@ -23,6 +24,13 @@
                       :item_list="item[x.field]"
                       :label="x.label"
                       :color="x.color"/>
+                    <generic-ordered-pill v-for="x in itemOrderedTags" :key="x.field"
+                      :item_list="item[x.field]"
+                      :label="x.label"
+                      :color="x.color"
+                      :field="x.field"
+                      :item="item"
+                      @finish-action="finishAction"/>
                     <div class="mt-auto mb-1" align="right">
                       <span v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" 
                         style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':item})">
@@ -90,13 +98,14 @@
 import GenericContextMenu from "@/components/GenericContextMenu";
 import Badges from "@/components/Badges";
 import GenericPill from "@/components/GenericPill";
+import GenericOrderedPill from "@/components/GenericOrderedPill";
 import RecipeCard from "@/components/RecipeCard";
 import { mixin as clickaway } from 'vue-clickaway';
 import { createPopper } from '@popperjs/core';
 
 export default {
   name: "GenericHorizontalCard",
-  components: { GenericContextMenu, RecipeCard, Badges, GenericPill},
+  components: { GenericContextMenu, RecipeCard, Badges, GenericPill, GenericOrderedPill},
   mixins: [clickaway],
   props: {
     item: {type: Object},
@@ -142,6 +151,9 @@ export default {
     },
     itemTags: function() {
       return this.model?.tags ?? []
+    },
+    itemOrderedTags: function() {
+      return this.model?.ordered_tags ?? []
     }
   },
   methods: {
@@ -206,6 +218,10 @@ export default {
     closeMenu: function(){
       this.show_menu = false
     },
+    finishAction: function(e){
+      this.$emit('finish-action', e)
+    }
+    
   }
 }
 </script>

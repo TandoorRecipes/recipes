@@ -229,8 +229,8 @@ export class Models {
         },
     }
     static SHOPPING_CATEGORY_RELATION = {
-        'name': i18n.t('Shopping_Category'),
-        'apiName': 'SupermarketCategory',
+        'name': i18n.t('Shopping_Category_Relation'),
+        'apiName': 'SupermarketCategoryRelation',
         'create': {
             'params': [['category', 'supermarket', 'order']],
             'form': {
@@ -254,7 +254,7 @@ export class Models {
     static SUPERMARKET = {
         'name': i18n.t('Supermarket'),
         'apiName': 'Supermarket',
-        'tags': [{'field': 'category_to_supermarket', 'label': 'category::name', 'color': 'info'}],
+        'ordered_tags': [{'field': 'category_to_supermarket', 'label': 'category::name', 'color': 'info'}],
         'create': {
             'params': [['name', 'description', 'category_to_supermarket']],
             'form': {
@@ -272,6 +272,19 @@ export class Models {
                     'label': i18n.t('Description'),
                     'placeholder': ''
                 },
+                'categories': {
+                    'form_field': true,
+                    'type': 'lookup',
+                    'list': 'SHOPPING_CATEGORY',
+                    'list_label': 'category::name',
+                    'ordered': true,        // ordered lookups assume working with relation field
+                    'field': 'category_to_supermarket',
+                    'label': i18n.t('Categories'),
+                    'placeholder': ''
+                },
+            },
+            'config': {
+                'category_to_supermarket': {'function': 'handleSuperMarketCategory'}
             }
         },
     }

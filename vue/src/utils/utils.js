@@ -189,11 +189,11 @@ export const ApiMixin = {
                     // maybe map/reduce is better?
                     for (const [k, v] of Object.entries(options)) {
                         if (item.includes(k)) {
-                            this_value[k] = formatParam(config?.[k], v)
+                            this_value[k] = formatParam(config?.[k], v, options)
                         }
                     }
                 } else {
-                    this_value = formatParam(config?.[item], options?.[item] ?? undefined)
+                    this_value = formatParam(config?.[item], options?.[item] ?? undefined, options)
                 }
                 // if no value is found so far, get the default if it exists
                 if (this_value === undefined) {
@@ -210,7 +210,7 @@ export const ApiMixin = {
 // /*
 // * local functions for ApiMixin
 // * */
-function formatParam(config, value) {
+function formatParam(config, value, options) {
     if (config) {
         for (const [k, v] of Object.entries(config)) { 
             switch(k) {
@@ -235,6 +235,10 @@ function formatParam(config, value) {
                             }
                             break;
                     }
+                    break;
+                case 'function':
+                    // needs wrapped in a promise and wait for the called function to complete before moving on
+                    specialCases[v](value, options)
                     break;
             }
         }
@@ -272,6 +276,7 @@ function getDefault(config, options) {
     return value
 }
 function getConfig(model, action) {
+    
     let f = action.function
     // if not defined partialUpdate will use params from create
     if (f === 'partialUpdate' && !model?.[f]?.params) {
@@ -286,6 +291,10 @@ function getConfig(model, action) {
     config = {...config, ...action, ...model.model_type?.[f], ...model?.[f]}
     // nested dictionaries are not merged - so merge again on any nested keys
     config.config = {...action?.config, ...model.model_type?.[f]?.config, ...model?.[f]?.config}
+    // look in partialUpdate again if necessary
+    if (f === 'partialUpdate' && Object.keys(config.config).length === 0) {
+        config.config = {...model.model_type?.create?.config, ...model?.create?.config}
+    }
     config['function'] = f + config.apiName + (config?.suffix ?? '')  // parens are required to force optional chaining to evaluate before concat
     return config
 }
@@ -415,3 +424,31 @@ export const CardMixin = {
     }
 }
 
+
+const specialCases = {
+    handleSuperMarketCategory: function(updatedRelationships, supermarket) {
+        let API = ApiMixin.methods.genericAPI
+        if (updatedRelationships.length === 0) {
+            return
+        }
+        // get current relationship mappings
+        API(Models.SUPERMARKET, Actions.FETCH, {'id': supermarket.id}).then((result) => {
+            let currentRelationships = result.data.category_to_supermarket
+            let removed = currentRelationships.map(x => x.id).filter(x => !updatedRelationships.map(x => x.id).includes(x))
+            removed.forEach(x => {
+                API(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, {'id': x})//.then((result)=> console.log('delete', result))
+            })
+            let item = {'supermarket': supermarket.id}
+            updatedRelationships.forEach(x => {
+                item.order = x.order
+                item.category = {'id': x.category.id, 'name': x.category.name}
+                if (x.id) {
+                    item.id = x.id
+                    API(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item)//.then((result)=> console.log('update', result))
+                } else {
+                    API(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item)//.then((result)=> console.log('create', result))
+                }
+            })
+        })        
+    }
+}
