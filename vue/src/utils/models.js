@@ -370,6 +370,15 @@ export class Models {
 
     }
 
+    static MEAL_TYPE = {
+        'name': i18n.t('Meal_Type'),
+        'apiName': 'MealType',
+        'list': {
+            'params': ['filter_list'],
+        },
+
+    }
+
     static MEAL_PLAN = {
         'name': i18n.t('Meal_Plan'),
         'apiName': 'MealPlan',

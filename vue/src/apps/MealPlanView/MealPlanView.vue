@@ -49,7 +49,8 @@
           <template #item="{ value, weekStartDate, top }">
             <meal-plan-card :value="value" :week-start-date="weekStartDate" :top="top" :detailed="detailed_items"
                             :item_height="item_height"
-                            @move-left="moveLeft(value)" @move-right="moveRight(value)"/>
+                            @move-left="moveEntryLeft(value)" @move-right="moveEntryRight(value)"
+                            @delete="deleteEntry(value)"/>
           </template>
 
           <template #header="{ headerProps }">
@@ -60,6 +61,8 @@
         </calendar-view>
       </div>
     </div>
+    <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial="entryEditing_initial"
+                          :edit_modal_show="edit_modal_show" @save-entry="editEntry"></meal-plan-edit-modal>
   </div>
 </template>
 
@@ -73,7 +76,8 @@ import {ApiApiFactory} from "../../utils/openapi/api";
 import RecipeCard from "../../components/RecipeCard";
 import MealPlanCard from "../../components/MealPlanCard";
 import moment from 'moment'
-import {StandardToasts} from "../../utils/utils";
+import {ApiMixin, StandardToasts} from "../../utils/utils";
+import MealPlanEditModal from "../../components/MealPlanEditModal";
 
 Vue.prototype.moment = moment
 Vue.use(BootstrapVue)
@@ -81,12 +85,13 @@ Vue.use(BootstrapVue)
 export default {
   name: "MealPlanView",
   components: {
+    MealPlanEditModal,
     MealPlanCard,
     RecipeCard,
     CalendarView,
     CalendarViewHeader
   },
-  mixins: [CalendarMathMixin],
+  mixins: [CalendarMathMixin, ApiMixin],
   data: function () {
     return {
       showDate: new Date(),
@@ -105,10 +110,39 @@ export default {
           value: 'month'
         }, {text: this.$t('Year'), value: 'year'}],
         displayPeriodCount: [1, 2, 3],
-      }
+        entryEditing: {
+          date: null,
+          id: -1,
+          meal_type: null,
+          meal_type_name: null,
+          note: "",
+          note_markdown: "",
+          recipe: null,
+          servings: 1,
+          shared: [],
+          title: '',
+          title_placeholder: this.$t('Title')
+        }
+      },
+      entryEditing: {},
+      edit_modal_show: false
     }
   },
   computed: {
+    modal_title: function () {
+      if (this.entryEditing_initial.length === 0) {
+        return this.$t('CreateMealPlanEntry')
+      } else {
+        return this.$t('EditMealPlanEntry')
+      }
+    },
+    entryEditing_initial: function () {
+      if (this.entryEditing.recipe != null) {
+        return [this.entryEditing.recipe]
+      } else {
+        return []
+      }
+    },
     plan_items: function () {
       let items = []
       this.plan_entries.forEach((entry) => {
@@ -138,6 +172,18 @@ export default {
     },
   },
   methods: {
+    editEntry(edit_entry) {
+      if (edit_entry.id !== -1) {
+        this.plan_entries.forEach((entry, index) => {
+          if (entry.id === edit_entry.id) {
+            this.$set(this.plan_entries, index, edit_entry)
+            this.saveEntry(this.plan_entries[index])
+          }
+        })
+      } else {
+        this.createEntry(edit_entry)
+      }
+    },
     setShowDate(d) {
       this.showDate = d;
     },
@@ -145,8 +191,9 @@ export default {
       console.log(data)
     },
     createEntryClick(data) {
-
-      console.log(data)
+      this.entryEditing = this.options.entryEditing
+      this.entryEditing.date = moment(data).format('YYYY-MM-DD')
+      this.$bvModal.show(`edit-modal`)
     },
     findEntry(id) {
       return this.plan_entries.filter(entry => {
@@ -161,7 +208,7 @@ export default {
         }
       })
     },
-    moveLeft(data) {
+    moveEntryLeft(data) {
       this.plan_entries.forEach((entry) => {
         if (entry.id === data.id) {
           entry.date = moment(entry.date).subtract(1, 'd')
@@ -169,7 +216,7 @@ export default {
         }
       })
     },
-    moveRight(data) {
+    moveEntryRight(data) {
       this.plan_entries.forEach((entry) => {
         if (entry.id === data.id) {
           entry.date = moment(entry.date).add(1, 'd')
@@ -177,10 +224,27 @@ export default {
         }
       })
     },
+    deleteEntry(data) {
+      this.plan_entries.forEach((entry, index, list) => {
+        if (entry.id === data.id) {
+          let apiClient = new ApiApiFactory()
+
+          apiClient.destroyMealPlan(entry.id).then(e => {
+            list.splice(index, 1)
+          }).catch(error => {
+            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+          })
+        }
+      })
+    },
     entryClick(data) {
-      console.log(data)
       let entry = this.findEntry(data.id)
-      this.recipe_viewed = entry.recipe
+      this.$bvModal.show(`edit-modal`)
+      this.entryEditing = entry
+      this.entryEditing.date = moment(entry.date).format('YYYY-MM-DD')
+      if (this.entryEditing.recipe != null) {
+        this.entryEditing.title_placeholder = this.entryEditing.recipe.name
+      }
     },
     refreshData() {
       let apiClient = new ApiApiFactory()
@@ -199,6 +263,17 @@ export default {
 
       apiClient.updateMealPlan(entry.id, entry).catch(error => {
         StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+      })
+    },
+    createEntry(entry) {
+      entry.date = moment(entry.date).format("YYYY-MM-DD")
+
+      let apiClient = new ApiApiFactory()
+
+      apiClient.createMealPlan(entry).catch(error => {
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+      }).then((entry_result) => {
+        this.plan_entries.push(entry_result.data)
       })
     },
     buildItem(plan_entry) {
@@ -234,5 +309,9 @@ export default {
 
 .cv-day.draghover {
   box-shadow: inset 0 0 0.2em 0.2em grey !important;
+}
+
+.modal-backdrop {
+  opacity: 0.5;
 }
 </style>

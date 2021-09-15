@@ -12,15 +12,15 @@
          v-if="detailed">
       <a>
         <meal-plan-card-context-menu :entry="entry.entry" @move-left="$emit('move-left')"
-                                     @move-right="$emit('move-right')"></meal-plan-card-context-menu>
+                                     @move-right="$emit('move-right')" @delete="$emit('delete')"></meal-plan-card-context-menu>
       </a>
     </div>
     <div class="card-header p-1 text-center" v-if="detailed">
       <span class="font-light">{{ title }}</span>
     </div>
-    <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="isRecipe && detailed"></b-img>
-    <div class="card-body p-1" v-if="!isRecipe && detailed">
-      {{ entry.entry.note }}
+    <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="hasRecipe && detailed"></b-img>
+    <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null">
+      <p>{{ entry.entry.note }}</p>
     </div>
     <div class="row p-1 flex-nowrap" v-if="!detailed">
       <div class="col-2">
@@ -57,15 +57,15 @@ export default {
       return this.value.originalItem
     },
     title: function () {
-      if (this.isRecipe) {
-        return this.entry.entry.recipe_name
-      } else {
+      if (this.entry.entry.title != null && this.entry.entry.title !== '') {
         return this.entry.entry.title
+      } else {
+        return this.entry.entry.recipe_name
       }
     },
-    isRecipe: function () {
-      return ('recipe_name' in this.entry.entry)
-    },
+    hasRecipe: function () {
+      return this.entry.entry.recipe != null;
+    }
   },
   methods: {
     onClickItem(calendarItem, windowEvent) {

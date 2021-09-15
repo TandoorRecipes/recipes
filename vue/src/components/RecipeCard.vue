@@ -102,11 +102,6 @@ export default {
     footer_text: String,
     footer_icon: String
   },
-  data() {
-    return {
-      recipe_image: '',
-    }
-  },
   computed: {
     detailed: function () {
       return this.recipe.steps !== undefined;
@@ -117,14 +112,13 @@ export default {
       } else {
         return 120
       }
-    }
-  },
-  mounted() {
-
-    if (this.recipe == null || this.recipe.image === null) {
-      this.recipe_image = window.IMAGE_PLACEHOLDER
-    } else {
-      this.recipe_image = this.recipe.image
+    },
+    recipe_image: function () {
+      if (this.recipe == null || this.recipe.image === null) {
+        return window.IMAGE_PLACEHOLDER
+      } else {
+        return this.recipe.image
+      }
     }
   },
   methods: {
