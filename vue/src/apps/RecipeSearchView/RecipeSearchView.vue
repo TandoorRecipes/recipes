@@ -440,9 +440,9 @@ export default {
         'books': this.settings.search_books.map(function (A) {
           return A["id"];
         }),
-        'keywords_or': this.settings.search_keywords_or,
-        'foods_or': this.settings.search_foods_or,
-        'books_or': this.settings.search_books_or,
+        'keywordsOr': this.settings.search_keywords_or,
+        'foodsOr': this.settings.search_foods_or,
+        'booksOr': this.settings.search_books_or,
         'internal': this.settings.search_internal,
         'random': this.random_search,
         '_new': this.settings.sort_by_new,
