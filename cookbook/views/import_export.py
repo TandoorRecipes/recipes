@@ -10,7 +10,8 @@ from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
-from cookbook.integration.Pepperplate import Pepperplate
+from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.pepperplate import Pepperplate
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.default import Default
@@ -62,6 +63,8 @@ def get_integration(request, export_type):
         return OpenEats(request, export_type)
     if export_type == ImportExportBase.PLANTOEAT:
         return Plantoeat(request, export_type)
+    if export_type == ImportExportBase.COOKBOOKAPP:
+        return CookBookApp(request, export_type)
 
 
 @group_required('user')
