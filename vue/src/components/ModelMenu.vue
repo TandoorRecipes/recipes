@@ -27,7 +27,7 @@
         </b-dropdown-item>
 
           <b-dropdown-item :href="resolveDjangoUrl('list_automation')">
-            <i class="fas fa-cogs fa-fw"></i> {{ Models['AUTOMATION'].name }}
+            <i class="fas fa-robot fa-fw"></i> {{ Models['AUTOMATION'].name }}
         </b-dropdown-item>
 
         </b-dropdown>
