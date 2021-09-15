@@ -93,17 +93,6 @@ class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
 
-    # removing ability to delete keywords from admin
-    # to avoid creating orphaned keywords
-    # def get_actions(self, request):
-    #     actions = super().get_actions(request)
-    #     if 'delete_selected' in actions:
-    #         del actions['delete_selected']
-    #     return actions
-
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
-
 
 admin.site.register(Keyword, KeywordAdmin)
 
@@ -144,7 +133,14 @@ class RecipeAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 
 admin.site.register(Unit)
-admin.site.register(Food)
+
+
+class FoodAdmin(TreeAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+
+
+admin.site.register(Food, FoodAdmin)
 
 
 class IngredientAdmin(admin.ModelAdmin):

@@ -191,7 +191,7 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                 if isTree:
                     children = source.get_children().exclude(id=target.id)
                     for c in children:
-                        c.move(target, 'sorted-child')
+                        c.move(target, 'last-child')
                 content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
@@ -244,7 +244,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         if parent == 0:
             try:
                 with scopes_disabled():
-                    child.move(self.model.get_first_root_node(), 'sorted-sibling')
+                    child.move(self.model.get_first_root_node(), 'last-sibling')
                 content = {'msg': _(f'{child.name} was moved successfully to the root.')}
                 return Response(content, status=status.HTTP_200_OK)
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
@@ -262,7 +262,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 
         try:
             with scopes_disabled():
-                child.move(parent, 'sorted-child')
+                child.move(parent, 'last-child')
             content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
             return Response(content, status=status.HTTP_200_OK)
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
