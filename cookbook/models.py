@@ -336,7 +336,7 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelMixin):
     # TODO add find and fix problem functions
-    node_order_by = ['name']
+    # node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
@@ -371,7 +371,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     # TODO add find and fix problem functions
-    node_order_by = ['name']
+    # node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -394,7 +394,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
         ]
-        indexes = (Index(fields=['id', 'name']),)
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['name']),
+        )
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -415,7 +418,9 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
     class Meta:
         ordering = ['order', 'pk']
-        indexes = (Index(fields=['id', 'food', 'unit']),)
+        indexes = (
+            Index(fields=['id']),
+        )
 
 
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
@@ -504,7 +509,12 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         return self.name
 
     class Meta():
-        indexes = (GinIndex(fields=["name_search_vector", "desc_search_vector"]), Index(fields=['id', 'name', 'description']),)
+        indexes = (
+            GinIndex(fields=["name_search_vector"]),
+            GinIndex(fields=["desc_search_vector"]),
+            Index(fields=['id']),
+            Index(fields=['name']),
+        )
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):
@@ -555,7 +565,7 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
         return self.name
 
     class Meta():
-        indexes = (Index(fields=['name', 'description']),)
+        indexes = (Index(fields=['name']),)
 
 
 class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, PermissionModelMixin):
@@ -756,7 +766,14 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating', 'created_by']),)
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['recipe']),
+            Index(fields=['-created_at']),
+            Index(fields=['rating']),
+            Index(fields=['created_by']),
+            Index(fields=['created_by', 'rating']),
+        )
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
@@ -771,7 +788,12 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['recipe', '-created_at', 'created_by']),)
+        indexes = (
+            Index(fields=['recipe']),
+            Index(fields=[ '-created_at']),
+            Index(fields=['created_by']),
+            Index(fields=['recipe', '-created_at', 'created_by']),
+        )
 
 
 class ImportLog(models.Model, PermissionModelMixin):
