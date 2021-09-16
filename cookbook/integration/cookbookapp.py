@@ -6,7 +6,7 @@ from io import BytesIO
 
 import yaml
 
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient, Keyword
 from gettext import gettext as _
@@ -53,11 +53,12 @@ class CookBookApp(Integration):
         step.save()
         recipe.steps.add(step)
 
+        ingredient_parser = IngredientParser(self.request, True)
         for ingredient in recipe_yml['ingredients'].split('\n'):
             if ingredient.strip() != '':
-                amount, unit, ingredient, note = parse(ingredient)
-                f = get_food(ingredient, self.request.space)
-                u = get_unit(unit, self.request.space)
+                amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
+                f = ingredient_parser.get_food(ingredient)
+                u = ingredient_parser.get_unit(unit)
                 step.ingredients.add(Ingredient.objects.create(
                     food=f, unit=u, amount=amount, note=note, space=self.request.space,
                 ))

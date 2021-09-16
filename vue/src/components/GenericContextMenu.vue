@@ -21,7 +21,7 @@
       </b-dropdown-item>
 
       <b-dropdown-item v-if="show_merge" v-on:click="$emit('item-action', 'merge-automate')">
-        <i class="fas fa-robot fa-fw"></i> {{$t('Merge')}} & {{$t('Automate')}}
+        <i class="fas fa-robot fa-fw"></i> {{$t('Merge')}} & {{$t('Automate')}} <b-badge v-b-tooltip.hover :title="$t('warning_feature_beta')">BETA</b-badge>
       </b-dropdown-item>
 
     </b-dropdown>
