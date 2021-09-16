@@ -8,11 +8,22 @@
                         :show="show_modal"
                         @finish-action="finishAction"/>
 
+
     <div class="row">
       <div class="col-md-2 d-none d-md-block">
       </div>
       <div class="col-xl-8 col-12">
         <div class="container-fluid d-flex flex-column flex-grow-1">
+
+          <div class="row" v-if="this_model === Models.AUTOMATION">
+            <div class="col-md-12">
+              <b-alert show variant="warning">
+                <b-badge>BETA</b-badge>
+                {{ $t('warning_feature_beta') }}
+              </b-alert>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-md-6" style="margin-top: 1vh">
               <h3>
@@ -38,11 +49,11 @@
               <!-- model isn't paginated and loads in one API call -->
               <div v-if="!paginated">
                 <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id"
-                        :item=i
-                        :model="this_model"
-                        @item-action="startAction($event, 'left')"
-                        @finish-action="finishAction"/>
-              </div> 
+                                         :item=i
+                                         :model="this_model"
+                                         @item-action="startAction($event, 'left')"
+                                         @finish-action="finishAction"/>
+              </div>
               <!-- model is paginated and needs managed -->
               <generic-infinite-cards v-if="paginated"
                                       :card_counts="left_counts"
@@ -343,7 +354,7 @@ export default {
         this.makeToast(this.$t('Error'), err.bodyText, 'danger')
       })
 
-      if (automate){
+      if (automate) {
         let apiClient = new ApiApiFactory()
 
         let automation = {
@@ -352,13 +363,13 @@ export default {
           param_2: target.id
         }
 
-        if (this.this_model === this.Models.FOOD){
+        if (this.this_model === this.Models.FOOD) {
           automation.type = 'FOOD_ALIAS'
         }
-        if (this.this_model === this.Models.UNIT){
+        if (this.this_model === this.Models.UNIT) {
           automation.type = 'UNIT_ALIAS'
         }
-        if (this.this_model === this.Models.KEYWORD){
+        if (this.this_model === this.Models.KEYWORD) {
           automation.type = 'KEYWORD_ALIAS'
         }
 

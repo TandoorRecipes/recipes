@@ -1,183 +1,294 @@
 {
   "status": "done",
   "assets": {
-    "../../templates/sw.js": {
-      "name": "../../templates/sw.js",
-      "path": "..\\..\\templates\\sw.js"
-    },
-    "css/chunk-vendors.css": {
-      "name": "css/chunk-vendors.css",
-      "path": "css\\chunk-vendors.css"
-    },
     "js/chunk-vendors.js": {
       "name": "js/chunk-vendors.js",
-      "path": "js\\chunk-vendors.js"
-    },
-    "css/cookbook_view.css": {
-      "name": "css/cookbook_view.css",
-      "path": "css\\cookbook_view.css"
+      "path": "js\\chunk-vendors.js",
+      "publicPath": "http://localhost:8080/js/chunk-vendors.js"
     },
     "js/cookbook_view.js": {
       "name": "js/cookbook_view.js",
-      "path": "js\\cookbook_view.js"
-    },
-    "css/edit_internal_recipe.css": {
-      "name": "css/edit_internal_recipe.css",
-      "path": "css\\edit_internal_recipe.css"
+      "path": "js\\cookbook_view.js",
+      "publicPath": "http://localhost:8080/js/cookbook_view.js"
     },
     "js/edit_internal_recipe.js": {
       "name": "js/edit_internal_recipe.js",
-      "path": "js\\edit_internal_recipe.js"
+      "path": "js\\edit_internal_recipe.js",
+      "publicPath": "http://localhost:8080/js/edit_internal_recipe.js"
     },
     "js/import_response_view.js": {
       "name": "js/import_response_view.js",
-      "path": "js\\import_response_view.js"
-    },
-    "css/meal_plan_view.css": {
-      "name": "css/meal_plan_view.css",
-      "path": "css\\meal_plan_view.css"
+      "path": "js\\import_response_view.js",
+      "publicPath": "http://localhost:8080/js/import_response_view.js"
     },
     "js/meal_plan_view.js": {
       "name": "js/meal_plan_view.js",
-      "path": "js\\meal_plan_view.js"
-    },
-    "css/model_list_view.css": {
-      "name": "css/model_list_view.css",
-      "path": "css\\model_list_view.css"
+      "path": "js\\meal_plan_view.js",
+      "publicPath": "http://localhost:8080/js/meal_plan_view.js"
     },
     "js/model_list_view.js": {
       "name": "js/model_list_view.js",
-      "path": "js\\model_list_view.js"
+      "path": "js\\model_list_view.js",
+      "publicPath": "http://localhost:8080/js/model_list_view.js"
     },
     "js/offline_view.js": {
       "name": "js/offline_view.js",
-      "path": "js\\offline_view.js"
-    },
-    "css/recipe_search_view.css": {
-      "name": "css/recipe_search_view.css",
-      "path": "css\\recipe_search_view.css"
+      "path": "js\\offline_view.js",
+      "publicPath": "http://localhost:8080/js/offline_view.js"
     },
     "js/recipe_search_view.js": {
       "name": "js/recipe_search_view.js",
-      "path": "js\\recipe_search_view.js"
-    },
-    "css/recipe_view.css": {
-      "name": "css/recipe_view.css",
-      "path": "css\\recipe_view.css"
+      "path": "js\\recipe_search_view.js",
+      "publicPath": "http://localhost:8080/js/recipe_search_view.js"
     },
     "js/recipe_view.js": {
       "name": "js/recipe_view.js",
-      "path": "js\\recipe_view.js"
+      "path": "js\\recipe_view.js",
+      "publicPath": "http://localhost:8080/js/recipe_view.js"
     },
     "js/supermarket_view.js": {
       "name": "js/supermarket_view.js",
-      "path": "js\\supermarket_view.js"
+      "path": "js\\supermarket_view.js",
+      "publicPath": "http://localhost:8080/js/supermarket_view.js"
     },
     "js/user_file_view.js": {
       "name": "js/user_file_view.js",
-      "path": "js\\user_file_view.js"
+      "path": "js\\user_file_view.js",
+      "publicPath": "http://localhost:8080/js/user_file_view.js"
     },
     "recipe_search_view.html": {
       "name": "recipe_search_view.html",
-      "path": "recipe_search_view.html"
+      "path": "recipe_search_view.html",
+      "publicPath": "http://localhost:8080/recipe_search_view.html"
     },
     "recipe_view.html": {
       "name": "recipe_view.html",
-      "path": "recipe_view.html"
+      "path": "recipe_view.html",
+      "publicPath": "http://localhost:8080/recipe_view.html"
     },
     "offline_view.html": {
       "name": "offline_view.html",
-      "path": "offline_view.html"
+      "path": "offline_view.html",
+      "publicPath": "http://localhost:8080/offline_view.html"
     },
     "import_response_view.html": {
       "name": "import_response_view.html",
-      "path": "import_response_view.html"
+      "path": "import_response_view.html",
+      "publicPath": "http://localhost:8080/import_response_view.html"
     },
     "supermarket_view.html": {
       "name": "supermarket_view.html",
-      "path": "supermarket_view.html"
+      "path": "supermarket_view.html",
+      "publicPath": "http://localhost:8080/supermarket_view.html"
     },
     "user_file_view.html": {
       "name": "user_file_view.html",
-      "path": "user_file_view.html"
+      "path": "user_file_view.html",
+      "publicPath": "http://localhost:8080/user_file_view.html"
     },
     "model_list_view.html": {
       "name": "model_list_view.html",
-      "path": "model_list_view.html"
+      "path": "model_list_view.html",
+      "publicPath": "http://localhost:8080/model_list_view.html"
     },
     "edit_internal_recipe.html": {
       "name": "edit_internal_recipe.html",
-      "path": "edit_internal_recipe.html"
+      "path": "edit_internal_recipe.html",
+      "publicPath": "http://localhost:8080/edit_internal_recipe.html"
     },
     "cookbook_view.html": {
       "name": "cookbook_view.html",
-      "path": "cookbook_view.html"
+      "path": "cookbook_view.html",
+      "publicPath": "http://localhost:8080/cookbook_view.html"
     },
     "meal_plan_view.html": {
       "name": "meal_plan_view.html",
-      "path": "meal_plan_view.html"
+      "path": "meal_plan_view.html",
+      "publicPath": "http://localhost:8080/meal_plan_view.html"
     },
     "manifest.json": {
       "name": "manifest.json",
-      "path": "manifest.json"
+      "path": "manifest.json",
+      "publicPath": "http://localhost:8080/manifest.json"
+    },
+    "model_list_view.7cf8cfb04383ac21dae2.hot-update.js": {
+      "name": "model_list_view.7cf8cfb04383ac21dae2.hot-update.js",
+      "path": "model_list_view.7cf8cfb04383ac21dae2.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.7cf8cfb04383ac21dae2.hot-update.js"
+    },
+    "7cf8cfb04383ac21dae2.hot-update.json": {
+      "name": "7cf8cfb04383ac21dae2.hot-update.json",
+      "path": "7cf8cfb04383ac21dae2.hot-update.json",
+      "publicPath": "http://localhost:8080/7cf8cfb04383ac21dae2.hot-update.json"
+    },
+    "model_list_view.65f25fe27091809f7fcf.hot-update.js": {
+      "name": "model_list_view.65f25fe27091809f7fcf.hot-update.js",
+      "path": "model_list_view.65f25fe27091809f7fcf.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.65f25fe27091809f7fcf.hot-update.js"
+    },
+    "65f25fe27091809f7fcf.hot-update.json": {
+      "name": "65f25fe27091809f7fcf.hot-update.json",
+      "path": "65f25fe27091809f7fcf.hot-update.json",
+      "publicPath": "http://localhost:8080/65f25fe27091809f7fcf.hot-update.json"
+    },
+    "model_list_view.032182ad6990812f8035.hot-update.js": {
+      "name": "model_list_view.032182ad6990812f8035.hot-update.js",
+      "path": "model_list_view.032182ad6990812f8035.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.032182ad6990812f8035.hot-update.js"
+    },
+    "032182ad6990812f8035.hot-update.json": {
+      "name": "032182ad6990812f8035.hot-update.json",
+      "path": "032182ad6990812f8035.hot-update.json",
+      "publicPath": "http://localhost:8080/032182ad6990812f8035.hot-update.json"
+    },
+    "model_list_view.cbedf3e2489989eec8dd.hot-update.js": {
+      "name": "model_list_view.cbedf3e2489989eec8dd.hot-update.js",
+      "path": "model_list_view.cbedf3e2489989eec8dd.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.cbedf3e2489989eec8dd.hot-update.js"
+    },
+    "cbedf3e2489989eec8dd.hot-update.json": {
+      "name": "cbedf3e2489989eec8dd.hot-update.json",
+      "path": "cbedf3e2489989eec8dd.hot-update.json",
+      "publicPath": "http://localhost:8080/cbedf3e2489989eec8dd.hot-update.json"
+    },
+    "model_list_view.87a9208c092e31885f51.hot-update.js": {
+      "name": "model_list_view.87a9208c092e31885f51.hot-update.js",
+      "path": "model_list_view.87a9208c092e31885f51.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.87a9208c092e31885f51.hot-update.js"
+    },
+    "87a9208c092e31885f51.hot-update.json": {
+      "name": "87a9208c092e31885f51.hot-update.json",
+      "path": "87a9208c092e31885f51.hot-update.json",
+      "publicPath": "http://localhost:8080/87a9208c092e31885f51.hot-update.json"
+    },
+    "cookbook_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "cookbook_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "cookbook_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/cookbook_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "edit_internal_recipe.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "edit_internal_recipe.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "edit_internal_recipe.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/edit_internal_recipe.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "import_response_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "import_response_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "import_response_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/import_response_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "meal_plan_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "meal_plan_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "meal_plan_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/meal_plan_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "model_list_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "model_list_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "model_list_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "offline_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "offline_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "offline_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/offline_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "recipe_search_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "recipe_search_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "recipe_search_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/recipe_search_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "recipe_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "recipe_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "recipe_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/recipe_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "supermarket_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "supermarket_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "supermarket_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/supermarket_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "user_file_view.307bb5ac629ff8f5dba5.hot-update.js": {
+      "name": "user_file_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "path": "user_file_view.307bb5ac629ff8f5dba5.hot-update.js",
+      "publicPath": "http://localhost:8080/user_file_view.307bb5ac629ff8f5dba5.hot-update.js"
+    },
+    "307bb5ac629ff8f5dba5.hot-update.json": {
+      "name": "307bb5ac629ff8f5dba5.hot-update.json",
+      "path": "307bb5ac629ff8f5dba5.hot-update.json",
+      "publicPath": "http://localhost:8080/307bb5ac629ff8f5dba5.hot-update.json"
+    },
+    "model_list_view.e2073a90ad8ff66f374c.hot-update.js": {
+      "name": "model_list_view.e2073a90ad8ff66f374c.hot-update.js",
+      "path": "model_list_view.e2073a90ad8ff66f374c.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.e2073a90ad8ff66f374c.hot-update.js"
+    },
+    "e2073a90ad8ff66f374c.hot-update.json": {
+      "name": "e2073a90ad8ff66f374c.hot-update.json",
+      "path": "e2073a90ad8ff66f374c.hot-update.json",
+      "publicPath": "http://localhost:8080/e2073a90ad8ff66f374c.hot-update.json"
+    },
+    "model_list_view.1b14899ea7152cc46f4e.hot-update.js": {
+      "name": "model_list_view.1b14899ea7152cc46f4e.hot-update.js",
+      "path": "model_list_view.1b14899ea7152cc46f4e.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.1b14899ea7152cc46f4e.hot-update.js"
+    },
+    "1b14899ea7152cc46f4e.hot-update.json": {
+      "name": "1b14899ea7152cc46f4e.hot-update.json",
+      "path": "1b14899ea7152cc46f4e.hot-update.json",
+      "publicPath": "http://localhost:8080/1b14899ea7152cc46f4e.hot-update.json"
+    },
+    "model_list_view.7a2ce4182c97623ab7e8.hot-update.js": {
+      "name": "model_list_view.7a2ce4182c97623ab7e8.hot-update.js",
+      "path": "model_list_view.7a2ce4182c97623ab7e8.hot-update.js",
+      "publicPath": "http://localhost:8080/model_list_view.7a2ce4182c97623ab7e8.hot-update.js"
+    },
+    "7a2ce4182c97623ab7e8.hot-update.json": {
+      "name": "7a2ce4182c97623ab7e8.hot-update.json",
+      "path": "7a2ce4182c97623ab7e8.hot-update.json",
+      "publicPath": "http://localhost:8080/7a2ce4182c97623ab7e8.hot-update.json"
     }
   },
   "chunks": {
     "recipe_search_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
-      "css/recipe_search_view.css",
       "js/recipe_search_view.js"
     ],
     "recipe_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
-      "css/recipe_view.css",
       "js/recipe_view.js"
     ],
     "offline_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
       "js/offline_view.js"
     ],
     "import_response_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
       "js/import_response_view.js"
     ],
     "supermarket_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
       "js/supermarket_view.js"
     ],
     "user_file_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
       "js/user_file_view.js"
     ],
     "model_list_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
-      "css/model_list_view.css",
-      "js/model_list_view.js"
+      "js/model_list_view.js",
+      "model_list_view.7a2ce4182c97623ab7e8.hot-update.js"
     ],
     "edit_internal_recipe": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
-      "css/edit_internal_recipe.css",
       "js/edit_internal_recipe.js"
     ],
     "cookbook_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
-      "css/cookbook_view.css",
       "js/cookbook_view.js"
     ],
     "meal_plan_view": [
-      "css/chunk-vendors.css",
       "js/chunk-vendors.js",
-      "css/meal_plan_view.css",
       "js/meal_plan_view.js"
     ]
-  }
+  },
+  "publicPath": "http://localhost:8080/"
 }

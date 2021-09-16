@@ -1,4 +1,5 @@
 {
+  "warning_feature_beta": "This feature is currently in a BETA (testing) state. Please expect bugs and possibly breaking changes in the future (possibly loosing feature related data) when using this feature.",
   "err_fetching_resource": "There was an error fetching a resource!",
   "err_creating_resource": "There was an error creating a resource!",
   "err_updating_resource": "There was an error updating a resource!",

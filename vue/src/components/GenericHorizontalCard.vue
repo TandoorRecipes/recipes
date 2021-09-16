@@ -86,7 +86,7 @@
         <i class="fas fa-compress-arrows-alt fa-fw"></i> <b>{{$t('Merge')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span>
       </b-list-group-item>
       <b-list-group-item v-if="useMerge" action v-on:click="$emit('item-action',{'action': 'merge-automate', 'target': item, 'source': source}); closeMenu()">
-       <i class="fas fa-robot fa-fw"></i> <b>{{$t('Merge')}} & {{$t('Automate')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span> {{$t('create_rule')}}
+       <i class="fas fa-robot fa-fw"></i> <b>{{$t('Merge')}} & {{$t('Automate')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span> {{$t('create_rule')}} <b-badge v-b-tooltip.hover :title="$t('warning_feature_beta')" >BETA</b-badge>
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
         <i class="fas fa-times fa-fw"></i> <b>{{$t('Cancel')}}</b>

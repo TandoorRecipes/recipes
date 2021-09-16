@@ -3,7 +3,7 @@ from io import BytesIO
 
 import requests
 
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient
 
@@ -31,6 +31,7 @@ class RecipeSage(Integration):
         except Exception as e:
             print('failed to parse yield or time ', str(e))
 
+        ingredient_parser = IngredientParser(self.request,True)
         ingredients_added = False
         for s in file['recipeInstructions']:
             step = Step.objects.create(
@@ -40,9 +41,9 @@ class RecipeSage(Integration):
                 ingredients_added = True
 
                 for ingredient in file['recipeIngredient']:
-                    amount, unit, ingredient, note = parse(ingredient)
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
+                    amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
+                    f = ingredient_parser.get_food(ingredient)
+                    u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(
                         food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))

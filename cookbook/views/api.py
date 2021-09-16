@@ -31,7 +31,7 @@ from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import PathOverflow, InvalidMoveToDescendant, InvalidPosition
 
 from cookbook.helper.image_processing import handle_image
-from cookbook.helper.ingredient_parser import parse
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
@@ -853,11 +853,11 @@ def recipe_from_source(request):
                 },
                 status=400)
         else:
-            return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
+            return JsonResponse({"recipe_json": get_from_scraper(scrape, request)})
     elif (mode == 'source') or (mode == 'url' and auto == 'false'):
         if not data or data == 'undefined':
             data = requests.get(url, headers=HEADERS).content
-        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request.space)
+        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request)
         if len(recipe_tree) == 0 and len(recipe_json) == 0:
             return JsonResponse(
                 {
@@ -893,7 +893,9 @@ def get_backup(request):
 @group_required('user')
 def ingredient_from_string(request):
     text = request.POST['text']
-    amount, unit, food, note = parse(text)
+
+    ingredient_parser = IngredientParser(request, False)
+    amount, unit, food, note = ingredient_parser.parse(text)
 
     return JsonResponse(
         {
