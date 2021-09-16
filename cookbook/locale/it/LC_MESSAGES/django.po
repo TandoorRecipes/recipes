@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-09-15 11:07+0000\n"
+"PO-Revision-Date: 2021-09-16 15:52+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -300,7 +300,7 @@ msgstr "Ignora accento"
 
 #: .\cookbook\forms.py:500
 msgid "Partial Match"
-msgstr ""
+msgstr "Corrispondenza parziale"
 
 #: .\cookbook\forms.py:501
 msgid "Starts Wtih"
@@ -429,19 +429,21 @@ msgstr "Selezione"
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Ricostruisce l'indice di ricerca full text per la ricetta"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgress databases use full text search, no index to rebuild"
 msgstr ""
+"Solo i database Postgres usano l'indice di ricerca full text, non ci sono "
+"indici da ricostruire"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "È stato ricostruito l'indice della ricetta."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Non è stato possibile ricostruire l'indice della ricetta."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -1668,6 +1670,14 @@ msgid ""
 "only available if you are using Postgres for your database.\n"
 "    "
 msgstr ""
+"\n"
+"        Creare la migliore esperienza di ricerca è complicato e pesa molto "
+"sulla tua configurazione.  \n"
+"        Cambiare una delle opzioni di ricerca può avere impatto "
+"significativo sulla velocità e qualità dei risultati.\n"
+"        Metodi di ricerca, Trigrams e ricerca Full Text sono disponibili "
+"solo se stati usando un database Postgres.\n"
+"    "
 
 #: .\cookbook\templates\search_info.html:19
 #, fuzzy
