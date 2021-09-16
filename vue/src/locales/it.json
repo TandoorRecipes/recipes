@@ -150,5 +150,10 @@
     "Time": "Tempo",
     "Shopping_Category": "Categoria di spesa",
     "Meal_Plan_Days": "Piani alimentari futuri",
-    "tree_root": "Radice dell'albero"
+    "tree_root": "Radice dell'albero",
+    "Automation": "Automazione",
+    "Parameter": "Parametro",
+    "Type": "Tipo",
+    "Automate": "Automatizza",
+    "create_rule": "e crea automazione"
 }
