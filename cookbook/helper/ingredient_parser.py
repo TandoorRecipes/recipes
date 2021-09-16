@@ -2,14 +2,16 @@ import re
 import string
 import unicodedata
 
-from cookbook.models import Unit, Food
+from django.core.cache import caches
+
+from cookbook.models import Unit, Food, Automation
 
 
 class IngredientParser:
     request = None
     ignore_rules = False
-    food_aliases = []
-    unit_aliases = []
+    food_aliases = {}
+    unit_aliases = {}
 
     def __init__(self, request, cache_mode, ignore_automations=False):
         """
@@ -21,8 +23,90 @@ class IngredientParser:
         self.request = request
         self.ignore_rules = ignore_automations
         if cache_mode:
-            self.food_aliases = []
-            self.unit_aliases = []
+            FOOD_CACHE_KEY = f'automation_food_alias_{self.request.space.pk}'
+            if c := caches['default'].get(FOOD_CACHE_KEY, None):
+                self.food_aliases = c
+                caches['default'].touch(FOOD_CACHE_KEY, 30)
+            else:
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').all():
+                    self.food_aliases[a.param_1] = a.param_2
+                caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
+
+            UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
+            if c := caches['default'].get(UNIT_CACHE_KEY, None):
+                self.unit_aliases = c
+                caches['default'].touch(UNIT_CACHE_KEY, 30)
+            else:
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').all():
+                    self.unit_aliases[a.param_1] = a.param_2
+                caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
+        else:
+            self.food_aliases = {}
+            self.unit_aliases = {}
+
+    def apply_food_automation(self, food):
+        """
+        Apply food alias automations to passed foood
+        :param food: unit as string
+        :return: food as string (possibly changed by automation)
+        """
+        if self.ignore_rules:
+            return food
+        else:
+            if self.food_aliases:
+                try:
+                    return self.food_aliases[food]
+                except KeyError:
+                    return food
+            else:
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1=food, disabled=False).first():
+                    return automation.param_2
+        return food
+
+    def apply_unit_automation(self, unit):
+        """
+        Apply unit alias automations to passed unit
+        :param unit: unit as string
+        :return: unit as string (possibly changed by automation)
+        """
+        if self.ignore_rules:
+            return unit
+        else:
+            if self.unit_aliases:
+                try:
+                    return self.unit_aliases[unit]
+                except KeyError:
+                    return unit
+            else:
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1=unit, disabled=False).first():
+                    return automation.param_2
+        return unit
+
+    def get_unit(self, unit):
+        """
+        Get or create a unit for given space respecting possible automations
+        :param unit: string unit
+        :return: None if unit passed is invalid, Unit object otherwise
+        """
+        if not unit:
+            return None
+        if len(unit) > 0:
+            u, created = Unit.objects.get_or_create(name=self.apply_unit_automation(unit), space=self.request.space)
+            return u
+        return None
+
+    def get_food(self, food):
+        """
+        Get or create a food for given space respecting possible automations
+        :param food: string food
+        :return: None if food passed is invalid, Food object otherwise
+        """
+        if not food:
+            return None
+        if len(food) > 0:
+            f, created = Food.objects.get_or_create(name=self.apply_food_automation(food), space=self.request.space)
+            return f
+        return None
 
     def parse_fraction(self, x):
         if len(x) == 1 and 'fraction' in unicodedata.decomposition(x):
@@ -187,30 +271,4 @@ class IngredientParser:
 
         if unit_note not in note:
             note += ' ' + unit_note
-        return amount, unit.strip(), ingredient.strip(), note.strip()
-
-    def get_unit(self, unit):
-        """
-        Get or create a unit for given space respecting possible automations
-        :param unit: string unit
-        :return: None if unit passed is invalid, Unit object otherwise
-        """
-        if not unit:
-            return None
-        if len(unit) > 0:
-            u, created = Unit.objects.get_or_create(name=unit, space=self.request.space)
-            return u
-        return None
-
-    def get_food(self, food):
-        """
-        Get or create a food for given space respecting possible automations
-        :param food: string food
-        :return: None if food passed is invalid, Food object otherwise
-        """
-        if not food:
-            return None
-        if len(food) > 0:
-            f, created = Food.objects.get_or_create(name=food, space=self.request.space)
-            return f
-        return None
+        return amount, self.apply_unit_automation(unit.strip()), self.apply_food_automation(ingredient.strip()), note.strip()
