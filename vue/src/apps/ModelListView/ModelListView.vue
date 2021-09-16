@@ -360,7 +360,7 @@ export default {
         let automation = {
           name: `Merge ${source.name} with ${target.name}`,
           param_1: source.name,
-          param_2: target.id
+          param_2: target.name
         }
 
         if (this.this_model === this.Models.FOOD) {
