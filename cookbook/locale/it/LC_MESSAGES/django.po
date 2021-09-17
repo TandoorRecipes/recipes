@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-09-16 15:52+0000\n"
+"PO-Revision-Date: 2021-09-18 23:06+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -2417,7 +2417,7 @@ msgstr "Il parametro updated_at non è formattato correttamente"
 #: .\cookbook\views\api.py:151
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
-msgstr ""
+msgstr "Non esiste nessun {self.basename} con id {pk}"
 
 #: .\cookbook\views\api.py:155 .\cookbook\views\edit.py:300
 #: .\cookbook\views\edit.py:316
@@ -2427,7 +2427,7 @@ msgstr "Non è possibile unirlo con lo stesso oggetto!"
 #: .\cookbook\views\api.py:162
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
-msgstr ""
+msgstr "Non esiste nessun {self.basename} con id {target}"
 
 #: .\cookbook\views\api.py:167
 #, fuzzy
@@ -2438,40 +2438,41 @@ msgstr "Non è possibile unirlo con lo stesso oggetto!"
 #: .\cookbook\views\api.py:195
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
-msgstr ""
+msgstr "{source.name} è stato unito con successo a {target.name}"
 
 #: .\cookbook\views\api.py:199
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr ""
+"Si è verificato un errore durante l'unione di {source.name} con {target.name}"
 
 #: .\cookbook\views\api.py:239
 #, python-brace-format
 msgid "No {self.basename} with id {child} exists"
-msgstr ""
+msgstr "Non esiste nessun {self.basename} con id {child}"
 
 #: .\cookbook\views\api.py:248
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
-msgstr ""
+msgstr "{child.name} è stato spostato con successo alla radice."
 
 #: .\cookbook\views\api.py:251 .\cookbook\views\api.py:269
 msgid "An error occurred attempting to move "
-msgstr ""
+msgstr "Si è verificato un errore durante lo spostamento "
 
 #: .\cookbook\views\api.py:254
 msgid "Cannot move an object to itself!"
-msgstr ""
+msgstr "Non è possibile muovere un oggetto a sé stesso!"
 
 #: .\cookbook\views\api.py:260
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
-msgstr ""
+msgstr "Non esiste nessun {self.basename} con id {parent}"
 
 #: .\cookbook\views\api.py:266
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
-msgstr ""
+msgstr "{child.name} è stato spostato con successo al primario {parent.name}"
 
 #: .\cookbook\views\api.py:704 .\cookbook\views\views.py:289
 msgid "This feature is not available in the demo version!"
@@ -2718,13 +2719,15 @@ msgstr "Commento salvato!"
 
 #: .\cookbook\views\views.py:351
 msgid "You must select at least one field to search!"
-msgstr ""
+msgstr "Devi selezionare almeno un campo da cercare!"
 
 #: .\cookbook\views\views.py:354
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
+"Per utilizzare questo metodo di ricerca devi selezionare almeno un campo di "
+"ricerca full text!"
 
 #: .\cookbook\views\views.py:357
 msgid "Fuzzy search is not compatible with this search method!"
