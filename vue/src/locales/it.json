@@ -90,7 +90,7 @@
     "Recipes": "Ricette",
     "Move": "Sposta",
     "Merge": "Unisci",
-    "Parent": "Primario",
+    "Parent": "Principale",
     "delete_confimation": "Sei sicuro di voler eliminare {kw} e tutti gli elementi dipendenti?",
     "move_confirmation": "Sposta <i>{child}</i> al primario <i>{parent}</i>",
     "merge_confirmation": "Sostituisci <i>{source}</i> con <i>{target}</i>",
