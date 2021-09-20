@@ -9,7 +9,7 @@ from django.db.models import Avg, Case, Count, Func, Max, Q, Subquery, Value, Wh
 from django.utils import timezone, translation
 
 from cookbook.managers import DICTIONARY
-from cookbook.models import Food, Keyword, ViewLog
+from cookbook.models import Food, Keyword, ViewLog, SearchPreference
 
 
 class Round(Func):
@@ -20,7 +20,10 @@ class Round(Func):
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
 # TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
 def search_recipes(request, queryset, params):
-    search_prefs = request.user.searchpreference
+    if request.user.is_authenticated:
+        search_prefs = request.user.searchpreference
+    else:
+        search_prefs = SearchPreference()
     search_string = params.get('query', '')
     search_rating = int(params.get('rating', 0))
     search_keywords = params.getlist('keywords', [])
