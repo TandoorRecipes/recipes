@@ -155,14 +155,14 @@ def import_url(request):
         for ing in data['recipeIngredient']:
             ingredient = Ingredient(space=request.space, )
 
-            if food_text := ing['ingredient']['text'].strip() != '':
+            if food_text := ing['ingredient']['text'].strip():
                 if automation := Automation.objects.filter(space=request.space, type=Automation.FOOD_ALIAS, param_1=food_text).first():
                     ingredient.food.id = automation.param_2
                 else:
                     ingredient.food, f_created = Food.objects.get_or_create(name=food_text, space=request.space)
 
             if ing['unit']:
-                if unit_text := ing['unit']['text'] != '':
+                if unit_text := ing['unit']['text']:
                     if automation := Automation.objects.filter(space=request.space, type=Automation.UNIT_ALIAS, param_1=unit_text).first():
                         ingredient.unit.id = automation.param_2
                     else:
