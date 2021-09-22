@@ -43,8 +43,7 @@ class TreeManager(MP_NodeManager):
         try:
             return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
-            with scopes_disabled():
-                return self.model.add_root(**kwargs), True
+            return self.model.add_root(**kwargs), True
 
 
 class TreeModel(MP_Node):
@@ -363,6 +362,12 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
     def __str__(self):
         return self.name
 
+    def delete(self):
+        if Recipe.objects.filter(steps__ingredients__unit__id=self.pk).exists():
+            raise ProtectedError(self.name + _(" is part of a recipe and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
+        else:
+            return super().delete()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space')
@@ -385,8 +390,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         return self.name
 
     def delete(self):
-        if len(self.ingredient_set.all().exclude(step=None)) > 0:
-            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
+        if Recipe.objects.filter(steps__ingredients__food__id__in=list(self.get_descendants_and_self().values_list('pk', flat=True))).exists():
+            raise ProtectedError(self.name + _(" or its children are part of a recipe and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
         else:
             return super().delete()
 
@@ -401,9 +406,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
-    # a pre-delete signal on Food checks if the Ingredient is part of a Step, if it is raises a ProtectedError instead of cascading the delete
+    # delete method on Food and Unit checks if they are part of a Recipe, if it is raises a ProtectedError instead of cascading the delete
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
