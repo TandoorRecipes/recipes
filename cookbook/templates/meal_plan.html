@@ -552,7 +552,8 @@
                         let plan_entry = evt.added.element
 
                         plan_entry.date = date
-                        plan_entry.meal_type = meal_type.id
+                        plan_entry.meal_type.id = meal_type.id
+                        plan_entry.meal_type.name = meal_type.name
                         plan_entry.meal_type_name = meal_type.name
 
                         if (plan_entry.is_new) { // its not a meal plan object
@@ -567,7 +568,6 @@
                                 console.log("dragChanged create error", err);
                             })
                         } else {
-                            console.log(plan_entry)
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
