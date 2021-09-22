@@ -596,6 +596,8 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
+    icon = models.CharField(max_length=16, blank=True, null=True)
+    color = models.CharField(max_length=7, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)

@@ -73,7 +73,7 @@ class MealTypeSerializer(SpacedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'created_by')
+        fields = ('id', 'name', 'order', 'icon', 'color', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -560,6 +560,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     recipe = RecipeOverviewSerializer(required=False, allow_null=True)
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
+    meal_type = MealTypeSerializer()
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()

@@ -2,29 +2,43 @@
   <div v-hover class="card cv-item meal-plan-card p-0" :key="value.id" :draggable="true"
        :style="`top:${top};height:${item_height}`"
        @dragstart="onDragItemStart(value, $event)"
-       @click.stop="onClickItem(value, $event)"
+       @click="onClickItem(value, $event)"
        :aria-grabbed="value == currentDragItem"
-       :class="value.classes" :title="title">
-    <div class="card-header p-1 text-center text-primary border-bottom-0" v-if="detailed">
-      <span class="font-light">{{ entry.entry.meal_type_name }}</span>
+       :class="value.classes" :title="title"
+       @contextmenu.prevent="$parent.$parent.$refs.menu.open($event, value)">
+    <div class="card-header p-1 text-center text-primary border-bottom-0" v-if="detailed"
+         :style="`background-color: ${background_color}`">
+      <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null">{{
+          entry.entry.meal_type.icon
+        }}</span>
+      <span class="font-light">{{ entry.entry.meal_type.name }}</span>
     </div>
     <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right p-0"
          v-if="detailed">
       <a>
-        <meal-plan-card-context-menu :entry="entry.entry" @move-left="$emit('move-left')"
-                                     @move-right="$emit('move-right')" @delete="$emit('delete')"></meal-plan-card-context-menu>
+        <div style="position: static;">
+          <div class="dropdown b-dropdown position-static btn-group">
+            <button aria-haspopup="true" aria-expanded="false" type="button"
+                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret" @click.stop="$parent.$parent.$refs.menu.open($event, value)"><i class="fas fa-ellipsis-v fa-lg"></i></button>
+          </div>
+        </div>
+
       </a>
     </div>
-    <div class="card-header p-1 text-center" v-if="detailed">
+    <div class="card-header p-1 text-center" v-if="detailed" :style="`background-color: ${background_color}`">
       <span class="font-light">{{ title }}</span>
     </div>
     <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="hasRecipe && detailed"></b-img>
-    <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null">
+    <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null"
+         :style="`background-color: ${background_color}`">
       <p>{{ entry.entry.note }}</p>
     </div>
-    <div class="row p-1 flex-nowrap" v-if="!detailed">
+    <div class="row p-1 flex-nowrap" v-if="!detailed" :style="`background-color: ${background_color}`">
       <div class="col-2">
-        <span class="font-light text-center">🍔</span>
+        <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null">{{
+            entry.entry.meal_type.icon
+          }}</span>
+        <span class="font-light text-center" v-if="entry.entry.meal_type.icon == null">❓</span>
       </div>
       <div class="col-10 d-inline-block text-truncate" :style="`max-height:${item_height}`">
         <span class="font-light">{{ title }}</span>
@@ -34,11 +48,9 @@
 </template>
 
 <script>
-import MealPlanCardContextMenu from "./MealPlanCardContextMenu";
-
 export default {
   name: "MealPlanCard.vue",
-  components: {MealPlanCardContextMenu},
+  components: {},
   props: {
     value: Object,
     weekStartDate: Date,
@@ -65,15 +77,24 @@ export default {
     },
     hasRecipe: function () {
       return this.entry.entry.recipe != null;
-    }
+    },
+    background_color: function () {
+      if (this.entry.entry.meal_type.color != null && this.entry.entry.meal_type.color !== '') {
+        return this.entry.entry.meal_type.color
+      } else {
+        return "#fff"
+      }
+    },
   },
   methods: {
-    onClickItem(calendarItem, windowEvent) {
-      this.$root.$emit("click-item", calendarItem, windowEvent)
-    },
     onDragItemStart(calendarItem, windowEvent) {
       windowEvent.dataTransfer.setData("text", calendarItem.id.toString())
-      this.$root.$emit("dragUpdate", calendarItem, windowEvent)
+      this.$emit("dragstart", calendarItem, windowEvent)
+      return true
+    },
+    onContextMenuOpen(calendarItem, windowEvent) {
+      windowEvent.dataTransfer.setData("text", calendarItem.id.toString())
+      this.$emit("dragstart", calendarItem, windowEvent)
       return true
     },
   },
