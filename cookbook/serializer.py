@@ -64,7 +64,7 @@ class SpacedModelSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class MealTypeSerializer(SpacedModelSerializer):
+class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -73,7 +73,7 @@ class MealTypeSerializer(SpacedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'icon', 'color', 'created_by')
+        fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -561,7 +561,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     recipe = RecipeOverviewSerializer(required=False, allow_null=True)
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type = MealTypeSerializer()
-    meal_type_name = serializers.ReadOnlyField(source='meal_type.name')
+    meal_type_name = serializers.ReadOnlyField(source='meal_type.name') # TODO deprecate once old meal plan was removed
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
 
