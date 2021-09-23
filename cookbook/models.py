@@ -598,6 +598,7 @@ class MealType(models.Model, PermissionModelMixin):
     order = models.IntegerField(default=0)
     icon = models.CharField(max_length=16, blank=True, null=True)
     color = models.CharField(max_length=7, blank=True, null=True)
+    default = models.BooleanField(default=False, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
