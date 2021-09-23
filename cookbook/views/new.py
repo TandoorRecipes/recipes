@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
 from cookbook.forms import (ImportRecipeForm, InviteLinkForm,
-                            MealPlanForm, RecipeBookForm, Storage, StorageForm)
+                            MealPlanForm, Storage, StorageForm)
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
 from cookbook.models import (InviteLink, MealPlan, MealType, Recipe,
@@ -134,26 +134,6 @@ def create_new_external_recipe(request, import_id):
         )
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
-
-
-class RecipeBookCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
-    groups_required = ['user']
-    template_name = "generic/new_template.html"
-    model = RecipeBook
-    form_class = RecipeBookForm
-    success_url = reverse_lazy('view_books')
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.created_by = self.request.user
-        obj.space = self.request.space
-        obj.save()
-        return HttpResponseRedirect(reverse('view_books'))
-
-    def get_context_data(self, **kwargs):
-        context = super(RecipeBookCreate, self).get_context_data(**kwargs)
-        context['title'] = _("Recipe Book")
-        return context
 
 
 class MealPlanCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
