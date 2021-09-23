@@ -11,9 +11,9 @@ from django.views.generic.edit import FormMixin
 from django_scopes import scopes_disabled
 
 from cookbook.forms import (CommentForm, ExternalRecipeForm,
-                            FoodMergeForm, MealPlanForm,
-                            RecipeBookForm, StorageForm, SyncForm,
-                            UnitMergeForm)
+                            MealPlanForm,
+                            StorageForm, SyncForm,
+                            )
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                OwnerRequiredMixin,
                                                group_required)
@@ -198,20 +198,6 @@ class ImportUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class RecipeBookUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
-    template_name = "generic/edit_template.html"
-    model = RecipeBook
-    form_class = RecipeBookForm
-
-    def get_success_url(self):
-        return reverse('view_books')
-
-    def get_context_data(self, **kwargs):
-        context = super(RecipeBookUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Recipe Book")
-        return context
-
-
 class MealPlanUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
     template_name = "generic/edit_template.html"
     model = MealPlan
@@ -275,51 +261,3 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
                 'delete_recipe_source', args=[self.object.pk]
             )
         return context
-
-
-# TODO deprecate
-@group_required('user')
-def edit_ingredients(request):
-    if request.method == "POST":
-        success = False
-        units_form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix, space=request.space)
-        if units_form.is_valid():
-            new_unit = units_form.cleaned_data['new_unit']
-            old_unit = units_form.cleaned_data['old_unit']
-            if new_unit != old_unit:
-                with scopes_disabled():
-                    recipe_ingredients = Ingredient.objects.filter(unit=old_unit).filter(Q(step__recipe__space=request.space) | Q(step__recipe__isnull=True)).all()
-                    for i in recipe_ingredients:
-                        i.unit = new_unit
-                        i.save()
-
-                    old_unit.delete()
-                    success = True
-                    messages.add_message(request, messages.SUCCESS, _('Units merged!'))
-            else:
-                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
-
-        food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix, space=request.space)
-        if food_form.is_valid():
-            new_food = food_form.cleaned_data['new_food']
-            old_food = food_form.cleaned_data['old_food']
-            if new_food != old_food:
-                ingredients = Ingredient.objects.filter(food=old_food).filter(Q(step__recipe__space=request.space) | Q(step__recipe__isnull=True)).all()
-                for i in ingredients:
-                    i.food = new_food
-                    i.save()
-
-                old_food.delete()
-                success = True
-                messages.add_message(request, messages.SUCCESS, _('Foods merged!'))
-            else:
-                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
-
-        if success:
-            units_form = UnitMergeForm(space=request.space)
-            food_form = FoodMergeForm(space=request.space)
-    else:
-        units_form = UnitMergeForm(space=request.space)
-        food_form = FoodMergeForm(space=request.space)
-
-    return render(request, 'forms/ingredients.html', {'units_form': units_form, 'food_form': food_form})

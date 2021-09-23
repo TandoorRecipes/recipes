@@ -5,11 +5,10 @@ from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
-from emoji_picker.widgets import EmojiPickerTextInput
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
-                     RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
+from .models import (Comment, InviteLink, Keyword, MealPlan, Recipe,
+                     RecipeBook, RecipeBookEntry, Storage, Sync, User,
                      UserPreference, MealType, Space,
                      SearchPreference)
 
@@ -158,53 +157,6 @@ class ExportForm(ImportExportBase):
         self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
 
 
-class UnitMergeForm(forms.Form):
-    prefix = 'unit'
-
-    new_unit = SafeModelChoiceField(
-        queryset=Unit.objects.none(),
-        widget=SelectWidget,
-        label=_('New Unit'),
-        help_text=_('New unit that other gets replaced by.'),
-    )
-    old_unit = SafeModelChoiceField(
-        queryset=Unit.objects.none(),
-        widget=SelectWidget,
-        label=_('Old Unit'),
-        help_text=_('Unit that should be replaced.'),
-    )
-
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['new_unit'].queryset = Unit.objects.filter(space=space).all()
-        self.fields['old_unit'].queryset = Unit.objects.filter(space=space).all()
-
-
-# TODO Deprecated
-class FoodMergeForm(forms.Form):
-    prefix = 'food'
-
-    new_food = SafeModelChoiceField(
-        queryset=Food.objects.none(),
-        widget=SelectWidget,
-        label=_('New Food'),
-        help_text=_('New food that other gets replaced by.'),
-    )
-    old_food = SafeModelChoiceField(
-        queryset=Food.objects.none(),
-        widget=SelectWidget,
-        label=_('Old Food'),
-        help_text=_('Food that should be replaced.'),
-    )
-
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['new_food'].queryset = Food.objects.filter(space=space).all()
-        self.fields['old_food'].queryset = Food.objects.filter(space=space).all()
-
-
 class CommentForm(forms.ModelForm):
     prefix = 'comment'
 
@@ -218,33 +170,6 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'rows': 2, 'cols': 15}),
         }
-
-
-# class KeywordForm(MoveNodeForm):
-#     class Meta:
-#         model = Keyword
-#         fields = ('name', 'icon', 'description')
-#         exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
-#         widgets = {'icon': EmojiPickerTextInput}
-
-
-# class FoodForm(forms.ModelForm):
-
-#     def __init__(self, *args, **kwargs):
-#         space = kwargs.pop('space')
-#         super().__init__(*args, **kwargs)
-#         self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
-#         self.fields['supermarket_category'].queryset = SupermarketCategory.objects.filter(space=space).all()
-
-#     class Meta:
-#         model = Food
-#         fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
-#         widgets = {'recipe': SelectWidget}
-
-#         field_classes = {
-#             'recipe': SafeModelChoiceField,
-#             'supermarket_category': SafeModelChoiceField,
-#         }
 
 
 class StorageForm(forms.ModelForm):
@@ -341,21 +266,6 @@ class ImportRecipeForm(forms.ModelForm):
         widgets = {'keywords': MultiSelectWidget}
         field_classes = {
             'keywords': SafeModelChoiceField,
-        }
-
-
-class RecipeBookForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
-
-    class Meta:
-        model = RecipeBook
-        fields = ('name', 'icon', 'description', 'shared')
-        widgets = {'icon': EmojiPickerTextInput, 'shared': MultiSelectWidget}
-        field_classes = {
-            'shared': SafeModelMultipleChoiceField,
         }
 
 
