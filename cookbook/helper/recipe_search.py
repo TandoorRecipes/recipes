@@ -24,7 +24,7 @@ def search_recipes(request, queryset, params):
         search_prefs = request.user.searchpreference
     else:
         search_prefs = SearchPreference()
-    search_string = params.get('query', '')
+    search_string = params.get('query', '').strip()
     search_rating = int(params.get('rating', 0))
     search_keywords = params.getlist('keywords', [])
     search_foods = params.getlist('foods', [])
