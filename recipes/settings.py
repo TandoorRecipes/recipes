@@ -98,7 +98,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'crispy_forms',
-    'emoji_picker',
     'rest_framework',
     'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
