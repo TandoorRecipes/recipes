@@ -216,9 +216,9 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     def get_image(self, obj):
         recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        if len(recipes) == 0 and obj.has_children():
+        if recipes.count() == 0 and obj.has_children():
             recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
-        if len(recipes) != 0:
+        if recipes.count() != 0:
             return random.choice(recipes).image.url
         else:
             return None
@@ -249,7 +249,7 @@ class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
     def get_image(self, obj):
         recipes = Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
-        if len(recipes) != 0:
+        if recipes.count() != 0:
             return random.choice(recipes).image.url
         else:
             return None
@@ -330,10 +330,10 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
         # if food is not also a recipe, look for recipe images that use the food
         recipes = Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
         # if no recipes found - check whole tree
-        if len(recipes) == 0 and obj.has_children():
+        if recipes.count() == 0 and obj.has_children():
             recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
-        if len(recipes) != 0:
+        if recipes.count() != 0:
             return random.choice(recipes).image.url
         else:
             return None

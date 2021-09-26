@@ -203,6 +203,9 @@ export const ApiMixin = {
             });
             let apiClient = new ApiApiFactory()
             return apiClient[func](...parameters)
+        },
+        genericGetAPI: function(url, options) {
+            return axios.get(this.resolveDjangoUrl(url), {'params':options, 'emulateJSON': true})
         }
     }
 }

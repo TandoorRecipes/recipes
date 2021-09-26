@@ -385,7 +385,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         return self.name
 
     def delete(self):
-        if len(self.ingredient_set.all().exclude(step=None)) > 0:
+        if self.ingredient_set.all().exclude(step=None).count() > 0:
             raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
         else:
             return super().delete()
