@@ -2,6 +2,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 
 from cookbook.views import views
+from recipes import settings
 
 
 class ScopeMiddleware:
@@ -11,14 +12,15 @@ class ScopeMiddleware:
     def __call__(self, request):
         if request.user.is_authenticated:
 
-            if request.path.startswith('/admin/'):
+            prefix = settings.JS_REVERSE_SCRIPT_PREFIX or ''
+            if request.path.startswith(prefix + '/admin/'):
                 with scopes_disabled():
                     return self.get_response(request)
 
-            if request.path.startswith('/signup/') or request.path.startswith('/invite/'):
+            if request.path.startswith(prefix + '/signup/') or request.path.startswith(prefix + '/invite/'):
                 return self.get_response(request)
 
-            if request.path.startswith('/accounts/'):
+            if request.path.startswith(prefix + '/accounts/'):
                 return self.get_response(request)
 
             with scopes_disabled():
