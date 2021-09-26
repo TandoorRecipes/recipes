@@ -5,6 +5,7 @@ from recipes import settings
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, TrigramSimilarity
 )
+from django.core.cache import caches
 from django.db.models import Avg, Case, Count, Func, Max, Q, Subquery, Value, When
 from django.utils import timezone, translation
 
@@ -15,6 +16,13 @@ from cookbook.models import Food, Keyword, ViewLog, SearchPreference
 class Round(Func):
     function = 'ROUND'
     template = '%(function)s(%(expressions)s, 0)'
+
+
+def str2bool(v):
+    if type(v) == bool:
+        return v
+    else:
+        return v.lower() in ("yes", "true", "1")
 
 
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
@@ -32,13 +40,13 @@ def search_recipes(request, queryset, params):
     search_units = params.get('units', None)
 
     # TODO I think default behavior should be 'AND' which is how most sites operate with facet/filters based on results
-    search_keywords_or = params.get('keywords_or', True)
-    search_foods_or = params.get('foods_or', True)
-    search_books_or = params.get('books_or', True)
+    search_keywords_or = str2bool(params.get('keywords_or', True))
+    search_foods_or = str2bool(params.get('foods_or', True))
+    search_books_or = str2bool(params.get('books_or', True))
 
-    search_internal = params.get('internal', None)
-    search_random = params.get('random', False)
-    search_new = params.get('new', False)
+    search_internal = str2bool(params.get('internal', None))
+    search_random = str2bool(params.get('random', False))
+    search_new = str2bool(params.get('new', False))
     search_last_viewed = int(params.get('last_viewed', 0))
     orderby = []
 
@@ -58,7 +66,7 @@ def search_recipes(request, queryset, params):
     # TODO create setting for default ordering - most cooked, rating,
     # TODO create options for live sorting
     # TODO make days of new recipe a setting
-    if search_new == 'true':
+    if search_new:
         queryset = (
             queryset.annotate(new_recipe=Case(
                 When(created_at__gte=(timezone.now() - timedelta(days=7)), then=('pk')), default=Value(0), ))
@@ -144,7 +152,7 @@ def search_recipes(request, queryset, params):
             queryset = queryset.filter(name__icontains=search_string)
 
     if len(search_keywords) > 0:
-        if search_keywords_or == 'true':
+        if search_keywords_or:
             # TODO creating setting to include descendants of keywords a setting
             # for kw in Keyword.objects.filter(pk__in=search_keywords):
             #     search_keywords += list(kw.get_descendants().values_list('pk', flat=True))
@@ -156,7 +164,7 @@ def search_recipes(request, queryset, params):
                 queryset = queryset.filter(keywords__id__in=list(kw.get_descendants_and_self().values_list('pk', flat=True)))
 
     if len(search_foods) > 0:
-        if search_foods_or == 'true':
+        if search_foods_or:
             # TODO creating setting to include descendants of food a setting
             queryset = queryset.filter(steps__ingredients__food__id__in=search_foods)
         else:
@@ -166,7 +174,7 @@ def search_recipes(request, queryset, params):
                 queryset = queryset.filter(steps__ingredients__food__id__in=list(fd.get_descendants_and_self().values_list('pk', flat=True)))
 
     if len(search_books) > 0:
-        if search_books_or == 'true':
+        if search_books_or:
             queryset = queryset.filter(recipebookentry__book__id__in=search_books)
         else:
             for k in search_books:
@@ -183,58 +191,119 @@ def search_recipes(request, queryset, params):
     if search_units:
         queryset = queryset.filter(steps__ingredients__unit__id=search_units)
 
-    if search_internal == 'true':
+    if search_internal:
         queryset = queryset.filter(internal=True)
 
     queryset = queryset.distinct()
 
-    if search_random == 'true':
+    if search_random:
         queryset = queryset.order_by("?")
     else:
-        # TODO add order by user settings
-        # orderby += ['name']
         queryset = queryset.order_by(*orderby)
     return queryset
 
 
-def get_facet(qs, request):
-    # NOTE facet counts for tree models include self AND descendants
+def get_facet(qs=None, request=None, use_cache=True, hash_key=None):
+    """
+    Gets an annotated list from a queryset.
+    :param qs:
+
+        recipe queryset to build facets from
+
+    :param request:
+
+        the web request that contains the necessary query parameters
+
+    :param use_cache:
+
+        will find results in cache, if any, and return them or empty list.
+        will save the list of recipes IDs in the cache for future processing
+
+    :param hash_key:
+
+        the cache key of the recipe list to process
+        only evaluated if the use_cache parameter is false
+    """
     facets = {}
-    keyword_list = request.query_params.getlist('keywords', [])
-    food_list = request.query_params.getlist('foods', [])
-    book_list = request.query_params.getlist('book', [])
-    search_keywords_or = request.query_params.get('keywords_or', True)
-    search_foods_or = request.query_params.get('foods_or', True)
-    search_books_or = request.query_params.get('books_or', True)
+    recipe_list = []
+    cache_timeout = 600
+
+    if use_cache:
+        qs_hash = hash(frozenset(qs.values_list('pk')))
+        facets['cache_key'] = str(qs_hash)
+        SEARCH_CACHE_KEY = f"recipes_filter_{qs_hash}"
+        if c := caches['default'].get(SEARCH_CACHE_KEY, None):
+            facets['Keywords'] = c['Keywords'] or []
+            facets['Foods'] = c['Foods'] or []
+            facets['Books'] = c['Books'] or []
+            facets['Ratings'] = c['Ratings'] or []
+            facets['Recent'] = c['Recent'] or []
+        else:
+            facets['Keywords'] = []
+            facets['Foods'] = []
+            facets['Books'] = []
+            rating_qs = qs.annotate(rating=Round(Avg(Case(When(cooklog__created_by=request.user, then='cooklog__rating'), default=Value(0)))))
+            facets['Ratings'] = dict(Counter(r.rating for r in rating_qs))
+            facets['Recent'] = ViewLog.objects.filter(
+                created_by=request.user, space=request.space,
+                created_at__gte=timezone.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
+            ).values_list('recipe__pk', flat=True)
+
+        cached_search = {
+            'recipe_list': list(qs.values_list('id', flat=True)),
+            'keyword_list': request.query_params.getlist('keywords', []),
+            'food_list': request.query_params.getlist('foods', []),
+            'book_list': request.query_params.getlist('book', []),
+            'search_keywords_or': str2bool(request.query_params.get('keywords_or', True)),
+            'search_foods_or': str2bool(request.query_params.get('foods_or', True)),
+            'search_books_or': str2bool(request.query_params.get('books_or', True)),
+            'space': request.space,
+            'Ratings': facets['Ratings'],
+            'Recent': facets['Recent'],
+            'Keywords': facets['Keywords'],
+            'Foods': facets['Foods'],
+            'Books': facets['Books']
+        }
+        caches['default'].set(SEARCH_CACHE_KEY, cached_search, cache_timeout)
+        return facets
+
+    SEARCH_CACHE_KEY = f'recipes_filter_{hash_key}'
+    if c := caches['default'].get(SEARCH_CACHE_KEY, None):
+        recipe_list = c['recipe_list']
+        keyword_list = c['keyword_list']
+        food_list = c['food_list']
+        book_list = c['book_list']
+        search_keywords_or = c['search_keywords_or']
+        search_foods_or = c['search_foods_or']
+        search_books_or = c['search_books_or']
+    else:
+        return {}
 
     # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
     if search_keywords_or:
         keywords = Keyword.objects.filter(space=request.space).annotate(recipe_count=Count('recipe'))
     else:
-        keywords = Keyword.objects.filter(recipe__in=qs, space=request.space).annotate(recipe_count=Count('recipe'))
+        keywords = Keyword.objects.filter(recipe__in=recipe_list, space=request.space).annotate(recipe_count=Count('recipe'))
     # custom django-tree function annotates a queryset to make building a tree easier.
     # see https://django-treebeard.readthedocs.io/en/latest/api.html#treebeard.models.Node.get_annotated_list_qs for details
     kw_a = annotated_qs(keywords, root=True, fill=True)
 
-    # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
+    # # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
     if search_foods_or:
         foods = Food.objects.filter(space=request.space).annotate(recipe_count=Count('ingredient'))
     else:
-        foods = Food.objects.filter(ingredient__step__recipe__in=list(qs.values_list('id', flat=True)), space=request.space).annotate(recipe_count=Count('ingredient'))
+        foods = Food.objects.filter(ingredient__step__recipe__in=recipe_list, space=request.space).annotate(recipe_count=Count('ingredient'))
     food_a = annotated_qs(foods, root=True, fill=True)
 
-    rating_qs = qs.annotate(rating=Round(Avg(Case(When(cooklog__created_by=request.user, then='cooklog__rating'), default=Value(0)))))
-
     # TODO add rating facet
-    facets['Ratings'] = dict(Counter(r.rating for r in rating_qs))
     facets['Keywords'] = fill_annotated_parents(kw_a, keyword_list)
     facets['Foods'] = fill_annotated_parents(food_a, food_list)
     # TODO add book facet
     facets['Books'] = []
-    facets['Recent'] = ViewLog.objects.filter(
-        created_by=request.user, space=request.space,
-        created_at__gte=timezone.now() - timedelta(days=14)  # TODO make days of recent recipe a setting
-    ).values_list('recipe__pk', flat=True)
+    c['Keywords'] = facets['Keywords']
+    c['Foods'] = facets['Foods']
+    c['Books'] = facets['Books']
+    caches['default'].set(SEARCH_CACHE_KEY, c, cache_timeout)
     return facets
 
 

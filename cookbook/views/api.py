@@ -499,7 +499,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(queryset, request)
+        self.facets = get_facet(qs=queryset, request=request)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):
@@ -903,6 +903,18 @@ def ingredient_from_string(request):
             'unit': unit,
             'food': food,
             'note': note
+        },
+        status=200
+    )
+
+
+@group_required('user')
+def get_facets(request):
+    key = request.GET['hash']
+
+    return JsonResponse(
+        {
+            'facets': get_facet(request=request, use_cache=False, hash_key=key),
         },
         status=200
     )

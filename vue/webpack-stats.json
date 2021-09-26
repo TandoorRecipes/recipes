@@ -3,83 +3,83 @@
   "assets": {
     "../../templates/sw.js": {
       "name": "../../templates/sw.js",
-      "path": "..\\..\\templates\\sw.js"
+      "path": "../../templates/sw.js"
     },
     "js/chunk-2d0da313.js": {
       "name": "js/chunk-2d0da313.js",
-      "path": "js\\chunk-2d0da313.js"
+      "path": "js/chunk-2d0da313.js"
     },
     "css/chunk-vendors.css": {
       "name": "css/chunk-vendors.css",
-      "path": "css\\chunk-vendors.css"
+      "path": "css/chunk-vendors.css"
     },
     "js/chunk-vendors.js": {
       "name": "js/chunk-vendors.js",
-      "path": "js\\chunk-vendors.js"
+      "path": "js/chunk-vendors.js"
     },
     "css/cookbook_view.css": {
       "name": "css/cookbook_view.css",
-      "path": "css\\cookbook_view.css"
+      "path": "css/cookbook_view.css"
     },
     "js/cookbook_view.js": {
       "name": "js/cookbook_view.js",
-      "path": "js\\cookbook_view.js"
+      "path": "js/cookbook_view.js"
     },
     "css/edit_internal_recipe.css": {
       "name": "css/edit_internal_recipe.css",
-      "path": "css\\edit_internal_recipe.css"
+      "path": "css/edit_internal_recipe.css"
     },
     "js/edit_internal_recipe.js": {
       "name": "js/edit_internal_recipe.js",
-      "path": "js\\edit_internal_recipe.js"
+      "path": "js/edit_internal_recipe.js"
     },
     "js/import_response_view.js": {
       "name": "js/import_response_view.js",
-      "path": "js\\import_response_view.js"
+      "path": "js/import_response_view.js"
     },
     "css/meal_plan_view.css": {
       "name": "css/meal_plan_view.css",
-      "path": "css\\meal_plan_view.css"
+      "path": "css/meal_plan_view.css"
     },
     "js/meal_plan_view.js": {
       "name": "js/meal_plan_view.js",
-      "path": "js\\meal_plan_view.js"
+      "path": "js/meal_plan_view.js"
     },
     "css/model_list_view.css": {
       "name": "css/model_list_view.css",
-      "path": "css\\model_list_view.css"
+      "path": "css/model_list_view.css"
     },
     "js/model_list_view.js": {
       "name": "js/model_list_view.js",
-      "path": "js\\model_list_view.js"
+      "path": "js/model_list_view.js"
     },
     "js/offline_view.js": {
       "name": "js/offline_view.js",
-      "path": "js\\offline_view.js"
+      "path": "js/offline_view.js"
     },
     "css/recipe_search_view.css": {
       "name": "css/recipe_search_view.css",
-      "path": "css\\recipe_search_view.css"
+      "path": "css/recipe_search_view.css"
     },
     "js/recipe_search_view.js": {
       "name": "js/recipe_search_view.js",
-      "path": "js\\recipe_search_view.js"
+      "path": "js/recipe_search_view.js"
     },
     "css/recipe_view.css": {
       "name": "css/recipe_view.css",
-      "path": "css\\recipe_view.css"
+      "path": "css/recipe_view.css"
     },
     "js/recipe_view.js": {
       "name": "js/recipe_view.js",
-      "path": "js\\recipe_view.js"
+      "path": "js/recipe_view.js"
     },
     "js/supermarket_view.js": {
       "name": "js/supermarket_view.js",
-      "path": "js\\supermarket_view.js"
+      "path": "js/supermarket_view.js"
     },
     "js/user_file_view.js": {
       "name": "js/user_file_view.js",
-      "path": "js\\user_file_view.js"
+      "path": "js/user_file_view.js"
     },
     "recipe_search_view.html": {
       "name": "recipe_search_view.html",
