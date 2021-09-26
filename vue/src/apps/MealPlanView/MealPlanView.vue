@@ -79,7 +79,7 @@
         <ContextMenuItem @click="$refs.menu.close();moveEntryRight(contextData)">
           <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-right"></i> {{ $t("DayForward") }}</a>
         </ContextMenuItem>
-         <ContextMenuItem @click="$refs.menu.close();createEntry(contextData.originalItem.entry)">
+        <ContextMenuItem @click="$refs.menu.close();createEntry(contextData.originalItem.entry)">
           <a class="dropdown-item p-2" href="#"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();deleteEntry(contextData)">
@@ -88,7 +88,7 @@
       </template>
     </ContextMenu>
     <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial_recipe="entryEditing_initial_recipe"
-                          :entry-editing_initial_meal_type="entryEditing_initial_meal_type"
+                          :entry-editing_initial_meal_type="entryEditing_initial_meal_type" :modal_title="modal_title"
                           :edit_modal_show="edit_modal_show" @save-entry="editEntry"
                           @delete-entry="deleteEntry"></meal-plan-edit-modal>
   </div>

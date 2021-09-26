@@ -19,7 +19,9 @@
         <div style="position: static;">
           <div class="dropdown b-dropdown position-static btn-group">
             <button aria-haspopup="true" aria-expanded="false" type="button"
-                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret" @click.stop="$parent.$parent.$refs.menu.open($event, value)"><i class="fas fa-ellipsis-v fa-lg"></i></button>
+                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                    @click.stop="$parent.$parent.$refs.menu.open($event, value)"><i class="fas fa-ellipsis-v fa-lg"></i>
+            </button>
           </div>
         </div>
 
@@ -95,6 +97,10 @@ export default {
     onContextMenuOpen(calendarItem, windowEvent) {
       windowEvent.dataTransfer.setData("text", calendarItem.id.toString())
       this.$emit("dragstart", calendarItem, windowEvent)
+      return true
+    },
+    onClickItem(calendarItem, windowEvent) {
+      this.$emit("click-item", calendarItem)
       return true
     },
   },

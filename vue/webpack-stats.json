@@ -5,6 +5,10 @@
       "name": "../../templates/sw.js",
       "path": "..\\..\\templates\\sw.js"
     },
+    "js/chunk-2d0da313.js": {
+      "name": "js/chunk-2d0da313.js",
+      "path": "js\\chunk-2d0da313.js"
+    },
     "css/chunk-vendors.css": {
       "name": "css/chunk-vendors.css",
       "path": "css\\chunk-vendors.css"
