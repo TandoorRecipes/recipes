@@ -1,11 +1,10 @@
 <template>
-  <b-modal id="edit-modal" size="lg" :title="modal_title" hide-footer aria-label="">
+  <b-modal :id="modal_id" size="lg" :title="modal_title" hide-footer aria-label="">
     <div class="row">
       <div class="col col-md-12">
         <div class="row">
           <div class="col-6 col-lg-9">
             <b-input-group>
-
               <b-form-input id="TitleInput" v-model="entryEditing.title"
                             :placeholder="entryEditing.title_placeholder"></b-form-input>
               <b-input-group-append class="d-none d-lg-block">
@@ -61,7 +60,7 @@
         </div>
         <div class="row mt-3 mb-3">
           <div class="col-12">
-            <b-button variant="danger" @click="deleteEntry">{{ $t('Delete') }}
+            <b-button variant="danger" @click="deleteEntry" v-if="allow_delete">{{ $t('Delete') }}
             </b-button>
             <b-button class="float-right" variant="primary" @click="editEntry">{{ $t('Save') }}</b-button>
           </div>
@@ -75,7 +74,6 @@
 import Vue from "vue";
 import {BootstrapVue} from "bootstrap-vue";
 import GenericMultiselect from "./GenericMultiselect";
-import RecipeCard from "./RecipeCard";
 import {ApiMixin} from "../utils/utils";
 
 Vue.use(BootstrapVue)
@@ -86,12 +84,20 @@ export default {
     entry: Object,
     entryEditing_initial_recipe: Array,
     entryEditing_initial_meal_type: Array,
-    modal_title: String
+    modal_title: String,
+    modal_id: {
+      type: String,
+      default: "edit-modal"
+    },
+    allow_delete: {
+      type: Boolean,
+      default: true
+    },
   },
   mixins: [ApiMixin],
   components: {
     GenericMultiselect,
-    RecipeCard
+    RecipeCard: () => import('./RecipeCard.vue')
   },
   data() {
     return {
