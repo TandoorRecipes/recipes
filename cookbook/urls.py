@@ -109,6 +109,7 @@ urlpatterns = [
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
+    path('api/get_facets/', api.get_facets, name='api_get_facets'),
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
