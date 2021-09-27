@@ -223,12 +223,6 @@
                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
                         <b-input-group-append>
                           <b-input-group-text style="width:85px">
-                            <!-- <b-form-checkbox v-model="settings.search_books_or" name="check-button"
-                                             @change="refreshData(false)"
-                                             class="shadow-none" tyle="width: 100%" switch>
-                              <span class="text-uppercase" v-if="settings.search_books_or">{{ $t('or') }}</span>
-                              <span class="text-uppercase" v-else>{{ $t('and') }}</span>
-                            </b-form-checkbox> -->
                           </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
@@ -303,8 +297,7 @@ import VueCookies from 'vue-cookies'
 
 Vue.use(VueCookies)
 
-import {ResolveUrlMixin} from "@/utils/utils";
-import {ApiMixin} from "@/utils/utils";
+import {ApiMixin, ResolveUrlMixin} from "@/utils/utils";
 
 import LoadingSpinner from "@/components/LoadingSpinner"; // is this deprecated?
 
@@ -325,7 +318,7 @@ export default {
     return {
       // this.Models and this.Actions inherited from ApiMixin
       recipes: [],
-      facets: [],
+      facets: {},
       meal_plans: [],
       last_viewed_recipes: [],
 
@@ -387,7 +380,6 @@ export default {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
         this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
       }
-
       let urlParams = new URLSearchParams(window.location.search);
 
       if (urlParams.has('keyword')) {
@@ -397,6 +389,18 @@ export default {
           this.settings.search_keywords.push(Number.parseInt(x))
           this.facets.Keywords.push({'id':x, 'name': 'loading...'})
         }
+      }
+      this.facets.Foods = []
+      for (let x of this.settings.search_foods) {
+        this.facets.Foods.push({'id':x, 'name': 'loading...'})
+      }
+      this.facets.Keywords = []
+      for (let x of this.settings.search_keywords) {
+        this.facets.Keywords.push({'id':x, 'name': 'loading...'})
+      }
+      this.facets.Books = []
+      for (let x of this.settings.search_books) {
+        this.facets.Books.push({'id':x, 'name': 'loading...'})
       }
       this.loadMealPlan()
       this.refreshData(false)
@@ -457,6 +461,9 @@ export default {
         this.pagination_count = result.data.count
         
         this.facets = result.data.facets
+        if(this.facets?.cache_key) {
+          this.getFacets(this.facets.cache_key)
+        }
         this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
         if (!this.searchFiltered){
           // if meal plans are being shown - filter out any meal plan recipes from the recipe list
@@ -530,6 +537,11 @@ export default {
         return [undefined, undefined]
       }
     },
+    getFacets: function(hash) {
+      this.genericGetAPI('api_get_facets', {hash: hash}).then((response) => {
+        this.facets = {...this.facets, ...response.data.facets}
+      })
+    }
   }
 }
 
