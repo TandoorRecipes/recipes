@@ -89,9 +89,18 @@ class SyncLogAdmin(admin.ModelAdmin):
 admin.site.register(SyncLog, SyncLogAdmin)
 
 
+@admin.action(description='Sort tree by name')
+def sort_tree(modeladmin, request, queryset):
+    modeladmin.model.node_order_by = ['name']
+    with scopes_disabled():
+        Keyword.fix_tree(fix_paths=True)
+    modeladmin.model.node_order_by = []
+
+
 class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    actions = [sort_tree]
 
 
 admin.site.register(Keyword, KeywordAdmin)
@@ -138,6 +147,7 @@ admin.site.register(Unit)
 class FoodAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    actions = [sort_tree]
 
 
 admin.site.register(Food, FoodAdmin)
