@@ -44,7 +44,7 @@ def search_recipes(request, queryset, params):
     search_foods_or = str2bool(params.get('foods_or', True))
     search_books_or = str2bool(params.get('books_or', True))
 
-    search_internal = str2bool(params.get('internal', None))
+    search_internal = str2bool(params.get('internal', False))
     search_random = str2bool(params.get('random', False))
     search_new = str2bool(params.get('new', False))
     search_last_viewed = int(params.get('last_viewed', 0))
