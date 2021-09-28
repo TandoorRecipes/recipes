@@ -10,8 +10,17 @@ https://docs.djangoproject.com/en/2.0/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
+from django_scopes import scopes_disabled
+from cookbook.models import Food, Keyword
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "recipes.settings")
+
+# run fix tree here solves 2 problems:
+# 1 if tree sorting is changed from unsorted to sorted ensures that objects are sorted
+# 2 if any condition caused the tree to be in an inconsistent state this will fix most problems
+with scopes_disabled():
+    Food.fix_tree(fix_paths=True)
+    Keyword.fix_tree(fix_paths=True)
 
 _application = get_wsgi_application()
 

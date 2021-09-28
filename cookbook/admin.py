@@ -89,19 +89,34 @@ class SyncLogAdmin(admin.ModelAdmin):
 admin.site.register(SyncLog, SyncLogAdmin)
 
 
+@admin.action(description='Temporarily ENABLE sorting on Foods and Keywords.')
+def enable_tree_sorting(modeladmin, request, queryset):
+    Food.node_order_by = ['name']
+    Keyword.node_order_by = ['name']
+    with scopes_disabled():
+        Food.fix_tree(fix_paths=True)
+        Keyword.fix_tree(fix_paths=True)
+
+
+@admin.action(description='Temporarily DISABLE sorting on Foods and Keywords.')
+def disable_tree_sorting(modeladmin, request, queryset):
+    Food.node_order_by = []
+    Keyword.node_order_by = []
+
+
 @admin.action(description='Fix problems and sort tree by name')
 def sort_tree(modeladmin, request, queryset):
     orginal_value = modeladmin.model.node_order_by[:]
     modeladmin.model.node_order_by = ['name']
     with scopes_disabled():
-        Keyword.fix_tree(fix_paths=True)
+        modeladmin.model.fix_tree(fix_paths=True)
     modeladmin.model.node_order_by = orginal_value
 
 
 class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
-    actions = [sort_tree]
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
 admin.site.register(Keyword, KeywordAdmin)
@@ -148,7 +163,7 @@ admin.site.register(Unit)
 class FoodAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
-    actions = [sort_tree]
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
 admin.site.register(Food, FoodAdmin)
