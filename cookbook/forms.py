@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import widgets
+from django.forms import widgets, NumberInput
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
@@ -390,10 +390,12 @@ class UserCreateForm(forms.Form):
 
 class SearchPreferenceForm(forms.ModelForm):
     prefix = 'search'
+    trigram_threshold = forms.DecimalField(min_value=0.01, max_value=1, decimal_places=2, widget=NumberInput(attrs={'class': "form-control-range", 'type': 'range'}),
+                                           help_text=_('Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
 
     class Meta:
         model = SearchPreference
-        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext')
+        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
 
         help_texts = {
             'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
@@ -402,7 +404,7 @@ class SearchPreferenceForm(forms.ModelForm):
             'icontains': _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
             'istartswith': _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
             'trigram': _("Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
-            'fulltext': _("Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields.")
+            'fulltext': _("Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields."),
         }
 
         labels = {

@@ -873,6 +873,7 @@ class SearchPreference(models.Model, PermissionModelMixin):
     istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
     trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
     fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
+    trigram_threshold = models.DecimalField(default=0.1, decimal_places=2, max_digits=3)
 
 
 class UserFile(ExportModelOperationsMixin('user_files'), models.Model, PermissionModelMixin):

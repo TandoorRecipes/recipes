@@ -366,6 +366,7 @@ def user_settings(request):
                     sp.istartswith.set(search_form.cleaned_data['istartswith'])
                     sp.trigram.set(search_form.cleaned_data['trigram'])
                     sp.fulltext.set(search_form.cleaned_data['fulltext'])
+                    sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
 
                     sp.save()
     if up:
