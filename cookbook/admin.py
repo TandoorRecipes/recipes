@@ -91,10 +91,11 @@ admin.site.register(SyncLog, SyncLogAdmin)
 
 @admin.action(description='Fix problems and sort tree by name')
 def sort_tree(modeladmin, request, queryset):
+    orginal_value = modeladmin.model.node_order_by[:]
     modeladmin.model.node_order_by = ['name']
     with scopes_disabled():
         Keyword.fix_tree(fix_paths=True)
-    modeladmin.model.node_order_by = []
+    modeladmin.model.node_order_by = orginal_value
 
 
 class KeywordAdmin(TreeAdmin):
