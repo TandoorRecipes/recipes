@@ -176,31 +176,11 @@ export const ApiMixin = {
     methods: {
         genericAPI: function(model, action, options) {
             let setup = getConfig(model, action)
+            if (setup?.config?.function) {
+                return specialCases[setup.config.function](action, options, setup)
+            }
             let func = setup.function
-            let config = setup?.config ?? {}
-            let params = setup?.params ?? []
-            let parameters = []
-            let this_value = undefined
-            params.forEach(function (item, index) {
-                if (Array.isArray(item)) {
-                    this_value = {}
-                    // if the value is an array, convert it to a dictionary of key:value
-                    // filtered based on OPTIONS passed
-                    // maybe map/reduce is better?
-                    for (const [k, v] of Object.entries(options)) {
-                        if (item.includes(k)) {
-                            this_value[k] = formatParam(config?.[k], v, options)
-                        }
-                    }
-                } else {
-                    this_value = formatParam(config?.[item], options?.[item] ?? undefined, options)
-                }
-                // if no value is found so far, get the default if it exists
-                if (this_value === undefined) {
-                    this_value = getDefault(config?.[item], options)
-                }
-                parameters.push(this_value)
-            });
+            let parameters = buildParams(options, setup)
             let apiClient = new ApiApiFactory()
             return apiClient[func](...parameters)
         },
@@ -247,6 +227,33 @@ function formatParam(config, value, options) {
         }
     } 
     return value
+}
+function buildParams(options, setup) {
+    let config = setup?.config ?? {}
+    let params = setup?.params ?? []
+    let parameters = []
+    let this_value = undefined
+    params.forEach(function (item, index) {
+        if (Array.isArray(item)) {
+            this_value = {}
+            // if the value is an array, convert it to a dictionary of key:value
+            // filtered based on OPTIONS passed
+            // maybe map/reduce is better?
+            for (const [k, v] of Object.entries(options)) {
+                if (item.includes(k)) {
+                    this_value[k] = formatParam(config?.[k], v, options)
+                }
+            }
+        } else {
+            this_value = formatParam(config?.[item], options?.[item] ?? undefined, options)
+        }
+        // if no value is found so far, get the default if it exists
+        if (this_value === undefined) {
+            this_value = getDefault(config?.[item], options)
+        }
+        parameters.push(this_value)
+    });
+    return parameters
 }
 function getDefault(config, options) {
     let value = undefined
@@ -429,29 +436,59 @@ export const CardMixin = {
 
 
 const specialCases = {
-    handleSuperMarketCategory: function(updatedRelationships, supermarket) {
-        let API = ApiMixin.methods.genericAPI
-        if (updatedRelationships.length === 0) {
-            return
+    // the supermarket API requires chaining promises together, instead of trying to make
+    // this use case generic just treat it as a unique use case
+    SupermarketWithCategories: function(action, options, setup) {
+        let API = undefined
+        let GenericAPI = ApiMixin.methods.genericAPI
+        let params = []
+        if (action.function === 'partialUpdate') {
+            API = GenericAPI
+            params = [Models.SUPERMARKET, Actions.FETCH, {'id': options.id}]
+            
+        } else if (action.function === 'create') {
+            API = new ApiApiFactory()[setup.function]
+            params = buildParams(options, setup)
         }
-        // get current relationship mappings
-        API(Models.SUPERMARKET, Actions.FETCH, {'id': supermarket.id}).then((result) => {
-            let currentRelationships = result.data.category_to_supermarket
-            let removed = currentRelationships.map(x => x.id).filter(x => !updatedRelationships.map(x => x.id).includes(x))
-            removed.forEach(x => {
-                API(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, {'id': x})//.then((result)=> console.log('delete', result))
+
+        return API(...params).then((result) => {
+            // either get the supermarket or create the supermarket (but without the category relations)
+            return result.data
+        }).then((result) => {
+            // delete, update or change all of the category/relations
+            let id = result.id
+            let existing_categories = result.category_to_supermarket
+            let updated_categories = options.category_to_supermarket
+            
+            let promises = []
+            // if the 'category.name' key does not exist on the updated_categories, the categories were not updated
+            if (updated_categories?.[0]?.category?.name) {
+                // list of category relationship ids that are not part of the updated supermarket
+                let removed_categories = existing_categories.filter(x => !updated_categories.map(x => x.category.id).includes(x.category.id))
+                let added_categories = updated_categories.filter(x => !existing_categories.map(x => x.category.id).includes(x.category.id))
+                let changed_categories = updated_categories.filter(x => existing_categories.map(x => x.category.id).includes(x.category.id))
+                
+                removed_categories.forEach(x => {
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, {'id': x.id}))
+                })
+                let item = {'supermarket': id}
+                added_categories.forEach(x => {
+                    item.order = x.order
+                    item.category = {'id': x.category.id, 'name': x.category.name}
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item))
+                })
+                changed_categories.forEach(x => {
+                    item.id = x?.id ?? existing_categories.find(y => y.category.id === x.category.id).id;
+                    item.order = x.order
+                    item.category = {'id': x.category.id, 'name': x.category.name}
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item))
+                })
+            }
+            
+            return Promise.all(promises).then(() => {
+                // finally get and return the Supermarket which everything downstream is expecting
+                return GenericAPI(Models.SUPERMARKET, Actions.FETCH, {'id': id})
             })
-            let item = {'supermarket': supermarket.id}
-            updatedRelationships.forEach(x => {
-                item.order = x.order
-                item.category = {'id': x.category.id, 'name': x.category.name}
-                if (x.id) {
-                    item.id = x.id
-                    API(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item)//.then((result)=> console.log('update', result))
-                } else {
-                    API(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item)//.then((result)=> console.log('create', result))
-                }
-            })
-        })        
+        })
     }
 }
