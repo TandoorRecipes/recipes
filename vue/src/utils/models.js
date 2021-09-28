@@ -284,9 +284,14 @@ export class Models {
                 },
             },
             'config': {
-                'category_to_supermarket': {'function': 'handleSuperMarketCategory'}
+                'function': 'SupermarketWithCategories',
             }
         },
+        'partialUpdate': {
+            'config': {
+                'function': 'SupermarketWithCategories',
+            }
+        }
     }
 
     static AUTOMATION = {
