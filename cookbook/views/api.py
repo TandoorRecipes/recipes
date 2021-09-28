@@ -189,9 +189,14 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                         # a new scenario exists and needs to be handled
                         raise NotImplementedError
                 if isTree:
+                    if self.model.node_order_by:
+                        node_location = 'sorted-child'
+                    else:
+                        node_location = 'last-child'
+
                     children = source.get_children().exclude(id=target.id)
                     for c in children:
-                        c.move(target, 'last-child')
+                        c.move(target, node_location)
                 content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
@@ -232,6 +237,10 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def move(self, request, pk, parent):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
+        if self.model.node_order_by:
+            node_location = 'sorted'
+        else:
+            node_location = 'last'
 
         try:
             child = self.model.objects.get(pk=pk, space=self.request.space)
@@ -244,7 +253,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         if parent == 0:
             try:
                 with scopes_disabled():
-                    child.move(self.model.get_first_root_node(), 'last-sibling')
+                    child.move(self.model.get_first_root_node(), f'{node_location}-sibling')
                 content = {'msg': _(f'{child.name} was moved successfully to the root.')}
                 return Response(content, status=status.HTTP_200_OK)
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
@@ -262,7 +271,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 
         try:
             with scopes_disabled():
-                child.move(parent, 'last-child')
+                child.move(parent, f'{node_location}-child')
             content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
             return Response(content, status=status.HTTP_200_OK)
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):

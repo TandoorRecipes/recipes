@@ -19,7 +19,7 @@ from treebeard.mp_tree import MP_Node, MP_NodeManager
 from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
-                              STICKY_NAV_PREF_DEFAULT)
+                              STICKY_NAV_PREF_DEFAULT, SORT_TREE_BY_NAME)
 
 
 def get_user_name(self):
@@ -335,8 +335,8 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 
 class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelMixin):
-    # TODO add find and fix problem functions
-    # node_order_by = ['name']
+    if SORT_TREE_BY_NAME:
+        node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
@@ -370,8 +370,8 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
-    # TODO add find and fix problem functions
-    # node_order_by = ['name']
+    if SORT_TREE_BY_NAME:
+        node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)

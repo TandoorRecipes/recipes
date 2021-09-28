@@ -73,6 +73,7 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
+SORT_TREE_BY_NAME = os.getenv('IMPRINT_URL', 1)
 
 HOSTED = bool(int(os.getenv('HOSTED', False)))
 

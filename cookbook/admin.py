@@ -89,7 +89,7 @@ class SyncLogAdmin(admin.ModelAdmin):
 admin.site.register(SyncLog, SyncLogAdmin)
 
 
-@admin.action(description='Sort tree by name')
+@admin.action(description='Fix problems and sort tree by name')
 def sort_tree(modeladmin, request, queryset):
     modeladmin.model.node_order_by = ['name']
     with scopes_disabled():
