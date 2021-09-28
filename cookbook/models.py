@@ -43,8 +43,7 @@ class TreeManager(MP_NodeManager):
         try:
             return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
-            with scopes_disabled():
-                return self.model.add_root(**kwargs), True
+            return self.model.add_root(**kwargs), True
 
 
 class TreeModel(MP_Node):
@@ -353,6 +352,13 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
         indexes = (Index(fields=['id', 'name']),)
 
 
+# when starting up run fix_tree to:
+#   a) make sure that nodes are sorted when switching between sort modes
+#   b) fix problems, if any, with tree consistency
+with scopes_disabled():
+    Keyword.fix_tree(fix_paths=True)
+
+
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
@@ -398,6 +404,13 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             Index(fields=['id']),
             Index(fields=['name']),
         )
+
+
+# when starting up run fix_tree to:
+#   a) make sure that nodes are sorted when switching between sort modes
+#   b) fix problems, if any, with tree consistency
+with scopes_disabled():
+    Food.fix_tree(fix_paths=True)
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -793,7 +806,7 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
     class Meta():
         indexes = (
             Index(fields=['recipe']),
-            Index(fields=[ '-created_at']),
+            Index(fields=['-created_at']),
             Index(fields=['created_by']),
             Index(fields=['recipe', '-created_at', 'created_by']),
         )
