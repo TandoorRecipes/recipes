@@ -10,14 +10,14 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 from django_scopes import scopes_disabled
 
-from cookbook.forms import (CommentForm, ExternalRecipeForm, FoodForm,
-                            FoodMergeForm, KeywordForm, MealPlanForm,
-                            RecipeBookForm, StorageForm, SyncForm,
-                            UnitMergeForm)
+from cookbook.forms import (CommentForm, ExternalRecipeForm,
+                            MealPlanForm,
+                            StorageForm, SyncForm,
+                            )
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                OwnerRequiredMixin,
                                                group_required)
-from cookbook.models import (Comment, Food, Ingredient, Keyword, MealPlan,
+from cookbook.models import (Comment, Ingredient, MealPlan,
                              MealType, Recipe, RecipeBook, RecipeImport,
                              Storage, Sync, UserPreference)
 from cookbook.provider.dropbox import Dropbox
@@ -56,9 +56,7 @@ def internal_recipe_update(request, pk):
 
     recipe_instance = get_object_or_404(Recipe, pk=pk, space=request.space)
 
-    return render(
-        request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance}
-    )
+    return render(request, 'forms/edit_internal_recipe.html', {'recipe': recipe_instance})
 
 
 class SpaceFormMixing(FormMixin):
@@ -86,38 +84,38 @@ class SyncUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
         return context
 
 
-class KeywordUpdate(GroupRequiredMixin, UpdateView):
-    groups_required = ['user']
-    template_name = "generic/edit_template.html"
-    model = Keyword
-    form_class = KeywordForm
+# class KeywordUpdate(GroupRequiredMixin, UpdateView):
+#     groups_required = ['user']
+#     template_name = "generic/edit_template.html"
+#     model = Keyword
+#     form_class = KeywordForm
 
-    # TODO add msg box
+#     # TODO add msg box
 
-    def get_success_url(self):
-        return reverse('list_keyword')
+#     def get_success_url(self):
+#         return reverse('list_keyword')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _("Keyword")
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = _("Keyword")
+#         return context
 
 
-class FoodUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
-    groups_required = ['user']
-    template_name = "generic/edit_template.html"
-    model = Food
-    form_class = FoodForm
+# class FoodUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
+#     groups_required = ['user']
+#     template_name = "generic/edit_template.html"
+#     model = Food
+#     form_class = FoodForm
 
-    # TODO add msg box
+#     # TODO add msg box
 
-    def get_success_url(self):
-        return reverse('edit_food', kwargs={'pk': self.object.pk})
+#     def get_success_url(self):
+#         return reverse('edit_food', kwargs={'pk': self.object.pk})
 
-    def get_context_data(self, **kwargs):
-        context = super(FoodUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Food")
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super(FoodUpdate, self).get_context_data(**kwargs)
+#         context['title'] = _("Food")
+#         return context
 
 
 @group_required('admin')
@@ -200,20 +198,6 @@ class ImportUpdate(GroupRequiredMixin, UpdateView):
         return context
 
 
-class RecipeBookUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
-    template_name = "generic/edit_template.html"
-    model = RecipeBook
-    form_class = RecipeBookForm
-
-    def get_success_url(self):
-        return reverse('view_books')
-
-    def get_context_data(self, **kwargs):
-        context = super(RecipeBookUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Recipe Book")
-        return context
-
-
 class MealPlanUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
     template_name = "generic/edit_template.html"
     model = MealPlan
@@ -277,50 +261,3 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
                 'delete_recipe_source', args=[self.object.pk]
             )
         return context
-
-
-@group_required('user')
-def edit_ingredients(request):
-    if request.method == "POST":
-        success = False
-        units_form = UnitMergeForm(request.POST, prefix=UnitMergeForm.prefix, space=request.space)
-        if units_form.is_valid():
-            new_unit = units_form.cleaned_data['new_unit']
-            old_unit = units_form.cleaned_data['old_unit']
-            if new_unit != old_unit:
-                with scopes_disabled():
-                    recipe_ingredients = Ingredient.objects.filter(unit=old_unit).filter(Q(step__recipe__space=request.space) | Q(step__recipe__isnull=True)).all()
-                    for i in recipe_ingredients:
-                        i.unit = new_unit
-                        i.save()
-
-                    old_unit.delete()
-                    success = True
-                    messages.add_message(request, messages.SUCCESS, _('Units merged!'))
-            else:
-                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
-
-        food_form = FoodMergeForm(request.POST, prefix=FoodMergeForm.prefix, space=request.space)
-        if food_form.is_valid():
-            new_food = food_form.cleaned_data['new_food']
-            old_food = food_form.cleaned_data['old_food']
-            if new_food != old_food:
-                ingredients = Ingredient.objects.filter(food=old_food).filter(Q(step__recipe__space=request.space) | Q(step__recipe__isnull=True)).all()
-                for i in ingredients:
-                    i.food = new_food
-                    i.save()
-
-                old_food.delete()
-                success = True
-                messages.add_message(request, messages.SUCCESS, _('Foods merged!'))
-            else:
-                messages.add_message(request, messages.ERROR, _('Cannot merge with the same object!'))
-
-        if success:
-            units_form = UnitMergeForm(space=request.space)
-            food_form = FoodMergeForm(space=request.space)
-    else:
-        units_form = UnitMergeForm(space=request.space)
-        food_form = FoodMergeForm(space=request.space)
-
-    return render(request, 'forms/ingredients.html', {'units_form': units_form, 'food_form': food_form})

@@ -273,7 +273,7 @@ def test_integrity(u1_s1, recipe_1_s1):
         )
     )
     assert r.status_code == 204
-    
+
     with scopes_disabled():
         assert Food.objects.count() == 9
         assert Ingredient.objects.count() == 9
@@ -327,7 +327,6 @@ def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
         assert Food.find_problems() == ([], [], [], [], [])
 
 
-# this seems overly long - should it be broken into smaller pieces?
 def test_merge(
     u1_s1,
     obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3,
@@ -430,7 +429,7 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert len(response['results']) == 2
 
     with scopes_disabled():
-        obj_2.move(obj_1, 'sorted-child')
+        obj_2.move(obj_1, 'last-child')
     # should return direct children of obj_1 (obj_1_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={obj_1.id}').content)
     assert response['count'] == 2
@@ -440,7 +439,7 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
 
 def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     with scopes_disabled():
-        obj_2.move(obj_1, 'sorted-child')
+        obj_2.move(obj_1, 'last-child')
     # should return full tree starting at obj_1 (obj_1_1_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}').content)
     assert response['count'] == 4

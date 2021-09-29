@@ -3,15 +3,11 @@
   <div>
     <b-modal class="modal" :id="`id_modal_add_book_${modal_id}`" :title="$t('Manage_Books')" :ok-title="$t('Add')"
              :cancel-title="$t('Close')" @ok="addToBook()" @shown="loadBookEntries">
-
-      <table>
-        <tr v-for="be in this.recipe_book_list" v-bind:key="be.id">
-          <td>
-            <button class="btn btn-sm btn-danger" @click="removeFromBook(be)"><i class="fa fa-trash-alt"></i></button>
-          </td>
-          <td> {{ be.book_content.name }}</td>
-        </tr>
-      </table>
+      <ul class="list-group">
+          <li  class="list-group-item d-flex justify-content-between align-items-center" v-for="be in this.recipe_book_list" v-bind:key="be.id">
+            {{ be.book_content.name }} <span class="btn btn-sm btn-danger" @click="removeFromBook(be)"><i class="fa fa-trash-alt"></i></span>
+          </li>
+        </ul>
 
       <multiselect
           style="margin-top: 1vh"

@@ -31,6 +31,7 @@ class Integration:
         """
         self.request = request
         self.export_type = export_type
+        self.ignored_recipes = []
 
         description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
         icon = '📥'
@@ -157,9 +158,10 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
+                                traceback.print_exc()
                                 self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
-                    elif '.json' in f['name'] or '.txt' in f['name']:
+                    elif '.json' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         il.total_recipes += len(data_list)
                         for d in data_list:

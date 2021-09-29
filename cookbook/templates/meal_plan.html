@@ -46,7 +46,8 @@
                 <table class="table table-sm table-striped table-responsive-sm" style=" table-layout:fixed;">
                     <thead class="thead-dark" style="background-image: url({% static 'assets/header.svg' %});">
                     <tr>
-                        <th class="thead-blank" v-for="d in dates" style="width: 14.2%; text-align: center;">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
+                        <th class="thead-blank" v-for="d in dates" style="width: 14.2%; text-align: center;">
+                            [[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
                             <button class="btn btn-sm btn-outline-secondary shadow-none" @click="addDayToShopping(d)"><i
                                     class="fas fa-cart-plus fa-sm"></i></button>
                         </th>
@@ -460,7 +461,7 @@
                             this.$set(mte, 'delete', false)
                         }
 
-                        if (this.meal_types.length === 0){
+                        if (this.meal_types.length === 0) {
                             this.makeToast(gettext('Information'), gettext('To use the meal plan please first create at least one meal plan type.'), 'warning')
                         }
                     }).catch((err) => {
@@ -552,7 +553,7 @@
                         let plan_entry = evt.added.element
 
                         plan_entry.date = date
-                        plan_entry.meal_type = meal_type.id
+                        plan_entry.meal_type = meal_type
                         plan_entry.meal_type_name = meal_type.name
 
                         if (plan_entry.is_new) { // its not a meal plan object
@@ -567,7 +568,6 @@
                                 console.log("dragChanged create error", err);
                             })
                         } else {
-                            console.log(plan_entry)
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
@@ -585,7 +585,7 @@
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
                 },
-                removeDuplicates: function(data, key) {
+                removeDuplicates: function (data, key) {
                     return [
                         ...new Map(data.map(item => [key(item), item])).values()
                     ]

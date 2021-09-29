@@ -10,8 +10,8 @@ from cookbook.helper import dal
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
-                     Storage, Sync, SyncLog, get_model_name)
-from .views import api, data, delete, edit, import_export, lists, trees, new, views, telegram
+                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, get_model_name, Automation)
+from .views import api, data, delete, edit, import_export, lists, new, views, telegram
 
 router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
@@ -40,6 +40,7 @@ router.register(r'supermarket-category-relation', api.SupermarketCategoryRelatio
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 router.register(r'user-file', api.UserFileViewSet)
+router.register(r'automation', api.AutomationViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -57,6 +58,7 @@ urlpatterns = [
     path('search/v2/', views.search_v2, name='view_search_v2'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
+    path('plan_new/', views.meal_plan_new, name='view_plan_new'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
@@ -87,7 +89,6 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('edit/ingredient/', edit.edit_ingredients, name='edit_food'),  # TODO is this still needed?
 
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
@@ -108,8 +109,9 @@ urlpatterns = [
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
+    path('api/get_facets/', api.get_facets, name='api_get_facets'),
 
-    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated?
+    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
 
@@ -176,12 +178,12 @@ for m in generic_models:
             )
         )
 
-tree_models = [Keyword, Food]
-for m in tree_models:
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation]
+for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')
 
-    if c := getattr(trees, py_name, None):
+    if c := getattr(lists, py_name, None):
         urlpatterns.append(
             path(
                 f'list/{url_name}/', c, name=f'list_{py_name}'

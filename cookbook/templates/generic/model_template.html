@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+{% load i18n %}
+{% comment %} {% load l10n %} {% endcomment %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content_fluid %}
+
+    <div id="app" >
+        <food-list-view></food-list-view>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    {{ config | json_script:"model_config" }}
+    
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
+
+    <script type="application/javascript">
+        window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
+    </script>
+
+    {% render_bundle 'model_list_view' %}
+{% endblock %}

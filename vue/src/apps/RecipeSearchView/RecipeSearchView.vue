@@ -10,7 +10,7 @@
                   <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input"
                            v-bind:placeholder="$t('Search')"></b-input>
                   <b-input-group-append>
-                    <b-button variant="light" 
+                    <b-button variant="light"
                       v-b-tooltip.hover :title="$t('Random Recipes')"
                       @click="openRandom()">
                       <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
@@ -23,7 +23,7 @@
                       <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
                       <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
                     </b-button>
-                    
+
                   </b-input-group-append>
                 </b-input-group>
               </div>
@@ -93,8 +93,6 @@
                         ></b-form-input>
                       </b-form-group>
 
-
-
                       <b-form-group
                           v-bind:label="$t('Meal_Plan')"
                           label-for="popover-input-2"
@@ -148,6 +146,7 @@
                     </div>
                   </b-popover>
 
+                  <!-- keywords filter -->
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
@@ -169,6 +168,7 @@
                     </div>
                   </div>
 
+                  <!-- foods filter -->
                   <div class="row">
                     <div class="col-12">
                       <b-input-group class="mt-2">
@@ -190,12 +190,13 @@
                     </div>
                   </div>
 
+                  <!-- books filter -->
                   <div class="row">
                     <div class="col-12">
-                      <b-input-group class="mt-2" v-if="models">
+                      <b-input-group class="mt-2">
                         <generic-multiselect @change="genericSelectChanged" parent_variable="search_books"
                                              :initial_selection="settings.search_books"
-                                             :model="models.RECIPE_BOOK"
+                                             :model="Models.RECIPE_BOOK"
                                              style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                              v-bind:placeholder="$t('Books')" :limit="50"></generic-multiselect>
                         <b-input-group-append>
@@ -206,6 +207,22 @@
                               <span class="text-uppercase" v-if="settings.search_books_or">{{ $t('or') }}</span>
                               <span class="text-uppercase" v-else>{{ $t('and') }}</span>
                             </b-form-checkbox>
+                          </b-input-group-text>
+                        </b-input-group-append>
+                      </b-input-group>
+                    </div>
+                  </div>
+
+                  <!-- ratings filter -->
+                  <div class="row">
+                    <div class="col-12">
+                      <b-input-group class="mt-2">
+                        <treeselect v-model="settings.search_ratings" :options="ratingOptions" :flat="true"
+                                    :placeholder="$t('Ratings')" :searchable="false"
+                                    @input="refreshData(false)"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"/>
+                        <b-input-group-append>
+                          <b-input-group-text style="width:85px">
                           </b-input-group-text>
                         </b-input-group-append>
                       </b-input-group>
@@ -234,14 +251,13 @@
           <div class="col col-md-12">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 0.8rem;" >
 
-              <template
-                  v-if="settings.search_input === '' && settings.search_keywords.length === 0 &&  settings.search_foods.length === 0  && settings.search_books.length === 0 && this.settings.pagination_page === 1 && !random_search">
+              <template v-if="!searchFiltered">
                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe"
                              :meal_plan="m" :footer_text="m.meal_type_name"
                              footer_icon="far fa-calendar-alt"></recipe-card>
               </template>
-              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
-                             :footer_text="isRecentOrNew(r)[0]" 
+              <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r" 
+                             :footer_text="isRecentOrNew(r)[0]"
                              :footer_icon="isRecentOrNew(r)[1]">
               </recipe-card>
             </div>
@@ -281,12 +297,10 @@ import VueCookies from 'vue-cookies'
 
 Vue.use(VueCookies)
 
-import {ResolveUrlMixin} from "@/utils/utils";
-import {Models} from "@/utils/models";
+import {ApiMixin, ResolveUrlMixin} from "@/utils/utils";
 
 import LoadingSpinner from "@/components/LoadingSpinner"; // is this deprecated?
 
-import {ApiApiFactory} from "@/utils/openapi/api.ts";
 import RecipeCard from "@/components/RecipeCard";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import Treeselect from '@riophae/vue-treeselect'
@@ -298,12 +312,13 @@ let SETTINGS_COOKIE_NAME = 'search_settings'
 
 export default {
   name: 'RecipeSearchView',
-  mixins: [ResolveUrlMixin],
+  mixins: [ResolveUrlMixin, ApiMixin],
   components: {GenericMultiselect, RecipeCard, Treeselect},
   data() {
     return {
+      // this.Models and this.Actions inherited from ApiMixin
       recipes: [],
-      facets: [],
+      facets: {},
       meal_plans: [],
       last_viewed_recipes: [],
 
@@ -314,6 +329,7 @@ export default {
         search_keywords: [],
         search_foods: [],
         search_books: [],
+        search_ratings: undefined,
 
         search_keywords_or: true,
         search_foods_or: true,
@@ -328,37 +344,67 @@ export default {
       },
 
       pagination_count: 0,
-      random_search: false,
-      models: Models
+      random_search: false
     }
 
+  },
+  computed: {
+    ratingOptions: function () {
+      return [
+        {'id': 5, 'label': '⭐⭐⭐⭐⭐' + ' (' + (this.facets.Ratings?.['5.0'] ?? 0) + ')' },
+        {'id': 4, 'label': '⭐⭐⭐⭐ ' + this.$t('and_up') + ' (' + (this.facets.Ratings?.['4.0'] ?? 0) + ')' },
+        {'id': 3, 'label': '⭐⭐⭐ ' + this.$t('and_up') + ' (' + (this.facets.Ratings?.['3.0'] ?? 0) + ')' },
+        {'id': 2, 'label': '⭐⭐ ' + this.$t('and_up') + ' (' + (this.facets.Ratings?.['2.0'] ?? 0) + ')' },
+        {'id': 1, 'label': '⭐ ' + this.$t("and_up") + ' (' + (this.facets.Ratings?.['1.0'] ?? 0) + ')' },
+        {'id': -1, 'label': this.$t('Unrated') + ' (' + (this.facets.Ratings?.['0.0'] ?? 0 )+ ')'},
+      ]
+    },
+    searchFiltered: function () {
+      if (
+        this.settings?.search_input === ''
+        && this.settings?.search_keywords?.length  === 0
+        && this.settings?.search_foods?.length  === 0 
+        && this.settings?.search_books?.length === 0
+        && this.settings?.pagination_page === 1
+        && !this.random_search
+        && this.settings?.search_ratings === undefined
+      ) {
+        return false
+      } else {
+        return true
+      }
+    },
   },
   mounted() {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
         this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
-        this.refreshData(false)
       }
-
       let urlParams = new URLSearchParams(window.location.search);
-      let apiClient = new ApiApiFactory()
 
       if (urlParams.has('keyword')) {
         this.settings.search_keywords = []
+        this.facets.Keywords = []
         for (let x of urlParams.getAll('keyword')) {
-          let keyword = {id: x, name: 'loading'}
-          this.settings.search_keywords.push(keyword.id)
-          apiClient.retrieveKeyword(x).then(result => {
-            this.$set(this.settings.search_keywords, this.settings.search_keywords.indexOf(keyword), result.data)
-          })
+          this.settings.search_keywords.push(Number.parseInt(x))
+          this.facets.Keywords.push({'id':x, 'name': 'loading...'})
         }
       }
-
+      this.facets.Foods = []
+      for (let x of this.settings.search_foods) {
+        this.facets.Foods.push({'id':x, 'name': 'loading...'})
+      }
+      this.facets.Keywords = []
+      for (let x of this.settings.search_keywords) {
+        this.facets.Keywords.push({'id':x, 'name': 'loading...'})
+      }
+      this.facets.Books = []
+      for (let x of this.settings.search_books) {
+        this.facets.Books.push({'id':x, 'name': 'loading...'})
+      }
       this.loadMealPlan()
-      // this.loadRecentlyViewed()
       this.refreshData(false)
     })
-
     this.$i18n.locale = window.CUSTOM_LOCALE
   },
   watch: {
@@ -375,7 +421,6 @@ export default {
       this.loadMealPlan()
     },
     'settings.recently_viewed': function () {
-      // this.loadRecentlyViewed()
       this.refreshData(false)
     },
     'settings.search_input': _debounce(function () {
@@ -388,33 +433,44 @@ export default {
     }, 300),
   },
   methods: {
+    // this.genericAPI inherited from ApiMixin
     refreshData: function (random) {
       this.random_search = random
-      let apiClient = new ApiApiFactory()
-
-      apiClient.listRecipes(
-          this.settings.search_input,
-          this.settings.search_keywords,
-          this.settings.search_foods,
-          this.settings.search_books.map(function (A) {
-            return A["id"];
-          }),
-          this.settings.search_keywords_or,
-          this.settings.search_foods_or,
-          this.settings.search_books_or,
-
-          this.settings.search_internal,
-          random,
-          this.settings.sort_by_new,
-          this.settings.pagination_page,
-          this.settings.page_count,
-          {query: {last_viewed: this.settings.recently_viewed}}
-      ).then(result => {
-        
+      let params = {
+        'query': this.settings.search_input,
+        'keywords': this.settings.search_keywords,
+        'foods': this.settings.search_foods,
+        'rating': this.settings.search_ratings,
+        'books': this.settings.search_books.map(function (A) {
+          return A["id"];
+        }),
+        'keywordsOr': this.settings.search_keywords_or,
+        'foodsOr': this.settings.search_foods_or,
+        'booksOr': this.settings.search_books_or,
+        'internal': this.settings.search_internal,
+        'random': this.random_search,
+        '_new': this.settings.sort_by_new,
+        'page': this.settings.pagination_page,
+        'pageSize': this.settings.page_count
+      }
+      if (!this.searchFiltered) {
+        params.options = {'query':{'last_viewed': this.settings.recently_viewed}}
+      }
+      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then(result => {
         window.scrollTo(0, 0);
         this.pagination_count = result.data.count
-        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
+        
         this.facets = result.data.facets
+        if(this.facets?.cache_key) {
+          this.getFacets(this.facets.cache_key)
+        }
+        this.recipes = this.removeDuplicates(result.data.results, recipe => recipe.id)
+        if (!this.searchFiltered){
+          // if meal plans are being shown - filter out any meal plan recipes from the recipe list
+          let mealPlans = []
+          this.meal_plans.forEach(x => mealPlans.push(x.recipe.id))
+          this.recipes = this.recipes.filter(recipe => !mealPlans.includes(recipe.id))
+        }
       })
     },
     openRandom: function () {
@@ -426,32 +482,20 @@ export default {
       ]
     },
     loadMealPlan: function () {
-      let apiClient = new ApiApiFactory()
       if (this.settings.show_meal_plan) {
-        apiClient.listMealPlans({
-          query: {
-            from_date: moment().format('YYYY-MM-DD'),
-            to_date: moment().add(this.settings.meal_plan_days, 'days').format('YYYY-MM-DD')
-          }
-        }).then(result => {
+        let params = {
+          'options': {'query':{
+            'from_date': moment().format('YYYY-MM-DD'),
+            'to_date': moment().add(this.settings.meal_plan_days, 'days').format('YYYY-MM-DD')
+          }}
+        }
+        this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, params).then(result => {
           this.meal_plans = result.data
         })
       } else {
         this.meal_plans = []
       }
     },
-    // DEPRECATED: intergrated into standard FTS queryset
-    // loadRecentlyViewed: function () {
-    //   let apiClient = new ApiApiFactory()
-    //   if (this.settings.recently_viewed > 0) {
-    //     apiClient.listRecipes(undefined, undefined, undefined, undefined, undefined, undefined,
-    //         undefined, undefined, undefined, this.settings.sort_by_new, 1, this.settings.recently_viewed, {query: {last_viewed: this.settings.recently_viewed}}).then(result => {
-    //       this.last_viewed_recipes = result.data.results
-    //     })
-    //   } else {
-    //     this.last_viewed_recipes = []
-    //   }
-    // },
     genericSelectChanged: function (obj) {
       this.settings[obj.var] = obj.val
       this.refreshData(false)
@@ -462,6 +506,7 @@ export default {
       this.settings.search_keywords = []
       this.settings.search_foods = []
       this.settings.search_books = []
+      this.settings.search_ratings = undefined
       this.settings.pagination_page = 1
       this.refreshData(false)
     },
@@ -473,9 +518,10 @@ export default {
       return ((this.settings.search_keywords.length + this.settings.search_foods.length + this.settings.search_books.length) > 0)
     },
     normalizer(node) {
+      let count = (node?.count ? ' (' + node.count + ')' : '')
       return {
             id: node.id,
-            label: node.name + ' (' + node.count + ')',
+            label: node.name + count,
             children: node.children,
             isDefaultExpanded: node.isDefaultExpanded
         }
@@ -490,6 +536,11 @@ export default {
       } else {
         return [undefined, undefined]
       }
+    },
+    getFacets: function(hash) {
+      this.genericGetAPI('api_get_facets', {hash: hash}).then((response) => {
+        this.facets = {...this.facets, ...response.data.facets}
+      })
     }
   }
 }
