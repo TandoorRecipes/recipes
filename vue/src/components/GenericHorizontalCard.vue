@@ -1,43 +1,56 @@
 <template>
   <div row style="margin: 4px">
+    <!-- @[useDrag&&`dragover`] <== this syntax completely shuts off draggable  -->
     <b-card no-body d-flex flex-column :class="{'border border-primary' : over, 'shake': isError}"
-      style="height: 10vh;" :style="{'cursor:grab' : draggable}"
-      @dragover.prevent
-      @dragenter.prevent
-      :draggable="draggable"
-      @dragstart="handleDragStart($event)"
-      @dragenter="handleDragEnter($event)"
-      @dragleave="handleDragLeave($event)"
-      @drop="handleDragDrop($event)">
-      <b-row no-gutters style="height:inherit;">  
-        <b-col no-gutters md="3" style="height:inherit;">
-          <b-card-img-lazy style="object-fit: cover; height: 10vh;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
+      :style="{'cursor:grab' : useDrag}"
+      :draggable="useDrag"
+      @[useDrag&&`dragover`].prevent
+      @[useDrag&&`dragenter`].prevent
+      @[useDrag&&`dragstart`]="handleDragStart($event)"
+      @[useDrag&&`dragenter`]="handleDragEnter($event)"
+      @[useDrag&&`dragleave`]="handleDragLeave($event)"
+      @[useDrag&&`drop`]="handleDragDrop($event)">
+      <b-row no-gutters >  
+        <b-col no-gutters class="col-sm-3">
+          <b-card-img-lazy style="object-fit: cover; height: 6em;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
         </b-col>
-        <b-col no-gutters md="9" style="height:inherit;">
-            <b-card-body class="m-0 py-0" style="height:inherit;">
+        <b-col no-gutters class="col-sm-9">
+            <b-card-body class="m-0 py-0">
               <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                     <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
                     <div class= "m-0 text-truncate">{{ item[subtitle] }}</div>
-                    <div class="mt-auto mb-1 d-flex flex-row justify-content-end">
-                      <div v-if="item[child_count] !=0" class="mx-2 btn btn-link btn-sm" 
+                    <!-- <span>{{this_item[itemTags.field]}}</span> -->
+                    <generic-pill v-for="x in itemTags" :key="x.field"
+                      :item_list="item[x.field]"
+                      :label="x.label"
+                      :color="x.color"/>
+                    <generic-ordered-pill v-for="x in itemOrderedTags" :key="x.field"
+                      :item_list="item[x.field]"
+                      :label="x.label"
+                      :color="x.color"
+                      :field="x.field"
+                      :item="item"
+                      @finish-action="finishAction"/>
+                    <div class="mt-auto mb-1" align="right">
+                      <span v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" 
                         style="z-index: 800;" v-on:click="$emit('item-action',{'action':'get-children','source':item})">
-                          <div v-if="!item.show_children">{{ item[child_count] }} {{ item_type }}</div>
+                          <div v-if="!item.show_children">{{ item[child_count] }} {{ itemName }}</div>
                           <div v-else>{{ text.hide_children }}</div>
-                      </div>
-                      <div v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
+                      </span>
+                      <span v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800;"
                         v-on:click="$emit('item-action',{'action':'get-recipes','source':item})">
                         <div v-if="!item.show_recipes">{{ item[recipe_count] }} {{$t('Recipes')}}</div>
                         <div v-else>{{$t('Hide_Recipes')}}</div>
-                      </div>
+                      </span>
                     </div>
               </b-card-text>
             </b-card-body>
         </b-col>
         <div class="card-img-overlay justify-content-right h-25 m-0 p-0 text-right">
-          <slot name="upper-right"></slot>
+          <badges :item="item" :model="model"/>
           <generic-context-menu  class="p-0"
-            :show_merge="merge"
-            :show_move="move"
+            :show_merge="useMerge"
+            :show_move="useMove"
             @item-action="$emit('item-action', {'action': $event, 'source': item})">
           </generic-context-menu>
         </div>
@@ -45,26 +58,17 @@
     </b-card>
     <!-- recursively add child cards -->
     <div class="row" v-if="item.show_children">
-      <div class="col-md-11 offset-md-1">
+      <div class="col-md-10 offset-md-2">
         <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id"
-          :draggable="draggable"
           :item="child"
-          :item_type="item_type"
-          :title="title"
-          :subtitle="subtitle"
-          :child_count="child_count"
-          :children="children"
-          :recipe_count="recipe_count"
-          :recipes="recipes"
-          :merge="merge"
-          :move="move"
+          :model="model"
           @item-action="$emit('item-action', $event)">
         </generic-horizontal-card>
       </div>
     </div>
     <!-- conditionally view recipes -->
     <div class="row" v-if="item.show_recipes">
-      <div class="col-md-11 offset-md-1">
+      <div class="col-md-10 offset-md-2">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
           <recipe-card v-for="r in item[recipes]" 
             v-bind:key="r.id"
@@ -75,14 +79,17 @@
     </div>
     <!-- this should be made a generic component, would also require mixin for functions that generate the popup and put in parent container-->  
     <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:9999; cursor:pointer">
-      <b-list-group-item v-if="move" action v-on:click="$emit('item-action',{'action': 'move', 'target': item, 'source': source}); closeMenu()">
-        <i class="fas fa-expand-arrows-alt fa-fw"></i> {{$t('Move')}}: {{$t('move_confirmation', {'child': source.name,'parent':item.name})}}
+      <b-list-group-item v-if="useMove" action v-on:click="$emit('item-action',{'action': 'move', 'target': item, 'source': source}); closeMenu()">
+        <i class="fas fa-expand-arrows-alt fa-fw"></i> <b>{{$t('Move')}}</b>: <span v-html="$t('move_confirmation', {'child': source.name,'parent':item.name})"></span>
       </b-list-group-item>
-      <b-list-group-item v-if="merge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': item, 'source': source}); closeMenu()">
-        <i class="fas fa-compress-arrows-alt fa-fw"></i> {{$t('Merge')}}: {{ $t('merge_confirmation', {'source': source.name,'target':item.name}) }}
+      <b-list-group-item v-if="useMerge" action v-on:click="$emit('item-action',{'action': 'merge', 'target': item, 'source': source}); closeMenu()">
+        <i class="fas fa-compress-arrows-alt fa-fw"></i> <b>{{$t('Merge')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span>
+      </b-list-group-item>
+      <b-list-group-item v-if="useMerge" action v-on:click="$emit('item-action',{'action': 'merge-automate', 'target': item, 'source': source}); closeMenu()">
+       <i class="fas fa-robot fa-fw"></i> <b>{{$t('Merge')}} & {{$t('Automate')}}</b>: <span v-html="$t('merge_confirmation', {'source': source.name,'target':item.name})"></span> {{$t('create_rule')}} <b-badge v-b-tooltip.hover :title="$t('warning_feature_beta')" >BETA</b-badge>
       </b-list-group-item>
       <b-list-group-item action v-on:click="closeMenu()">
-        {{$t('Cancel')}}
+        <i class="fas fa-times fa-fw"></i> <b>{{$t('Cancel')}}</b>
       </b-list-group-item>
       <!-- TODO add to shopping list -->
       <!-- TODO add to and/or manage pantry -->
@@ -92,26 +99,26 @@
 
 <script>
 import GenericContextMenu from "@/components/GenericContextMenu";
+import Badges from "@/components/Badges";
+import GenericPill from "@/components/GenericPill";
+import GenericOrderedPill from "@/components/GenericOrderedPill";
 import RecipeCard from "@/components/RecipeCard";
 import { mixin as clickaway } from 'vue-clickaway';
 import { createPopper } from '@popperjs/core';
 
 export default {
   name: "GenericHorizontalCard",
-  components: { GenericContextMenu, RecipeCard },
+  components: { GenericContextMenu, RecipeCard, Badges, GenericPill, GenericOrderedPill},
   mixins: [clickaway],
   props: {
-    item: Object,
-    item_type: {type: String, default: 'Blank Item Type'},  // TODO update translations to handle plural translations
-    draggable: {type: Boolean, default: false},
-    title: {type: String, default: 'name'},
+    item: {type: Object},
+    model: {type: Object},
+    title: {type: String, default: 'name'},  // this and the following props need to be moved to model.js and made computed values
     subtitle: {type: String, default: 'description'},
     child_count: {type: String, default: 'numchild'},
     children: {type: String, default: 'children'},
     recipe_count: {type: String, default: 'numrecipe'},
-    recipes: {type: String, default: 'recipes'},
-    move: {type: Boolean, default: false},
-    merge: {type: Boolean, default: false},
+    recipes: {type: String, default: 'recipes'}
   },
   data() {
     return {
@@ -130,7 +137,27 @@ export default {
   mounted() {
     this.item_image = this.item?.image ?? window.IMAGE_PLACEHOLDER
     this.dragMenu = this.$refs.tooltip
-    this.text.hide_children = this.$t('Hide_' + this.item_type)
+    this.text.hide_children = this.$t('Hide_' + this.itemName)
+  },
+  computed: {
+    itemName: function() {
+      return this.model?.name ?? "You Forgot To Set Model Name in model.js"
+    },
+    useMove: function() {
+      return (this.model?.['move'] ?? false) ? true : false
+    },
+    useMerge: function() {
+      return (this.model?.['merge'] ?? false) ? true : false
+    },
+    useDrag: function() {
+      return this.useMove || this.useMerge
+    },
+    itemTags: function() {
+      return this.model?.tags ?? []
+    },
+    itemOrderedTags: function() {
+      return this.model?.ordered_tags ?? []
+    }
   },
   methods: {
     handleDragStart: function(e) {
@@ -194,6 +221,10 @@ export default {
     closeMenu: function(){
       this.show_menu = false
     },
+    finishAction: function(e){
+      this.$emit('finish-action', e)
+    }
+    
   }
 }
 </script>

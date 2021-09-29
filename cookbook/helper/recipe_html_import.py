@@ -10,7 +10,7 @@ from recipe_scrapers._utils import get_host_name, normalize_string
 from urllib.parse import unquote
 
 
-def get_recipe_from_source(text, url, space):
+def get_recipe_from_source(text, url, request):
     def build_node(k, v):
         if isinstance(v, dict):
             node = {
@@ -103,7 +103,7 @@ def get_recipe_from_source(text, url, space):
                 parse_list.append(el)
         scrape = text_scraper(text, url=url)
 
-    recipe_json = helper.get_from_scraper(scrape, space)
+    recipe_json = helper.get_from_scraper(scrape, request)
 
     for el in parse_list:
         temp_tree = []

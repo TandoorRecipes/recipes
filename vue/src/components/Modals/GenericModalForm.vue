@@ -1,18 +1,14 @@
 <template>
     <div>
-      <b-modal class="modal" id="modal" @hidden="cancelAction">
+      <b-modal :id="'modal_'+id" @hidden="cancelAction">
         <template v-slot:modal-title><h4>{{form.title}}</h4></template>
         <div v-for="(f, i) in form.fields" v-bind:key=i>
           <p v-if="f.type=='instruction'">{{f.label}}</p>
           <!-- this lookup is single selection -->
           <lookup-input v-if="f.type=='lookup'"
-            :label="f.label"
-            :value="f.value"
-            :field="f.field"
+            :form="f"
             :model="listModel(f.list)"
-            :sticky_options="f.sticky_options || undefined"
             @change="storeValue"/> <!-- TODO add ability to create new items associated with lookup -->
-          <!-- TODO: add emoji field -->
           <!-- TODO: add multi-selection input list -->
           <checkbox-input v-if="f.type=='checkbox'"
             :label="f.label"
@@ -23,6 +19,17 @@
             :value="f.value"
             :field="f.field"
             :placeholder="f.placeholder"/>
+          <choice-input v-if="f.type=='choice'"
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"
+            :options="f.options"
+            :placeholder="f.placeholder"/>
+          <emoji-input v-if="f.type=='emoji'"
+            :label="f.label"
+            :value="f.value"
+            :field="f.field"
+            @change="storeValue"/>
         </div>
         
         <template  v-slot:modal-footer>
@@ -43,26 +50,32 @@ import {Models} from "@/utils/models";
 import CheckboxInput from "@/components/Modals/CheckboxInput";
 import LookupInput from "@/components/Modals/LookupInput";
 import TextInput from "@/components/Modals/TextInput";
+import EmojiInput from "@/components/Modals/EmojiInput";
+import ChoiceInput from "@/components/Modals/ChoiceInput";
 
 export default {
   name: 'GenericModalForm',
-  components: {CheckboxInput, LookupInput, TextInput},
+  components: {CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput},
   props: {
-    model: {required: true, type: Object, default: function() {}},
-    action: {required: true, type: Object, default: function() {}},
-    item1: {type: Object, default: function() {}},
-    item2: {type: Object, default: function() {}},
+    model: {required: true, type: Object},
+    action: {required: true, type: Object},
+    item1: {type: Object, default () {return undefined}},
+    item2: {type: Object, default () {return undefined}},
     show: {required: true, type: Boolean, default: false},
   },
   data() {
     return {
+      id: undefined,
       form_data: {},
       form: {},
-      dirty: false
+      dirty: false,
+      special_handling: false
     }
   },
   mounted() {
-    this.$root.$on('change', this.storeValue);  // modal is outside Vue instance(?) so have to listen at root of component
+    this.id = Math.random()
+    this.$root.$on('change', this.storeValue);  // boostrap modal placed at document so have to listen at root of component
+    
   },
   computed: {
     buttonLabel() {
@@ -74,9 +87,9 @@ export default {
       if (this.show) {
         this.form = getForm(this.model, this.action, this.item1, this.item2)
         this.dirty = true
-        this.$bvModal.show('modal')
+        this.$bvModal.show('modal_' + this.id)
       } else {
-        this.$bvModal.hide('modal')
+        this.$bvModal.hide('modal_' + this.id)
         this.form_data = {}
       }
     },
@@ -84,7 +97,7 @@ export default {
   methods: {
       doAction: function(){
         this.dirty = false
-        this.$emit('finish-action', {'form_data': this.form_data })
+        this.$emit('finish-action', {'form_data': this.detectOverride(this.form_data) })
       },
       cancelAction: function() {
         if (this.dirty) {
@@ -101,6 +114,14 @@ export default {
         } else {
           return Models[m]
         }
+      },
+      detectOverride: function(form) {
+        for (const [k, v] of Object.entries(form)) {
+          if (form[k].__override__) {
+            form[k] = form[k].__override__
+          }
+        }
+        return form
       }
   }
 }

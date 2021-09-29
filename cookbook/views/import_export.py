@@ -10,7 +10,8 @@ from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
-from cookbook.integration.Pepperplate import Pepperplate
+from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.pepperplate import Pepperplate
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.default import Default
@@ -20,6 +21,7 @@ from cookbook.integration.mealmaster import MealMaster
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
+from cookbook.integration.plantoeat import Plantoeat
 from cookbook.integration.recipekeeper import RecipeKeeper
 from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipesage import RecipeSage
@@ -59,6 +61,10 @@ def get_integration(request, export_type):
         return MealMaster(request, export_type)
     if export_type == ImportExportBase.OPENEATS:
         return OpenEats(request, export_type)
+    if export_type == ImportExportBase.PLANTOEAT:
+        return Plantoeat(request, export_type)
+    if export_type == ImportExportBase.COOKBOOKAPP:
+        return CookBookApp(request, export_type)
 
 
 @group_required('user')
@@ -73,7 +79,7 @@ def import_recipe(request):
 
     if request.method == "POST":
         form = ImportForm(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_valid() and request.FILES != {}:
             try:
                 integration = get_integration(request, form.cleaned_data['type'])
 

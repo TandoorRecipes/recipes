@@ -14,7 +14,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
                      ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport, UserFile)
+                     ImportLog, TelegramBot, BookmarkletImport, UserFile, SearchPreference)
 
 from cookbook.managers import DICTIONARY
 
@@ -52,6 +52,19 @@ class UserPreferenceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserPreference, UserPreferenceAdmin)
+
+
+class SearchPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'search', 'trigram_threshold',)
+    search_fields = ('user__username',)
+    list_filter = ('search',)
+
+    @staticmethod
+    def name(obj):
+        return obj.user.get_user_name()
+
+
+admin.site.register(SearchPreference, SearchPreferenceAdmin)
 
 
 class StorageAdmin(admin.ModelAdmin):
@@ -93,17 +106,6 @@ class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
 
-    # removing ability to delete keywords from admin
-    # to avoid creating orphaned keywords
-    # def get_actions(self, request):
-    #     actions = super().get_actions(request)
-    #     if 'delete_selected' in actions:
-    #         del actions['delete_selected']
-    #     return actions
-
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
-
 
 admin.site.register(Keyword, KeywordAdmin)
 
@@ -144,7 +146,14 @@ class RecipeAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 
 admin.site.register(Unit)
-admin.site.register(Food)
+
+
+class FoodAdmin(TreeAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+
+
+admin.site.register(Food, FoodAdmin)
 
 
 class IngredientAdmin(admin.ModelAdmin):

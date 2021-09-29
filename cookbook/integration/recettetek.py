@@ -6,7 +6,7 @@ from zipfile import ZipFile
 import imghdr
 
 from cookbook.helper.image_processing import get_filetype
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient, Keyword
 
@@ -55,11 +55,12 @@ class RecetteTek(Integration):
 
         try:
             # Process the ingredients. Assumes 1 ingredient per line.
+            ingredient_parser = IngredientParser(self.request, True)
             for ingredient in file['ingredients'].split('\n'):
                 if len(ingredient.strip()) > 0:
-                    amount, unit, ingredient, note = parse(ingredient)
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
+                    amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
+                    f = ingredient_parser.get_food(ingredient)
+                    u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(
                         food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))

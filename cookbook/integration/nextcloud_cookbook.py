@@ -4,7 +4,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from cookbook.helper.image_processing import get_filetype
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient
 
@@ -39,6 +39,7 @@ class NextcloudCookbook(Integration):
 
                 ingredients_added = True
 
+                ingredient_parser = IngredientParser(self.request, True)
                 for ingredient in recipe_json['recipeIngredient']:
                     amount, unit, ingredient, note = parse(ingredient)
                     f = get_food(ingredient, self.request.space)

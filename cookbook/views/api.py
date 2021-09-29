@@ -31,7 +31,7 @@ from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import PathOverflow, InvalidMoveToDescendant, InvalidPosition
 
 from cookbook.helper.image_processing import handle_image
-from cookbook.helper.ingredient_parser import parse
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
                                                CustomIsOwner, CustomIsShare,
                                                CustomIsShared, CustomIsUser,
@@ -44,11 +44,11 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
                              MealType, Recipe, RecipeBook, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step,
                              Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation)
+                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation, Automation)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import RecipeSchema, TreeSchema
+from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookSerializer,
@@ -62,7 +62,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  UserNameSerializer, UserPreferenceSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer)
+                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer, AutomationSerializer)
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -98,6 +98,8 @@ class DefaultPagination(PageNumberPagination):
 
 
 class FuzzyFilterMixin(ViewSetMixin):
+    schema = FilterSchema()
+
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
         query = self.request.query_params.get('query', None)
@@ -107,16 +109,16 @@ class FuzzyFilterMixin(ViewSetMixin):
             if fuzzy:
                 self.queryset = (
                     self.queryset
-                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
-                    .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
-                    .order_by('-exact').order_by("-trigram")
+                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                        .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
+                        .order_by('-exact').order_by("-trigram")
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 self.queryset = (
                     self.queryset
-                    .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
-                    .filter(name__icontains=query).order_by('-exact')
+                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                        .filter(name__icontains=query).order_by('-exact')
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -138,7 +140,7 @@ class FuzzyFilterMixin(ViewSetMixin):
 
 
 class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
-    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'],)
+    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def merge(self, request, pk, target):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
@@ -164,7 +166,12 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                 if target in source.get_descendants_and_self():
                     content = {'error': True, 'msg': _('Cannot merge with child object!')}
                     return Response(content, status=status.HTTP_403_FORBIDDEN)
+                isTree = True
+            except AttributeError:
+                # AttributeError probably means its not a tree, so can safely ignore
+                isTree = False
 
+            try:
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
                     related = linkManager.all()
@@ -181,9 +188,10 @@ class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
                     else:
                         # a new scenario exists and needs to be handled
                         raise NotImplementedError
-                children = source.get_children().exclude(id=target.id)
-                for c in children:
-                    c.move(target, 'sorted-child')
+                if isTree:
+                    children = source.get_children().exclude(id=target.id)
+                    for c in children:
+                        c.move(target, 'last-child')
                 content = {'msg': _(f'{source.name} was merged successfully with {target.name}')}
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
@@ -218,9 +226,9 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                     self.queryset = self.model.objects.none()
         else:
             return super().get_queryset()
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space).order_by('name')
 
-    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'],)
+    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def move(self, request, pk, parent):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
@@ -236,7 +244,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         if parent == 0:
             try:
                 with scopes_disabled():
-                    child.move(self.model.get_first_root_node(), 'sorted-sibling')
+                    child.move(self.model.get_first_root_node(), 'last-sibling')
                 content = {'msg': _(f'{child.name} was moved successfully to the root.')}
                 return Response(content, status=status.HTTP_200_OK)
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
@@ -254,7 +262,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 
         try:
             with scopes_disabled():
-                child.move(parent, 'sorted-child')
+                child.move(parent, 'last-child')
             content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
             return Response(content, status=status.HTTP_200_OK)
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
@@ -351,7 +359,7 @@ class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMi
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(supermarket__space=self.request.space)
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space).order_by('order')
         return super().get_queryset()
 
 
@@ -363,14 +371,12 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
 
-class UnitViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
+class UnitViewSet(viewsets.ModelViewSet, MergeMixin, FuzzyFilterMixin):
     queryset = Unit.objects
+    model = Unit
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser]
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
+    pagination_class = DefaultPagination
 
 
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
@@ -412,7 +418,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space)
+        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space).distinct()
 
         recipe_id = self.request.query_params.get('recipe', None)
         if recipe_id is not None:
@@ -493,7 +499,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(queryset, request)
+        self.facets = get_facet(qs=queryset, request=request)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):
@@ -542,9 +548,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if obj.get_space() != request.space:
             raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
 
-        serializer = self.serializer_class(
-            obj, data=request.data, partial=True
-        )
+        serializer = self.serializer_class(obj, data=request.data, partial=True)
 
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
@@ -552,8 +556,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            img, filetype = handle_image(request, obj.image)
-            obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
+            if serializer.validated_data == {}:
+                obj.image = None
+            else:
+                img, filetype = handle_image(request, obj.image)
+                obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
             obj.save()
 
             return Response(serializer.data)
@@ -568,7 +575,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(
             Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
-            shoppinglist__space=self.request.space).all()
+            shoppinglist__space=self.request.space).distinct().all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
@@ -579,7 +586,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(
             Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
-            shoppinglist__space=self.request.space).all()
+            shoppinglist__space=self.request.space).distinct().all()
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
@@ -646,6 +653,16 @@ class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser]
     parser_classes = [MultiPartParser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space).all()
+        return super().get_queryset()
+
+
+class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = Automation.objects
+    serializer_class = AutomationSerializer
+    permission_classes = [CustomIsUser]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()
@@ -836,11 +853,11 @@ def recipe_from_source(request):
                 },
                 status=400)
         else:
-            return JsonResponse({"recipe_json": get_from_scraper(scrape, request.space)})
+            return JsonResponse({"recipe_json": get_from_scraper(scrape, request)})
     elif (mode == 'source') or (mode == 'url' and auto == 'false'):
         if not data or data == 'undefined':
             data = requests.get(url, headers=HEADERS).content
-        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request.space)
+        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request)
         if len(recipe_tree) == 0 and len(recipe_json) == 0:
             return JsonResponse(
                 {
@@ -876,7 +893,9 @@ def get_backup(request):
 @group_required('user')
 def ingredient_from_string(request):
     text = request.POST['text']
-    amount, unit, food, note = parse(text)
+
+    ingredient_parser = IngredientParser(request, False)
+    amount, unit, food, note = ingredient_parser.parse(text)
 
     return JsonResponse(
         {
@@ -884,6 +903,18 @@ def ingredient_from_string(request):
             'unit': unit,
             'food': food,
             'note': note
+        },
+        status=200
+    )
+
+
+@group_required('user')
+def get_facets(request):
+    key = request.GET['hash']
+
+    return JsonResponse(
+        {
+            'facets': get_facet(request=request, use_cache=False, hash_key=key),
         },
         status=200
     )

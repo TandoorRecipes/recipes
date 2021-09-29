@@ -25,14 +25,22 @@ const pages = {
         entry: './src/apps/UserFileView/main.js',
         chunks: ['chunk-vendors']
     },
-    'keyword_list_view': {
-        entry: './src/apps/KeywordListView/main.js',
+    'model_list_view': {
+        entry: './src/apps/ModelListView/main.js',
         chunks: ['chunk-vendors']
     },
-    'food_list_view': {
-        entry: './src/apps/FoodListView/main.js',
+    'edit_internal_recipe': {
+        entry: './src/apps/RecipeEditView/main.js',
         chunks: ['chunk-vendors']
     },
+    'cookbook_view': {
+        entry: './src/apps/CookbookView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'meal_plan_view': {
+        entry: './src/apps/MealPlanView/main.js',
+        chunks: ['chunk-vendors']
+    }
 }
 
 module.exports = {

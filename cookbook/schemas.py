@@ -25,6 +25,16 @@ class RecipeSchema(AutoSchema):
             'schema': {'type': 'string', },
         })
         parameters.append({
+            "name": 'units', "in": "query", "required": False,
+            "description": 'Id of unit a recipe should have.',
+            'schema': {'type': 'int', },
+        })
+        parameters.append({
+            "name": 'rating', "in": "query", "required": False,
+            "description": 'Id of unit a recipe should have.',
+            'schema': {'type': 'int', },
+        })
+        parameters.append({
             "name": 'books', "in": "query", "required": False,
             "description": 'Id of book a recipe should have. For multiple repeat parameter.',
             'schema': {'type': 'string', },
@@ -83,5 +93,20 @@ class TreeSchema(AutoSchema):
             "name": 'tree', "in": "query", "required": False,
             "description": 'Return all self and children of {} with ID [int].'.format(api_name),
             'schema': {'type': 'int', },
+        })
+        return parameters
+
+
+class FilterSchema(AutoSchema):
+    def get_path_parameters(self, path, method):
+        if not is_list_view(path, method, self.view):
+            return super(FilterSchema, self).get_path_parameters(path, method)
+
+        api_name = path.split('/')[2]
+        parameters = super().get_path_parameters(path, method)
+        parameters.append({
+            "name": 'query', "in": "query", "required": False,
+            "description": 'Query string matched against {} name.'.format(api_name),
+            'schema': {'type': 'string', },
         })
         return parameters

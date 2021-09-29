@@ -26,10 +26,9 @@ from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
                             UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
                             SearchPreferenceForm)
-from cookbook.helper.ingredient_parser import parse
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
+                             ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
                              Food, UserFile, ShareLink)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable, InviteLinkTable)
@@ -213,26 +212,16 @@ def recipe_view(request, pk, share=None):
 
 @group_required('user')
 def books(request):
-    book_list = []
-
-    recipe_books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user),
-                                             space=request.space).distinct().all()
-
-    for b in recipe_books:
-        book_list.append(
-            {
-                'book': b,
-                'recipes': RecipeBookEntry.objects.filter(book=b).all()
-            }
-        )
-
-    return render(request, 'books.html', {'book_list': book_list})
+    return render(request, 'books.html', {})
 
 
 @group_required('user')
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
 
+@group_required('user')
+def meal_plan_new(request):
+    return render(request, 'meal_plan_new.html', {})
 
 @group_required('user')
 def supermarket(request):
@@ -377,6 +366,7 @@ def user_settings(request):
                     sp.istartswith.set(search_form.cleaned_data['istartswith'])
                     sp.trigram.set(search_form.cleaned_data['trigram'])
                     sp.fulltext.set(search_form.cleaned_data['fulltext'])
+                    sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
 
                     sp.save()
     if up:
@@ -604,7 +594,12 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
-    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
+
+    with scopes_disabled():
+        result = ShoppingList.objects.filter(
+            Q(created_by=request.user) | Q(shared=request.user)).filter(
+            space=request.space).values().distinct()
+    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
 
 
 def test2(request):

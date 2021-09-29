@@ -41,7 +41,7 @@ class TreeManager(MP_NodeManager):
     def get_or_create(self, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
         try:
-            return self.get(name__iexact=kwargs['name'], space=kwargs['space']), False
+            return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
             with scopes_disabled():
                 return self.model.add_root(**kwargs), True
@@ -336,7 +336,7 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelMixin):
     # TODO add find and fix problem functions
-    node_order_by = ['name']
+    # node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
@@ -371,7 +371,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     # TODO add find and fix problem functions
-    node_order_by = ['name']
+    # node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -385,7 +385,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         return self.name
 
     def delete(self):
-        if len(self.ingredient_set.all().exclude(step=None)) > 0:
+        if self.ingredient_set.all().exclude(step=None).count() > 0:
             raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
         else:
             return super().delete()
@@ -394,7 +394,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
         ]
-        indexes = (Index(fields=['id', 'name']),)
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['name']),
+        )
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -415,7 +418,9 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
     class Meta:
         ordering = ['order', 'pk']
-        indexes = (Index(fields=['id', 'food', 'unit']),)
+        indexes = (
+            Index(fields=['id']),
+        )
 
 
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
@@ -504,7 +509,12 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         return self.name
 
     class Meta():
-        indexes = (GinIndex(fields=["name_search_vector", "desc_search_vector"]), Index(fields=['id', 'name', 'description']),)
+        indexes = (
+            GinIndex(fields=["name_search_vector"]),
+            GinIndex(fields=["desc_search_vector"]),
+            Index(fields=['id']),
+            Index(fields=['name']),
+        )
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):
@@ -555,7 +565,7 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
         return self.name
 
     class Meta():
-        indexes = (Index(fields=['name', 'description']),)
+        indexes = (Index(fields=['name']),)
 
 
 class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, PermissionModelMixin):
@@ -586,6 +596,9 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
+    icon = models.CharField(max_length=16, blank=True, null=True)
+    color = models.CharField(max_length=7, blank=True, null=True)
+    default = models.BooleanField(default=False, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -756,7 +769,14 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['id', 'recipe', '-created_at', 'rating', 'created_by']),)
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['recipe']),
+            Index(fields=['-created_at']),
+            Index(fields=['rating']),
+            Index(fields=['created_by']),
+            Index(fields=['created_by', 'rating']),
+        )
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
@@ -771,7 +791,12 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
         return self.recipe.name
 
     class Meta():
-        indexes = (Index(fields=['recipe', '-created_at', 'created_by']),)
+        indexes = (
+            Index(fields=['recipe']),
+            Index(fields=[ '-created_at']),
+            Index(fields=['created_by']),
+            Index(fields=['recipe', '-created_at', 'created_by']),
+        )
 
 
 class ImportLog(models.Model, PermissionModelMixin):
@@ -818,7 +843,7 @@ class SearchFields(models.Model, PermissionModelMixin):
 
 
 def allSearchFields():
-    return SearchFields.objects.values_list('id')
+    return list(SearchFields.objects.values_list('id', flat=True))
 
 
 def nameSearchField():
@@ -846,8 +871,9 @@ class SearchPreference(models.Model, PermissionModelMixin):
     unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
     icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
     istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
-    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
+    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True,default=nameSearchField)
     fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
+    trigram_threshold = models.DecimalField(default=0.1, decimal_places=2, max_digits=3)
 
 
 class UserFile(ExportModelOperationsMixin('user_files'), models.Model, PermissionModelMixin):
@@ -865,3 +891,27 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
             self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
             self.file_size_kb = round(self.file.size / 1000)
         super(UserFile, self).save(*args, **kwargs)
+
+
+class Automation(ExportModelOperationsMixin('automations'), models.Model, PermissionModelMixin):
+    FOOD_ALIAS = 'FOOD_ALIAS'
+    UNIT_ALIAS = 'UNIT_ALIAS'
+    KEYWORD_ALIAS = 'KEYWORD_ALIAS'
+
+    type = models.CharField(max_length=128,
+                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),))
+    name = models.CharField(max_length=128, default='')
+    description = models.TextField(blank=True, null=True)
+
+    param_1 = models.CharField(max_length=128, blank=True, null=True)
+    param_2 = models.CharField(max_length=128, blank=True, null=True)
+    param_3 = models.CharField(max_length=128, blank=True, null=True)
+
+    disabled = models.BooleanField(default=False)
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
