@@ -843,7 +843,7 @@ class SearchFields(models.Model, PermissionModelMixin):
 
 
 def allSearchFields():
-    return SearchFields.objects.values_list('id')
+    return list(SearchFields.objects.values_list('id', flat=True))
 
 
 def nameSearchField():
@@ -871,7 +871,7 @@ class SearchPreference(models.Model, PermissionModelMixin):
     unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
     icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
     istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
-    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
+    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True,default=nameSearchField)
     fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
     trigram_threshold = models.DecimalField(default=0.1, decimal_places=2, max_digits=3)
 
