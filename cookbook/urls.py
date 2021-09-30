@@ -63,6 +63,7 @@ urlpatterns = [
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
     path('shopping/latest/', views.latest_shopping_list, name='view_shopping_latest'),
+    path('shopping/new/', lists.shopping_list_new, name='view_shopping_new'),
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
