@@ -390,5 +390,5 @@ EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
 
-if os.getenv('SQL_DEBUG', False):
+if bool(int(os.getenv('SQL_DEBUG', False))):
     MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
