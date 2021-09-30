@@ -11,7 +11,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.core.validators import MinLengthValidator
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models import Index, ProtectedError
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -43,7 +43,13 @@ class TreeManager(MP_NodeManager):
         try:
             return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
-            return self.model.add_root(**kwargs), True
+            with scopes_disabled():
+                try:
+                    return self.model.add_root(**kwargs), True
+                except IntegrityError as e:
+                    if 'Key (path)' in e.args[0]:
+                        self.model.fix_tree(fix_paths=True)
+                        return self.model.add_root(**kwargs), True
 
 
 class TreeModel(MP_Node):
