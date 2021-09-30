@@ -21,9 +21,9 @@
 {% block content %}
 
     <div id="app">
-        <div class="row">
+        <div class="row mt-2 mb-1">
             <div class="col-md-4 offset-md-4">
-                <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
+                <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-secondary shadow-none"
                                 @click="changeStartDate(number_of_days * -1)">
@@ -38,6 +38,13 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'view_plan_new' %}" class="float-right">
+                    <button class="btn btn-outline-secondary shadow-none">
+                        <i class="fas fa-star"></i> {% trans 'Try the new meal planner' %}
+                    </button>
+                </a>
             </div>
         </div>
 
