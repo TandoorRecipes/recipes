@@ -392,6 +392,7 @@ class SearchPreferenceForm(forms.ModelForm):
     prefix = 'search'
     trigram_threshold = forms.DecimalField(min_value=0.01, max_value=1, decimal_places=2, widget=NumberInput(attrs={'class': "form-control-range", 'type': 'range'}),
                                            help_text=_('Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
+    preset = forms.CharField(widget=forms.HiddenInput(),required=False)
 
     class Meta:
         model = SearchPreference
