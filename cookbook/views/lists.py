@@ -198,3 +198,19 @@ def automation(request):
             }
         }
     )
+
+
+@group_required('user')
+def shopping_list_new(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/checklist_template.html',
+        {
+            "title": _("New Shopping List"),
+            "config": {
+                'model': "SHOPPING_LIST",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )

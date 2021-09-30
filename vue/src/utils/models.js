@@ -175,7 +175,10 @@ export class Models {
         },
         'merge': true
     }
-    static SHOPPING_LIST = {}
+    static SHOPPING_LIST = {
+        'name': i18n.t('Shopping_list'),
+        'apiName': 'ShoppingListEntry',
+    }
     static RECIPE_BOOK = {
         'name': i18n.t('Recipe_Book'),
         'apiName': 'RecipeBook',
