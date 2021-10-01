@@ -487,8 +487,6 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     ignore_shopping = models.BooleanField(default=False)
     description = models.TextField(default='', blank=True)
     on_hand = models.BooleanField(default=False)
-    inherit = models.BooleanField(default=False)
-    ignore_inherit = models.ManyToManyField(FoodInheritField, blank=True)  # is this better as inherit instead of ignore inherit?  which is more intuitive?
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -840,10 +838,10 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
+    recipe = models.ForeignKey(Recipe, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
-    delay_until = models.DateTimeField(null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
