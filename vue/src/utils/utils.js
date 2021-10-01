@@ -285,7 +285,7 @@ function getDefault(config, options) {
     }
     return value
 }
-function getConfig(model, action) {
+export function getConfig(model, action) {
     
     let f = action.function
     // if not defined partialUpdate will use params from create
