@@ -11,7 +11,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.core.validators import MinLengthValidator
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models import Index, ProtectedError
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -19,7 +19,7 @@ from treebeard.mp_tree import MP_Node, MP_NodeManager
 from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
-                              STICKY_NAV_PREF_DEFAULT)
+                              STICKY_NAV_PREF_DEFAULT, SORT_TREE_BY_NAME)
 
 
 def get_user_name(self):
@@ -44,7 +44,12 @@ class TreeManager(MP_NodeManager):
             return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
             with scopes_disabled():
-                return self.model.add_root(**kwargs), True
+                try:
+                    return self.model.add_root(**kwargs), True
+                except IntegrityError as e:
+                    if 'Key (path)' in e.args[0]:
+                        self.model.fix_tree(fix_paths=True)
+                        return self.model.add_root(**kwargs), True
 
 
 class TreeModel(MP_Node):
@@ -335,8 +340,8 @@ class SyncLog(models.Model, PermissionModelMixin):
 
 
 class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelMixin):
-    # TODO add find and fix problem functions
-    # node_order_by = ['name']
+    if SORT_TREE_BY_NAME:
+        node_order_by = ['name']
     name = models.CharField(max_length=64)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
@@ -351,6 +356,13 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
             models.UniqueConstraint(fields=['space', 'name'], name='kw_unique_name_per_space')
         ]
         indexes = (Index(fields=['id', 'name']),)
+
+
+# when starting up run fix_tree to:
+#   a) make sure that nodes are sorted when switching between sort modes
+#   b) fix problems, if any, with tree consistency
+with scopes_disabled():
+    Keyword.fix_tree(fix_paths=True)
 
 
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
@@ -370,8 +382,8 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
-    # TODO add find and fix problem functions
-    # node_order_by = ['name']
+    if SORT_TREE_BY_NAME:
+        node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -398,6 +410,13 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             Index(fields=['id']),
             Index(fields=['name']),
         )
+
+
+# when starting up run fix_tree to:
+#   a) make sure that nodes are sorted when switching between sort modes
+#   b) fix problems, if any, with tree consistency
+with scopes_disabled():
+    Food.fix_tree(fix_paths=True)
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -793,7 +812,7 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
     class Meta():
         indexes = (
             Index(fields=['recipe']),
-            Index(fields=[ '-created_at']),
+            Index(fields=['-created_at']),
             Index(fields=['created_by']),
             Index(fields=['recipe', '-created_at', 'created_by']),
         )
