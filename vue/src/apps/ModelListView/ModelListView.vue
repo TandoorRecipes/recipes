@@ -144,7 +144,7 @@ export default {
     this.paginated = this.this_model?.paginated ?? false
     this.$nextTick(() => {
       if (!this.paginated) {
-        this.getItems()
+        this.getItems({page:1},'left')
       }
     })
 
