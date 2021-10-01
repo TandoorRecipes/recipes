@@ -45,7 +45,8 @@ class UserPreferenceForm(forms.ModelForm):
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'show_recent', 'search_style',
-            'plan_share', 'ingredient_decimals',  'comments',
+            'plan_share', 'shopping_share', 'ingredient_decimals', 'shopping_auto_sync',
+            'comments'
         )
 
         labels = {
@@ -74,7 +75,8 @@ class UserPreferenceForm(forms.ModelForm):
             'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  # noqa: E501
             'plan_share': _(
                 'Users with whom newly created meal plans should be shared by default.'),
-            'shopping_share': _('Users with whom to share shopping lists.'),
+            'shopping_share': _(
+            'Users with whom to share shopping lists.'),
             # noqa: E501
             'show_recent': _('Show recently viewed recipes on search page.'),  # noqa: E501
 
@@ -91,8 +93,7 @@ class UserPreferenceForm(forms.ModelForm):
 
         widgets = {
             'plan_share': MultiSelectWidget,
-            'shopping_share': MultiSelectWidget,
-
+            'shopping_share': MultiSelectWidget
         }
 
 
