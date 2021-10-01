@@ -3,7 +3,7 @@
     <draggable v-if="itemList" v-model="this_list"  tag="span" group="ordered_items" z-index="500"
       @change="orderChanged">
       <span :key="k.id" v-for="k in itemList" class="pl-1">
-        <b-badge pill :variant="color">{{thisLabel(k)}}</b-badge>
+        <b-badge squared :variant="color"><i class="fas fa-grip-lines-vertical text-muted"></i><span class="ml-1">{{thisLabel(k)}}</span></b-badge>
       </span>
     </draggable>
 </template>

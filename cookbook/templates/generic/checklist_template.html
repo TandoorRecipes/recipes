@@ -8,7 +8,7 @@
 {% block content_fluid %}
 
     <div id="app" >
-        <model-list-view></model-list-view>
+        <checklist-view></checklist-view>
     </div>
 
 
@@ -28,5 +28,5 @@
         window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
     </script>
 
-    {% render_bundle 'model_list_view' %}
+    {% render_bundle 'checklist_view' %}
 {% endblock %}
