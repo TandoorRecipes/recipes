@@ -119,13 +119,5 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
 
 
-# TODO test sharing
-# TODO test completed entries still visible if today, but not yesterday
-# TODO test create shopping list from recipe
-# TODO test delete shopping list from recipe -  include created by, shared with and not shared with
-# TODO test create shopping list from food
-# TODO test delete shopping list from food -  include created by, shared with and not shared with
-# TODO test create shopping list from mealplan
-# TODO test create shopping list from recipe, excluding ingredients
-# TODO test auto creating shopping list from meal plan
-# TODO test excluding on-hand when auto creating shopping list
+# test sharing
+# test completed entries still visible if today, but not yesterday
