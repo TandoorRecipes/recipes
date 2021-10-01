@@ -17,6 +17,7 @@ import re
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
+
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -73,9 +74,6 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
-if SORT_TREE_BY_NAME:= bool(int(os.getenv('SQL_DEBUG', True))):
-    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
-
 HOSTED = bool(int(os.getenv('HOSTED', False)))
 
 MESSAGE_TAGS = {
@@ -150,6 +148,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
+
+SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', True)))
+
+if bool(int(os.getenv('SQL_DEBUG', False))):
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
 
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -391,7 +394,3 @@ EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS', False)))
 EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
-
-if bool(int(os.getenv('SQL_DEBUG', False))):
-    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
-
