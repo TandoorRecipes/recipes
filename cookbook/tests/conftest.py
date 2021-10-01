@@ -5,10 +5,10 @@ import uuid
 
 import pytest
 from django.contrib import auth
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group, User
 from django_scopes import scopes_disabled
 
-from cookbook.models import Space, Recipe, Step, Ingredient, Food, Unit
+from cookbook.models import Food, Ingredient, Recipe, Space, Step, Unit
 
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
@@ -52,8 +52,8 @@ def get_random_recipe(space_1, u1_s1):
         internal=True,
     )
 
-    s1 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), space=space_1, )
-    s2 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), space=space_1, )
+    s1 = Step.objects.create(name=str(uuid.uuid4()), instruction=str(uuid.uuid4()), space=space_1, )
+    s2 = Step.objects.create(name=str(uuid.uuid4()), instruction=str(uuid.uuid4()), space=space_1, )
 
     r.steps.add(s1)
     r.steps.add(s2)
@@ -63,8 +63,8 @@ def get_random_recipe(space_1, u1_s1):
             Ingredient.objects.create(
                 amount=1,
                 food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
-                unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
-                note=uuid.uuid4(),
+                unit=Unit.objects.create(name=str(uuid.uuid4()), space=space_1, ),
+                note=str(uuid.uuid4()),
                 space=space_1,
             )
         )
@@ -73,8 +73,8 @@ def get_random_recipe(space_1, u1_s1):
             Ingredient.objects.create(
                 amount=1,
                 food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
-                unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
-                note=uuid.uuid4(),
+                unit=Unit.objects.create(name=str(uuid.uuid4()), space=space_1, ),
+                note=str(uuid.uuid4()),
                 space=space_1,
             )
         )
