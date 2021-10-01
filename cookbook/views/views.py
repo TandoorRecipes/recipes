@@ -29,7 +29,7 @@ from cookbook.forms import (CommentForm, Recipe, User,
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
                              ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
-                             Food, UserFile, ShareLink)
+                             Food, UserFile, ShareLink, SearchPreference, SearchFields)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable, InviteLinkTable)
 from cookbook.views.data import Object
@@ -219,9 +219,11 @@ def books(request):
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
 
+
 @group_required('user')
 def meal_plan_new(request):
     return render(request, 'meal_plan_new.html', {})
+
 
 @group_required('user')
 def supermarket(request):
@@ -344,11 +346,11 @@ def user_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                    len(search_form.cleaned_data['icontains'])
-                    + len(search_form.cleaned_data['istartswith'])
-                    + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext']))
-                # TODO add 'recommended' option
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
+                )
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
                     search_error = True
@@ -366,6 +368,27 @@ def user_settings(request):
                     sp.istartswith.set(search_form.cleaned_data['istartswith'])
                     sp.trigram.set(search_form.cleaned_data['trigram'])
                     sp.fulltext.set(search_form.cleaned_data['fulltext'])
+                    sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
+
+                    if search_form.cleaned_data['preset'] == 'fuzzy':
+                        sp.search = SearchPreference.SIMPLE
+                        sp.lookup = True
+                        sp.unaccent.set([SearchFields.objects.get(name='Name')])
+                        sp.icontains.set([SearchFields.objects.get(name='Name')])
+                        sp.istartswith.clear()
+                        sp.trigram.set([SearchFields.objects.get(name='Name')])
+                        sp.fulltext.clear()
+                        sp.trigram_threshold = 0.1
+
+                    if search_form.cleaned_data['preset'] == 'precise':
+                        sp.search = SearchPreference.WEB
+                        sp.lookup = True
+                        sp.unaccent.set(SearchFields.objects.all())
+                        sp.icontains.clear()
+                        sp.istartswith.set([SearchFields.objects.get(name='Name')])
+                        sp.trigram.clear()
+                        sp.fulltext.set(SearchFields.objects.all())
+                        sp.trigram_threshold = 0.1
 
                     sp.save()
     if up:
@@ -416,8 +439,8 @@ def history(request):
 @group_required('admin')
 def system(request):
     postgres = False if (
-        settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
-        or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
+            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
+            or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
     ) else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True

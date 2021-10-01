@@ -73,6 +73,8 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
+if SORT_TREE_BY_NAME:= bool(int(os.getenv('SQL_DEBUG', True))):
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
 
 HOSTED = bool(int(os.getenv('HOSTED', False)))
 
@@ -392,3 +394,4 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tando
 
 if bool(int(os.getenv('SQL_DEBUG', False))):
     MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
+
