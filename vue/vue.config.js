@@ -40,7 +40,11 @@ const pages = {
     'meal_plan_view': {
         entry: './src/apps/MealPlanView/main.js',
         chunks: ['chunk-vendors']
-    }
+    },
+    'checklist_view': {
+        entry: './src/apps/ChecklistView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {

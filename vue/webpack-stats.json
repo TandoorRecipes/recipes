@@ -5,6 +5,10 @@
       "name": "../../templates/sw.js",
       "path": "..\\..\\templates\\sw.js"
     },
+    "js/checklist_view.js": {
+      "name": "js/checklist_view.js",
+      "path": "js/checklist_view.js"
+    },
     "js/chunk-2d0da313.js": {
       "name": "js/chunk-2d0da313.js",
       "path": "js\\chunk-2d0da313.js"
@@ -121,6 +125,10 @@
       "name": "meal_plan_view.html",
       "path": "meal_plan_view.html"
     },
+    "checklist_view.html": {
+      "name": "checklist_view.html",
+      "path": "checklist_view.html"
+    },
     "manifest.json": {
       "name": "manifest.json",
       "path": "manifest.json"
@@ -182,6 +190,11 @@
       "js/chunk-vendors.js",
       "css/meal_plan_view.css",
       "js/meal_plan_view.js"
+    ],
+    "checklist_view": [
+      "css/chunk-vendors.css",
+      "js/chunk-vendors.js",
+      "js/checklist_view.js"
     ]
   }
 }
