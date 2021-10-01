@@ -1,73 +1,81 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-12 calender-parent">
-        <calendar-view
-            :show-date="showDate" :enable-date-selection="true" class="theme-default"
-            @date-selection-finish="createEntryRange" :items="plan_items"
-            :display-period-uom="settings.displayPeriodUom"
-            :period-changed-callback="refreshData" :enable-drag-drop="true" :item-content-height="item_height"
-            @click-date="createEntryClick" @drop-on-date="moveEntry"
-            :display-period-count="settings.displayPeriodCount"
-            :starting-day-of-week="settings.startingDayOfWeek"
-            :display-week-numbers="settings.displayWeekNumbers">
-          <template #item="{ value, weekStartDate, top }">
-            <meal-plan-card :value="value" :week-start-date="weekStartDate" :top="top" :detailed="detailed_items"
-                            :item_height="item_height" @dragstart="dragged_item = value" @click-item="entryClick"/>
-          </template>
+    <b-tabs content-class="mt-3">
+      <b-tab :title="$t('Planner')" active>
+        <div class="row">
+          <div class="col-12 calender-parent">
+            <calendar-view
+                :show-date="showDate" :enable-date-selection="true" class="theme-default"
+                @date-selection-finish="createEntryRange" :items="plan_items"
+                :display-period-uom="settings.displayPeriodUom"
+                :period-changed-callback="periodChangedCallback" :enable-drag-drop="true"
+                :item-content-height="item_height"
+                @click-date="createEntryClick" @drop-on-date="moveEntry"
+                :display-period-count="settings.displayPeriodCount"
+                :starting-day-of-week="settings.startingDayOfWeek"
+                :display-week-numbers="settings.displayWeekNumbers">
+              <template #item="{ value, weekStartDate, top }">
+                <meal-plan-card :value="value" :week-start-date="weekStartDate" :top="top" :detailed="detailed_items"
+                                :item_height="item_height" @dragstart="dragged_item = value" @click-item="entryClick"
+                                @open-context-menu="openContextMenu"/>
+              </template>
+              <template #header="{ headerProps }">
+                <meal-plan-calender-header
+                    :header-props="headerProps"
+                    @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"/>
+              </template>
+            </calendar-view>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab :title="$t('Settings')">
+        <div class="row mt-3">
+          <div class="col-3 calender-options">
+            <h5>{{ $t('CalenderSettings') }}</h5>
+            <b-form>
+              <b-form-group id="UomInput"
+                            :label="$t('Period')"
+                            :description="$t('PeriodToShow')"
+                            label-for="UomInput">
+                <b-form-select
+                    id="UomInput"
+                    v-model="settings.displayPeriodUom"
+                    :options="options.displayPeriodUom"
+                ></b-form-select>
+              </b-form-group>
+              <b-form-group id="PeriodInput"
+                            :label="$t('PeriodCount')"
+                            :description="$t('ShowHowManyPeriods')"
+                            label-for="PeriodInput">
+                <b-form-select
+                    id="PeriodInput"
+                    v-model="settings.displayPeriodCount"
+                    :options="options.displayPeriodCount"
+                ></b-form-select>
+              </b-form-group>
+              <b-form-group id="DaysInput"
+                            :label="$t('StartingDay')"
+                            :description="$t('StartingDay')"
+                            label-for="DaysInput">
+                <b-form-select
+                    id="DaysInput"
+                    v-model="settings.startingDayOfWeek"
+                    :options="dayNames"
+                ></b-form-select>
+              </b-form-group>
+            </b-form>
+          </div>
+          <div class="col-6">
+            <h5>{{ $t('MealTypes') }}</h5>
+            <b-form>
 
-          <template #header="{ headerProps }">
-            <calendar-view-header
-                :header-props="headerProps"
-                @input="setShowDate"/>
-          </template>
-        </calendar-view>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-3 calender-options">
-        <h5>{{ $t('CalenderSettings') }}</h5>
-        <b-form>
-          <b-form-group id="UomInput"
-                        :label="$t('Period')"
-                        :description="$t('PeriodToShow')"
-                        label-for="UomInput">
-            <b-form-select
-                id="UomInput"
-                v-model="settings.displayPeriodUom"
-                :options="options.displayPeriodUom"
-            ></b-form-select>
-          </b-form-group>
-          <b-form-group id="PeriodInput"
-                        :label="$t('PeriodCount')"
-                        :description="$t('ShowHowManyPeriods')"
-                        label-for="PeriodInput">
-            <b-form-select
-                id="PeriodInput"
-                v-model="settings.displayPeriodCount"
-                :options="options.displayPeriodCount"
-            ></b-form-select>
-          </b-form-group>
-          <b-form-group id="DaysInput"
-                        :label="$t('StartingDay')"
-                        :description="$t('StartingDay')"
-                        label-for="DaysInput">
-            <b-form-select
-                id="DaysInput"
-                v-model="settings.startingDayOfWeek"
-                :options="dayNames"
-            ></b-form-select>
-          </b-form-group>
-        </b-form>
-      </div>
-      <div class="col-6">
-        <h5>{{ $t('MealTypes') }}</h5>
-        <b-form>
+            </b-form>
+            <recipe-card :recipe="recipe_viewed" v-if="false"></recipe-card>
+          </div>
+        </div>
+      </b-tab>
+    </b-tabs>
 
-        </b-form>
-        <recipe-card :recipe="recipe_viewed" v-if="false"></recipe-card>
-      </div>
-    </div>
     <ContextMenu ref="menu">
       <template #menu="{ contextData }">
         <ContextMenuItem @click="$refs.menu.close();openEntryEdit(contextData.originalItem.entry)">
@@ -100,7 +108,7 @@
 import ContextMenu from "@/components/ContextMenu/ContextMenu";
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem";
 import "vue-simple-calendar/static/css/default.css"
-import {CalendarView, CalendarViewHeader, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle";
+import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle";
 import Vue from "vue";
 import {BootstrapVue} from "bootstrap-vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
@@ -110,6 +118,7 @@ import moment from 'moment'
 import {ApiMixin, StandardToasts} from "@/utils/utils";
 import MealPlanEditModal from "../../components/MealPlanEditModal";
 import VueCookies from "vue-cookies";
+import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader";
 
 Vue.prototype.moment = moment
 Vue.use(BootstrapVue)
@@ -124,9 +133,9 @@ export default {
     MealPlanCard,
     RecipeCard,
     CalendarView,
-    CalendarViewHeader,
     ContextMenu,
-    ContextMenuItem
+    ContextMenuItem,
+    MealPlanCalenderHeader
   },
   mixins: [CalendarMathMixin, ApiMixin],
   data: function () {
@@ -253,7 +262,6 @@ export default {
     createEntryClick(data) {
       this.entryEditing = this.options.entryEditing
       this.entryEditing.date = moment(data).format('YYYY-MM-DD')
-      console.log(this.entryEditing)
       this.$bvModal.show(`edit-modal`)
     },
     findEntry(id) {
@@ -278,7 +286,6 @@ export default {
       })
     },
     moveEntryRight(data) {
-      console.log(data)
       this.plan_entries.forEach((entry) => {
         if (entry.id === data.id) {
           entry.date = moment(entry.date).add(1, 'd')
@@ -303,6 +310,9 @@ export default {
       let entry = this.findEntry(data.id)
       this.openEntryEdit(entry)
     },
+    openContextMenu($event, value) {
+      this.$refs.menu.open($event, value)
+    },
     openEntryEdit(entry) {
       this.$bvModal.show(`edit-modal`)
       this.entryEditing = entry
@@ -311,10 +321,15 @@ export default {
         this.entryEditing.title_placeholder = this.entryEditing.recipe.name
       }
     },
-    refreshData() {
+    periodChangedCallback(date) {
       let apiClient = new ApiApiFactory()
 
-      apiClient.listMealPlans().then(result => {
+      apiClient.listMealPlans({
+        query: {
+          from_date: moment(date.periodStart).format('YYYY-MM-DD'),
+          to_date: moment(date.periodEnd).format('YYYY-MM-DD')
+        }
+      }).then(result => {
         this.plan_entries = result.data
       })
       apiClient.listMealTypes().then(result => {

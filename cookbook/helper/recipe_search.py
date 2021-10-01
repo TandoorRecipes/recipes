@@ -112,16 +112,15 @@ def search_recipes(request, queryset, params):
             )
 
             # iterate through fields to use in trigrams generating a single trigram
-            if search_trigram & len(trigram_include) > 1:
+            if search_trigram and len(trigram_include) > 0:
                 trigram = None
                 for f in trigram_include:
                     if trigram:
                         trigram += TrigramSimilarity(f, search_string)
                     else:
                         trigram = TrigramSimilarity(f, search_string)
-                queryset.annotate(simularity=trigram)
-                # TODO allow user to play with trigram scores
-                filters += [Q(simularity__gt=0.5)]
+                queryset = queryset.annotate(similarity=trigram)
+                filters += [Q(similarity__gt=search_prefs.trigram_threshold)]
 
             if 'name' in fulltext_include:
                 filters += [Q(name_search_vector=search_query)]

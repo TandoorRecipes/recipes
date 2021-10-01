@@ -18,10 +18,11 @@ from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.image_processing import handle_image
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
-                             RecipeImport, Step, Sync, Unit, UserPreference, Automation)
+                             RecipeImport, Step, Sync, Unit, UserPreference)
 from cookbook.tables import SyncTable
 
 
@@ -152,21 +153,16 @@ def import_url(request):
             k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
             recipe.keywords.add(k)
 
+        ingredient_parser = IngredientParser(request, True)
         for ing in data['recipeIngredient']:
             ingredient = Ingredient(space=request.space, )
 
             if food_text := ing['ingredient']['text'].strip():
-                if automation := Automation.objects.filter(space=request.space, type=Automation.FOOD_ALIAS, param_1=food_text).first():
-                    ingredient.food.id = automation.param_2
-                else:
-                    ingredient.food, f_created = Food.objects.get_or_create(name=food_text, space=request.space)
+                ingredient.food = ingredient_parser.get_food(food_text)
 
             if ing['unit']:
-                if unit_text := ing['unit']['text']:
-                    if automation := Automation.objects.filter(space=request.space, type=Automation.UNIT_ALIAS, param_1=unit_text).first():
-                        ingredient.unit.id = automation.param_2
-                    else:
-                        ingredient.unit, u_created = Unit.objects.get_or_create(name=unit_text, space=request.space)
+                if unit_text := ing['unit']['text'].strip():
+                    ingredient.unit = ingredient_parser.get_unit(unit_text)
 
             # TODO properly handle no_amount recipes
             if isinstance(ing['amount'], str):

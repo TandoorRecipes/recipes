@@ -14,7 +14,7 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
                      ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport, UserFile)
+                     ImportLog, TelegramBot, BookmarkletImport, UserFile, SearchPreference)
 
 from cookbook.managers import DICTIONARY
 
@@ -54,6 +54,19 @@ class UserPreferenceAdmin(admin.ModelAdmin):
 admin.site.register(UserPreference, UserPreferenceAdmin)
 
 
+class SearchPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'search', 'trigram_threshold',)
+    search_fields = ('user__username',)
+    list_filter = ('search',)
+
+    @staticmethod
+    def name(obj):
+        return obj.user.get_user_name()
+
+
+admin.site.register(SearchPreference, SearchPreferenceAdmin)
+
+
 class StorageAdmin(admin.ModelAdmin):
     list_display = ('name', 'method')
     search_fields = ('name',)
@@ -89,9 +102,34 @@ class SyncLogAdmin(admin.ModelAdmin):
 admin.site.register(SyncLog, SyncLogAdmin)
 
 
+@admin.action(description='Temporarily ENABLE sorting on Foods and Keywords.')
+def enable_tree_sorting(modeladmin, request, queryset):
+    Food.node_order_by = ['name']
+    Keyword.node_order_by = ['name']
+    with scopes_disabled():
+        Food.fix_tree(fix_paths=True)
+        Keyword.fix_tree(fix_paths=True)
+
+
+@admin.action(description='Temporarily DISABLE sorting on Foods and Keywords.')
+def disable_tree_sorting(modeladmin, request, queryset):
+    Food.node_order_by = []
+    Keyword.node_order_by = []
+
+
+@admin.action(description='Fix problems and sort tree by name')
+def sort_tree(modeladmin, request, queryset):
+    orginal_value = modeladmin.model.node_order_by[:]
+    modeladmin.model.node_order_by = ['name']
+    with scopes_disabled():
+        modeladmin.model.fix_tree(fix_paths=True)
+    modeladmin.model.node_order_by = orginal_value
+
+
 class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
 admin.site.register(Keyword, KeywordAdmin)
@@ -138,6 +176,7 @@ admin.site.register(Unit)
 class FoodAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
 admin.site.register(Food, FoodAdmin)
