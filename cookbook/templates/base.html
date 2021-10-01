@@ -142,7 +142,7 @@
                         </div>
                         <div class="row m-0">
                             <div class="col-4">
-                                <a href="{% url 'view_supermarket' %}" class="p-1">
+                                <a href="{% url 'list_supermarket' %}" class="p-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-store-alt fa-2x"></i>
@@ -153,6 +153,32 @@
                                     </div>
                                 </a>
                             </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_supermarket_category' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-cubes fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Supermarket Category' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_automation' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-robot fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Automations' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row m-0">
                             <div class="col-4">
                                 <a href="{% url 'data_batch_edit' %}" class="p-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -202,6 +228,8 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'view_settings' %}"><i
                                 class="fas fa-user-cog fa-fw"></i> {% trans 'Settings' %}</a>
+                        <a class="dropdown-item" href="{% url 'data_sync' %}"><i
+                                class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                         {% if request.user == request.space.created_by %}
                             <a class="dropdown-item" href="{% url 'view_space' %}"><i
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
@@ -225,8 +253,6 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'account_logout' %}"><i
                                 class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Log out' %}</a>
-                        <a class="dropdown-item" href="{% url 'data_sync' %}"><i
-                                class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                     </div>
                 </li>
             {% else %}
