@@ -21,6 +21,10 @@ LIST_URL = 'api:food-list'
 DETAIL_URL = 'api:food-detail'
 MOVE_URL = 'api:food-move'
 MERGE_URL = 'api:food-merge'
+if (Food.node_order_by):
+    node_location = 'sorted-child'
+else:
+    node_location = 'last-child'
 
 
 @pytest.fixture()
@@ -264,7 +268,7 @@ def test_integrity(u1_s1, recipe_1_s1):
         i_1.step_set.first().ingredients.remove(i_1)
         assert Food.objects.count() == 10
         assert Ingredient.objects.count() == 10
-    
+
     # deleting food will succeed because its not part of recipe and delete will cascade to Ingredient
     r = u1_s1.delete(
         reverse(
@@ -429,7 +433,7 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert len(response['results']) == 2
 
     with scopes_disabled():
-        obj_2.move(obj_1, 'last-child')
+        obj_2.move(obj_1, node_location)
     # should return direct children of obj_1 (obj_1_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={obj_1.id}').content)
     assert response['count'] == 2
@@ -439,7 +443,7 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
 
 def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     with scopes_disabled():
-        obj_2.move(obj_1, 'last-child')
+        obj_2.move(obj_1, node_location)
     # should return full tree starting at obj_1 (obj_1_1_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}').content)
     assert response['count'] == 4
