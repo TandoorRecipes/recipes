@@ -488,7 +488,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     description = models.TextField(default='', blank=True)
     on_hand = models.BooleanField(default=False)
     inherit = models.BooleanField(default=False)
-    ignore_inherit = models.ManyToManyField(FoodInheritField,  blank=True)  # is this better as inherit instead of ignore inherit?  which is more intuitive?
+    ignore_inherit = models.ManyToManyField(FoodInheritField, blank=True)  # is this better as inherit instead of ignore inherit?  which is more intuitive?
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -827,7 +827,7 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def get_owner(self):
         try:
-            return self.entries.first().created_by or self.shoppinglist_set.first().created_by
+            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(), 'created_by', None)
         except AttributeError:
             return None
 
