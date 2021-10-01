@@ -15,7 +15,7 @@
     "@riophae/vue-treeselect": "^0.4.0",
     "axios": "^0.21.4",
     "bootstrap-vue": "^2.21.2",
-    "core-js": "^3.14.0",
+    "core-js": "^3.18.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "prismjs": "^1.25.0",
