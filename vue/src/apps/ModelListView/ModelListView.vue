@@ -101,7 +101,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {CardMixin, ApiMixin} from "@/utils/utils";
+import {CardMixin, ApiMixin, getConfig} from "@/utils/utils";
 import {StandardToasts, ToastMixin} from "@/utils/utils";
 
 import GenericInfiniteCards from "@/components/GenericInfiniteCards";
@@ -254,17 +254,40 @@ export default {
       let column = col || 'left'
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         let results = result.data?.results ?? result.data
+
         if (results?.length) {
+
+          // let secondaryRequest = undefined;
+          // if (this['items_' + column]?.length < getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1)) {
+          //   // the item list is smaller than it should be based on the site the user is own
+          //   // this happens when an item is deleted (or merged)
+          //   // to prevent issues insert the last item of the previous search page before loading the new results
+          //   params.page = params.page - 1
+          //   secondaryRequest = this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
+          //     let prev_page_results = result.data?.results ?? result.data
+          //     if (prev_page_results?.length) {
+          //       results = [prev_page_results[prev_page_results.length]].concat(results)
+          //
+          //       this['items_' + column] = this['items_' + column].concat(results) //TODO duplicate code, find some elegant workaround
+          //       this[column + '_counts']['current'] = getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1) + results.length
+          //       this[column + '_counts']['max'] = result.data?.count ?? 0
+          //     }
+          //   })
+          // } else {
+          //
+          // }
+
           this['items_' + column] = this['items_' + column].concat(results)
+          this[column + '_counts']['current'] = getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1) + results.length
           this[column + '_counts']['max'] = result.data?.count ?? 0
-          this[column + '_counts']['current'] = this['items_' + column]?.length
+
         } else {
           this[column + '_counts']['max'] = 0
           this[column + '_counts']['current'] = 0
           console.log('no data returned')
         }
       }).catch((err) => {
-        console.log(err)
+        console.log(err, Object.keys(err))
         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
       })
     },
