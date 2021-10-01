@@ -38,7 +38,7 @@
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.31.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "@vue/cli-plugin-babel": "~4.5.13",
     "@vue/cli-plugin-eslint": "~4.5.13",
     "@vue/cli-plugin-pwa": "~4.5.13",
