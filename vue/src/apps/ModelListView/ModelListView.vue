@@ -30,8 +30,8 @@
                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                 <model-menu/>
                 <span>{{ this.this_model.name }}</span>
-                <span><b-button variant="link" size="lg" @click="startAction({'action':'new'})"><i
-                    class="fas fa-plus-circle"></i></b-button></span>
+                <span><b-button variant="link" @click="startAction({'action':'new'})"><i
+                    class="fas fa-plus-circle fa-2x"></i></b-button></span>
               </h3>
             </div>
             <div class="col-md-3"/>

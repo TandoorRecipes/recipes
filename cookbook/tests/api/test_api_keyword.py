@@ -20,7 +20,10 @@ LIST_URL = 'api:keyword-list'
 DETAIL_URL = 'api:keyword-detail'
 MOVE_URL = 'api:keyword-move'
 MERGE_URL = 'api:keyword-merge'
-
+if (Keyword.node_order_by):
+    node_location = 'sorted-child'
+else:
+    node_location = 'last-child'
 
 @pytest.fixture()
 def obj_1(space_1):
@@ -350,7 +353,7 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert len(response['results']) == 2
 
     with scopes_disabled():
-        obj_2.move(obj_1, 'last-child')
+        obj_2.move(obj_1, node_location)
     # should return direct children of obj_1 (obj_1_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={obj_1.id}').content)
     assert response['count'] == 2
@@ -360,7 +363,7 @@ def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
 
 def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     with scopes_disabled():
-        obj_2.move(obj_1, 'last-child')
+        obj_2.move(obj_1, node_location)
     # should return full tree starting at obj_1 (obj_1_1_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}').content)
     assert response['count'] == 4

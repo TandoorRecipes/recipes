@@ -25,9 +25,16 @@
 {% block content %}
 
     <div class="row">
-        <div class="col col-md-9">
+        <span class="col col-md-9">
             <h2>{% trans 'Shopping List' %}</h2>
-        </div>
+        </span>
+        <span class="col-md-3">
+            <a href="{% url 'view_shopping_new' %}" class="float-right">
+                <button class="btn btn-outline-secondary shadow-none">
+                    <i class="fas fa-star"></i> {% trans 'Try the new shopping list' %}
+                </button>
+            </a>
+        </span>
         <div class="col col-mdd-3 text-right">
             <b-form-checkbox switch size="lg" v-model="edit_mode"
                              @change="$forceUpdate()">{% trans 'Edit' %}</b-form-checkbox>
