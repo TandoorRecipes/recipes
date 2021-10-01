@@ -13,7 +13,7 @@
     "@kevinfaguiar/vue-twemoji-picker": "^5.7.4",
     "@popperjs/core": "^2.10.1",
     "@riophae/vue-treeselect": "^0.4.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.14.0",
     "lodash": "^4.17.21",
