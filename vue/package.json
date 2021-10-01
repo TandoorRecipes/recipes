@@ -52,7 +52,7 @@
     "typescript": "~4.4.3",
     "vue-cli-plugin-i18n": "^2.1.1",
     "webpack-bundle-tracker": "1.3.0",
-    "workbox-expiration": "^6.0.2",
+    "workbox-expiration": "^6.3.0",
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.3.0",
     "workbox-routing": "^6.3.0",
