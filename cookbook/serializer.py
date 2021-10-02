@@ -372,6 +372,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     def get_shopping_status(self, obj):
         return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
 
+    def get_fields(self, *args, **kwargs):
+        fields = super().get_fields(*args, **kwargs)
+        print('food', self.__class__, self.parent.__class__)
+        # extended values are computationally expensive and not needed in normal circumstances
+        if not bool(int(self.context['request'].query_params.get('extended', False))) or not self.parent:
+            del fields['image']
+            del fields['numrecipe']
+        return fields
+
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         validated_data['space'] = self.context['request'].space
@@ -670,41 +679,31 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
-
+        print('shoppinglist', self.__class__, self.parent.__class__)
         # autosync values are only needed for frequent 'checked' value updating
         if self.context['request'] and bool(int(self.context['request'].query_params.get('autosync', False))):
             for f in list(set(fields) - set(['id', 'checked'])):
                 del fields[f]
+        # extended values are computationally expensive and not needed in normal circumstances
+        elif not bool(int(self.context['request'].query_params.get('extended', False))) or not self.parent:
+            del fields['notes']
         return fields
-
-    def run_validation(self, data):
-        if (
-            data.get('checked', False)
-            and self.root.instance
-            and not self.root.instance.checked
-        ):
-            # if checked flips from false to true set completed datetime
-            data['completed_at'] = timezone.now()
-        elif not data.get('checked', False):
-            # if not checked set completed to None
-            data['completed_at'] = None
-        else:
-            # otherwise don't write anything
-            if 'completed_at' in data:
-                del data['completed_at']
-
-        return super().run_validation(data)
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        if validated_data['checked']:
+            validated_data['completed_at'] = timezone.now()
+        return super().update(instance, validated_data)
+
     class Meta:
         model = ShoppingListEntry
         fields = (
-            'id', 'list_recipe', 'food', 'unit', 'ingredient', 'ingredient_note', 'amount', 'order', 'checked', 'recipe_mealplan',
-            'created_by', 'created_at', 'completed_at', 'delay_until'
+            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked',
+            'created_by', 'created_at', 'notes', 'completed_at'
         )
         read_only_fields = ('id',  'created_by', 'created_at',)
 
