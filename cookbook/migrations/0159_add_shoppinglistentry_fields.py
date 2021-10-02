@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 from django_scopes import scopes_disabled
 
-from cookbook.models import PermissionModelMixin, ShoppingListEntry
+from cookbook.models import ShoppingListEntry
 
 
 def copy_values_to_sle(apps, schema_editor):
@@ -16,8 +16,10 @@ def copy_values_to_sle(apps, schema_editor):
             if entry.shoppinglist_set.first():
                 entry.created_by = entry.shoppinglist_set.first().created_by
                 entry.space = entry.shoppinglist_set.first().space
+            if entry.list_recipe:
+                entry.recipe = entry.list_recipe.recipe
         if entries:
-            ShoppingListEntry.objects.bulk_update(entries, ["created_by", "space", ])
+            ShoppingListEntry.objects.bulk_update(entries, ["created_by", "recipe"])
 
 
 class Migration(migrations.Migration):
@@ -49,6 +51,11 @@ class Migration(migrations.Migration):
             name='created_by',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='auth.user'),
             preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='shoppinglistentry',
+            name='recipe',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cookbook.recipe'),
         ),
         migrations.AddField(
             model_name='userpreference',
