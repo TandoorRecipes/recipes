@@ -7,6 +7,7 @@ from django.contrib.postgres.search import (
 )
 from django.core.cache import caches
 from django.db.models import Avg, Case, Count, Func, Max, Q, Subquery, Value, When
+from django.db.models.functions import Coalesce
 from django.utils import timezone, translation
 
 from cookbook.managers import DICTIONARY
@@ -60,7 +61,7 @@ def search_recipes(request, queryset, params):
 
         # return queryset.annotate(last_view=Max('viewlog__pk')).annotate(new=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0))).filter(new__gt=0).order_by('-new')
         # queryset that only annotates most recent view (higher pk = lastest view)
-        queryset = queryset.annotate(last_view=Max('viewlog__pk')).annotate(recent=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0)))
+        queryset = queryset.annotate(last_view=Max('viewlog__pk')).annotate(recent=Coalesce(When(pk__in=last_viewed_recipes, then=('last_view')), Value(0)))
         orderby += ['-recent']
 
     # TODO create setting for default ordering - most cooked, rating,
