@@ -121,3 +121,6 @@ def test_delete(u1_s1, u1_s2, obj_1):
 
 # test sharing
 # test completed entries still visible if today, but not yesterday
+# test create shopping list from recipe
+# test create shopping list from mealplan
+# test create shopping list from recipe, excluding ingredients
