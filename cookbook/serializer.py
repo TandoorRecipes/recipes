@@ -35,20 +35,13 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
         except KeyError:
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
-        try:
-            if bool(int(
-                    self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
-                return fields
-        except AttributeError:
-            pass
-        except KeyError:
-            pass
-        try:
+        # another choice is to only return the fields when self.__class__ = serializer and not worry about 'extended'
+        if self.context['request'] and bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+            return fields
+        else:
             del fields['image']
             del fields['numrecipe']
-        except KeyError:
-            pass
-        return fields
+            return fields
 
     def get_image(self, obj):
         # TODO add caching
@@ -634,37 +627,18 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         read_only_fields = ('created_by',)
 
 
-# TODO deprecate
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
-    mealplan_note = serializers.ReadOnlyField(source='mealplan.note')
+    mealplan_note = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
 
-    def get_name(self, obj):
-        if not isinstance(value := obj.servings, Decimal):
-            value = Decimal(value)
-        value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
-        return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
-        ) + f' ({value:.2g})'
-
-    def update(self, instance, validated_data):
-        if 'servings' in validated_data:
-            ShoppingListEntry.list_from_recipe(
-                list_recipe=instance,
-                servings=validated_data['servings'],
-                created_by=self.context['request'].user,
-                space=self.context['request'].space
-            )
-        return super().update(instance, validated_data)
+    def get_note_markdown(self, obj):
+        return obj.mealplan and markdown(obj.mealplan.note)
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note')
+        fields = ('id', 'recipe', 'mealplan', 'recipe_name', 'servings', 'mealplan_note')
         read_only_fields = ('id',)
 
 
@@ -674,36 +648,63 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     ingredient_note = serializers.ReadOnlyField(source='ingredient.note')
     recipe_mealplan = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
-    created_by = UserNameSerializer(read_only=True)
-    completed_at = serializers.DateTimeField(allow_null=True)
+    created_by = UserNameSerializer()
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
-        print('shoppinglist', self.__class__, self.parent.__class__)
+        # try:
+        #     # this serializer is the parent serializer for the API
+        #     api_serializer = self.context['view'].serializer_class
+        # except Exception:
+        #     # this serializer is probably nested or a foreign key
+        #     api_serializer = None
+
         # autosync values are only needed for frequent 'checked' value updating
         if self.context['request'] and bool(int(self.context['request'].query_params.get('autosync', False))):
             for f in list(set(fields) - set(['id', 'checked'])):
                 del fields[f]
         # extended values are computationally expensive and not needed in normal circumstances
-        elif not bool(int(self.context['request'].query_params.get('extended', False))) or not self.parent:
-            del fields['notes']
+        # elif bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+        #     pass
+        # else:
+        #     del fields['recipe_mealplan']
         return fields
+
+    def run_validation(self, data):
+        if (
+            data.get('checked', False)
+            and not (id := data.get('id', None))
+            and not ShoppingListEntry.objects.get(id=id).checked
+        ):
+            # if checked flips from false to true set completed datetime
+            data['completed_at'] = timezone.now()
+
+        ############################################################
+        # temporary while old and new shopping lists are both in use
+        try:
+            # this serializer is the parent serializer for the API
+            api_serializer = self.context['view'].serializer_class
+        except Exception:
+            # this serializer is probably nested or a foreign key
+            api_serializer = None
+        if self.context['request'].method == 'POST' and not self.__class__ == api_serializer:
+            data['space'] = self.context['request'].space.id
+            data['created_by'] = self.context['request'].user.id
+        ############################################################
+        if self.context['request'].method == 'POST' and self.__class__ == api_serializer:
+            data['created_by'] = {'id': self.context['request'].user.id}
+        return super().run_validation(data)
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
-    def update(self, instance, validated_data):
-        if validated_data['checked']:
-            validated_data['completed_at'] = timezone.now()
-        return super().update(instance, validated_data)
-
     class Meta:
         model = ShoppingListEntry
         fields = (
-            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked',
-            'created_by', 'created_at', 'notes', 'completed_at'
+            'id', 'list_recipe', 'food', 'unit', 'ingredient', 'ingredient_note', 'amount', 'order', 'checked', 'recipe_mealplan',
+            'created_by', 'created_at', 'completed_at'
         )
         read_only_fields = ('id',  'created_by', 'created_at',)
 

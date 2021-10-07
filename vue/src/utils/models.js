@@ -404,18 +404,15 @@ export class Models {
     }
 
     static RECIPE = {
-        name: i18n.t("Recipe"),
-        apiName: "Recipe",
-        list: {
-            params: ["query", "keywords", "foods", "units", "rating", "books", "keywordsOr", "foodsOr", "booksOr", "internal", "random", "_new", "page", "pageSize", "options"],
+        'name': i18n.t('Recipe'),
+        'apiName': 'Recipe',
+        'list': {
+            'params': ['query', 'keywords', 'foods', 'units', 'rating', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
             // 'config': {
             //     'foods': {'type': 'string'},
             //     'keywords': {'type': 'string'},
             //     'books': {'type': 'string'},
             // }
-        },
-        shopping: {
-            params: ["id", ["id", "list_recipe", "ingredients", "servings"]],
         },
     }
 
