@@ -781,17 +781,16 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.get_owner().userpreference.mealplan_autoadd_shopping:
-            kwargs = {
-                'mealplan': self,
-                'space': self.space,
-                'created_by': self.get_owner()
-            }
-            if self.get_owner().userpreference.mealplan_autoexclude_onhand:
-                kwargs['ingredients'] = Ingredient.objects.filter(step__recipe=self.recipe, food__on_hand=False, space=self.space).values_list('id', flat=True)
-            ShoppingListEntry.list_from_recipe(**kwargs)
+    # TODO override create method to check if recipes are always added
+    # @classmethod
+    # def generate_shoppinglist(self, ingredients=None):
+    #     recipe_list = ShoppingListRecipe.objects.create()
+    #     if not ingredients:
+    #         ingredients = Ingredient.objects.filter(step__recipe=self.recipe)
+    #     for i in ingredients:
+    #         ShoppingListEntry.objects.create(
+
+    #         )
 
     def get_label(self):
         if self.title:
@@ -831,20 +830,50 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
-    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)  # TODO deprecate
+    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True)  # TODO remove when shoppinglist is deprecated
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
-    recipe = models.ForeignKey(Recipe, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='shoppinglist__space')
+    objects = ScopedManager(space='space')
+
+    @classmethod
+    def list_from_recipe(self, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None):
+        try:
+            r = recipe or mealplan.recipe
+        except AttributeError:
+            raise ValueError(_("You must supply a recipe or mealplan"))
+
+        created_by = created_by or getattr(mealplan, 'created_by', None)
+        if not created_by:
+            raise ValueError(_("You must supply a created_by"))
+
+        servings = servings or getattr(mealplan, 'servings', 1.0)
+        if ingredients:
+            ingredients = Ingredient.objects.filter(pk__in=ingredients, space=space)
+        else:
+            ingredients = Ingredient.objects.filter(step__recipe=r, space=space)
+        list_recipe = ShoppingListRecipe.objects.create(recipe=r, mealplan=mealplan, servings=servings)
+        shoppinglist = [
+            ShoppingListEntry(
+                list_recipe=list_recipe,
+                food=i.food,
+                unit=i.unit,
+                ingredient=i,
+                amount=i.amount * Decimal(servings),
+                created_by=created_by,
+                space=space
+            )
+            for i in ingredients
+        ]
+        return ShoppingListEntry.objects.bulk_create(shoppinglist)
 
     @classmethod
     @atomic
