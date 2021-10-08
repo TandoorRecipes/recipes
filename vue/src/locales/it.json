@@ -155,5 +155,12 @@
     "Parameter": "Parametro",
     "Type": "Tipo",
     "Automate": "Automatizza",
-    "create_rule": "e crea automazione"
+    "create_rule": "e crea automazione",
+    "Empty": "Vuoto",
+    "Food_Alias": "Alias Alimento",
+    "Unit_Alias": "Alias Unità",
+    "Keyword_Alias": "Alias Parola Chiave",
+    "Table_of_Contents": "Indice dei contenuti",
+    "warning_feature_beta": "Questa funzione è attualmente in BETA (non è completa). Potrebbero verificarsi delle anomalie e modifiche che in futuro potrebbero bloccare la funzionalità stessa o rimuove i dati correlati a essa.",
+    "Shopping_list": "Lista della spesa"
 }
