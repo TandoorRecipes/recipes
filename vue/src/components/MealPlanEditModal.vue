@@ -6,12 +6,14 @@
           <div class="col-6 col-lg-9">
             <b-input-group>
               <b-form-input id="TitleInput" v-model="entryEditing.title"
-                            :placeholder="entryEditing.title_placeholder"></b-form-input>
+                            :placeholder="entryEditing.title_placeholder"
+                            @change="missing_recipe = false"></b-form-input>
               <b-input-group-append class="d-none d-lg-block">
                 <b-button variant="primary" @click="entryEditing.title = ''"><i class="fa fa-eraser"></i></b-button>
               </b-input-group-append>
             </b-input-group>
-            <small tabindex="-1" class="form-text text-muted">{{ $t("Title") }}</small>
+            <span class="text-danger" v-if="missing_recipe">{{ $t('Title_or_Recipe_Required') }}</span>
+            <small tabindex="-1" class="form-text text-muted" v-if="!missing_recipe">{{ $t("Title") }}</small>
           </div>
           <div class="col-6 col-lg-3">
             <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date">
@@ -37,10 +39,15 @@
                                    :label="'name'"
                                    :model="Models.MEAL_TYPE"
                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                   v-bind:placeholder="$t('MealType')" :limit="10"
+                                   v-bind:placeholder="$t('Meal_Type')" :limit="10"
                                    :multiple="false"
-                                   :initial_selection="entryEditing_initial_meal_type"></generic-multiselect>
-              <small tabindex="-1" class="form-text text-muted">{{ $t("MealType") }}</small>
+                                   :initial_selection="entryEditing_initial_meal_type"
+                                   :allow_create="true"
+                                   :create_placeholder="$t('Create_New_Meal_Type')"
+                                   @new="createMealType"
+              ></generic-multiselect>
+              <span class="text-danger" v-if="missing_meal_type">{{ $t('Meal_Type_Required') }}</span>
+              <small tabindex="-1" class="form-text text-muted" v-if="!missing_meal_type">{{ $t("Meal_Type") }}</small>
             </b-form-group>
             <b-form-group
                 label-for="NoteInput"
@@ -76,6 +83,10 @@ import {BootstrapVue} from "bootstrap-vue";
 import GenericMultiselect from "./GenericMultiselect";
 import {ApiMixin} from "../utils/utils";
 
+const {ApiApiFactory} = require("@/utils/openapi/api");
+
+const {StandardToasts} = require("@/utils/utils");
+
 Vue.use(BootstrapVue)
 
 export default {
@@ -101,7 +112,9 @@ export default {
   },
   data() {
     return {
-      entryEditing: {}
+      entryEditing: {},
+      missing_recipe: false,
+      missing_meal_type: false
     }
   },
   watch: {
@@ -114,29 +127,47 @@ export default {
   },
   methods: {
     editEntry() {
+      this.missing_meal_type = false
+      this.missing_recipe = false
+      let cancel = false
       if (this.entryEditing.meal_type == null) {
-        alert("Need Meal type")
-        return
+        this.missing_meal_type = true
+        cancel = true
       }
       if (this.entryEditing.recipe == null && this.entryEditing.title === '') {
-        alert("Need title or recipe")
-        return
+        this.missing_recipe = true
+        cancel = true
       }
-      this.$bvModal.hide(`edit-modal`);
-      this.$emit('save-entry', this.entryEditing)
+      if (!cancel) {
+        this.$bvModal.hide(`edit-modal`);
+        this.$emit('save-entry', this.entryEditing)
+      }
     },
     deleteEntry() {
       this.$bvModal.hide(`edit-modal`);
       this.$emit('delete-entry', this.entryEditing)
     },
     selectMealType(event) {
+      this.missing_meal_type = false
       if (event.val != null) {
         this.entryEditing.meal_type = event.val;
       } else {
         this.entryEditing.meal_type = null;
       }
     },
+    createMealType(event) {
+      if (event != "") {
+        let apiClient = new ApiApiFactory()
+
+        apiClient.createMealType({name: event}).then(e => {
+          this.$emit('reload-meal-types')
+        }).catch(error => {
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+        })
+      }
+    },
     selectRecipe(event) {
+      this.missing_recipe = false
       if (event.val != null) {
         this.entryEditing.recipe = event.val;
         this.entryEditing.title_placeholder = this.entryEditing.recipe.name
