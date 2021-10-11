@@ -5,6 +5,7 @@ on:
       - 'beta'
 jobs:
   build:
+    if: github.repository_owner == 'vabene1111'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -24,3 +25,9 @@ jobs:
           tag: beta
           dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
           dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_BETA_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: 'The BETA Image has been updated!'

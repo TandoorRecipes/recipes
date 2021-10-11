@@ -1,4 +1,4 @@
-from cookbook.helper.ingredient_parser import parse
+from cookbook.helper.ingredient_parser import IngredientParser
 
 
 def test_ingredient_parser():
@@ -58,14 +58,16 @@ def test_ingredient_parser():
         "2L Wasser": (2, "L", "Wasser", ""),
         "1 (16 ounce) package dry lentils, rinsed": (1, "package", "dry lentils, rinsed", "16 ounce"),
         "2-3 c Water": (2, "c", "Water", "2-3"),
-        "Pane (raffermo o secco) 80 g": (0, "", "Pane 80 g", "raffermo o secco"), #TODO this is actually not a good result but currently expected
+        "Pane (raffermo o secco) 80 g": (0, "", "Pane 80 g", "raffermo o secco"),  # TODO this is actually not a good result but currently expected
     }
     # for German you could say that if an ingredient does not have
     # an amount # and it starts with a lowercase letter, then that
     # is a unit ("etwas", "evtl.") does not apply to English tho
 
+    ingredient_parser = IngredientParser(None, False, ignore_automations=True)
+
     count = 0
     for key, val in expectations.items():
         count += 1
-        parsed = parse(key)
+        parsed = ingredient_parser.parse(key)
         assert val == parsed

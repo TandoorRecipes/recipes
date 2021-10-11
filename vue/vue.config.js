@@ -25,6 +25,26 @@ const pages = {
         entry: './src/apps/UserFileView/main.js',
         chunks: ['chunk-vendors']
     },
+    'model_list_view': {
+        entry: './src/apps/ModelListView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'edit_internal_recipe': {
+        entry: './src/apps/RecipeEditView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'cookbook_view': {
+        entry: './src/apps/CookbookView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'meal_plan_view': {
+        entry: './src/apps/MealPlanView/main.js',
+        chunks: ['chunk-vendors']
+    },
+    'checklist_view': {
+        entry: './src/apps/ChecklistView/main.js',
+        chunks: ['chunk-vendors']
+    },
 }
 
 module.exports = {
@@ -67,15 +87,18 @@ module.exports = {
     chainWebpack: config => {
 
         config.optimization.splitChunks({
-            cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: "chunk-vendors",
-                    chunks: "all",
-                    priority: 1
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: "chunk-vendors",
+                        chunks: "all",
+                        priority: 1
+                    },
                 },
             },
-        });
+            // TODO make this conditional on .env DEBUG = FALSE
+            config.optimization.minimize(true)
+        );
 
         //TODO somehow remov them as they are also added to the manifest config of the service worker
         /*

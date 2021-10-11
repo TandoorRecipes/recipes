@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    if: github.repository_owner == 'vabene1111'
     runs-on: ubuntu-latest
     name: Build image job
     steps:

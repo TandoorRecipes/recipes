@@ -105,7 +105,7 @@ def test_add(arg, request, u1_s2, recipe_1_s1, meal_type):
     c = request.getfixturevalue(arg[0])
     r = c.post(
         reverse(LIST_URL),
-        {'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []}, 'meal_type': meal_type.id,
+        {'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []}, 'meal_type': {'id': meal_type.id, 'name': meal_type.name},
          'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test'},
         content_type='application/json'
     )

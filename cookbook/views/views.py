@@ -3,7 +3,6 @@ import re
 from datetime import datetime
 from uuid import UUID
 
-from allauth.account.forms import SignupForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -12,26 +11,25 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django_scopes import scopes_disabled, scope
+from django_scopes import scopes_disabled
 from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
-from cookbook.forms import (CommentForm, Recipe, RecipeBookEntryForm, User,
+from cookbook.forms import (CommentForm, Recipe, User,
                             UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm, AllAuthSignupForm)
-from cookbook.helper.ingredient_parser import parse
+                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
+                            SearchPreferenceForm)
 from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
 from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
-                             Food, UserFile, ShareLink)
+                             ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
+                             Food, UserFile, ShareLink, SearchPreference, SearchFields)
 from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable, InviteLinkTable)
 from cookbook.views.data import Object
@@ -57,15 +55,14 @@ def index(request):
         return HttpResponseRedirect(reverse('view_search'))
 
 
+# TODO need to deprecate
 def search(request):
     if has_group_permission(request.user, ('guest',)):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
-
         f = RecipeFilter(request.GET,
                          queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
                          space=request.space)
-
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
         else:
@@ -95,6 +92,7 @@ def search(request):
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
+@group_required('guest')
 def search_v2(request):
     return render(request, 'search.html', {})
 
@@ -214,25 +212,17 @@ def recipe_view(request, pk, share=None):
 
 @group_required('user')
 def books(request):
-    book_list = []
-
-    recipe_books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user),
-                                             space=request.space).distinct().all()
-
-    for b in recipe_books:
-        book_list.append(
-            {
-                'book': b,
-                'recipes': RecipeBookEntry.objects.filter(book=b).all()
-            }
-        )
-
-    return render(request, 'books.html', {'book_list': book_list})
+    return render(request, 'books.html', {})
 
 
 @group_required('user')
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
+
+
+@group_required('user')
+def meal_plan_new(request):
+    return render(request, 'meal_plan_new.html', {})
 
 
 @group_required('user')
@@ -304,11 +294,15 @@ def user_settings(request):
         return redirect('index')
 
     up = request.user.userpreference
+    sp = request.user.searchpreference
+    search_error = False
+    active_tab = 'account'
 
     user_name_form = UserNameForm(instance=request.user)
 
     if request.method == "POST":
         if 'preference_form' in request.POST:
+            active_tab = 'preferences'
             form = UserPreferenceForm(request.POST, prefix='preference')
             if form.is_valid():
                 if not up:
@@ -332,25 +326,98 @@ def user_settings(request):
 
                 up.save()
 
-        if 'user_name_form' in request.POST:
+        elif 'user_name_form' in request.POST:
             user_name_form = UserNameForm(request.POST, prefix='name')
             if user_name_form.is_valid():
                 request.user.first_name = user_name_form.cleaned_data['first_name']
                 request.user.last_name = user_name_form.cleaned_data['last_name']
                 request.user.save()
 
+        elif 'password_form' in request.POST:
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+
+        elif 'search_form' in request.POST:
+            active_tab = 'search'
+            search_form = SearchPreferenceForm(request.POST, prefix='search')
+            if search_form.is_valid():
+                if not sp:
+                    sp = SearchPreferenceForm(user=request.user)
+                fields_searched = (
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
+                )
+                if fields_searched == 0:
+                    search_form.add_error(None, _('You must select at least one field to search!'))
+                    search_error = True
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
+                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
+                    search_error = True
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
+                    search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
+                    search_error = True
+                else:
+                    sp.search = search_form.cleaned_data['search']
+                    sp.lookup = search_form.cleaned_data['lookup']
+                    sp.unaccent.set(search_form.cleaned_data['unaccent'])
+                    sp.icontains.set(search_form.cleaned_data['icontains'])
+                    sp.istartswith.set(search_form.cleaned_data['istartswith'])
+                    sp.trigram.set(search_form.cleaned_data['trigram'])
+                    sp.fulltext.set(search_form.cleaned_data['fulltext'])
+                    sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
+
+                    if search_form.cleaned_data['preset'] == 'fuzzy':
+                        sp.search = SearchPreference.SIMPLE
+                        sp.lookup = True
+                        sp.unaccent.set([SearchFields.objects.get(name='Name')])
+                        sp.icontains.set([SearchFields.objects.get(name='Name')])
+                        sp.istartswith.clear()
+                        sp.trigram.set([SearchFields.objects.get(name='Name')])
+                        sp.fulltext.clear()
+                        sp.trigram_threshold = 0.1
+
+                    if search_form.cleaned_data['preset'] == 'precise':
+                        sp.search = SearchPreference.WEB
+                        sp.lookup = True
+                        sp.unaccent.set(SearchFields.objects.all())
+                        sp.icontains.clear()
+                        sp.istartswith.set([SearchFields.objects.get(name='Name')])
+                        sp.trigram.clear()
+                        sp.fulltext.set(SearchFields.objects.all())
+                        sp.trigram_threshold = 0.1
+
+                    sp.save()
     if up:
         preference_form = UserPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm()
 
+    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
+    if sp and not search_error and fields_searched > 0:
+        search_form = SearchPreferenceForm(instance=sp)
+    elif not search_error:
+        search_form = SearchPreferenceForm()
+
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
+
+    # these fields require postgress - just disable them if postgress isn't available
+    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        search_form.fields['search'].disabled = True
+        search_form.fields['lookup'].disabled = True
+        search_form.fields['trigram'].disabled = True
+        search_form.fields['fulltext'].disabled = True
 
     return render(request, 'settings.html', {
         'preference_form': preference_form,
         'user_name_form': user_name_form,
         'api_token': api_token,
+        'search_form': search_form,
+        'active_tab': active_tab
     })
 
 
@@ -533,6 +600,10 @@ def markdown_info(request):
     return render(request, 'markdown_info.html', {})
 
 
+def search_info(request):
+    return render(request, 'search_info.html', {})
+
+
 @group_required('guest')
 def api_info(request):
     return render(request, 'api_info.html', {})
@@ -545,7 +616,12 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
-    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
+
+    with scopes_disabled():
+        result = ShoppingList.objects.filter(
+            Q(created_by=request.user) | Q(shared=request.user)).filter(
+            space=request.space).values().distinct()
+    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
 
 
 def test2(request):
