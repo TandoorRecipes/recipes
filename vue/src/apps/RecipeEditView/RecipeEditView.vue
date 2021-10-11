@@ -24,7 +24,7 @@
       </div>
 
       <div class="row pt-2">
-        <div class="col-md-6" style="max-height: 50vh">
+        <div class="col-md-6" style="max-height: 50vh; min-height: 30vh">
 
           <input id="id_file_upload" ref="file_upload" type="file" hidden @change="uploadImage($event.target.files[0])">
 
@@ -47,7 +47,7 @@
           </button>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mt-1">
           <label for="id_name"> {{ $t('Preparation') }} {{ $t('Time') }}</label>
           <input class="form-control" id="id_prep_time" v-model="recipe.working_time">
           <br/>
