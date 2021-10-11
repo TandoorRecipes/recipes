@@ -21,9 +21,9 @@
 {% block content %}
 
     <div id="app">
-        <div class="row">
+        <div class="row mt-2 mb-1">
             <div class="col-md-4 offset-md-4">
-                <div class="input-group" style="margin-top: 8px; margin-bottom: 8px">
+                <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-secondary shadow-none"
                                 @click="changeStartDate(number_of_days * -1)">
@@ -39,6 +39,13 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <a href="{% url 'view_plan_new' %}" class="float-right">
+                    <button class="btn btn-outline-secondary shadow-none">
+                        <i class="fas fa-star"></i> {% trans 'Try the new meal planner' %}
+                    </button>
+                </a>
+            </div>
         </div>
 
         <div class="row">
@@ -46,7 +53,8 @@
                 <table class="table table-sm table-striped table-responsive-sm" style=" table-layout:fixed;">
                     <thead class="thead-dark" style="background-image: url({% static 'assets/header.svg' %});">
                     <tr>
-                        <th class="thead-blank" v-for="d in dates" style="width: 14.2%; text-align: center;">[[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
+                        <th class="thead-blank" v-for="d in dates" style="width: 14.2%; text-align: center;">
+                            [[formatDateDayname(d)]]<br/>[[formatDateDay(d)]].
                             <button class="btn btn-sm btn-outline-secondary shadow-none" @click="addDayToShopping(d)"><i
                                     class="fas fa-cart-plus fa-sm"></i></button>
                         </th>
@@ -460,7 +468,7 @@
                             this.$set(mte, 'delete', false)
                         }
 
-                        if (this.meal_types.length === 0){
+                        if (this.meal_types.length === 0) {
                             this.makeToast(gettext('Information'), gettext('To use the meal plan please first create at least one meal plan type.'), 'warning')
                         }
                     }).catch((err) => {
@@ -517,7 +525,7 @@
                     }
 
                     this.$http.get(url).then((response) => {
-                        this.recipes = response.data.results;
+                        this.recipes = this.removeDuplicates(response.data.results, recipe => recipe.id);
                     }).catch((err) => {
                         console.log("getRecipes error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
@@ -552,7 +560,7 @@
                         let plan_entry = evt.added.element
 
                         plan_entry.date = date
-                        plan_entry.meal_type = meal_type.id
+                        plan_entry.meal_type = meal_type
                         plan_entry.meal_type_name = meal_type.name
 
                         if (plan_entry.is_new) { // its not a meal plan object
@@ -567,7 +575,6 @@
                                 console.log("dragChanged create error", err);
                             })
                         } else {
-                            console.log(plan_entry)
                             this.$http.put(`{% url 'api:mealplan-list' %}${plan_entry.id}/`, plan_entry).then((response) => {
                             }).catch((err) => {
                                 console.log("dragChanged update error", err);
@@ -584,6 +591,11 @@
                         console.log("deleteEntry error: ", err);
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
+                },
+                removeDuplicates: function (data, key) {
+                    return [
+                        ...new Map(data.map(item => [key(item), item])).values()
+                    ]
                 },
                 updatePlanTypes: function () {
                     let promise_list = []

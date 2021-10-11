@@ -1,6 +1,5 @@
 import io
 import os
-import tempfile
 from datetime import datetime
 from os import listdir
 from os.path import isfile, join

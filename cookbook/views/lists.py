@@ -1,30 +1,16 @@
 from datetime import datetime
 
 from django.db.models import Q
-from django.db.models.functions import Lower
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
-from cookbook.filters import FoodFilter, ShoppingListFilter
+from cookbook.filters import ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import (Food, InviteLink, Keyword, RecipeImport,
+from cookbook.models import (InviteLink, RecipeImport,
                              ShoppingList, Storage, SyncLog)
-from cookbook.tables import (ImportLogTable, IngredientTable, InviteLinkTable,
-                             KeywordTable, RecipeImportTable,
-                             ShoppingListTable, StorageTable)
-
-
-@group_required('user')
-def keyword(request):
-    table = KeywordTable(Keyword.objects.filter(space=request.space).all())
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
-    return render(
-        request,
-        'generic/list_template.html',
-        {'title': _("Keyword"), 'table': table, 'create_url': 'new_keyword'}
-    )
+from cookbook.tables import (ImportLogTable, InviteLinkTable,
+                             RecipeImportTable, ShoppingListTable, StorageTable)
 
 
 @group_required('admin')
@@ -54,26 +40,24 @@ def recipe_import(request):
     )
 
 
-@group_required('user')
-def food(request):
-    f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
+# @group_required('user')
+# def food(request):
+#     f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
 
-    table = IngredientTable(f.qs)
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+#     table = IngredientTable(f.qs)
+#     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(
-        request,
-        'generic/list_template.html',
-        {'title': _("Ingredients"), 'table': table, 'filter': f}
-    )
+#     return render(
+#         request,
+#         'generic/list_template.html',
+#         {'title': _("Ingredients"), 'table': table, 'filter': f}
+#     )
 
 
 @group_required('user')
 def shopping_list(request):
-    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(
-        Q(created_by=request.user) |
-        Q(shared=request.user), space=request.space
-    ).all().order_by('finished', 'created_at'))
+    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(space=request.space).filter(
+        Q(created_by=request.user) | Q(shared=request.user)).distinct().all().order_by('finished', 'created_at'))
 
     table = ShoppingListTable(f.qs)
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
@@ -108,7 +92,8 @@ def storage(request):
 
 @group_required('admin')
 def invite_link(request):
-    table = InviteLinkTable(InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
+    table = InviteLinkTable(
+        InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
     return render(request, 'generic/list_template.html', {
@@ -116,3 +101,116 @@ def invite_link(request):
         'table': table,
         'create_url': 'new_invite_link'
     })
+
+
+@group_required('user')
+def keyword(request):
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Keywords"),
+            "config": {
+                'model': "KEYWORD",
+                'recipe_param': 'keywords'
+            }
+        }
+    )
+
+
+@group_required('user')
+def food(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Foods"),
+            "config": {
+                'model': "FOOD",  # *REQUIRED* name of the model in models.js
+                'recipe_param': 'foods'  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+            }
+        }
+    )
+
+
+@group_required('user')
+def unit(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Units"),
+            "config": {
+                'model': "UNIT",  # *REQUIRED* name of the model in models.js
+                'recipe_param': 'units',  # *OPTIONAL* name of the listRecipes parameter if filtering on this attribute
+            }
+        }
+    )
+
+
+@group_required('user')
+def supermarket(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Supermarkets"),
+            "config": {
+                'model': "SUPERMARKET",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def supermarket_category(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Shopping Categories"),
+            "config": {
+                'model': "SHOPPING_CATEGORY",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def automation(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Automations"),
+            "config": {
+                'model': "AUTOMATION",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def shopping_list_new(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/checklist_template.html',
+        {
+            "title": _("New Shopping List"),
+            "config": {
+                'model': "SHOPPING_LIST",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )

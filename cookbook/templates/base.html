@@ -73,68 +73,21 @@
     {% endif %}
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if request.resolver_match.url_name in 'view_search,edit_recipe,edit_internal_recipe,edit_external_recipe,view_recipe,data_import_url' %}active{% endif %}">
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_search' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_search' %}"><i
-                        class="fas fa-book"></i> {% trans 'Cookbook' %}<span
-                        class="sr-only">(current)</span></a>
+                        class="fas fa-book"></i> {% trans 'Cookbook' %}</a>
             </li>
-
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_books,view_plan,view_shopping,list_food,view_plan_entry' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-mortar-pestle"></i> {% trans 'Utensils' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'view_books' %}"><i
-                            class="fas fa-bookmark fa-fw"></i> {% trans 'Books' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'view_plan' %}"><i
-                            class="fas fa-calendar fa-fw"></i> {% trans 'Meal-Plan' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_shopping_list' %}"><i
-                            class="fas fa-shopping-cart fa-fw"></i> {% trans 'Shopping' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'list_food' %}"><i
-                            class="fas fa-leaf fa-fw"></i> {% trans 'Ingredients' %}
-                    </a>
-                    <a class="dropdown-item" href="{% url 'view_supermarket' %}"><i
-                            class="fas fa-store-alt fa-fw"></i> {% trans 'Supermarket' %}
-                    </a>
-                </div>
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_plan' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'view_plan' %}"><i
+                        class="fas fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,data_batch_edit' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-tags"></i> {% trans 'Keywords' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
-                            class="fas fa-tags fa-fw"></i> {% trans 'Keyword' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_batch_edit' %}"><i
-                            class="fas fa-edit fa-fw"></i> {% trans 'Batch Edit' %}</a>
-                </div>
+            <li class="nav-item {% if request.resolver_match.url_name in 'list_shopping_list,view_shopping' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'list_shopping_list' %}"><i
+                        class="fas fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
             </li>
-            <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_storage,data_sync,list_recipe_import,list_sync_log,data_stats,edit_food,edit_storage' %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-database"></i> {% trans 'Storage Data' %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'list_storage' %}"><i
-                            class="fas fa-database fa-fw"></i> {% trans 'Storage Backends' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_sync' %}"><i
-                            class="fas fa-sync-alt fa-fw"></i> {% trans 'Configure Sync' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_recipe_import' %}"><i
-                            class="far fa-file-alt fa-fw"></i> {% trans 'Discovered Recipes' %}</a>
-                    <a class="dropdown-item" href="{% url 'list_sync_log' %}"><i
-                            class="fas fa-history fa-fw"></i> {% trans 'Discovery Log' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_stats' %}"><i
-                            class="fas fa-chart-line fa-fw"></i> {% trans 'Statistics' %}</a>
-                    <a class="dropdown-item" href="{% url 'edit_food' %}"><i
-                            class="fas fa-balance-scale fa-fw"></i> {% trans 'Units & Ingredients' %}</a>
-                    <a class="dropdown-item" href="{% url 'data_import_url' %}"><i
-                            class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
-
-                </div>
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_books' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'view_books' %}"><i
+                        class="fas fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
         </ul>
 
@@ -143,6 +96,129 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-toolbox fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-center dropdown-menu-center-large">
+                        <div class="row m-0">
+                            <div class="col-4">
+                                <a href="{% url 'list_keyword' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-tags fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Keyword' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_food' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-leaf fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Ingredients' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_unit' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-balance-scale fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Units' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4">
+                                <a href="{% url 'list_supermarket' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-store-alt fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Supermarket' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_supermarket_category' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-cubes fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Supermarket Category' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_automation' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-robot fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Automations' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-4">
+                                <a href="{% url 'data_batch_edit' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-edit fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Batch Edit' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'view_history' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-history fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'History' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'data_import_url,new_recipe' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"><i
+                            class="fas fa-plus fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-center"
+                         aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'data_import_url' %}"><i
+                                class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
+                        <a class="dropdown-item " href="{% url 'new_recipe' %}"><i
+                                class="fas fa-plus"></i> {% trans 'Create' %}</a>
+                    </div>
+                </li>
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
@@ -152,21 +228,16 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url 'view_settings' %}"><i
                                 class="fas fa-user-cog fa-fw"></i> {% trans 'Settings' %}</a>
-                        <a class="dropdown-item" href="{% url 'view_history' %}"><i
-                                class="fas fa-history"></i> {% trans 'History' %}</a>
+                        <a class="dropdown-item" href="{% url 'data_sync' %}"><i
+                                class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                         {% if request.user == request.space.created_by %}
                             <a class="dropdown-item" href="{% url 'view_space' %}"><i
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
                         {% endif %}
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'view_system' %}"><i
-                                class="fas fa-server fa-fw"></i> {% trans 'System' %}</a>
-                        <a class="dropdown-item" href="{% url 'admin:index' %}"><i
-                                class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% if user.is_superuser %}
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'list_keyword' %}"><i
-                                    class="fas fa-tags"></i> {% trans 'Keywords' %}</a>
+                            <a class="dropdown-item" href="{% url 'view_system' %}"><i
+                                    class="fas fa-server fa-fw"></i> {% trans 'System' %}</a>
                             <a class="dropdown-item" href="{% url 'admin:index' %}"><i
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
                         {% endif %}
@@ -175,6 +246,8 @@
                                 class="fab fa-markdown fa-fw"></i> {% trans 'Markdown Guide' %}</a>
                         <a class="dropdown-item" href="https://github.com/vabene1111/recipes"><i
                                 class="fab fa-github fa-fw"></i> {% trans 'GitHub' %}</a>
+                        <a class="dropdown-item" href="https://translate.tandoor.dev/projects/tandoor/"><i
+                                class="fas fa-language fa-fw"></i> {% trans 'Translate Tandoor' %}</a>
                         <a class="dropdown-item" href="{% url 'docs_api' %}"><i
                                 class="fas fa-passport fa-fw"></i> {% trans 'API Documentation' %}</a>
                         <a class="dropdown-item" href="{% url 'api:api-root' %}"><i
@@ -242,9 +315,11 @@
 {% endblock script %}
 
 <script type="application/javascript">
+    localStorage.setItem('SCRIPT_NAME', "{% base_path request 'script' %}")
+    localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: '/'}).then(function (reg) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {
 
             }).catch(function (err) {
                 console.warn('Error whilst registering service worker', err);

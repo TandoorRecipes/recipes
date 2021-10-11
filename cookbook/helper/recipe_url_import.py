@@ -2,17 +2,15 @@ import random
 import re
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
-from recipe_scrapers._exceptions import ElementNotFoundInHtml
 
-from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Keyword
 from django.utils.dateparse import parse_duration
 from html import unescape
-from recipe_scrapers._schemaorg import SchemaOrgException
 from recipe_scrapers._utils import get_minutes
 
 
-def get_from_scraper(scrape, space):
+def get_from_scraper(scrape, request):
     # converting the scrape_me object to the existing json format based on ld+json
     recipe_json = {}
     try:
@@ -56,6 +54,7 @@ def get_from_scraper(scrape, space):
         recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
     except Exception:
         recipe_json['cookTime'] = 0
+
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
@@ -92,15 +91,16 @@ def get_from_scraper(scrape, space):
     except Exception:
         pass
     try:
-        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
+        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
         recipe_json['keywords'] = keywords
 
+    ingredient_parser = IngredientParser(request, True)
     try:
         ingredients = []
         for x in scrape.ingredients():
             try:
-                amount, unit, ingredient, note = parse_single_ingredient(x)
+                amount, unit, ingredient, note = ingredient_parser.parse(x)
                 ingredients.append(
                     {
                         'amount': amount,
