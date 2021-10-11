@@ -70,7 +70,7 @@ Execute `bin/python3.9 manage.py migrate`
 
 and revert superuser from postgres: `sudo -u postgres psql` and `ALTER USER djangouser WITH NOSUPERUSER;`
 
-Generate static files: `python3.9 manage.py collectstatic` and remember the folder where files have been copied.
+Generate static files: `bin/python3.9 manage.py collectstatic` and remember the folder where files have been copied.
 
 ## Setup web services
 
