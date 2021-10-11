@@ -45,7 +45,7 @@
     <div class="actionArea d-none d-sm-flex">
       <span class="delete-area text-danger p-1 mr-2" @drop.prevent="onDeleteDrop($event)"
             @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i
-          class="fas fa-trash"></i> {{ $t('DragHereToDelete') }}</span>
+          class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
     </div>
   </div>
 </template>

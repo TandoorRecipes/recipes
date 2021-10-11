@@ -5,7 +5,9 @@ import uuid
 from io import BytesIO, StringIO
 from zipfile import ZipFile, BadZipFile
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
@@ -35,20 +37,24 @@ class Integration:
 
         description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
         icon = '📥'
-        count = Keyword.objects.filter(name__icontains='Import', space=request.space).count()
-        name = f'Import {count + 1}'
 
-        if DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-            parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
+        try:
+            last_kw = Keyword.objects.filter(name__regex=r'^(Import [0-9]+)', space=request.space).latest('created_at')
+            name = f'Import {int(last_kw.name.replace("Import ", "")) + 1}'
+        except ObjectDoesNotExist:
+            name = 'Import 1'
+
+        parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
+        try:
             self.keyword = parent.add_child(
                 name=name,
                 description=description,
                 icon=icon,
                 space=request.space
             )
-        else:
-            self.keyword, created = Keyword.objects.get_or_create(
-                name=name,
+        except IntegrityError: # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
+            self.keyword = parent.add_child(
+                name=f'{name} {str(uuid.uuid4())[0:8]}',
                 description=description,
                 icon=icon,
                 space=request.space
