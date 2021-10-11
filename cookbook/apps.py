@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 from django.conf import settings
-from django.db import OperationalError
+from django.db import OperationalError, ProgrammingError
 from django_scopes import scopes_disabled
 
 
@@ -21,4 +21,6 @@ class CookbookConfig(AppConfig):
                 Keyword.fix_tree(fix_paths=True)
                 Food.fix_tree(fix_paths=True)
             except OperationalError:
-                pass # if model does not exist there is no need to fix it
+                pass  # if model does not exist there is no need to fix it
+            except ProgrammingError:
+                pass  # if migration has not been run database cannot be fixed yet
