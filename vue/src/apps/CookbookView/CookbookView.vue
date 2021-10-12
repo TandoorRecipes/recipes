@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div class="mb-3" v-for="book in filteredBooks" v-bind:key="book.id">
+    <div class="mb-3" v-for="book in filteredBooks" :key="book.id">
       <div class="row">
         <div class="col-md-12">
           <b-card class="d-flex flex-column" v-hover
@@ -49,7 +49,8 @@
 
       <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
       <transition name="slide-fade">
-        <cookbook-slider :recipes="recipes" :book="book" v-if="current_book === book.id && !loading" v-on:refresh="refreshData"></cookbook-slider>
+        <cookbook-slider :recipes="recipes" :book="book" :key="`slider_${book.id}`"
+                         v-if="current_book === book.id && !loading" v-on:refresh="refreshData"></cookbook-slider>
       </transition>
     </div>
   </div>
