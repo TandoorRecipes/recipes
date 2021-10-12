@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-06-24 15:49+0000\n"
-"Last-Translator: Maximilian J <maxijannack@t-online.de>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2021-10-07 19:06+0000\n"
+"Last-Translator: vabene1111 <vabene1234@googlemail.com>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7\n"
+"X-Generator: Weblate 4.8\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -286,38 +286,32 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\forms.py:497
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Suche"
+msgstr "Suchmethode"
 
 #: .\cookbook\forms.py:498
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Unpräzise Suche"
 
 #: .\cookbook\forms.py:499
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Akzente ignorieren"
 
 #: .\cookbook\forms.py:500
 msgid "Partial Match"
-msgstr ""
+msgstr "Teilweise Übereinstimmung"
 
 #: .\cookbook\forms.py:501
 msgid "Starts Wtih"
-msgstr ""
+msgstr "Beginnt mit"
 
 #: .\cookbook\forms.py:502
-#, fuzzy
-#| msgid "Search"
 msgid "Fuzzy Search"
-msgstr "Suche"
+msgstr "Unpräzise Suche"
 
 #: .\cookbook\forms.py:503
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Text"
+msgstr "Volltext"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -410,7 +404,6 @@ msgstr "Quelle"
 #: .\cookbook\templates\include\log_cooking.html:16
 #: .\cookbook\templates\url_import.html:224
 #: .\cookbook\templates\url_import.html:455
-#, fuzzy
 msgid "Servings"
 msgstr "Portionen"
 
@@ -475,7 +468,7 @@ msgstr ""
 #: .\cookbook\models.py:196 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:52
 msgid "Search"
-msgstr "Suche"
+msgstr "Suchen"
 
 #: .\cookbook\models.py:197 .\cookbook\templates\base.html:82
 #: .\cookbook\templates\meal_plan.html:5 .\cookbook\views\delete.py:152
@@ -503,7 +496,7 @@ msgstr "Neu"
 
 #: .\cookbook\models.py:389
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " ist Teil eines Rezepts und kann nicht gelöscht werden"
 
 #: .\cookbook\models.py:429
 msgid "Text"

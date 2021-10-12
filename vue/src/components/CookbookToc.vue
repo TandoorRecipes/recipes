@@ -1,7 +1,7 @@
 <template>
   <b-card no-body v-hover>
     <b-card-header class="p-4">
-      <h5>{{ $t('TableOfContents') }}</h5>
+      <h5>{{ $t('Table_of_Contents') }}</h5>
     </b-card-header>
     <b-card-body class="p-4">
       <ol style="max-height: 60vh;overflow-y:auto;-webkit-overflow-scrolling: touch;" class="mb-1">
