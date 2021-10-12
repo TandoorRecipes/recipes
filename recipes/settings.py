@@ -149,7 +149,7 @@ MIDDLEWARE = [
     'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
 
-SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', True)))
+SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 
 if bool(int(os.getenv('SQL_DEBUG', False))):
     MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)

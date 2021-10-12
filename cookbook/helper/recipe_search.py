@@ -61,7 +61,7 @@ def search_recipes(request, queryset, params):
 
         # return queryset.annotate(last_view=Max('viewlog__pk')).annotate(new=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0))).filter(new__gt=0).order_by('-new')
         # queryset that only annotates most recent view (higher pk = lastest view)
-        queryset = queryset.annotate(last_view=Max('viewlog__pk')).annotate(recent=Coalesce(When(pk__in=last_viewed_recipes, then=('last_view')), Value(0)))
+        queryset = queryset.annotate(recent=Coalesce(Max('viewlog__pk'), Value(0)))
         orderby += ['-recent']
 
     # TODO create setting for default ordering - most cooked, rating,

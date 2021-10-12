@@ -75,7 +75,7 @@
 
     <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial_recipe="[recipe]"
                           :entry-editing_initial_meal_type="[]" @save-entry="saveMealPlan"
-                          :modal_id="`modal-meal-plan_${modal_id}`" :allow_delete="false" :modal_title="$t('CreateMealPlanEntry')"></meal-plan-edit-modal>
+                          :modal_id="`modal-meal-plan_${modal_id}`" :allow_delete="false" :modal_title="$t('Create_Meal_Plan_Entry')"></meal-plan-edit-modal>
   </div>
 </template>
 

@@ -31,11 +31,11 @@
       <b-tab :title="$t('Settings')">
         <div class="row mt-3">
           <div class="col-3 calender-options">
-            <h5>{{ $t('CalenderSettings') }}</h5>
+            <h5>{{ $t('Planner_Settings') }}</h5>
             <b-form>
               <b-form-group id="UomInput"
                             :label="$t('Period')"
-                            :description="$t('PeriodToShow')"
+                            :description="$t('Plan_Period_To_Show')"
                             label-for="UomInput">
                 <b-form-select
                     id="UomInput"
@@ -44,8 +44,8 @@
                 ></b-form-select>
               </b-form-group>
               <b-form-group id="PeriodInput"
-                            :label="$t('PeriodCount')"
-                            :description="$t('ShowHowManyPeriods')"
+                            :label="$t('Periods')"
+                            :description="$t('Plan_Show_How_Many_Periods')"
                             label-for="PeriodInput">
                 <b-form-select
                     id="PeriodInput"
@@ -54,8 +54,8 @@
                 ></b-form-select>
               </b-form-group>
               <b-form-group id="DaysInput"
-                            :label="$t('StartingDay')"
-                            :description="$t('StartingDay')"
+                            :label="$t('Starting_Day')"
+                            :description="$t('Starting_Day')"
                             label-for="DaysInput">
                 <b-form-select
                     id="DaysInput"
@@ -66,7 +66,7 @@
             </b-form>
           </div>
           <div class="col-6">
-            <h5>{{ $t('MealTypes') }}</h5>
+            <h5>{{ $t('Meal_Types') }}</h5>
             <b-form>
 
             </b-form>
@@ -82,10 +82,10 @@
           <a class="dropdown-item p-2" href="#"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();moveEntryLeft(contextData)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-left"></i> {{ $t("DayBack") }}</a>
+          <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();moveEntryRight(contextData)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-right"></i> {{ $t("DayForward") }}</a>
+          <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();createEntry(contextData.originalItem.entry)">
           <a class="dropdown-item p-2" href="#"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
@@ -98,7 +98,7 @@
     <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial_recipe="entryEditing_initial_recipe"
                           :entry-editing_initial_meal_type="entryEditing_initial_meal_type" :modal_title="modal_title"
                           :edit_modal_show="edit_modal_show" @save-entry="editEntry"
-                          @delete-entry="deleteEntry"></meal-plan-edit-modal>
+                          @delete-entry="deleteEntry" @reload-meal-types="refreshMealTypes"></meal-plan-edit-modal>
   </div>
 </template>
 
@@ -178,9 +178,9 @@ export default {
   computed: {
     modal_title: function () {
       if (this.entryEditing.id === -1) {
-        return this.$t('CreateMealPlanEntry')
+        return this.$t('Create_Meal_Plan_Entry')
       } else {
-        return this.$t('EditMealPlanEntry')
+        return this.$t('Edit_Meal_Plan_Entry')
       }
     },
     entryEditing_initial_recipe: function () {
@@ -332,6 +332,11 @@ export default {
       }).then(result => {
         this.plan_entries = result.data
       })
+      this.refreshMealTypes()
+    },
+    refreshMealTypes() {
+      let apiClient = new ApiApiFactory()
+
       apiClient.listMealTypes().then(result => {
         this.meal_types = result.data
       })
