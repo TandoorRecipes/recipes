@@ -101,7 +101,7 @@ class FuzzyFilterMixin(ViewSetMixin):
     schema = FilterSchema()
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
+        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
         query = self.request.query_params.get('query', None)
         fuzzy = self.request.user.searchpreference.lookup
 
@@ -111,14 +111,14 @@ class FuzzyFilterMixin(ViewSetMixin):
                     self.queryset
                         .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
                         .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
-                        .order_by('-exact').order_by("-trigram")
+                        .order_by('-exact', '-trigram')
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 self.queryset = (
                     self.queryset
                         .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(name__icontains=query).order_by('-exact')
+                        .filter(name__icontains=query).order_by('-exact', 'name')
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -139,7 +139,7 @@ class FuzzyFilterMixin(ViewSetMixin):
         return self.queryset
 
 
-class MergeMixin(ViewSetMixin):  # TODO update Units to use merge API
+class MergeMixin(ViewSetMixin):
     @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def merge(self, request, pk, target):
