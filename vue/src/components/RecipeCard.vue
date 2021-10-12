@@ -44,20 +44,22 @@
             <last-cooked :recipe="recipe"></last-cooked>
             <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
           </p>
-          <div class="row mt-3" v-if="detailed">
-            <div class="col-md-12">
-              <h6 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t('Ingredients') }}</h6>
-              <table class="table table-sm text-wrap">
-                <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-                <template v-for="s in recipe.steps">
-                  <template v-for="i in s.ingredients">
-                    <Ingredient :detailed="false" :ingredient="i" :ingredient_factor="1" :key="i.id"></Ingredient>
+          <transition name="fade" mode="in-out">
+            <div class="row mt-3" v-if="detailed">
+              <div class="col-md-12">
+                <h6 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t('Ingredients') }}</h6>
+                <table class="table table-sm text-wrap">
+                  <!-- eslint-disable vue/no-v-for-template-key-on-child -->
+                  <template v-for="s in recipe.steps">
+                    <template v-for="i in s.ingredients">
+                      <Ingredient :detailed="false" :ingredient="i" :ingredient_factor="1" :key="i.id"></Ingredient>
+                    </template>
                   </template>
-                </template>
-                <!-- eslint-enable vue/no-v-for-template-key-on-child -->
-              </table>
+                  <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+                </table>
+              </div>
             </div>
-          </div>
+          </transition>
 
           <b-badge pill variant="info" v-if="!recipe.internal">{{ $t('External') }}</b-badge>
           <!-- <b-badge pill variant="success"
@@ -147,5 +149,10 @@ export default {
 </script>
 
 <style scoped>
-
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
