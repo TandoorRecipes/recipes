@@ -13,7 +13,7 @@ export class Models {
     // MODEL_TYPES - inherited by MODELS, inherits and takes precedence over ACTIONS
     static TREE = {
         'list': {
-            'params': ['query', 'root', 'tree', 'page', 'pageSize'],
+            'params': ['query', 'root', 'tree', 'page', 'pageSize', 'options'],
             'config': {
                 'root': {
                     'default': {
@@ -471,7 +471,7 @@ export class Actions {
     static LIST = {
         "function": "list",
         "suffix": "s",
-        "params": ['query', 'page', 'pageSize'],
+        "params": ['query', 'page', 'pageSize', 'options'],
         "config": {
             'query': {'default': undefined},
             'page': {'default': 1},

@@ -21,6 +21,45 @@ from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
 from cookbook.templatetags.custom_tags import markdown
 
 
+class ExtendedRecipeMixin(serializers.ModelSerializer):
+    # adds image and recipe count to serializer when query param extended=1
+    image = serializers.SerializerMethodField('get_image')
+    numrecipe = serializers.SerializerMethodField('count_recipes')
+    recipe_filter = None
+
+    def get_fields(self, *args, **kwargs):
+        fields = super().get_fields(*args, **kwargs)
+        try:
+            api_serializer = self.context['view'].serializer_class
+        except KeyError:
+            api_serializer = None
+        # extended values are computationally expensive and not needed in normal circumstances
+        if bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+            return fields
+        else:
+            del fields['image']
+            del fields['numrecipe']
+            return fields
+
+    def get_image(self, obj):
+        # TODO add caching
+        recipes = Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+        try:
+            if recipes.count() == 0 and obj.has_children():
+                obj__in = self.recipe_filter + '__in'
+                recipes = Recipe.objects.filter(**{obj__in: obj.get_descendants()}, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+        except AttributeError:
+            # probably not a tree
+            pass
+        if recipes.count() != 0:
+            return random.choice(recipes).image.url
+        else:
+            return None
+
+    def count_recipes(self, obj):
+        return Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).count()
+
+
 class CustomDecimalField(serializers.Field):
     """
     Custom decimal field to normalize useless decimal places
@@ -28,10 +67,9 @@ class CustomDecimalField(serializers.Field):
     """
 
     def to_representation(self, value):
-        if isinstance(value, Decimal):
-            return value.normalize()
-        else:
-            return Decimal(value).normalize()
+        if not isinstance(value, Decimal):
+            value = Decimal(value)
+        return round(value, 2).normalize()
 
     def to_internal_value(self, data):
         if type(data) == int or type(data) == float:
@@ -206,25 +244,26 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'label')
 
 
-class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     label = serializers.SerializerMethodField('get_label')
-    image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.SerializerMethodField('count_recipes')
+    # image = serializers.SerializerMethodField('get_image')
+    # numrecipe = serializers.SerializerMethodField('count_recipes')
+    recipe_filter = 'keywords'
 
     def get_label(self, obj):
         return str(obj)
 
-    def get_image(self, obj):
-        recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        if recipes.count() == 0 and obj.has_children():
-            recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
-        if recipes.count() != 0:
-            return random.choice(recipes).image.url
-        else:
-            return None
+    # def get_image(self, obj):
+    #     recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+    #     if recipes.count() == 0 and obj.has_children():
+    #         recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+    #     if recipes.count() != 0:
+    #         return random.choice(recipes).image.url
+    #     else:
+    #        return None
 
-    def count_recipes(self, obj):
-        return obj.recipe_set.filter(space=self.context['request'].space).all().count()
+    # def count_recipes(self, obj):
+    #     return obj.recipe_set.filter(space=self.context['request'].space).all().count()
 
     def create(self, validated_data):
         # since multi select tags dont have id's
@@ -242,20 +281,21 @@ class KeywordSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
         read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 
-class UnitSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.SerializerMethodField('count_recipes')
+class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
+    # image = serializers.SerializerMethodField('get_image')
+    # numrecipe = serializers.SerializerMethodField('count_recipes')
+    recipe_filter = 'steps__ingredients__unit'
 
-    def get_image(self, obj):
-        recipes = Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+    # def get_image(self, obj):
+    #     recipes = Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
-        if recipes.count() != 0:
-            return random.choice(recipes).image.url
-        else:
-            return None
+    #     if recipes.count() != 0:
+    #         return random.choice(recipes).image.url
+    #     else:
+    #         return None
 
-    def count_recipes(self, obj):
-        return Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).count()
+    # def count_recipes(self, obj):
+    #     return Recipe.objects.filter(steps__ingredients__unit=obj, space=obj.space).count()
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -317,29 +357,30 @@ class RecipeSimpleSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'name', 'url']
 
 
-class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
-    image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.SerializerMethodField('count_recipes')
+    # image = serializers.SerializerMethodField('get_image')
+    # numrecipe = serializers.SerializerMethodField('count_recipes')
+    recipe_filter = 'steps__ingredients__food'
 
-    def get_image(self, obj):
-        if obj.recipe and obj.space == obj.recipe.space:
-            if obj.recipe.image and obj.recipe.image != '':
-                return obj.recipe.image.url
-        # if food is not also a recipe, look for recipe images that use the food
-        recipes = Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-        # if no recipes found - check whole tree
-        if recipes.count() == 0 and obj.has_children():
-            recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+    # def get_image(self, obj):
+    #     if obj.recipe and obj.space == obj.recipe.space:
+    #         if obj.recipe.image and obj.recipe.image != '':
+    #             return obj.recipe.image.url
+    #     # if food is not also a recipe, look for recipe images that use the food
+    #     recipes = Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+    #     # if no recipes found - check whole tree
+    #     if recipes.count() == 0 and obj.has_children():
+    #         recipes = Recipe.objects.filter(steps__ingredients__food__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
 
-        if recipes.count() != 0:
-            return random.choice(recipes).image.url
-        else:
-            return None
+    #     if recipes.count() != 0:
+    #         return random.choice(recipes).image.url
+    #     else:
+    #         return None
 
-    def count_recipes(self, obj):
-        return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
+    # def count_recipes(self, obj):
+    #     return Recipe.objects.filter(steps__ingredients__food=obj, space=obj.space).count()
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -542,7 +583,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         return RecipeBookSerializer(context={'request': self.context['request']}).to_representation(obj.book)
 
     def get_recipe_content(self, obj):
-        return RecipeSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
+        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
 
     def create(self, validated_data):
         book = validated_data['book']
@@ -561,7 +602,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     recipe = RecipeOverviewSerializer(required=False, allow_null=True)
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     meal_type = MealTypeSerializer()
-    meal_type_name = serializers.ReadOnlyField(source='meal_type.name') # TODO deprecate once old meal plan was removed
+    meal_type_name = serializers.ReadOnlyField(source='meal_type.name')  # TODO deprecate once old meal plan was removed
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
 
