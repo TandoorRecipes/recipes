@@ -201,6 +201,20 @@ def automation(request):
 
 
 @group_required('user')
+def user_file(request):
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Files"),
+            "config": {
+                'model': "USERFILE",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
 def shopping_list_new(request):
     # recipe-param is the name of the parameters used when filtering recipes by this attribute
     # model-name is the models.js name of the model, probably ALL-CAPS

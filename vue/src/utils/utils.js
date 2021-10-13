@@ -165,6 +165,7 @@ import axios from "axios";
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 import { Actions, Models } from './models';
+import {RequestArgs} from "@/utils/openapi/base";
 
 export const ApiMixin = {
     data() {
