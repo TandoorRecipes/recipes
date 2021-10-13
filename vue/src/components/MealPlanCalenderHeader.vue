@@ -43,7 +43,8 @@
       <slot name="label">{{ headerProps.periodLabel }}</slot>
     </div>
     <div class="actionArea d-none d-sm-flex">
-      <span class="delete-area text-danger p-1 mr-2" @drop.prevent="onDeleteDrop($event)"
+      <button class="btn btn-success plus-button pt-1 pb-1" @click="$emit('create-new')"><i class="fas fa-plus"></i></button>
+      <span class="delete-area text-danger p-1 mr-2 ml-2" @drop.prevent="onDeleteDrop($event)"
             @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i
           class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
     </div>
@@ -105,6 +106,13 @@ export default {
   min-height: 1.5em;
   line-height: 1;
   font-size: 1.5em;
+}
+
+.plus-button {
+  border-style: dotted;
+  margin-left: auto;
+  order: 1;
+  user-select: none
 }
 
 .delete-area {
