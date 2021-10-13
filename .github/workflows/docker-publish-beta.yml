@@ -17,6 +17,12 @@ jobs:
             VERSION_NUMBER = 'beta'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: build
       - name: Build and publish image
         uses: ilteoood/docker_buildx@master
         with:

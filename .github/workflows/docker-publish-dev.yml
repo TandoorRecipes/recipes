@@ -19,6 +19,12 @@ jobs:
             VERSION_NUMBER = 'develop'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: build
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@2.13
         with:

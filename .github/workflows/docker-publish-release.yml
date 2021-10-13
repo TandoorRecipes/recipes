@@ -24,6 +24,12 @@ jobs:
             VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: build
       - name: Build and publish image
         uses: ilteoood/docker_buildx@master
         with:
@@ -32,3 +38,9 @@ jobs:
           tag: ${{ steps.get_version.outputs.VERSION }}
           dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
           dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: '🚀 A new Version of tandoor has been released 🥳 \n https://github.com/vabene1111/recipes/releases/tag/{{ steps.get_version.outputs.VERSION }}'
