@@ -275,6 +275,18 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     def get_label(self, obj):
         return str(obj)
 
+    # def get_image(self, obj):
+    #     recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+    #     if recipes.count() == 0 and obj.has_children():
+    #         recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+    #     if recipes.count() != 0:
+    #         return random.choice(recipes).image.url
+    #     else:
+    #        return None
+
+    # def count_recipes(self, obj):
+    #     return obj.recipe_set.filter(space=self.context['request'].space).all().count()
+
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
