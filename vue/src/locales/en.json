@@ -183,5 +183,7 @@
   "Clone": "Clone",
   "Drag_Here_To_Delete": "Drag here to delete",
   "Meal_Type_Required": "Meal type is required",
-  "Title_or_Recipe_Required": "Title or recipe selection required"
+  "Title_or_Recipe_Required": "Title or recipe selection required",
+  "Color": "Color",
+  "New_Meal_Type": "New Meal type"
 }
