@@ -66,11 +66,11 @@ Things to edit:
 
 Execute `export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)` to load variables from `/var/www/recipes/.env`
 
-Execute `/python3.9 manage.py migrate`
+Execute `bin/python3.9 manage.py migrate`
 
 and revert superuser from postgres: `sudo -u postgres psql` and `ALTER USER djangouser WITH NOSUPERUSER;`
 
-Generate static files: `python3.9 manage.py collectstatic` and remember the folder where files have been copied.
+Generate static files: `bin/python3.9 manage.py collectstatic` and remember the folder where files have been copied.
 
 ## Setup web services
 
