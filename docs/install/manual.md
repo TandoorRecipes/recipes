@@ -154,7 +154,7 @@ server {
 
 Reload nginx : `sudo systemctl reload nginx`
 
-# Updating
+## Updating
 In order to update the application you will need to run the following commands (probably best to put them into a small script).
 
 ```shell
