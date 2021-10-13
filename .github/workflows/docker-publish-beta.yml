@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      # Update Version number
       - name: Update version file
         uses: DamianReeves/write-file-action@v1.0
         with:
@@ -17,12 +18,17 @@ jobs:
             VERSION_NUMBER = 'beta'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
-      - uses: borales/actions-yarn@v2.3.0
+      # Build Vue frontend
+      - uses: actions/setup-node@v2
         with:
-          cmd: install
-      - uses: borales/actions-yarn@v2.3.0
-        with:
-          cmd: build
+          node-version: '14'
+      - name: Install dependencies
+        working-directory: ./vue
+        run: yarn install
+      - name: Build dependencies
+        working-directory: ./vue
+        run: yarn build
+      # Build container
       - name: Build and publish image
         uses: ilteoood/docker_buildx@master
         with:
@@ -31,9 +37,10 @@ jobs:
           tag: beta
           dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
           dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+      # Send discord notification
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_BETA_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
-          args: 'The BETA Image has been updated!'
+          args: '🚀 The BETA Image has been updated! 🥳'
