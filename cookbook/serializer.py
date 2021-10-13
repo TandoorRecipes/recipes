@@ -146,21 +146,20 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 class UserFileSerializer(serializers.ModelSerializer):
 
     def check_file_limit(self, validated_data):
-        if self.context['request'].space.max_file_storage_mb == -1:
-            raise ValidationError(_('File uploads are not enabled for this Space.'))
+        if 'file' in validated_data:
+            if self.context['request'].space.max_file_storage_mb == -1:
+                raise ValidationError(_('File uploads are not enabled for this Space.'))
 
-        try:
-            current_file_size_mb = \
-                UserFile.objects.filter(space=self.context['request'].space).aggregate(Sum('file_size_kb'))[
-                    'file_size_kb__sum'] / 1000
-        except TypeError:
-            current_file_size_mb = 0
+            try:
+                current_file_size_mb = \
+                    UserFile.objects.filter(space=self.context['request'].space).aggregate(Sum('file_size_kb'))[
+                        'file_size_kb__sum'] / 1000
+            except TypeError:
+                current_file_size_mb = 0
 
-        if (
-                (validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
-                > self.context['request'].space.max_file_storage_mb != 0
-        ):
-            raise ValidationError(_('You have reached your file upload limit.'))
+            if ((validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
+                                             > self.context['request'].space.max_file_storage_mb != 0):
+                raise ValidationError(_('You have reached your file upload limit.'))
 
     def create(self, validated_data):
         self.check_file_limit(validated_data)
