@@ -34,7 +34,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
         except KeyError:
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
-        if bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+        if self.context.get('request', False) and bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
             return fields
         else:
             del fields['image']
