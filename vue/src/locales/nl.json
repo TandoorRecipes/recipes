@@ -188,5 +188,6 @@
     "Title_or_Recipe_Required": "Titel of recept selectie is verplicht",
     "Select_File": "Selecteer Bestand",
     "Year": "Jaar",
-    "Planner": "Planner"
+    "Planner": "Planner",
+    "file_upload_disabled": "Het uploaden van bestanden is niet ingeschakeld voor uw ruimte."
 }
