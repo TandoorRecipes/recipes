@@ -30,6 +30,7 @@
   "Manage_Books": "Manage Books",
   "Meal_Plan": "Meal Plan",
   "Select_Book": "Select Book",
+  "Select_File": "Select File",
   "Recipe_Image": "Recipe Image",
   "Import_finished": "Import finished",
   "View_Recipes": "View Recipes",
@@ -92,6 +93,7 @@
   "Files": "Files",
   "File": "File",
   "Edit": "Edit",
+  "Image": "Image",
   "Delete": "Delete",
   "Open": "Open",
   "Ok": "Open",
@@ -181,5 +183,7 @@
   "Clone": "Clone",
   "Drag_Here_To_Delete": "Drag here to delete",
   "Meal_Type_Required": "Meal type is required",
-  "Title_or_Recipe_Required": "Title or recipe selection required"
+  "Title_or_Recipe_Required": "Title or recipe selection required",
+  "Color": "Color",
+  "New_Meal_Type": "New Meal type"
 }

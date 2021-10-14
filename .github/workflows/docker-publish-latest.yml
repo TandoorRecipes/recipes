@@ -13,6 +13,7 @@ jobs:
       - name: Get version number
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      # Update Version number
       - name: Update version file
         uses: DamianReeves/write-file-action@v1.0
         with:
@@ -21,6 +22,17 @@ jobs:
             VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
+      # Build Vue frontend
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        working-directory: ./vue
+        run: yarn install
+      - name: Build dependencies
+        working-directory: ./vue
+        run: yarn build
+      # Build container
       - name: Build and publish image
         uses: ilteoood/docker_buildx@master
         with:

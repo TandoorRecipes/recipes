@@ -81,3 +81,6 @@ vue/node_modules
 .vscode/
 vue/yarn.lock
 vetur.config.js
+cookbook/static/vue
+vue/webpack-stats.json
+cookbook/templates/sw.js

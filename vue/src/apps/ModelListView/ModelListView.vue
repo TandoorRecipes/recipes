@@ -237,7 +237,6 @@ export default {
           case this.Actions.UPDATE:
             update = e.form_data
             update.id = this.this_item.id
-            console.log('form', update)
             this.saveThis(update)
             break;
           case this.Actions.MERGE:
@@ -252,6 +251,7 @@ export default {
     },
     getItems: function (params, col) {
       let column = col || 'left'
+      params.options = {'query':{'extended': 1}} // returns extended values in API response
       this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         let results = result.data?.results ?? result.data
 
@@ -399,11 +399,13 @@ export default {
     },
     getChildren: function (col, item) {
       let parent = {}
-      let options = {
+      let params = {
         'root': item.id,
-        'pageSize': 200
+        'pageSize': 200,
+        'query': {'extended': 1},
+        'options': {'query':{'extended': 1}}
       }
-      this.genericAPI(this.this_model, this.Actions.LIST, options).then((result) => {
+      this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
         parent = this.findCard(item.id, this['items_' + col])
         if (parent) {
           Vue.set(parent, 'children', result.data.results)
@@ -418,10 +420,10 @@ export default {
     getRecipes: function (col, item) {
       let parent = {}
       // TODO: make this generic
-      let options = {'pageSize': 200}
-      options[this.this_recipe_param] = item.id
+      let params = {'pageSize': 50}
+      params[this.this_recipe_param] = item.id
 
-      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, options).then((result) => {
+      this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
         parent = this.findCard(item.id, this['items_' + col])
         if (parent) {
           Vue.set(parent, 'recipes', result.data.results)

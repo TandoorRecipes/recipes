@@ -27,7 +27,7 @@
     "min": "Min",
     "Servings": "Portionen",
     "Waiting": "Wartezeit",
-    "Preparation": "Vorbereitung",
+    "Preparation": "Zubereitung",
     "Edit": "Bearbeiten",
     "Open": "Öffnen",
     "Save": "Speichern",
@@ -162,5 +162,10 @@
     "Recipes_per_page": "Rezepte pro Seite",
     "Manage_Books": "Bücher Verwalten",
     "delete_confirmation": "Soll {source} wirklich gelöscht werden?",
-    "merge_selection": "Ersetze alle vorkommen von {source} mit dem ausgewählten {type}."
+    "merge_selection": "Ersetze alle vorkommen von {source} mit dem ausgewählten {type}.",
+    "Plan_Period_To_Show": "Wochen, Monate oder Jahre anzeigen",
+    "Title": "Titel",
+    "Week": "Wocje",
+    "Month": "Monat",
+    "Year": "Jahr"
 }
