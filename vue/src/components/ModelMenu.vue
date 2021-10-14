@@ -28,7 +28,11 @@
 
           <b-dropdown-item :href="resolveDjangoUrl('list_automation')">
             <i class="fas fa-robot fa-fw"></i> {{ Models['AUTOMATION'].name }}
-        </b-dropdown-item>
+          </b-dropdown-item>
+
+          <b-dropdown-item :href="resolveDjangoUrl('list_user_file')">
+            <i class="fas fa-file fa-fw"></i> {{ Models['USERFILE'].name }}
+          </b-dropdown-item>
 
         </b-dropdown>
     </span>

@@ -67,7 +67,6 @@ urlpatterns = [
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
-    path('files/', views.files, name='view_files'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
     path('test/', views.test, name='view_test'),
     path('test2/', views.test2, name='view_test2'),

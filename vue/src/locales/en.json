@@ -8,6 +8,7 @@
   "success_creating_resource": "Successfully created a resource!",
   "success_updating_resource": "Successfully updated a resource!",
   "success_deleting_resource": "Successfully deleted a resource!",
+  "file_upload_disabled": "File upload is not enabled for your space.",
   "step_time_minutes": "Step time in minutes",
   "confirm_delete": "Are you sure you want to delete this {object}?",
   "import_running": "Import running, please wait!",
