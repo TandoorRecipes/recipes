@@ -231,17 +231,6 @@ def supermarket(request):
 
 
 @group_required('user')
-def files(request):
-    try:
-        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-                                   'file_size_kb__sum'] / 1000
-    except TypeError:
-        current_file_size_mb = 0
-    return render(request, 'files.html',
-                  {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
-
-
-@group_required('user')
 def meal_plan_entry(request, pk):
     plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
 

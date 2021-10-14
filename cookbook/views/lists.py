@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
@@ -8,7 +8,7 @@ from django_tables2 import RequestConfig
 from cookbook.filters import ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import (InviteLink, RecipeImport,
-                             ShoppingList, Storage, SyncLog)
+                             ShoppingList, Storage, SyncLog, UserFile)
 from cookbook.tables import (ImportLogTable, InviteLinkTable,
                              RecipeImportTable, ShoppingListTable, StorageTable)
 
@@ -202,6 +202,12 @@ def automation(request):
 
 @group_required('user')
 def user_file(request):
+    try:
+        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
+                                   'file_size_kb__sum'] / 1000
+    except TypeError:
+        current_file_size_mb = 0
+
     return render(
         request,
         'generic/model_template.html',
@@ -209,7 +215,8 @@ def user_file(request):
             "title": _("Files"),
             "config": {
                 'model': "USERFILE",  # *REQUIRED* name of the model in models.js
-            }
+            },
+            'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb
         }
     )
 

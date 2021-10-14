@@ -308,6 +308,11 @@ export class Models {
         'name': i18n.t('Automation'),
         'apiName': 'Automation',
         'paginated': true,
+        'list': {
+            'header_component': {
+                'name': 'BetaWarning'
+            },
+        },
         'create': {
             'params': [['name', 'description', 'type', 'param_1', 'param_2', 'param_3']],
             'form': {
@@ -407,6 +412,11 @@ export class Models {
         'name': i18n.t('File'),
         'apiName': 'UserFile',
         'paginated': false,
+        'list': {
+            'header_component': {
+                'name': 'StorageQuota'
+            },
+        },
         'create': {
             'params': ['name', 'file',],
             'form': {
