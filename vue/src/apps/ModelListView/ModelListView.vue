@@ -140,7 +140,9 @@ export default {
   },
   computed: {
     headerComponent() {
-      return () => import(`@/components/${this.header_component_name}`)
+      // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
+      // TODO this is not necessarily bad but maybe there are better options to do this
+      return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.header_component_name}`)
     }
   },
   mounted() {
