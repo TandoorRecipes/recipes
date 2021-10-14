@@ -23,7 +23,7 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6" style="margin-top: 1vh">
+            <div class="col-md-9" style="margin-top: 1vh">
               <h3>
                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                 <model-menu/>
@@ -32,7 +32,6 @@
                     class="fas fa-plus-circle fa-2x"></i></b-button></span>
               </h3>
             </div>
-            <div class="col-md-3"/>
             <div class="col-md-3" style="position: relative; margin-top: 1vh">
               <b-form-checkbox v-model="show_split" name="check-button" v-if="paginated"
                                class="shadow-none"
