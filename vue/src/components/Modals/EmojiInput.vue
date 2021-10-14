@@ -1,15 +1,15 @@
 <template>
     <div>
-        <b-form-group 
+        <b-form-group
             v-bind:label="label"
             class="mb-3">
-          <twemoji-textarea 
+          <twemoji-textarea
             :ref="'_edit_' + id"
             :initialContent="value"
-            :emojiData="emojiDataAll" 
+            :emojiData="emojiDataAll"
             :emojiGroups="emojiGroups"
             triggerType="hover"
-            recentEmojisFeat="true"
+            :recentEmojisFeat="true"
             recentEmojisStorage="local"
             @contentChanged="setIcon"
            />
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     prepareEmoji: function() {
-      this.$refs['_edit_' + this.id].addText(this.this_item.icon || ''); 
+      this.$refs['_edit_' + this.id].addText(this.this_item.icon || '');
       this.$refs['_edit_' + this.id].blur()
       document.getElementById('btn-emoji-default').disabled = true;
     },

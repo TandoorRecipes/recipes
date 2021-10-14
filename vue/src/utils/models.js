@@ -13,7 +13,7 @@ export class Models {
     // MODEL_TYPES - inherited by MODELS, inherits and takes precedence over ACTIONS
     static TREE = {
         'list': {
-            'params': ['query', 'root', 'tree', 'page', 'pageSize'],
+            'params': ['query', 'root', 'tree', 'page', 'pageSize', 'options'],
             'config': {
                 'root': {
                     'default': {
@@ -113,6 +113,7 @@ export class Models {
         },
 
     }
+
     static KEYWORD = {
         'name': i18n.t('Keyword'),              // *OPTIONAL: parameters will be built model -> model_type -> default
         'apiName': 'Keyword',
@@ -150,6 +151,7 @@ export class Models {
             }
         },
     }
+
     static UNIT = {
         'name': i18n.t('Unit'),
         'apiName': 'Unit',
@@ -175,10 +177,12 @@ export class Models {
         },
         'merge': true
     }
+
     static SHOPPING_LIST = {
         'name': i18n.t('Shopping_list'),
         'apiName': 'ShoppingListEntry',
     }
+
     static RECIPE_BOOK = {
         'name': i18n.t('Recipe_Book'),
         'apiName': 'RecipeBook',
@@ -208,6 +212,7 @@ export class Models {
             }
         },
     }
+
     static SHOPPING_CATEGORY = {
         'name': i18n.t('Shopping_Category'),
         'apiName': 'SupermarketCategory',
@@ -231,6 +236,7 @@ export class Models {
             }
         },
     }
+
     static SHOPPING_CATEGORY_RELATION = {
         'name': i18n.t('Shopping_Category_Relation'),
         'apiName': 'SupermarketCategoryRelation',
@@ -254,6 +260,7 @@ export class Models {
             }
         },
     }
+
     static SUPERMARKET = {
         'name': i18n.t('Supermarket'),
         'apiName': 'Supermarket',
@@ -395,6 +402,31 @@ export class Models {
         },
 
     }
+
+    static USERFILE = {
+        'name': i18n.t('File'),
+        'apiName': 'UserFile',
+        'paginated': false,
+        'create': {
+            'params': ['name', 'file',],
+            'form': {
+                'name': {
+                    'form_field': true,
+                    'type': 'text',
+                    'field': 'name',
+                    'label': i18n.t('Name'),
+                    'placeholder': ''
+                },
+                'file': {
+                    'form_field': true,
+                    'type': 'file',
+                    'field': 'file',
+                    'label': i18n.t('File'),
+                    'placeholder': ''
+                },
+            }
+        },
+    }
 }
 
 
@@ -471,7 +503,7 @@ export class Actions {
     static LIST = {
         "function": "list",
         "suffix": "s",
-        "params": ['query', 'page', 'pageSize'],
+        "params": ['query', 'page', 'pageSize', 'options'],
         "config": {
             'query': {'default': undefined},
             'page': {'default': 1},

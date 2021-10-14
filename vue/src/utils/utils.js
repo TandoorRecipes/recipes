@@ -159,12 +159,13 @@ export function roundDecimals(num) {
 /*
 * Utility functions to use OpenAPIs generically
 * */
-import {ApiApiFactory} from "@/utils/openapi/api.ts";  // TODO: is it possible to only import inside the Mixin?
+import {ApiApiFactory} from "@/utils/openapi/api.ts";
 
 import axios from "axios";
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 import { Actions, Models } from './models';
+import {RequestArgs} from "@/utils/openapi/base";
 
 export const ApiMixin = {
     data() {

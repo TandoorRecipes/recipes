@@ -121,7 +121,6 @@ export default {
           case this.Actions.UPDATE:
             update = e.form_data
             update.id = this.this_item.id
-            console.log('form', update)
             this.saveThis(update)
             break;
           case this.Actions.MERGE:

@@ -505,7 +505,7 @@
                                 servings = this.servings_cache[item.list_recipe]
                             }
 
-                            entry.amount += item.amount * servings
+                            entry.amount += (item.amount * servings).toFixed(2)
 
                             if (item.list_recipe !== null && entry.recipes.indexOf(this.recipe_cache[item.list_recipe]) === -1) {
                                 entry.recipes.push(this.recipe_cache[item.list_recipe])
@@ -514,7 +514,7 @@
                             entry.entries.push(item.id)
                         } else {
                             if (item.list_recipe !== null) {
-                                item.amount = item.amount * this.servings_cache[item.list_recipe]
+                                item.amount = (item.amount * this.servings_cache[item.list_recipe]).toFixed(2)
                             }
                             item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
                             item.entries = [element.id]
