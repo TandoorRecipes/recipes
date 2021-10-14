@@ -22,7 +22,8 @@
               <template #header="{ headerProps }">
                 <meal-plan-calender-header
                     :header-props="headerProps"
-                    @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"/>
+                    @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
+                    @create-new="createEntryClick(new Date())"/>
               </template>
             </calendar-view>
           </div>
@@ -67,10 +68,57 @@
           </div>
           <div class="col-6">
             <h5>{{ $t('Meal_Types') }}</h5>
-            <b-form>
-
-            </b-form>
-            <recipe-card :recipe="recipe_viewed" v-if="false"></recipe-card>
+            <div>
+              <draggable :list="meal_types" group="meal_types"
+                         :empty-insert-threshold="10" handle=".handle" @sort="sortMealTypes()">
+                <b-card no-body class="mt-1" v-for="(meal_type, index) in meal_types" v-hover :key="meal_type.id">
+                  <b-card-header class="p-4">
+                    <div class="row">
+                      <div class="col-2 handle">
+                        <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v "></i>
+                        </button>
+                      </div>
+                      <div class="col-10">
+                        <h5>{{ meal_type.icon }} {{ meal_type.name }}<span class="float-right text-primary"><i
+                            class="fa" v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
+                            @click="editOrSaveMealType(index)"
+                            aria-hidden="true"></i></span></h5>
+                      </div>
+                    </div>
+                  </b-card-header>
+                  <b-card-body class="p-4" v-if="meal_type.editing">
+                    <div class="form-group">
+                      <label>{{ $t('Name') }}</label>
+                      <input class="form-control"
+                             placeholder="Name" v-model="meal_type.name">
+                    </div>
+                    <div class="form-group">
+                      <emoji-input :field="'icon'" :label="$t('Icon')" :value="meal_type.icon"></emoji-input>
+                    </div>
+                    <div class="form-group">
+                      <label>{{ $t('Color') }}</label>
+                      <input class="form-control" type="color"
+                             name="Name" :value="meal_type.color" @change="meal_type.color = $event.target.value">
+                    </div>
+                    <b-form-checkbox
+                        id="checkbox-1"
+                        v-model="meal_type.default"
+                        name="default_checkbox"
+                        class="mb-2">
+                      {{ $t('Default') }}
+                    </b-form-checkbox>
+                    <button class="btn btn-danger" @click="deleteMealType(index)">{{ $t('Delete') }}</button>
+                    <button class="btn btn-primary float-right" @click="editOrSaveMealType(index)">{{
+                        $t('Save')
+                      }}
+                    </button>
+                  </b-card-body>
+                </b-card>
+              </draggable>
+              <button class="btn btn-success float-right mt-1" @click="newMealType"><i class="fas fa-plus"></i>
+                {{ $t('New_Meal_Type') }}
+              </button>
+            </div>
           </div>
         </div>
       </b-tab>
@@ -119,6 +167,8 @@ import {ApiMixin, StandardToasts} from "@/utils/utils";
 import MealPlanEditModal from "../../components/MealPlanEditModal";
 import VueCookies from "vue-cookies";
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader";
+import EmojiInput from "../../components/Modals/EmojiInput";
+import draggable from 'vuedraggable'
 
 Vue.prototype.moment = moment
 Vue.use(BootstrapVue)
@@ -131,11 +181,12 @@ export default {
   components: {
     MealPlanEditModal,
     MealPlanCard,
-    RecipeCard,
     CalendarView,
     ContextMenu,
     ContextMenuItem,
-    MealPlanCalenderHeader
+    MealPlanCalenderHeader,
+    EmojiInput,
+    draggable
   },
   mixins: [CalendarMathMixin, ApiMixin],
   data: function () {
@@ -171,6 +222,7 @@ export default {
           title_placeholder: this.$t('Title')
         }
       },
+      current_period: null,
       entryEditing: {},
       edit_modal_show: false
     }
@@ -231,6 +283,7 @@ export default {
         this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
       }
     })
+    this.$root.$on('change', this.updateEmoji);
   },
   watch: {
     settings: {
@@ -241,6 +294,69 @@ export default {
     },
   },
   methods: {
+    newMealType() {
+      let apiClient = new ApiApiFactory()
+
+      apiClient.createMealType({name: "Mealtype"}).then(e => {
+        this.periodChangedCallback(this.current_period)
+      }).catch(error => {
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+      })
+
+      this.refreshMealTypes()
+    },
+    sortMealTypes() {
+      this.meal_types.forEach(function (element, index) {
+        element.order = index
+      });
+      let updated = 0
+      this.meal_types.forEach((meal_type) => {
+        let apiClient = new ApiApiFactory()
+
+        apiClient.updateMealType(meal_type.id, meal_type).then(e => {
+          if (updated === (this.meal_types.length - 1)) {
+            this.periodChangedCallback(this.current_period)
+          } else {
+            updated++
+          }
+        }).catch(error => {
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+        })
+      })
+    },
+    editOrSaveMealType(index) {
+      let meal_type = this.meal_types[index]
+      if (meal_type.editing) {
+        this.$set(this.meal_types[index], 'editing', false)
+        let apiClient = new ApiApiFactory()
+
+        apiClient.updateMealType(this.meal_types[index].id, this.meal_types[index]).then(e => {
+          this.periodChangedCallback(this.current_period)
+          StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+        }).catch(error => {
+          StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+        })
+      } else {
+        this.$set(this.meal_types[index], 'editing', true)
+      }
+    },
+    deleteMealType(index) {
+      let apiClient = new ApiApiFactory()
+
+      apiClient.destroyMealType(this.meal_types[index].id).then(e => {
+        this.periodChangedCallback(this.current_period)
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+      }).catch(error => {
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+      })
+    },
+    updateEmoji: function (field, value) {
+      this.meal_types.forEach((meal_type) => {
+        if (meal_type.editing) {
+          meal_type.icon = value
+        }
+      })
+    },
     editEntry(edit_entry) {
       if (edit_entry.id !== -1) {
         this.plan_entries.forEach((entry, index) => {
@@ -322,6 +438,7 @@ export default {
       }
     },
     periodChangedCallback(date) {
+      this.current_period = date
       let apiClient = new ApiApiFactory()
 
       apiClient.listMealPlans({
@@ -338,6 +455,9 @@ export default {
       let apiClient = new ApiApiFactory()
 
       apiClient.listMealTypes().then(result => {
+        result.data.forEach((meal_type) => {
+          meal_type.editing = false
+        })
         this.meal_types = result.data
       })
     },
@@ -369,6 +489,18 @@ export default {
         startDate: date,
         endDate: date,
         entry: plan_entry
+      }
+    }
+  },
+  directives: {
+    hover: {
+      inserted: function (el) {
+        el.addEventListener('mouseenter', () => {
+          el.classList.add("shadow")
+        });
+        el.addEventListener('mouseleave', () => {
+          el.classList.remove("shadow")
+        });
       }
     }
   }

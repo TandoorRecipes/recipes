@@ -19,16 +19,32 @@ Give the user permissions: `chown -R recipes:www-data /var/www/recipes`
 
 Create virtual env: `python3.9 -m venv /var/www/recipes`
 
+Install Javascript Tools
+```shell
+apt install nodejs
+npm install --global yarn
+```
+
 ### Install postgresql requirements
 
 `sudo apt install libpq-dev postgresql`
 
 ###Install project requirements
 
+!!! warning "Update"
+    Dependencies change with most updates so the following steps need to be re-run with every update or else the application might stop working.
+    See section **Updating** below
+
 Using binaries from the virtual env:
 
 `/var/www/recipes/bin/pip3.9 install -r requirements.txt`
 
+You will also need to install front end requirements and build them. For this navigate to the `./vue`folder and run
+
+```shell
+yarn install
+yarn build
+```
 
 ## Setup postgresql
 
@@ -66,11 +82,11 @@ Things to edit:
 
 Execute `export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)` to load variables from `/var/www/recipes/.env`
 
-Execute `/python3.9 manage.py migrate`
+Execute `bin/python3.9 manage.py migrate`
 
 and revert superuser from postgres: `sudo -u postgres psql` and `ALTER USER djangouser WITH NOSUPERUSER;`
 
-Generate static files: `python3.9 manage.py collectstatic` and remember the folder where files have been copied.
+Generate static files: `bin/python3.9 manage.py collectstatic` and `bin/python3.9 manage.py collectstatic_js_reverse` and remember the folder where files have been copied.
 
 ## Setup web services
 
@@ -137,3 +153,25 @@ server {
 *Note*: Enter the correct path in static and proxy_pass lines.
 
 Reload nginx : `sudo systemctl reload nginx`
+
+## Updating
+In order to update the application you will need to run the following commands (probably best to put them into a small script).
+
+```shell
+# Update source files
+git pull
+# load envirtonment variables
+export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)
+# migrate database 
+bin/python3.9 manage.py migrate
+# collect static files
+bin/python3.9 manage.py collectstatic
+bin/python3.9 manage.py collectstatic_js_reverse
+# change to frontend directory
+cd vue
+# install and build frontend
+yarn install
+yarn build
+# restart gunicorn service
+sudo systemctl restart gunicorn_recipes
+```
