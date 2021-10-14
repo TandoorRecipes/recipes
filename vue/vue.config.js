@@ -48,7 +48,7 @@ module.exports = {
     filenameHashing: false,
     productionSourceMap: false,
     publicPath: process.env.NODE_ENV === 'production'
-        ? ''
+        ? '/static/vue'
         : 'http://localhost:8080/',
     outputDir: '../cookbook/static/vue/',
     runtimeCompiler: true,
