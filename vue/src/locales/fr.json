@@ -117,5 +117,7 @@
     "move_selection": "Sélectionner un parent {type} pour y déplacer {source}.",
     "merge_selection": "Remplace toutes les occurrences de {source} par {type}.",
     "move_title": "Déplacer {type}",
-    "del_confirmation_tree": "Êtes-vous sûr de vouloir supprimer {source} et tous ses enfants ?"
+    "del_confirmation_tree": "Êtes-vous sûr de vouloir supprimer {source} et tous ses enfants ?",
+    "warning_feature_beta": "Cette fonctionnalité est actuellement en phase BETA (test). Veuillez vous attendre à des bugs et éventuellement à des changements avenir (éventuellement la perte de données liées aux fonctionnalités) lorsque vous utilisez cette fonctionnalité.",
+    "confirm_delete": "Voulez-vous vraiment supprimer {objet} ?"
 }

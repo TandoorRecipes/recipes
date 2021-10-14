@@ -15,17 +15,15 @@
       <div class="col-xl-8 col-12">
         <div class="container-fluid d-flex flex-column flex-grow-1">
 
-          <div class="row" v-if="this_model === Models.AUTOMATION">
+          <!-- dynamically loaded header components -->
+          <div class="row" v-if="header_component_name !== ''">
             <div class="col-md-12">
-              <b-alert show variant="warning">
-                <b-badge>BETA</b-badge>
-                {{ $t('warning_feature_beta') }}
-              </b-alert>
+              <component :is="headerComponent"></component>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-md-6" style="margin-top: 1vh">
+            <div class="col-md-9" style="margin-top: 1vh">
               <h3>
                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                 <model-menu/>
@@ -34,7 +32,6 @@
                     class="fas fa-plus-circle fa-2x"></i></b-button></span>
               </h3>
             </div>
-            <div class="col-md-3"/>
             <div class="col-md-3" style="position: relative; margin-top: 1vh">
               <b-form-checkbox v-model="show_split" name="check-button" v-if="paginated"
                                class="shadow-none"
@@ -109,6 +106,7 @@ import GenericHorizontalCard from "@/components/GenericHorizontalCard";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
 import ModelMenu from "@/components/ModelMenu";
 import {ApiApiFactory} from "@/utils/openapi/api";
+//import StorageQuota from "@/components/StorageQuota";
 
 Vue.use(BootstrapVue)
 
@@ -117,7 +115,9 @@ export default {
   // or i'm capturing it incorrectly
   name: 'ModelListView',
   mixins: [CardMixin, ApiMixin, ToastMixin],
-  components: {GenericHorizontalCard, GenericModalForm, GenericInfiniteCards, ModelMenu},
+  components: {
+     GenericHorizontalCard, GenericModalForm, GenericInfiniteCards, ModelMenu,
+  },
   data() {
     return {
       // this.Models and this.Actions inherited from ApiMixin
@@ -134,6 +134,14 @@ export default {
       show_modal: false,
       show_split: false,
       paginated: false,
+      header_component_name: undefined,
+    }
+  },
+  computed: {
+    headerComponent() {
+      // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
+      // TODO this is not necessarily bad but maybe there are better options to do this
+      return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.header_component_name}`)
     }
   },
   mounted() {
@@ -142,6 +150,7 @@ export default {
     this.this_model = this.Models[model_config?.model]
     this.this_recipe_param = model_config?.recipe_param
     this.paginated = this.this_model?.paginated ?? false
+    this.header_component_name = this.this_model?.list?.header_component?.name ?? undefined
     this.$nextTick(() => {
       if (!this.paginated) {
         this.getItems({page:1},'left')
@@ -237,7 +246,6 @@ export default {
           case this.Actions.UPDATE:
             update = e.form_data
             update.id = this.this_item.id
-            console.log('form', update)
             this.saveThis(update)
             break;
           case this.Actions.MERGE:

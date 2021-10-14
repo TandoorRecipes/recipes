@@ -180,5 +180,7 @@
     "Meal_Type_Required": "Il tipo di pasto è richiesto",
     "Periods": "Periodi",
     "Meal_Type": "Tipo di pasto",
-    "Title_or_Recipe_Required": "Sono richiesti titolo o ricetta"
+    "Title_or_Recipe_Required": "Sono richiesti titolo o ricetta",
+    "Create_Meal_Plan_Entry": "Crea voce nel piano alimentare",
+    "Edit_Meal_Plan_Entry": "Modifica voce del piano alimentare"
 }

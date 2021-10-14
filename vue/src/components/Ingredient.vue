@@ -19,7 +19,7 @@
       </td>
       <td>
         <template v-if="ingredient.food !== null">
-          <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe)" v-if="ingredient.food.recipe !== null"
+          <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null"
              target="_blank" rel="noopener noreferrer">{{ ingredient.food.name }}</a>
           <span v-if="ingredient.food.recipe === null">{{ ingredient.food.name }}</span>
         </template>
