@@ -164,7 +164,6 @@ AUTHENTICATION_BACKENDS = []
 LDAP_AUTH=bool(os.getenv('LDAP_AUTH', False))
 if LDAP_AUTH:
     import ldap
-#    import logging, logging.handlers
     from django_auth_ldap.config import LDAPSearch
     AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
     AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI') 
@@ -175,7 +174,6 @@ if LDAP_AUTH:
         ldap.SCOPE_SUBTREE,
         os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
     )
-    #AUTH_LDAP_REQUIRE_GROUP = ''
     AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
         'first_name': 'givenName',
         'last_name': 'sn',
@@ -183,13 +181,6 @@ if LDAP_AUTH:
     }
     AUTH_LDAP_ALWAYS_UPDATE_USER = bool(int(os.getenv('AUTH_LDAP_ALWAYS_UPDATE_USER', True)))
     AUTH_LDAP_CACHE_TIMEOUT = int(os.getenv('AUTH_LDAP_CACHE_TIMEOUT', 3600))
-
-#    logfile = "/tmp/django-ldap-debug.log"
-#    my_logger = logging.getLogger('django_auth_ldap')
-#    my_logger.setLevel(logging.DEBUG)
-#    handler = logging.handlers.RotatingFileHandler(
-#       logfile, maxBytes=1024 * 500, backupCount=5)
-#    my_logger.addHandler(handler)
 
 AUTHENTICATION_BACKENDS += [
     'django.contrib.auth.backends.ModelBackend',
