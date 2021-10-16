@@ -12,13 +12,12 @@ from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
-                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
-                             NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
-                             ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
-                             UserPreference, ViewLog)
+from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food, ImportLog,
+                             Ingredient, Keyword, MealPlan, MealType, NutritionInformation, Recipe,
+                             RecipeBook, RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
+                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UserFile, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -163,8 +162,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         fields = (
             'user', 'theme', 'nav_color', 'default_unit', 'default_page',
             'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
-            'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default', 'default_delay',
-            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share'
+            'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping'
         )
 
 
@@ -404,7 +402,10 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'description', 'recipe', 'ignore_shopping', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe', 'on_hand')
+        fields = (
+            'id', 'name', 'description', 'shopping', 'recipe', 'ignore_shopping', 'supermarket_category',
+            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'child_inherit', 'ignore_parent'
+        )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
 
@@ -930,3 +931,13 @@ class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'amount', 'unit', 'delete', ]
+
+
+class FoodParentIgnoreSerializer(serializers.ModelSerializer):
+    field = serializers.CharField()
+    name = serializers.CharField()
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'name', 'field', ]
+        read_only_fields = ('id', 'name', 'field', )
