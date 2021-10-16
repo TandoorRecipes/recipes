@@ -91,9 +91,9 @@ module.exports = {
             },
             // TODO make this conditional on .env DEBUG = FALSE
             config.optimization.minimize(false)
-        )
+        );
 
-        config.plugin("BundleTracker").use(BundleTracker, [{ relativePath: true, path: "../vue/" }])
+        config.plugin('BundleTracker').use(BundleTracker, [{relativePath: true, path: '../vue/'}]);
 
         config.resolve.alias.set("__STATIC__", "static")
 
