@@ -161,9 +161,5 @@ def base_path(request, path_type):
 
 @register.simple_tag
 def user_prefs(request):
-    from cookbook.serializer import \
-        UserPreferenceSerializer  # putting it with imports caused circular execution
-    try:
-        return UserPreferenceSerializer(request.user.userpreference).data
-    except AttributeError:
-        pass
+    from cookbook.serializer import UserPreferenceSerializer  # putting it with imports caused circular execution
+    return UserPreferenceSerializer(request.user.userpreference).data

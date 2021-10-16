@@ -39,7 +39,7 @@ from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import shopping_helper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
+from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodParentIgnore,
                              ImportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
                              RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
@@ -50,7 +50,7 @@ from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
-                                 CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
+                                 CookLogSerializer, FoodParentIgnoreSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookEntrySerializer,
@@ -393,14 +393,14 @@ class UnitViewSet(viewsets.ModelViewSet, MergeMixin, FuzzyFilterMixin):
     pagination_class = DefaultPagination
 
 
-class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = FoodInheritField.objects
-    serializer_class = FoodInheritFieldSerializer
+class FoodParentIgnoreViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = FoodParentIgnore.objects
+    serializer_class = FoodParentIgnoreSerializer
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
         # exclude fields not yet implemented
-        return Food.inherit_fields
+        return self.queryset.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
 
 
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
