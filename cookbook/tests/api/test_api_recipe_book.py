@@ -97,7 +97,7 @@ def test_add(arg, request, u1_s2):
     c = request.getfixturevalue(arg[0])
     r = c.post(
         reverse(LIST_URL),
-        {'name': 'test'},
+        {'name': 'test', 'shared': []},
         content_type='application/json'
     )
     response = json.loads(r.content)

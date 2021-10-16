@@ -35,7 +35,8 @@ Overview of the capabilities of the different integrations.
 | MealMaster     | ✔️      | ❌      |  ❌        |
 | RezKonv     | ✔️      | ❌      |  ❌        |
 | OpenEats     | ✔️      | ❌      |  ⌚        |
-| OpenEats     | ✔️      | ❌      |  ✔        |
+| Plantoeat     | ✔️      | ❌      |  ✔        |
+| CookBookApp     | ✔️      | ⌚      |  ❌        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -209,3 +210,11 @@ Store the outputted json string in a `.json` file and simply import it using the
 ]
 
 ```
+
+## Plantoeat
+
+Plan to eat allow to export a text file containing all your recipes. Simply upload that text file to Tandoor to import all recipes
+
+## CookBookApp
+
+CookBookApp can export .zip files containing .yml files. Upload the entire ZIP to Tandoor to import all conluded recipes.

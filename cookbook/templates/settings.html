@@ -21,23 +21,40 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 2vh">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="account-tab" data-toggle="tab" href="#account" role="tab"
-               aria-controls="account" aria-selected="true">{% trans 'Account' %}</a>
+            <a class="nav-link {% if active_tab == 'account' %} active {% endif %}" id="account-tab" data-toggle="tab"
+               href="#account" role="tab"
+               aria-controls="account"
+               aria-selected="{% if active_tab == 'account' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'Account' %}</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="preferences-tab" data-toggle="tab" href="#preferences" role="tab"
-               aria-controls="preferences" aria-selected="false">{% trans 'Preferences' %}</a>
+            <a class="nav-link {% if active_tab == 'prefernces' %} active {% endif %}" id="preferences-tab"
+               data-toggle="tab" href="#preferences" role="tab"
+               aria-controls="preferences"
+               aria-selected="{% if active_tab == 'prefernces' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'Preferences' %}</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="api-tab" data-toggle="tab" href="#api" role="tab" aria-controls="api"
-               aria-selected="false">{% trans 'API-Settings' %}</a>
+            <a class="nav-link {% if active_tab == 'api' %} active {% endif %}" id="api-tab" data-toggle="tab"
+               href="#api" role="tab"
+               aria-controls="api"
+               aria-selected="{% if active_tab == 'api' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'API-Settings' %}</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if active_tab == 'search' %} active {% endif %}" id="search-tab" data-toggle="tab"
+               href="#search" role="tab"
+               aria-controls="search"
+               aria-selected="{% if active_tab == 'search' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'Search-Settings' %}</a>
         </li>
 
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane active" id="account" role="tabpanel" aria-labelledby="account-tab">
+        <div class="tab-pane {% if active_tab == 'account' %} active {% endif %}" id="account" role="tabpanel"
+             aria-labelledby="account-tab">
             <h4>{% trans 'Name Settings' %}</h4>
             <form action="." method="post">
                 {% csrf_token %}
@@ -48,8 +65,8 @@
 
             <h4>{% trans 'Account Settings' %}</h4>
 
-            <a href="{% url 'account_email'%}" class="btn btn-primary">{% trans 'Emails' %}</a>
-            <a href="{% url 'account_change_password'%}" class="btn btn-primary">{% trans 'Password' %}</a>
+            <a href="{% url 'account_email' %}" class="btn btn-primary">{% trans 'Emails' %}</a>
+            <a href="{% url 'account_change_password' %}" class="btn btn-primary">{% trans 'Password' %}</a>
 
             <a href="{% url 'socialaccount_connections' %}" class="btn btn-primary">{% trans 'Social' %}</a>
             <br/>
@@ -58,7 +75,8 @@
             <br/>
 
         </div>
-        <div class="tab-pane" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
+        <div class="tab-pane {% if active_tab == 'preferences' %} active {% endif %}" id="preferences" role="tabpanel"
+             aria-labelledby="preferences-tab">
 
 
             <div class="row">
@@ -109,7 +127,8 @@
 
 
         </div>
-        <div class="tab-pane" id="api" role="tabpanel" aria-labelledby="api-tab">
+        <div class="tab-pane {% if active_tab == 'api' %} active {% endif %}" id="api" role="tabpanel"
+             aria-labelledby="api-tab">
 
             <div class="row">
                 <div class="col col-md-12">
@@ -141,13 +160,69 @@
 
 
         </div>
+        <div class="tab-pane {% if active_tab == 'search' %} active {% endif %}" id="search" role="tabpanel"
+             aria-labelledby="search-tab">
+            <h4>{% trans 'Search Settings' %}</h4>
+            {% trans 'There are many options to configure the search depending on your personal preferences.' %}
+            {% trans 'Usually you do <b>not need</b> to configure any of them and can just stick with either the default or one of the following presets.' %}
+            {% trans 'If you do want to configure the search you can read about the different options <a href="/docs/search/">here</a>.' %}
+
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{% trans 'Fuzzy' %}</h5>
+                        <p class="card-text">{% trans 'Find what you need even if your search or the recipe contains typos. Might return more results than needed to make sure you find what you are looking for.' %}</p>
+                        <p class="card-text"><small class="text-muted">{% trans 'This is the default behavior' %}</small></p>
+                        <button class="btn btn-primary card-link" onclick="applyPreset('fuzzy')">{% trans 'Apply' %}</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{% trans 'Percise' %}</h5>
+                        <p class="card-text">{% trans 'Allows fine control over search results but might not return results if too many spelling mistakes are made.' %}</p>
+                        <p class="card-text"><small class="text-muted">{% trans 'Perfect for large Databases' %}</small></p>
+                        <button class="btn btn-primary card-link" onclick="applyPreset('precise')">{% trans 'Apply' %}</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr/>
+            <form action="./#search" method="post" id="id_search_form">
+                {% csrf_token %}
+                {{ search_form|crispy }}
+                <button class="btn btn-success" type="submit" name="search_form" id="search_form_button"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}</button>
+            </form>
+        </div>
+
     </div>
 
     <script type="application/javascript">
+        $(function () {
+            $('#id_search-trigram_threshold').get(0).type = 'range';
+        })
+
+        function applyPreset (preset){
+            $('#id_search-preset').val(preset)
+            $('#search_form_button').click()
+        }
+
         function copyToken() {
             let token = $('#id_token');
             token.select();
             document.execCommand("copy");
         }
+
+        // Javascript to enable link to tab
+        var hash = location.hash.replace(/^#/, '');  // ^ means starting, meaning only match the first hash
+        if (hash) {
+            $('.nav-tabs a[href="#' + hash + '"]').tab('show');
+        }
+
+        // Change hash for page-reload
+        $('.nav-tabs a').on('shown.bs.tab', function (e) {
+            window.location.hash = e.target.hash;
+        })
     </script>
 {% endblock %}

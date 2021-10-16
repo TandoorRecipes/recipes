@@ -49,15 +49,6 @@ Navigate to `vue/src/utils/openapi`.
 
 Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/` (replace your dev server url if required)
 
-### Pre-Commit
-Some checks and scripts can be automatically run using [pre-commit](https://pre-commit.com/).
-
-The scripts are configured in the `pre-commit-config.yaml`. To setup the hooks on your development environment install 
-pre commit using `pip install pre-commit` and run `pre-commit install` to setup the hooks.
-
-To manually test all hooks (and ignore if files have changed) use `pre-commit run --all-files`
-
-
 ## Contribute Documentation
 The documentation is build from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
 folder of the GitHub repository. 

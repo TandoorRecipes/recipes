@@ -13,7 +13,8 @@
 
       <div class="row text-center">
         <div class="col col-md-12">
-          <recipe-rating :recipe="recipe"></recipe-rating> <br/>
+          <recipe-rating :recipe="recipe"></recipe-rating>
+          <br/>
           <last-cooked :recipe="recipe"></last-cooked>
         </div>
       </div>
@@ -60,12 +61,14 @@
               <i class="fas fa-pizza-slice fa-2x text-primary"></i>
             </div>
             <div class="my-auto" style="padding-right: 4px">
-              <input style="text-align: right; border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
-                     value="1" maxlength="3" min="0"
-                     type="number" class="form-control form-control-lg" v-model.number="servings"/>
+              <input
+                  style="text-align: right; border-width:0px;border:none; padding:0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
+                  value="1" maxlength="3" min="0"
+                  type="number" class="form-control form-control-lg" v-model.number="servings"/>
             </div>
             <div class="my-auto ">
-              <span class="text-primary"><b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template v-else>{{recipe.servings_text}}</template></b></span>
+              <span class="text-primary"><b><template v-if="recipe.servings_text === ''">{{ $t('Servings') }}</template><template
+                  v-else>{{ recipe.servings_text }}</template></b></span>
             </div>
           </div>
         </div>
@@ -90,12 +93,15 @@
                 <div class="col-md-12">
                   <table class="table table-sm">
                     <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-                    <template v-for="s in recipe.steps">
+                    <div v-for="s in recipe.steps" v-bind:key="s.id">
+                      <template v-if="s.show_as_header && s.name !== ''">
+                        <b>{{s.name}}</b>
+                      </template>
                       <template v-for="i in s.ingredients">
                         <Ingredient :ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
                                     @checked-state-changed="updateIngredientCheckedState"></Ingredient>
                       </template>
-                    </template>
+                    </div>
                     <!-- eslint-enable vue/no-v-for-template-key-on-child -->
                   </table>
                 </div>
@@ -144,7 +150,7 @@
 
     <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh" v-if="share_uid !== 'None'">
       <div class="col col-md-12">
-        <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)" >{{$t('Report Abuse')}}</a>
+        <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)">{{ $t('Report Abuse') }}</a>
       </div>
     </div>
 
@@ -155,7 +161,6 @@
 <script>
 import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
-
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {apiLoadRecipe} from "@/utils/api";

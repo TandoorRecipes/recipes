@@ -9,6 +9,7 @@ from ._recipes import (
     ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, CHEF_KOCH2, COOKPAD,
     COOKS_COUNTRY, DELISH, FOOD_NETWORK, GIALLOZAFFERANO, JOURNAL_DES_FEMMES,
     MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO)
+from cookbook.tests.conftest import validate_recipe
 
 IMPORT_SOURCE_URL = 'api_recipe_from_source'
 DATA_DIR = "cookbook/tests/other/test_data/"
@@ -56,7 +57,8 @@ def test_import_permission(arg, request):
     TUDOGOSTOSO,
 ])
 def test_recipe_import(arg, u1_s1):
-    for f in arg['file']:
+    url = arg['url']
+    for f in list(arg['file']) :  # url and files get popped later
         if 'cookbook' in os.getcwd():
             test_file = os.path.join(os.getcwd(), 'other', 'test_data', f)
         else:
@@ -66,33 +68,10 @@ def test_recipe_import(arg, u1_s1):
                 reverse(IMPORT_SOURCE_URL),
                 {
                     'data': d.read(),
-                    'url': arg['url'],
+                    'url': url,
                     'mode': 'source'
                 },
                 files={'foo': 'bar'}
             )
         recipe = json.loads(response.content)['recipe_json']
-        for key in list(set(arg) - set(['file', 'url'])):
-            if type(arg[key]) == list:
-                assert len(recipe[key]) == len(arg[key])
-                if key == 'keywords':
-                    valid_keywords = [i['text'] for i in arg[key]]
-                    for k in recipe[key]:
-                        assert k['text'] in valid_keywords
-                elif key == 'recipeIngredient':
-                    valid_ing = ["{:g}{}{}{}{}".format(
-                        i['amount'],
-                        i['unit']['text'],
-                        i['ingredient']['text'],
-                        i['note'],
-                        i['original'])
-                        for i in arg[key]]
-                    for i in recipe[key]:
-                        assert "{:g}{}{}{}{}".format(
-                            i['amount'],
-                            i['unit']['text'],
-                            i['ingredient']['text'],
-                            i['note'],
-                            i['original']) in valid_ing
-            else:
-                assert recipe[key] == arg[key]
+        validate_recipe(arg, recipe)

@@ -11,7 +11,7 @@ LIST_URL = 'api:recipebookentry-list'
 DETAIL_URL = 'api:recipebookentry-detail'
 
 
-@pytest.fixture()
+@pytest.fixture
 def obj_1(space_1, u1_s1, recipe_1_s1):
     b = RecipeBook.objects.create(name='test_1', created_by=auth.get_user(u1_s1), space=space_1)
 
@@ -100,7 +100,7 @@ def test_add_duplicate(u1_s1, obj_1):
         {'book': obj_1.book.pk, 'recipe': obj_1.recipe.pk},
         content_type='application/json'
     )
-    assert r.status_code == 400
+    assert r.status_code == 201
 
 
 def test_delete(u1_s1, u1_s2, obj_1):

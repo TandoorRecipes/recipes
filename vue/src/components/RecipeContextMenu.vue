@@ -26,8 +26,7 @@
           <i class="fas fa-shopping-cart fa-fw"></i> {{ $t('Add_to_Shopping') }}
         </a>
 
-        <a class="dropdown-item" :href="`${resolveDjangoUrl('new_meal_plan') }?recipe=${recipe.id}`"
-           target="_blank" rel="noopener noreferrer"><i
+        <a class="dropdown-item" @click="createMealPlan" href="#"><i
             class="fas fa-calendar fa-fw"></i> {{ $t('Add_to_Plan') }}
         </a>
 
@@ -72,19 +71,26 @@
               class="fa fa-share-alt"></i></b-button>
         </div>
       </div>
-
     </b-modal>
 
-
+    <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial_recipe="[recipe]"
+                          :entry-editing_initial_meal_type="[]" @save-entry="saveMealPlan"
+                          :modal_id="`modal-meal-plan_${modal_id}`" :allow_delete="false" :modal_title="$t('Create_Meal_Plan_Entry')"></meal-plan-edit-modal>
   </div>
 </template>
 
 <script>
 
-import {makeToast, resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
+import {makeToast, resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/utils/utils";
 import CookLog from "@/components/CookLog";
 import axios from "axios";
 import AddRecipeToBook from "./AddRecipeToBook";
+import MealPlanEditModal from "@/components/MealPlanEditModal";
+import moment from "moment";
+import Vue from "vue";
+import {ApiApiFactory} from "@/utils/openapi/api";
+
+Vue.prototype.moment = moment
 
 export default {
   name: 'RecipeContextMenu',
@@ -93,13 +99,29 @@ export default {
   ],
   components: {
     AddRecipeToBook,
-    CookLog
+    CookLog,
+    MealPlanEditModal
   },
   data() {
     return {
       servings_value: 0,
       recipe_share_link: undefined,
-      modal_id: this.recipe.id + Math.round(Math.random() * 100000)
+      modal_id: this.recipe.id + Math.round(Math.random() * 100000),
+      options: {
+        entryEditing: {
+          date: null,
+          id: -1,
+          meal_type: null,
+          note: "",
+          note_markdown: "",
+          recipe: null,
+          servings: 1,
+          shared: [],
+          title: '',
+          title_placeholder: this.$t('Title')
+        }
+      },
+      entryEditing: {},
     }
   },
   props: {
@@ -113,6 +135,24 @@ export default {
     this.servings_value = ((this.servings === -1) ? this.recipe.servings : this.servings)
   },
   methods: {
+    saveMealPlan: function (entry) {
+      entry.date = moment(entry.date).format("YYYY-MM-DD")
+
+      let apiClient = new ApiApiFactory()
+
+      apiClient.createMealPlan(entry).then(result => {
+        this.$bvModal.hide(`modal-meal-plan_${this.modal_id}`)
+        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+      }).catch(error => {
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+      })
+    },
+    createMealPlan(data) {
+      this.entryEditing = this.options.entryEditing
+      this.entryEditing.recipe = this.recipe
+      this.entryEditing.date = moment(new Date()).format('YYYY-MM-DD')
+      this.$bvModal.show(`modal-meal-plan_${this.modal_id}`)
+    },
     createShareLink: function () {
       axios.get(resolveDjangoUrl('api_share_link', this.recipe.id)).then(result => {
         this.$bvModal.show(`modal-share-link_${this.modal_id}`)
