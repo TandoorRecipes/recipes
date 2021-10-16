@@ -64,7 +64,7 @@ import { BootstrapVue } from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import { CardMixin, ApiMixin, getConfig, StandardToasts, getUserPreference, makeToast } from "@/utils/utils"
+import { CardMixin, ApiMixin, getConfig, StandardToasts } from "@/utils/utils"
 
 import GenericInfiniteCards from "@/components/GenericInfiniteCards"
 import GenericHorizontalCard from "@/components/GenericHorizontalCard"
