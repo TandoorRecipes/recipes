@@ -4,7 +4,7 @@ import json
 import re
 from io import BytesIO
 
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient, Keyword
 from gettext import gettext as _
@@ -16,7 +16,7 @@ class Paprika(Integration):
         raise NotImplementedError('Method not implemented in storage integration')
 
     def get_recipe_from_file(self, file):
-        with  gzip.open(file, 'r') as recipe_zip:
+        with gzip.open(file, 'r') as recipe_zip:
             recipe_json = json.loads(recipe_zip.read().decode("utf-8"))
 
             recipe = Recipe.objects.create(
@@ -58,7 +58,7 @@ class Paprika(Integration):
                 instruction=instructions, space=self.request.space,
             )
 
-            if len(recipe_json['description'].strip()) > 500:
+            if 'description' in recipe_json and len(recipe_json['description'].strip()) > 500:
                 step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
 
             if 'categories' in recipe_json:
@@ -66,12 +66,13 @@ class Paprika(Integration):
                     keyword, created = Keyword.objects.get_or_create(name=c.strip(), space=self.request.space)
                     recipe.keywords.add(keyword)
 
+            ingredient_parser = IngredientParser(self.request, True)
             try:
                 for ingredient in recipe_json['ingredients'].split('\n'):
                     if len(ingredient.strip()) > 0:
-                        amount, unit, ingredient, note = parse(ingredient)
-                        f = get_food(ingredient, self.request.space)
-                        u = get_unit(unit, self.request.space)
+                        amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
+                        f = ingredient_parser.get_food(ingredient)
+                        u = ingredient_parser.get_unit(unit)
                         step.ingredients.add(Ingredient.objects.create(
                             food=f, unit=u, amount=amount, note=note, space=self.request.space,
                         ))

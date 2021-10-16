@@ -3,12 +3,12 @@ import json
 import requests
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
-from cookbook.helper.ingredient_parser import parse, get_unit, get_food
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry, Food, Unit
+from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry
 
 
 @group_required('user')
@@ -49,16 +49,19 @@ def hook(request, token):
             if not sl:
                 sl = ShoppingList.objects.create(created_by=tb.created_by, space=tb.space)
 
-            amount, unit, ingredient, note = parse(data['message']['text'])
-            f = get_food(ingredient, tb.space)
-            u = get_unit(unit, tb.space)
+            request.space = tb.space  # TODO this is likely a bad idea. Verify and test
+            request.user = tb.created_by
+            ingredient_parser = IngredientParser(request, False)
+            amount, unit, ingredient, note = ingredient_parser.parse(data['message']['text'])
+            f = ingredient_parser.get_food(ingredient)
+            u = ingredient_parser.get_unit(unit)
             sl.entries.add(
                 ShoppingListEntry.objects.create(
                     food=f, unit=u, amount=amount
                 )
             )
             return JsonResponse({'data': data['message']['text']})
-    except:
+    except Exception:
         pass
 
     return JsonResponse({})

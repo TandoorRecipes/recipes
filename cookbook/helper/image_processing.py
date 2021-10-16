@@ -32,7 +32,7 @@ def rescale_image_png(image_object, base_width=720):
 def get_filetype(name):
     try:
         return os.path.splitext(name)[1]
-    except:
+    except Exception:
         return '.jpeg'
 
 

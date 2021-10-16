@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userpreference',
             name='use_fractions',
-            field=models.BooleanField(default=False),
+            field=models.BooleanField(default=True),
         ),
     ]

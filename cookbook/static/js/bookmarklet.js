@@ -18,7 +18,7 @@
     }
     function initBookmarklet() {
         (window.bookmarkletTandoor = function() {
-            let recipe = document.documentElement.innerHTML
+            let recipe = document.documentElement.outerHTML
             let windowName = "ImportRecipe"
             let url = localStorage.getItem('importURL')
             let redirect = localStorage.getItem('redirectURL')

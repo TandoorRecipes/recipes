@@ -37,19 +37,3 @@ def sticky_nav(request):
         return 'position: sticky; top: 0; left: 0; z-index: 1000;'
     else:
         return ''
-
-
-@register.simple_tag
-def tabulator_theme_url(request):
-    if not request.user.is_authenticated:
-        return static('tabulator/tabulator_bootstrap4.min.css')
-    themes = {
-        UserPreference.BOOTSTRAP: 'tabulator/tabulator_bootstrap4.min.css',
-        UserPreference.FLATLY: 'tabulator/tabulator_bootstrap4.min.css',
-        UserPreference.DARKLY: 'tabulator/tabulator_site.min.css',
-        UserPreference.SUPERHERO: 'tabulator/tabulator_site.min.css',
-    }
-    if request.user.userpreference.theme in themes:
-        return static(themes[request.user.userpreference.theme])
-    else:
-        raise AttributeError

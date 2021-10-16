@@ -5,7 +5,12 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "pip"
+    directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+
+  - package-ecosystem: "npm"
+    directory: "/vue/"
+    schedule:
+      interval: "monthly"

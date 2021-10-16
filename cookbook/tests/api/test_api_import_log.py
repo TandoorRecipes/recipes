@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Keyword, CookLog, ViewLog, ImportLog
+from cookbook.models import ImportLog
 
 LIST_URL = 'api:importlog-list'
 DETAIL_URL = 'api:importlog-detail'
@@ -33,14 +33,14 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 2
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
     obj_1.space = space_2
     obj_1.save()
 
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 1
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
 
 
 @pytest.mark.parametrize("arg", [

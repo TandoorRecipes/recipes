@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 

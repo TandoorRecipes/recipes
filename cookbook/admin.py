@@ -1,6 +1,12 @@
+from django.conf import settings
 from django.contrib import admin
+from django.contrib.postgres.search import SearchVector
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User, Group
+from django_scopes import scopes_disabled
+from django.utils import translation
 
 from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      MealPlan, MealType, NutritionInformation, Recipe,
@@ -8,7 +14,9 @@ from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe,
                      Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
                      ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport, UserFile)
+                     ImportLog, TelegramBot, BookmarkletImport, UserFile, SearchPreference)
+
+from cookbook.managers import DICTIONARY
 
 
 class CustomUserAdmin(UserAdmin):
@@ -46,6 +54,19 @@ class UserPreferenceAdmin(admin.ModelAdmin):
 admin.site.register(UserPreference, UserPreferenceAdmin)
 
 
+class SearchPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'search', 'trigram_threshold',)
+    search_fields = ('user__username',)
+    list_filter = ('search',)
+
+    @staticmethod
+    def name(obj):
+        return obj.user.get_user_name()
+
+
+admin.site.register(SearchPreference, SearchPreferenceAdmin)
+
+
 class StorageAdmin(admin.ModelAdmin):
     list_display = ('name', 'method')
     search_fields = ('name',)
@@ -80,7 +101,38 @@ class SyncLogAdmin(admin.ModelAdmin):
 
 admin.site.register(SyncLog, SyncLogAdmin)
 
-admin.site.register(Keyword)
+
+@admin.action(description='Temporarily ENABLE sorting on Foods and Keywords.')
+def enable_tree_sorting(modeladmin, request, queryset):
+    Food.node_order_by = ['name']
+    Keyword.node_order_by = ['name']
+    with scopes_disabled():
+        Food.fix_tree(fix_paths=True)
+        Keyword.fix_tree(fix_paths=True)
+
+
+@admin.action(description='Temporarily DISABLE sorting on Foods and Keywords.')
+def disable_tree_sorting(modeladmin, request, queryset):
+    Food.node_order_by = []
+    Keyword.node_order_by = []
+
+
+@admin.action(description='Fix problems and sort tree by name')
+def sort_tree(modeladmin, request, queryset):
+    orginal_value = modeladmin.model.node_order_by[:]
+    modeladmin.model.node_order_by = ['name']
+    with scopes_disabled():
+        modeladmin.model.fix_tree(fix_paths=True)
+    modeladmin.model.node_order_by = orginal_value
+
+
+class KeywordAdmin(TreeAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
+
+
+admin.site.register(Keyword, KeywordAdmin)
 
 
 class StepAdmin(admin.ModelAdmin):
@@ -89,6 +141,17 @@ class StepAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Step, StepAdmin)
+
+
+@admin.action(description='Rebuild index for selected recipes')
+def rebuild_index(modeladmin, request, queryset):
+    language = DICTIONARY.get(translation.get_language(), 'simple')
+    with scopes_disabled():
+        Recipe.objects.all().update(
+            name_search_vector=SearchVector('name__unaccent', weight='A', config=language),
+            desc_search_vector=SearchVector('description__unaccent', weight='B', config=language)
+        )
+        Step.objects.all().update(search_vector=SearchVector('instruction__unaccent', weight='B', config=language))
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -101,11 +164,22 @@ class RecipeAdmin(admin.ModelAdmin):
     def created_by(obj):
         return obj.created_by.get_user_name()
 
+    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        actions = [rebuild_index]
+
 
 admin.site.register(Recipe, RecipeAdmin)
 
 admin.site.register(Unit)
-admin.site.register(Food)
+
+
+class FoodAdmin(TreeAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
+
+
+admin.site.register(Food, FoodAdmin)
 
 
 class IngredientAdmin(admin.ModelAdmin):

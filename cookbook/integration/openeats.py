@@ -1,11 +1,8 @@
 import json
-import re
 
-from django.utils.translation import gettext as _
-
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Food, Unit, Ingredient
+from cookbook.models import Recipe, Step, Ingredient
 
 
 class OpenEats(Integration):
@@ -26,9 +23,10 @@ class OpenEats(Integration):
 
         step = Step.objects.create(instruction=instructions, space=self.request.space,)
 
+        ingredient_parser = IngredientParser(self.request, True)
         for ingredient in file['ingredients']:
-            f = get_food(ingredient['food'], self.request.space)
-            u = get_unit(ingredient['unit'], self.request.space)
+            f = ingredient_parser.get_food(ingredient['food'])
+            u = ingredient_parser.get_unit(ingredient['unit'])
             step.ingredients.add(Ingredient.objects.create(
                 food=f, unit=u, amount=ingredient['amount'], space=self.request.space,
             ))

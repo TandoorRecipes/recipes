@@ -13,11 +13,12 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
-from PIL import Image, UnidentifiedImageError
+from PIL import UnidentifiedImageError
 from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.image_processing import handle_image
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
@@ -149,24 +150,19 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if k := Keyword.objects.filter(name=kw['text'], space=request.space).first():
-                recipe.keywords.add(k)
-            elif data['all_keywords']:
-                k = Keyword.objects.create(name=kw['text'], space=request.space)
-                recipe.keywords.add(k)
+            k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
+            recipe.keywords.add(k)
 
+        ingredient_parser = IngredientParser(request, True)
         for ing in data['recipeIngredient']:
-            ingredient = Ingredient(space=request.space,)
+            ingredient = Ingredient(space=request.space, )
 
-            if ing['ingredient']['text'] != '':
-                ingredient.food, f_created = Food.objects.get_or_create(
-                    name=ing['ingredient']['text'].strip(), space=request.space
-                )
+            if food_text := ing['ingredient']['text'].strip():
+                ingredient.food = ingredient_parser.get_food(food_text)
 
-            if ing['unit'] and ing['unit']['text'] != '':
-                ingredient.unit, u_created = Unit.objects.get_or_create(
-                    name=ing['unit']['text'].strip(), space=request.space
-                )
+            if ing['unit']:
+                if unit_text := ing['unit']['text'].strip():
+                    ingredient.unit = ingredient_parser.get_unit(unit_text)
 
             # TODO properly handle no_amount recipes
             if isinstance(ing['amount'], str):

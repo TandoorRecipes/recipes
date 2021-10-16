@@ -18,6 +18,7 @@
             <form method="POST" class="post-form">{% csrf_token %}
                 {{ form|crispy }}
                 <input type="submit" value="Submit" class="btn btn-success">
+                <a href="{% url 'list_storage' %}"><button type="button" class="btn btn-primary">{% trans 'Manage External Storage' %}</button></a>
             </form>
 
         </div>
@@ -25,6 +26,8 @@
 
     <br/>
     <a href="{% url 'data_sync_wait' %}" class="btn btn-warning">{% trans 'Sync Now!' %}</a>
+    <a href="{% url 'list_recipe_import' %}" class="btn btn-info">{% trans 'Show Recipes' %}</a>
+    <a href="{% url 'list_sync_log' %}" class="btn btn-secondary">{% trans 'Show Log' %}</a>
     <br/><br/>
 
     {% render_table monitored_paths %}

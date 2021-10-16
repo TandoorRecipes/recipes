@@ -10440,13 +10440,13 @@ footer a:hover {
     background-color: transparent !important;
 }
 
-textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([class="select2-search__field"]), select {
+textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([class="select2-search__field"]):not([class="vue-treeselect__input"]), select  {
     background-color: white !important;
     border-radius: .25rem !important;
     border: 1px solid #ced4da !important;
 }
 
-.multiselect__tag, .multiselect__option--highlight, .multiselect__option--highlight:after {
+.multiselect__tag, .multiselect__option--highlight, .multiselect__option--highlight:after, .vue-treeselect__multi-value-item {
     background-color: #cfd5cd !important;
     color: #212529 !important;
 }
@@ -10455,7 +10455,7 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
     background-color: #a7240e !important;
 }
 
-.multiselect__tag-icon:after {
+.multiselect__tag-icon:after, .vue-treeselect__icon vue-treeselect__value-remove, .vue-treeselect__value-remove {
     color: #212529 !important
 }
 

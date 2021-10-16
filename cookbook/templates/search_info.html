@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Search Settings" %}{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'Search Settings' %}</h1>
+    {% blocktrans %}
+        Creating the best search experience is complicated and weighs heavily on your personal configuration.  
+        Changing any of the search settings can have significant impact on the speed and quality of the results.
+        Search Methods, Trigrams and Full Text Search configurations are only available if you are using Postgres for your database.
+    {% endblocktrans %}
+
+    <br/>
+    <br/>
+
+    <h3>{% trans 'Search Methods' %}</h3>
+
+    <div class="card">
+        <div class="card-body">
+            <p> {% blocktrans %} 
+            Full text searches attempt to normalize the words provided to match common variants.  For example: 'forked', 'forking', 'forks' will all normalize to 'fork'.
+            There are several methods available, described below, that will control how the search behavior should react when multiple words are searched.
+            Full technical details on how these operate can be viewed on <a href=https://www.postgresql.org/docs/current/textsearch-controls.html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>
+            {% endblocktrans %}</p>
+            <h4>{% trans 'Simple' %}</h4>
+            <p> {% blocktrans %} 
+            Simple searches ignore punctuation and common words such as 'the', 'a', 'and'. And will treat seperate words as required.
+            Searching for 'apple or flour' will return any recipe that includes both 'apple' and 'flour' anywhere in the fields that have been selected for a full text search.
+            {% endblocktrans %}</p>
+            <h4>{% trans 'Phrase' %}</h4>
+            <p> {% blocktrans %} 
+            Phrase searches ignore punctuation, but will search for all of the words in the exact order provided.
+            Searching for 'apple or flour' will only return a recipe that includes the exact phrase 'apple or flour' in any of the fields that have been selected for a full text search.
+            {% endblocktrans %}</p>
+            <h4>{% trans 'Web' %}</h4>
+            <p> {% blocktrans %} 
+            Web searches simulate functionality found on many web search sites supporting special syntax.
+            Placing quotes around several words will convert those words into a phrase.
+            'or' is recongized as searching for the word (or phrase) immediately before 'or' OR the word (or phrase) directly after.
+            '-' is recognized as searching for recipes that do not include the word (or phrase) that comes immediately after. 
+            For example searching for 'apple pie' or cherry -butter will return any recipe that includes the phrase 'apple pie' or the word 'cherry' 
+            in any field included in the full text search but exclude any recipe that has the word 'butter' in any field included.
+            {% endblocktrans %}</p>
+            <h4>{% trans 'Raw' %}</h4>
+            <p> {% blocktrans %} 
+            Raw search is similar to Web except will take puncuation operators such as '|', '&' and '()'
+            {% endblocktrans %}</p>
+        </div>
+
+    </div>
+
+    <br/>
+    <h4>fuzzy search</h4>
+    <div class="card">
+        <div class="card-body">
+            {% blocktrans %} 
+            Another approach to searching that also requires Postgresql is fuzzy search or trigram similarity. A trigram is a group of three consecutive characters.
+            For example searching for 'apple' will create x trigrams 'app', 'ppl', 'ple' and will create a score of how closely words match the generated trigrams.
+            One benefit of searching trigams is that a search for 'sandwich' will find mispelled words such as 'sandwhich' that would be missed by other methods.
+            {% endblocktrans %} 
+        </div>
+
+    </div>
+
+    <br/>
+    <h4>{% trans 'Search Fields' %}</h4>
+
+    <div class="card">
+        <div class="card-body">
+            {% blocktrans %} 
+            Unaccent is a special case in that it enables searching a field 'unaccented' for each search style attempting to ignore accented values. 
+            For example when you enable unaccent for 'Name' any search (starts with, contains, trigram) will attempt the search ignoring accented characters.
+            
+            For the other options, you can enable search on any or all fields and they will be combined together with an assumed 'OR'.
+            For example enabling 'Name' for Starts With, 'Name' and 'Description' for Partial Match and 'Ingredients' and 'Keywords' for Full Search
+            and searching for 'apple' will generate a search that will return recipes that have:
+            - A recipe name that starts with 'apple'
+            - OR a recipe name that contains 'apple'
+            - OR a recipe description that contains 'apple'
+            - OR a recipe that will have a full text search match ('apple' or 'apples') in ingredients
+            - OR a recipe that will have a full text search match in Keywords
+
+            Combining too many fields in too many types of search can have a negative impact on performance, create duplicate results or return unexpected results.
+            For example, enabling fuzzy search or partial matches will interfere with web search methods.  
+            Searching for 'apple -pie' with fuzzy search and full text search will return the recipe Apple Pie.  Though it is not included in the full text results, it does match the trigram results.
+            {% endblocktrans %} 
+        </div>
+
+    </div>
+
+    <br/>
+    <h4>{% trans 'Search Index' %}</h4>
+
+    <div class="card">
+        <div class="card-body">
+            {% blocktrans %} 
+            Trigram search and Full Text Search both rely on database indexes to perform effectively.  
+            You can rebuild the indexes on all fields in the Admin page for Recipes and selecting all recipes and running 'rebuild index for selected recipes'
+            You can also rebuild indexes at the command line by executing the management command 'python manage.py rebuildindex'
+            {% endblocktrans %} 
+        </div>
+
+    </div>
+<br>
+<br>
+<br>
+{% endblock %}
