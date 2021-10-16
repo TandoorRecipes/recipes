@@ -329,8 +329,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
-    filter_to_supermarket = models.BooleanField(default=False)
-    default_delay = models.IntegerField(default=4)
+    food_inherit = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
@@ -474,6 +473,18 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
         ]
 
 
+class FoodParentIgnore(models.Model, PermissionModelMixin):
+    field = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return _(self.name)
+
+    @staticmethod
+    def get_name(self):
+        return _(self.name)
+
+
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     # exclude fields not implemented yet
     inherit_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
@@ -487,6 +498,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     ignore_shopping = models.BooleanField(default=False)
     description = models.TextField(default='', blank=True)
     on_hand = models.BooleanField(default=False)
+    child_inherit = models.BooleanField(default=False)
+    ignore_parent = models.ManyToManyField(FoodParentIgnore, related_name="ignore_parent", blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
