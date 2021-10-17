@@ -14,8 +14,7 @@
       <div class="row text-center">
         <div class="col col-md-12">
           <recipe-rating :recipe="recipe"></recipe-rating>
-          <br/>
-          <last-cooked :recipe="recipe"></last-cooked>
+          <last-cooked :recipe="recipe" class="mt-2"></last-cooked>
         </div>
       </div>
 
