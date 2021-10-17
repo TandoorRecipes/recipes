@@ -41,13 +41,11 @@
     <div class="periodLabel">
       <slot name="label">{{ headerProps.periodLabel }}</slot>
     </div>
-    <div class="actionArea d-none d-sm-flex">
-      <button class="btn btn-success plus-button pt-1 pb-1" @click="$emit('create-new')"><i class="fas fa-plus"></i>
-      </button>
-      <span class="delete-area text-danger p-1 mr-2 ml-2" @drop.prevent="onDeleteDrop($event)"
-            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)"
-            @dragover.prevent="onDeleteDragEnter"><i
-          class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
+    <div class="actionArea">
+      <button class="btn btn-secondary ical-button pt-1 pb-1 pl-3 pr-3 text-body" @click="exportiCal" v-b-tooltip.hover :title="$t('Export_As_ICal')"><i class="fas fa-calendar"></i></button>
+      <button class="btn btn-success plus-button pt-1 pb-1 pl-3 pr-3 mr-1 ml-1 text-body" @click="$emit('create-new')" v-b-tooltip.hover :title="$t('Create_Meal_Plan_Entry')"><i class="fas fa-plus"></i></button>
+      <span class="delete-area text-danger p-1 mr-2 ml-1 d-none d-sm-flex" @drop.prevent="onDeleteDrop($event)"
+            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
     </div>
   </div>
 </template>
@@ -63,6 +61,7 @@ export default {
     previousPeriodLabel: {type: String, default: "<"},
     nextPeriodLabel: {type: String, default: ">"},
     nextYearLabel: {type: String, default: ">>"},
+    iCalUrl: {type: String, default: ""},
   },
   methods: {
     onDayForward() {
@@ -70,6 +69,9 @@ export default {
     },
     onDayBack() {
       this.$emit("set-starting-day-back")
+    },
+    exportiCal() {
+      window.open(this.iCalUrl)
     },
     onInput(d) {
       this.$emit("input", d)
@@ -115,17 +117,20 @@ export default {
   font-size: 1.5em;
 }
 
-.plus-button {
-  border-style: dotted;
+.ical-button {
   margin-left: auto;
   order: 1;
   user-select: none
 }
 
+.plus-button {
+  order: 2;
+  user-select: none
+}
+
 .delete-area {
   border-style: dotted;
-  margin-left: auto;
-  order: 2;
+  order: 3;
   user-select: none
 }
 

@@ -4,7 +4,7 @@
        @dragstart="onDragItemStart(value, $event)"
        @click="onClickItem(value, $event)"
        :aria-grabbed="value == currentDragItem"
-       :class="value.classes" :title="title"
+       :class="value.classes"
        @contextmenu.prevent="$emit('open-context-menu', $event, value)">
     <div class="card-header p-1 text-center text-primary border-bottom-0" v-if="detailed"
          :style="`background-color: ${background_color}`">
@@ -30,17 +30,20 @@
       <span class="font-light">{{ title }}</span>
     </div>
     <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="hasRecipe && detailed"></b-img>
-    <b-img fluid class="card-img-bottom" :src="image_placeholder" v-if="detailed && ((!hasRecipe && entry.entry.note === '') || (hasRecipe && entry.entry.recipe.image === null))"></b-img>
+    <b-img fluid class="card-img-bottom" :src="image_placeholder"
+           v-if="detailed && ((!hasRecipe && entry.entry.note === '') || (hasRecipe && entry.entry.recipe.image === null))"></b-img>
     <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null"
          :style="`background-color: ${background_color}`">
       <p>{{ entry.entry.note }}</p>
     </div>
     <div class="row p-1 flex-nowrap" v-if="!detailed" :style="`background-color: ${background_color}`">
       <div class="col-2">
-        <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null">{{
+        <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null" v-b-tooltip.hover.left
+              :title=" entry.entry.meal_type.name">{{
             entry.entry.meal_type.icon
           }}</span>
-        <span class="font-light text-center" v-if="entry.entry.meal_type.icon == null">❓</span>
+        <span class="font-light text-center" v-if="entry.entry.meal_type.icon == null" v-b-tooltip.hover.left
+              :title=" entry.entry.meal_type.name">❓</span>
       </div>
       <div class="col-10 d-inline-block text-truncate" :style="`max-height:${item_height}`">
         <span class="font-light">{{ title }}</span>
