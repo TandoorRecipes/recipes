@@ -2,42 +2,41 @@
   <div class="cv-header">
     <div class="cv-header-nav">
       <button
-          :disabled="!headerProps.previousYear"
-          class="previousYear"
-          aria-label="Previous Year"
-          @click.prevent="onInput(headerProps.previousYear)"
-      >
-        {{ previousYearLabel }}
-      </button>
-      <button
           :disabled="!headerProps.previousPeriod"
           class="previousPeriod"
           aria-label="Previous Period"
           @click.prevent="onInput(headerProps.previousPeriod)"
-          v-html="previousPeriodLabel"
-      />
+          v-b-tooltip.hover.top
+          :title="$t('Previous_Period')"
+          v-html="previousYearLabel"/>
+      <button
+          class="previousDay"
+          aria-label="Previous Day"
+          @click.prevent="onDayBack"
+          v-b-tooltip.hover.top
+          :title="$t('Previous_Day')"
+          v-html="previousPeriodLabel"/>
       <button
           class="currentPeriod"
           aria-label="Current Period"
-          @click.prevent="onInput(headerProps.currentPeriod)"
-      >
+          @click.prevent="onInput(headerProps.currentPeriod)">
         {{ headerProps.currentPeriodLabel }}
       </button>
+      <button
+          class="nextDay"
+          aria-label="Next Day"
+          @click.prevent="onDayForward"
+          v-b-tooltip.hover.top
+          :title="$t('Next_Day')"
+          v-html="nextPeriodLabel"/>
       <button
           :disabled="!headerProps.nextPeriod"
           class="nextPeriod"
           aria-label="Next Period"
+          v-b-tooltip.hover.top
+          :title="$t('Next_Period')"
           @click.prevent="onInput(headerProps.nextPeriod)"
-      >
-        {{ nextPeriodLabel }}
-      </button>
-      <button
-          :disabled="!headerProps.nextYear"
-          class="nextYear"
-          aria-label="Next Year"
-          @click.prevent="onInput(headerProps.nextYear)">
-        {{ nextYearLabel }}
-      </button>
+          v-html="nextYearLabel"/>
     </div>
     <div class="periodLabel">
       <slot name="label">{{ headerProps.periodLabel }}</slot>
@@ -46,8 +45,7 @@
       <button class="btn btn-secondary ical-button pt-1 pb-1 pl-3 pr-3 text-body" @click="exportiCal" v-b-tooltip.hover :title="$t('Export_As_ICal')"><i class="fas fa-calendar"></i></button>
       <button class="btn btn-success plus-button pt-1 pb-1 pl-3 pr-3 mr-1 ml-1 text-body" @click="$emit('create-new')" v-b-tooltip.hover :title="$t('Create_Meal_Plan_Entry')"><i class="fas fa-plus"></i></button>
       <span class="delete-area text-danger p-1 mr-2 ml-1 d-none d-sm-flex" @drop.prevent="onDeleteDrop($event)"
-            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i
-          class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
+            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
     </div>
   </div>
 </template>
@@ -66,6 +64,12 @@ export default {
     iCalUrl: {type: String, default: ""},
   },
   methods: {
+    onDayForward() {
+      this.$emit("set-starting-day-forward")
+    },
+    onDayBack() {
+      this.$emit("set-starting-day-back")
+    },
     exportiCal() {
       window.open(this.iCalUrl)
     },
