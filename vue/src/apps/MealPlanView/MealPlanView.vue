@@ -23,7 +23,8 @@
                 <meal-plan-calender-header
                     :header-props="headerProps"
                     @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
-                    @create-new="createEntryClick(new Date())"/>
+                    @create-new="createEntryClick(new Date())" @set-starting-day-back="setStartingDay(-1)"
+                    @set-starting-day-forward="setStartingDay(1)"/>
               </template>
             </calendar-view>
           </div>
@@ -63,6 +64,12 @@
                     v-model="settings.startingDayOfWeek"
                     :options="dayNames"
                 ></b-form-select>
+              </b-form-group>
+              <b-form-group id="WeekNumInput"
+                            :label="$t('Week_Numbers')">
+                <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
+                  {{ $t('Show_Week_Numbers') }}
+                </b-form-checkbox>
               </b-form-group>
             </b-form>
           </div>
@@ -294,6 +301,15 @@ export default {
     },
   },
   methods: {
+    setStartingDay(days) {
+      if (this.settings.startingDayOfWeek + days < 0) {
+        this.settings.startingDayOfWeek = 6
+      } else if (this.settings.startingDayOfWeek + days > 6) {
+        this.settings.startingDayOfWeek = 0
+      } else {
+        this.settings.startingDayOfWeek = this.settings.startingDayOfWeek + days
+      }
+    },
     newMealType() {
       let apiClient = new ApiApiFactory()
 
