@@ -19,12 +19,11 @@
         <div style="position: static;">
           <div class="dropdown b-dropdown position-static btn-group">
             <button aria-haspopup="true" aria-expanded="false" type="button"
-                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                    class="btn btn-link text-decoration-none text-body pr-2 dropdown-toggle-no-caret"
                     @click.stop="$emit('open-context-menu', $event, value)"><i class="fas fa-ellipsis-v fa-lg"></i>
             </button>
           </div>
         </div>
-
       </a>
     </div>
     <div class="card-header p-1 text-center" v-if="detailed" :style="`background-color: ${background_color}`">
@@ -124,9 +123,5 @@ export default {
 <style scoped>
 .meal-plan-card {
   background-color: #fff;
-}
-
-.theme-default .cv-day.draghover {
-  box-shadow: inset 0 0 0.2em 0.2em grey;
 }
 </style>

@@ -527,7 +527,7 @@ export default {
 }
 
 .cv-day.draghover {
-  box-shadow: inset 0 0 0.2em 0.2em grey !important;
+  box-shadow: inset 0 0 0.2em 0.2em rgb(221, 191, 134) !important;
 }
 
 .modal-backdrop {
