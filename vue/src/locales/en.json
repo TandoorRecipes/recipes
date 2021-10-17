@@ -186,5 +186,7 @@
   "Meal_Type_Required": "Meal type is required",
   "Title_or_Recipe_Required": "Title or recipe selection required",
   "Color": "Color",
-  "New_Meal_Type": "New Meal type"
+  "New_Meal_Type": "New Meal type",
+  "Week_Numbers": "Week numbers",
+  "Show_Week_Numbers": "Show week numbers ?"
 }
