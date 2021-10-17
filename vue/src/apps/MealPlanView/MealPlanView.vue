@@ -23,7 +23,7 @@
                 <meal-plan-calender-header
                     :header-props="headerProps"
                     @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
-                    @create-new="createEntryClick(new Date())"/>
+                    @create-new="createEntryClick(new Date())" :i-cal-url="iCalUrl"/>
               </template>
             </calendar-view>
           </div>
@@ -152,15 +152,15 @@
 
 <script>
 
+import {BootstrapVue} from 'bootstrap-vue'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import ContextMenu from "@/components/ContextMenu/ContextMenu";
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem";
 import "vue-simple-calendar/static/css/default.css"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle";
 import Vue from "vue";
-import {BootstrapVue} from "bootstrap-vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
-import RecipeCard from "../../components/RecipeCard";
 import MealPlanCard from "../../components/MealPlanCard";
 import moment from 'moment'
 import {ApiMixin, StandardToasts} from "@/utils/utils";
@@ -224,7 +224,8 @@ export default {
       },
       current_period: null,
       entryEditing: {},
-      edit_modal_show: false
+      edit_modal_show: false,
+      ical_url: window.ICAL_URL
     }
   },
   computed: {
@@ -276,6 +277,11 @@ export default {
         return "1.6rem"
       }
     },
+    iCalUrl() {
+      let start = moment(this.current_period.periodStart).format('YYYY-MM-DD')
+      let end = moment(this.current_period.periodEnd).format('YYYY-MM-DD')
+      return this.ical_url.replace(/12345/, start).replace(/6789/, end)
+    }
   },
   mounted() {
     this.$nextTick(function () {
