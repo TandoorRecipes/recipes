@@ -187,5 +187,8 @@
     "file_upload_disabled": "Przesyłanie plików nie jest włączone dla Twojej przestrzeni.",
     "Period": "Okres",
     "Plan_Period_To_Show": "Pokaż tygodnie, miesiące lub lata",
-    "Title_or_Recipe_Required": "Wymagany wybór tytułu lub przepisu"
+    "Title_or_Recipe_Required": "Wymagany wybór tytułu lub przepisu",
+    "Export_As_ICal": "Eksportuj bieżący okres do formatu .ical",
+    "Week_Numbers": "Numery tygodni",
+    "Show_Week_Numbers": "Wyświetlić numery tygodni?"
 }
