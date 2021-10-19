@@ -48,6 +48,7 @@ def update_step_search_vector(sender, instance=None, created=False, **kwargs):
 
 
 @receiver(post_save, sender=Food)
+@skip_signal
 def update_food_inheritance(sender, instance=None, created=False, **kwargs):
     if not instance:
         return

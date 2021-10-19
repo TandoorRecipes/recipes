@@ -130,12 +130,19 @@ class UserNameSerializer(WritableNestedModelSerializer):
         fields = ('id', 'username')
 
 
-class FoodInheritFieldSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+class FoodInheritFieldSerializer(UniqueFieldsMixin):
+
+    def create(self, validated_data):
+        # don't allow writing to FoodInheritField via API
+        return FoodInheritField.objects.get(**validated_data)
+
+    def update(self, instance, validated_data):
+        # don't allow writing to FoodInheritField via API
+        return FoodInheritField.objects.get(**validated_data)
 
     class Meta:
         model = FoodInheritField
         fields = ['id', 'name', 'field', ]
-        read_only_fields = ('id', 'name', 'field', )
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
@@ -266,18 +273,6 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     def get_label(self, obj):
         return str(obj)
 
-    # def get_image(self, obj):
-    #     recipes = obj.recipe_set.all().filter(space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
-    #     if recipes.count() == 0 and obj.has_children():
-    #         recipes = Recipe.objects.filter(keywords__in=obj.get_descendants(), space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
-    #     if recipes.count() != 0:
-    #         return random.choice(recipes).image.url
-    #     else:
-    #        return None
-
-    # def count_recipes(self, obj):
-    #     return obj.recipe_set.filter(space=self.context['request'].space).all().count()
-
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
@@ -361,7 +356,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
-    ignore_inherit = FoodInheritFieldSerializer(allow_null=True, required=False, many=True)
+    ignore_inherit = FoodInheritFieldSerializer(many=True)
 
     recipe_filter = 'steps__ingredients__food'
 
