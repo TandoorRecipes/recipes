@@ -334,6 +334,7 @@ LANGUAGES = [
     ('de', _('German')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
+    ('pl', _('Polish')),
     ('es', _('Spanish')),
 ]
 
