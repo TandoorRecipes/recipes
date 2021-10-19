@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load custom_tags %}
+{% load custom_tags %}
 {% load crispy_forms_tags %}
 {% load i18n %}
 
@@ -12,16 +14,40 @@
 
     <h3>{% trans 'Delete' %} {{ title }}</h3>
 
-    
+
     <form action="." method="post">
         {% csrf_token %}
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-warning" role="alert">
             {% blocktrans %}Are you sure you want to delete the {{ title }}: <b>{{ object }}</b> {% endblocktrans %}
         </div>
         {{ form|crispy }}
-        <button class="btn btn-success" type="submit" href="{{ success_url }}"><i class="fas fa-trash-alt"></i> {% trans 'Confirm' %}</button>
-        <a href="javascript:history.back()"  class="btn btn-danger"><i class="fas fa-undo-alt"></i> {% trans 'Cancel' %}</a>
+
+        {% if related_objects %}
+            {% blocktrans %} <i>{{ object }}</i> could not be deleted because it is still referenced by the following instances: {% endblocktrans %}
+            <br/>
+            <br/>
+            {% for o in related_objects %}
+                {% class_name o.model as name %}
+                <h5>{{ name }}</h5>
+                <ul>
+                    {% for e in o %}
+                        <li>
+                            <span class="badge badge-info">#{{ e.id }}</span> {{ e }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            {% endfor %}
+
+
+            <br/>
+        {% endif %}
+
+        <button class="btn btn-success" type="submit" href="{{ success_url }}"><i
+                class="fas fa-trash-alt"></i> {% trans 'Confirm' %}</button>
+        <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-undo-alt"></i> {% trans 'Cancel' %}
+        </a>
     </form>
-    
+
 
 {% endblock %}
