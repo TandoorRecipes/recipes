@@ -92,15 +92,15 @@
                 <div class="col-md-12">
                   <table class="table table-sm">
                     <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-                    <div v-for="s in recipe.steps" v-bind:key="s.id">
+                    <template v-for="s in recipe.steps" >
                       <template v-if="s.show_as_header && s.name !== ''">
-                        <b>{{s.name}}</b>
+                        <b v-bind:key="s.id">{{s.name}}</b>
                       </template>
                       <template v-for="i in s.ingredients">
                         <Ingredient :ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
                                     @checked-state-changed="updateIngredientCheckedState"></Ingredient>
                       </template>
-                    </div>
+                    </template>
                     <!-- eslint-enable vue/no-v-for-template-key-on-child -->
                   </table>
                 </div>
