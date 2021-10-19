@@ -15,9 +15,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
 from django.db.models import Index, ProtectedError, Q, Subquery
-from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
-from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
@@ -329,7 +327,6 @@ class UserPreference(models.Model, PermissionModelMixin):
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
-    food_inherit = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
@@ -473,18 +470,6 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
         ]
 
 
-class FoodParentIgnore(models.Model, PermissionModelMixin):
-    field = models.CharField(max_length=32, unique=True)
-    name = models.CharField(max_length=64, unique=True)
-
-    def __str__(self):
-        return _(self.name)
-
-    @staticmethod
-    def get_name(self):
-        return _(self.name)
-
-
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     # exclude fields not implemented yet
     inherit_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
@@ -498,8 +483,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     ignore_shopping = models.BooleanField(default=False)
     description = models.TextField(default='', blank=True)
     on_hand = models.BooleanField(default=False)
-    child_inherit = models.BooleanField(default=False)
-    ignore_parent = models.ManyToManyField(FoodParentIgnore, related_name="ignore_parent", blank=True)
+    inherit = models.BooleanField(default=False)
+    ignore_inherit = models.ManyToManyField(FoodInheritField,  blank=True)  # is this better as inherit instead of ignore inherit?  which is more intuitive?
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -857,8 +842,17 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    @classmethod
-    def list_from_recipe(self, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None):
+    @ classmethod
+    def list_from_recipe(self, list_recipe=None, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None):
+        """
+        Creates ShoppingListRecipe and associated ShoppingListEntrys from a recipe or a meal plan with a recipe
+        :param list_recipe: Modify an existing ShoppingListRecipe
+        :param recipe: Recipe to use as list of ingredients.  One of [recipe, mealplan] are required
+        :param mealplan: alternatively use a mealplan recipe as source of ingredients
+        :param servings: Optional: Number of servings to use to scale shoppinglist.  If servings = 0 an existing recipe list will be deleted
+        :param ingredients: Ingredients, list of ingredient IDs to include on the shopping list.  When not provided all ingredients will be used
+        """
+        # TODO cascade to associated recipes
         try:
             r = recipe or mealplan.recipe
         except AttributeError:
