@@ -15,6 +15,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
 from django.db.models import Index, ProtectedError, Q, Subquery
+from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
 from django.utils.translation import gettext as _
