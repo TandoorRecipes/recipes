@@ -64,7 +64,7 @@ import { BootstrapVue } from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import { CardMixin, ApiMixin, getConfig, StandardToasts, getUserPreference } from "@/utils/utils"
+import { CardMixin, ApiMixin, getConfig, StandardToasts, getUserPreference, makeToast } from "@/utils/utils"
 
 import GenericInfiniteCards from "@/components/GenericInfiniteCards"
 import GenericHorizontalCard from "@/components/GenericHorizontalCard"
@@ -296,11 +296,11 @@ export default {
                 .then((result) => {
                     this.moveUpdateItem(source_id, target_id)
                     // TODO make standard toast
-                    this.makeToast(this.$t("Success"), "Succesfully moved resource", "success")
+                    makeToast(this.$t("Success"), "Succesfully moved resource", "success")
                 })
                 .catch((err) => {
                     console.log(err)
-                    this.makeToast(this.$t("Error"), err.bodyText, "danger")
+                    makeToast(this.$t("Error"), err.bodyText, "danger")
                 })
         },
         moveUpdateItem: function (source_id, target_id) {
@@ -336,12 +336,12 @@ export default {
                 .then((result) => {
                     this.mergeUpdateItem(source_id, target_id)
                     // TODO make standard toast
-                    this.makeToast(this.$t("Success"), "Succesfully merged resource", "success")
+                    makeToast(this.$t("Success"), "Succesfully merged resource", "success")
                 })
                 .catch((err) => {
                     //TODO error checking not working with OpenAPI methods
                     console.log("Error", err)
-                    this.makeToast(this.$t("Error"), err.bodyText, "danger")
+                    makeToast(this.$t("Error"), err.bodyText, "danger")
                 })
 
             if (automate) {
@@ -390,7 +390,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    this.makeToast(this.$t("Error"), err.bodyText, "danger")
+                    makeToast(this.$t("Error"), err.bodyText, "danger")
                 })
         },
         getRecipes: function (col, item) {
@@ -410,7 +410,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    this.makeToast(this.$t("Error"), err.bodyText, "danger")
+                    makeToast(this.$t("Error"), err.bodyText, "danger")
                 })
         },
         refreshThis: function (id) {
