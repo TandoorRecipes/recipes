@@ -15,7 +15,7 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev cargo && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip install wheel==0.36.2 && \
