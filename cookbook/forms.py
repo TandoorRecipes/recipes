@@ -45,8 +45,7 @@ class UserPreferenceForm(forms.ModelForm):
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'show_recent', 'search_style',
-            'plan_share', 'shopping_share', 'ingredient_decimals', 'shopping_auto_sync',
-            'comments'
+            'plan_share', 'ingredient_decimals',  'comments',
         )
 
         labels = {
@@ -93,7 +92,8 @@ class UserPreferenceForm(forms.ModelForm):
 
         widgets = {
             'plan_share': MultiSelectWidget,
-            'shopping_share': MultiSelectWidget
+            'shopping_share': MultiSelectWidget,
+
         }
 
 

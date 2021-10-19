@@ -12,12 +12,13 @@ from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food, ImportLog,
-                             Ingredient, Keyword, MealPlan, MealType, NutritionInformation, Recipe,
-                             RecipeBook, RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
-                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog)
+from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
+                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
+                             NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
+                             RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
+                             ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
+                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
+                             UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -129,19 +130,12 @@ class UserNameSerializer(WritableNestedModelSerializer):
         fields = ('id', 'username')
 
 
-class FoodInheritFieldSerializer(UniqueFieldsMixin):
-
-    def create(self, validated_data):
-        # don't allow writing to FoodInheritField via API
-        return FoodInheritField.objects.get(**validated_data)
-
-    def update(self, instance, validated_data):
-        # don't allow writing to FoodInheritField via API
-        return FoodInheritField.objects.get(**validated_data)
+class FoodInheritFieldSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = FoodInheritField
         fields = ['id', 'name', 'field', ]
+        read_only_fields = ('id', 'name', 'field', )
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
@@ -161,7 +155,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         fields = (
             'user', 'theme', 'nav_color', 'default_unit', 'default_page',
             'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
-            'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping'
+            'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default'
         )
 
 
@@ -367,7 +361,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
-    ignore_inherit = FoodInheritFieldSerializer(allow_null=True, many=True, required=False)
+    ignore_inherit = FoodInheritFieldSerializer(allow_null=True, required=False, many=True)
 
     recipe_filter = 'steps__ingredients__food'
 
@@ -403,7 +397,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'ignore_shopping', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'child_inherit', 'ignore_parent'
+            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'inherit', 'ignore_inherit'
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -930,13 +924,3 @@ class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'amount', 'unit', 'delete', ]
-
-
-class FoodParentIgnoreSerializer(serializers.ModelSerializer):
-    field = serializers.CharField()
-    name = serializers.CharField()
-
-    class Meta:
-        model = Recipe
-        fields = ['id', 'name', 'field', ]
-        read_only_fields = ('id', 'name', 'field', )
