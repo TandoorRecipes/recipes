@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-10-07 19:06+0000\n"
-"Last-Translator: vabene1111 <vabene1234@googlemail.com>\n"
+"PO-Revision-Date: 2021-10-20 12:06+0000\n"
+"Last-Translator: Marco Lütticke <marcol123@gmail.com>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -248,12 +248,16 @@ msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
+"Suchmethode auswählen. Klicke <a href=\"/docs/search/\">hier</a> für eine "
+"Auflistung der Optionen."
 
 #: .\cookbook\forms.py:488
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Benutze Fuzzy-Suche für Einheiten, Schlüsselwörter und Zutaten beim ändern "
+"und importieren von Rezepten."
 
 #: .\cookbook\forms.py:489
 msgid ""
@@ -507,10 +511,8 @@ msgid "Time"
 msgstr "Zeit"
 
 #: .\cookbook\models.py:429
-#, fuzzy
-#| msgid "File ID"
 msgid "File"
-msgstr "Datei-ID"
+msgstr "Datei"
 
 #: .\cookbook\models.py:429
 #: .\cookbook\templates\include\recipe_open_modal.html:7
@@ -521,19 +523,19 @@ msgstr "Rezept"
 
 #: .\cookbook\models.py:836 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Einfach"
 
 #: .\cookbook\models.py:837 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Satz"
 
 #: .\cookbook\models.py:838 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: .\cookbook\models.py:839 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Rohdaten"
 
 #: .\cookbook\serializer.py:112
 msgid "File uploads are not enabled for this Space."
@@ -614,10 +616,8 @@ msgid "Primary"
 msgstr ""
 
 #: .\cookbook\templates\account\email.html:47
-#, fuzzy
-#| msgid "Make Header"
 msgid "Make Primary"
-msgstr "Überschrift erstellen"
+msgstr "Als Hauptadresse verwenden"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
@@ -1067,7 +1067,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:23
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
