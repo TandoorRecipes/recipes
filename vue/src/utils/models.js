@@ -74,7 +74,18 @@ export class Models {
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "ignore_shopping", "supermarket_category", "on_hand", "inherit", "ignore_inherit"]],
+            params: [
+                [
+                    "name",
+                    "description",
+                    "recipe",
+                    "ignore_shopping",
+                    "supermarket_category",
+                    "on_hand",
+                    "inherit",
+                    "ignore_inherit",
+                ],
+            ],
 
             form: {
                 name: {
@@ -404,15 +415,34 @@ export class Models {
     }
 
     static RECIPE = {
-        'name': i18n.t('Recipe'),
-        'apiName': 'Recipe',
-        'list': {
-            'params': ['query', 'keywords', 'foods', 'units', 'rating', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
+        name: i18n.t("Recipe"),
+        apiName: "Recipe",
+        list: {
+            params: [
+                "query",
+                "keywords",
+                "foods",
+                "units",
+                "rating",
+                "books",
+                "keywordsOr",
+                "foodsOr",
+                "booksOr",
+                "internal",
+                "random",
+                "_new",
+                "page",
+                "pageSize",
+                "options",
+            ],
             // 'config': {
             //     'foods': {'type': 'string'},
             //     'keywords': {'type': 'string'},
             //     'books': {'type': 'string'},
             // }
+        },
+        shopping: {
+            params: ["id", ["id", "list_recipe", "ingredients", "servings"]],
         },
     }
 

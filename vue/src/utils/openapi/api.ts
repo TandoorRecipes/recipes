@@ -239,6 +239,68 @@ export interface Food {
      * @memberof Food
      */
     on_hand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    inherit?: boolean;
+    /**
+     * 
+     * @type {Array<FoodIgnoreInherit>}
+     * @memberof Food
+     */
+    ignore_inherit?: Array<FoodIgnoreInherit> | null;
+}
+/**
+ * 
+ * @export
+ * @interface FoodIgnoreInherit
+ */
+export interface FoodIgnoreInherit {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodIgnoreInherit
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodIgnoreInherit
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodIgnoreInherit
+     */
+    field?: string;
+}
+/**
+ * 
+ * @export
+ * @interface FoodInheritField
+ */
+export interface FoodInheritField {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodInheritField
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritField
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritField
+     */
+    field?: string;
 }
 /**
  * 
@@ -736,10 +798,10 @@ export interface InlineResponse2004 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Step>}
+     * @type {Array<RecipeOverview>}
      * @memberof InlineResponse2004
      */
-    results?: Array<Step>;
+    results?: Array<RecipeOverview>;
 }
 /**
  * 
@@ -864,6 +926,37 @@ export interface InlineResponse2008 {
      * @memberof InlineResponse2008
      */
     results?: Array<Unit>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse2009
+ */
+export interface InlineResponse2009 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2009
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2009
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2009
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ViewLog>}
+     * @memberof InlineResponse2009
+     */
+    results?: Array<ViewLog>;
 }
 /**
  * 
@@ -1379,10 +1472,10 @@ export interface RecipeBook {
     icon?: string | null;
     /**
      * 
-     * @type {Array<ShoppingListCreatedBy>}
+     * @type {Array<RecipeBookShared>}
      * @memberof RecipeBook
      */
-    shared: Array<ShoppingListCreatedBy>;
+    shared: Array<RecipeBookShared>;
     /**
      * 
      * @type {string}
@@ -1488,6 +1581,61 @@ export interface RecipeImage {
  * 
  * @export
  * @interface RecipeIngredients
+ */
+export interface RecipeIngredients {
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeIngredients
+     */
+    id?: number;
+    /**
+     * 
+     * @type {IngredientFood}
+     * @memberof RecipeIngredients
+     */
+    food: IngredientFood | null;
+    /**
+     * 
+     * @type {FoodSupermarketCategory}
+     * @memberof RecipeIngredients
+     */
+    unit: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    amount: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    note?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeIngredients
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeIngredients
+     */
+    is_header?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeIngredients
+     */
+    no_amount?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeKeywords
  */
 export interface RecipeIngredients {
     /**
@@ -1919,10 +2067,10 @@ export interface ShoppingList {
     entries: Array<ShoppingListEntries> | null;
     /**
      * 
-     * @type {Array<ShoppingListCreatedBy>}
+     * @type {Array<RecipeBookShared>}
      * @memberof ShoppingList
      */
-    shared: Array<ShoppingListCreatedBy>;
+    shared: Array<RecipeBookShared>;
     /**
      * 
      * @type {boolean}
@@ -1991,18 +2139,6 @@ export interface ShoppingListEntries {
      * @memberof ShoppingListEntries
      */
     food: IngredientFood | null;
-    /**
-     * 
-     * @type {FoodSupermarketCategory}
-     * @memberof ShoppingListEntries
-     */
-    unit?: FoodSupermarketCategory | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListEntries
-     */
-    ingredient?: number | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -2329,49 +2465,6 @@ export interface ShoppingListRecipeMealplan {
 /**
  * 
  * @export
- * @interface ShoppingListRecipes
- */
-export interface ShoppingListRecipes {
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListRecipes
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListRecipes
-     */
-    recipe?: number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListRecipes
-     */
-    mealplan?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipes
-     */
-    recipe_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipes
-     */
-    servings: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipes
-     */
-    mealplan_note?: string;
-}
-/**
- * 
- * @export
  * @interface ShoppingListSupermarket
  */
 export interface ShoppingListSupermarket {
@@ -2559,147 +2652,6 @@ export enum StepTypeEnum {
     Recipe = 'RECIPE'
 }
 
-/**
- * 
- * @export
- * @interface StepFile
- */
-export interface StepFile {
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFile
-     */
-    name: string;
-    /**
-     * 
-     * @type {any}
-     * @memberof StepFile
-     */
-    file?: any;
-    /**
-     * 
-     * @type {number}
-     * @memberof StepFile
-     */
-    id?: number;
-}
-/**
- * 
- * @export
- * @interface StepFood
- */
-export interface StepFood {
-    /**
-     * 
-     * @type {number}
-     * @memberof StepFood
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFood
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFood
-     */
-    description?: string;
-    /**
-     * 
-     * @type {FoodRecipe}
-     * @memberof StepFood
-     */
-    recipe?: FoodRecipe | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepFood
-     */
-    ignore_shopping?: boolean;
-    /**
-     * 
-     * @type {FoodSupermarketCategory}
-     * @memberof StepFood
-     */
-    supermarket_category?: FoodSupermarketCategory | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFood
-     */
-    parent?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof StepFood
-     */
-    numchild?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepFood
-     */
-    on_hand?: boolean;
-}
-/**
- * 
- * @export
- * @interface StepIngredients
- */
-export interface StepIngredients {
-    /**
-     * 
-     * @type {number}
-     * @memberof StepIngredients
-     */
-    id?: number;
-    /**
-     * 
-     * @type {StepFood}
-     * @memberof StepIngredients
-     */
-    food: StepFood | null;
-    /**
-     * 
-     * @type {FoodSupermarketCategory}
-     * @memberof StepIngredients
-     */
-    unit: FoodSupermarketCategory | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepIngredients
-     */
-    amount: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepIngredients
-     */
-    note?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof StepIngredients
-     */
-    order?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepIngredients
-     */
-    is_header?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepIngredients
-     */
-    no_amount?: boolean;
-}
 /**
  * 
  * @export
