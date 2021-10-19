@@ -1,6 +1,13 @@
 <template>
   <div class="cv-header">
     <div class="cv-header-nav">
+      <b-form-datepicker
+          class="currentPeriod mr-3"
+          button-only
+          aria-controls="example-input"
+          button-variant=""
+          @context="dateSelect"
+      ></b-form-datepicker>
       <button
           :disabled="!headerProps.previousPeriod"
           class="previousPeriod"
@@ -19,8 +26,8 @@
       <button
           class="currentPeriod"
           aria-label="Current Period"
-          @click.prevent="onInput(headerProps.currentPeriod)">
-        {{ headerProps.currentPeriodLabel }}
+          @click="onInput(headerProps.currentPeriod)">
+        <i class="fas fa-home"></i>
       </button>
       <button
           class="nextDay"
@@ -42,26 +49,60 @@
       <slot name="label">{{ headerProps.periodLabel }}</slot>
     </div>
     <div class="actionArea">
-      <button class="btn btn-secondary ical-button pt-1 pb-1 pl-3 pr-3 text-body" @click="exportiCal" v-b-tooltip.hover :title="$t('Export_As_ICal')"><i class="fas fa-calendar"></i></button>
-      <button class="btn btn-success plus-button pt-1 pb-1 pl-3 pr-3 mr-1 ml-1 text-body" @click="$emit('create-new')" v-b-tooltip.hover :title="$t('Create_Meal_Plan_Entry')"><i class="fas fa-plus"></i></button>
+      <span class="period-span-1 pt-1 pb-1 pl-1 pr-1 d-none d-xl-inline-flex text-body align-items-center">
+        <small>Period:</small>
+        <b-form-select
+            class="ml-1"
+            id="UomInput"
+            v-model="settings.displayPeriodUom"
+            :options="options.displayPeriodUom"
+        ></b-form-select>
+      </span>
+      <span class="period-span-2 pt-1 pb-1 pl-1 pr-1 mr-1 ml-1 d-none d-xl-inline-flex text-body align-items-center">
+         <small>Periods:</small>
+         <b-form-select
+             class="ml-1"
+             id="UomInput"
+             v-model="settings.displayPeriodCount"
+             :options="options.displayPeriodCount"
+         ></b-form-select>
+      </span>
+      <button class="btn btn-secondary ical-button pt-1 pb-1 pl-3 pr-3 mr-1 ml-1 text-body" @click="exportiCal"
+              v-b-tooltip.hover
+              :title="$t('Export_As_ICal')"><i class="fas fa-download"></i></button>
+      <button class="btn btn-success plus-button pt-1 pb-1 pl-3 pr-3 mr-1 ml-1 text-body" @click="$emit('create-new')"
+              v-b-tooltip.hover :title="$t('Create_Meal_Plan_Entry')"><i class="fas fa-calendar-plus"></i></button>
       <span class="delete-area text-danger p-1 mr-2 ml-1 d-none d-sm-flex" @drop.prevent="onDeleteDrop($event)"
-            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
+            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)"
+            @dragover.prevent="onDeleteDragEnter"><i class="fa fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "MealPlanCalenderHeader",
+  computed: {
+    settings: {
+      get: function () {
+        return this.settings_prop
+      },
+      set: function (value) {
+        this.$emit('change', value)
+      }
+    }
+  },
   props: {
     headerProps: {
       type: Object,
       required: true,
     },
+    options: {},
     previousYearLabel: {type: String, default: "<<"},
     previousPeriodLabel: {type: String, default: "<"},
     nextPeriodLabel: {type: String, default: ">"},
     nextYearLabel: {type: String, default: ">>"},
     iCalUrl: {type: String, default: ""},
+    settings_prop: {}
   },
   methods: {
     onDayForward() {
@@ -69,6 +110,9 @@ export default {
     },
     onDayBack() {
       this.$emit("set-starting-day-back")
+    },
+    dateSelect(ctx) {
+      this.$emit("input", ctx.selectedDate)
     },
     exportiCal() {
       window.open(this.iCalUrl)
@@ -117,20 +161,30 @@ export default {
   font-size: 1.5em;
 }
 
-.ical-button {
+.period-span-1 {
   margin-left: auto;
   order: 1;
   user-select: none
 }
 
-.plus-button {
+.period-span-2 {
   order: 2;
+  user-select: none
+}
+
+.ical-button {
+  order: 3;
+  user-select: none
+}
+
+.plus-button {
+  order: 4;
   user-select: none
 }
 
 .delete-area {
   border-style: dotted;
-  order: 3;
+  order: 5;
   user-select: none
 }
 

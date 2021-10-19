@@ -24,7 +24,7 @@
                     :header-props="headerProps"
                     @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
                     @create-new="createEntryClick(new Date())" @set-starting-day-back="setStartingDay(-1)"
-                    @set-starting-day-forward="setStartingDay(1)" :i-cal-url="iCalUrl"/>
+                    @set-starting-day-forward="setStartingDay(1)" :i-cal-url="iCalUrl" :options="options" :settings_prop="settings"/>
               </template>
             </calendar-view>
           </div>
