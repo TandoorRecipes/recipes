@@ -631,7 +631,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
-    mealplan_note = serializers.SerializerMethodField('get_note_markdown')
+    mealplan_note = serializers.ReadOnlyField(source='mealplan.note')
     servings = CustomDecimalField()
 
     def get_note_markdown(self, obj):
@@ -639,7 +639,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'recipe', 'mealplan', 'recipe_name', 'servings', 'mealplan_note')
+        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note')
         read_only_fields = ('id',)
 
 
@@ -679,6 +679,12 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         ):
             # if checked flips from false to true set completed datetime
             data['completed_at'] = timezone.now()
+        elif not data.get('checked', False):
+            # if not checked set completed to None
+            data['completed_at'] = None
+        else:
+            # otherwise don't write anything
+            del data['completed_at']
 
         ############################################################
         # temporary while old and new shopping lists are both in use
@@ -707,7 +713,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'id', 'list_recipe', 'food', 'unit', 'ingredient', 'ingredient_note', 'amount', 'order', 'checked', 'recipe_mealplan',
             'created_by', 'created_at', 'completed_at'
         )
-        read_only_fields = ('id',  'created_by', 'created_at',)
+        read_only_fields = ('id', 'list_recipe', 'created_by', 'created_at',)
 
 
 # TODO deprecate

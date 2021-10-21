@@ -2,108 +2,68 @@
     <!-- add alert at top if offline -->
     <!-- get autosync time from preferences and put fetching checked items on timer -->
     <!-- allow reordering or items -->
-    <div id="shopping_line_item">
+    <div id="app">
         <div class="col-12">
             <div class="row">
                 <div class="col col-md-1">
                     <div style="position: static;" class=" btn-group">
-                        <div class="dropdown b-dropdown position-static inline-block">
+                        <div class="dropdown b-dropdown position-static">
                             <button
                                 aria-haspopup="true"
                                 aria-expanded="false"
                                 type="button"
                                 class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                                @click.stop="$emit('open-context-menu', $event, entries)"
+                                @click.stop="$emit('open-context-menu', $event, entries[0])"
                             >
                                 <i class="fas fa-ellipsis-v fa-lg"></i>
                             </button>
                         </div>
-                        <input type="checkbox" class="text-right mx-3 mt-2" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    <div v-if="Object.entries(formatAmount).length == 1">{{ Object.entries(formatAmount)[0][1] }} &ensp; {{ Object.entries(formatAmount)[0][0] }}</div>
-                    <div class="small" v-else v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp; {{ x[0] }}</div>
-                </div>
 
-                <div class="col col-md-6">
-                    {{ formatFood }} <span class="small text-muted">{{ formatHint }}</span>
+                    <b-button class="btn far text-body text-decoration-none" variant="link" @click="checkboxChanged()" :class="formatChecked ? 'fa-check-square' : 'fa-square'" />
                 </div>
+                <div class="col col-md-1">{{ formatAmount }}</div>
+                <div class="col col-md-1">{{ formatUnit }}</div>
+
+                <div class="col col-md-4">
+                    {{ formatFood }} <span class="text-muted">({{ formatHint }})</span>
+                </div>
+                <div class="col col-md-1">{{ formatNotes }}</div>
                 <div class="col col-md-1">
                     <b-button size="sm" @click="showDetails = !showDetails" class="mr-2" variant="link">
                         <div class="text-nowrap">{{ showDetails ? "Hide" : "Show" }} Details</div>
                     </b-button>
                 </div>
             </div>
-            <div class="card no-body" v-if="showDetails">
-                <div v-for="(e, z) in entries" :key="z">
-                    <div class="row ml-2 small">
-                        <div class="col-md-4 overflow-hidden text-nowrap">
-                            <button
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                type="button"
-                                class="btn btn-link btn-sm m-0 p-0"
-                                style="text-overflow: ellipsis;"
-                                @click.stop="openRecipeCard($event, e)"
-                                @mouseover="openRecipeCard($event, e)"
-                            >
-                                {{ formatOneRecipe(e) }}
-                            </button>
-                        </div>
-                        <div class="col-md-4 text-muted">{{ formatOneMealPlan(e) }}</div>
-                        <div class="col-md-4 text-muted text-right">{{ formatOneCreatedBy(e) }}</div>
-                    </div>
-                    <div class="row ml-2 small">
-                        <div class="col-md-4 offset-md-8 text-muted text-right">{{ formatOneCompletedAt(e) }}</div>
-                    </div>
-                    <div class="row ml-2 light">
-                        <div class="col-sm-1 text-nowrap">
-                            <div style="position: static;" class=" btn-group ">
-                                <div class="dropdown b-dropdown position-static inline-block">
-                                    <button
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                        type="button"
-                                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                                        @click.stop="$emit('open-context-menu', $event, e)"
-                                    >
-                                        <i class="fas fa-ellipsis-v fa-lg"></i>
-                                    </button>
-                                </div>
-                                <input type="checkbox" class="text-right mx-3 mt-2" :checked="e.checked" @change="updateChecked($event, e)" />
+            <div class="row" v-if="showDetails">
+                <div class="offset-md-1">
+                    <div v-for="e in entries" :key="e.id">
+                        <div style="position: static;" class=" btn-group">
+                            <div class="dropdown b-dropdown position-static">
+                                <button
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    type="button"
+                                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                                    @click.stop="$emit('open-context-menu', $event, e)"
+                                >
+                                    <i class="fas fa-ellipsis-v fa-lg"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="col-sm-1">{{ formatOneAmount(e) }}</div>
-                        <div class="col-sm-2">{{ formatOneUnit(e) }}</div>
 
-                        <div class="col-sm-3">{{ formatOneFood(e) }}</div>
-
-                        <div class="col-sm-4">
-                            <div class="small" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
-                        </div>
+                        <b-button
+                            class="btn far text-body text-decoration-none"
+                            variant="link"
+                            @click="checkboxChanged()"
+                            :class="formatChecked ? 'fa-check-square' : 'fa-square'"
+                        />
+                        {{ e.amount }} - {{ e.unit }}- {{ e.recipe }}- {{ e.mealplan }}- {{ e.note }}- {{ e.unit }}
                     </div>
-
-                    <hr class="w-75" />
                 </div>
             </div>
             <hr class="m-1" />
         </div>
-        <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width:300">
-            <template #menu="{ contextData }" v-if="recipe">
-                <ContextMenuItem><RecipeCard :recipe="contextData" :detail="false"></RecipeCard></ContextMenuItem>
-                <ContextMenuItem @click="$refs.menu.close()">
-                    <b-form-group label-cols="9" content-cols="3" class="text-nowrap m-0 mr-2">
-                        <template #label>
-                            <a class="dropdown-item p-2" href="#"><i class="fas fa-pizza-slice"></i> {{ $t("Servings") }}</a>
-                        </template>
-                        <div @click.prevent.stop>
-                            <b-form-input class="mt-2" min="0" type="number" v-model="servings"></b-form-input>
-                        </div>
-                    </b-form-group>
-                </ContextMenuItem>
-            </template>
-        </ContextMenu>
     </div>
 </template>
 
@@ -111,10 +71,6 @@
 import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import ContextMenu from "@/components/ContextMenu/ContextMenu"
-import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
-import { ApiMixin } from "@/utils/utils"
-import RecipeCard from "./RecipeCard.vue"
 
 Vue.use(BootstrapVue)
 
@@ -122,8 +78,8 @@ export default {
     // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available
     // or i'm capturing it incorrectly
     name: "ShoppingLineItem",
-    mixins: [ApiMixin],
-    components: { RecipeCard, ContextMenu, ContextMenuItem },
+    mixins: [],
+    components: {},
     props: {
         entries: {
             type: Array,
@@ -133,30 +89,17 @@ export default {
     data() {
         return {
             showDetails: false,
-            recipe: undefined,
-            servings: 1,
         }
     },
     computed: {
         formatAmount: function() {
-            let amount = {}
-            this.entries.forEach((entry) => {
-                let unit = entry?.unit?.name ?? "----"
-                if (entry.amount) {
-                    if (amount[unit]) {
-                        amount[unit] += entry.amount
-                    } else {
-                        amount[unit] = entry.amount
-                    }
-                }
-            })
-            return amount
+            return this.entries[0].amount
         },
         formatCategory: function() {
-            return this.formatOneCategory(this.entries[0]) || this.$t("Undefined")
+            return this.entries[0]?.food?.supermarket_category?.name ?? this.$t("Undefined")
         },
         formatChecked: function() {
-            return this.entries.map((x) => x.checked).every((x) => x === true)
+            return false
         },
         formatHint: function() {
             if (this.groupby == "recipe") {
@@ -166,30 +109,24 @@ export default {
             }
         },
         formatFood: function() {
-            return this.formatOneFood(this.entries[0])
+            return this.entries[0]?.food?.name ?? this.$t("Undefined")
         },
         formatUnit: function() {
-            return this.formatOneUnit(this.entries[0])
+            return this.entries[0]?.unit?.name ?? this.$t("Undefined")
         },
         formatRecipe: function() {
-            if (this.entries?.length == 1) {
-                return this.formatOneMealPlan(this.entries[0]) || ""
+            if (this.entries.length == 1) {
+                return this.entries[0]?.recipe_mealplan?.name ?? this.$t("Undefined")
             } else {
-                let mealplan_name = this.entries.filter((x) => x?.recipe_mealplan?.name)
-                return [this.formatOneMealPlan(mealplan_name?.[0]), this.$t("CountMore", { count: this.entries?.length - 1 })].join("  ")
+                return [this.entries[0]?.recipe_mealplan?.name ?? this.$t("Undefined"), this.$t("CountMore", { count: this.entries.length - 1 })].join("  ")
             }
         },
         formatNotes: function() {
-            if (this.entries?.length == 1) {
-                return this.formatOneNote(this.entries[0]) || ""
-            }
-            return ""
+            return [this.entries[0]?.recipe_mealplan?.mealplan_note, this.entries?.ingredient_note].filter(String).join("\n")
         },
     },
     watch: {},
-    mounted() {
-        this.servings = this.entries?.[0]?.recipe_mealplan?.servings ?? 0
-    },
+    mounted() {},
     methods: {
         // this.genericAPI inherited from ApiMixin
 
@@ -199,57 +136,15 @@ export default {
             }
             return Intl.DateTimeFormat(window.navigator.language, { dateStyle: "short", timeStyle: "short" }).format(Date.parse(datetime))
         },
-        formatOneAmount: function(item) {
-            return item?.amount ?? 1
-        },
-        formatOneUnit: function(item) {
-            return item?.unit?.name ?? ""
-        },
-        formatOneCategory: function(item) {
-            return item?.food?.supermarket_category?.name
-        },
-        formatOneCompletedAt: function(item) {
-            if (!item.completed_at) {
-                return ""
-            }
-            return [this.$t("Completed"), "@", this.formatDate(item.completed_at)].join(" ")
-        },
-        formatOneFood: function(item) {
-            return item.food.name
-        },
-        formatOneChecked: function(item) {
-            return item.checked
-        },
-        formatOneMealPlan: function(item) {
-            return item?.recipe_mealplan?.name
-        },
-        formatOneRecipe: function(item) {
-            return item?.recipe_mealplan?.recipe_name
-        },
-        formatOneNote: function(item) {
-            if (!item) {
-                item = this.entries[0]
-            }
-            return [item?.recipe_mealplan?.mealplan_note, item?.ingredient_note].filter(String)
-        },
-        formatOneCreatedBy: function(item) {
-            return [item?.created_by.username, "@", this.formatDate(item.created_at)].join(" ")
-        },
-        openRecipeCard: function(e, item) {
-            this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, { id: item.recipe_mealplan.recipe }).then((result) => {
-                let recipe = result.data
-                recipe.steps = undefined
-                this.recipe = true
-                this.$refs.recipe_card.open(e, recipe)
-            })
-        },
-        updateChecked: function(e, item) {
-            if (!item) {
-                let update = { entries: this.entries.map((x) => x.id), checked: !this.formatChecked }
-                this.$emit("update-checkbox", update)
-            } else {
-                this.$emit("update-checkbox", { id: item.id, checked: !item.checked })
-            }
+        checkboxChanged: function() {
+            console.log("click!")
+            // item.checked = !item.checked
+            // if (item.checked) {
+            //     item.completed_at = new Date().toISOString()
+            // }
+
+            // this.saveThis(item, false)
+            // this.$refs.table.refresh()
         },
     },
 }
@@ -257,13 +152,4 @@ export default {
 
 <!--style src="vue-multiselect/dist/vue-multiselect.min.css"></style-->
 
-<style>
-/* table           { border-collapse:collapse } /* Ensure no space between cells   */
-/* tr.strikeout td { position:relative        } /* Setup a new coordinate system   */
-/* tr.strikeout td:before {                     /* Create a new element that       */
-/*   content: " ";                              /* …has no text content            */
-/*   position: absolute;                        /* …is absolutely positioned       */
-/*   left: 0; top: 50%; width: 100%;            /* …with the top across the middle */
-/*   border-bottom: 1px solid #000;             /* …and with a border on the top   */
-/* }   */
-</style>
+<style></style>
