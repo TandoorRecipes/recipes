@@ -188,7 +188,16 @@
     "Period": "Okres",
     "Plan_Period_To_Show": "Pokaż tygodnie, miesiące lub lata",
     "Title_or_Recipe_Required": "Wymagany wybór tytułu lub przepisu",
-    "Export_As_ICal": "Eksportuj bieżący okres do formatu .ical",
+    "Export_As_ICal": "Eksportuj bieżący okres do formatu iCal",
     "Week_Numbers": "Numery tygodni",
-    "Show_Week_Numbers": "Wyświetlić numery tygodni?"
+    "Show_Week_Numbers": "Wyświetlić numery tygodni?",
+    "Added_To_Shopping_List": "Dodano do listy zakupów",
+    "Next_Period": "Następny okres",
+    "Previous_Period": "Poprzedni okres",
+    "Current_Period": "Bieżący okres",
+    "Next_Day": "Następny dzień",
+    "Previous_Day": "Poprzedni dzień",
+    "Export_To_ICal": "Eksportuj .ics",
+    "Cannot_Add_Notes_To_Shopping": "Notatki nie mogą być dodawane do listy zakupów",
+    "Shopping_List_Empty": "Twoja lista zakupów jest obecnie pusta, możesz dodawać pozycje za pomocą menu kontekstowego wpisu planu posiłków (kliknij prawym przyciskiem myszy na karcie lub lewym przyciskiem myszy ikonę menu)"
 }
