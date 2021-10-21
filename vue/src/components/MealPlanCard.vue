@@ -1,6 +1,6 @@
 <template>
   <div v-hover class="card cv-item meal-plan-card p-0" :key="value.id" :draggable="true"
-       :style="`top:${top};height:${item_height}`"
+       :style="`top:${top};max-height:${item_height}`"
        @dragstart="onDragItemStart(value, $event)"
        @click="onClickItem(value, $event)"
        :aria-grabbed="value == currentDragItem"
@@ -11,7 +11,7 @@
       <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null">{{
           entry.entry.meal_type.icon
         }}</span>
-      <span class="font-light">{{ entry.entry.meal_type.name }}</span>
+      <span class="font-light d-none d-md-inline">{{ entry.entry.meal_type.name }}</span>
     </div>
     <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right p-0"
          v-if="detailed">
@@ -29,7 +29,7 @@
     <div class="card-header p-1 text-center" v-if="detailed" :style="`background-color: ${background_color}`">
       <span class="font-light">{{ title }}</span>
     </div>
-    <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="hasRecipe && detailed"></b-img>
+    <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="hasRecipe && detailed" ></b-img>
     <b-img fluid class="card-img-bottom" :src="image_placeholder"
            v-if="detailed && ((!hasRecipe && entry.entry.note === '') || (hasRecipe && entry.entry.recipe.image === null))"></b-img>
     <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null"
@@ -94,12 +94,10 @@ export default {
   },
   methods: {
     onDragItemStart(calendarItem, windowEvent) {
-      windowEvent.dataTransfer.setData("text", calendarItem.id.toString())
       this.$emit("dragstart", calendarItem, windowEvent)
       return true
     },
     onContextMenuOpen(calendarItem, windowEvent) {
-      windowEvent.dataTransfer.setData("text", calendarItem.id.toString())
       this.$emit("dragstart", calendarItem, windowEvent)
       return true
     },

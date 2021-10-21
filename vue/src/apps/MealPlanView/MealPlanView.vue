@@ -6,7 +6,7 @@
           <div class="col-12 calender-parent">
             <calendar-view
                 :show-date="showDate" :enable-date-selection="true" class="theme-default"
-                @date-selection-finish="createEntryRange" :items="plan_items"
+                :items="plan_items"
                 :display-period-uom="settings.displayPeriodUom"
                 :period-changed-callback="periodChangedCallback" :enable-drag-drop="true"
                 :item-content-height="item_height"
@@ -20,11 +20,14 @@
                                 @open-context-menu="openContextMenu"/>
               </template>
               <template #header="{ headerProps }">
-                <meal-plan-calender-header
-                    :header-props="headerProps"
-                    @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
-                    @create-new="createEntryClick(new Date())" @set-starting-day-back="setStartingDay(-1)"
-                    @set-starting-day-forward="setStartingDay(1)" :i-cal-url="iCalUrl" :options="options" :settings_prop="settings"/>
+                <meal-plan-calender-header ref="header"
+                                           :header-props="headerProps"
+                                           @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
+                                           @create-new="createEntryClick(new Date())"
+                                           @set-starting-day-back="setStartingDay(-1)"
+                                           @set-starting-day-forward="setStartingDay(1)" :i-cal-url="iCalUrl"
+                                           :options="options"
+                                           :settings_prop="settings"/>
               </template>
             </calendar-view>
           </div>
@@ -73,7 +76,7 @@
               </b-form-group>
             </b-form>
           </div>
-          <div class="col-6">
+          <div class="col-9 col-lg-6">
             <h5>{{ $t('Meal_Types') }}</h5>
             <div>
               <draggable :list="meal_types" group="meal_types"
@@ -130,7 +133,6 @@
         </div>
       </b-tab>
     </b-tabs>
-
     <ContextMenu ref="menu">
       <template #menu="{ contextData }">
         <ContextMenuItem @click="$refs.menu.close();openEntryEdit(contextData.originalItem.entry)">
@@ -145,6 +147,9 @@
         <ContextMenuItem @click="$refs.menu.close();createEntry(contextData.originalItem.entry)">
           <a class="dropdown-item p-2" href="#"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
         </ContextMenuItem>
+        <ContextMenuItem @click="$refs.menu.close();addToShopping(contextData)">
+          <a class="dropdown-item p-2" href="#"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
+        </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();deleteEntry(contextData)">
           <a class="dropdown-item p-2 text-danger" href="#"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
         </ContextMenuItem>
@@ -154,6 +159,73 @@
                           :entry-editing_initial_meal_type="entryEditing_initial_meal_type" :modal_title="modal_title"
                           :edit_modal_show="edit_modal_show" @save-entry="editEntry"
                           @delete-entry="deleteEntry" @reload-meal-types="refreshMealTypes"></meal-plan-edit-modal>
+    <template>
+      <div>
+        <b-sidebar id="sidebar-shopping" :title="$t('Shopping_list')" backdrop right shadow="sm">
+          <div class="row p-1 no-gutters">
+            <div class="col-12 mt-1" v-if="shopping_list.length === 0">
+              <p class="p-3">{{ $t("Shopping_List_Empty") }}</p>
+            </div>
+            <div class="col-12 mt-1" v-for="entry in shopping_list" v-bind:key="entry.id">
+              <b-card :header="`${entry.meal_type.icon} ${entry.recipe_name}`" no-body>
+                <template #footer>
+                  <small class="text-muted">{{ `${$t("Servings")}: ${entry.servings}` }}</small>
+                </template>
+              </b-card>
+            </div>
+            <div class="col-12 mt-1" v-if="shopping_list.length > 0">
+              <b-button-group>
+                <b-button variant="success" @click="saveShoppingList"><i class="fas fa-external-link-alt"></i>
+                  {{ $t("Open") }}
+                </b-button>
+                <b-button variant="danger" @click="shopping_list = []"><i class="fa fa-trash"></i> {{ $t("Clear") }}
+                </b-button>
+              </b-button-group>
+            </div>
+          </div>
+        </b-sidebar>
+      </div>
+    </template>
+    <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background:rgba(255,255,255,0.6);">
+      <div class="col-md-3 col-6">
+        <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
+            class="fas fa-calendar-plus"></i> {{ $t('Create') }}
+        </button>
+      </div>
+      <div class="col-md-3 col-6">
+        <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i
+            class="fas fa-shopping-cart"></i> {{ $t('Shopping_list') }}
+        </button>
+      </div>
+      <div class="col-md-3 col-6">
+        <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
+          {{ $t('Export_To_ICal') }}
+        </a>
+      </div>
+      <div class="col-md-3 col-6">
+        <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top :title="$t('Coming-Soon')">{{ $t('Auto-Planner') }}</button>
+      </div>
+      <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
+        <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+          <b-button-group class="mx-1">
+            <b-button v-html="'<<'" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+            <b-button v-html="'<'" @click="setStartingDay(-1)"></b-button>
+          </b-button-group>
+          <b-button-group class="mx-1">
+            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i>
+            </b-button>
+            <b-form-datepicker
+                button-only
+                button-variant="secondary"
+            ></b-form-datepicker>
+          </b-button-group>
+          <b-button-group class="mx-1">
+            <b-button v-html="'>'" @click="setStartingDay(1)"></b-button>
+            <b-button v-html="'>>'" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+          </b-button-group>
+        </b-button-toolbar>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -164,7 +236,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import ContextMenu from "@/components/ContextMenu/ContextMenu";
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem";
-import "vue-simple-calendar/static/css/default.css"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle";
 import Vue from "vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
@@ -176,6 +247,8 @@ import VueCookies from "vue-cookies";
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader";
 import EmojiInput from "../../components/Modals/EmojiInput";
 import draggable from 'vuedraggable'
+
+const {makeToast} = require("@/utils/utils");
 
 Vue.prototype.moment = moment
 Vue.use(BootstrapVue)
@@ -229,6 +302,7 @@ export default {
           title_placeholder: this.$t('Title')
         }
       },
+      shopping_list: [],
       current_period: null,
       entryEditing: {},
       edit_modal_show: false,
@@ -285,9 +359,13 @@ export default {
       }
     },
     iCalUrl() {
-      let start = moment(this.current_period.periodStart).format('YYYY-MM-DD')
-      let end = moment(this.current_period.periodEnd).format('YYYY-MM-DD')
-      return this.ical_url.replace(/12345/, start).replace(/6789/, end)
+      if (this.current_period !== null) {
+        let start = moment(this.current_period.periodStart).format('YYYY-MM-DD')
+        let end = moment(this.current_period.periodEnd).format('YYYY-MM-DD')
+        return this.ical_url.replace(/12345/, start).replace(/6789/, end)
+      } else {
+        return ""
+      }
     }
   },
   mounted() {
@@ -307,6 +385,27 @@ export default {
     },
   },
   methods: {
+    addToShopping(entry) {
+      if (entry.originalItem.entry.recipe !== null) {
+        this.shopping_list.push(entry.originalItem.entry)
+        makeToast(this.$t("Success"), this.$t("Added_To_Shopping_List"), 'success')
+      } else {
+        makeToast(this.$t("Failure"), this.$t("Cannot_Add_Notes_To_Shopping"), 'danger')
+      }
+    },
+    saveShoppingList() {
+      let url = window.SHOPPING_URL
+      let first = true
+      for (let se of this.shopping_list) {
+        if (first) {
+          url += `?r=[${se.recipe.id},${se.servings}]`
+          first = false
+        } else {
+          url += `&r=[${se.recipe.id},${se.servings}]`
+        }
+      }
+      window.open(url)
+    },
     setStartingDay(days) {
       if (this.settings.startingDayOfWeek + days < 0) {
         this.settings.startingDayOfWeek = 6
@@ -393,9 +492,6 @@ export default {
     },
     setShowDate(d) {
       this.showDate = d;
-    },
-    createEntryRange(data) {
-      console.log(data)
     },
     createEntryClick(data) {
       this.entryEditing = this.options.entryEditing
@@ -536,8 +632,7 @@ export default {
   flex-grow: 1;
   overflow-x: hidden;
   overflow-y: hidden;
-  max-height: 80vh;
-  min-height: 40rem;
+  height: 70vh;
 }
 
 .cv-item {
@@ -554,5 +649,120 @@ export default {
 
 .modal-backdrop {
   opacity: 0.5;
+}
+
+/*
+**************************************************************
+This theme is the default shipping theme, it includes some
+decent defaults, but is separate from the calendar component
+to make it easier for users to implement their own themes w/o
+having to override as much.
+**************************************************************
+*/
+
+/* Header */
+
+.theme-default .cv-header,
+.theme-default .cv-header-day {
+  background-color: #f0f0f0;
+}
+
+.theme-default .cv-header .periodLabel {
+  font-size: 1.5em;
+}
+
+/* Grid */
+
+.theme-default .cv-weeknumber {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+  color: #808080;
+}
+
+.theme-default .cv-weeknumber span {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.theme-default .cv-day.past {
+  background-color: #fafafa;
+}
+
+.theme-default .cv-day.outsideOfMonth {
+  background-color: #f7f7f7;
+}
+
+.theme-default .cv-day.today {
+  background-color: #ffe;
+}
+
+.theme-default .cv-day[aria-selected] {
+  background-color: #ffc;
+}
+
+/* Events */
+
+.theme-default .cv-item {
+  border-color: #e0e0f0;
+  border-radius: 0.5em;
+  background-color: #fff;
+  text-overflow: ellipsis;
+}
+
+.theme-default .cv-item.purple {
+  background-color: #f0e0ff;
+  border-color: #e7d7f7;
+}
+
+.theme-default .cv-item.orange {
+  background-color: #ffe7d0;
+  border-color: #f7e0c7;
+}
+
+.theme-default .cv-item.continued::before,
+.theme-default .cv-item.toBeContinued::after {
+  content: " \21e2 ";
+  color: #999;
+}
+
+.theme-default .cv-item.toBeContinued {
+  border-right-style: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.theme-default .cv-item.isHovered.hasUrl {
+  text-decoration: underline;
+}
+
+.theme-default .cv-item.continued {
+  border-left-style: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.cv-item.span3,
+.cv-item.span4,
+.cv-item.span5,
+.cv-item.span6,
+.cv-item.span7 {
+  text-align: center;
+}
+
+/* Event Times */
+
+.theme-default .cv-item .startTime,
+.theme-default .cv-item .endTime {
+  font-weight: bold;
+  color: #666;
+}
+
+/* Drag and drop */
+
+.theme-default .cv-day.draghover {
+  box-shadow: inset 0 0 0.2em 0.2em yellow;
 }
 </style>
