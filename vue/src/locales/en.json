@@ -189,5 +189,14 @@
   "New_Meal_Type": "New Meal type",
   "Week_Numbers": "Week numbers",
   "Show_Week_Numbers": "Show week numbers ?",
-  "Export_As_ICal": "Export current period to .ical format"
+  "Export_As_ICal": "Export current period to iCal format",
+  "Export_To_ICal": "Export .ics",
+  "Cannot_Add_Notes_To_Shopping": "Notes cannot be added to the shopping list",
+  "Added_To_Shopping_List": "Added to shopping list",
+  "Shopping_List_Empty": "Your shopping list is currently empty, you can add items via the context menu of a meal plan entry (right click on the card or left click the menu icon)",
+  "Next_Period": "Next Period",
+  "Previous_Period": "Previous Period",
+  "Current_Period": "Current Period",
+  "Next_Day": "Next Day",
+  "Previous_Day": "Previous Day"
 }

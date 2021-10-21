@@ -29,6 +29,7 @@
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
 
         window.ICAL_URL = '{% url 'api_get_plan_ical' 12345 6789 %}'
+        window.SHOPPING_URL = '{% url 'view_shopping' %}'
     </script>
 
     {% render_bundle 'meal_plan_view' %}
