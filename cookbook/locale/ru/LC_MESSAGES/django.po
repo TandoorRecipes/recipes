@@ -8,56 +8,63 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-10-23 09:06+0000\n"
+"Last-Translator: rustam <uzbekr@gmail.com>\n"
+"Language-Team: Russian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.8\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:270
 msgid "Ingredients"
-msgstr ""
+msgstr "ингредиенты"
 
 #: .\cookbook\forms.py:50
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"Цвет навигационной панели. Не все цвета работают с некоторыми темами, "
+"пробуйте !"
 
 #: .\cookbook\forms.py:52
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
 msgstr ""
+"Будут использоваться единицы измерения по умолчания при добавлении нового "
+"ингредиента в рецепт."
 
 #: .\cookbook\forms.py:54
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
-msgstr ""
+msgstr "Автоматический использовать десятичный формат цифр в ингредиентах"
 
 #: .\cookbook\forms.py:57
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
-msgstr ""
+msgstr "Пользователи, к которым по умолчанию будет отправлен новый рецепт."
 
 #: .\cookbook\forms.py:59
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Показывать недавно просмотренные рецпты на странице поиска."
 
 #: .\cookbook\forms.py:60
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "Количество десятичных знаков для округления ингредиентов."
 
 #: .\cookbook\forms.py:61
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr ""
+"Если хотите иметь возможность создавать и видеть комментарии под рецептами."
 
 #: .\cookbook\forms.py:63
 msgid ""
@@ -66,166 +73,192 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"Установка на 0 отключит автосинхронизацию. При просмотре списка покупок он "
+"обновляется каждые заданные секунды для синхронизации изменений, которые "
+"могли быть внесены кем-то другим. Полезно при совершении покупок с "
+"несколькими людьми, но при этом может потребоваться немного мобильных "
+"данных. Если значение ниже предела экземпляра, оно сбрасывается при "
+"сохранении."
 
 #: .\cookbook\forms.py:66
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "Оставляет навигационную панель в верхней части страницы."
 
 #: .\cookbook\forms.py:82
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Оба поля необязательны. Если ничего не указано, вместо этого будет "
+"отображаться имя пользователя"
 
 #: .\cookbook\forms.py:103 .\cookbook\forms.py:334
 #: .\cookbook\templates\url_import.html:154
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: .\cookbook\forms.py:104 .\cookbook\forms.py:335
 #: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
 #: .\cookbook\templates\url_import.html:188
 #: .\cookbook\templates\url_import.html:573 .\cookbook\views\lists.py:112
 msgid "Keywords"
-msgstr ""
+msgstr "Ключевые поля"
 
 #: .\cookbook\forms.py:105
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Время приготовления в минутах"
 
 #: .\cookbook\forms.py:106
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Время ожидания (выпечка) в минутах"
 
 #: .\cookbook\forms.py:107 .\cookbook\forms.py:336
 msgid "Path"
-msgstr ""
+msgstr "Путь"
 
 #: .\cookbook\forms.py:108
 msgid "Storage UID"
-msgstr ""
+msgstr "UID хранилища"
 
 #: .\cookbook\forms.py:134
 msgid "Default"
-msgstr ""
+msgstr "По умолчанию"
 
 #: .\cookbook\forms.py:145 .\cookbook\templates\url_import.html:90
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Во избежание дублирования рецепты с тем же именем, что и существующие, "
+"игнорируются. Установите этот флажок, чтобы импортировать все."
 
 #: .\cookbook\forms.py:165
 msgid "New Unit"
-msgstr ""
+msgstr "Новый юнит"
 
 #: .\cookbook\forms.py:166
 msgid "New unit that other gets replaced by."
-msgstr ""
+msgstr "Новый юнит, который заменяется другим."
 
 #: .\cookbook\forms.py:171
 msgid "Old Unit"
-msgstr ""
+msgstr "Старый юнит"
 
 #: .\cookbook\forms.py:172
 msgid "Unit that should be replaced."
-msgstr ""
+msgstr "Юнит, который должен быть заменен."
 
 #: .\cookbook\forms.py:189
 msgid "New Food"
-msgstr ""
+msgstr "Новый продукт"
 
 #: .\cookbook\forms.py:190
 msgid "New food that other gets replaced by."
-msgstr ""
+msgstr "Новая продукт, которую заменяют другие."
 
 #: .\cookbook\forms.py:195
 msgid "Old Food"
-msgstr ""
+msgstr "Старый продукт"
 
 #: .\cookbook\forms.py:196
 msgid "Food that should be replaced."
-msgstr ""
+msgstr "Продукт, который должен быть заменен."
 
 #: .\cookbook\forms.py:214
 msgid "Add your comment: "
-msgstr ""
+msgstr "Добавить комментарий: "
 
 #: .\cookbook\forms.py:256
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
+"Оставьте поле пустым для Dropbox и введите пароль приложения для nextcloud."
 
 #: .\cookbook\forms.py:263
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "Оставьте поле пустым для nextcloud и введите токен api для dropbox."
 
 #: .\cookbook\forms.py:272
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Оставьте пустым для dropbox и введите только базовый URL для nextcloud ("
+"<code> /remote.php/webdav/ </code> добавляется автоматически)"
 
 #: .\cookbook\forms.py:310
 msgid "Search String"
-msgstr ""
+msgstr "Текст поискового запроса"
 
 #: .\cookbook\forms.py:337
 msgid "File ID"
-msgstr ""
+msgstr "ID файла"
 
 #: .\cookbook\forms.py:373
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "Вы должны предоставить хотя бы рецепт или название."
 
 #: .\cookbook\forms.py:386
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
+"Вы можете перечислить пользователей по умолчанию, с которыми можно делиться "
+"рецептами, в настройках."
 
 #: .\cookbook\forms.py:387
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
 msgstr ""
+"Для форматирования этого поля можно использовать markdown. См. <a href=\"/"
+"docs/markdown/\"> документацию здесь </a>"
 
 #: .\cookbook\forms.py:412
 msgid "Maximum number of users for this space reached."
 msgstr ""
+"Достигнуто максимальное количество пользователей для этого пространства."
 
 #: .\cookbook\forms.py:418
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Этот email уже используется!"
 
 #: .\cookbook\forms.py:426
 msgid ""
 "An email address is not required but if present the invite link will be send "
 "to the user."
 msgstr ""
+"email не требуется, но если он присутствует, пользователю будет отправлена "
+"ссылка для приглашения."
 
 #: .\cookbook\forms.py:441
 msgid "Name already taken."
-msgstr ""
+msgstr "Имя уже используется."
 
 #: .\cookbook\forms.py:452
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Принять условия пользования и конфиденциальности"
 
 #: .\cookbook\forms.py:487
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
+"Выберите тип метода поиска. Щелкните <a href=\"/docs/search/\"> здесь </a> "
+"для получения полного описания вариантов."
 
 #: .\cookbook\forms.py:488
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Используйте нечеткое соответствие единиц измерения, ключевых слов и "
+"ингредиентов при редактировании и импорте рецептов."
 
 #: .\cookbook\forms.py:489
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Поля для поиска без акцентов. Выбор этого параметра может улучшить или "
+"ухудшить качество поиска в зависимости от языка"
 
 #: .\cookbook\forms.py:490
 msgid ""
