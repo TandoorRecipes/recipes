@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-09-07 16:06+0000\n"
-"Last-Translator: Afaren <Afaren@outlook.com>\n"
-"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/fr/>\n"
+"PO-Revision-Date: 2021-10-26 10:06+0000\n"
+"Last-Translator: tarek EL SOL <tarek.elsol@gmail.com>\n"
+"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -305,7 +305,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:500
 msgid "Partial Match"
-msgstr ""
+msgstr "correspondance partielle"
 
 #: .\cookbook\forms.py:501
 msgid "Starts Wtih"
