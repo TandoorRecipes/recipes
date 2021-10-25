@@ -15,7 +15,7 @@
             <i class="fas fa-fire fa-fw text-primary"></i> {{ $t('Calories') }}
           </div>
           <div class="col-6">
-            <span v-html="calculateAmount(recipe.nutrition.calories)"></span> kcal
+            <span v-html="calculateEnergy(recipe.nutrition.calories)"></span>
           </div>
         </div>
 
@@ -54,7 +54,7 @@
 
 <script>
 
-import {calculateAmount} from "@/utils/utils";
+import {calculateAmount, calculateEnergy} from "@/utils/utils";
 
 export default {
   name: 'Nutrition',
@@ -65,6 +65,9 @@ export default {
   methods: {
     calculateAmount: function (x) {
       return calculateAmount(x, this.ingredient_factor)
+    },
+    calculateEnergy: function (x) {
+      return calculateEnergy(x, this.ingredient_factor)
     }
   }
 }
