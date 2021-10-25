@@ -45,6 +45,10 @@ class UserPreferenceForm(forms.ModelForm):
             'comments'
         )
 
+        labels = {
+            'use_kj': 'Use KJ'
+        }
+
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
             # noqa: E501
