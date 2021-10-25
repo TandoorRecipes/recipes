@@ -167,6 +167,14 @@ export function calculateEnergy(amount, factor) {
     }
 }
 
+export function convertEnergyToCalories(amount) {
+    if (getUserPreference('use_kj')) {
+        return amount / KILOJOULES_PER_CALORIE
+    } else {
+        return amount
+    }
+}
+
 /*
 * Utility functions to use OpenAPIs generically
 * */

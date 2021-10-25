@@ -481,7 +481,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import draggable from 'vuedraggable'
-import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/utils/utils";
+import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts, convertEnergyToCalories} from "@/utils/utils";
 import Multiselect from "vue-multiselect";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -605,11 +605,13 @@ export default {
     updateRecipe: function (view_after) {
       let apiFactory = new ApiApiFactory()
 
+      this.normalizeEnergy()
+
       this.sortSteps()
       for (let s of this.recipe.steps) {
         this.sortIngredients(s)
-
       }
+
       apiFactory.updateRecipe(this.recipe_id, this.recipe,
           {}).then((response) => {
         console.log(response)
@@ -812,6 +814,11 @@ export default {
       el.select();
       document.execCommand('copy');
       document.body.removeChild(el);
+    },
+    normalizeEnergy: function () {
+      if (this.recipe.nutrition && this.recipe.nutrition.calories) {
+        this.recipe.nutrition.calories = convertEnergyToCalories(this.recipe.nutrition.calories)
+      }
     }
 
   }
