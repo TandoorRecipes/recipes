@@ -108,7 +108,7 @@
 
               <b-collapse id="id_nutrition_collapse" class="mt-2">
                 <div class="card-body " v-if="recipe.nutrition">
-                  <label for="id_name"> {{ energy() }}</label>
+                  <label for="id_name"> {{ $t(energy()) }}</label>
                   <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
 
                   <label for="id_name"> {{ $t('Carbohydrates') }}</label>
