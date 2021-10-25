@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col col-md-12">
                         <!-- TODO add spinner -->
-                        <div role="tablist" v-if="items.length > 0">
+                        <div role="tablist" v-if="items && items.length > 0">
                             <!-- WARNING: all data in the table should be considered read-only, don't change any data through table bindings -->
                             <div v-for="(done, x) in Sections" :key="x">
                                 <div v-if="x == 'true'">
@@ -52,80 +52,6 @@
                                                 @open-context-menu="openContextMenu"
                                                 @toggle-checkbox="toggleChecked"
                                             ></ShoppingLineItem>
-                                            <!-- <div style="position: static;" class=" btn-group">
-                                                <div class="dropdown b-dropdown position-static">
-                                                    <button
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false"
-                                                        type="button"
-                                                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                                                        @click.stop="openContextMenu($event, entries[1])"
-                                                    >
-                                                        <i class="fas fa-ellipsis-v fa-lg"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <b-button
-                                                class="btn far text-body text-decoration-none"
-                                                variant="link"
-                                                @click="checkboxChanged(entries.item)"
-                                                :class="formatChecked ? 'fa-square' : 'fa-check-square'"
-                                            />
-                                            {{ entries[0] }} {{ entries[1] }}
-
-                                        </div> -->
-                                            <!-- <b-table ref="table" small :items="Object.entries(s)" :fields="Fields" responsive="sm" class="w-100">
-                                            <template #cell(checked)="row">
-                                                <div style="position: static;" class=" btn-group">
-                                                    <div class="dropdown b-dropdown position-static">
-                                                        <button
-                                                            aria-haspopup="true"
-                                                            aria-expanded="false"
-                                                            type="button"
-                                                            class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                                                            @click.stop="openContextMenu($event, row)"
-                                                        >
-                                                            <i class="fas fa-ellipsis-v fa-lg"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                                <b-button
-                                                    class="btn far text-body text-decoration-none"
-                                                    variant="link"
-                                                    @click="checkboxChanged(data.item)"
-                                                    :class="row.item.checked ? 'fa-check-square' : 'fa-square'"
-                                                />
-                                            </template>
-                                            <template #cell(amount)="row">
-                                                {{ formatAmount(row.item) }}
-                                            </template>
-                                            <template #cell(food)="row">
-                                                {{ formatFood(row.item) }}
-                                            </template>
-                                            <template #cell(recipe)="row">
-                                                {{ formatRecipe(row.item) }}
-                                            </template>
-                                            <template #cell(unit)="row">
-                                                {{ formatUnit(row.item) }}
-                                            </template>
-                                            <template #cell(category)="row">
-                                                {{ formatCategory(row.item.food.supermarket_category) }}
-                                            </template>
-                                            <template #cell(details)="row">
-                                                <b-button size="sm" @click="row.toggleDetails" class="mr-2" variant="link">
-                                                    <div class="text-nowrap">{{ row.detailsShowing ? "Hide" : "Show" }} Details</div>
-                                                </b-button>
-                                            </template>
-
-                                            <template #row-details="row">
-                                                notes {{ formatNotes(row.item) }} <br />
-                                                by {{ row.item.created_by.username }}<br />
-                                                at {{ formatDate(row.item.created_at) }}<br />
-                                                <div v-if="row.item.checked">completed {{ formatDate(row.item.completed_at) }}</div>
-                                            </template>
-                                        </b-table> -->
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +60,15 @@
                     </div>
                 </div>
             </b-tab>
-            <b-tab :title="$t('Settings')"> These are the settings</b-tab>
+            <b-tab :title="$t('Settings')">
+                These are the settings <br />-sort supermarket categories<br />
+                -add supermarket categories<br />
+                - add supermarkets autosync time<br />
+                autosync on/off<br />
+                always restrict supermarket to categories?<br />
+                when restricted or filterd - give visual indication<br />
+                how long to defer shopping - default tomorrow
+            </b-tab>
         </b-tabs>
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
@@ -159,23 +93,52 @@
         </b-popover>
         <ContextMenu ref="menu">
             <template #menu="{ contextData }">
-                <ContextMenuItem>
-                    <b-form-group label-cols="6" content-cols="6" class="text-nowrap m-0 mr-2">
+                <ContextMenuItem
+                    @click="
+                        moveEntry($event, contextData)
+                        $refs.menu.close()
+                    "
+                >
+                    <b-form-group label-cols="10" content-cols="2" class="text-nowrap m-0 mr-2">
                         <template #label>
-                            <a class="dropdown-item p-2" href="#"><i class="fas fa-cubes"></i> {{ $t("MoveCategory") }}</a>
+                            <a class="dropdown-item p-2" href="#"><i class="fas fa-cubes"></i> {{ $t("MoveCategory", { category: categoryName(shopcat) }) }}</a>
                         </template>
-                        <b-form-select
-                            class="mt-2"
-                            :options="shopping_categories"
-                            text-field="name"
-                            value-field="id"
-                            v-model="shopcat"
-                            @change="
-                                $refs.menu.close()
-                                moveEntry($event, contextData)
-                            "
-                        ></b-form-select>
+                        <div @click.prevent.stop @mouseup.prevent.stop>
+                            <b-form-select class="mt-2  border-0" :options="shopping_categories" text-field="name" value-field="id" v-model="shopcat"></b-form-select>
+                        </div>
                     </b-form-group>
+                </ContextMenuItem>
+
+                <ContextMenuItem
+                    @click="
+                        $refs.menu.close()
+                        onHand(contextData)
+                    "
+                >
+                    <a class="dropdown-item p-2" href="#"><i class="fas fa-clipboard-check"></i> {{ $t("OnHand") }}</a>
+                </ContextMenuItem>
+                <ContextMenuItem
+                    @click="
+                        $refs.menu.close()
+                        delayThis(contextData)
+                    "
+                >
+                    <b-form-group label-cols="10" content-cols="2" class="text-nowrap m-0 mr-2">
+                        <template #label>
+                            <a class="dropdown-item p-2" href="#"><i class="far fa-hourglass"></i> {{ $t("DelayFor", { hours: delay }) }}</a>
+                        </template>
+
+                        <b-form-input class="mt-2" min="0" type="number" v-model="delay"></b-form-input>
+                    </b-form-group>
+                </ContextMenuItem>
+
+                <ContextMenuItem
+                    @click="
+                        $refs.menu.close()
+                        ignoreThis(contextData)
+                    "
+                >
+                    <a class="dropdown-item p-2" href="#"><i class="fas fa-ban"></i> {{ $t("IgnoreThis", { food: foodName(contextData) }) }}</a>
                 </ContextMenuItem>
 
                 <ContextMenuItem
@@ -200,9 +163,9 @@ import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import ShoppingLineItem from "@/components/ShoppingLineItem"
 
-import { ApiMixin } from "@/utils/utils"
+import { ApiMixin, getUserPreference } from "@/utils/utils"
 import { ApiApiFactory } from "@/utils/openapi/api"
-import { StandardToasts } from "@/utils/utils"
+import { StandardToasts, makeToast } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
@@ -225,6 +188,7 @@ export default {
             show_undefined_categories: true,
             supermarket_categories_only: false,
             shopcat: null,
+            delay: 0, // user default
             show_modal: false,
             fields: ["checked", "amount", "category", "unit", "food", "recipe", "details"],
             loading: true,
@@ -293,6 +257,7 @@ export default {
         this.getItems()
         this.getSupermarkets()
         this.getShoppingCategories()
+        this.hours = getUserPreference("shopping_delay") || 1
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
@@ -402,7 +367,8 @@ export default {
         //     }
         //     return Intl.DateTimeFormat(window.navigator.language, { dateStyle: "short", timeStyle: "short" }).format(Date.parse(datetime))
         // },
-        toggleChecked: function(item) {
+        toggleChecked: function(item, refresh = false) {
+            // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
             item.checked = !item.checked
             if (item.checked) {
                 item.completed_at = new Date().toISOString()
@@ -418,16 +384,21 @@ export default {
             this.$refs.menu.open(e, value)
         },
         moveEntry: function(e, item) {
+            if (!e) {
+                makeToast(this.$t("Warning"), this.$t("NoCategory"), "warning")
+            }
+
             // TODO update API to warn that category is inherited
             let food = {
-                id: item.food.id,
-                supermarket_category: this.shopping_categories.filter((x) => x.id === e)[0],
+                id: item?.[0]?.food?.id ?? item?.food?.id,
+                supermarket_category: this.shopping_categories.filter((x) => x?.id === e)?.[0],
             }
             console.log("food", food, "event", e, "item", item)
 
             this.genericAPI(this.Models.FOOD, this.Actions.UPDATE, food)
                 .then((result) => {
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    // TODO this needs to change order of saved item to match category or category sort needs to be local instead of based on API
                     this.items
                         .filter((x) => x.food.id == food.id)
                         .forEach((y) => {
@@ -444,6 +415,26 @@ export default {
         updateEntry: function(newItem) {
             let idx = this.items.indexOf((x) => x.id === newItem.id)
             Vue.set(this.items, idx, newItem)
+        },
+        foodName: function(value) {
+            console.log(value?.food?.name ?? value?.[0]?.food?.name ?? "")
+            return value?.food?.name ?? value?.[0]?.food?.name ?? ""
+        },
+        ignoreThis: function(item) {
+            return item
+        },
+        onHand: function(item) {
+            return item
+        },
+        delayThis: function(item) {
+            return item
+        },
+        categoryName: function(value) {
+            return this.shopping_categories.filter((x) => x.id == value)[0]?.name ?? ""
+        },
+        stop: function(e) {
+            e.stopPropagation() // default @click.stop not working
+            e.preventDefault() // default @click.stop not working
         },
     },
 }
