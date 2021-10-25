@@ -12,7 +12,7 @@
 
         <div class="row">
           <div class="col-6">
-            <i class="fas fa-fire fa-fw text-primary"></i> {{ energy() }}
+            <i class="fas fa-fire fa-fw text-primary"></i> {{ $t(energy()) }}
           </div>
           <div class="col-6">
             <span v-html="calculateEnergy(recipe.nutrition.calories)"></span>
