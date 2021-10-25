@@ -108,7 +108,7 @@
 
               <b-collapse id="id_nutrition_collapse" class="mt-2">
                 <div class="card-body " v-if="recipe.nutrition">
-                  <label for="id_name"> {{ $t('Calories') }}</label>
+                  <label for="id_name"> {{ energy() }}</label>
                   <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
 
                   <label for="id_name"> {{ $t('Carbohydrates') }}</label>
@@ -481,7 +481,7 @@ import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import draggable from 'vuedraggable'
-import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts, convertEnergyToCalories} from "@/utils/utils";
+import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts, convertEnergyToCalories, energyHeading} from "@/utils/utils";
 import Multiselect from "vue-multiselect";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -819,6 +819,9 @@ export default {
       if (this.recipe.nutrition && this.recipe.nutrition.calories) {
         this.recipe.nutrition.calories = convertEnergyToCalories(this.recipe.nutrition.calories)
       }
+    },
+    energy: function () {
+      return energyHeading()
     }
 
   }

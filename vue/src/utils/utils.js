@@ -175,6 +175,14 @@ export function convertEnergyToCalories(amount) {
     }
 }
 
+export function energyHeading() {
+    if (getUserPreference('use_kj')) {
+        return 'Energy'
+    } else {
+        return 'Calories'
+    }
+}
+
 /*
 * Utility functions to use OpenAPIs generically
 * */
