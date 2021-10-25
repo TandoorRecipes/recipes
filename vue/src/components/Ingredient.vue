@@ -19,18 +19,14 @@
             </td>
             <td @click="done">
                 <template v-if="ingredient.food !== null">
-                    <i
+                    <!-- <i
                         v-if="show_shopping && !add_shopping_mode"
                         class="far fa-edit fa-sm px-1"
                         @click="editFood()"
-                    ></i>
-                    <a
-                        :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)"
-                        v-if="ingredient.food.recipe !== null"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >{{ ingredient.food.name }}</a
-                    >
+                    ></i> -->
+                    <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">{{
+                        ingredient.food.name
+                    }}</a>
                     <span v-if="ingredient.food.recipe === null">{{ ingredient.food.name }}</span>
                 </template>
             </td>
@@ -44,9 +40,7 @@
                     <!--            {{ ingredient.note }}-->
                     <!--          </span>-->
 
-                    <div class="d-none d-print-block">
-                        <i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}
-                    </div>
+                    <div class="d-none d-print-block"><i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}</div>
                 </div>
             </td>
             <td v-else-if="show_shopping" class="text-right text-nowrap">
@@ -71,13 +65,7 @@
                     <!-- or in shopping mode and food is ignored: Shopping Badge bypasses linking ingredient to Recipe which would get ignored -->
                     <shopping-badge :item="ingredient.food" :override_ignore="true" class="px-1" />
                     <span class="px-2">
-                        <input
-                            type="checkbox"
-                            class="align-middle"
-                            disabled
-                            v-b-popover.hover.click.blur
-                            :title="$t('IgnoredFood', { food: ingredient.food.name })"
-                        />
+                        <input type="checkbox" class="align-middle" disabled v-b-popover.hover.click.blur :title="$t('IgnoredFood', { food: ingredient.food.name })" />
                     </span>
                     <on-hand-badge :item="ingredient.food" />
                 </div>
@@ -158,10 +146,7 @@ export default {
                 }
                 // if we are in add shopping mode start with all checks marked
                 if (this.add_shopping_mode) {
-                    this.shop =
-                        !this.ingredient.food.on_hand &&
-                        !this.ingredient.food.ignore_shopping &&
-                        !this.ingredient.food.recipe
+                    this.shop = !this.ingredient.food.on_hand && !this.ingredient.food.ignore_shopping && !this.ingredient.food.recipe
                 }
             },
         },
@@ -177,9 +162,7 @@ export default {
                 return this.$t("NotInShopping", { food: this.ingredient.food.name })
             } else {
                 let list = this.shopping_list.filter((x) => x.food.id == this.ingredient.food.id)
-                let category =
-                    this.$t("Category") + ": " + this.ingredient?.food?.supermarket_category?.name ??
-                    this.$t("Undefined")
+                let category = this.$t("Category") + ": " + this.ingredient?.food?.supermarket_category?.name ?? this.$t("Undefined")
                 let popover = []
 
                 list.forEach((x) => {
@@ -200,9 +183,7 @@ export default {
                         ].join("")
                     )
                 })
-                return (
-                    "<table class='table-small'><th colspan='4'>" + category + "</th>" + popover.join("") + "</table>"
-                )
+                return "<table class='table-small'><th colspan='4'>" + category + "</th>" + popover.join("") + "</table>"
             }
         },
     },
