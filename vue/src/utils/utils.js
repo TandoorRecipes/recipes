@@ -156,6 +156,17 @@ export function roundDecimals(num) {
     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
 }
 
+const KILOJOULES_PER_CALORIE = 4.18
+
+export function calculateEnergy(amount, factor) {
+    if (getUserPreference('use_kj')) {
+        let joules = amount * KILOJOULES_PER_CALORIE
+        return calculateAmount(joules, factor) + ' kJ'
+    } else {
+        return calculateAmount(amount, factor) + ' kcal'
+    }
+}
+
 /*
 * Utility functions to use OpenAPIs generically
 * */
