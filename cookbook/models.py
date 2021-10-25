@@ -19,7 +19,8 @@ from treebeard.mp_tree import MP_Node, MP_NodeManager
 from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
-                              STICKY_NAV_PREF_DEFAULT, SORT_TREE_BY_NAME)
+                              KJ_PREF_DEFAULT, STICKY_NAV_PREF_DEFAULT,
+                              SORT_TREE_BY_NAME)
 
 
 def get_user_name(self):
@@ -217,6 +218,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
+    use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
     default_page = models.CharField(
         choices=PAGES, max_length=64, default=SEARCH
     )

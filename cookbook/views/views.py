@@ -307,6 +307,7 @@ def user_settings(request):
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']  # noqa: E501
                 up.comments = form.cleaned_data['comments']
                 up.use_fractions = form.cleaned_data['use_fractions']
+                up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
 
                 up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
