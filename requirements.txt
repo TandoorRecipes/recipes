@@ -27,7 +27,7 @@ uritemplate==3.0.1
 beautifulsoup4==4.10.0
 microdata==0.7.1
 Jinja2==3.0.1
-django-webpack-loader==1.4.0
+django-webpack-loader==1.4.1
 django-js-reverse==0.9.1
 django-allauth==0.45.0
 recipe-scrapers==13.4.0
@@ -40,3 +40,5 @@ django-storages==1.11.1
 boto3==1.18.52
 django-prometheus==2.1.0
 django-hCaptcha==0.1.0
+python-ldap==3.3.1
+django-auth-ldap==3.0.0

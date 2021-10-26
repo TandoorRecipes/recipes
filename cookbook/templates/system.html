@@ -103,5 +103,19 @@
     {% endif %}
     <br/>
     <br/>
+    <h4>Debug</h4>
+    <textarea class="form-control" rows="20">
+Gunicoren Media: {{ gunicorn_media }}
+Sqlite: {{ postgres }}
+Debug: {{ debug }}
 
+{% for key,value in request.META.items %}{% if key in 'SERVER_PORT,REMOTE_HOST,REMOTE_ADDR,SERVER_PROTOCOL' %}{{ key }}:{{ value }}
+{% endif %}{% endfor %}
+{% for key,value in request.META.items %}{% if 'HTTP_' in key  %}{{ key }}:{{ value }}
+{% endif %}{% endfor %}
+{% for key,value in request.META.items %}{% if 'wsgi.' in key  %}{{ key }}:{{ value }}
+{% endif %}{% endfor %}
+    </textarea>
+    <br/>
+    <br/>
 {% endblock %}

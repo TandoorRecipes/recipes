@@ -1,9 +1,11 @@
 <template>
-  <span class="pl-1">
-  <b-badge pill variant="primary" v-if="recipe.last_cooked !== null" class="font-weight-normal"><i class="fas fa-utensils"></i> {{
-      formatDate(recipe.last_cooked)
-    }}</b-badge>
-  </span>
+  <div>
+    <span class="pl-1" v-if="recipe.last_cooked !== null">
+    <b-badge pill variant="primary" class="font-weight-normal"><i class="fas fa-utensils"></i> {{
+        formatDate(recipe.last_cooked)
+      }}</b-badge>
+    </span>
+  </div>
 </template>
 
 <script>

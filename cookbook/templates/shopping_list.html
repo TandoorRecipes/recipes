@@ -137,7 +137,7 @@
                     <tr v-for="(element, index) in c.entries" :key="element.id"
                         v-bind:class="{ 'text-muted': element.checked }">
                         <td class="handle"><i class="fas fa-sort"></i></td>
-                        <td>[[element.amount]]</td>
+                        <td>[[element.amount.toFixed(2)]]</td>
                         <td>[[element.unit.name]]</td>
                         <td>[[element.food.name]]</td>
                         <td>
@@ -319,7 +319,7 @@
                                         <td><input type="checkbox" style="zoom:1.4;" v-model="x.checked"
                                                    @change="entryChecked(x)">
                                         </td>
-                                        <td>[[x.amount]]</td>
+                                        <td>[[x.amount.toFixed(2)]]</td>
                                         <td>[[x.unit.name]]</td>
                                         <td>[[x.food.name]] <span class="text-muted" v-if="x.recipes.length > 0">([[x.recipes.join(', ')]])</span>
                                         </td>
@@ -505,7 +505,7 @@
                                 servings = this.servings_cache[item.list_recipe]
                             }
 
-                            entry.amount += (item.amount * servings).toFixed(2)
+                            entry.amount += item.amount * servings
 
                             if (item.list_recipe !== null && entry.recipes.indexOf(this.recipe_cache[item.list_recipe]) === -1) {
                                 entry.recipes.push(this.recipe_cache[item.list_recipe])
@@ -514,7 +514,7 @@
                             entry.entries.push(item.id)
                         } else {
                             if (item.list_recipe !== null) {
-                                item.amount = (item.amount * this.servings_cache[item.list_recipe]).toFixed(2)
+                                item.amount = item.amount * this.servings_cache[item.list_recipe]
                             }
                             item.unit = ((element.unit !== undefined && element.unit !== null) ? element.unit : {'name': ''})
                             item.entries = [element.id]
