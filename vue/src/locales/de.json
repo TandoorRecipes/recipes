@@ -165,7 +165,16 @@
     "merge_selection": "Ersetze alle vorkommen von {source} mit dem ausgewählten {type}.",
     "Plan_Period_To_Show": "Wochen, Monate oder Jahre anzeigen",
     "Title": "Titel",
-    "Week": "Wocje",
+    "Week": "Woche",
     "Month": "Monat",
-    "Year": "Jahr"
+    "Year": "Jahr",
+    "Drag_Here_To_Delete": "Hierher ziehen zum löschen",
+    "Select_File": "Datei auswählen",
+    "Image": "Bild",
+    "Planner": "Planer",
+    "Planner_Settings": "Planer Einstellungen",
+    "Period": "Zeitraum",
+    "Clone": "Kopieren",
+    "file_upload_disabled": "Das Hochladen von Dateien ist für deinen Space nicht aktiviert.",
+    "Meal_Type_Required": "Mahlzeitentyp ist erforderlich"
 }

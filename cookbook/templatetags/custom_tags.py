@@ -27,6 +27,11 @@ def get_class(value):
 
 
 @register.simple_tag
+def class_name(value):
+    return value.__class__.__name__
+
+
+@register.simple_tag
 def delete_url(model, pk):
     try:
         return reverse(f'delete_{get_model_name(model)}', args=[pk])
