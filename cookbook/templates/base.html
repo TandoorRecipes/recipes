@@ -180,6 +180,18 @@
                         </div>
                         <div class="row m-0">
                             <div class="col-4">
+                                <a href="{% url 'list_user_file' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-file fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Files' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
                                 <a href="{% url 'data_batch_edit' %}" class="p-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
@@ -203,6 +215,9 @@
                                     </div>
                                 </a>
                             </div>
+
+                        </div>
+                        <div class="row m-0">
                             <div class="col-4">
                                 <a href="{% url 'view_export' %}" class="p-1">
                                     <div class="card p-0 no-gutters border-0">

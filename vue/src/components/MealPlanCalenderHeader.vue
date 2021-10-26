@@ -1,69 +1,98 @@
 <template>
   <div class="cv-header">
-    <div class="cv-header-nav">
-      <button
-          :disabled="!headerProps.previousYear"
-          class="previousYear"
-          aria-label="Previous Year"
-          @click.prevent="onInput(headerProps.previousYear)"
-      >
-        {{ previousYearLabel }}
-      </button>
-      <button
-          :disabled="!headerProps.previousPeriod"
-          class="previousPeriod"
-          aria-label="Previous Period"
-          @click.prevent="onInput(headerProps.previousPeriod)"
-          v-html="previousPeriodLabel"
-      />
-      <button
-          class="currentPeriod"
-          aria-label="Current Period"
-          @click.prevent="onInput(headerProps.currentPeriod)"
-      >
-        {{ headerProps.currentPeriodLabel }}
-      </button>
-      <button
-          :disabled="!headerProps.nextPeriod"
-          class="nextPeriod"
-          aria-label="Next Period"
-          @click.prevent="onInput(headerProps.nextPeriod)"
-      >
-        {{ nextPeriodLabel }}
-      </button>
-      <button
-          :disabled="!headerProps.nextYear"
-          class="nextYear"
-          aria-label="Next Year"
-          @click.prevent="onInput(headerProps.nextYear)">
-        {{ nextYearLabel }}
-      </button>
+    <div class="cv-header-nav d-none d-md-block">
+      <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+        <b-button-group class="mx-1">
+          <b-button v-html="'<<'" @click="onInput(headerProps.previousPeriod)" class="text-white" v-b-tooltip.hover.top
+                    :title="$t('Previous_Period')"></b-button>
+          <b-button v-html="'<'" @click="onDayBack" class="text-white" v-b-tooltip.hover.top
+                    :title="$t('Previous_Day')"></b-button>
+        </b-button-group>
+        <b-button-group class="mx-1">
+          <b-button @click="onInput(headerProps.currentPeriod)" class="text-white" v-b-tooltip.hover.top
+                    :title="$t('Current_Period')"><i class="fas fa-home"></i>
+          </b-button>
+          <b-form-datepicker
+              button-only
+              button-variant="secondary"
+              v-b-tooltip.hover.top
+              :title="$t('Date')"
+              @context="dateSelect" class="text-white"
+          ></b-form-datepicker>
+        </b-button-group>
+        <b-button-group class="mx-1">
+          <b-button v-html="'>'" @click="onDayForward" class="text-white" v-b-tooltip.hover.top
+                    :title="$t('Next_Day')"></b-button>
+          <b-button v-html="'>>'" @click="onInput(headerProps.nextPeriod)" class="text-white" v-b-tooltip.hover.top
+                    :title="$t('Next_Period')"></b-button>
+        </b-button-group>
+      </b-button-toolbar>
     </div>
     <div class="periodLabel">
       <slot name="label">{{ headerProps.periodLabel }}</slot>
     </div>
-    <div class="actionArea d-none d-sm-flex">
-      <button class="btn btn-success plus-button pt-1 pb-1" @click="$emit('create-new')"><i class="fas fa-plus"></i></button>
-      <span class="delete-area text-danger p-1 mr-2 ml-2" @drop.prevent="onDeleteDrop($event)"
-            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)" @dragover.prevent="onDeleteDragEnter"><i
-          class="fas fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
+    <div class="actionArea pt-1 pb-1 d-none d-lg-flex">
+      <span class="period-span-1 pt-1 pb-1 pl-1 pr-1 d-none d-xl-inline-flex text-body align-items-center">
+        <small>Period:</small>
+        <b-form-select
+            class="ml-1"
+            id="UomInput"
+            v-model="settings.displayPeriodUom"
+            :options="options.displayPeriodUom"
+        ></b-form-select>
+      </span>
+      <span class="period-span-2 pt-1 pb-1 pl-1 pr-1 mr-1 ml-1 d-none d-xl-inline-flex text-body align-items-center">
+         <small>Periods:</small>
+         <b-form-select
+             class="ml-1"
+             id="UomInput"
+             v-model="settings.displayPeriodCount"
+             :options="options.displayPeriodCount"
+         ></b-form-select>
+      </span>
+      <span class="delete-area text-danger p-1 mr-2 ml-1 d-none d-sm-flex align-items-center"
+            @drop.prevent="onDeleteDrop($event)"
+            @dragenter.prevent="onDeleteDragEnter($event)" @dragleave.prevent="onDeleteDragLeave($event)"
+            @dragover.prevent="onDeleteDragEnter"><i class="fa fa-trash"></i> {{ $t('Drag_Here_To_Delete') }}</span>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "MealPlanCalenderHeader",
+  computed: {
+    settings: {
+      get: function () {
+        return this.settings_prop
+      },
+      set: function (value) {
+        this.$emit('change', value)
+      }
+    }
+  },
   props: {
     headerProps: {
       type: Object,
       required: true,
     },
+    options: {},
     previousYearLabel: {type: String, default: "<<"},
     previousPeriodLabel: {type: String, default: "<"},
     nextPeriodLabel: {type: String, default: ">"},
     nextYearLabel: {type: String, default: ">>"},
+    iCalUrl: {type: String, default: ""},
+    settings_prop: {}
   },
   methods: {
+    onDayForward() {
+      this.$emit("set-starting-day-forward")
+    },
+    onDayBack() {
+      this.$emit("set-starting-day-back")
+    },
+    dateSelect(ctx) {
+      this.$emit("input", ctx.selectedDate)
+    },
     onInput(d) {
       this.$emit("input", d)
     },
@@ -108,17 +137,20 @@ export default {
   font-size: 1.5em;
 }
 
-.plus-button {
-  border-style: dotted;
+.period-span-1 {
   margin-left: auto;
   order: 1;
   user-select: none
 }
 
+.period-span-2 {
+  order: 2;
+  user-select: none
+}
+
 .delete-area {
   border-style: dotted;
-  margin-left: auto;
-  order: 2;
+  order: 3;
   user-select: none
 }
 

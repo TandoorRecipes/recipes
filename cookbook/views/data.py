@@ -5,6 +5,7 @@ from io import BytesIO
 
 import requests
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.db.transaction import atomic
 from django.http import HttpResponse, HttpResponseRedirect
@@ -150,8 +151,15 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
-            recipe.keywords.add(k)
+            if data['all_keywords']: # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
+                k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
+                recipe.keywords.add(k)
+            else:
+                try:
+                    k = Keyword.objects.get(name=kw['text'], space=request.space)
+                    recipe.keywords.add(k)
+                except ObjectDoesNotExist:
+                    pass
 
         ingredient_parser = IngredientParser(request, True)
         for ing in data['recipeIngredient']:

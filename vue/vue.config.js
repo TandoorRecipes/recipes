@@ -21,10 +21,6 @@ const pages = {
         entry: './src/apps/SupermarketView/main.js',
         chunks: ['chunk-vendors']
     },
-    'user_file_view': {
-        entry: './src/apps/UserFileView/main.js',
-        chunks: ['chunk-vendors']
-    },
     'model_list_view': {
         entry: './src/apps/ModelListView/main.js',
         chunks: ['chunk-vendors']
@@ -52,7 +48,7 @@ module.exports = {
     filenameHashing: false,
     productionSourceMap: false,
     publicPath: process.env.NODE_ENV === 'production'
-        ? ''
+        ? '/static/vue'
         : 'http://localhost:8080/',
     outputDir: '../cookbook/static/vue/',
     runtimeCompiler: true,
