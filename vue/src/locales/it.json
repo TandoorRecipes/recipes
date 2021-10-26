@@ -182,5 +182,22 @@
     "Meal_Type": "Tipo di pasto",
     "Title_or_Recipe_Required": "Sono richiesti titolo o ricetta",
     "Create_Meal_Plan_Entry": "Crea voce nel piano alimentare",
-    "Edit_Meal_Plan_Entry": "Modifica voce del piano alimentare"
+    "Edit_Meal_Plan_Entry": "Modifica voce del piano alimentare",
+    "Make_header": "Crea Intestazione",
+    "Color": "Colore",
+    "New_Meal_Type": "Nuovo tipo di pasto",
+    "Select_File": "Seleziona file",
+    "Image": "Immagine",
+    "Export_As_ICal": "Esporta il periodo attuale in formato .iCal",
+    "Week_Numbers": "Numeri della settimana",
+    "Show_Week_Numbers": "Mostra numeri della settimana?",
+    "file_upload_disabled": "Il caricamento dei file non è abilitato in questa istanza.",
+    "Export_To_ICal": "Esporta .ics",
+    "Cannot_Add_Notes_To_Shopping": "Le note non possono essere aggiunte alla lista della spesa",
+    "Added_To_Shopping_List": "Aggiunto alla lista della spesa",
+    "Next_Period": "Periodo successivo",
+    "Previous_Period": "Periodo precedente",
+    "Current_Period": "Periodo attuale",
+    "Next_Day": "Giorno successivo",
+    "Previous_Day": "Giorno precedente"
 }
