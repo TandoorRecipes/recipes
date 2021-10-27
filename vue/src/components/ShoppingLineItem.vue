@@ -21,8 +21,10 @@
                         <input type="checkbox" class="text-right mx-3 mt-2" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                     </div>
                 </div>
-                <div class="col col-md-1">{{ formatAmount }}</div>
-                <div class="col col-md-1">{{ formatUnit }}</div>
+                <div class="col-sm-3">
+                    <div v-if="Object.entries(formatAmount).length == 1">{{ Object.entries(formatAmount)[0][1] }} &ensp; {{ Object.entries(formatAmount)[0][0] }}</div>
+                    <div class="small" v-else v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp; {{ x[0] }}</div>
+                </div>
 
                 <div class="col col-md-6">
                     {{ formatFood }} <span class="small text-muted">{{ formatHint }}</span>
@@ -41,7 +43,7 @@
                                 aria-haspopup="true"
                                 aria-expanded="false"
                                 type="button"
-                                class="btn btn-link stn-sm m-0 p-0"
+                                class="btn btn-link btn-sm m-0 p-0"
                                 style="text-overflow: ellipsis;"
                                 @click.stop="openRecipeCard($event, e)"
                                 @mouseover="openRecipeCard($event, e)"
@@ -74,6 +76,7 @@
                         </div>
                         <div class="col-sm-1">{{ formatOneAmount(e) }}</div>
                         <div class="col-sm-2">{{ formatOneUnit(e) }}</div>
+
                         <div class="col-sm-3">{{ formatOneFood(e) }}</div>
 
                         <div class="col-sm-4">
@@ -136,7 +139,18 @@ export default {
     },
     computed: {
         formatAmount: function() {
-            return this.formatOneAmount(this.entries[0])
+            let amount = {}
+            this.entries.forEach((entry) => {
+                let unit = entry?.unit?.name ?? "----"
+                if (entry.amount) {
+                    if (amount[unit]) {
+                        amount[unit] += entry.amount
+                    } else {
+                        amount[unit] = entry.amount
+                    }
+                }
+            })
+            return amount
         },
         formatCategory: function() {
             return this.formatOneCategory(this.entries[0]) || this.$t("Undefined")
