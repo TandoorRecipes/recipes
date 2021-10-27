@@ -385,7 +385,6 @@ def user_settings(request):
                 up.mealplan_autoexclude_onhand = shopping_form.cleaned_data['mealplan_autoexclude_onhand']
                 up.mealplan_autoinclude_related = shopping_form.cleaned_data['mealplan_autoinclude_related']
                 up.shopping_auto_sync = shopping_form.cleaned_data['shopping_auto_sync']
-                up.filter_to_supermarket = shopping_form.cleaned_data['filter_to_supermarket']
                 up.default_delay = shopping_form.cleaned_data['default_delay']
                 if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
                     up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL

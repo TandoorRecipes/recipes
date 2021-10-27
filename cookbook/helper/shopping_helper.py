@@ -23,11 +23,6 @@ def shopping_helper(qs, request):
         supermarket_categories = SupermarketCategoryRelation.objects.filter(supermarket=supermarket, category=OuterRef('food__supermarket_category'))
         qs = qs.annotate(supermarket_order=Coalesce(Subquery(supermarket_categories.values('order')), Value(9999)))
         supermarket_order = ['supermarket_order'] + supermarket_order
-    # if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-    #     qs = qs.annotate(recipe_notes=ArrayAgg('list_recipe__recipe__steps__ingredients__note', filter=Q(list_recipe__recipe__steps__ingredients__food=F('food_id'))))
-        # qs = qs.annotate(meal_notes=ArrayAgg('list_recipe__mealplan__note', distinct=True, filter=Q(list_recipe__mealplan__note__isnull=False)))
-    # else:
-    #     pass  # ignore adding notes when running sqlite?  or do some ugly contruction?
     if checked in ['false', 0, '0']:
         qs = qs.filter(checked=False)
     elif checked in ['true', 1, '1']:
@@ -39,4 +34,4 @@ def shopping_helper(qs, request):
         qs = qs.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
         supermarket_order = ['checked'] + supermarket_order
 
-    return qs.order_by(*supermarket_order).select_related('unit', 'food', 'list_recipe__mealplan', 'list_recipe__recipe')
+    return qs.order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
