@@ -479,7 +479,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
         model = UserPreference
 
         fields = (
-            'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand', 'default_delay'
+            'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
+            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket'
         )
 
         help_texts = {
@@ -490,14 +491,18 @@ class ShoppingPreferenceForm(forms.ModelForm):
             ),
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
             'mealplan_autoexclude_onhand': _('When automatically adding a meal plan to the shopping list, exclude ingredients that are on hand.'),
+            'mealplan_autoinclude_related': _('When automatically adding a meal plan to the shopping list, include all related recipes.'),
             'default_delay': _('Default number of hours to delay a shopping list entry.'),
+            'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
         }
         labels = {
             'shopping_share': _('Share Shopping List'),
             'shopping_auto_sync': _('Autosync'),
             'mealplan_autoadd_shopping': _('Auto Add Meal Plan'),
             'mealplan_autoexclude_onhand': _('Exclude On Hand'),
+            'mealplan_autoinclude_related': _('Include Related'),
             'default_delay': _('Default Delay Hours'),
+            'filter_to_supermarket': _('Filter to Supermarket'),
         }
 
         widgets = {
