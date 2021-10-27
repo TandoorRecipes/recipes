@@ -2,12 +2,12 @@
     <!-- add alert at top if offline -->
     <!-- get autosync time from preferences and put fetching checked items on timer -->
     <!-- allow reordering or items -->
-    <div id="app">
+    <div id="shopping_line_item">
         <div class="col-12">
-            <div class="row" :class="{ 'text-muted': formatChecked }">
+            <div class="row">
                 <div class="col col-md-1">
                     <div style="position: static;" class=" btn-group">
-                        <div class="dropdown b-dropdown position-static">
+                        <div class="dropdown b-dropdown position-static inline-block">
                             <button
                                 aria-haspopup="true"
                                 aria-expanded="false"
@@ -18,9 +18,8 @@
                                 <i class="fas fa-ellipsis-v fa-lg"></i>
                             </button>
                         </div>
+                        <input type="checkbox" class="text-right mx-3 mt-2" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                     </div>
-
-                    <b-button class="btn far text-body text-decoration-none" variant="link" @click="checkboxChanged()" :class="formatChecked ? 'fa-check-square' : 'fa-square'" />
                 </div>
                 <div class="col col-md-1">{{ formatAmount }}</div>
                 <div class="col col-md-1">{{ formatUnit }}</div>
@@ -36,8 +35,8 @@
             </div>
             <div class="card no-body" v-if="showDetails">
                 <div v-for="(e, z) in entries" :key="z">
-                    <div class="row ml-2 small" v-if="formatOneMealPlan(e)">
-                        <div class="col-md-4  overflow-hidden text-nowrap">
+                    <div class="row ml-2 small">
+                        <div class="col-md-4 overflow-hidden text-nowrap">
                             <button
                                 aria-haspopup="true"
                                 aria-expanded="false"
@@ -51,12 +50,15 @@
                             </button>
                         </div>
                         <div class="col-md-4 text-muted">{{ formatOneMealPlan(e) }}</div>
-                        <div class="col-md-4 text-muted">{{ formatOneCreatedBy(e) }}</div>
+                        <div class="col-md-4 text-muted text-right">{{ formatOneCreatedBy(e) }}</div>
+                    </div>
+                    <div class="row ml-2 small">
+                        <div class="col-md-4 offset-md-8 text-muted text-right">{{ formatOneCompletedAt(e) }}</div>
                     </div>
                     <div class="row ml-2 light">
                         <div class="col-sm-1 text-nowrap">
                             <div style="position: static;" class=" btn-group ">
-                                <div class="dropdown b-dropdown position-static">
+                                <div class="dropdown b-dropdown position-static inline-block">
                                     <button
                                         aria-haspopup="true"
                                         aria-expanded="false"
@@ -67,14 +69,8 @@
                                         <i class="fas fa-ellipsis-v fa-lg"></i>
                                     </button>
                                 </div>
+                                <input type="checkbox" class="text-right mx-3 mt-2" :checked="e.checked" @change="updateChecked($event, e)" />
                             </div>
-
-                            <b-button
-                                class="btn far text-body text-decoration-none"
-                                variant="link"
-                                @click="checkboxChanged(e)"
-                                :class="formatOneChecked(e) ? 'fa-check-square' : 'fa-square'"
-                            />
                         </div>
                         <div class="col-sm-1">{{ formatOneAmount(e) }}</div>
                         <div class="col-sm-2">{{ formatOneUnit(e) }}</div>
@@ -84,15 +80,26 @@
                             <div class="small" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
                         </div>
                     </div>
+
                     <hr class="w-75" />
                 </div>
             </div>
             <hr class="m-1" />
         </div>
         <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width:300">
-            <template #menu="{ contextData }">
-                <ContextMenuItem><RecipeCard :recipe="contextData" :detail="false" v-if="recipe"></RecipeCard></ContextMenuItem
-            ></template>
+            <template #menu="{ contextData }" v-if="recipe">
+                <ContextMenuItem><RecipeCard :recipe="contextData" :detail="false"></RecipeCard></ContextMenuItem>
+                <ContextMenuItem @click="$refs.menu.close()">
+                    <b-form-group label-cols="9" content-cols="3" class="text-nowrap m-0 mr-2">
+                        <template #label>
+                            <a class="dropdown-item p-2" href="#"><i class="fas fa-pizza-slice"></i> {{ $t("Servings") }}</a>
+                        </template>
+                        <div @click.prevent.stop>
+                            <b-form-input class="mt-2" min="0" type="number" v-model="servings"></b-form-input>
+                        </div>
+                    </b-form-group>
+                </ContextMenuItem>
+            </template>
         </ContextMenu>
     </div>
 </template>
@@ -124,6 +131,7 @@ export default {
         return {
             showDetails: false,
             recipe: undefined,
+            servings: 1,
         }
     },
     computed: {
@@ -134,7 +142,7 @@ export default {
             return this.formatOneCategory(this.entries[0]) || this.$t("Undefined")
         },
         formatChecked: function() {
-            return false
+            return this.entries.map((x) => x.checked).every((x) => x === true)
         },
         formatHint: function() {
             if (this.groupby == "recipe") {
@@ -165,7 +173,9 @@ export default {
         },
     },
     watch: {},
-    mounted() {},
+    mounted() {
+        this.servings = this.entries?.[0]?.recipe_mealplan?.servings ?? 0
+    },
     methods: {
         // this.genericAPI inherited from ApiMixin
 
@@ -175,16 +185,6 @@ export default {
             }
             return Intl.DateTimeFormat(window.navigator.language, { dateStyle: "short", timeStyle: "short" }).format(Date.parse(datetime))
         },
-        checkboxChanged: function() {
-            console.log("click!")
-            // item.checked = !item.checked
-            // if (item.checked) {
-            //     item.completed_at = new Date().toISOString()
-            // }
-
-            // this.saveThis(item, false)
-            // this.$refs.table.refresh()
-        },
         formatOneAmount: function(item) {
             return item?.amount ?? 1
         },
@@ -193,6 +193,12 @@ export default {
         },
         formatOneCategory: function(item) {
             return item?.food?.supermarket_category?.name
+        },
+        formatOneCompletedAt: function(item) {
+            if (!item.completed_at) {
+                return ""
+            }
+            return [this.$t("Completed"), "@", this.formatDate(item.completed_at)].join(" ")
         },
         formatOneFood: function(item) {
             return item.food.name
@@ -222,6 +228,14 @@ export default {
                 this.recipe = true
                 this.$refs.recipe_card.open(e, recipe)
             })
+        },
+        updateChecked: function(e, item) {
+            if (!item) {
+                let update = { entries: this.entries.map((x) => x.id), checked: !this.formatChecked }
+                this.$emit("update-checkbox", update)
+            } else {
+                this.$emit("update-checkbox", { id: item.id, checked: !item.checked })
+            }
         },
     },
 }

@@ -162,7 +162,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         fields = (
             'user', 'theme', 'nav_color', 'default_unit', 'default_page',
             'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
-            'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default'
+            'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default', 'default_delay'
         )
 
 
@@ -392,7 +392,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'ignore_shopping', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'inherit', 'ignore_inherit'
+            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'inherit', 'ignore_inherit',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -634,8 +634,26 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     mealplan_note = serializers.ReadOnlyField(source='mealplan.note')
     servings = CustomDecimalField()
 
-    def get_note_markdown(self, obj):
-        return obj.mealplan and markdown(obj.mealplan.note)
+    def get_name(self, obj):
+        if not isinstance(value := obj.servings, Decimal):
+            value = Decimal(value)
+        value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
+        return (
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
+        ) + f' ({value:.2g})'
+
+    def update(self, instance, validated_data):
+        if 'servings' in validated_data:
+            ShoppingListEntry.list_from_recipe(
+                list_recipe=instance,
+                servings=validated_data['servings'],
+                created_by=self.context['request'].user,
+                space=self.context['request'].space
+            )
+        return super().update(instance, validated_data)
 
     class Meta:
         model = ShoppingListRecipe
@@ -649,7 +667,8 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     ingredient_note = serializers.ReadOnlyField(source='ingredient.note')
     recipe_mealplan = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
-    created_by = UserNameSerializer()
+    created_by = UserNameSerializer(read_only=True)
+    completed_at = serializers.DateTimeField(allow_null=True)
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -684,7 +703,8 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             data['completed_at'] = None
         else:
             # otherwise don't write anything
-            del data['completed_at']
+            if 'completed_at' in data:
+                del data['completed_at']
 
         ############################################################
         # temporary while old and new shopping lists are both in use
@@ -711,9 +731,9 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         model = ShoppingListEntry
         fields = (
             'id', 'list_recipe', 'food', 'unit', 'ingredient', 'ingredient_note', 'amount', 'order', 'checked', 'recipe_mealplan',
-            'created_by', 'created_at', 'completed_at'
+            'created_by', 'created_at', 'completed_at', 'delay_until'
         )
-        read_only_fields = ('id', 'list_recipe', 'created_by', 'created_at',)
+        read_only_fields = ('id',  'created_by', 'created_at',)
 
 
 # TODO deprecate
