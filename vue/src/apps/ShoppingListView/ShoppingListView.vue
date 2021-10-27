@@ -1,8 +1,8 @@
 <template>
     <!-- add alert at top if offline -->
     <!-- get autosync time from preferences and put fetching checked items on timer -->
-    <!-- allow reordering or items -->
     <div id="app" style="margin-bottom: 4vh">
+        <b-alert :show="online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
         <div class="row  float-top">
             <div class="offset-md-10 col-md-2 no-gutter text-right">
                 <b-button variant="link" class="px-0">
@@ -19,9 +19,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col col-md-12">
-                            <!-- TODO add spinner -->
                             <div role="tablist" v-if="items && items.length > 0">
-                                <!-- WARNING: all data in the table should be considered read-only, don't change any data through table bindings -->
                                 <div class="row justify-content-md-center w-75" v-if="entrymode">
                                     <div class="col col-md-2 "><b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input></div>
                                     <div class="col col-md-3">
@@ -74,12 +72,7 @@
                                         <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
                                             <!-- passing an array of values to the table grouped by Food -->
                                             <div v-for="(entries, x) in Object.entries(s)" :key="x">
-                                                <ShoppingLineItem
-                                                    :entries="entries[1]"
-                                                    :groupby="group_by"
-                                                    @open-context-menu="openContextMenu"
-                                                    @update-checkbox="updateChecked"
-                                                ></ShoppingLineItem>
+                                                <ShoppingLineItem :entries="entries[1]" :groupby="group_by" @open-context-menu="openContextMenu" @update-checkbox="updateChecked" />
                                             </div>
                                         </div>
                                     </div>
@@ -93,7 +86,6 @@
                 <table class="table w-75">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
                             <th scope="col">{{ $t("Meal_Plan") }}</th>
                             <th scope="col">{{ $t("Recipe") }}</th>
                             <th scope="col">{{ $t("Servings") }}</th>
@@ -101,7 +93,6 @@
                         </tr>
                     </thead>
                     <tr v-for="r in Recipes" :key="r.list_recipe">
-                        <td>{{ r.list_recipe }}</td>
                         <td>{{ r.recipe_mealplan.name }}</td>
                         <td>{{ r.recipe_mealplan.recipe_name }}</td>
                         <td class="block-inline">
@@ -230,8 +221,6 @@ import { StandardToasts, makeToast } from "@/utils/utils"
 Vue.use(BootstrapVue)
 
 export default {
-    // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available
-    // or i'm capturing it incorrectly
     name: "ShoppingListView",
     mixins: [ApiMixin],
     components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect },
@@ -240,7 +229,7 @@ export default {
         return {
             // this.Models and this.Actions inherited from ApiMixin
             items: [],
-            group_by: "category", //TODO create setting to switch group_by
+            group_by: "category",
             group_by_choices: ["created_by", "category", "recipe"],
             supermarkets: [],
             shopping_categories: [],
@@ -248,13 +237,17 @@ export default {
             show_undefined_categories: true,
             supermarket_categories_only: false,
             shopcat: null,
-            delay: 0, // user default
+            delay: 0,
+            autosync: 0,
+            autosync_id: undefined,
+            auto_sync_running: false,
             show_delay: false,
             show_modal: false,
             fields: ["checked", "amount", "category", "unit", "food", "recipe", "details"],
             loading: true,
             entrymode: false,
             new_item: { amount: 1, unit: undefined, food: undefined },
+            online: true,
         }
     },
     computed: {
@@ -341,22 +334,44 @@ export default {
         selected_supermarket(newVal, oldVal) {
             this.getShoppingList()
         },
+        autosync(newVal, oldVal) {
+            clearInterval(this.autosync_id)
+            this.autosync_id = undefined
+            if (!newVal) {
+                window.removeEventListener("online", this.updateOnlineStatus)
+                window.removeEventListener("offline", this.updateOnlineStatus)
+                return
+            } else if (oldVal === 0 && newVal > 0) {
+                console.log("adding listener")
+                window.addEventListener("online", this.updateOnlineStatus)
+                window.addEventListener("offline", this.updateOnlineStatus)
+            }
+            this.autosync_id = setInterval(() => {
+                if (this.online && !this.auto_sync_running) {
+                    console.log("interval", this.online && !this.auto_sync_running)
+                    this.auto_sync_running = true
+                    this.getShoppingList(true)
+                }
+            }, this.autosync * 1000)
+        },
     },
     mounted() {
-        // value is passed from lists.py
         this.getShoppingList()
         this.getSupermarkets()
         this.getShoppingCategories()
         this.delay = getUserPreference("default_delay") || 4
+        this.autosync = getUserPreference("shopping_auto_sync")
+        if (this.autosync) {
+            window.addEventListener("online", this.updateOnlineStatus)
+            window.addEventListener("offline", this.updateOnlineStatus)
+        }
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
         addItem() {
-            console.log(this.new_item)
             let api = new ApiApiFactory()
             api.createShoppingListEntry(this.new_item)
                 .then((results) => {
-                    console.log(results)
                     if (results?.data) {
                         this.items.push(results.data)
                         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
@@ -436,21 +451,28 @@ export default {
                 this.shopping_categories = result.data
             })
         },
-        getShoppingList: function(params = {}) {
-            this.loading = true
-            params = {
-                supermarket: this.selected_supermarket,
-            }
+        getShoppingList: function(autosync = false) {
+            let params = {}
+            params.supermarket = this.selected_supermarket
+
             params.options = { query: { recent: 1 } }
+            if (autosync) {
+                params.options.query["autosync"] = 1
+            } else {
+                this.loading = true
+            }
             this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params)
                 .then((results) => {
-                    console.log(results.data)
-                    if (results.data?.length) {
-                        this.items = results.data
+                    if (!autosync) {
+                        if (results.data?.length) {
+                            this.items = results.data
+                        } else {
+                            console.log("no data returned")
+                        }
+                        this.loading = false
                     } else {
-                        console.log("no data returned")
+                        this.mergeShoppingList(results.data)
                     }
-                    this.loading = false
                 })
                 .catch((err) => {
                     console.log(err)
@@ -461,14 +483,10 @@ export default {
             let api = new ApiApiFactory()
             api.listSupermarkets().then((result) => {
                 this.supermarkets = result.data
-                console.log(this.supermarkets)
             })
         },
         getThis: function(id) {
             return this.genericAPI(this.Models.SHOPPING_CATEGORY, this.Actions.FETCH, { id: id })
-        },
-        getRecipe: function(item) {
-            // change to get pop up card?  maybe same for unit and food?
         },
         ignoreThis: function(item) {
             let food = {
@@ -476,6 +494,18 @@ export default {
                 ignore_shopping: true,
             }
             this.updateFood(food, "ignore_shopping")
+        },
+        mergeShoppingList: function(data) {
+            console.log(data)
+            this.items.map((x) =>
+                data.map((y) => {
+                    if (y.id === x.id) {
+                        x.checked = y.checked
+                        return x
+                    }
+                })
+            )
+            this.auto_sync_running = false
         },
         moveEntry: function(e, item) {
             if (!e) {
@@ -536,7 +566,6 @@ export default {
                     })
                     .catch((err) => {
                         console.log(err, err.response)
-
                         StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
                     })
             }
@@ -546,15 +575,17 @@ export default {
         },
         updateChecked: function(update) {
             // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
-
             let promises = []
             update.entries.forEach((x) => {
-                console.log({ id: x, checked: update.checked })
                 promises.push(this.saveThis({ id: x, checked: update.checked }, false))
                 let item = this.items.filter((entry) => entry.id == x)[0]
 
                 Vue.set(item, "checked", update.checked)
-                Vue.set(item, "completed_at", new Date().toISOString())
+                if (update.checked) {
+                    Vue.set(item, "completed_at", new Date().toISOString())
+                } else {
+                    Vue.set(item, "completed_at", undefined)
+                }
             })
             Promise.all(promises).catch((err) => {
                 console.log(err, err.response)
@@ -597,6 +628,14 @@ export default {
                 this.getShoppingList()
             })
         },
+        updateOnlineStatus(e) {
+            const { type } = e
+            this.online = type === "online"
+        },
+        beforeDestroy() {
+            window.removeEventListener("online", this.updateOnlineStatus)
+            window.removeEventListener("offline", this.updateOnlineStatus)
+        },
     },
 }
 </script>
@@ -617,5 +656,9 @@ export default {
 .float-top {
     padding-bottom: -3em;
     margin-bottom: -3em;
+}
+.float-up {
+    padding-top: -3em;
+    margin-top: -3em;
 }
 </style>
