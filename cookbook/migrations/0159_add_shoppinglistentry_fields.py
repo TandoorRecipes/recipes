@@ -152,5 +152,10 @@ class Migration(migrations.Migration):
             name='shopping_recent_days',
             field=models.PositiveIntegerField(default=7),
         ),
+        migrations.AddField(
+            model_name='userpreference',
+            name='filter_to_supermarket',
+            field=models.BooleanField(default=False),
+        ),
         migrations.RunPython(copy_values_to_sle),
     ]
