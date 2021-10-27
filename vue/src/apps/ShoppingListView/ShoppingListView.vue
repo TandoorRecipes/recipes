@@ -1,8 +1,6 @@
 <template>
-    <!-- add alert at top if offline -->
-    <!-- get autosync time from preferences and put fetching checked items on timer -->
     <div id="app" style="margin-bottom: 4vh">
-        <b-alert :show="online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
+        <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
         <div class="row  float-top">
             <div class="offset-md-10 col-md-2 no-gutter text-right">
                 <b-button variant="link" class="px-0">
@@ -13,7 +11,9 @@
                 </b-button>
             </div>
         </div>
+
         <b-tabs content-class="mt-3">
+            <!-- shopping list tab -->
             <b-tab :title="$t('ShoppingList')" active>
                 <template #title> <b-spinner v-if="loading" type="border" small></b-spinner> {{ $t("ShoppingList") }} </template>
                 <div class="container">
@@ -82,6 +82,7 @@
                     </div>
                 </div>
             </b-tab>
+            <!-- recipe tab -->
             <b-tab :title="$t('Recipes')">
                 <table class="table w-75">
                     <thead>
@@ -104,15 +105,124 @@
                     </tr>
                 </table>
             </b-tab>
+            <!-- settings tab -->
             <b-tab :title="$t('Settings')">
-                These are the settings <br />-sort supermarket categories<br />
-                -add supermarket categories<br />
-                - add supermarkets autosync time<br />
-                autosync on/off<br />
-                always restrict supermarket to categories?<br />
-                when restricted or filterd - give visual indication<br />
-                how long to defer shopping - default tomorrow <br />
-                always override inheritance
+                <div class="row">
+                    <div class="col col-md-4 ">
+                        <b-card class="no-body">
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="checkbox" size="sm" v-model="settings.mealplan_autoadd_shopping" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">{{ $t("mealplan_autoadd_shopping_desc") }}</em>
+                                </div>
+                            </div>
+                            <div v-if="settings.mealplan_autoadd_shopping">
+                                <div class="row">
+                                    <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
+                                    <div class="col col-md-6 text-right">
+                                        <input type="checkbox" size="sm" v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings" />
+                                    </div>
+                                </div>
+                                <div class="row sm mb-3">
+                                    <div class="col">
+                                        <em class="small text-muted">{{ $t("mealplan_autoadd_shopping_desc") }}</em>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="settings.mealplan_autoadd_shopping">
+                                <div class="row">
+                                    <div class="col col-md-6">{{ $t("mealplan_autoinclude_related") }}</div>
+                                    <div class="col col-md-6 text-right">
+                                        <input type="checkbox" size="sm" v-model="settings.mealplan_autoinclude_related" @change="saveSettings" />
+                                    </div>
+                                </div>
+                                <div class="row sm mb-3">
+                                    <div class="col">
+                                        <em class="small text-muted">
+                                            {{ $t("mealplan_autoinclude_related_desc") }}
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("shopping_share") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <generic-multiselect
+                                        size="sm"
+                                        @change="
+                                            settings.shopping_share = $event.val
+                                            saveSettings()
+                                        "
+                                        :model="Models.USER"
+                                        :initial_selection="settings.shopping_share"
+                                        label="username"
+                                        :multiple="true"
+                                        :allow_create="false"
+                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                        :placeholder="$t('User')"
+                                    />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">{{ $t("shopping_share_desc") }}</em>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("shopping_auto_sync") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="number" size="sm" v-model="settings.shopping_auto_sync" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("shopping_auto_sync_desc") }}
+                                    </em>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("filter_to_supermarket") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="checkbox" size="sm" v-model="settings.filter_to_supermarket" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("filter_to_supermarket_desc") }}
+                                    </em>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("default_delay") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="number" size="sm" min="1" v-model="settings.default_delay" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("default_delay_desc") }}
+                                    </em>
+                                </div>
+                            </div>
+                        </b-card>
+                    </div>
+                    <div class="col col-md-8">
+                        <b-card class=" no-body">
+                            put the supermarket stuff here<br />
+                            -add supermarkets<br />
+                            -add supermarket categories<br />
+                            -sort supermarket categories<br />
+                        </b-card>
+                    </div>
+                </div>
             </b-tab>
         </b-tabs>
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
@@ -133,9 +243,10 @@
                     <b-form-checkbox v-model="supermarket_categories_only"></b-form-checkbox>
                 </b-form-group>
             </div>
-            <div class="row" style="margin-top: 1vh;min-width:300px">
-                <div class="col-12" style="text-align: right;">
-                    <b-button size="sm" variant="secondary" style="margin-right:20px" @click="$root.$emit('bv::hide::popover')">{{ $t("Close") }} </b-button>
+            <div class="row " style="margin-top: 1vh;min-width:300px">
+                <div class="col-12 " style="text-align: right;">
+                    <b-button size="sm" variant="primary" class="mx-1" @click="resetFilters">{{ $t("Reset") }} </b-button>
+                    <b-button size="sm" variant="secondary" class="mr-3" @click="$root.$emit('bv::hide::popover')">{{ $t("Close") }} </b-button>
                 </div>
             </div>
         </b-popover>
@@ -238,7 +349,15 @@ export default {
             supermarket_categories_only: false,
             shopcat: null,
             delay: 0,
-            autosync: 0,
+            settings: {
+                shopping_auto_sync: 0,
+                default_delay: 4,
+                mealplan_autoadd_shopping: false,
+                mealplan_autoinclude_related: false,
+                mealplan_autoexclude_onhand: true,
+                filter_to_supermarket: false,
+            },
+
             autosync_id: undefined,
             auto_sync_running: false,
             show_delay: false,
@@ -282,16 +401,16 @@ export default {
                 shopping_list = shopping_list.filter((x) => x?.food?.supermarket_category)
             }
 
-            const groups = { false: {}, true: {} } // force unchecked to always be first
+            let groups = { false: {}, true: {} } // force unchecked to always be first
             if (this.selected_supermarket) {
                 let super_cats = this.supermarkets
                     .filter((x) => x.id === this.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
                     .flat()
                     .map((x) => x.category.name)
-                new Set([...super_cats, ...this.shopping_categories.map((x) => x.name)]).foreach((cat) => {
-                    groups.false[cat.name] = {}
-                    groups.true[cat.name] = {}
+                new Set([...super_cats, ...this.shopping_categories.map((x) => x.name)]).forEach((cat) => {
+                    groups["false"][cat.name] = {}
+                    groups["true"][cat.name] = {}
                 })
             } else {
                 this.shopping_categories.forEach((cat) => {
@@ -324,7 +443,7 @@ export default {
             return this.items.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) > new Date(Date.now())).length < this.items.length
         },
         filterApplied() {
-            return (this.itemsDelayed && !this.show_delay) || !this.show_undefined_categories || this.supermarket_categories_only
+            return (this.itemsDelayed && !this.show_delay) || !this.show_undefined_categories || (this.supermarket_categories_only && this.selected_supermarket)
         },
         Recipes() {
             return [...new Map(this.items.filter((x) => x.list_recipe).map((item) => [item["list_recipe"], item])).values()]
@@ -332,9 +451,12 @@ export default {
     },
     watch: {
         selected_supermarket(newVal, oldVal) {
-            this.getShoppingList()
+            this.supermarket_categories_only = this.settings.filter_to_supermarket
         },
-        autosync(newVal, oldVal) {
+        "settings.filter_to_supermarket": function(newVal, oldVal) {
+            this.supermarket_categories_only = this.settings.filter_to_supermarket
+        },
+        "settings.shopping_auto_sync": function(newVal, oldVal) {
             clearInterval(this.autosync_id)
             this.autosync_id = undefined
             if (!newVal) {
@@ -342,26 +464,26 @@ export default {
                 window.removeEventListener("offline", this.updateOnlineStatus)
                 return
             } else if (oldVal === 0 && newVal > 0) {
-                console.log("adding listener")
                 window.addEventListener("online", this.updateOnlineStatus)
                 window.addEventListener("offline", this.updateOnlineStatus)
             }
             this.autosync_id = setInterval(() => {
                 if (this.online && !this.auto_sync_running) {
-                    console.log("interval", this.online && !this.auto_sync_running)
                     this.auto_sync_running = true
                     this.getShoppingList(true)
                 }
-            }, this.autosync * 1000)
+            }, this.settings.shopping_auto_sync * 1000)
         },
     },
     mounted() {
         this.getShoppingList()
         this.getSupermarkets()
         this.getShoppingCategories()
-        this.delay = getUserPreference("default_delay") || 4
-        this.autosync = getUserPreference("shopping_auto_sync")
-        if (this.autosync) {
+
+        this.settings = getUserPreference()
+        this.delay = this.settings.default_delay || 4
+        this.supermarket_categories_only = this.settings.filter_to_supermarket
+        if (this.settings.shopping_auto_sync) {
             window.addEventListener("online", this.updateOnlineStatus)
             window.addEventListener("offline", this.updateOnlineStatus)
         }
@@ -387,6 +509,13 @@ export default {
         },
         categoryName: function(value) {
             return this.shopping_categories.filter((x) => x.id == value)[0]?.name ?? ""
+        },
+        resetFilters: function() {
+            this.selected_supermarket = undefined
+            this.supermarket_categories_only = this.settings.filter_to_supermarket
+            this.show_undefined_categories = true
+            this.group_by = "category"
+            this.show_delay = false
         },
         delayThis: function(item) {
             let entries = []
@@ -476,7 +605,9 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    if (!autosync) {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    }
                 })
         },
         getSupermarkets: function() {
@@ -496,7 +627,6 @@ export default {
             this.updateFood(food, "ignore_shopping")
         },
         mergeShoppingList: function(data) {
-            console.log(data)
             this.items.map((x) =>
                 data.map((y) => {
                     if (y.id === x.id) {
@@ -540,6 +670,17 @@ export default {
         openContextMenu(e, value) {
             this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
             this.$refs.menu.open(e, value)
+        },
+        saveSettings: function() {
+            let api = ApiApiFactory()
+            api.partialUpdateUserPreference(this.settings.user, this.settings)
+                .then((result) => {
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                })
+                .catch((err) => {
+                    console.log(err)
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                })
         },
         saveThis: function(thisItem, toast = true) {
             let api = new ApiApiFactory()
