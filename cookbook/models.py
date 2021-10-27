@@ -17,6 +17,7 @@ from django.db import IntegrityError, models
 from django.db.models import Index, ProtectedError, Q, Subquery
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
+from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
@@ -328,6 +329,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
+    default_delay = models.IntegerField(default=4)
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
@@ -823,7 +825,7 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def get_owner(self):
         try:
-            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(), 'created_by', None)
+            return self.entries.first().created_by or self.shoppinglist_set.first().created_by
         except AttributeError:
             return None
 
@@ -839,11 +841,13 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+    delay_until = models.DateTimeField(null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    @ classmethod
+    @classmethod
+    @atomic
     def list_from_recipe(self, list_recipe=None, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None):
         """
         Creates ShoppingListRecipe and associated ShoppingListEntrys from a recipe or a meal plan with a recipe
@@ -853,22 +857,51 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
         :param servings: Optional: Number of servings to use to scale shoppinglist.  If servings = 0 an existing recipe list will be deleted
         :param ingredients: Ingredients, list of ingredient IDs to include on the shopping list.  When not provided all ingredients will be used
         """
-        # TODO cascade to associated recipes
-        try:
-            r = recipe or mealplan.recipe
-        except AttributeError:
+        # TODO cascade to related recipes
+        r = recipe or getattr(mealplan, 'recipe', None) or getattr(list_recipe, 'recipe', None)
+        if not r:
             raise ValueError(_("You must supply a recipe or mealplan"))
 
-        created_by = created_by or getattr(mealplan, 'created_by', None)
+        created_by = created_by or getattr(mealplan, 'created_by', None) or getattr(list_recipe, 'created_by', None)
         if not created_by:
             raise ValueError(_("You must supply a created_by"))
 
-        servings = servings or getattr(mealplan, 'servings', 1.0)
-        if ingredients:
+        if type(servings) not in [int, float]:
+            servings = getattr(mealplan, 'servings', 1.0)
+
+        shared_users = list(created_by.get_shopping_share())
+        shared_users.append(created_by)
+        if list_recipe:
+            created = False
+        else:
+            list_recipe = ShoppingListRecipe.objects.create(recipe=r, mealplan=mealplan, servings=servings)
+            created = True
+
+        if servings == 0 and not created:
+            list_recipe.delete()
+            return []
+        elif ingredients:
             ingredients = Ingredient.objects.filter(pk__in=ingredients, space=space)
         else:
             ingredients = Ingredient.objects.filter(step__recipe=r, space=space)
-        list_recipe = ShoppingListRecipe.objects.create(recipe=r, mealplan=mealplan, servings=servings)
+        existing_list = ShoppingListEntry.objects.filter(list_recipe=list_recipe)
+        # delete shopping list entries not included in ingredients
+        existing_list.exclude(ingredient__in=ingredients).delete()
+        # add shopping list entries that did not previously exist
+        add_ingredients = set(ingredients.values_list('id', flat=True)) - set(existing_list.values_list('ingredient__id', flat=True))
+        add_ingredients = Ingredient.objects.filter(id__in=add_ingredients, space=space)
+
+        # if servings have changed, update the ShoppingListRecipe and existing Entrys
+        if servings <= 0:
+            servings = 1
+        servings_factor = servings / r.servings
+        if not created and list_recipe.servings != servings:
+            update_ingredients = set(ingredients.values_list('id', flat=True)) - set(add_ingredients.values_list('id', flat=True))
+            for sle in ShoppingListEntry.objects.filter(list_recipe=list_recipe, ingredient__id__in=update_ingredients):
+                sle.amount = sle.ingredient.amount * Decimal(servings_factor)
+                sle.save()
+
+        # add any missing Entrys
         shoppinglist = [
             ShoppingListEntry(
                 list_recipe=list_recipe,
