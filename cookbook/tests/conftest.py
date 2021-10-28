@@ -43,7 +43,7 @@ def space_2():
 
 def get_random_recipe(space_1, u1_s1):
     r = Recipe.objects.create(
-        name=uuid.uuid4(),
+        name=str(uuid.uuid4()),
         waiting_time=20,
         working_time=20,
         servings=4,
