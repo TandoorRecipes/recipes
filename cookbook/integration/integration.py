@@ -3,7 +3,7 @@ import json
 import traceback
 import uuid
 from io import BytesIO, StringIO
-from zipfile import ZipFile, BadZipFile
+from zipfile import BadZipFile, ZipFile
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File

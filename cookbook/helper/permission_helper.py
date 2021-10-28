@@ -2,17 +2,17 @@
 Source: https://djangosnippets.org/snippets/1703/
 """
 from django.conf import settings
-from django.core.cache import caches
-
-from cookbook.models import ShareLink
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.core.cache import caches
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
+
+from cookbook.models import ShareLink
 
 
 def get_allowed_groups(groups_required):
@@ -79,7 +79,11 @@ def is_object_shared(user, obj):
     #      share checks for relevant objects
     if not user.is_authenticated:
         return False
-    return user in obj.get_shared()
+    if obj.__class__.__name__ == 'ShoppingListEntry':
+        # shopping lists are shared all or none and stored in user preferences
+        return obj.created_by in user.get_shopping_share()
+    else:
+        return user in obj.get_shared()
 
 
 def share_link_valid(recipe, share):

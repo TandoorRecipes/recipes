@@ -25,14 +25,7 @@
                             </h3>
                         </div>
                         <div class="col-md-3" style="position: relative; margin-top: 1vh">
-                            <b-form-checkbox
-                                v-model="show_split"
-                                name="check-button"
-                                v-if="paginated"
-                                class="shadow-none"
-                                style="position: relative; top: 50%; transform: translateY(-50%)"
-                                switch
-                            >
+                            <b-form-checkbox v-model="show_split" name="check-button" v-if="paginated" class="shadow-none" style="position: relative; top: 50%; transform: translateY(-50%)" switch>
                                 {{ $t("show_split_screen") }}
                             </b-form-checkbox>
                         </div>
@@ -42,46 +35,19 @@
                         <div class="col" :class="{ 'col-md-6': show_split }">
                             <!-- model isn't paginated and loads in one API call -->
                             <div v-if="!paginated">
-                                <generic-horizontal-card
-                                    v-for="i in items_left"
-                                    v-bind:key="i.id"
-                                    :item="i"
-                                    :model="this_model"
-                                    @item-action="startAction($event, 'left')"
-                                    @finish-action="finishAction"
-                                />
+                                <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id" :item="i" :model="this_model" @item-action="startAction($event, 'left')" @finish-action="finishAction" />
                             </div>
                             <!-- model is paginated and needs managed -->
                             <generic-infinite-cards v-if="paginated" :card_counts="left_counts" :scroll="show_split" @search="getItems($event, 'left')" @reset="resetList('left')">
                                 <template v-slot:cards>
-                                    <generic-horizontal-card
-                                        v-for="i in items_left"
-                                        v-bind:key="i.id"
-                                        :item="i"
-                                        :model="this_model"
-                                        @item-action="startAction($event, 'left')"
-                                        @finish-action="finishAction"
-                                    />
+                                    <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id" :item="i" :model="this_model" @item-action="startAction($event, 'left')" @finish-action="finishAction" />
                                 </template>
                             </generic-infinite-cards>
                         </div>
                         <div class="col col-md-6" v-if="show_split">
-                            <generic-infinite-cards
-                                v-if="this_model"
-                                :card_counts="right_counts"
-                                :scroll="show_split"
-                                @search="getItems($event, 'right')"
-                                @reset="resetList('right')"
-                            >
+                            <generic-infinite-cards v-if="this_model" :card_counts="right_counts" :scroll="show_split" @search="getItems($event, 'right')" @reset="resetList('right')">
                                 <template v-slot:cards>
-                                    <generic-horizontal-card
-                                        v-for="i in items_right"
-                                        v-bind:key="i.id"
-                                        :item="i"
-                                        :model="this_model"
-                                        @item-action="startAction($event, 'right')"
-                                        @finish-action="finishAction"
-                                    />
+                                    <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id" :item="i" :model="this_model" @item-action="startAction($event, 'right')" @finish-action="finishAction" />
                                 </template>
                             </generic-infinite-cards>
                         </div>
@@ -98,13 +64,12 @@ import { BootstrapVue } from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import { CardMixin, ApiMixin, getConfig } from "@/utils/utils"
-import { StandardToasts, ToastMixin } from "@/utils/utils"
+import { CardMixin, ApiMixin, getConfig, StandardToasts, getUserPreference, makeToast } from "@/utils/utils"
 
 import GenericInfiniteCards from "@/components/GenericInfiniteCards"
 import GenericHorizontalCard from "@/components/GenericHorizontalCard"
 import GenericModalForm from "@/components/Modals/GenericModalForm"
-import ModelMenu from "@/components/ModelMenu"
+import ModelMenu from "@/components/ContextMenu/ModelMenu"
 import { ApiApiFactory } from "@/utils/openapi/api"
 //import StorageQuota from "@/components/StorageQuota";
 
@@ -114,13 +79,8 @@ export default {
     // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available
     // or i'm capturing it incorrectly
     name: "ModelListView",
-    mixins: [CardMixin, ApiMixin, ToastMixin],
-    components: {
-        GenericHorizontalCard,
-        GenericModalForm,
-        GenericInfiniteCards,
-        ModelMenu,
-    },
+    mixins: [CardMixin, ApiMixin],
+    components: { GenericHorizontalCard, GenericModalForm, GenericInfiniteCards, ModelMenu },
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
@@ -236,6 +196,7 @@ export default {
             }
         },
         finishAction: function (e) {
+            let update = undefined
             switch (e?.action) {
                 case "save":
                     this.saveThis(e.form_data)
@@ -263,7 +224,7 @@ export default {
             }
             this.clearState()
         },
-        getItems: function (params, col) {
+        getItems: function (params = {}, col) {
             let column = col || "left"
             params.options = { query: { extended: 1 } } // returns extended values in API response
             this.genericAPI(this.this_model, this.Actions.LIST, params)

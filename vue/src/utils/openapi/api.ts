@@ -199,6 +199,12 @@ export interface Food {
     description?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Food
+     */
+    shopping?: string;
+    /**
+     * 
      * @type {FoodRecipe}
      * @memberof Food
      */
@@ -227,6 +233,74 @@ export interface Food {
      * @memberof Food
      */
     numchild?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    on_hand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    inherit?: boolean;
+    /**
+     * 
+     * @type {Array<FoodIgnoreInherit>}
+     * @memberof Food
+     */
+    ignore_inherit?: Array<FoodIgnoreInherit> | null;
+}
+/**
+ * 
+ * @export
+ * @interface FoodIgnoreInherit
+ */
+export interface FoodIgnoreInherit {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodIgnoreInherit
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodIgnoreInherit
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodIgnoreInherit
+     */
+    field?: string;
+}
+/**
+ * 
+ * @export
+ * @interface FoodInheritField
+ */
+export interface FoodInheritField {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodInheritField
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritField
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritField
+     */
+    field?: string;
 }
 /**
  * 
@@ -253,6 +327,46 @@ export interface FoodRecipe {
      */
     url?: string;
 }
+/**
+ * 
+ * @export
+ * @interface FoodShoppingUpdate
+ */
+export interface FoodShoppingUpdate {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodShoppingUpdate
+     */
+    id?: number;
+    /**
+     * Amount of food to add to the shopping list
+     * @type {number}
+     * @memberof FoodShoppingUpdate
+     */
+    amount?: number | null;
+    /**
+     * ID of unit to use for the shopping list
+     * @type {number}
+     * @memberof FoodShoppingUpdate
+     */
+    unit?: number | null;
+    /**
+     * When set to true will delete all food from active shopping lists.
+     * @type {string}
+     * @memberof FoodShoppingUpdate
+     */
+    _delete: FoodShoppingUpdateDeleteEnum;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum FoodShoppingUpdateDeleteEnum {
+    True = 'true'
+}
+
 /**
  * 
  * @export
@@ -387,18 +501,6 @@ export interface ImportLogKeyword {
      * @memberof ImportLogKeyword
      */
     numchild?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ImportLogKeyword
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ImportLogKeyword
-     */
-    updated_at?: string;
 }
 /**
  * 
@@ -414,10 +516,10 @@ export interface Ingredient {
     id?: number;
     /**
      * 
-     * @type {StepFood}
+     * @type {IngredientFood}
      * @memberof Ingredient
      */
-    food: StepFood | null;
+    food: IngredientFood | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -458,6 +560,85 @@ export interface Ingredient {
 /**
  * 
  * @export
+ * @interface IngredientFood
+ */
+export interface IngredientFood {
+    /**
+     * 
+     * @type {number}
+     * @memberof IngredientFood
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientFood
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientFood
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientFood
+     */
+    shopping?: string;
+    /**
+     * 
+     * @type {FoodRecipe}
+     * @memberof IngredientFood
+     */
+    recipe?: FoodRecipe | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    ignore_shopping?: boolean;
+    /**
+     * 
+     * @type {FoodSupermarketCategory}
+     * @memberof IngredientFood
+     */
+    supermarket_category?: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientFood
+     */
+    parent?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof IngredientFood
+     */
+    numchild?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    on_hand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    inherit?: boolean;
+    /**
+     * 
+     * @type {Array<FoodIgnoreInherit>}
+     * @memberof IngredientFood
+     */
+    ignore_inherit?: Array<FoodIgnoreInherit> | null;
+}
+/**
+ * 
+ * @export
  * @interface InlineResponse200
  */
 export interface InlineResponse200 {
@@ -481,10 +662,10 @@ export interface InlineResponse200 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<SyncLog>}
+     * @type {Array<CookLog>}
      * @memberof InlineResponse200
      */
-    results?: Array<SyncLog>;
+    results?: Array<CookLog>;
 }
 /**
  * 
@@ -512,10 +693,10 @@ export interface InlineResponse2001 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Keyword>}
+     * @type {Array<Food>}
      * @memberof InlineResponse2001
      */
-    results?: Array<Keyword>;
+    results?: Array<Food>;
 }
 /**
  * 
@@ -543,10 +724,10 @@ export interface InlineResponse2002 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Unit>}
+     * @type {Array<ImportLog>}
      * @memberof InlineResponse2002
      */
-    results?: Array<Unit>;
+    results?: Array<ImportLog>;
 }
 /**
  * 
@@ -574,10 +755,10 @@ export interface InlineResponse2003 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Food>}
+     * @type {Array<Keyword>}
      * @memberof InlineResponse2003
      */
-    results?: Array<Food>;
+    results?: Array<Keyword>;
 }
 /**
  * 
@@ -636,10 +817,10 @@ export interface InlineResponse2005 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<RecipeOverview>}
+     * @type {Array<Step>}
      * @memberof InlineResponse2005
      */
-    results?: Array<RecipeOverview>;
+    results?: Array<Step>;
 }
 /**
  * 
@@ -667,10 +848,10 @@ export interface InlineResponse2006 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ViewLog>}
+     * @type {Array<SupermarketCategoryRelation>}
      * @memberof InlineResponse2006
      */
-    results?: Array<ViewLog>;
+    results?: Array<SupermarketCategoryRelation>;
 }
 /**
  * 
@@ -698,10 +879,10 @@ export interface InlineResponse2007 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<CookLog>}
+     * @type {Array<SyncLog>}
      * @memberof InlineResponse2007
      */
-    results?: Array<CookLog>;
+    results?: Array<SyncLog>;
 }
 /**
  * 
@@ -729,10 +910,10 @@ export interface InlineResponse2008 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<SupermarketCategoryRelation>}
+     * @type {Array<Unit>}
      * @memberof InlineResponse2008
      */
-    results?: Array<SupermarketCategoryRelation>;
+    results?: Array<Unit>;
 }
 /**
  * 
@@ -760,10 +941,10 @@ export interface InlineResponse2009 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ImportLog>}
+     * @type {Array<ViewLog>}
      * @memberof InlineResponse2009
      */
-    results?: Array<ImportLog>;
+    results?: Array<ViewLog>;
 }
 /**
  * 
@@ -813,18 +994,6 @@ export interface Keyword {
      * @memberof Keyword
      */
     numchild?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Keyword
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Keyword
-     */
-    updated_at?: string;
 }
 /**
  * 
@@ -986,10 +1155,10 @@ export interface MealPlanRecipe {
     image?: any;
     /**
      * 
-     * @type {Array<RecipeOverviewKeywords>}
+     * @type {Array<MealPlanRecipeKeywords>}
      * @memberof MealPlanRecipe
      */
-    keywords: Array<RecipeOverviewKeywords>;
+    keywords: Array<MealPlanRecipeKeywords>;
     /**
      * 
      * @type {number}
@@ -1056,6 +1225,25 @@ export interface MealPlanRecipe {
      * @memberof MealPlanRecipe
      */
     _new?: string;
+}
+/**
+ * 
+ * @export
+ * @interface MealPlanRecipeKeywords
+ */
+export interface MealPlanRecipeKeywords {
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRecipeKeywords
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipeKeywords
+     */
+    label?: string;
 }
 /**
  * 
@@ -1253,10 +1441,10 @@ export interface RecipeBook {
     icon?: string | null;
     /**
      * 
-     * @type {Array<ShoppingListShared>}
+     * @type {Array<RecipeBookShared>}
      * @memberof RecipeBook
      */
-    shared: Array<ShoppingListShared>;
+    shared: Array<RecipeBookShared>;
     /**
      * 
      * @type {string}
@@ -1304,6 +1492,50 @@ export interface RecipeBookEntry {
 /**
  * 
  * @export
+ * @interface RecipeBookShared
+ */
+export interface RecipeBookShared {
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookShared
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBookShared
+     */
+    username?: string;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeFile
+ */
+export interface RecipeFile {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeFile
+     */
+    name: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof RecipeFile
+     */
+    file?: any;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeFile
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
  * @interface RecipeImage
  */
 export interface RecipeImage {
@@ -1313,6 +1545,61 @@ export interface RecipeImage {
      * @memberof RecipeImage
      */
     image?: any | null;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeIngredients
+ */
+export interface RecipeIngredients {
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeIngredients
+     */
+    id?: number;
+    /**
+     * 
+     * @type {IngredientFood}
+     * @memberof RecipeIngredients
+     */
+    food: IngredientFood | null;
+    /**
+     * 
+     * @type {FoodSupermarketCategory}
+     * @memberof RecipeIngredients
+     */
+    unit: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    amount: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    note?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeIngredients
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeIngredients
+     */
+    is_header?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeIngredients
+     */
+    no_amount?: boolean;
 }
 /**
  * 
@@ -1362,18 +1649,6 @@ export interface RecipeKeywords {
      * @memberof RecipeKeywords
      */
     numchild?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeKeywords
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeKeywords
-     */
-    updated_at?: string;
 }
 /**
  * 
@@ -1450,10 +1725,10 @@ export interface RecipeOverview {
     image?: any;
     /**
      * 
-     * @type {Array<RecipeOverviewKeywords>}
+     * @type {Array<MealPlanRecipeKeywords>}
      * @memberof RecipeOverview
      */
-    keywords: Array<RecipeOverviewKeywords>;
+    keywords: Array<MealPlanRecipeKeywords>;
     /**
      * 
      * @type {number}
@@ -1524,21 +1799,58 @@ export interface RecipeOverview {
 /**
  * 
  * @export
- * @interface RecipeOverviewKeywords
+ * @interface RecipeShoppingUpdate
  */
-export interface RecipeOverviewKeywords {
+export interface RecipeShoppingUpdate {
     /**
      * 
      * @type {number}
-     * @memberof RecipeOverviewKeywords
+     * @memberof RecipeShoppingUpdate
+     */
+    id?: number;
+    /**
+     * Existing shopping list to update
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
+     */
+    list_recipe?: number | null;
+    /**
+     * List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
+     */
+    ingredients?: number | null;
+    /**
+     * Providing a list_recipe ID and servings of 0 will delete that shopping list.
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
+     */
+    servings?: number | null;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeSimple
+ */
+export interface RecipeSimple {
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeSimple
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof RecipeOverviewKeywords
+     * @memberof RecipeSimple
      */
-    label?: string;
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeSimple
+     */
+    url?: string;
 }
 /**
  * 
@@ -1572,10 +1884,10 @@ export interface RecipeSteps {
     instruction?: string;
     /**
      * 
-     * @type {Array<StepIngredients>}
+     * @type {Array<RecipeIngredients>}
      * @memberof RecipeSteps
      */
-    ingredients: Array<StepIngredients>;
+    ingredients: Array<RecipeIngredients>;
     /**
      * 
      * @type {string}
@@ -1608,10 +1920,10 @@ export interface RecipeSteps {
     show_as_header?: boolean;
     /**
      * 
-     * @type {StepFile}
+     * @type {RecipeFile}
      * @memberof RecipeSteps
      */
-    file?: StepFile | null;
+    file?: RecipeFile | null;
     /**
      * 
      * @type {number}
@@ -1681,10 +1993,10 @@ export interface ShoppingList {
     entries: Array<ShoppingListEntries> | null;
     /**
      * 
-     * @type {Array<ShoppingListShared>}
+     * @type {Array<RecipeBookShared>}
      * @memberof ShoppingList
      */
-    shared: Array<ShoppingListShared>;
+    shared: Array<RecipeBookShared>;
     /**
      * 
      * @type {boolean}
@@ -1713,6 +2025,25 @@ export interface ShoppingList {
 /**
  * 
  * @export
+ * @interface ShoppingListCreatedBy
+ */
+export interface ShoppingListCreatedBy {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListCreatedBy
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListCreatedBy
+     */
+    username?: string;
+}
+/**
+ * 
+ * @export
  * @interface ShoppingListEntries
  */
 export interface ShoppingListEntries {
@@ -1724,22 +2055,34 @@ export interface ShoppingListEntries {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ShoppingListEntries
      */
-    list_recipe?: number | null;
+    list_recipe?: string;
     /**
      * 
-     * @type {StepFood}
+     * @type {IngredientFood}
      * @memberof ShoppingListEntries
      */
-    food: StepFood | null;
+    food: IngredientFood | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
      * @memberof ShoppingListEntries
      */
     unit?: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntries
+     */
+    ingredient?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntries
+     */
+    ingredient_note?: string;
     /**
      * 
      * @type {string}
@@ -1758,6 +2101,30 @@ export interface ShoppingListEntries {
      * @memberof ShoppingListEntries
      */
     checked?: boolean;
+    /**
+     * 
+     * @type {ShoppingListRecipeMealplan}
+     * @memberof ShoppingListEntries
+     */
+    recipe_mealplan?: ShoppingListRecipeMealplan;
+    /**
+     * 
+     * @type {ShoppingListCreatedBy}
+     * @memberof ShoppingListEntries
+     */
+    created_by?: ShoppingListCreatedBy;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntries
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntries
+     */
+    completed_at?: string;
 }
 /**
  * 
@@ -1773,22 +2140,34 @@ export interface ShoppingListEntry {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ShoppingListEntry
      */
-    list_recipe?: number | null;
+    list_recipe?: string;
     /**
      * 
-     * @type {StepFood}
+     * @type {IngredientFood}
      * @memberof ShoppingListEntry
      */
-    food: StepFood | null;
+    food: IngredientFood | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
      * @memberof ShoppingListEntry
      */
     unit?: FoodSupermarketCategory | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntry
+     */
+    ingredient?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntry
+     */
+    ingredient_note?: string;
     /**
      * 
      * @type {string}
@@ -1807,6 +2186,30 @@ export interface ShoppingListEntry {
      * @memberof ShoppingListEntry
      */
     checked?: boolean;
+    /**
+     * 
+     * @type {ShoppingListRecipeMealplan}
+     * @memberof ShoppingListEntry
+     */
+    recipe_mealplan?: ShoppingListRecipeMealplan;
+    /**
+     * 
+     * @type {ShoppingListCreatedBy}
+     * @memberof ShoppingListEntry
+     */
+    created_by?: ShoppingListCreatedBy;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntry
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntry
+     */
+    completed_at?: string;
 }
 /**
  * 
@@ -1822,22 +2225,77 @@ export interface ShoppingListRecipe {
     id?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ShoppingListRecipe
+     */
+    name?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ShoppingListRecipe
      */
     recipe?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListRecipe
      */
-    recipe_name?: string;
+    mealplan?: number | null;
     /**
      * 
      * @type {string}
      * @memberof ShoppingListRecipe
      */
     servings: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipe
+     */
+    mealplan_note?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ShoppingListRecipeMealplan
+ */
+export interface ShoppingListRecipeMealplan {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    recipe?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    mealplan?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    servings: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    mealplan_note?: string;
 }
 /**
  * 
@@ -1853,41 +2311,34 @@ export interface ShoppingListRecipes {
     id?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ShoppingListRecipes
+     */
+    name?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ShoppingListRecipes
      */
     recipe?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListRecipes
      */
-    recipe_name?: string;
+    mealplan?: number | null;
     /**
      * 
      * @type {string}
      * @memberof ShoppingListRecipes
      */
     servings: string;
-}
-/**
- * 
- * @export
- * @interface ShoppingListShared
- */
-export interface ShoppingListShared {
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListShared
-     */
-    id?: number;
     /**
      * 
      * @type {string}
-     * @memberof ShoppingListShared
+     * @memberof ShoppingListRecipes
      */
-    username?: string;
+    mealplan_note?: string;
 }
 /**
  * 
@@ -2008,10 +2459,10 @@ export interface Step {
     instruction?: string;
     /**
      * 
-     * @type {Array<StepIngredients>}
+     * @type {Array<RecipeIngredients>}
      * @memberof Step
      */
-    ingredients: Array<StepIngredients>;
+    ingredients: Array<RecipeIngredients>;
     /**
      * 
      * @type {string}
@@ -2044,10 +2495,10 @@ export interface Step {
     show_as_header?: boolean;
     /**
      * 
-     * @type {StepFile}
+     * @type {RecipeFile}
      * @memberof Step
      */
-    file?: StepFile | null;
+    file?: RecipeFile | null;
     /**
      * 
      * @type {number}
@@ -2079,141 +2530,6 @@ export enum StepTypeEnum {
     Recipe = 'RECIPE'
 }
 
-/**
- * 
- * @export
- * @interface StepFile
- */
-export interface StepFile {
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFile
-     */
-    name: string;
-    /**
-     * 
-     * @type {any}
-     * @memberof StepFile
-     */
-    file?: any;
-    /**
-     * 
-     * @type {number}
-     * @memberof StepFile
-     */
-    id?: number;
-}
-/**
- * 
- * @export
- * @interface StepFood
- */
-export interface StepFood {
-    /**
-     * 
-     * @type {number}
-     * @memberof StepFood
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFood
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFood
-     */
-    description?: string;
-    /**
-     * 
-     * @type {FoodRecipe}
-     * @memberof StepFood
-     */
-    recipe?: FoodRecipe | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepFood
-     */
-    ignore_shopping?: boolean;
-    /**
-     * 
-     * @type {FoodSupermarketCategory}
-     * @memberof StepFood
-     */
-    supermarket_category?: FoodSupermarketCategory | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepFood
-     */
-    parent?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof StepFood
-     */
-    numchild?: number;
-}
-/**
- * 
- * @export
- * @interface StepIngredients
- */
-export interface StepIngredients {
-    /**
-     * 
-     * @type {number}
-     * @memberof StepIngredients
-     */
-    id?: number;
-    /**
-     * 
-     * @type {StepFood}
-     * @memberof StepIngredients
-     */
-    food: StepFood | null;
-    /**
-     * 
-     * @type {FoodSupermarketCategory}
-     * @memberof StepIngredients
-     */
-    unit: FoodSupermarketCategory | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepIngredients
-     */
-    amount: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StepIngredients
-     */
-    note?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof StepIngredients
-     */
-    order?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepIngredients
-     */
-    is_header?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof StepIngredients
-     */
-    no_amount?: boolean;
-}
 /**
  * 
  * @export
@@ -2588,6 +2904,18 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     comments?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserPreference
+     */
+    shopping_auto_sync?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    mealplan_autoadd_shopping?: boolean;
 }
 
 /**
@@ -4485,6 +4813,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listFoodInheritFields: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food-inherit-field/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} [query] Query string matched against food name.
          * @param {number} [root] Return first level children of food with ID [int].  Integer 0 will return root foods.
          * @param {number} [tree] Return all self and children of food with ID [int].
@@ -4778,24 +5135,23 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-         * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
-         * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
-         * @param {number} [units] Id of unit a recipe should have.
-         * @param {number} [rating] Id of unit a recipe should have.
-         * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
-         * @param {string} [steps] Id of a step a recipe should have. For multiple repeat parameter.
-         * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
-         * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
-         * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
-         * @param {string} [internal] true or false. If only internal recipes should be returned or not.
-         * @param {string} [random] true or false. returns the results in randomized order.
-         * @param {string} [_new] true or false. returns new results first in search results
+         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+         * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [units] ID of unit a recipe should have.
+         * @param {number} [rating] Rating a recipe should have. [0 - 5]
+         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
+         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
+         * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (query?: string, keywords?: string, foods?: string, units?: number, rating?: number, books?: string, steps?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4881,10 +5237,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listShoppingListEntrys: async (options: any = {}): Promise<RequestArgs> => {
+        listShoppingListEntrys: async (id?: number, checked?: string, supermarket?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/shopping-list-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4896,6 +5255,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+            if (checked !== undefined) {
+                localVarQueryParameter['checked'] = checked;
+            }
+
+            if (supermarket !== undefined) {
+                localVarQueryParameter['supermarket'] = supermarket;
+            }
 
 
     
@@ -4968,13 +5339,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} [query] Query string matched (fuzzy) against object name.
+         * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSteps: async (query?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listSteps: async (recipe?: number, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/step/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4987,8 +5358,8 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (query !== undefined) {
-                localVarQueryParameter['query'] = query;
+            if (recipe !== undefined) {
+                localVarQueryParameter['recipe'] = recipe;
             }
 
             if (page !== undefined) {
@@ -6528,6 +6899,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this recipe.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        relatedRecipe: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('relatedRecipe', 'id', id)
+            const localVarPath = `/api/recipe/{id}/related/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6635,6 +7039,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('retrieveFood', 'id', id)
             const localVarPath = `/api/food/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food inherit field.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveFoodInheritField: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveFoodInheritField', 'id', id)
+            const localVarPath = `/api/food-inherit-field/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7411,6 +7848,80 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shoppingFood: async (id: string, foodShoppingUpdate?: FoodShoppingUpdate, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('shoppingFood', 'id', id)
+            const localVarPath = `/api/food/{id}/shopping/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(foodShoppingUpdate, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this recipe.
+         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shoppingRecipe: async (id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('shoppingRecipe', 'id', id)
+            const localVarPath = `/api/recipe/{id}/shopping/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeShoppingUpdate, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8913,8 +9424,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCookLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2007>> {
+        async listCookLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listCookLogs(page, pageSize, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listFoodInheritFields(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<FoodInheritField>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listFoodInheritFields(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8927,7 +9447,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
+        async listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFoods(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -8938,7 +9458,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listImportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2009>> {
+        async listImportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2002>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listImportLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -8961,7 +9481,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKeywords(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9004,34 +9524,36 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-         * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
-         * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
-         * @param {number} [units] Id of unit a recipe should have.
-         * @param {number} [rating] Id of unit a recipe should have.
-         * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
-         * @param {string} [steps] Id of a step a recipe should have. For multiple repeat parameter.
-         * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
-         * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
-         * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
-         * @param {string} [internal] true or false. If only internal recipes should be returned or not.
-         * @param {string} [random] true or false. returns the results in randomized order.
-         * @param {string} [_new] true or false. returns new results first in search results
+         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+         * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [units] ID of unit a recipe should have.
+         * @param {number} [rating] Rating a recipe should have. [0 - 5]
+         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
+         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
+         * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: string, foods?: string, units?: number, rating?: number, books?: string, steps?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, units, rating, books, steps, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, units, rating, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
+         * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listShoppingListEntrys(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listShoppingListEntrys(options);
+        async listShoppingListEntrys(id?: number, checked?: string, supermarket?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListEntry>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listShoppingListEntrys(id, checked, supermarket, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9054,14 +9576,14 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [query] Query string matched (fuzzy) against object name.
+         * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSteps(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSteps(query, page, pageSize, options);
+        async listSteps(recipe?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSteps(recipe, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9080,7 +9602,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2008>> {
+        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2006>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategoryRelations(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9109,7 +9631,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSyncLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+        async listSyncLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2007>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSyncLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9130,7 +9652,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2002>> {
+        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2008>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUnits(query, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9168,7 +9690,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2006>> {
+        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2009>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9512,6 +10034,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this recipe.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async relatedRecipe(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeSimple>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.relatedRecipe(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9548,6 +10080,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveFood(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveFood(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food inherit field.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveFoodInheritField(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodInheritField>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveFoodInheritField(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9778,6 +10320,28 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveViewLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveViewLog(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async shoppingFood(id: string, foodShoppingUpdate?: FoodShoppingUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodShoppingUpdate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.shoppingFood(id, foodShoppingUpdate, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this recipe.
+         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async shoppingRecipe(id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeShoppingUpdate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.shoppingRecipe(id, recipeShoppingUpdate, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10554,8 +11118,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCookLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2007> {
+        listCookLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
             return localVarFp.listCookLogs(page, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listFoodInheritFields(options?: any): AxiosPromise<Array<FoodInheritField>> {
+            return localVarFp.listFoodInheritFields(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10567,7 +11139,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
+        listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
             return localVarFp.listFoods(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10577,7 +11149,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listImportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2009> {
+        listImportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2002> {
             return localVarFp.listImportLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10598,7 +11170,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
             return localVarFp.listKeywords(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10636,33 +11208,35 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-         * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
-         * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
-         * @param {number} [units] Id of unit a recipe should have.
-         * @param {number} [rating] Id of unit a recipe should have.
-         * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
-         * @param {string} [steps] Id of a step a recipe should have. For multiple repeat parameter.
-         * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
-         * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
-         * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
-         * @param {string} [internal] true or false. If only internal recipes should be returned or not.
-         * @param {string} [random] true or false. returns the results in randomized order.
-         * @param {string} [_new] true or false. returns new results first in search results
+         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+         * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [units] ID of unit a recipe should have.
+         * @param {number} [rating] Rating a recipe should have. [0 - 5]
+         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
+         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
+         * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: string, foods?: string, units?: number, rating?: number, books?: string, steps?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
-            return localVarFp.listRecipes(query, keywords, foods, units, rating, books, steps, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
+            return localVarFp.listRecipes(query, keywords, foods, units, rating, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
+         * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listShoppingListEntrys(options?: any): AxiosPromise<Array<ShoppingListEntry>> {
-            return localVarFp.listShoppingListEntrys(options).then((request) => request(axios, basePath));
+        listShoppingListEntrys(id?: number, checked?: string, supermarket?: number, options?: any): AxiosPromise<Array<ShoppingListEntry>> {
+            return localVarFp.listShoppingListEntrys(id, checked, supermarket, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10682,14 +11256,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} [query] Query string matched (fuzzy) against object name.
+         * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSteps(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
-            return localVarFp.listSteps(query, page, pageSize, options).then((request) => request(axios, basePath));
+        listSteps(recipe?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
+            return localVarFp.listSteps(recipe, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10706,7 +11280,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2008> {
+        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2006> {
             return localVarFp.listSupermarketCategoryRelations(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10732,7 +11306,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSyncLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
+        listSyncLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2007> {
             return localVarFp.listSyncLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10751,7 +11325,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2002> {
+        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2008> {
             return localVarFp.listUnits(query, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10785,7 +11359,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2006> {
+        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2009> {
             return localVarFp.listViewLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11098,6 +11672,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this recipe.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        relatedRecipe(id: string, options?: any): AxiosPromise<RecipeSimple> {
+            return localVarFp.relatedRecipe(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11131,6 +11714,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveFood(id: string, options?: any): AxiosPromise<Food> {
             return localVarFp.retrieveFood(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food inherit field.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveFoodInheritField(id: string, options?: any): AxiosPromise<FoodInheritField> {
+            return localVarFp.retrieveFoodInheritField(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11338,6 +11930,26 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveViewLog(id: string, options?: any): AxiosPromise<ViewLog> {
             return localVarFp.retrieveViewLog(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food.
+         * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shoppingFood(id: string, foodShoppingUpdate?: FoodShoppingUpdate, options?: any): AxiosPromise<FoodShoppingUpdate> {
+            return localVarFp.shoppingFood(id, foodShoppingUpdate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this recipe.
+         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        shoppingRecipe(id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any): AxiosPromise<RecipeShoppingUpdate> {
+            return localVarFp.shoppingRecipe(id, recipeShoppingUpdate, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12201,6 +12813,16 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listFoodInheritFields(options?: any) {
+        return ApiApiFp(this.configuration).listFoodInheritFields(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} [query] Query string matched against food name.
      * @param {number} [root] Return first level children of food with ID [int].  Integer 0 will return root foods.
      * @param {number} [tree] Return all self and children of food with ID [int].
@@ -12294,36 +12916,38 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-     * @param {string} [keywords] Id of keyword a recipe should have. For multiple repeat parameter.
-     * @param {string} [foods] Id of food a recipe should have. For multiple repeat parameter.
-     * @param {number} [units] Id of unit a recipe should have.
-     * @param {number} [rating] Id of unit a recipe should have.
-     * @param {string} [books] Id of book a recipe should have. For multiple repeat parameter.
-     * @param {string} [steps] Id of a step a recipe should have. For multiple repeat parameter.
-     * @param {string} [keywordsOr] If recipe should have all (AND) or any (OR) of the provided keywords.
-     * @param {string} [foodsOr] If recipe should have all (AND) or any (OR) any of the provided foods.
-     * @param {string} [booksOr] If recipe should be in all (AND) or any (OR) any of the provided books.
-     * @param {string} [internal] true or false. If only internal recipes should be returned or not.
-     * @param {string} [random] true or false. returns the results in randomized order.
-     * @param {string} [_new] true or false. returns new results first in search results
+     * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+     * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+     * @param {number} [units] ID of unit a recipe should have.
+     * @param {number} [rating] Rating a recipe should have. [0 - 5]
+     * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+     * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
+     * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
+     * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+     * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(query?: string, keywords?: string, foods?: string, units?: number, rating?: number, books?: string, steps?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, units, rating, books, steps, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, units, rating, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
+     * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+     * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+     * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listShoppingListEntrys(options?: any) {
-        return ApiApiFp(this.configuration).listShoppingListEntrys(options).then((request) => request(this.axios, this.basePath));
+    public listShoppingListEntrys(id?: number, checked?: string, supermarket?: number, options?: any) {
+        return ApiApiFp(this.configuration).listShoppingListEntrys(id, checked, supermarket, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12348,15 +12972,15 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [query] Query string matched (fuzzy) against object name.
+     * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listSteps(query?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listSteps(query, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listSteps(recipe?: number, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listSteps(recipe, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12848,6 +13472,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this recipe.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public relatedRecipe(id: string, options?: any) {
+        return ApiApiFp(this.configuration).relatedRecipe(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this automation.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -12888,6 +13523,17 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveFood(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveFood(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food inherit field.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveFoodInheritField(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveFoodInheritField(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13141,6 +13787,30 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveViewLog(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveViewLog(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food.
+     * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public shoppingFood(id: string, foodShoppingUpdate?: FoodShoppingUpdate, options?: any) {
+        return ApiApiFp(this.configuration).shoppingFood(id, foodShoppingUpdate, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this recipe.
+     * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public shoppingRecipe(id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any) {
+        return ApiApiFp(this.configuration).shoppingRecipe(id, recipeShoppingUpdate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

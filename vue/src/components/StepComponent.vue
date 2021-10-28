@@ -38,12 +38,11 @@
           <div class="col col-md-4"
                v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
             <table class="table table-sm">
-              <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-              <template v-for="i in step.ingredients">
-                <Ingredient-component v-bind:ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
-                            @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient-component>
-              </template>
-              <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+              <ingredients-card 
+                :steps="[step]"
+                :ingredient_factor="ingredient_factor"
+                @checked-state-changed="$emit('checked-state-changed', $event)"
+              />
             </table>
           </div>
           <div class="col" :class="{ 'col-md-8':  recipe.steps.length > 1, 'col-md-12':  recipe.steps.length <= 1,}">
@@ -161,6 +160,7 @@ import {calculateAmount} from "@/utils/utils";
 import {GettextMixin} from "@/utils/utils";
 
 import CompileComponent from "@/components/CompileComponent";
+import IngredientsCard from "@/components/IngredientsCard";
 import Vue from "vue";
 import moment from "moment";
 import {ResolveUrlMixin} from "@/utils/utils";
@@ -174,10 +174,7 @@ export default {
     GettextMixin,
     ResolveUrlMixin,
   ],
-  components: {
-    IngredientComponent,
-    CompileComponent,
-  },
+  components: { CompileComponent, IngredientsCard},
   props: {
     step: Object,
     ingredient_factor: Number,

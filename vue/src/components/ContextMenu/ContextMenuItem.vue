@@ -1,16 +1,13 @@
 <template>
-  <li @click="$emit('click', $event)" role="presentation">
-    <slot/>
-  </li>
+    <li @click="$emit('click', $event)" role="presentation">
+        <slot />
+    </li>
 </template>
 
 <script>
 export default {
-  name: "ContextMenuItem.vue",
+    name: "ContextMenuItem.vue",
 }
 </script>
 
-<style scoped>
-
-</style>
-
+<style scoped></style>
