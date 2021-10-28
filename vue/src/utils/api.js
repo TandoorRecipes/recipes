@@ -1,6 +1,7 @@
 import axios from "axios";
 import {djangoGettext as _, makeToast} from "@/utils/utils";
 import {resolveDjangoUrl} from "@/utils/utils";
+import {ApiApiFactory} from "@/utils/openapi/api.ts";
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -48,3 +49,7 @@ function handleError(error, message) {
         console.log(error)
     }
 }
+
+/*
+* Generic class to use OpenAPIs with parameters and provide generic modals
+* */

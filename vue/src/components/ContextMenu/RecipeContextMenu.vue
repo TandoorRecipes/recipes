@@ -26,7 +26,11 @@
           <i class="fas fa-shopping-cart fa-fw"></i> {{ $t('Add_to_Shopping') }}
         </a>
 
-        <a class="dropdown-item" @click="createMealPlan" href="javascript:void(0);"><i
+        <a class="dropdown-item" v-if="recipe.internal" @click="addToShopping" href="#">
+          <i class="fas fa-shopping-cart fa-fw"></i> New {{ $t('Add_to_Shopping') }}
+        </a>
+
+        <a class="dropdown-item" @click="createMealPlan" href="#"><i
             class="fas fa-calendar fa-fw"></i> {{ $t('Add_to_Plan') }}
         </a>
 
@@ -76,6 +80,7 @@
     <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial_recipe="[recipe]"
                           :entry-editing_initial_meal_type="[]" @save-entry="saveMealPlan"
                           :modal_id="`modal-meal-plan_${modal_id}`" :allow_delete="false" :modal_title="$t('Create_Meal_Plan_Entry')"></meal-plan-edit-modal>
+    <shopping-modal :recipe="recipe" :servings="servings_value" :modal_id="modal_id"/>
   </div>
 </template>
 
@@ -84,8 +89,9 @@
 import {makeToast, resolveDjangoUrl, ResolveUrlMixin, StandardToasts} from "@/utils/utils";
 import CookLog from "@/components/CookLog";
 import axios from "axios";
-import AddRecipeToBook from "./AddRecipeToBook";
-import MealPlanEditModal from "@/components/MealPlanEditModal";
+import AddRecipeToBook from "@/components/Modals/AddRecipeToBook";
+import MealPlanEditModal from "@/components/Modals/MealPlanEditModal";
+import ShoppingModal from "@/components/Modals/ShoppingModal";
 import moment from "moment";
 import Vue from "vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
@@ -100,7 +106,8 @@ export default {
   components: {
     AddRecipeToBook,
     CookLog,
-    MealPlanEditModal
+    MealPlanEditModal,
+    ShoppingModal
   },
   data() {
     return {
@@ -118,7 +125,7 @@ export default {
           servings: 1,
           shared: [],
           title: '',
-          title_placeholder: this.$t('Title')
+          title_placeholder: this.$t('Title'),
         }
       },
       entryEditing: {},
@@ -177,7 +184,10 @@ export default {
         url: this.recipe_share_link
       }
       navigator.share(shareData)
-    }
+    },
+    addToShopping() {
+      this.$bvModal.show(`shopping_${this.modal_id}`)
+    },
   }
 }
 </script>

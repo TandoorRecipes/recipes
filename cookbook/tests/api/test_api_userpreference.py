@@ -1,11 +1,11 @@
-from cookbook.models import UserPreference
-
 import json
 
 import pytest
 from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
+
+from cookbook.models import UserPreference
 
 LIST_URL = 'api:userpreference-list'
 DETAIL_URL = 'api:userpreference-detail'
@@ -109,3 +109,6 @@ def test_preference_delete(u1_s1, u2_s1):
         )
     )
     assert r.status_code == 204
+
+
+# TODO test existance of default food_inherit fields, test multiple users same space work and users in difference space do not

@@ -37,8 +37,8 @@ const pages = {
         entry: "./src/apps/MealPlanView/main.js",
         chunks: ["chunk-vendors"],
     },
-    checklist_view: {
-        entry: "./src/apps/ChecklistView/main.js",
+    shopping_list_view: {
+        entry: "./src/apps/ShoppingListView/main.js",
         chunks: ["chunk-vendors"],
     },
 }
@@ -47,7 +47,7 @@ module.exports = {
     pages: pages,
     filenameHashing: false,
     productionSourceMap: false,
-    publicPath: process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/",
+    publicPath: process.env.NODE_ENV === "production" ? "/static/vue" : "http://localhost:8080/",
     outputDir: "../cookbook/static/vue/",
     runtimeCompiler: true,
     pwa: {
@@ -90,17 +90,8 @@ module.exports = {
                 },
             },
             // TODO make this conditional on .env DEBUG = FALSE
-            config.optimization.minimize(true)
+            config.optimization.minimize(false)
         )
-
-        //TODO somehow remov them as they are also added to the manifest config of the service worker
-        /*
-        Object.keys(pages).forEach(page => {
-            config.plugins.delete(`html-${page}`);
-            config.plugins.delete(`preload-${page}`);
-            config.plugins.delete(`prefetch-${page}`);
-        })
-        */
 
         config.plugin("BundleTracker").use(BundleTracker, [{ relativePath: true, path: "../vue/" }])
 

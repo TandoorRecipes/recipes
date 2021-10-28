@@ -629,7 +629,6 @@ export default {
 
       apiFactory.updateRecipe(this.recipe_id, this.recipe,
           {}).then((response) => {
-        console.log(response)
         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         this.recipe_changed = false
         if (view_after) {

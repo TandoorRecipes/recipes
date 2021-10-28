@@ -655,6 +655,7 @@
                             if (this.shopping_list.entries.length === 0) {
                                 this.edit_mode = true
                             }
+                            console.log(response.data)
                         }).catch((err) => {
                             console.log(err)
                             this.makeToast(gettext('Error'), gettext("There was an error loading a resource!") + err.bodyText, 'danger')

@@ -92,13 +92,13 @@
         <i class="fas fa-times fa-fw"></i> <b>{{$t('Cancel')}}</b>
       </b-list-group-item>
       <!-- TODO add to shopping list -->
-      <!-- TODO add to and/or manage pantry -->
+      <!-- TODO toggle onhand -->
     </b-list-group>
   </div>
 </template>
 
 <script>
-import GenericContextMenu from "@/components/GenericContextMenu";
+import GenericContextMenu from "@/components/ContextMenu/GenericContextMenu";
 import Badges from "@/components/Badges";
 import GenericPill from "@/components/GenericPill";
 import GenericOrderedPill from "@/components/GenericOrderedPill";

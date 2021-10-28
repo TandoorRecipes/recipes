@@ -1,6 +1,6 @@
 <template>
   <span>
-    <b-button v-if="item.icon" class=" btn p-0 border-0" variant="link">
+    <b-button v-if="item.icon" class=" btn px-1 py-0 border-0 text-decoration-none" variant="link">
         {{item.icon}}
     </b-button>
   </span>

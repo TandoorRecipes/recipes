@@ -38,21 +38,25 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, ImportLog, Ingredient,
-                             Keyword, MealPlan, MealType, Recipe, RecipeBook, RecipeBookEntry,
-                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Step,
-                             Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                             Sync, SyncLog, Unit, UserFile, UserPreference, ViewLog)
+from cookbook.helper.shopping_helper import shopping_helper
+from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
+                             ImportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+                             RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
+                             ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
+                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
+                             UserPreference, ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
-                                 CookLogSerializer, FoodSerializer, ImportLogSerializer,
+                                 CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
+                                 FoodShoppingUpdateSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookEntrySerializer,
                                  RecipeBookSerializer, RecipeImageSerializer,
                                  RecipeOverviewSerializer, RecipeSerializer,
+                                 RecipeShoppingUpdateSerializer, RecipeSimpleSerializer,
                                  ShoppingListAutoSyncSerializer, ShoppingListEntrySerializer,
                                  ShoppingListRecipeSerializer, ShoppingListSerializer,
                                  StepSerializer, StorageSerializer,
@@ -359,8 +363,7 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
+        return self.queryset.filter(space=self.request.space)
 
 
 class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
@@ -390,12 +393,39 @@ class UnitViewSet(viewsets.ModelViewSet, MergeMixin, FuzzyFilterMixin):
     pagination_class = DefaultPagination
 
 
+class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = FoodInheritField.objects
+    serializer_class = FoodInheritFieldSerializer
+    permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        # exclude fields not yet implemented
+        return Food.inherit_fields
+
+
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
+
+    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
+    def shopping(self, request, pk):
+        obj = self.get_object()
+        shared_users = list(self.request.user.get_shopping_share())
+        shared_users.append(request.user)
+        if request.data.get('_delete', False) == 'true':
+            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by__in=shared_users).delete()
+            content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
+            return Response(content, status=status.HTTP_204_NO_CONTENT)
+
+        amount = request.data.get('amount', 1)
+        unit = request.data.get('unit', None)
+        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
+
+        ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space, created_by=request.user)
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, *args, **kwargs):
         try:
@@ -547,27 +577,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = RecipePagination
     # TODO the boolean params below (keywords_or through new) should be updated to boolean types with front end refactored accordingly
     query_params = [
-        QueryParam(name='query', description=_(
-            'Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
-        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter.'),
-                   qtype='int'),
-        QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'),
-                   qtype='int'),
+        QueryParam(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
+        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter.'), qtype='int'),
+        QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), qtype='int'),
         QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
         QueryParam(name='rating', description=_('Rating a recipe should have. [0 - 5]'), qtype='int'),
         QueryParam(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
-        QueryParam(name='keywords_or', description=_(
-            'If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided keywords.')),
-        QueryParam(name='foods_or', description=_(
-            'If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided foods.')),
-        QueryParam(name='books_or', description=_(
-            'If recipe should be in all (AND=''false'') or any (OR=''<b>true</b>'') of the provided books.')),
-        QueryParam(name='internal',
-                   description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
-        QueryParam(name='random',
-                   description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
-        QueryParam(name='new',
-                   description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
+        QueryParam(name='keywords_or', description=_('If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided keywords.')),
+        QueryParam(name='foods_or', description=_('If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided foods.')),
+        QueryParam(name='books_or', description=_('If recipe should be in all (AND=''false'') or any (OR=''<b>true</b>'') of the provided books.')),
+        QueryParam(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
+        QueryParam(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
+        QueryParam(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
     ]
     schema = QueryParamAutoSchema()
 
@@ -625,16 +646,49 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, 400)
 
+    @decorators.action(
+        detail=True,
+        methods=['PUT'],
+        serializer_class=RecipeShoppingUpdateSerializer,
+    )
+    def shopping(self, request, pk):
+        obj = self.get_object()
+        ingredients = request.data.get('ingredients', None)
+        servings = request.data.get('servings', obj.servings)
+        list_recipe = request.data.get('list_recipe', None)
+        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
+        # TODO: Consider if this should be a Recipe method
+        ShoppingListEntry.list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=request.user)
 
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
+
+    @decorators.action(
+        detail=True,
+        methods=['GET'],
+        serializer_class=RecipeSimpleSerializer
+    )
+    def related(self, request, pk):
+        obj = self.get_object()
+        if obj.get_space() != request.space:
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+        qs = obj.get_related_recipes(levels=2)  # TODO: make levels a user setting, included in request data, keep solely in the backend?
+        return Response(self.serializer_class(qs, many=True).data)
+
+
+# TODO deprecate
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
     permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
+        self.queryset = self.queryset.filter(Q(shoppinglist__space=self.request.space) | Q(entries__space=self.request.space))
         return self.queryset.filter(
-            Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
-            shoppinglist__space=self.request.space).distinct().all()
+            Q(shoppinglist__created_by=self.request.user)
+            | Q(shoppinglist__shared=self.request.user)
+            | Q(entries__created_by=self.request.user)
+            | Q(entries__created_by__in=list(self.request.user.get_shopping_share()))
+        ).distinct().all()
 
 
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
@@ -642,35 +696,46 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [CustomIsOwner | CustomIsShared]
     query_params = [
-        QueryParam(name='id',
-                   description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'),
-                   qtype='int'),
+        QueryParam(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), qtype='int'),
         QueryParam(
             name='checked',
-            description=_(
-                'Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
+            description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
         ),
-        QueryParam(name='supermarket',
-                   description=_('Returns the shopping list entries sorted by supermarket category order.'),
-                   qtype='int'),
+        QueryParam(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), qtype='int'),
     ]
     schema = QueryParamAutoSchema()
 
     def get_queryset(self):
-        return self.queryset.filter(
-            Q(shoppinglist__created_by=self.request.user) | Q(shoppinglist__shared=self.request.user)).filter(
-            shoppinglist__space=self.request.space).distinct().all()
+        self.queryset = self.queryset.filter(space=self.request.space)
+
+        self.queryset = self.queryset.filter(
+            Q(created_by=self.request.user)
+            | Q(shoppinglist__shared=self.request.user)
+            | Q(created_by__in=list(self.request.user.get_shopping_share()))
+        ).distinct().all()
+
+        if pk := self.request.query_params.getlist('id', []):
+            self.queryset = self.queryset.filter(food__id__in=[int(i) for i in pk])
+
+        if bool(int(self.request.query_params.get('recent', False))):
+            return shopping_helper(self.queryset, self.request)
+
+        # TODO once old shopping list is removed this needs updated to sharing users in preferences
+        return self.queryset
 
 
+# TODO deprecate
 class ShoppingListViewSet(viewsets.ModelViewSet):
     queryset = ShoppingList.objects
     serializer_class = ShoppingListSerializer
     permission_classes = [CustomIsOwner | CustomIsShared]
 
+    # TODO update to include settings shared user - make both work for a period of time
     def get_queryset(self):
         return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
 
+    # TODO deprecate
     def get_serializer_class(self):
         try:
             autosync = self.request.query_params.get('autosync', False)
