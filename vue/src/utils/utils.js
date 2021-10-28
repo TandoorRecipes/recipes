@@ -16,6 +16,7 @@ import Vue from "vue"
 import { Actions, Models } from "./models"
 
 export const ToastMixin = {
+    name: "ToastMixin",
     methods: {
         makeToast: function (title, message, variant = null) {
             return makeToast(title, message, variant)
@@ -147,12 +148,17 @@ export function resolveDjangoUrl(url, params = null) {
 /*
  * other utilities
  * */
-
-export function getUserPreference(pref) {
-    if (window.USER_PREF === undefined) {
+export function getUserPreference(pref = undefined) {
+    let user_preference
+    if (document.getElementById("user_preference")) {
+        user_preference = JSON.parse(document.getElementById("user_preference").textContent)
+    } else {
         return undefined
     }
-    return window.USER_PREF[pref]
+    if (pref) {
+        return user_preference[pref]
+    }
+    return user_preference
 }
 
 export function calculateAmount(amount, factor) {
@@ -214,6 +220,11 @@ export const ApiMixin = {
         return {
             Models: Models,
             Actions: Actions,
+            FoodCreateDefault: function (form) {
+                form.inherit_ignore = getUserPreference("food_ignore_default")
+                form.inherit = form.supermarket_category.length > 0
+                return form
+            },
         }
     },
     methods: {
@@ -523,5 +534,13 @@ const specialCases = {
                     return GenericAPI(Models.SUPERMARKET, Actions.FETCH, { id: id })
                 })
             })
+    },
+}
+
+export const formFunctions = {
+    FoodCreateDefault: function (form) {
+        form.fields.filter((x) => x.field === "ignore_inherit")[0].value = getUserPreference("food_ignore_default")
+        form.fields.filter((x) => x.field === "inherit")[0].value = getUserPreference("food_ignore_default").length > 0
+        return form
     },
 }

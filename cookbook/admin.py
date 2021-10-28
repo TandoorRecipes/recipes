@@ -280,7 +280,7 @@ admin.site.register(ShoppingListRecipe, ShoppingListRecipeAdmin)
 
 
 class ShoppingListEntryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'food', 'unit', 'list_recipe', 'checked')
+    list_display = ('id', 'food', 'unit', 'list_recipe', 'created_by', 'created_at', 'checked')
 
 
 admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)
