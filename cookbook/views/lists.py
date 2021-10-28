@@ -7,10 +7,9 @@ from django_tables2 import RequestConfig
 
 from cookbook.filters import ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import (InviteLink, RecipeImport,
-                             ShoppingList, Storage, SyncLog, UserFile)
-from cookbook.tables import (ImportLogTable, InviteLinkTable,
-                             RecipeImportTable, ShoppingListTable, StorageTable)
+from cookbook.models import InviteLink, RecipeImport, ShoppingList, Storage, SyncLog, UserFile
+from cookbook.tables import (ImportLogTable, InviteLinkTable, RecipeImportTable, ShoppingListTable,
+                             StorageTable)
 
 
 @group_required('admin')
@@ -38,20 +37,6 @@ def recipe_import(request):
         'generic/list_template.html',
         {'title': _("Discovery"), 'table': table, 'import_btn': True}
     )
-
-
-# @group_required('user')
-# def food(request):
-#     f = FoodFilter(request.GET, queryset=Food.objects.filter(space=request.space).all().order_by('pk'))
-
-#     table = IngredientTable(f.qs)
-#     RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
-#     return render(
-#         request,
-#         'generic/list_template.html',
-#         {'title': _("Ingredients"), 'table': table, 'filter': f}
-#     )
 
 
 @group_required('user')
@@ -204,7 +189,7 @@ def automation(request):
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-                                   'file_size_kb__sum'] / 1000
+            'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
 
@@ -244,11 +229,9 @@ def shopping_list_new(request):
     # model-name is the models.js name of the model, probably ALL-CAPS
     return render(
         request,
-        'generic/checklist_template.html',
+        'shoppinglist_template.html',
         {
             "title": _("New Shopping List"),
-            "config": {
-                'model': "SHOPPING_LIST",  # *REQUIRED* name of the model in models.js
-            }
+
         }
     )

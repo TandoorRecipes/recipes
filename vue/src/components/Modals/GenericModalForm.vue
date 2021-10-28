@@ -28,7 +28,7 @@
 <script>
 import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
-import { getForm } from "@/utils/utils"
+import { getForm, formFunctions } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
@@ -84,6 +84,10 @@ export default {
         show: function () {
             if (this.show) {
                 this.form = getForm(this.model, this.action, this.item1, this.item2)
+                // TODO: I don't know how to generalize this, but Food needs default values to drive inheritance
+                if (this.form?.form_function) {
+                    this.form = formFunctions[this.form.form_function](this.form)
+                }
                 this.dirty = true
                 this.$bvModal.show("modal_" + this.id)
             } else {
