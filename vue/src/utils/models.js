@@ -67,12 +67,15 @@ export class Models {
         merge: true,
         badges: {
             linked_recipe: true,
+            on_hand: true,
+            shopping: true,
         },
         tags: [{ field: "supermarket_category", label: "name", color: "info" }],
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "ignore_shopping", "supermarket_category"]],
+            params: [["name", "description", "recipe", "ignore_shopping", "supermarket_category", "on_hand", "inherit", "ignore_inherit"]],
+
             form: {
                 name: {
                     form_field: true,
@@ -101,6 +104,12 @@ export class Models {
                     field: "ignore_shopping",
                     label: i18n.t("Ignore_Shopping"),
                 },
+                onhand: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "on_hand",
+                    label: i18n.t("OnHand"),
+                },
                 shopping_category: {
                     form_field: true,
                     type: "lookup",
@@ -109,8 +118,30 @@ export class Models {
                     label: i18n.t("Shopping_Category"),
                     allow_create: true,
                 },
+                inherit: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "inherit",
+                    label: i18n.t("Inherit"),
+                },
+                ignore_inherit: {
+                    form_field: true,
+                    type: "lookup",
+                    multiple: true,
+                    field: "ignore_inherit",
+                    list: "FOOD_INHERIT_FIELDS",
+                    label: i18n.t("IgnoreInherit"),
+                },
+                form_function: "FoodCreateDefault",
             },
         },
+        shopping: {
+            params: ["id", ["id", "amount", "unit", "_delete"]],
+        },
+    }
+    static FOOD_INHERIT_FIELDS = {
+        name: i18n.t("FoodInherit"),
+        apiName: "FoodInheritField",
     }
 
     static KEYWORD = {
@@ -180,6 +211,12 @@ export class Models {
     static SHOPPING_LIST = {
         name: i18n.t("Shopping_list"),
         apiName: "ShoppingListEntry",
+        list: {
+            params: ["id", "checked", "supermarket", "options"],
+        },
+        create: {
+            params: [["amount", "unit", "food", "checked"]],
+        },
     }
 
     static RECIPE_BOOK = {
@@ -370,41 +407,15 @@ export class Models {
         name: i18n.t("Recipe"),
         apiName: "Recipe",
         list: {
-            params: [
-                "query",
-                "keywords",
-                "foods",
-                "units",
-                "rating",
-                "books",
-                "steps",
-                "keywordsOr",
-                "foodsOr",
-                "booksOr",
-                "internal",
-                "random",
-                "_new",
-                "page",
-                "pageSize",
-                "options",
-            ],
-            config: {
-                foods: { type: "string" },
-                keywords: { type: "string" },
-                books: { type: "string" },
-            },
+            params: ["query", "keywords", "foods", "units", "rating", "books", "keywordsOr", "foodsOr", "booksOr", "internal", "random", "_new", "page", "pageSize", "options"],
+            // 'config': {
+            //     'foods': {'type': 'string'},
+            //     'keywords': {'type': 'string'},
+            //     'books': {'type': 'string'},
+            // }
         },
-    }
-
-    static STEP = {
-        name: i18n.t("Step"),
-        apiName: "Step",
-        paginated: true,
-        list: {
-            header_component: {
-                name: "BetaWarning",
-            },
-            params: ["query", "page", "pageSize", "options"],
+        shopping: {
+            params: ["id", ["id", "list_recipe", "ingredients", "servings"]],
         },
     }
 
@@ -460,6 +471,11 @@ export class Models {
                 },
             },
         },
+    }
+    static USER = {
+        name: i18n.t("User"),
+        apiName: "User",
+        paginated: false,
     }
 }
 
@@ -638,5 +654,8 @@ export class Actions {
                 list: "self",
             },
         },
+    }
+    static SHOPPING = {
+        function: "shopping",
     }
 }

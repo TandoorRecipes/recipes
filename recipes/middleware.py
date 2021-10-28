@@ -61,9 +61,9 @@ def SqlPrintingMiddleware(get_response):
             sql = "\033[1;31m[%s]\033[0m %s" % (query['time'], nice_sql)
             total_time = total_time + float(query['time'])
             while len(sql) > width - indentation:
-                #print("%s%s" % (" " * indentation, sql[:width - indentation]))
+                # print("%s%s" % (" " * indentation, sql[:width - indentation]))
                 sql = sql[width - indentation:]
-            #print("%s%s\n" % (" " * indentation, sql))
+            # print("%s%s\n" % (" " * indentation, sql))
         replace_tuple = (" " * indentation, str(total_time))
         print("%s\033[1;32m[TOTAL TIME: %s seconds]\033[0m" % replace_tuple)
         print("%s\033[1;32m[TOTAL QUERIES: %s]\033[0m" % (" " * indentation, len(connection.queries)))

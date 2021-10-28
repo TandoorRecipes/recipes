@@ -48,6 +48,13 @@
                aria-selected="{% if active_tab == 'search' %} 'true' {% else %} 'false' {% endif %}">
                 {% trans 'Search-Settings' %}</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if active_tab == 'shopping' %} active {% endif %}" id="shopping-tab" data-toggle="tab"
+               href="#shopping" role="tab"
+               aria-controls="search"
+               aria-selected="{% if active_tab == 'shopping' %} 'true' {% else %} 'false' {% endif %}">
+                {% trans 'Shopping-Settings' %}</a>
+        </li>
 
     </ul>
 
@@ -195,6 +202,17 @@
                         class="fas fa-save"></i> {% trans 'Save' %}</button>
             </form>
         </div>
+        <div class="tab-pane {% if active_tab == 'shopping' %} active {% endif %}" id="shopping" role="tabpanel"
+             aria-labelledby="shopping-tab">
+            <h4>{% trans 'Shopping Settings' %}</h4>
+
+            <form action="./#shopping" method="post" id="id_shopping_form">
+                {% csrf_token %}
+                {{ shopping_form|crispy }}
+                <button class="btn btn-success" type="submit" name="shopping_form" id="shopping_form_button"><i
+                        class="fas fa-save"></i> {% trans 'Save' %}</button>
+            </form>
+        </div>
 
     </div>
 
@@ -224,5 +242,26 @@
         $('.nav-tabs a').on('shown.bs.tab', function (e) {
             window.location.hash = e.target.hash;
         })
+        // listen for events
+        $(document).ready(function(){
+            hideShow()
+            // call hideShow when the user clicks on the mealplan_autoadd checkbox
+            $("#id_shopping-mealplan_autoadd_shopping").click(function(event){
+                hideShow()
+            });
+        })
+
+        function hideShow(){
+            if(document.getElementById('id_shopping-mealplan_autoadd_shopping').checked == true)
+                {
+                    $('#div_id_shopping-mealplan_autoexclude_onhand').show();
+                    $('#div_id_shopping-mealplan_autoinclude_related').show();
+                }
+            else
+                {
+                $('#div_id_shopping-mealplan_autoexclude_onhand').hide();
+                $('#div_id_shopping-mealplan_autoinclude_related').hide();
+                }
+        }
     </script>
 {% endblock %}

@@ -4,16 +4,22 @@
             :item="item"/>
         <icon-badge v-if="Icon"
             :item="item"/>
+        <on-hand-badge v-if="OnHand"
+            :item="item"/>
+        <shopping-badge v-if="Shopping"
+            :item="item"/>
     </span>
 </template>
 
 <script>
 import LinkedRecipe from "@/components/Badges/LinkedRecipe";
 import IconBadge from "@/components/Badges/Icon";
+import OnHandBadge from "@/components/Badges/OnHand";
+import ShoppingBadge from "@/components/Badges/Shopping";
 
 export default {
   name: 'CardBadges',
-  components: {LinkedRecipe, IconBadge},
+  components: {LinkedRecipe, IconBadge, OnHandBadge, ShoppingBadge},
   props: {
     item: {type: Object},
     model: {type: Object}
@@ -30,6 +36,12 @@ export default {
     },
     Icon: function () {
         return this.model?.badges?.icon ?? false
+    },
+    OnHand: function () {
+        return this.model?.badges?.on_hand ?? false
+    },
+    Shopping: function () {
+        return this.model?.badges?.shopping ?? false
     }
   },
   watch: {

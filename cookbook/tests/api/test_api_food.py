@@ -1,10 +1,9 @@
 import json
+
 import pytest
-
 from django.contrib import auth
-from django_scopes import scopes_disabled
 from django.urls import reverse
-
+from django_scopes import scopes_disabled
 
 from cookbook.models import Food, Ingredient, ShoppingList, ShoppingListEntry
 
@@ -74,7 +73,7 @@ def ing_1_1_s1(obj_1_1, space_1):
 
 @pytest.fixture()
 def sle_1_s1(obj_1, u1_s1, space_1):
-    e = ShoppingListEntry.objects.create(food=obj_1)
+    e = ShoppingListEntry.objects.create(food=obj_1, created_by=auth.get_user(u1_s1), space=space_1,)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -82,12 +81,12 @@ def sle_1_s1(obj_1, u1_s1, space_1):
 
 @pytest.fixture()
 def sle_2_s1(obj_2, u1_s1, space_1):
-    return ShoppingListEntry.objects.create(food=obj_2)
+    return ShoppingListEntry.objects.create(food=obj_2, created_by=auth.get_user(u1_s1), space=space_1,)
 
 
 @pytest.fixture()
 def sle_3_s2(obj_3, u1_s2, space_2):
-    e = ShoppingListEntry.objects.create(food=obj_3)
+    e = ShoppingListEntry.objects.create(food=obj_3, created_by=auth.get_user(u1_s2), space=space_2)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s2), space=space_2, )
     s.entries.add(e)
     return e
@@ -95,7 +94,7 @@ def sle_3_s2(obj_3, u1_s2, space_2):
 
 @pytest.fixture()
 def sle_1_1_s1(obj_1_1, u1_s1, space_1):
-    e = ShoppingListEntry.objects.create(food=obj_1_1)
+    e = ShoppingListEntry.objects.create(food=obj_1_1, created_by=auth.get_user(u1_s1), space=space_1,)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -449,3 +448,10 @@ def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert response['count'] == 4
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
+
+
+# TODO test inherit creating, moving for each field type
+# TODO test ignore inherit for each field type
+# TODO test with grand-children
+# - flow from parent through child and grand-child
+# - flow from parent stop when child is ignore inherit
