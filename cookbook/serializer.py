@@ -357,7 +357,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
-    ignore_inherit = FoodInheritFieldSerializer(many=True)
+    ignore_inherit = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
 
     recipe_filter = 'steps__ingredients__food'
 

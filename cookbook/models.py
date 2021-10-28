@@ -826,7 +826,7 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def get_owner(self):
         try:
-            return self.entries.first().created_by or self.shoppinglist_set.first().created_by
+            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(), 'created_by', None)
         except AttributeError:
             return None
 
