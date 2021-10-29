@@ -93,21 +93,26 @@
                     <h5 class="d-table-cell align-middle">{{ $t('Nutrition') }}</h5>
                   </div>
                   <div class="col-md-3">
-                    <button type="button" @click="addNutrition()"
-                            class="btn btn-sm btn-light shadow-none float-right" v-b-toggle.id_nutrition_collapse
-                            v-if="recipe.nutrition === null"><i class="fas fa-plus-circle"></i>
+                    <button type="button" @click="addNutrition()" v-if="recipe.nutrition === null"
+                            v-b-tooltip.hover v-bind:title="$t('Add_nutrition_recipe')"
+                            class="btn btn-sm btn-success shadow-none float-right" ><i class="fas fa-plus-circle"></i>
                     </button>
                     <button type="button" @click="removeNutrition()" v-if="recipe.nutrition !== null"
-                            v-b-toggle.id_nutrition_collapse
-                            class="btn btn-sm btn-light shadow-none float-right"><i class="fas fa-minus-circle"></i>
+                            v-b-tooltip.hover v-bind:title="$t('Remove_nutrition_recipe')"
+                            class="btn btn-sm btn-danger shadow-none float-right"><i class="fas fa-trash-alt"></i>
                     </button>
                   </div>
                 </div>
 
               </div>
 
-              <b-collapse id="id_nutrition_collapse" class="mt-2">
-                <div class="card-body " v-if="recipe.nutrition">
+              <b-collapse id="id_nutrition_collapse" class="mt-2" v-model="nutrition_visible">
+                <div class="card-body " v-if="recipe.nutrition !== null">
+                  <b-alert show>
+                    There is currently only very basic support for tracking nutritional information.
+                    A <a href="https://github.com/vabene1111/recipes/issues/896" target="_blank" rel="noreferrer nofollow">big update</a> is planned to improve on this in many different areas.
+                  </b-alert>
+
                   <label for="id_name"> {{ $t('Calories') }}</label>
                   <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories">
 
@@ -461,7 +466,8 @@
           </button>
         </div>
         <div class="col-md-3 col-6">
-          <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
+          <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover
+                  :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
                   class="btn btn-sm btn-block btn-success shadow-none">{{ $t('Save_and_View') }}
           </button>
         </div>
@@ -505,7 +511,7 @@ Vue.use(VueMarkdownEditor);
 Vue.use(BootstrapVue)
 
 export default {
-  name: 'RecipeSearchView',
+  name: 'RecipeEditView',
   mixins: [ResolveUrlMixin, ApiMixin],
   components: {Multiselect, LoadingSpinner, draggable},
   data() {
@@ -527,7 +533,11 @@ export default {
     }
 
   },
-  computed: {},
+  computed: {
+    nutrition_visible: function () {
+      return this.recipe.nutrition !== null
+    }
+  },
   mounted() {
 
     this.loadRecipe()
