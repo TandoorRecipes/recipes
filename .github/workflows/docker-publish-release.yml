@@ -50,4 +50,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
-          args: '🚀 A new Version of tandoor has been released 🥳 \n https://github.com/vabene1111/recipes/releases/tag/{{ steps.get_version.outputs.VERSION }}'
+          args: '🚀 A new Version of tandoor has been released 🥳 \n https://github.com/vabene1111/recipes/releases/tag/{{GITHUB_REF/refs\/tags\//}}'
