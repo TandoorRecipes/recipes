@@ -229,10 +229,10 @@ export interface Food {
     parent?: string;
     /**
      * 
-     * @type {boolean}
+     * @type {number}
      * @memberof Food
      */
-    on_hand?: boolean;
+    numchild?: number;
     /**
      * 
      * @type {boolean}
@@ -269,13 +269,13 @@ export interface FoodIgnoreInherit {
      * @type {string}
      * @memberof FoodIgnoreInherit
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof FoodIgnoreInherit
      */
-    field?: string;
+    field: string;
 }
 /**
  * 
@@ -294,13 +294,13 @@ export interface FoodInheritField {
      * @type {string}
      * @memberof FoodInheritField
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof FoodInheritField
      */
-    field?: string;
+    field: string;
 }
 /**
  * 
@@ -961,37 +961,6 @@ export interface InlineResponse2009 {
 /**
  * 
  * @export
- * @interface InlineResponse2009
- */
-export interface InlineResponse2009 {
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2009
-     */
-    count?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    next?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<ViewLog>}
-     * @memberof InlineResponse2009
-     */
-    results?: Array<ViewLog>;
-}
-/**
- * 
- * @export
  * @interface Keyword
  */
 export interface Keyword {
@@ -1006,7 +975,13 @@ export interface Keyword {
      * @type {string}
      * @memberof Keyword
      */
-    parent?: string;
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    icon?: string | null;
     /**
      * 
      * @type {string}
@@ -1018,13 +993,31 @@ export interface Keyword {
      * @type {string}
      * @memberof Keyword
      */
-    created_at?: string;
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    parent?: string;
     /**
      * 
      * @type {number}
      * @memberof Keyword
      */
     numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    updated_at?: string;
 }
 /**
  * 
@@ -1637,61 +1630,6 @@ export interface RecipeIngredients {
  * @export
  * @interface RecipeKeywords
  */
-export interface RecipeIngredients {
-    /**
-     * 
-     * @type {number}
-     * @memberof RecipeIngredients
-     */
-    id?: number;
-    /**
-     * 
-     * @type {IngredientFood}
-     * @memberof RecipeIngredients
-     */
-    food: IngredientFood | null;
-    /**
-     * 
-     * @type {FoodSupermarketCategory}
-     * @memberof RecipeIngredients
-     */
-    unit: FoodSupermarketCategory | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeIngredients
-     */
-    amount: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeIngredients
-     */
-    note?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof RecipeIngredients
-     */
-    order?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof RecipeIngredients
-     */
-    is_header?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof RecipeIngredients
-     */
-    no_amount?: boolean;
-}
-/**
- * 
- * @export
- * @interface RecipeKeywords
- */
 export interface RecipeKeywords {
     /**
      * 
@@ -1704,7 +1642,13 @@ export interface RecipeKeywords {
      * @type {string}
      * @memberof RecipeKeywords
      */
-    parent?: string;
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    icon?: string | null;
     /**
      * 
      * @type {string}
@@ -1716,13 +1660,31 @@ export interface RecipeKeywords {
      * @type {string}
      * @memberof RecipeKeywords
      */
-    created_at?: string;
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    parent?: string;
     /**
      * 
      * @type {number}
      * @memberof RecipeKeywords
      */
     numchild?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    updated_at?: string;
 }
 /**
  * 
@@ -2129,10 +2091,10 @@ export interface ShoppingListEntries {
     id?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListEntries
      */
-    list_recipe?: string;
+    list_recipe?: number | null;
     /**
      * 
      * @type {IngredientFood}
@@ -2186,7 +2148,7 @@ export interface ShoppingListEntries {
      * @type {ShoppingListCreatedBy}
      * @memberof ShoppingListEntries
      */
-    created_by: ShoppingListCreatedBy;
+    created_by?: ShoppingListCreatedBy;
     /**
      * 
      * @type {string}
@@ -2198,7 +2160,13 @@ export interface ShoppingListEntries {
      * @type {string}
      * @memberof ShoppingListEntries
      */
-    completed_at?: string | null;
+    completed_at: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntries
+     */
+    delay_until?: string | null;
 }
 /**
  * 
@@ -2214,10 +2182,10 @@ export interface ShoppingListEntry {
     id?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListEntry
      */
-    list_recipe?: string;
+    list_recipe?: number | null;
     /**
      * 
      * @type {IngredientFood}
@@ -2283,7 +2251,13 @@ export interface ShoppingListEntry {
      * @type {string}
      * @memberof ShoppingListEntry
      */
-    completed_at?: string;
+    completed_at: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntry
+     */
+    delay_until?: string | null;
 }
 /**
  * 
@@ -2302,6 +2276,12 @@ export interface ShoppingListRecipe {
      * @type {string}
      * @memberof ShoppingListRecipe
      */
+    recipe_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipe
+     */
     name?: string;
     /**
      * 
@@ -2312,7 +2292,7 @@ export interface ShoppingListRecipe {
     /**
      * 
      * @type {number}
-     * @memberof ShoppingListEntry
+     * @memberof ShoppingListRecipe
      */
     ingredient?: number | null;
     /**
@@ -2338,79 +2318,6 @@ export interface ShoppingListRecipe {
      * @type {string}
      * @memberof ShoppingListRecipe
      */
-    checked?: boolean;
-    /**
-     * 
-     * @type {ShoppingListRecipeMealplan}
-     * @memberof ShoppingListEntry
-     */
-    recipe_mealplan?: ShoppingListRecipeMealplan;
-    /**
-     * 
-     * @type {ShoppingListCreatedBy}
-     * @memberof ShoppingListEntry
-     */
-    created_by: ShoppingListCreatedBy;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListEntry
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListEntry
-     */
-    completed_at?: string | null;
-}
-/**
- * 
- * @export
- * @interface ShoppingListRecipeMealplan
- */
-export interface ShoppingListRecipeMealplan {
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListRecipeMealplan
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipeMealplan
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListRecipeMealplan
-     */
-    recipe?: number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ShoppingListRecipe
-     */
-    mealplan?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipe
-     */
-    mealplan?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipeMealplan
-     */
-    servings: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipe
-     */
     mealplan_note?: string;
 }
 /**
@@ -2428,13 +2335,74 @@ export interface ShoppingListRecipeMealplan {
     /**
      * 
      * @type {string}
-     * @memberof ShoppingListRecipes
+     * @memberof ShoppingListRecipeMealplan
+     */
+    recipe_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
      */
     name?: string;
     /**
      * 
      * @type {number}
      * @memberof ShoppingListRecipeMealplan
+     */
+    recipe?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipe
+     */
+    mealplan?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipe
+     */
+    mealplan?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    servings: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    mealplan_note?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ShoppingListRecipes
+ */
+export interface ShoppingListRecipes {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipes
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipes
+     */
+    recipe_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipes
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipes
      */
     recipe?: number | null;
     /**
@@ -2452,13 +2420,13 @@ export interface ShoppingListRecipeMealplan {
     /**
      * 
      * @type {string}
-     * @memberof ShoppingListRecipeMealplan
+     * @memberof ShoppingListRecipes
      */
     servings: string;
     /**
      * 
      * @type {string}
-     * @memberof ShoppingListRecipeMealplan
+     * @memberof ShoppingListRecipes
      */
     mealplan_note?: string;
 }
@@ -3038,6 +3006,36 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     mealplan_autoadd_shopping?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    food_ignore_default?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserPreference
+     */
+    default_delay?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    mealplan_autoinclude_related?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    mealplan_autoexclude_onhand?: boolean;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UserPreference
+     */
+    shopping_share?: Array<number>;
 }
 
 /**
@@ -5359,12 +5357,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} [checked] Filter shopping list entries on checked.  Valid values are true, false, both and &lt;b&gt;false+&lt;/b&gt;.&lt;br&gt;  - false+ includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listShoppingListEntrys: async (checked?: string, id?: number, options: any = {}): Promise<RequestArgs> => {
+        listShoppingListEntrys: async (id?: number, checked?: string, supermarket?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/shopping-list-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5377,12 +5376,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
             if (checked !== undefined) {
                 localVarQueryParameter['checked'] = checked;
             }
 
-            if (id !== undefined) {
-                localVarQueryParameter['id'] = id;
+            if (supermarket !== undefined) {
+                localVarQueryParameter['supermarket'] = supermarket;
             }
 
 
@@ -9663,13 +9666,14 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [checked] Filter shopping list entries on checked.  Valid values are true, false, both and &lt;b&gt;false+&lt;/b&gt;.&lt;br&gt;  - false+ includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listShoppingListEntrys(checked?: string, id?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listShoppingListEntrys(checked, id, options);
+        async listShoppingListEntrys(id?: number, checked?: string, supermarket?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListEntry>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listShoppingListEntrys(id, checked, supermarket, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11345,13 +11349,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} [checked] Filter shopping list entries on checked.  Valid values are true, false, both and &lt;b&gt;false+&lt;/b&gt;.&lt;br&gt;  - false+ includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listShoppingListEntrys(checked?: string, id?: number, options?: any): AxiosPromise<Array<ShoppingListEntry>> {
-            return localVarFp.listShoppingListEntrys(checked, id, options).then((request) => request(axios, basePath));
+        listShoppingListEntrys(id?: number, checked?: string, supermarket?: number, options?: any): AxiosPromise<Array<ShoppingListEntry>> {
+            return localVarFp.listShoppingListEntrys(id, checked, supermarket, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13054,14 +13059,15 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [checked] Filter shopping list entries on checked.  Valid values are true, false, both and &lt;b&gt;false+&lt;/b&gt;.&lt;br&gt;  - false+ includes unchecked items and recently completed items.
      * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+     * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+     * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listShoppingListEntrys(checked?: string, id?: number, options?: any) {
-        return ApiApiFp(this.configuration).listShoppingListEntrys(checked, id, options).then((request) => request(this.axios, this.basePath));
+    public listShoppingListEntrys(id?: number, checked?: string, supermarket?: number, options?: any) {
+        return ApiApiFp(this.configuration).listShoppingListEntrys(id, checked, supermarket, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

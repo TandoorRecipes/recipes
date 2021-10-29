@@ -12,15 +12,11 @@
                                 @change="missing_recipe = false"
                             ></b-form-input>
                             <b-input-group-append class="d-none d-lg-block">
-                                <b-button variant="primary" @click="entryEditing.title = ''"
-                                    ><i class="fa fa-eraser"></i
-                                ></b-button>
+                                <b-button variant="primary" @click="entryEditing.title = ''"><i class="fa fa-eraser"></i></b-button>
                             </b-input-group-append>
                         </b-input-group>
                         <span class="text-danger" v-if="missing_recipe">{{ $t("Title_or_Recipe_Required") }}</span>
-                        <small tabindex="-1" class="form-text text-muted" v-if="!missing_recipe">{{
-                            $t("Title")
-                        }}</small>
+                        <small tabindex="-1" class="form-text text-muted" v-if="!missing_recipe">{{ $t("Title") }}</small>
                     </div>
                     <div class="col-6 col-lg-3">
                         <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date" />
@@ -58,24 +54,13 @@
                                 @new="createMealType"
                             ></generic-multiselect>
                             <span class="text-danger" v-if="missing_meal_type">{{ $t("Meal_Type_Required") }}</span>
-                            <small tabindex="-1" class="form-text text-muted" v-if="!missing_meal_type">{{
-                                $t("Meal_Type")
-                            }}</small>
+                            <small tabindex="-1" class="form-text text-muted" v-if="!missing_meal_type">{{ $t("Meal_Type") }}</small>
                         </b-form-group>
                         <b-form-group label-for="NoteInput" :description="$t('Note')" class="mt-3">
-                            <textarea
-                                class="form-control"
-                                id="NoteInput"
-                                v-model="entryEditing.note"
-                                :placeholder="$t('Note')"
-                            ></textarea>
+                            <textarea class="form-control" id="NoteInput" v-model="entryEditing.note" :placeholder="$t('Note')"></textarea>
                         </b-form-group>
                         <b-input-group>
-                            <b-form-input
-                                id="ServingsInput"
-                                v-model="entryEditing.servings"
-                                :placeholder="$t('Servings')"
-                            ></b-form-input>
+                            <b-form-input id="ServingsInput" v-model="entryEditing.servings" :placeholder="$t('Servings')"></b-form-input>
                         </b-input-group>
                         <small tabindex="-1" class="form-text text-muted">{{ $t("Servings") }}</small>
                         <!-- TODO: hide this checkbox if autoadding menuplans, but allow editing on-hand -->
@@ -90,9 +75,7 @@
                 </div>
                 <div class="row mt-3 mb-3">
                     <div class="col-12">
-                        <b-button variant="danger" @click="deleteEntry" v-if="allow_delete"
-                            >{{ $t("Delete") }}
-                        </b-button>
+                        <b-button variant="danger" @click="deleteEntry" v-if="allow_delete">{{ $t("Delete") }} </b-button>
                         <b-button class="float-right" variant="primary" @click="editEntry">{{ $t("Save") }}</b-button>
                     </div>
                 </div>
@@ -119,6 +102,7 @@ export default {
         entry: Object,
         entryEditing_initial_recipe: Array,
         entryEditing_initial_meal_type: Array,
+        entryEditing_inital_servings: Number,
         modal_title: String,
         modal_id: {
             type: String,
@@ -145,6 +129,9 @@ export default {
         entry: {
             handler() {
                 this.entryEditing = Object.assign({}, this.entry)
+                if (this.entryEditing_inital_servings) {
+                    this.entryEditing.servings = this.entryEditing_inital_servings
+                }
             },
             deep: true,
         },
