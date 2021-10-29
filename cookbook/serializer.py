@@ -38,8 +38,13 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
                 return fields
         except AttributeError:
             pass
-        del fields['image']
-        del fields['numrecipe']
+        except KeyError:
+            pass
+        try:
+            del fields['image']
+            del fields['numrecipe']
+        except KeyError:
+            pass
         return fields
 
     def get_image(self, obj):
