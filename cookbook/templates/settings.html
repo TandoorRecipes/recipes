@@ -243,7 +243,7 @@
             window.location.hash = e.target.hash;
         })
         // listen for events
-        $(document).ready(function(){
+        {% comment %} $(document).ready(function(){
             hideShow()
             // call hideShow when the user clicks on the mealplan_autoadd checkbox
             $("#id_shopping-mealplan_autoadd_shopping").click(function(event){
@@ -261,7 +261,7 @@
                 {
                 $('#div_id_shopping-mealplan_autoexclude_onhand').hide();
                 $('#div_id_shopping-mealplan_autoinclude_related').hide();
-                }
+                } {% endcomment %}
         }
     </script>
 {% endblock %}
