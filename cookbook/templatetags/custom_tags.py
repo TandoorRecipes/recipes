@@ -142,7 +142,7 @@ def bookmarklet(request):
             localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
             localStorage.setItem('token', '" + api_token.__str__() + "'); \
             document.body.appendChild(document.createElement(\'script\')).src=\'" \
-            + server + prefix + static('js/bookmarklet.js') + "? \
+               + server + prefix + static('js/bookmarklet.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();"
     return re.sub(r"[\n\t\s]*", "", bookmark)
 
@@ -153,3 +153,5 @@ def base_path(request, path_type):
         return request._current_scheme_host + request.META.get('HTTP_X_SCRIPT_NAME', '')
     elif path_type == 'script':
         return request.META.get('HTTP_X_SCRIPT_NAME', '')
+    elif path_type == 'static_base':
+        return static('vue/manifest.json').replace('vue/manifest.json', '')
