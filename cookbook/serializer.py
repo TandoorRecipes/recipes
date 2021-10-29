@@ -40,8 +40,11 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             pass
         except KeyError:
             pass
-        del fields['image']
-        del fields['numrecipe']
+        try:
+            del fields['image']
+            del fields['numrecipe']
+        except KeyError:
+            pass
         return fields
 
     def get_image(self, obj):
