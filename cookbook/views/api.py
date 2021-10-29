@@ -38,7 +38,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
-from cookbook.helper.shopping_helper import shopping_helper
+from cookbook.helper.shopping_helper import list_from_recipe, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
                              ImportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
                              RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
@@ -658,7 +658,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         list_recipe = request.data.get('list_recipe', None)
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
         # TODO: Consider if this should be a Recipe method
-        ShoppingListEntry.list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=request.user)
+        list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=request.user)
 
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
