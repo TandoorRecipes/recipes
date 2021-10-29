@@ -12,6 +12,7 @@ from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
+from cookbook.helper.shopping_helper import list_from_recipe
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
                              NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
@@ -616,7 +617,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         validated_data['created_by'] = self.context['request'].user
         mealplan = super().create(validated_data)
         if self.context['request'].data.get('addshopping', False):
-            ShoppingListEntry.list_from_recipe(mealplan=mealplan, space=validated_data['space'], created_by=validated_data['created_by'])
+            list_from_recipe(mealplan=mealplan, space=validated_data['space'], created_by=validated_data['created_by'])
         return mealplan
 
     class Meta:
@@ -648,7 +649,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if 'servings' in validated_data:
-            ShoppingListEntry.list_from_recipe(
+            list_from_recipe(
                 list_recipe=instance,
                 servings=validated_data['servings'],
                 created_by=self.context['request'].user,

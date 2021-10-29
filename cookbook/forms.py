@@ -490,8 +490,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
                 'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
             ),
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
-            'mealplan_autoexclude_onhand': _('When automatically adding a meal plan to the shopping list, exclude ingredients that are on hand.'),
-            'mealplan_autoinclude_related': _('When automatically adding a meal plan to the shopping list, include all related recipes.'),
+            'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
+            'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
             'default_delay': _('Default number of hours to delay a shopping list entry.'),
             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
         }

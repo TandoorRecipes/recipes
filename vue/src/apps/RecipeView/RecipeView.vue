@@ -81,18 +81,11 @@
             <hr />
 
             <div class="row">
-                <div class="col-md-8 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
-                    <ingredients-card
-                        :steps="recipe.steps"
-                        :recipe="recipe.id"
-                        :ingredient_factor="ingredient_factor"
-                        :servings="servings"
-                        :header="true"
-                        @checked-state-changed="updateIngredientCheckedState"
-                    />
+                <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
+                    <ingredients-card :steps="recipe.steps" :ingredient_factor="ingredient_factor" :servings="servings" :header="true" @checked-state-changed="updateIngredientCheckedState" />
                 </div>
 
-                <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-4 order-md-2">
+                <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
                     <div class="row">
                         <div class="col-12">
                             <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh" :alt="$t('Recipe_Image')" v-if="recipe.image !== null" />
@@ -149,11 +142,11 @@ import { apiLoadRecipe } from "@/utils/api"
 import Step from "@/components/Step"
 import RecipeContextMenu from "@/components/ContextMenu/RecipeContextMenu"
 import { ResolveUrlMixin, ToastMixin } from "@/utils/utils"
-import IngredientsCard from "@/components/IngredientsCard"
 
 import PdfViewer from "@/components/PdfViewer"
 import ImageViewer from "@/components/ImageViewer"
 import Nutrition from "@/components/Nutrition"
+import IngredientsCard from "@/components/IngredientsCard"
 
 import moment from "moment"
 import Keywords from "@/components/Keywords"
