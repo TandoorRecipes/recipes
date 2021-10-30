@@ -200,5 +200,7 @@
     "Previous_Period": "Periodo precedente",
     "Current_Period": "Periodo attuale",
     "Next_Day": "Giorno successivo",
-    "Previous_Day": "Giorno precedente"
+    "Previous_Day": "Giorno precedente",
+    "Add_nutrition_recipe": "Aggiungi nutrienti alla ricetta",
+    "Remove_nutrition_recipe": "Elimina nutrienti dalla ricetta"
 }
