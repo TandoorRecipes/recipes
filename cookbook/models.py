@@ -330,7 +330,8 @@ class UserPreference(models.Model, PermissionModelMixin):
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
     filter_to_supermarket = models.BooleanField(default=False)
-    default_delay = models.IntegerField(default=4)
+    default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
+    shopping_recent_days = models.PositiveIntegerField(default=7)
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
