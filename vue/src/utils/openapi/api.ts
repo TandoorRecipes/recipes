@@ -2160,7 +2160,7 @@ export interface ShoppingListEntries {
      * @type {string}
      * @memberof ShoppingListEntries
      */
-    completed_at: string | null;
+    completed_at?: string | null;
     /**
      * 
      * @type {string}
@@ -2251,7 +2251,7 @@ export interface ShoppingListEntry {
      * @type {string}
      * @memberof ShoppingListEntry
      */
-    completed_at: string | null;
+    completed_at?: string | null;
     /**
      * 
      * @type {string}
@@ -3014,10 +3014,10 @@ export interface UserPreference {
     food_ignore_default?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof UserPreference
      */
-    default_delay?: number;
+    default_delay?: string;
     /**
      * 
      * @type {boolean}
@@ -3036,6 +3036,12 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     shopping_share?: Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserPreference
+     */
+    shopping_recent_days?: number;
 }
 
 /**

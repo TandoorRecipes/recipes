@@ -673,7 +673,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     recipe_mealplan = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
     created_by = UserNameSerializer(read_only=True)
-    completed_at = serializers.DateTimeField(allow_null=True)
+    completed_at = serializers.DateTimeField(allow_null=True, required=False)
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)

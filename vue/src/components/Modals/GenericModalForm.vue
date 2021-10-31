@@ -83,7 +83,6 @@ export default {
         show: function () {
             if (this.show) {
                 this.form = getForm(this.model, this.action, this.item1, this.item2)
-                // TODO: I don't know how to generalize this, but Food needs default values to drive inheritance
                 if (this.form?.form_function) {
                     this.form = formFunctions[this.form.form_function](this.form)
                 }
