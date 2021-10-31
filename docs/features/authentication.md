@@ -60,6 +60,25 @@ Use the superuser account to grant permissions to the newly created users.
 To link an account to an already existing normal user go to the settings page of the user and link it. 
 Here you can also unlink your account if you no longer want to use a social login method.
 
+## LDAP
+
+LDAP authentication can be enabled in the `.env` file by setting `LDAP_AUTH=1`.
+If set, users listed in the LDAP instance will be able to sign in without signing up.
+These variables must be set to configure the connection to the LDAP instance:
+```
+AUTH_LDAP_SERVER_URI=ldap://ldap.example.org:389
+AUTH_LDAP_BIND_DN=uid=admin,ou=users,dc=example,dc=org
+AUTH_LDAP_BIND_PASSWORD=adminpassword
+AUTH_LDAP_USER_SEARCH_BASE_DN=ou=users,dc=example,dc=org
+```
+Additional optional variables:
+```
+AUTH_LDAP_USER_SEARCH_FILTER_STR=(uid=%(user)s)
+AUTH_LDAP_USER_ATTR_MAP={'first_name': 'givenName', 'last_name': 'sn', 'email': 'mail'}
+AUTH_LDAP_ALWAYS_UPDATE_USER=1
+AUTH_LDAP_CACHE_TIMEOUT=3600
+```
+
 ## Reverse Proxy Authentication
 
 !!! Info "Community Contributed Tutorial"
