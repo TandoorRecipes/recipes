@@ -14,14 +14,16 @@
 
         <b-tabs content-class="mt-3">
             <!-- shopping list tab -->
-            <b-tab :title="$t('ShoppingList')" active>
-                <template #title> <b-spinner v-if="loading" type="border" small></b-spinner> {{ $t("ShoppingList") }} </template>
+            <b-tab active>
+                <template #title> <b-spinner v-if="loading" type="border" small></b-spinner> {{ $t("Shopping_list") }} </template>
                 <div class="container">
                     <div class="row">
                         <div class="col col-md-12">
                             <div role="tablist" v-if="items && items.length > 0">
                                 <div class="row justify-content-md-center w-75" v-if="entrymode">
-                                    <div class="col col-md-2 "><b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input></div>
+                                    <div class="col col-md-2 ">
+                                        <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
+                                    </div>
                                     <div class="col col-md-3">
                                         <generic-multiselect
                                             @change="new_item.unit = $event.val"
@@ -106,9 +108,149 @@
                 </table>
             </b-tab>
             <!-- settings tab -->
+            <b-tab :title="$t('Supermarkets')">
+                <div class="row justify-content-center">
+                    <div class="col col-md-5">
+                        <b-card>
+                            <template #header>
+                                <h4 class="mb-0">
+                                    {{ $t("Supermarkets") }}
+                                    <b-button variant="link" class="p-0 m-0 float-right" @click="new_supermarket.entrymode = !new_supermarket.entrymode">
+                                        <i class="btn fas fa-plus-circle fa-lg px-0 " :class="new_supermarket.entrymode ? 'text-success' : 'text-muted'" />
+                                    </b-button>
+                                </h4>
+                            </template>
+                            <b-card
+                                class="m-1 p-1 no-body"
+                                border-variant="success"
+                                header-bg-variant="success"
+                                header-text-variant="white"
+                                align="center"
+                                v-if="new_supermarket.entrymode"
+                                :header="$t('SupermarketName')"
+                            >
+                                <div class="input-group">
+                                    <b-form-input type="text" :placeholder="$t('SupermarketName')" v-model="new_supermarket.value" />
+                                    <b-button class="input-group-append" variant="success" @click="addSupermarket"><i class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }}</b-button>
+                                </div>
+                            </b-card>
+
+                            <b-card-body class="m-0 p-0">
+                                <b-card class=" no-body mb-2" v-for="s in supermarkets" v-bind:key="s.id">
+                                    <b-card-title
+                                        >{{ s.name }}
+                                        <b-button
+                                            variant="link"
+                                            class="p-0 m-0 float-right"
+                                            @click="
+                                                s.editmode = !s.editmode
+                                                editSupermarket(s)
+                                            "
+                                        >
+                                            <i class="btn fas fa-edit fa-lg px-0 " :class="s.editmode ? 'text-success' : 'text-muted'" />
+                                        </b-button>
+                                    </b-card-title>
+
+                                    <b-card-body class="py-0">
+                                        <generic-pill :item_list="s.category_to_supermarket" label="category::name" color="info"></generic-pill>
+                                    </b-card-body>
+                                </b-card>
+                            </b-card-body>
+                        </b-card>
+                    </div>
+                    <div class="col col-md-5">
+                        <b-card class="no-body">
+                            <template #header>
+                                <h4 class="mb-0">
+                                    {{ $t("Shopping_Categories") }}
+                                    <b-button variant="link" class="p-0 m-0 float-right" @click="new_category.entrymode = !new_category.entrymode">
+                                        <i class="btn fas fa-plus-circle fa-lg px-0 " :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
+                                    </b-button>
+                                </h4>
+                            </template>
+                            <b-card
+                                class="m-1 p-1 no-body"
+                                border-variant="success"
+                                header-bg-variant="success"
+                                header-text-variant="white"
+                                align="center"
+                                v-if="new_category.entrymode"
+                                :header="$t('CategoryName')"
+                            >
+                                <div class="input-group">
+                                    <b-form-input type="text" :placeholder="$t('CategoryName')" v-model="new_category.value" />
+                                    <b-button class="input-group-append" variant="success" @click="addCategory"><i class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }}</b-button>
+                                </div>
+                            </b-card>
+
+                            <b-card-sub-title v-if="new_supermarket.editmode" class="pt-0 pb-3"
+                                >Drag categories to change the order categories appear in shopping list.</b-card-sub-title
+                            >
+                            <b-card
+                                v-if="new_supermarket.editmode && supermarketCategory.length === 0"
+                                class="m-0 p-0  font-weight-bold no-body"
+                                border-variant="success"
+                                v-bind:key="-1"
+                            />
+                            <draggable
+                                class="list-group "
+                                :list="supermarketCategory"
+                                group="category"
+                                @start="drag = true"
+                                @end="drag = false"
+                                ghost-class="ghost"
+                                @change="saveSupermarketCategoryOrder"
+                                v-bind="{ animation: 200, disabled: !new_supermarket.editmode }"
+                            >
+                                <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+                                    <b-card
+                                        class="m-0 p-0  font-weight-bold no-body list-group-item"
+                                        :style="new_supermarket.editmode ? 'cursor:move' : ''"
+                                        v-for="c in supermarketCategory"
+                                        v-bind:key="c.id"
+                                        :border-variant="new_supermarket.editmode ? 'success' : ''"
+                                    >
+                                        {{ categoryName(c) }}
+                                    </b-card>
+                                </transition-group>
+                            </draggable>
+                            <hr style="height:2px;;background-color:black" v-if="new_supermarket.editmode" />
+                            <b-card
+                                v-if="new_supermarket.editmode && notSupermarketCategory.length === 0"
+                                v-bind:key="-2"
+                                class="m-0 p-0 font-weight-bold no-body"
+                                border-variant="danger"
+                            />
+                            <draggable
+                                class="list-group "
+                                :list="notSupermarketCategory"
+                                group="category"
+                                v-if="new_supermarket.editmode"
+                                @start="drag = true"
+                                @end="drag = false"
+                                ghost-class="ghost"
+                                v-bind="{ animation: 200 }"
+                            >
+                                <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+                                    <b-card
+                                        class="m-0 p-0 font-weight-bold no-body list-group-item"
+                                        style="cursor:move"
+                                        v-for="c in notSupermarketCategory"
+                                        v-bind:key="c.id"
+                                        :border-variant="'danger'"
+                                    >
+                                        {{ categoryName(c) }}
+                                    </b-card>
+                                </transition-group>
+                            </draggable>
+                        </b-card>
+                    </div>
+                </div>
+            </b-tab>
+            <!-- settings tab -->
             <b-tab :title="$t('Settings')">
-                <div class="row">
-                    <div class="col col-md-4 ">
+                <div class="row justify-content-center">
+                    <div class="col col-md-4 col-sm-8  ">
                         <b-card class="no-body">
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
@@ -214,14 +356,6 @@
                             </div>
                         </b-card>
                     </div>
-                    <div class="col col-md-8">
-                        <b-card class=" no-body">
-                            put the supermarket stuff here<br />
-                            -add supermarkets<br />
-                            -add supermarket categories<br />
-                            -sort supermarket categories<br />
-                        </b-card>
-                    </div>
                 </div>
             </b-tab>
         </b-tabs>
@@ -324,6 +458,8 @@ import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import ShoppingLineItem from "@/components/ShoppingLineItem"
 import GenericMultiselect from "@/components/GenericMultiselect"
+import GenericPill from "@/components/GenericPill"
+import draggable from "vuedraggable"
 
 import { ApiMixin, getUserPreference } from "@/utils/utils"
 import { ApiApiFactory } from "@/utils/openapi/api"
@@ -334,7 +470,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingListView",
     mixins: [ApiMixin],
-    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect },
+    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable },
 
     data() {
         return {
@@ -357,10 +493,12 @@ export default {
                 mealplan_autoexclude_onhand: true,
                 filter_to_supermarket: false,
             },
-
+            new_supermarket: { entrymode: false, value: undefined, editmode: undefined },
+            new_category: { entrymode: false, value: undefined },
             autosync_id: undefined,
             auto_sync_running: false,
             show_delay: false,
+            drag: false,
             show_modal: false,
             fields: ["checked", "amount", "category", "unit", "food", "recipe", "details"],
             loading: true,
@@ -448,6 +586,25 @@ export default {
         Recipes() {
             return [...new Map(this.items.filter((x) => x.list_recipe).map((item) => [item["list_recipe"], item])).values()]
         },
+        supermarketCategory() {
+            return this.new_supermarket.editmode ? this.new_supermarket.value.category_to_supermarket : this.shopping_categories
+        },
+
+        notSupermarketCategory() {
+            let supercats = this.new_supermarket.value.category_to_supermarket
+                .map((x) => x.category)
+                .flat()
+                .map((x) => x.id)
+
+            return this.shopping_categories
+                .filter((x) => !supercats.includes(x.id))
+                .map((x) => {
+                    return {
+                        id: Math.random(),
+                        category: x,
+                    }
+                })
+        },
     },
     watch: {
         selected_supermarket(newVal, oldVal) {
@@ -506,9 +663,6 @@ export default {
                     console.log(err)
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
-        },
-        categoryName: function(value) {
-            return this.shopping_categories.filter((x) => x.id == value)[0]?.name ?? ""
         },
         resetFilters: function() {
             this.selected_supermarket = undefined
@@ -570,6 +724,16 @@ export default {
                 this.items = this.items.filter((x) => !entries.includes(x.id))
                 StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
             })
+        },
+        editSupermarket(s) {
+            if (!s.editmode) {
+                this.new_supermarket = { entrymode: false, value: undefined, editmode: undefined }
+                this.supermarkets.map((x) => (x.editmode = false))
+            } else {
+                this.new_supermarket.value = s
+                this.new_supermarket.editmode = true
+                this.supermarkets.filter((x) => x.id !== s.id).map((x) => (x.editmode = false))
+            }
         },
         foodName: function(value) {
             return value?.food?.name ?? value?.[0]?.food?.name ?? ""
@@ -769,6 +933,108 @@ export default {
                 this.getShoppingList()
             })
         },
+        addCategory: function() {
+            let api = new ApiApiFactory()
+            api.createSupermarketCategory({ name: this.new_category.value })
+                .then((result) => {
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    this.shopping_categories.push(result.data)
+                    this.new_category.value = undefined
+                })
+                .catch((err) => {
+                    console.log(err, Object.keys(err))
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                })
+        },
+        addSupermarket: function() {
+            let api = new ApiApiFactory()
+            api.createSupermarket({ name: this.new_supermarket.value })
+                .then((result) => {
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    this.supermarkets.push(result.data)
+                    this.new_supermarket.value = undefined
+                })
+                .catch((err) => {
+                    console.log(err, Object.keys(err))
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                })
+        },
+        saveSupermarketCategoryOrder(e) {
+            // TODO: all of this complexity should be moved to the backend
+            let apiClient = new ApiApiFactory()
+            let supermarket = this.new_supermarket.value
+            let temp_supermarkets = [...this.supermarkets]
+            const updateMoved = function(supermarket) {
+                var promises = []
+                supermarket.category_to_supermarket.forEach((x, i) => {
+                    x.order = i
+                    promises.push(apiClient.partialUpdateSupermarketCategoryRelation(x.id, { order: i }))
+                })
+                return Promise.all(promises).then(() => {
+                    return supermarket
+                })
+            }
+
+            if ("removed" in e) {
+                // store current value in case it needs rolled back
+                let idx = this.supermarkets.indexOf((x) => x.id === supermarket.id)
+                Vue.set(this.supermarkets, idx, supermarket)
+                apiClient
+                    .destroySupermarketCategoryRelation(e.removed.element.id)
+                    .then((result) => {
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    })
+                    .catch((err) => {
+                        console.log(err, Object.keys(err))
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        this.supermarkets = temp_supermarkets
+                    })
+            }
+
+            if ("added" in e) {
+                let apiClient = new ApiApiFactory()
+                let category = e.added.element.category
+
+                apiClient
+                    .createSupermarketCategoryRelation({
+                        supermarket: supermarket.id,
+                        category: category,
+                        order: e.added.element.newIndex,
+                    })
+                    .then((results) => {
+                        this.new_supermarket.value.category_to_supermarket.filter((x) => x.category.id === category.id)[0].id = results.data.id
+
+                        return updateMoved(this.new_supermarket.value)
+                    })
+                    .then((updated_supermarket) => {
+                        let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
+                        Vue.set(this.supermarkets, idx, updated_supermarket)
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    })
+                    .catch((err) => {
+                        console.log(err, Object.keys(err))
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        this.supermarkets = temp_supermarkets
+                    })
+            }
+
+            if ("moved" in e) {
+                updateMoved(this.new_supermarket.value)
+                    .then((updated_supermarket) => {
+                        let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
+                        Vue.set(this.supermarkets, idx, updated_supermarket)
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    })
+                    .catch((err) => {
+                        console.log(err, Object.keys(err))
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        this.supermarkets = temp_supermarkets
+                    })
+            }
+        },
+        categoryName(item) {
+            return item?.category?.name ?? item.name
+        },
         updateOnlineStatus(e) {
             const { type } = e
             this.online = type === "online"
@@ -801,5 +1067,10 @@ export default {
 .float-up {
     padding-top: -3em;
     margin-top: -3em;
+}
+
+.ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
 }
 </style>
