@@ -79,9 +79,6 @@ def is_object_shared(user, obj):
     #      share checks for relevant objects
     if not user.is_authenticated:
         return False
-    if obj.__class__.__name__ == 'ShoppingListEntry':
-        # shopping lists are shared all or none and stored in user preferences
-        return obj.created_by in user.get_shopping_share()
     else:
         return user in obj.get_shared()
 

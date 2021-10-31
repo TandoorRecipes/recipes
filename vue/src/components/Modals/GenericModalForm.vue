@@ -8,7 +8,6 @@
                 <p v-if="f.type == 'instruction'">{{ f.label }}</p>
                 <!-- this lookup is single selection -->
                 <lookup-input v-if="f.type == 'lookup'" :form="f" :model="listModel(f.list)" @change="storeValue" />
-                <!-- TODO add ability to create new items associated with lookup -->
                 <!-- TODO: add multi-selection input list -->
                 <checkbox-input v-if="f.type == 'checkbox'" :label="f.label" :value="f.value" :field="f.field" />
                 <text-input v-if="f.type == 'text'" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" />

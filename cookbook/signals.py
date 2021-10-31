@@ -24,7 +24,6 @@ def skip_signal(signal_func):
     return _decorator
 
 
-# TODO there is probably a way to generalize this
 @receiver(post_save, sender=Recipe)
 @skip_signal
 def update_recipe_search_vector(sender, instance=None, created=False, **kwargs):

@@ -216,6 +216,24 @@ export class Models {
         },
         create: {
             params: [["amount", "unit", "food", "checked"]],
+            form: {
+                unit: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "unit",
+                    list: "UNIT",
+                    label: i18n.t("Unit"),
+                    allow_create: true,
+                },
+                food: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "food",
+                    list: "FOOD",
+                    label: i18n.t("Food"),
+                    allow_create: true,
+                },
+            },
         },
     }
 
