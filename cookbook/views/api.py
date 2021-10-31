@@ -657,7 +657,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         servings = request.data.get('servings', obj.servings)
         list_recipe = request.data.get('list_recipe', None)
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-        # TODO: Consider if this should be a Recipe method
         list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=request.user)
 
         return Response(content, status=status.HTTP_204_NO_CONTENT)

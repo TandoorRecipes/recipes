@@ -24,7 +24,7 @@
                         <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                             <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
                             <div class="m-0 text-truncate">{{ item[subtitle] }}</div>
-                            <!-- <span>{{this_item[itemTags.field]}}</span> -->
+
                             <generic-pill v-for="x in itemTags" :key="x.field" :item_list="item[x.field]" :label="x.label" :color="x.color" />
                             <generic-ordered-pill
                                 v-for="x in itemOrderedTags"
@@ -66,6 +66,8 @@
                         class="p-0"
                         :show_merge="useMerge"
                         :show_move="useMove"
+                        :show_shopping="useShopping"
+                        :show_onhand="useOnhand"
                         @item-action="$emit('item-action', { action: $event, source: item })"
                     >
                     </generic-context-menu>
@@ -126,8 +128,6 @@
             <b-list-group-item action v-on:click="closeMenu()">
                 <i class="fas fa-times fa-fw"></i> <b>{{ $t("Cancel") }}</b>
             </b-list-group-item>
-            <!-- TODO add to shopping list -->
-            <!-- TODO toggle onhand -->
         </b-list-group>
     </div>
 </template>
@@ -184,6 +184,12 @@ export default {
         },
         useMerge: function() {
             return this.model?.["merge"] ?? false ? true : false
+        },
+        useShopping: function() {
+            return this.model?.["shop"] ?? false ? true : false
+        },
+        useOnhand: function() {
+            return this.model?.["onhand"] ?? false ? true : false
         },
         useDrag: function() {
             return this.useMove || this.useMerge
