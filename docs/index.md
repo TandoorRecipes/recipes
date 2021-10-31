@@ -29,10 +29,10 @@
 ![Preview](preview.png)
 
 ## Core Features
-- 🥗 **Manage your recipes** - Manage your ever growing recipe collection
-- 📆 **Plan** - multiple meals for each day
-- 🛒 **Shopping lists** - via the meal plan or straight from recipes
-- 📚 **Cookbooks** - collect recipes into books
+- 🥗 **Manage your recipes** with a fast and intuitive editor
+- 📆 **Plan** multiple meals for each day
+- 🛒 **Shopping lists** via the meal plan or straight from recipes
+- 📚 **Cookbooks** collect recipes into books
 - 👪 **Share and collaborate** on recipes with friends and family
 
 ## Made by and for power users
