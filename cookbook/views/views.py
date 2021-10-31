@@ -387,6 +387,7 @@ def user_settings(request):
                 up.shopping_auto_sync = shopping_form.cleaned_data['shopping_auto_sync']
                 up.filter_to_supermarket = shopping_form.cleaned_data['filter_to_supermarket']
                 up.default_delay = shopping_form.cleaned_data['default_delay']
+                up.shopping_recent_days = shopping_form.cleaned_data['shopping_recent_days']
                 if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
                     up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
                 up.save()
