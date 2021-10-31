@@ -25,24 +25,10 @@
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
                                     </div>
                                     <div class="col col-md-3">
-                                        <generic-multiselect
-                                            @change="new_item.unit = $event.val"
-                                            :model="Models.UNIT"
-                                            :multiple="false"
-                                            :allow_create="false"
-                                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                            :placeholder="$t('Unit')"
-                                        />
+                                        <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" />
                                     </div>
                                     <div class="col col-md-4">
-                                        <generic-multiselect
-                                            @change="new_item.food = $event.val"
-                                            :model="Models.FOOD"
-                                            :multiple="false"
-                                            :allow_create="false"
-                                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                            :placeholder="$t('Food')"
-                                        />
+                                        <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" />
                                     </div>
                                     <div class="col col-md-1 ">
                                         <b-button variant="link" class="px-0">
@@ -107,7 +93,7 @@
                     </tr>
                 </table>
             </b-tab>
-            <!-- settings tab -->
+            <!-- supermarkets tab -->
             <b-tab :title="$t('Supermarkets')">
                 <div class="row justify-content-center">
                     <div class="col col-md-5">
@@ -183,9 +169,7 @@
                                 </div>
                             </b-card>
 
-                            <b-card-sub-title v-if="new_supermarket.editmode" class="pt-0 pb-3"
-                                >Drag categories to change the order categories appear in shopping list.</b-card-sub-title
-                            >
+                            <b-card-sub-title v-if="new_supermarket.editmode" class="pt-0 pb-3">{{ $t("CategoryInstruction") }}</b-card-sub-title>
                             <b-card
                                 v-if="new_supermarket.editmode && supermarketCategory.length === 0"
                                 class="m-0 p-0  font-weight-bold no-body"
@@ -329,6 +313,20 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col col-md-6">{{ $t("shopping_recent_days") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="number" size="sm" v-model="settings.shopping_recent_days" @change="saveSettings" />
+                                </div>
+                            </div>
+
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("shopping_recent_days_desc") }}
+                                    </em>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col col-md-6">{{ $t("filter_to_supermarket") }}</div>
                                 <div class="col col-md-6 text-right">
                                     <input type="checkbox" size="sm" v-model="settings.filter_to_supermarket" @change="saveSettings" />
@@ -459,6 +457,7 @@ import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import ShoppingLineItem from "@/components/ShoppingLineItem"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import GenericPill from "@/components/GenericPill"
+import LookupInput from "@/components/Modals/LookupInput"
 import draggable from "vuedraggable"
 
 import { ApiMixin, getUserPreference } from "@/utils/utils"
@@ -470,7 +469,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingListView",
     mixins: [ApiMixin],
-    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable },
+    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable, LookupInput },
 
     data() {
         return {
@@ -492,6 +491,7 @@ export default {
                 mealplan_autoinclude_related: false,
                 mealplan_autoexclude_onhand: true,
                 filter_to_supermarket: false,
+                shopping_recent_days: 7,
             },
             new_supermarket: { entrymode: false, value: undefined, editmode: undefined },
             new_category: { entrymode: false, value: undefined },
@@ -577,6 +577,16 @@ export default {
         defaultDelay() {
             return getUserPreference("default_delay") || 2
         },
+        formUnit() {
+            let unit = this.Models.SHOPPING_LIST.create.form.unit
+            unit.value = this.new_item.unit
+            return unit
+        },
+        formFood() {
+            let food = this.Models.SHOPPING_LIST.create.form.food
+            food.value = this.new_item.food
+            return food
+        },
         itemsDelayed() {
             return this.items.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) > new Date(Date.now())).length < this.items.length
         },
@@ -647,6 +657,10 @@ export default {
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
+        test(e) {
+            this.new_item.unit = e
+            console.log(e, this.new_item, this.formUnit)
+        },
         addItem() {
             let api = new ApiApiFactory()
             api.createShoppingListEntry(this.new_item)

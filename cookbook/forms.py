@@ -228,6 +228,7 @@ class StorageForm(forms.ModelForm):
         }
 
 
+# TODO: Deprecate
 class RecipeBookEntryForm(forms.ModelForm):
     prefix = 'bookmark'
 
@@ -480,7 +481,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
 
         fields = (
             'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
-            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket'
+            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days'
         )
 
         help_texts = {
@@ -494,6 +495,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
             'default_delay': _('Default number of hours to delay a shopping list entry.'),
             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
+            'shopping_recent_days':  _('Days of recent shopping list entries to display.'),
         }
         labels = {
             'shopping_share': _('Share Shopping List'),
@@ -503,6 +505,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'mealplan_autoinclude_related': _('Include Related'),
             'default_delay': _('Default Delay Hours'),
             'filter_to_supermarket': _('Filter to Supermarket'),
+            'shopping_recent_days': _('Recent Days')
         }
 
         widgets = {

@@ -2,13 +2,15 @@
 import annoying.fields
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField, SearchVector
+from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import migrations, models
 from django.db.models import deletion
-from django_scopes import scopes_disabled
 from django.utils import translation
+from django_scopes import scopes_disabled
+
 from cookbook.managers import DICTIONARY
-from cookbook.models import Recipe, Step, Index, PermissionModelMixin, nameSearchField, allSearchFields
+from cookbook.models import (Index, PermissionModelMixin, Recipe, Step, allSearchFields,
+                             nameSearchField)
 
 
 def set_default_search_vector(apps, schema_editor):
@@ -16,8 +18,6 @@ def set_default_search_vector(apps, schema_editor):
         return
     language = DICTIONARY.get(translation.get_language(), 'simple')
     with scopes_disabled():
-        # TODO this approach doesn't work terribly well if multiple languages are in use
-        # I'm also uncertain about forcing unaccent here
         Recipe.objects.all().update(
             name_search_vector=SearchVector('name__unaccent', weight='A', config=language),
             desc_search_vector=SearchVector('description__unaccent', weight='B', config=language)
