@@ -90,7 +90,7 @@ export default {
             left_counts: { max: 9999, current: 0 },
             this_model: undefined,
             model_menu: undefined,
-            this_action: undefined,
+            this_action: {},
             this_recipe_param: undefined,
             this_item: {},
             this_target: {},
@@ -193,6 +193,13 @@ export default {
                         this.getRecipes(param, source)
                     }
                     break
+                case "add-shopping":
+                    //TODO: add modal to edit units and amount
+                    this.addShopping(e.source)
+                    break
+                case "add-onhand":
+                    this.addOnhand(e.source)
+                    break
             }
         },
         finishAction: function (e) {
@@ -232,26 +239,6 @@ export default {
                     let results = result.data?.results ?? result.data
 
                     if (results?.length) {
-                        // let secondaryRequest = undefined;
-                        // if (this['items_' + column]?.length < getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1)) {
-                        //   // the item list is smaller than it should be based on the site the user is own
-                        //   // this happens when an item is deleted (or merged)
-                        //   // to prevent issues insert the last item of the previous search page before loading the new results
-                        //   params.page = params.page - 1
-                        //   secondaryRequest = this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
-                        //     let prev_page_results = result.data?.results ?? result.data
-                        //     if (prev_page_results?.length) {
-                        //       results = [prev_page_results[prev_page_results.length]].concat(results)
-                        //
-                        //       this['items_' + column] = this['items_' + column].concat(results) //TODO duplicate code, find some elegant workaround
-                        //       this[column + '_counts']['current'] = getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1) + results.length
-                        //       this[column + '_counts']['max'] = result.data?.count ?? 0
-                        //     }
-                        //   })
-                        // } else {
-                        //
-                        // }
-
                         this["items_" + column] = this["items_" + column].concat(results)
                         this[column + "_counts"]["current"] = getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1) + results.length
                         this[column + "_counts"]["max"] = result.data?.count ?? 0
@@ -276,6 +263,21 @@ export default {
             // this creates a deep copy to make sure that columns stay independent
             this.items_right = [{ ...item }].concat(this.destroyCard(item?.id, this.items_right))
         },
+        // this currently assumes shopping is only applicable on FOOD model
+        addShopping: function (food) {
+            let api = new ApiApiFactory()
+            food.shopping = true
+            api.createShoppingListEntry({ food: food, amount: 1 }).then(() => {
+                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                this.refreshCard(food, this.items_left)
+                this.refreshCard({ ...food }, this.items_right)
+            })
+        },
+        addOnhand: function (item) {
+            item.on_hand = true
+            this.saveThis(item)
+        },
+
         updateThis: function (item) {
             this.refreshThis(item.id)
         },
@@ -300,7 +302,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    makeToast(this.$t("Error"), err.bodyText, "danger")
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_MOVE, err?.bodyText)
                 })
         },
         moveUpdateItem: function (source_id, target_id) {
@@ -336,12 +338,12 @@ export default {
                 .then((result) => {
                     this.mergeUpdateItem(source_id, target_id)
                     // TODO make standard toast
-                    makeToast(this.$t("Success"), "Succesfully merged resource", "success")
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
                     //TODO error checking not working with OpenAPI methods
                     console.log("Error", err)
-                    makeToast(this.$t("Error"), err.bodyText, "danger")
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_MOVE, err?.bodyText)
                 })
 
             if (automate) {
@@ -425,7 +427,7 @@ export default {
         },
         clearState: function () {
             this.show_modal = false
-            this.this_action = undefined
+            this.this_action = {}
             this.this_item = undefined
             this.this_target = undefined
         },
