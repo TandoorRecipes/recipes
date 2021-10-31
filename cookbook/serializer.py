@@ -329,6 +329,9 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
 class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
     category = SupermarketCategorySerializer()
 
+    def get_fields(self, *args, **kwargs):
+        return super().get_fields(*args, **kwargs)
+
     class Meta:
         model = SupermarketCategoryRelation
         fields = ('id', 'category', 'supermarket', 'order')
