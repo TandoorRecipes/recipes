@@ -65,6 +65,8 @@ export class Models {
         paginated: true,
         move: true,
         merge: true,
+        shop: true,
+        onhand: true,
         badges: {
             linked_recipe: true,
             on_hand: true,

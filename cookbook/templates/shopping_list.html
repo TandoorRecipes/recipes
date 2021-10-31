@@ -1,5 +1,12 @@
-{% extends "base.html" %} {% comment %} TODO: Deprecate {% endcomment %} {% load django_tables2 %} {% load crispy_forms_tags %} {% load static %} {% load i18n %} {% block title
-%}{% trans "Shopping List" %}{% endblock %} {% block extra_head %} {% include 'include/vue_base.html' %}
+{% extends "base.html" %}
+{% comment %} TODO: Deprecate {% endcomment %}
+{% load django_tables2 %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% trans "Shopping List" %}{% endblock %}
+{% block extra_head %}
+{% include 'include/vue_base.html' %}
 
 <link rel="stylesheet" href="{% static 'css/vue-multiselect-bs4.min.css' %}" />
 <script src="{% static 'js/vue-multiselect.min.js' %}"></script>
@@ -907,7 +914,7 @@
                     this.makeToast(gettext('Error'), gettext("There was an error loading a resource!") + err.bodyText, 'danger')
                 })
             },
-            searchSupermarket: function (query) { //TODO move to central component
+            searchSupermarket: function (query) {
                 this.supermarkets_loading = true
                 this.$http.get("{% url 'api:supermarket-list' %}" + '?query=' + query + '&limit=10').then((response) => {
                     this.supermarkets = response.data

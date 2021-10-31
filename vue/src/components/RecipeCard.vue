@@ -82,6 +82,9 @@ export default {
         footer_text: String,
         footer_icon: String,
     },
+    mounted() {
+        console.log(this.recipe)
+    },
     computed: {
         detailed: function() {
             return this.recipe?.steps !== undefined
