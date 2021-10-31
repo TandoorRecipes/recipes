@@ -15,14 +15,12 @@ from recipes import settings
 def shopping_helper(qs, request):
     supermarket = request.query_params.get('supermarket', None)
     checked = request.query_params.get('checked', 'recent')
+    user = request.user
 
     supermarket_order = ['food__supermarket_category__name', 'food__name']
 
     # TODO created either scheduled task or startup task to delete very old shopping list entries
     # TODO create user preference to define 'very old'
-
-    # qs = qs.annotate(supermarket_category=Coalesce(F('food__supermarket_category__name'), Value(_('Undefined'))))
-    # TODO add supermarket to API - order by category order
     if supermarket:
         supermarket_categories = SupermarketCategoryRelation.objects.filter(supermarket=supermarket, category=OuterRef('food__supermarket_category'))
         qs = qs.annotate(supermarket_order=Coalesce(Subquery(supermarket_categories.values('order')), Value(9999)))
@@ -33,8 +31,7 @@ def shopping_helper(qs, request):
         qs = qs.filter(checked=True)
     elif checked in ['recent']:
         today_start = timezone.now().replace(hour=0, minute=0, second=0)
-        # TODO make recent a user setting
-        week_ago = today_start - timedelta(days=7)
+        week_ago = today_start - timedelta(days=user.userpreference.shopping_recent_days)
         qs = qs.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
         supermarket_order = ['checked'] + supermarket_order
 
@@ -51,7 +48,6 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     :param ingredients: Ingredients, list of ingredient IDs to include on the shopping list.  When not provided all ingredients will be used
     :param append: If False will remove any entries not included with ingredients, when True will append ingredients to the shopping list
     """
-    # TODO cascade to related recipes
     r = recipe or getattr(mealplan, 'recipe', None) or getattr(list_recipe, 'recipe', None)
     if not r:
         raise ValueError(_("You must supply a recipe or mealplan"))
