@@ -258,7 +258,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import MealPlanCard from "@/components/MealPlanCard"
-import MealPlanEditModal from "@/components/MealPlanEditModal"
+import MealPlanEditModal from "@/components/Modals/MealPlanEditModal"
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader"
 import EmojiInput from "@/components/Modals/EmojiInput"
 

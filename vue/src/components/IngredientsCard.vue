@@ -25,7 +25,7 @@
                         <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                         <template v-for="s in steps">
                             <template v-for="i in s.ingredients">
-                                <ingredient
+                                <ingredient-component
                                     :ingredient="i"
                                     :ingredient_factor="ingredient_factor"
                                     :key="i.id"
@@ -52,14 +52,14 @@ import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import Ingredient from "@/components/Ingredient"
+import IngredientComponent from "@/components/IngredientComponent"
 import { ApiMixin, StandardToasts } from "@/utils/utils"
 Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientCard",
     mixins: [ApiMixin],
-    components: { Ingredient },
+    components: { IngredientComponent },
     props: {
         steps: {
             type: Array,
