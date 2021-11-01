@@ -61,10 +61,10 @@ import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import {ApiApiFactory} from "../../utils/openapi/api";
-import CookbookSlider from "../../components/CookbookSlider";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import {StandardToasts} from "../../utils/utils";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import CookbookSlider from "@/components/CookbookSlider";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import {StandardToasts} from "@/utils/utils";
 
 Vue.use(BootstrapVue)
 
