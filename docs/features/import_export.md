@@ -36,7 +36,7 @@ Overview of the capabilities of the different integrations.
 | RezKonv     | ✔️      | ❌      |  ❌        |
 | OpenEats     | ✔️      | ❌      |  ⌚        |
 | Plantoeat     | ✔️      | ❌      |  ✔        |
-| CookBookApp     | ✔️      | ⌚      |  ❌        |
+| CookBookApp     | ✔️      | ⌚      |  ✔️        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -217,4 +217,4 @@ Plan to eat allow to export a text file containing all your recipes. Simply uplo
 
 ## CookBookApp
 
-CookBookApp can export .zip files containing .yml files. Upload the entire ZIP to Tandoor to import all conluded recipes.
+CookBookApp can export .zip files containing .html files. Upload the entire ZIP to Tandoor to import all included recipes.
