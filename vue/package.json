@@ -24,7 +24,7 @@
     "vue-click-outside": "^1.1.0",
     "vue-clickaway": "^2.2.2",
     "vue-cookies": "^1.7.4",
-    "vue-i18n": "^8.24.4",
+    "vue-i18n": "^8.26.5",
     "vue-infinite-loading": "^2.4.5",
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.1.2",
@@ -33,7 +33,7 @@
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.0",
-    "workbox-webpack-plugin": "^6.1.5"
+    "workbox-webpack-plugin": "^6.3.0"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.5.0",
@@ -44,12 +44,12 @@
     "@vue/cli-plugin-pwa": "~4.5.13",
     "@vue/cli-plugin-typescript": "^4.5.13",
     "@vue/cli-service": "~4.5.13",
-    "@vue/compiler-sfc": "^3.1.1",
+    "@vue/compiler-sfc": "^3.2.20",
     "@vue/eslint-config-typescript": "^7.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.28.0",
-    "eslint-plugin-vue": "^7.10.0",
-    "typescript": "~4.4.3",
+    "eslint-plugin-vue": "^8.0.3",
+    "typescript": "~4.4.4",
     "vue-cli-plugin-i18n": "^2.1.1",
     "webpack-bundle-tracker": "1.4.0",
     "workbox-expiration": "^6.3.0",

@@ -221,11 +221,6 @@ def meal_plan(request):
 
 
 @group_required('user')
-def meal_plan_new(request):
-    return render(request, 'meal_plan_new.html', {})
-
-
-@group_required('user')
 def supermarket(request):
     return render(request, 'supermarket.html', {})
 
@@ -343,10 +338,13 @@ def user_settings(request):
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
                     search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
-                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
+                        search_form.cleaned_data['fulltext']) == 0:
+                    search_form.add_error('search',
+                                          _('To use this search method you must select at least one full text search field!'))
                     search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
+                        search_form.cleaned_data['trigram']) > 0:
                     search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
                     search_error = True
                 else:
@@ -385,7 +383,8 @@ def user_settings(request):
     else:
         preference_form = UserPreferenceForm()
 
-    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
+    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
+        sp.fulltext.all())
     if sp and not search_error and fields_searched > 0:
         search_form = SearchPreferenceForm(instance=sp)
     elif not search_error:
@@ -395,7 +394,8 @@ def user_settings(request):
         api_token = Token.objects.create(user=request.user)
 
     # these fields require postgress - just disable them if postgress isn't available
-    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                                       'django.db.backends.postgresql']:
         search_form.fields['search'].disabled = True
         search_form.fields['lookup'].disabled = True
         search_form.fields['trigram'].disabled = True
