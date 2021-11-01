@@ -69,6 +69,7 @@
         window.USER_PREF = {
             'use_fractions': {% if request.user.userpreference.use_fractions %} true {% else %} false {% endif %},
             'ingredient_decimals': {% if request.user.userpreference.use_fractions %} {{ request.user.userpreference.ingredient_decimals }} {% else %} 2 {% endif %},
+            'use_kj': {% if request.user.userpreference.use_kj %} true {% else %} false {% endif %},
         }
     </script>
 
