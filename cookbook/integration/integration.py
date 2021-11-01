@@ -269,7 +269,8 @@ class Integration:
         """
         raise NotImplementedError('Method not implemented in integration')
 
-    def handle_exception(self, exception, log=None, message=''):
+    @staticmethod
+    def handle_exception(exception, log=None, message=''):
         if log:
             if message:
                 log.msg += message
