@@ -19,11 +19,6 @@
             </td>
             <td @click="done">
                 <template v-if="ingredient.food !== null">
-                    <!-- <i
-                        v-if="show_shopping && !add_shopping_mode"
-                        class="far fa-edit fa-sm px-1"
-                        @click="editFood()"
-                    ></i> -->
                     <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">{{
                         ingredient.food.name
                     }}</a>
@@ -35,10 +30,6 @@
                     <span v-b-popover.hover="ingredient.note" class="d-print-none touchable">
                         <i class="far fa-comment"></i>
                     </span>
-                    <!-- v-if="ingredient.note.length > 15" -->
-                    <!--          <span v-else>-->
-                    <!--            {{ ingredient.note }}-->
-                    <!--          </span>-->
 
                     <div class="d-none d-print-block"><i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}</div>
                 </div>
@@ -80,7 +71,7 @@ import OnHandBadge from "@/components/Badges/OnHand"
 import ShoppingBadge from "@/components/Badges/Shopping"
 
 export default {
-    name: "Ingredient",
+    name: "IngredientComponent",
     components: { OnHandBadge, ShoppingBadge },
     props: {
         ingredient: Object,

@@ -36,12 +36,17 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
         except KeyError:
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
-        if self.context.get('request', False) and bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
-            return fields
-        else:
+        try:
+            if bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+                return fields
+        except (AttributeError, KeyError) as e:
+            pass
+        try:
             del fields['image']
             del fields['numrecipe']
-            return fields
+        except KeyError:
+            pass
+        return fields
 
     def get_image(self, obj):
         # TODO add caching
@@ -286,8 +291,9 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     class Meta:
         model = Keyword
         fields = (
-            'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe')
-        read_only_fields = ('id', 'label', 'image', 'parent', 'numchild', 'numrecipe')
+            'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
+            'updated_at')
+        read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
 
 class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
@@ -367,15 +373,6 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     def get_shopping_status(self, obj):
         return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
-
-    def get_fields(self, *args, **kwargs):
-        fields = super().get_fields(*args, **kwargs)
-        print('food', self.__class__, self.parent.__class__)
-        # extended values are computationally expensive and not needed in normal circumstances
-        if not bool(int(self.context['request'].query_params.get('extended', False))) or not self.parent:
-            del fields['image']
-            del fields['numrecipe']
-        return fields
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -633,6 +630,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         read_only_fields = ('created_by',)
 
 
+# TODO deprecate
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
@@ -698,8 +696,8 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     def run_validation(self, data):
         if (
             data.get('checked', False)
-            and not (id := data.get('id', None))
-            and not ShoppingListEntry.objects.get(id=id).checked
+            and self.root.instance
+            and not self.root.instance.checked
         ):
             # if checked flips from false to true set completed datetime
             data['completed_at'] = timezone.now()
@@ -711,20 +709,6 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             if 'completed_at' in data:
                 del data['completed_at']
 
-        ############################################################
-        # temporary while old and new shopping lists are both in use
-        try:
-            # this serializer is the parent serializer for the API
-            api_serializer = self.context['view'].serializer_class
-        except Exception:
-            # this serializer is probably nested or a foreign key
-            api_serializer = None
-        if self.context['request'].method == 'POST' and not self.__class__ == api_serializer:
-            data['space'] = self.context['request'].space.id
-            data['created_by'] = self.context['request'].user.id
-        ############################################################
-        if self.context['request'].method == 'POST' and self.__class__ == api_serializer:
-            data['created_by'] = {'id': self.context['request'].user.id}
         return super().run_validation(data)
 
     def create(self, validated_data):
