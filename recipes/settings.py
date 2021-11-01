@@ -360,6 +360,7 @@ LANGUAGES = [
     ('it', _('Italian')),
     ('lv', _('Latvian')),
     ('pl', _('Polish')),
+    ('ru', _('Russian')),
     ('es', _('Spanish')),
 ]
 

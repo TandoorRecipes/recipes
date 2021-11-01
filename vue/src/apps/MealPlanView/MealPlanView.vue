@@ -231,22 +231,24 @@
 
 <script>
 
+import Vue from "vue";
 import {BootstrapVue} from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import ContextMenu from "@/components/ContextMenu/ContextMenu";
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem";
-import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle";
-import Vue from "vue";
-import {ApiApiFactory} from "@/utils/openapi/api";
-import MealPlanCard from "../../components/MealPlanCard";
-import moment from 'moment'
-import {ApiMixin, StandardToasts} from "@/utils/utils";
-import MealPlanEditModal from "../../components/MealPlanEditModal";
-import VueCookies from "vue-cookies";
+import MealPlanCard from "@/components/MealPlanCard";
+import MealPlanEditModal from "@/components/MealPlanEditModal";
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader";
-import EmojiInput from "../../components/Modals/EmojiInput";
-import draggable from 'vuedraggable'
+import EmojiInput from "@/components/Modals/EmojiInput";
+
+import moment from "moment"
+import draggable from "vuedraggable"
+import VueCookies from "vue-cookies";
+
+import {ApiMixin, StandardToasts} from "@/utils/utils";
+import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle";
+import {ApiApiFactory} from "@/utils/openapi/api";
 
 const {makeToast} = require("@/utils/utils");
 
