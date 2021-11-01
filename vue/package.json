@@ -33,7 +33,7 @@
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.0",
-    "workbox-webpack-plugin": "^6.1.5"
+    "workbox-webpack-plugin": "^6.3.0"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.5.0",
