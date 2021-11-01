@@ -39,11 +39,15 @@ class UserPreferenceForm(forms.ModelForm):
     class Meta:
         model = UserPreference
         fields = (
-            'default_unit', 'use_fractions', 'theme', 'nav_color',
+            'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'show_recent', 'search_style',
             'plan_share', 'ingredient_decimals', 'shopping_auto_sync',
             'comments'
         )
+
+        labels = {
+            'use_kj': 'Use KJ'
+        }
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
@@ -52,6 +56,7 @@ class UserPreferenceForm(forms.ModelForm):
             'use_fractions': _(
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
             # noqa: E501
+            'use_kj': _('Display nutritional energy amounts in joules instead of calories'), # noqa: E501
             'plan_share': _(
                 'Users with whom newly created meal plan/shopping list entries should be shared by default.'),
             # noqa: E501

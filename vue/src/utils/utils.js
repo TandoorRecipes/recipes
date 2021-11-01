@@ -156,6 +156,33 @@ export function roundDecimals(num) {
     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`);
 }
 
+const KILOJOULES_PER_CALORIE = 4.18
+
+export function calculateEnergy(amount, factor) {
+    if (getUserPreference('use_kj')) {
+        let joules = amount * KILOJOULES_PER_CALORIE
+        return calculateAmount(joules, factor) + ' kJ'
+    } else {
+        return calculateAmount(amount, factor) + ' kcal'
+    }
+}
+
+export function convertEnergyToCalories(amount) {
+    if (getUserPreference('use_kj')) {
+        return amount / KILOJOULES_PER_CALORIE
+    } else {
+        return amount
+    }
+}
+
+export function energyHeading() {
+    if (getUserPreference('use_kj')) {
+        return 'Energy'
+    } else {
+        return 'Calories'
+    }
+}
+
 /*
 * Utility functions to use OpenAPIs generically
 * */
