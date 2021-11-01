@@ -67,6 +67,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='cookbook.mealplan'),
         ),
         migrations.AddField(
+            model_name='shoppinglistrecipe',
+            name='name',
+            field=models.CharField(blank=True, default='', max_length=32),
+        ),
+        migrations.AddField(
             model_name='shoppinglistentry',
             name='ingredient',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='cookbook.ingredient'),
