@@ -25,8 +25,34 @@
             </div>
 
             <div style="text-align: center">
-                <keywords :recipe="recipe"></keywords>
+        <keywords-component :recipe="recipe"></keywords-component>
+      </div>
+
+      <hr/>
+      <div class="row">
+        <div class="col col-md-3">
+          <div class="row d-flex" style="padding-left: 16px">
+            <div class="my-auto" style="padding-right: 4px">
+              <i class="fas fa-user-clock fa-2x text-primary"></i>
             </div>
+            <div class="my-auto" style="padding-right: 4px">
+              <span class="text-primary"><b>{{ $t('Preparation') }}</b></span><br/>
+              {{ recipe.working_time }} {{ $t('min') }}
+            </div>
+
+            <div class="row text-center">
+                <div class="col col-md-12">
+                    <recipe-rating :recipe="recipe"></recipe-rating>
+                    <last-cooked :recipe="recipe" class="mt-2"></last-cooked>
+                </div>
+            </div>
+
+            <div class="my-auto">
+                <div class="col-12" style="text-align: center">
+                    <i>{{ recipe.description }}</i>
+                </div>
+            </div>
+
 
             <hr />
             <div class="row">
@@ -92,35 +118,29 @@
                         </div>
                     </div>
 
-                    <div class="row" style="margin-top: 2vh; margin-bottom: 2vh">
-                        <div class="col-12">
-                            <Nutrition :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <template v-if="!recipe.internal">
-                <div v-if="recipe.file_path.includes('.pdf')">
-                    <PdfViewer :recipe="recipe"></PdfViewer>
-                </div>
-                <div v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg') || recipe.file_path.includes('.gif')">
-                    <ImageViewer :recipe="recipe"></ImageViewer>
-                </div>
-            </template>
 
-            <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-                <Step
-                    :recipe="recipe"
-                    :step="s"
-                    :ingredient_factor="ingredient_factor"
-                    :index="index"
-                    :start_time="start_time"
-                    @update-start-time="updateStartTime"
-                    @checked-state-changed="updateIngredientCheckedState"
-                ></Step>
+          <div class="row" style="margin-top: 2vh; margin-bottom: 2vh">
+            <div class="col-12">
+              <Nutrition-component :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition-component>
             </div>
         </div>
+
+        <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
+
+        <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh" v-if="share_uid !== 'None'">
+            <div class="col col-md-12">
+                <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)">{{ $t("Report Abuse") }}</a>
+            </div>
+        </div>
+      </template>
+
+
+      <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
+        <step-component :recipe="recipe" :step="s" :ingredient_factor="ingredient_factor" :index="index" :start_time="start_time"
+              @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></step-component>
+      </div>
+    </div>
 
         <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
 
@@ -139,17 +159,17 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import { apiLoadRecipe } from "@/utils/api"
 
-import Step from "@/components/Step"
+import StepComponent from "@/components/StepComponent";
 import RecipeContextMenu from "@/components/ContextMenu/RecipeContextMenu"
 import { ResolveUrlMixin, ToastMixin } from "@/utils/utils"
 
 import PdfViewer from "@/components/PdfViewer"
 import ImageViewer from "@/components/ImageViewer"
-import Nutrition from "@/components/Nutrition"
 import IngredientsCard from "@/components/IngredientsCard"
 
 import moment from "moment"
-import Keywords from "@/components/Keywords"
+import KeywordsComponent from "@/components/KeywordsComponent";
+import NutritionComponent from "@/components/NutritionComponent";
 import LoadingSpinner from "@/components/LoadingSpinner"
 import AddRecipeToBook from "@/components/Modals/AddRecipeToBook"
 import RecipeRating from "@/components/RecipeRating"
@@ -168,10 +188,10 @@ export default {
         PdfViewer,
         ImageViewer,
         IngredientsCard,
-        Step,
+        StepComponent,
         RecipeContextMenu,
-        Nutrition,
-        Keywords,
+        NutritionComponent,
+        KeywordsComponent,
         LoadingSpinner,
         AddRecipeToBook,
     },
