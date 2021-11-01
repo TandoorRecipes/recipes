@@ -202,5 +202,7 @@
     "Current_Period": "Huidige periode",
     "Next_Day": "Volgende dag",
     "Previous_Day": "Vorige dag",
-    "Cannot_Add_Notes_To_Shopping": "Notities kunnen niet aan de boodschappenlijst toegevoegd worden"
+    "Cannot_Add_Notes_To_Shopping": "Notities kunnen niet aan de boodschappenlijst toegevoegd worden",
+    "Remove_nutrition_recipe": "Verwijder voedingswaarde van recept",
+    "Add_nutrition_recipe": "Voeg voedingswaarde toe aan recept"
 }
