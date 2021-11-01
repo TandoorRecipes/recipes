@@ -25,7 +25,7 @@
       </div>
 
       <div style="text-align: center">
-        <keywords :recipe="recipe"></keywords>
+        <keywords-component :recipe="recipe"></keywords-component>
       </div>
 
       <hr/>
@@ -97,8 +97,8 @@
                         <b v-bind:key="s.id">{{s.name}}</b>
                       </template>
                       <template v-for="i in s.ingredients">
-                        <Ingredient :ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
-                                    @checked-state-changed="updateIngredientCheckedState"></Ingredient>
+                        <ingredient-component :ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
+                                    @checked-state-changed="updateIngredientCheckedState"></ingredient-component>
                       </template>
                     </template>
                     <!-- eslint-enable vue/no-v-for-template-key-on-child -->
@@ -120,7 +120,7 @@
 
           <div class="row" style="margin-top: 2vh; margin-bottom: 2vh">
             <div class="col-12">
-              <Nutrition :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition>
+              <Nutrition-component :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition-component>
             </div>
           </div>
         </div>
@@ -140,8 +140,8 @@
 
 
       <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-        <Step :recipe="recipe" :step="s" :ingredient_factor="ingredient_factor" :index="index" :start_time="start_time"
-              @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></Step>
+        <step-component :recipe="recipe" :step="s" :ingredient_factor="ingredient_factor" :index="index" :start_time="start_time"
+              @update-start-time="updateStartTime" @checked-state-changed="updateIngredientCheckedState"></step-component>
       </div>
     </div>
 
@@ -164,21 +164,25 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import {apiLoadRecipe} from "@/utils/api";
 
-import Step from "@/components/Step";
+import Step from "@/components/StepComponent";
 import RecipeContextMenu from "@/components/RecipeContextMenu";
 import {ResolveUrlMixin, ToastMixin} from "@/utils/utils";
-import Ingredient from "@/components/Ingredient";
+import Ingredient from "@/components/IngredientComponent";
 
 import PdfViewer from "@/components/PdfViewer";
 import ImageViewer from "@/components/ImageViewer";
-import Nutrition from "@/components/Nutrition";
+import Nutrition from "@/components/NutritionComponent";
 
 import moment from 'moment'
-import Keywords from "@/components/Keywords";
+import Keywords from "@/components/KeywordsComponent";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import AddRecipeToBook from "@/components/AddRecipeToBook";
 import RecipeRating from "@/components/RecipeRating";
 import LastCooked from "@/components/LastCooked";
+import IngredientComponent from "@/components/IngredientComponent";
+import StepComponent from "@/components/StepComponent";
+import KeywordsComponent from "@/components/KeywordsComponent";
+import NutritionComponent from "@/components/NutritionComponent";
 
 Vue.prototype.moment = moment
 
@@ -195,11 +199,11 @@ export default {
     RecipeRating,
     PdfViewer,
     ImageViewer,
-    Ingredient,
-    Step,
+    IngredientComponent,
+    StepComponent,
     RecipeContextMenu,
-    Nutrition,
-    Keywords,
+    NutritionComponent,
+    KeywordsComponent,
     LoadingSpinner,
     AddRecipeToBook,
   },

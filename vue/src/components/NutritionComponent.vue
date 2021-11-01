@@ -57,7 +57,7 @@
 import {calculateAmount, calculateEnergy, energyHeading} from "@/utils/utils";
 
 export default {
-  name: 'Nutrition',
+  name: 'NutritionComponent',
   props: {
     recipe: Object,
     ingredient_factor: Number,
