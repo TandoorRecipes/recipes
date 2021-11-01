@@ -246,7 +246,10 @@ def parse_instructions(instructions):
                     instruction_text += str(i)
         instructions = instruction_text
 
-    return normalize_string(instructions)
+    normalized_string = normalize_string(instructions)
+    normalized_string = normalized_string.replace('\n', '  \n')
+    normalized_string = normalized_string.replace('  \n  \n', '\n\n')
+    return normalized_string
 
 
 def parse_image(image):
