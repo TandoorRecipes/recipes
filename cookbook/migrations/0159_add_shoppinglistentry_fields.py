@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 from django_scopes import scopes_disabled
 
-from cookbook.models import ShoppingListEntry
+from cookbook.models import PermissionModelMixin, ShoppingListEntry
 
 
 def copy_values_to_sle(apps, schema_editor):
@@ -16,10 +16,8 @@ def copy_values_to_sle(apps, schema_editor):
             if entry.shoppinglist_set.first():
                 entry.created_by = entry.shoppinglist_set.first().created_by
                 entry.space = entry.shoppinglist_set.first().space
-            if entry.list_recipe:
-                entry.recipe = entry.list_recipe.recipe
         if entries:
-            ShoppingListEntry.objects.bulk_update(entries, ["created_by", "recipe"])
+            ShoppingListEntry.objects.bulk_update(entries, ["created_by", "space", ])
 
 
 class Migration(migrations.Migration):
@@ -53,11 +51,6 @@ class Migration(migrations.Migration):
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='shoppinglistentry',
-            name='recipe',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cookbook.recipe'),
-        ),
-        migrations.AddField(
             model_name='userpreference',
             name='shopping_share',
             field=models.ManyToManyField(blank=True, related_name='shopping_share', to=settings.AUTH_USER_MODEL),
@@ -74,19 +67,9 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='cookbook.mealplan'),
         ),
         migrations.AddField(
-            model_name='shoppinglistrecipe',
-            name='name',
-            field=models.CharField(blank=True, default='', max_length=32),
-        ),
-        migrations.AddField(
             model_name='shoppinglistentry',
             name='ingredient',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='cookbook.ingredient'),
-        ),
-        migrations.AddField(
-            model_name='shoppinglistrecipe',
-            name='name',
-            field=models.CharField(blank=True, default='', max_length=32),
         ),
         migrations.AlterField(
             model_name='shoppinglistentry',
@@ -146,16 +129,6 @@ class Migration(migrations.Migration):
             model_name='userpreference',
             name='default_delay',
             field=models.DecimalField(decimal_places=4, default=4, max_digits=8),
-        ),
-        migrations.AddField(
-            model_name='userpreference',
-            name='filter_to_supermarket',
-            field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
-            model_name='userpreference',
-            name='shopping_recent_days',
-            field=models.PositiveIntegerField(default=7),
         ),
         migrations.AddField(
             model_name='userpreference',
