@@ -7,22 +7,15 @@
                     <recipe-context-menu :recipe="recipe" class="float-right" v-if="recipe !== null"></recipe-context-menu>
                 </a>
             </div>
-            <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2" v-if="recipe.waiting_time !== 0">
-                <b-badge pill variant="light" class="mt-1 font-weight-normal"><i class="fa fa-clock"></i> {{ recipe.working_time }} {{ $t("min") }} </b-badge>
-                <b-badge pill variant="secondary" class="mt-1 font-weight-normal"><i class="fa fa-pause"></i> {{ recipe.waiting_time }} {{ $t("min") }} </b-badge>
+            <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2" v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
+                <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"
+                    ><i class="fa fa-clock"></i> {{ recipe.working_time }} {{ $t("min") }}
+                </b-badge>
+                <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"
+                    ><i class="fa fa-pause"></i> {{ recipe.waiting_time }} {{ $t("min") }}
+                </b-badge>
             </div>
         </a>
-      </div>
-      <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2"
-           v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
-        <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"><i class="fa fa-clock"></i>
-          {{ recipe.working_time }} {{ $t('min') }}
-        </b-badge>
-        <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"><i class="fa fa-pause"></i>
-          {{ recipe.waiting_time }} {{ $t('min') }}
-        </b-badge>
-      </div>
-    </a>
 
         <b-card-body class="p-4">
             <h6>
@@ -69,7 +62,7 @@
 
 <script>
 import RecipeContextMenu from "@/components/ContextMenu/RecipeContextMenu"
-import KeywordsComponent from "@/components/KeywordsComponent";
+import KeywordsComponent from "@/components/KeywordsComponent"
 import { resolveDjangoUrl, ResolveUrlMixin } from "@/utils/utils"
 import RecipeRating from "@/components/RecipeRating"
 import moment from "moment/moment"

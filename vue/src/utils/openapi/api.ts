@@ -2942,6 +2942,12 @@ export interface UserPreference {
     default_page?: UserPreferenceDefaultPageEnum;
     /**
      * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    use_kj?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof UserPreference
      */
