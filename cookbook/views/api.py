@@ -363,7 +363,8 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
 
 
 class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
