@@ -26,6 +26,8 @@
   "Recipes_per_page": "Recipes per Page",
   "Show_as_header": "Show as header",
   "Hide_as_header": "Hide as header",
+  "Add_nutrition_recipe": "Add nutrition to recipe",
+  "Remove_nutrition_recipe": "Delete nutrition from recipe",
   "Copy_template_reference": "Copy template reference",
   "Save_and_View": "Save & View",
   "Manage_Books": "Manage Books",

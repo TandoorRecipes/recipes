@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-10-02 12:25+0000\n"
+"PO-Revision-Date: 2021-10-26 10:06+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
@@ -58,7 +58,7 @@ msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
 msgstr ""
-"Gebruikers waarmee nieuwe maaltijdplannen/boodschappenlijstjes standaard "
+"Gebruikers waarmee een nieuw maaltijdplan/boodschappenlijst standaard "
 "gedeeld moeten worden."
 
 #: .\cookbook\forms.py:59
@@ -71,7 +71,7 @@ msgstr "Aantal decimalen om ingrediënten op af te ronden."
 
 #: .\cookbook\forms.py:61
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr "Als je opmerkingen bij recepten wil kunnen maken en zien."
+msgstr "Als je opmerkingen onder recepten wil kunnen maken en zien."
 
 #: .\cookbook\forms.py:63
 msgid ""
@@ -842,7 +842,7 @@ msgstr "Winkelen"
 
 #: .\cookbook\templates\base.html:113
 msgid "Keyword"
-msgstr "Etiket"
+msgstr "Etiketten"
 
 #: .\cookbook\templates\base.html:137
 #: .\cookbook\templates\forms\ingredients.html:24
@@ -874,7 +874,7 @@ msgstr "Recept importeren"
 #: .\cookbook\templates\shopping_list.html:188
 #: .\cookbook\templates\shopping_list.html:210
 msgid "Create"
-msgstr "Maak"
+msgstr "Nieuw recept"
 
 #: .\cookbook\templates\base.html:207 .\cookbook\templates\space.html:7
 #: .\cookbook\templates\space.html:19
@@ -1028,11 +1028,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Het volgende formulier kan worden gebruikt wanneer per ongeluk twee "
-"(of meer) eenheden of ingrediënten zijn gemaakt die eigenlijk hetzelfde "
-"zijn.\n"
-" Het voegt de twee eenheden of ingrediënten samen en past alle bijbehorende "
-"recepten aan.\n"
+"        Het volgende formulier kan worden gebruikt wanneer per ongeluk twee ("
+"of meer) eenheden of ingrediënten zijn gemaakt die eigenlijk\n"
+"        hetzelfde zijn\n"
+"        Het voegt de twee eenheden of ingrediënten samen en past alle "
+"bijbehorende recepten aan.\n"
 "    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
@@ -1068,7 +1068,7 @@ msgstr "Origineel bestand verwijderen"
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:21
 msgid "List"
-msgstr "Lijst"
+msgstr " "
 
 #: .\cookbook\templates\generic\list_template.html:34
 msgid "Filter"
@@ -1201,13 +1201,14 @@ msgstr ""
 "\n"
 "        Markdown is een lichtgewicht opmaak taal die gebruikt kan worden om "
 "tekst eenvoudig op te maken.\n"
-" Deze site gebruikt de <a href=\"https://python-markdown.github.io/\" target="
-"\"_blank\">Python Markdown</a> bibliotheek\n"
-" om je tekst in mooi uitziende HTML om te zetten. De volledige documentatie "
-"kan \n"
-" <a href=\"https://daringfireball.net/projects/markdown/syntax\" target="
-"\"_blank\">hier</a>gevonden worden.\n"
-" Onvolledige, maar waarschijnlijk voldoende, informatie staat hieronder.\n"
+"        Deze site gebruikt de <a href=\"https://python-markdown.github.io/\" "
+"target=\"_blank\">Python Markdown</a> bibliotheek\n"
+"        om je tekst in mooi uitziende HTML om te zetten. De volledige "
+"documentatie kan \n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">hier</a>gevonden worden.\n"
+"         Onvolledige, maar waarschijnlijk voldoende, informatie staat "
+"hieronder.\n"
 "    "
 
 #: .\cookbook\templates\markdown_info.html:25
@@ -1216,7 +1217,7 @@ msgstr "Koppen"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr "Formattering"
+msgstr "Opmaak"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
@@ -1299,7 +1300,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr "Dit wordt een plaatje"
+msgstr "Dit wordt een afbeelding"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
@@ -1372,7 +1373,7 @@ msgstr "Maak alleen een notitie"
 #: .\cookbook\templates\shopping_list.html:29
 #: .\cookbook\templates\shopping_list.html:714
 msgid "Shopping List"
-msgstr "Boodschappenlijstje"
+msgstr "Boodschappenlijst"
 
 #: .\cookbook\templates\meal_plan.html:172
 msgid "Shopping list currently empty"
@@ -1380,7 +1381,7 @@ msgstr "Boodschappenlijst is momenteel leeg"
 
 #: .\cookbook\templates\meal_plan.html:175
 msgid "Open Shopping List"
-msgstr "Open boodschappenlijstje"
+msgstr "Open boodschappenlijst"
 
 #: .\cookbook\templates\meal_plan.html:189
 msgid "Plan"
@@ -1405,15 +1406,15 @@ msgstr ""
 #: .\cookbook\templates\meal_plan.html:217
 #: .\cookbook\templates\meal_plan.html:294
 msgid "Edit plan types"
-msgstr "Bewerk plan soorten"
+msgstr "Bewerk maaltijdplan types"
 
 #: .\cookbook\templates\meal_plan.html:219
 msgid "Show help"
-msgstr "Toon help"
+msgstr "Help"
 
 #: .\cookbook\templates\meal_plan.html:220
 msgid "Week iCal export"
-msgstr "Week iCal export"
+msgstr "Exporteer week als iCal"
 
 #: .\cookbook\templates\meal_plan.html:256
 #: .\cookbook\templates\url_import.html:542
@@ -1433,7 +1434,7 @@ msgstr "Gedeeld met"
 
 #: .\cookbook\templates\meal_plan.html:280
 msgid "Add to Shopping"
-msgstr "Voeg toe aan Boodschappen"
+msgstr "Voeg toe aan boodschappenlijst"
 
 #: .\cookbook\templates\meal_plan.html:323
 msgid "New meal type"
@@ -1556,7 +1557,7 @@ msgid ""
 "Recipes, foods, shopping lists and more are organized in spaces of one or "
 "more people."
 msgstr ""
-"Recepten, ingrediënten, boodschappenlijstjes en meer zijn georganiseerd in "
+"Recepten, ingrediënten, boodschappenlijsten en meer zijn georganiseerd in "
 "ruimtes van één of meer personen."
 
 #: .\cookbook\templates\no_space_info.html:18
@@ -1995,7 +1996,7 @@ msgstr "Maak Superuser acount"
 
 #: .\cookbook\templates\shopping_list.html:79
 msgid "Shopping Recipes"
-msgstr "Boodschappen recepten"
+msgstr "Recepten op boodschappenlijst"
 
 #: .\cookbook\templates\shopping_list.html:83
 msgid "No recipes selected"
@@ -2007,7 +2008,7 @@ msgstr "Invoermodus"
 
 #: .\cookbook\templates\shopping_list.html:158
 msgid "Add Entry"
-msgstr "Zet op lijst"
+msgstr "Voeg toe aan boodschappenlijst"
 
 #: .\cookbook\templates\shopping_list.html:174
 msgid "Amount"
@@ -2044,7 +2045,7 @@ msgstr "Afgerond"
 
 #: .\cookbook\templates\shopping_list.html:296
 msgid "You are offline, shopping list might not syncronize."
-msgstr "Je bent offline, boodschappenlijst synchroniseert mogelijk niet."
+msgstr "Je bent offline, de boodschappenlijst synchroniseert mogelijk niet."
 
 #: .\cookbook\templates\shopping_list.html:361
 msgid "Copy/Export"
@@ -2721,7 +2722,7 @@ msgstr "Supermarkten"
 
 #: .\cookbook\views\lists.py:179
 msgid "Shopping Categories"
-msgstr "Boodschappen categorieën"
+msgstr "Boodschappencategorieën"
 
 #: .\cookbook\views\new.py:122
 msgid "Imported new recipe!"

@@ -108,7 +108,7 @@ export default {
   mixins: [ApiMixin],
   components: {
     GenericMultiselect,
-    RecipeCard: () => import('./RecipeCard.vue')
+    RecipeCard: () => import('@/components/RecipeCard.vue')
   },
   data() {
     return {

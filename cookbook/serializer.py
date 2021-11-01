@@ -2,22 +2,21 @@ import random
 from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
+
 from django.contrib.auth.models import User
 from django.db.models import Avg, QuerySet, Sum
 from django.urls import reverse
 from django.utils import timezone
-from drf_writable_nested import (UniqueFieldsMixin,
-                                 WritableNestedModelSerializer)
+from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 
-from cookbook.models import (Comment, CookLog, Food, Ingredient, Keyword,
-                             MealPlan, MealType, NutritionInformation, Recipe,
-                             RecipeBook, RecipeBookEntry, RecipeImport,
-                             ShareLink, ShoppingList, ShoppingListEntry,
-                             ShoppingListRecipe, Step, Storage, Sync, SyncLog,
-                             Unit, UserPreference, ViewLog, SupermarketCategory, Supermarket,
-                             SupermarketCategoryRelation, ImportLog, BookmarkletImport, UserFile, Automation)
+from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food, ImportLog,
+                             Ingredient, Keyword, MealPlan, MealType, NutritionInformation, Recipe,
+                             RecipeBook, RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
+                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UserFile, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
 
 
@@ -34,12 +33,19 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
         except KeyError:
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
-        if self.context.get('request', False) and bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
-            return fields
-        else:
+        try:
+            if bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+                return fields
+        except AttributeError:
+            pass
+        except KeyError:
+            pass
+        try:
             del fields['image']
             del fields['numrecipe']
-            return fields
+        except KeyError:
+            pass
+        return fields
 
     def get_image(self, obj):
         # TODO add caching
@@ -158,7 +164,7 @@ class UserFileSerializer(serializers.ModelSerializer):
                 current_file_size_mb = 0
 
             if ((validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
-                                             > self.context['request'].space.max_file_storage_mb != 0):
+                    > self.context['request'].space.max_file_storage_mb != 0):
                 raise ValidationError(_('You have reached your file upload limit.'))
 
     def create(self, validated_data):
