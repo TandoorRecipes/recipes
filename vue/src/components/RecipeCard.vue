@@ -12,6 +12,17 @@
                 <b-badge pill variant="secondary" class="mt-1 font-weight-normal"><i class="fa fa-pause"></i> {{ recipe.waiting_time }} {{ $t("min") }} </b-badge>
             </div>
         </a>
+      </div>
+      <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2"
+           v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
+        <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"><i class="fa fa-clock"></i>
+          {{ recipe.working_time }} {{ $t('min') }}
+        </b-badge>
+        <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"><i class="fa fa-pause"></i>
+          {{ recipe.waiting_time }} {{ $t('min') }}
+        </b-badge>
+      </div>
+    </a>
 
         <b-card-body class="p-4">
             <h6>
@@ -34,7 +45,7 @@
                     </template>
                     <p class="mt-1">
                         <last-cooked :recipe="recipe"></last-cooked>
-                        <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
+                        <keywords-component :recipe="recipe" style="margin-top: 4px"></keywords-component>
                     </p>
                     <transition name="fade" mode="in-out">
                         <div class="row mt-3" v-if="detailed">
@@ -47,10 +58,6 @@
                     </transition>
 
                     <b-badge pill variant="info" v-if="!recipe.internal">{{ $t("External") }}</b-badge>
-                    <!-- <b-badge pill variant="success"
-                   v-if="Date.parse(recipe.created_at) > new Date(Date.now() - (7 * (1000 * 60 * 60 * 24)))">
-            {{ $t('New') }}
-          </b-badge> -->
                 </template>
                 <template v-else>{{ meal_plan.note }}</template>
             </b-card-text>
@@ -62,7 +69,7 @@
 
 <script>
 import RecipeContextMenu from "@/components/ContextMenu/RecipeContextMenu"
-import Keywords from "@/components/Keywords"
+import KeywordsComponent from "@/components/KeywordsComponent";
 import { resolveDjangoUrl, ResolveUrlMixin } from "@/utils/utils"
 import RecipeRating from "@/components/RecipeRating"
 import moment from "moment/moment"
@@ -75,7 +82,7 @@ Vue.prototype.moment = moment
 export default {
     name: "RecipeCard",
     mixins: [ResolveUrlMixin],
-    components: { LastCooked, RecipeRating, Keywords, RecipeContextMenu, IngredientsCard },
+    components: { LastCooked, RecipeRating, KeywordsComponent, RecipeContextMenu, IngredientsCard },
     props: {
         recipe: Object,
         meal_plan: Object,

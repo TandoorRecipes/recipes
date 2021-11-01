@@ -84,4 +84,5 @@
         "@vue/cli-plugin-pwa/workbox-webpack-plugin": "^5.1.3",
         "coa": "2.0.2"
     }
+  }
 }
