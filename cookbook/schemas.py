@@ -3,10 +3,11 @@ from rest_framework.schemas.utils import is_list_view
 
 
 class QueryParam(object):
-    def __init__(self, name, description=None, qtype='string'):
+    def __init__(self, name, description=None, qtype='string', required=False):
         self.name = name
         self.description = description
         self.qtype = qtype
+        self.required = required
 
     def __str__(self):
         return f'{self.name}, {self.qtype}, {self.description}'
@@ -19,7 +20,7 @@ class QueryParamAutoSchema(AutoSchema):
         parameters = super().get_path_parameters(path, method)
         for q in self.view.query_params:
             parameters.append({
-                "name": q.name, "in": "query", "required": False,
+                "name": q.name, "in": "query", "required": q.required,
                 "description": q.description,
                 'schema': {'type': q.qtype, },
             })
