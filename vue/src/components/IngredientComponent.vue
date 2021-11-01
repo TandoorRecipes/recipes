@@ -49,7 +49,7 @@
 import {calculateAmount, ResolveUrlMixin} from "@/utils/utils";
 
 export default {
-  name: 'Ingredient',
+  name: 'IngredientComponent',
   props: {
     ingredient: Object,
     ingredient_factor: {

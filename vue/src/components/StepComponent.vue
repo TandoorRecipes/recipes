@@ -169,7 +169,7 @@ import IngredientComponent from "@/components/IngredientComponent";
 Vue.prototype.moment = moment
 
 export default {
-  name: 'Step',
+  name: 'StepComponent',
   mixins: [
     GettextMixin,
     ResolveUrlMixin,
