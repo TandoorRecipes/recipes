@@ -2285,22 +2285,10 @@ export interface ShoppingListRecipe {
     name?: string;
     /**
      * 
-     * @type {FoodSupermarketCategory}
-     * @memberof ShoppingListEntry
-     */
-    unit?: FoodSupermarketCategory | null;
-    /**
-     * 
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    ingredient?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListEntry
-     */
-    ingredient_note?: string;
+    recipe?: number | null;
     /**
      * 
      * @type {number}
@@ -2353,13 +2341,7 @@ export interface ShoppingListRecipeMealplan {
     /**
      * 
      * @type {number}
-     * @memberof ShoppingListRecipe
-     */
-    mealplan?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipe
+     * @memberof ShoppingListRecipeMealplan
      */
     mealplan?: number | null;
     /**
@@ -2408,13 +2390,7 @@ export interface ShoppingListRecipes {
     /**
      * 
      * @type {number}
-     * @memberof ShoppingListRecipeMealplan
-     */
-    mealplan?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipeMealplan
+     * @memberof ShoppingListRecipes
      */
     mealplan?: number | null;
     /**
