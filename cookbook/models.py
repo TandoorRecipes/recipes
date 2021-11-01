@@ -689,7 +689,7 @@ class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionMod
 
     objects = ScopedManager(space='recipe__space')
 
-    @ staticmethod
+    @staticmethod
     def get_space_key():
         return 'recipe', 'space'
 
@@ -737,7 +737,7 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 
     objects = ScopedManager(space='book__space')
 
-    @ staticmethod
+    @staticmethod
     def get_space_key():
         return 'book', 'space'
 
@@ -804,7 +804,7 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     objects = ScopedManager(space='recipe__space')
 
-    @ staticmethod
+    @staticmethod
     def get_space_key():
         return 'recipe', 'space'
 
@@ -837,7 +837,7 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    @ staticmethod
+    @staticmethod
     def get_space_key():
         return 'shoppinglist', 'space'
 
@@ -1010,7 +1010,7 @@ class SearchFields(models.Model, PermissionModelMixin):
     def __str__(self):
         return _(self.name)
 
-    @ staticmethod
+    @staticmethod
     def get_name(self):
         return _(self.name)
 

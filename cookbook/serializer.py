@@ -78,7 +78,7 @@ class CustomDecimalField(serializers.Field):
     def to_representation(self, value):
         if not isinstance(value, Decimal):
             value = Decimal(value)
-        return round(value, 3).normalize()
+        return round(value, 2).normalize()
 
     def to_internal_value(self, data):
         if type(data) == int or type(data) == float:
@@ -166,7 +166,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
         fields = (
-            'user', 'theme', 'nav_color', 'default_unit', 'default_page',
+            'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_kj',
             'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
             'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days'
@@ -334,9 +334,6 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
 
 class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
     category = SupermarketCategorySerializer()
-
-    def get_fields(self, *args, **kwargs):
-        return super().get_fields(*args, **kwargs)
 
     class Meta:
         model = SupermarketCategoryRelation
@@ -543,9 +540,6 @@ class RecipeSerializer(RecipeBaseSerializer):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
-
 
 class RecipeImageSerializer(WritableNestedModelSerializer):
     class Meta:
@@ -675,22 +669,11 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
-        # try:
-        #     # this serializer is the parent serializer for the API
-        #     api_serializer = self.context['view'].serializer_class
-        # except Exception:
-        #     # this serializer is probably nested or a foreign key
-        #     api_serializer = None
 
         # autosync values are only needed for frequent 'checked' value updating
         if self.context['request'] and bool(int(self.context['request'].query_params.get('autosync', False))):
             for f in list(set(fields) - set(['id', 'checked'])):
                 del fields[f]
-        # extended values are computationally expensive and not needed in normal circumstances
-        # elif bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
-        #     pass
-        # else:
-        #     del fields['recipe_mealplan']
         return fields
 
     def run_validation(self, data):
