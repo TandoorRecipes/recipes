@@ -36,8 +36,8 @@ class CookBookApp(Integration):
             pass
 
         try:
-            recipe.working_time = iso_duration_to_minutes(recipe_json['prep_time'])
-            recipe.waiting_time = iso_duration_to_minutes(recipe_json['cook_time'])
+            recipe.working_time = iso_duration_to_minutes(recipe_json['prepTime'])
+            recipe.waiting_time = iso_duration_to_minutes(recipe_json['cookTime'])
         except Exception:
             pass
 
