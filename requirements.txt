@@ -42,3 +42,4 @@ django-prometheus==2.1.0
 django-hCaptcha==0.1.0
 python-ldap==3.4.0
 django-auth-ldap==3.0.0
+factory-boy==3.2.1

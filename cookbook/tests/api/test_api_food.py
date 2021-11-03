@@ -4,8 +4,11 @@ import pytest
 from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
+from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import Food, Ingredient, ShoppingList, ShoppingListEntry
+from cookbook.tests.conftest import get_random_json_recipe
+from cookbook.tests.factories import FoodFactory
 
 #    ------------------ IMPORTANT -------------------
 #
@@ -26,9 +29,14 @@ else:
     node_location = 'last-child'
 
 
-@pytest.fixture()
-def obj_1(space_1):
-    return Food.objects.get_or_create(name='test_1', space=space_1)[0]
+register(FoodFactory, 'obj_1', space=LazyFixture('space_1'))
+register(FoodFactory, 'obj_2', space=LazyFixture('space_1'))
+register(FoodFactory, 'obj_3', space=LazyFixture('space_2'))
+
+
+# @pytest.fixture()
+# def obj_1(food_factory, space_1):
+#     return food_factory(space=space_1)
 
 
 @pytest.fixture()
@@ -41,14 +49,14 @@ def obj_1_1_1(obj_1_1, space_1):
     return obj_1_1.add_child(name='test_1_1_1', space=space_1)
 
 
-@pytest.fixture
-def obj_2(space_1):
-    return Food.objects.get_or_create(name='test_2', space=space_1)[0]
+# @pytest.fixture()
+# def obj_2(food_factory, space_1):
+#     return food_factory(space=space_1)
 
 
-@pytest.fixture()
-def obj_3(space_2):
-    return Food.objects.get_or_create(name='test_3', space=space_2)[0]
+# @pytest.fixture()
+# def obj_3(food_factory, space_2):
+#     return food_factory(space=space_2)
 
 
 @pytest.fixture()
@@ -127,7 +135,10 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     assert r.status_code == 200
     response = json.loads(r.content)
     assert response['count'] == 2
-    assert response['results'][0]['name'] == obj_1.name
+
+    assert obj_1.name in [x['name'] for x in response['results']]
+    assert obj_2.name in [x['name'] for x in response['results']]
+    assert response['results'][0]['name'] < response['results'][1]['name']
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?page_size=1').content)
     assert len(response['results']) == 1
@@ -193,7 +204,6 @@ def test_add(arg, request, u1_s2):
         assert r.status_code == 404
 
 
-@pytest.mark.django_db(transaction=True)
 def test_add_duplicate(u1_s1, u1_s2, obj_1, obj_3):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
