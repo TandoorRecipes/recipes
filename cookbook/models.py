@@ -139,6 +139,7 @@ class TreeModel(MP_Node):
         return self.get_children().count()
 
     # use self.objects.get_or_create() instead
+
     @classmethod
     def add_root(self, **kwargs):
         with scopes_disabled():
