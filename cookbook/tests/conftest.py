@@ -7,12 +7,19 @@ import pytest
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django_scopes import scopes_disabled
+from pytest_factoryboy import register
 
 from cookbook.models import Food, Ingredient, Recipe, Space, Step, Unit
+from cookbook.tests.factories import FoodFactory, SpaceFactory
+
+register(SpaceFactory, 'space_1')
+register(SpaceFactory, 'space_2')
 
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
 # does not work on yield fixtures as only one yield can be used per fixture (i think)
+
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_fixture_setup(fixturedef, request):
     if inspect.isgeneratorfunction(fixturedef.func):
@@ -27,16 +34,16 @@ def enable_db_access_for_all_tests(db):
     pass
 
 
-@pytest.fixture()
-def space_1():
-    with scopes_disabled():
-        return Space.objects.get_or_create(name='space_1')[0]
+# @pytest.fixture()
+# def space_1():
+#     with scopes_disabled():
+#         return Space.objects.get_or_create(name='space_1')[0]
 
 
-@pytest.fixture()
-def space_2():
-    with scopes_disabled():
-        return Space.objects.get_or_create(name='space_2')[0]
+# @pytest.fixture()
+# def space_2():
+#     with scopes_disabled():
+#         return Space.objects.get_or_create(name='space_2')[0]
 
 
 # ---------------------- OBJECT FIXTURES ---------------------
