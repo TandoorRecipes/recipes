@@ -203,7 +203,7 @@
         </a>
       </div>
       <div class="col-md-3 col-6">
-        <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top :title="$t('Coming-Soon')">{{ $t('Auto-Planner') }}</button>
+        <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top :title="$t('Coming_Soon')">{{ $t('Auto_Planner') }}</button>
       </div>
       <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
         <b-button-toolbar key-nav aria-label="Toolbar with button groups">
@@ -377,6 +377,7 @@ export default {
       }
     })
     this.$root.$on('change', this.updateEmoji);
+    this.$i18n.locale = window.CUSTOM_LOCALE
   },
   watch: {
     settings: {
