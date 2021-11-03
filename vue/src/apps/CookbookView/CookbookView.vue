@@ -119,7 +119,7 @@ export default {
     createNew: function () {
       let apiClient = new ApiApiFactory()
 
-      apiClient.createRecipeBook({name: 'New Book', description: '', icon: '', shared: []}).then(result => {
+      apiClient.createRecipeBook({name: this.$t('New_Cookbook'), description: '', icon: '', shared: []}).then(result => {
         let new_book = result.data
         this.refreshData()
         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
