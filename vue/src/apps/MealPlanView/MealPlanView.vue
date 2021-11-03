@@ -421,7 +421,7 @@ export default {
     newMealType() {
       let apiClient = new ApiApiFactory()
 
-      apiClient.createMealType({name: "Mealtype"}).then(e => {
+      apiClient.createMealType({name: this.$t('Meal_Type')}).then(e => {
         this.periodChangedCallback(this.current_period)
       }).catch(error => {
         StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
