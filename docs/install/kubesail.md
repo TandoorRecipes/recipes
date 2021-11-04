@@ -1,13 +1,17 @@
 !!! info "Community Contributed"
     This guide was contributed by the community and is neither officially supported, nor updated or tested.
 
-KubeSail lets you install Tandoor by providing a simple web interface for installing and managing apps. You can connect any server running Kubernetes, or buy a pre-configured [PiBox](https://www.kickstarter.com/projects/pastudan/pibox-a-modular-raspberry-pi-storage-server). A portion of every PiBox sale goes toward supporting Tandoor development.
+KubeSail lets you install Tandoor by providing a simple web interface for installing and managing apps. You can connect any server running Kubernetes, or buy a pre-configured [PiBox](https://www.kickstarter.com/projects/pastudan/pibox-a-modular-raspberry-pi-storage-server).
+
+<!-- A portion of every PiBox sale goes toward supporting Tandoor development. -->
 
 The KubeSail template is closely based on the [Kubernetes installation]([docs/install/k8s](https://github.com/vabene1111/recipes/tree/develop/docs/install/k8s)) configs
 
 ## Quick Start
 
 Load the [Tandoor Recipes](https://kubesail.com/template/PastuDan/Tandoor%20Recipes) template, and click **Launch Template**.
+
+If you have not yet attached your server to KubeSail, see the [Getting a Cluster](https://docs.kubesail.com/guides/bare-metal/) section on the KubeSail docs.
 
 ## Important notes
 
