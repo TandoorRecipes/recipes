@@ -75,11 +75,20 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
         finally:
             del instance.skip_signal
 
+    # TODO figure out how to generalize this
     # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
-    instance.get_children().filter(inherit=True).exclude(ignore_inherit__field='ignore_shopping').update(ignore_shopping=instance.ignore_shopping)
+    _save = []
+    for child in instance.get_children().filter(inherit=True).exclude(ignore_inherit__field='ignore_shopping'):
+        child.ignore_shopping = instance.ignore_shopping
+        _save.append(child)
     # don't cascade empty supermarket category
     if instance.supermarket_category:
-        instance.get_children().filter(inherit=True).exclude(ignore_inherit__field='supermarket_category').update(supermarket_category=instance.supermarket_category)
+        # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
+        for child in instance.get_children().filter(inherit=True).exclude(ignore_inherit__field='supermarket_category'):
+            child.supermarket_category = instance.supermarket_category
+            _save.append(child)
+    for child in set(_save):
+        child.save()
 
 
 @receiver(post_save, sender=MealPlan)
