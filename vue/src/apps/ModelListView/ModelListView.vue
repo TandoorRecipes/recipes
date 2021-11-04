@@ -156,7 +156,7 @@ export default {
         this.getItems({page:1},'left')
       }
     })
-
+    this.$i18n.locale = window.CUSTOM_LOCALE
   },
   methods: {
     // this.genericAPI inherited from ApiMixin

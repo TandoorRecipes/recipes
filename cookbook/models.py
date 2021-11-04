@@ -458,6 +458,9 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         from cookbook.helper.template_helper import render_instructions
         return render_instructions(self)
 
+    def __str__(self):
+        return f'{self.pk} {self.name}'
+
     class Meta:
         ordering = ['order', 'pk']
         indexes = (GinIndex(fields=["search_vector"]),)
