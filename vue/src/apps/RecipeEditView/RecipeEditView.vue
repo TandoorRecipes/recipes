@@ -48,10 +48,10 @@
         </div>
 
         <div class="col-md-6 mt-1">
-          <label for="id_name"> {{ $t('Preparation') }} {{ $t('Time') }}</label>
+          <label for="id_name"> {{ $t('Preparation') }} {{ $t('Time') }} ({{ $t('min') }})</label>
           <input class="form-control" id="id_prep_time" v-model="recipe.working_time">
           <br/>
-          <label for="id_name"> {{ $t('Waiting') }} {{ $t('Time') }}</label>
+          <label for="id_name"> {{ $t('Waiting') }} {{ $t('Time') }} ({{ $t('min') }})</label>
           <input class="form-control" id="id_wait_time" v-model="recipe.waiting_time">
           <br/>
           <label for="id_name"> {{ $t('Servings') }}</label>
