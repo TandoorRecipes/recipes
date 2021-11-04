@@ -1,7 +1,7 @@
 !!! info "Community Contributed"
     This guide was contributed by the community and is neither officially supported, nor updated or tested.
 
-KubeSail lets you install Tandoor by providing a simple web interface for installing and managing apps. You can connect any server running Kubernetes, or get a pre-configured [PiBox](https://www.kickstarter.com/projects/pastudan/pibox-a-modular-raspberry-pi-storage-server).
+KubeSail lets you install Tandoor by providing a simple web interface for installing and managing apps. You can connect any server running Kubernetes, or get a pre-configured [PiBox](https://pibox.io).
 
 <!-- A portion of every PiBox sale goes toward supporting Tandoor development. -->
 
