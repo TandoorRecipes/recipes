@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-11-04 11:29+0000\n"
-"Last-Translator: vabene1111 <vabene1234@googlemail.com>\n"
+"PO-Revision-Date: 2021-11-04 13:53+0000\n"
+"Last-Translator: Kaibu <notkaibu@gmail.com>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -1866,31 +1866,29 @@ msgstr ""
 " \n"
 "            Unbetonte Suche ist ein spezieller Typ welcher erlaubt ein Feld "
 "\"unbetont\" für jeden Suchtyp zu durchsuchen. \n"
-"            Beispiel: .\n"
+"            Wenn die unbetonte Suche Beispielsweise für das Feld \"Name\" "
+"aktiviert werden, wird jeder Suchtyp auf diesem Feld versuchen unbetont zu "
+"suchen.\n"
 "            \n"
-"            For the other options, you can enable search on any or all "
-"fields and they will be combined together with an assumed 'OR'.\n"
-"            For example enabling 'Name' for Starts With, 'Name' and "
-"'Description' for Partial Match and 'Ingredients' and 'Keywords' for Full "
-"Search\n"
-"            and searching for 'apple' will generate a search that will "
-"return recipes that have:\n"
-"            - A recipe name that starts with 'apple'\n"
-"            - OR a recipe name that contains 'apple'\n"
-"            - OR a recipe description that contains 'apple'\n"
-"            - OR a recipe that will have a full text search match ('apple' "
-"or 'apples') in ingredients\n"
-"            - OR a recipe that will have a full text search match in "
-"Keywords\n"
+"            Wen die Suche für weitere Felder aktiviert wird, versteht die "
+"Suche dies als  \"oder\".\n"
+"            Beispielsweise könnte man \"Name\" als Beginnt mit , \"Name\" "
+"und \"Description\" als Partielle Treffer und \"Inhaltstoffe\" sowie "
+"\"Keyword\" im Volltext durchsuchen \n"
+"            Eine Suche nach \"Apfel\" wird dann zu folgenden Ergebnissen "
+"führen::\n"
+"            - Rezeptname beginnt mit \"Apfel\"\n"
+"            - ODER Rezeptname enthält \"Apfel\"\n"
+"            - ODER Rezeptbeschreibung enthält \"Apfel'\n"
+"            - ODER das Rezept hat einen Volltext-Treffer in den "
+"Inhaltstoffen\n"
+"            - ODER das Rezept hat einen Volltext-Treffer in den Keywords\n"
 "\n"
-"            Combining too many fields in too many types of search can have a "
-"negative impact on performance, create duplicate results or return "
-"unexpected results.\n"
-"            For example, enabling fuzzy search or partial matches will "
-"interfere with web search methods.  \n"
-"            Searching for 'apple -pie' with fuzzy search and full text "
-"search will return the recipe Apple Pie.  Though it is not included in the "
-"full text results, it does match the trigram results.\n"
+"            Das Kombinieren von zu vielen Suchtypen kann negative Einflüsse "
+"auf die Geschwindigkeit der Suche haben, doppelte Ergebnisse verursachen "
+"oder unerwartete Ergebnisse liefern.\n"
+"            Beispielsweise führt das aktivieren der Ungenauen Suche zu "
+"Problemen in Kombination mit dem Suchtyp Web.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:95
@@ -1909,6 +1907,14 @@ msgid ""
 "the management command 'python manage.py rebuildindex'\n"
 "            "
 msgstr ""
+" \n"
+"            Die Trigramm und Volltext-Suche benötigen Indizes auf der "
+"Datenbank um schnell Ergebnisse zu liefern.  \n"
+"            Die Indizes für alle Felder können auf der Admin Seite neu "
+"erstellt werden.'\n"
+"            Ansonsten können die Indizes auch mit dem management command "
+"\"python manage.py rebuildindex\" neu erstellt werden.\n"
+"            "
 
 #: .\cookbook\templates\settings.html:27
 msgid "Account"
@@ -2412,6 +2418,8 @@ msgstr "Anleitung"
 msgid ""
 "Recipe instructions dragged here will be appended to current instructions."
 msgstr ""
+"Rezeptanweisungen welche hierhin gezogen werden, werden zu den aktuellen "
+"Anweisungen hinzugefügt."
 
 #: .\cookbook\templates\url_import.html:325
 msgid "Discovered Attributes"
@@ -2422,6 +2430,8 @@ msgid ""
 "Drag recipe attributes from below into the appropriate box on the left. "
 "Click any node to display its full properties."
 msgstr ""
+"Ziehe Rezepteigenschaften von unten in das jeweilige Feld links. Klicke auf "
+"beliebige Elemente um dessen Eigenschaften anzuzeigen."
 
 #: .\cookbook\templates\url_import.html:344
 msgid "Show Blank Field"
@@ -2433,7 +2443,7 @@ msgstr "Leeres Feld"
 
 #: .\cookbook\templates\url_import.html:353
 msgid "Items dragged to Blank Field will be appended."
-msgstr ""
+msgstr "Elemente die in ein leeres Feld gezogen werden, werden angefügt."
 
 #: .\cookbook\templates\url_import.html:400
 msgid "Delete Text"
@@ -2507,7 +2517,7 @@ msgstr "Der Parameter updated_at ist falsch formatiert"
 #: .\cookbook\views\api.py:151
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
-msgstr ""
+msgstr "Kein {self.basename} mit der ID {pk} existiert"
 
 #: .\cookbook\views\api.py:155 .\cookbook\views\edit.py:300
 #: .\cookbook\views\edit.py:316
@@ -2517,7 +2527,7 @@ msgstr "Zusammenführen mit selben Objekt nicht möglich!"
 #: .\cookbook\views\api.py:162
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
-msgstr ""
+msgstr "Kein {self.basename} mit der ID {target} existiert"
 
 #: .\cookbook\views\api.py:167
 msgid "Cannot merge with child object!"
@@ -2538,30 +2548,30 @@ msgstr ""
 #: .\cookbook\views\api.py:239
 #, python-brace-format
 msgid "No {self.basename} with id {child} exists"
-msgstr ""
+msgstr "Kein {self.basename} mit ID {child} existiert"
 
 #: .\cookbook\views\api.py:248
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
-msgstr ""
+msgstr "{child.name} wurde erfolgreich zur Wurzel verschoben."
 
 #: .\cookbook\views\api.py:251 .\cookbook\views\api.py:269
 msgid "An error occurred attempting to move "
-msgstr ""
+msgstr "Fehler aufgetreten beim verschieben von "
 
 #: .\cookbook\views\api.py:254
 msgid "Cannot move an object to itself!"
-msgstr ""
+msgstr "Ein Element kann nicht in sich selbst verschoben werden!"
 
 #: .\cookbook\views\api.py:260
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
-msgstr ""
+msgstr "Kein {self.basename} mit ID {parent} existiert"
 
 #: .\cookbook\views\api.py:266
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
-msgstr ""
+msgstr "{child.name} wurde erfolgreich zum Überelement {parent.name} verschoben"
 
 #: .\cookbook\views\api.py:704 .\cookbook\views\views.py:289
 msgid "This feature is not available in the demo version!"
