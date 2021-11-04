@@ -225,6 +225,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                     root = int(root)
                 except ValueError:
                     self.queryset = self.model.objects.none()
+
                 if root == 0:
                     self.queryset = self.model.get_root_nodes()
                 else:
