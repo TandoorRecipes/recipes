@@ -6,9 +6,10 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, ShoppingList, ShoppingListEntry
+from cookbook.models import Food, FoodInheritField, Ingredient, ShoppingList, ShoppingListEntry
 from cookbook.tests.conftest import get_random_json_recipe
-from cookbook.tests.factories import FoodFactory, IngredientFactory, ShoppingListEntryFactory
+from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
+                                      SupermarketCategoryFactory)
 
 #    ------------------ IMPORTANT -------------------
 #
@@ -32,18 +33,38 @@ else:
 register(FoodFactory, 'obj_1', space=LazyFixture('space_1'))
 register(FoodFactory, 'obj_2', space=LazyFixture('space_1'))
 register(FoodFactory, 'obj_3', space=LazyFixture('space_2'))
+register(SupermarketCategoryFactory, 'cat_1', space=LazyFixture('space_1'))
+
+
+# @pytest.fixture
+# def true():
+#     return True
+
+
+@pytest.fixture
+def false():
+    return False
+
+
+@pytest.fixture
+def non_exist():
+    return {}
 
 
 @pytest.fixture()
-def obj_tree_1(space_1):
+def obj_tree_1(request, space_1):
+    try:
+        params = request.param
+    except AttributeError:
+        params = {}
     objs = []
-    objs.extend(FoodFactory.create_batch(3, space=space_1))
+    objs.extend(FoodFactory.create_batch(3, space=space_1, **params))  # request.param is a magic variable
     objs[0].move(objs[1], node_location)
     objs[1].move(objs[2], node_location)
     return Food.objects.get(id=objs[1].id)  # whenever you move/merge a tree it's safest to re-get the object
 
 
-@ pytest.mark.parametrize("arg", [
+@pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
     ['u1_s1', 200],
@@ -87,11 +108,11 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=chicken').content)
     assert response['count'] == 0
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[4:]}').content)
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[:-4]}').content)
     assert response['count'] == 1
 
 
-@ pytest.mark.parametrize("arg", [
+@pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
     ['u1_s1', 200],
@@ -116,7 +137,7 @@ def test_update(arg, request, obj_1):
         assert response['name'] == 'new'
 
 
-@ pytest.mark.parametrize("arg", [
+@pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
     ['u1_s1', 201],
@@ -447,11 +468,63 @@ def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     assert response['count'] == 4
 
 
-def test_inherit(obj_tree_1, u1_s1):
-    pass
-# TODO test inherit creating, moving for each field type
-# TODO test ignore inherit for each field type
-# TODO test with grand-children
-# - flow from parent through child and grand-child
-# - flow from parent stop when child is ignore inherit
+# This is more about the model than the API - should this be moved to a different test?
+@pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
+    ({'add_categories': True, 'inherit': True},  'supermarket_category', True, 'cat_1'),
+    ({'add_categories': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
+    ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping',  True, 'false'),
+    ({'ignore_shopping': True, 'inherit': False}, 'ignore_shopping', False, 'false'),
+], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
+def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
+    with scope(space=obj_tree_1.space):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+
+    new_val = request.getfixturevalue(new_val)
+    # if this test passes it demonstrates that inheritance works
+    #  when moving to a parent as each food is created with a different category
+    assert (getattr(parent, field) == getattr(obj_tree_1, field)) in [inherit, True]
+    assert (getattr(obj_tree_1, field) == getattr(child, field)) in [inherit, True]
+    # change parent to a new value
+    setattr(parent, field, new_val)
+    with scope(space=parent.space):
+        parent.save()  # trigger post-save signal
+        # get the objects again because values are cached
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        child = Food.objects.get(id=child.id)
+    # when changing parent value the obj value should be same if inherited
+    assert (getattr(obj_tree_1, field) == new_val) == inherit
+    assert (getattr(child, field) == new_val) == inherit
+
+
+# This is more about the model than the API - should this be moved to a different test?
+@pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
+    ({'add_categories': True, 'inherit': True, },  'supermarket_category', True, 'cat_1'),
+    ({'ignore_shopping': True, 'inherit': True, }, 'ignore_shopping',  True, 'false'),
+], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
+def test_ignoreinherit_field(request, obj_tree_1, field, inherit, new_val, u1_s1):
+    with scope(space=obj_tree_1.space):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        obj_tree_1.ignore_inherit.add(FoodInheritField.objects.get(field=field))
+    new_val = request.getfixturevalue(new_val)
+
+    # change parent to a new value
+    setattr(parent, field, new_val)
+    with scope(space=parent.space):
+        parent.save()  # trigger post-save signal
+        # get the objects again because values are cached
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+    # inheritance is blocked - should not get new value
+    assert getattr(obj_tree_1, field) != new_val
+
+    setattr(obj_tree_1, field, new_val)
+    with scope(space=parent.space):
+        obj_tree_1.save()  # trigger post-save signal
+        # get the objects again because values are cached
+        child = Food.objects.get(id=child.id)
+    # inherit with child should still work
+    assert getattr(child, field) == new_val
+
+
 # TODO test reset_inheritance
