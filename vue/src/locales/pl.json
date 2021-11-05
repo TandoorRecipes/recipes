@@ -61,7 +61,7 @@
     "Fats": "Tłuszcze",
     "Carbohydrates": "Węglowodany",
     "Calories": "Kalorie",
-    "Energy": "",
+    "Energy": "Energia",
     "Nutrition": "Odżywianie",
     "Date": "Data",
     "Share": "Udostępnij",
@@ -200,5 +200,12 @@
     "Previous_Day": "Poprzedni dzień",
     "Export_To_ICal": "Eksportuj .ics",
     "Cannot_Add_Notes_To_Shopping": "Notatki nie mogą być dodawane do listy zakupów",
-    "Shopping_List_Empty": "Twoja lista zakupów jest obecnie pusta, możesz dodawać pozycje za pomocą menu kontekstowego wpisu planu posiłków (kliknij prawym przyciskiem myszy na karcie lub lewym przyciskiem myszy ikonę menu)"
+    "Shopping_List_Empty": "Twoja lista zakupów jest obecnie pusta, możesz dodawać pozycje za pomocą menu kontekstowego wpisu planu posiłków (kliknij prawym przyciskiem myszy na karcie lub lewym przyciskiem myszy ikonę menu)",
+    "Add_nutrition_recipe": "Dodaj wartości odżywcze do przepisu",
+    "Remove_nutrition_recipe": "Usuń wartości odżywcze z przepisu",
+    "Coming_Soon": "Dostępne wkrótce",
+    "Auto_Planner": "Plan automatyczny",
+    "New_Cookbook": "Nowa książka kucharska",
+    "Hide_Keyword": "Ukryj słowa kluczowe",
+    "Clear": "Wyczyść"
 }
