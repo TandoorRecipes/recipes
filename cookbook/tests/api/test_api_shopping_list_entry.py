@@ -6,7 +6,7 @@ from django.forms import model_to_dict
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import ShoppingList, ShoppingListEntry, Food
+from cookbook.models import Food, ShoppingList, ShoppingListEntry
 
 LIST_URL = 'api:shoppinglistentry-list'
 DETAIL_URL = 'api:shoppinglistentry-detail'
@@ -129,3 +129,6 @@ def test_delete(u1_s1, u1_s2, obj_1):
 # TODO test create shopping list from recipe, excluding ingredients
 # TODO test auto creating shopping list from meal plan
 # TODO test excluding on-hand when auto creating shopping list
+# test delay
+# test completed_at when checked
+# test completed_at cleared when unchecked
