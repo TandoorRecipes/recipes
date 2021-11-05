@@ -169,7 +169,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:343
 msgid ""
-"An email address is not required but if present the invite link will be send "
+"An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
 
