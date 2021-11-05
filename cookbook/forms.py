@@ -36,6 +36,11 @@ class DateWidget(forms.DateInput):
 class UserPreferenceForm(forms.ModelForm):
     prefix = 'preference'
 
+    def __init__(self, *args, **kwargs):
+        space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['plan_share'].queryset = User.objects.filter(userpreference__space=space).all()
+
     class Meta:
         model = UserPreference
         fields = (
