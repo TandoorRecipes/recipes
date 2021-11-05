@@ -3,7 +3,7 @@
 These intructions are inspired from a standard django/gunicorn/postgresql instructions ([for example](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04))
 
 !!! warning
-    Be sure to use pyton3.9 and pip related to python 3.9. Depending on your distribution calling `python` or `pip` will use python2 instead of pyton 3.9.
+    Be sure to use python3.9 and pip related to python 3.9. Depending on your distribution calling `python` or `pip` will use python2 instead of pyton 3.9.
 
 ## Prerequisites
 
