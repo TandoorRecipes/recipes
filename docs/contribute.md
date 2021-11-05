@@ -23,7 +23,7 @@ This application is developed using the Django framework for Python. They have e
 
 1. Clone this repository wherever you like and install the Python language for your OS (at least version 3.8)
 2. Open it in your favorite editor/IDE (e.g. PyCharm)
-    1. If you want, create a virutal environment for all your packages.
+    1. If you want, create a virtual environment for all your packages.
 3. Install all required packages: `pip install -r requirements.txt`
 4. Run the migrations: `python manage.py migrate`
 5. Start the development server: `python manage.py runserver`
