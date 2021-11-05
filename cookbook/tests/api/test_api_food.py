@@ -470,8 +470,8 @@ def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
 
 # This is more about the model than the API - should this be moved to a different test?
 @pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
-    ({'add_categories': True, 'inherit': True},  'supermarket_category', True, 'cat_1'),
-    ({'add_categories': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
+    ({'has_category': True, 'inherit': True},  'supermarket_category', True, 'cat_1'),
+    ({'has_category': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
     ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping',  True, 'false'),
     ({'ignore_shopping': True, 'inherit': False}, 'ignore_shopping', False, 'false'),
 ], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
@@ -499,7 +499,7 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
 
 # This is more about the model than the API - should this be moved to a different test?
 @pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
-    ({'add_categories': True, 'inherit': True, },  'supermarket_category', True, 'cat_1'),
+    ({'has_category': True, 'inherit': True, },  'supermarket_category', True, 'cat_1'),
     ({'ignore_shopping': True, 'inherit': True, }, 'ignore_shopping',  True, 'false'),
 ], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
 def test_ignoreinherit_field(request, obj_tree_1, field, inherit, new_val, u1_s1):
