@@ -789,6 +789,7 @@
 <p>Change to the directory: <code>cd /var/www/recipes</code></p>
 <p>Give the user permissions: <code>chown -R recipes:www-data /var/www/recipes</code></p>
 <p>Create virtual env: <code>python3.9 -m venv /var/www/recipes</code></p>
+<p>At least on Debian, libsasl2-dev is required for python-ldap (it provides sasl/sasl.h): <code>apt install libsasl2-dev</code></p>
 <p>Install Javascript Tools
 <div class="highlight"><pre><span></span><code>apt install nodejs
 npm install --global yarn
