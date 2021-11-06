@@ -8,21 +8,23 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 12:31+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-11-06 14:06+0000\n"
+"Last-Translator: Nicklas Yli-Länttä <admin@timanttikuutio.eu>\n"
+"Language-Team: Finnish <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.8\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:272
 msgid "Ingredients"
-msgstr ""
+msgstr "Ainesosat"
 
 #: .\cookbook\forms.py:53
 msgid ""
@@ -39,10 +41,12 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Mahdollistaa ainesosien määrien murto-osien tuen (esim. muuntaa desimaalit "
+"murtoluvuiksi automaattisesti)"
 
 #: .\cookbook\forms.py:59
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Näytä ravitsemukselliset energiamäärä jouleina kalorien sijaan"
 
 #: .\cookbook\forms.py:61
 msgid ""
@@ -52,15 +56,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:63
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Näytä äskettäin katsotut reseptit hakusivulla."
 
 #: .\cookbook\forms.py:64
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "Ainesosien pyöristettävä desimaalien määrä."
 
 #: .\cookbook\forms.py:65
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "Jos haluat luoda ja nähdä kommentteja reseptien alla."
 
 #: .\cookbook\forms.py:67
 msgid ""
@@ -83,7 +87,7 @@ msgstr ""
 #: .\cookbook\forms.py:107 .\cookbook\forms.py:266
 #: .\cookbook\templates\url_import.html:156
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #: .\cookbook\forms.py:108 .\cookbook\forms.py:267
 #: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
@@ -120,33 +124,35 @@ msgstr ""
 
 #: .\cookbook\forms.py:173
 msgid "Add your comment: "
-msgstr ""
+msgstr "Lisää kommenttisi: "
 
 #: .\cookbook\forms.py:188
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "Jätä tyhjäksi dropboxia varten ja anna salasana nextcloudia varten."
 
 #: .\cookbook\forms.py:195
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "Jätä tyhjäksi nextcloudia varten ja anna dropbox api-avain tähän."
 
 #: .\cookbook\forms.py:204
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Jätä tyhjäksi dropboxia varten ja anna nextcloudin osoite tähän "
+"(<code>/remote.php/webdav/</code> lisätään automaattisesti)"
 
 #: .\cookbook\forms.py:242
 msgid "Search String"
-msgstr ""
+msgstr "Hakusana"
 
 #: .\cookbook\forms.py:269
 msgid "File ID"
-msgstr ""
+msgstr "Tiedosto ID"
 
 #: .\cookbook\forms.py:290
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "Sinun on annettava vähintään resepti tai otsikko."
 
 #: .\cookbook\forms.py:303
 msgid "You can list default users to share recipes with in the settings."
