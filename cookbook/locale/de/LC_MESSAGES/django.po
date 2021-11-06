@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 14:56+0100\n"
 "PO-Revision-Date: 2021-11-07 16:34+0000\n"
-"Last-Translator: Kaibu <notkaibu@gmail.com>\n"
+"Last-Translator: Jens <thhgttg@web.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -52,12 +52,12 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
-"Unterstützung für Brüche in Zutaten aktivieren. Dadurch werden Dezimalzahlen "
-"mit Brüchen ersetzt, z.B. 0.5 mit ½."
+"Aktiviert die Unterstützung von Brüchen in Mengenangaben von Zutaten (z. B. "
+"automatische Ersetzung von Dezimalzahlen durch Brüche)"
 
 #: .\cookbook\forms.py:59
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Anzeige der Nahrungsenergiemenge in Joule statt Kalorien"
 
 #: .\cookbook\forms.py:61
 msgid ""
@@ -220,6 +220,9 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Legt die Unschärfe einer Suche fest, wenn sie den Trigram-"
+"Ähnlichkeitsabgleich verwendet (z. B. bedeuten niedrige Werte, dass mehr "
+"Tippfehler ignoriert werden)."
 
 #: .\cookbook\forms.py:407
 msgid ""
@@ -242,9 +245,8 @@ msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
-"Felder bei welchen Akzente ignoriert werden. Das aktivieren dieser Option "
-"kann die Suchqualität abhängig von der Sprache verbessern oder "
-"verschlechtern."
+"Felder in denen Akzente ignoriert werden. Das Aktivieren dieser Option kann "
+"die Suchqualität abhängig von der Sprache verbessern oder verschlechtern"
 
 #: .\cookbook\forms.py:410
 msgid ""
@@ -787,30 +789,30 @@ msgstr ""
 "innerhalb der nächsten Minuten erhältst."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "API-Token"
+msgstr "Ungültiger Token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.\n"
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Der Link zum Zurücksetzen des Passworts war ungültig, möglicherweise weil er "
+"bereits verwendet worden ist.\n"
+"Bitte fordere ein <a href=\"%(passwd_reset_url)s\">erneutes "
+"Passwortzurücksetzen an</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Change Password"
 msgid "change password"
 msgstr "Passwort ändern"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Dein Passwort wurde geändert."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
@@ -893,13 +895,11 @@ msgstr "Supermarkt"
 #, fuzzy
 #| msgid "Supermarket"
 msgid "Supermarket Category"
-msgstr "Supermarkt"
+msgstr "Supermarkt-Kategorie"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:195
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Information"
+msgstr "Automatisierungen"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:215
 msgid "Files"
@@ -960,7 +960,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Übersetze Tandoor"
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
@@ -1105,12 +1105,14 @@ msgstr ""
 "Bist du sicher, dass %(title)s: <b>%(object)s</b> gelöscht werden soll? "
 
 #: .\cookbook\templates\generic\delete_template.html:26
+#, fuzzy
 msgid "Protected"
-msgstr ""
+msgstr "Geschützt"
 
 #: .\cookbook\templates\generic\delete_template.html:41
+#, fuzzy
 msgid "Cascade"
-msgstr ""
+msgstr "Kaskade"
 
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Cancel"
@@ -1872,52 +1874,66 @@ msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
 msgstr ""
+"Es gibt viele Optionen, die Suche deinen persönlichen Vorlieben entsprechend "
+"zu konfigurieren."
 
 #: .\cookbook\templates\settings.html:167
+#, fuzzy
 msgid ""
 "Usually you do <b>not need</b> to configure any of them and can just stick "
 "with either the default or one of the following presets."
 msgstr ""
+"Normalerweise musst Du <b>nichts</b> konfigurieren und kannst bei den "
+"Standardeinstellungen oder einer der folgenden Voreinstellungen bleiben."
 
 #: .\cookbook\templates\settings.html:168
 msgid ""
 "If you do want to configure the search you can read about the different "
 "options <a href=\"/docs/search/\">here</a>."
 msgstr ""
+"Wenn Du die Suche konfigurieren möchtest, kannst Du <a href=\"/docs/search/\""
+">hier</a> die verschiedenen Optionen nachlesen."
 
 #: .\cookbook\templates\settings.html:173
 msgid "Fuzzy"
-msgstr ""
+msgstr "Unscharf"
 
 #: .\cookbook\templates\settings.html:174
+#, fuzzy
 msgid ""
 "Find what you need even if your search or the recipe contains typos. Might "
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Finde was Du brauchst, auch wenn deine Suche oder die Rezepte Tippfehler "
+"enthalten. Möglicherweise werden mehr Ergebnisse zurückgegeben, um sicher zu "
+"sein, dass Du findest was Du suchst."
 
 #: .\cookbook\templates\settings.html:175
 msgid "This is the default behavior"
-msgstr ""
+msgstr "Dies ist das Standardverhalten"
 
 #: .\cookbook\templates\settings.html:176
 #: .\cookbook\templates\settings.html:184
+#, fuzzy
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 #: .\cookbook\templates\settings.html:181
 msgid "Precise"
-msgstr ""
+msgstr "Präzise"
 
 #: .\cookbook\templates\settings.html:182
 msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Erlaubt eine feine Steuerung der Suchergebnisse, aber es könnten keine "
+"Ergebnisse geliefert werden, wenn zu viele Tippfehler gemacht wurden."
 
 #: .\cookbook\templates\settings.html:183
 msgid "Perfect for large Databases"
-msgstr ""
+msgstr "Perfekt für große Datenbanken"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -1945,10 +1961,8 @@ msgid "Shopping List"
 msgstr "Einkaufsliste"
 
 #: .\cookbook\templates\shopping_list.html:34
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Try the new shopping list"
-msgstr "Einkaufsliste öffnen"
+msgstr "Probiere die neue Einkaufsliste aus"
 
 #: .\cookbook\templates\shopping_list.html:63
 msgid "Search Recipe"
@@ -2193,7 +2207,7 @@ msgstr "Warnung"
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80 .\cookbook\templates\system.html:95
 msgid "Ok"
-msgstr "Ok"
+msgstr "OK"
 
 #: .\cookbook\templates\system.html:51
 msgid ""
@@ -2204,10 +2218,11 @@ msgid ""
 "            your installation.\n"
 "        "
 msgstr ""
-"Das direkte ausliefern von Mediendateien mit gunicorn/python ist <b>nicht "
-"empfehlenswert</b>! Bitte folge den beschriebenen Schritten <a href=\"https"
-"\\://github.com/vabene1111/recipes/releases/tag/0.8.1\">hier</a>, um Ihre "
-"Installation zu aktualisieren.\n"
+"Das direkte Ausliefern von Mediendateien mit gunicorn/python ist <b>nicht "
+"empfehlenswert</b>!\n"
+"Bitte folge den <a href=\"https\\://github.com/vabene1111/recipes/releases/"
+"tag/0.8.1\">hier</a> beschriebenen Schritten, \n"
+"um deine Installation zu aktualisieren.\n"
 "        "
 
 #: .\cookbook\templates\system.html:57 .\cookbook\templates\system.html:73
@@ -2217,7 +2232,7 @@ msgstr "Alles in Ordnung!"
 
 #: .\cookbook\templates\system.html:62
 msgid "Secret Key"
-msgstr "Secret Key"
+msgstr "Geheimer Schlüssel"
 
 #: .\cookbook\templates\system.html:66
 msgid ""
@@ -2232,11 +2247,12 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Du hast keinen <code>SECRET_KEY</code> in deiner <code>.env</"
-"code>-Datei konfiguriert. Django verwendet standardmäßig den mit der "
+"            Du hast keinen <code>SECRET_KEY</code> in deiner <code>."
+"env</code>-Datei konfiguriert. Django verwendet standardmäßig den mit der "
 "Installation gelieferten Standardschlüssel, der öffentlich bekannt und "
-"unsicher ist! Bitte setze den <code>SECRET_KEY</code> in der "
-"Konfigurationsdatei <code>.env</code>.\n"
+"unsicher ist!\n"
+"Bitte setze den <code>SECRET_KEY</code> in der Konfigurationsdatei <code>."
+"env</code>.\n"
 "        "
 
 #: .\cookbook\templates\system.html:78
@@ -2329,7 +2345,7 @@ msgstr "Inhalte leeren"
 
 #: .\cookbook\templates\url_import.html:160
 msgid "Text dragged here will be appended to the name."
-msgstr "Text welcher hierhin gezogen wird, wird an den Namen angehängt."
+msgstr "Hierhin gezogener Text wird an den Namen angehängt."
 
 #: .\cookbook\templates\url_import.html:173
 msgid "Description"
@@ -2337,7 +2353,7 @@ msgstr "Beschreibung"
 
 #: .\cookbook\templates\url_import.html:177
 msgid "Text dragged here will be appended to the description."
-msgstr "Text welcher hierhin gezogen wird, wird an die Beschreibung angehängt."
+msgstr "Hierhin gezogener Text wird an die Beschreibung angehängt."
 
 #: .\cookbook\templates\url_import.html:194
 msgid "Keywords dragged here will be appended to current list"
@@ -2677,10 +2693,8 @@ msgid "Shopping Categories"
 msgstr "Einkaufskategorien"
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Einkaufsliste"
+msgstr "Neue Einkaufsliste"
 
 #: .\cookbook\views\new.py:122
 msgid "Imported new recipe!"
