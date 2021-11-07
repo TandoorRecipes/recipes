@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 14:56+0100\n"
-"PO-Revision-Date: 2021-11-06 14:06+0000\n"
-"Last-Translator: Jan Brach <big.jan@gmail.com>\n"
+"PO-Revision-Date: 2021-11-07 16:34+0000\n"
+"Last-Translator: Kaibu <notkaibu@gmail.com>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -234,8 +234,8 @@ msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
-"Benutze Fuzzy-Suche für Einheiten, Schlüsselwörter und Zutaten beim ändern "
-"und importieren von Rezepten."
+"Benutze die Unscharfe Suche für Einheiten, Schlüsselwörter und Zutaten beim "
+"ändern und importieren von Rezepten."
 
 #: .\cookbook\forms.py:409
 msgid ""
@@ -285,7 +285,7 @@ msgstr "Suchmethode"
 
 #: .\cookbook\forms.py:418
 msgid "Fuzzy Lookups"
-msgstr "Unpräzise Suche"
+msgstr "Unscharfe Suche"
 
 #: .\cookbook\forms.py:419
 msgid "Ignore Accent"
