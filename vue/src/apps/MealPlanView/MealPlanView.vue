@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-tabs content-class="mt-3">
+    <b-tabs content-class="mt-3" v-model="current_tab">
       <b-tab :title="$t('Planner')" active>
         <div class="row">
           <div class="col-12 calender-parent">
@@ -35,7 +35,7 @@
       </b-tab>
       <b-tab :title="$t('Settings')">
         <div class="row mt-3">
-          <div class="col-3 calender-options">
+          <div class="col-12 col-md-3 calender-options">
             <h5>{{ $t('Planner_Settings') }}</h5>
             <b-form>
               <b-form-group id="UomInput"
@@ -76,7 +76,7 @@
               </b-form-group>
             </b-form>
           </div>
-          <div class="col-9 col-lg-6">
+          <div class="col-12 col-md-9 col-lg-6">
             <h5>{{ $t('Meal_Types') }}</h5>
             <div>
               <draggable :list="meal_types" group="meal_types"
@@ -186,46 +186,52 @@
         </b-sidebar>
       </div>
     </template>
-    <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background:rgba(255,255,255,0.6);">
-      <div class="col-md-3 col-6">
-        <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
-            class="fas fa-calendar-plus"></i> {{ $t('Create') }}
-        </button>
+    <transition name="slide-fade">
+      <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background:rgba(255,255,255,0.6);"
+           v-if="current_tab === 0">
+        <div class="col-md-3 col-6">
+          <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
+              class="fas fa-calendar-plus"></i> {{ $t('Create') }}
+          </button>
+        </div>
+        <div class="col-md-3 col-6">
+          <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i
+              class="fas fa-shopping-cart"></i> {{ $t('Shopping_list') }}
+          </button>
+        </div>
+        <div class="col-md-3 col-6">
+          <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
+            {{ $t('Export_To_ICal') }}
+          </a>
+        </div>
+        <div class="col-md-3 col-6">
+          <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top
+                  :title="$t('Coming_Soon')">
+            {{ $t('Auto_Planner') }}
+          </button>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
+          <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+            <b-button-group class="mx-1">
+              <b-button v-html="'<<'" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+              <b-button v-html="'<'" @click="setStartingDay(-1)"></b-button>
+            </b-button-group>
+            <b-button-group class="mx-1">
+              <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i>
+              </b-button>
+              <b-form-datepicker
+                  button-only
+                  button-variant="secondary"
+              ></b-form-datepicker>
+            </b-button-group>
+            <b-button-group class="mx-1">
+              <b-button v-html="'>'" @click="setStartingDay(1)"></b-button>
+              <b-button v-html="'>>'" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+            </b-button-group>
+          </b-button-toolbar>
+        </div>
       </div>
-      <div class="col-md-3 col-6">
-        <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i
-            class="fas fa-shopping-cart"></i> {{ $t('Shopping_list') }}
-        </button>
-      </div>
-      <div class="col-md-3 col-6">
-        <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
-          {{ $t('Export_To_ICal') }}
-        </a>
-      </div>
-      <div class="col-md-3 col-6">
-        <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top :title="$t('Coming_Soon')">{{ $t('Auto_Planner') }}</button>
-      </div>
-      <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
-        <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-          <b-button-group class="mx-1">
-            <b-button v-html="'<<'" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-            <b-button v-html="'<'" @click="setStartingDay(-1)"></b-button>
-          </b-button-group>
-          <b-button-group class="mx-1">
-            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i>
-            </b-button>
-            <b-form-datepicker
-                button-only
-                button-variant="secondary"
-            ></b-form-datepicker>
-          </b-button-group>
-          <b-button-group class="mx-1">
-            <b-button v-html="'>'" @click="setStartingDay(1)"></b-button>
-            <b-button v-html="'>>'" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-          </b-button-group>
-        </b-button-toolbar>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -283,6 +289,7 @@ export default {
         displayWeekNumbers: true
       },
       dragged_item: null,
+      current_tab: 0,
       meal_types: [],
       current_context_menu_item: null,
       options: {
@@ -629,6 +636,19 @@ export default {
 </script>
 
 <style>
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
 .calender-parent {
   display: flex;
   flex-direction: column;
