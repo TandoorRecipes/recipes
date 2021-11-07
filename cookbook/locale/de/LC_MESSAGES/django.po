@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-07 17:31+0100\n"
-"PO-Revision-Date: 2021-11-06 14:06+0000\n"
-"Last-Translator: Jan Brach <big.jan@gmail.com>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2021-11-07 17:14+0000\n"
+"Last-Translator: Kaibu <notkaibu@gmail.com>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,66 +34,52 @@ msgid "Ingredients"
 msgstr "Zutaten"
 
 #: .\cookbook\forms.py:54
-#, fuzzy
-#| msgid "Default"
 msgid "Default unit"
-msgstr "Standard"
+msgstr "Standardeinheit"
 
 #: .\cookbook\forms.py:55
-#, fuzzy
-#| msgid "System Information"
 msgid "Use fractions"
-msgstr "Systeminformation"
+msgstr "Brüche verwenden"
 
 #: .\cookbook\forms.py:56
 msgid "Use KJ"
-msgstr ""
+msgstr "Kilojoule verwenden"
 
 #: .\cookbook\forms.py:57
 msgid "Theme"
-msgstr ""
+msgstr "Theme"
 
 #: .\cookbook\forms.py:58
 msgid "Navbar color"
-msgstr ""
+msgstr "Farbe der Navigationsleiste"
 
 #: .\cookbook\forms.py:59
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Navigationsleiste anheften"
 
 #: .\cookbook\forms.py:60
-#, fuzzy
-#| msgid "Default"
 msgid "Default page"
-msgstr "Standard"
+msgstr "Standardseite"
 
 #: .\cookbook\forms.py:61
-#, fuzzy
-#| msgid "Show Recipes"
 msgid "Show recent recipes"
-msgstr "Rezepte anzeigen"
+msgstr "Zuletzt betrachtete Rezepte anzeigen"
 
 #: .\cookbook\forms.py:62
-#, fuzzy
-#| msgid "Search Index"
 msgid "Search style"
-msgstr "Suchindex"
+msgstr "Suchmethode"
 
 #: .\cookbook\forms.py:63
 msgid "Plan sharing"
-msgstr ""
+msgstr "Essensplan teilen"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Zutaten"
+msgstr "Nachkommastellen für Zutaten"
 
 #: .\cookbook\forms.py:65
-#, fuzzy
-#| msgid "Shopping list currently empty"
 msgid "Shopping list auto sync period"
-msgstr "Die Einkaufsliste ist aktuell leer"
+msgstr "Synchronisierungshäufigkeit der Einkaufsliste"
 
 #: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
@@ -124,7 +110,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Nährwerte in Joule statt Kalorien anzeigen"
 
 #: .\cookbook\forms.py:78
 msgid ""
@@ -238,7 +224,7 @@ msgstr "Speicher"
 
 #: .\cookbook\forms.py:260
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: .\cookbook\forms.py:265
 msgid "Search String"
@@ -295,6 +281,8 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Legt fest wie unscharf eine Suche ist, falls Trigramme verwendet werden ("
+"i.A. führen niedrigere Werte zum ignorieren von mehr Tippfehlern)."
 
 #: .\cookbook\forms.py:435
 msgid ""
@@ -309,8 +297,8 @@ msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
-"Benutze Fuzzy-Suche für Einheiten, Schlüsselwörter und Zutaten beim ändern "
-"und importieren von Rezepten."
+"Benutze die unscharfe Suche für Einheiten, Schlüsselwörter und Zutaten beim "
+"ändern und importieren von Rezepten."
 
 #: .\cookbook\forms.py:438
 msgid ""
@@ -360,7 +348,7 @@ msgstr "Suchmethode"
 
 #: .\cookbook\forms.py:451
 msgid "Fuzzy Lookups"
-msgstr "Unpräzise Suche"
+msgstr "Unscharfe Suche"
 
 #: .\cookbook\forms.py:452
 msgid "Ignore Accent"
@@ -605,22 +593,16 @@ msgid "Raw"
 msgstr "Rohdaten"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Foods"
 msgid "Food Alias"
-msgstr "Lebensmittel"
+msgstr "Lebensmittel Alias"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Einheiten"
+msgstr "Einheiten Alias"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Stichwörter"
+msgstr "Stichwort Alias"
 
 #: .\cookbook\serializer.py:157
 msgid "File uploads are not enabled for this Space."
@@ -862,10 +844,8 @@ msgstr ""
 "innerhalb der nächsten Minuten erhältst."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "API-Token"
+msgstr "Ungültiger Token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -875,17 +855,18 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Der Link wurde bereits benutzt oder deaktiviert.\n"
+"                    Bitte fordern Sie <a href=\"%(passwd_reset_url)s\">hier</"
+"a> einen neuen Link an ."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Change Password"
 msgid "change password"
 msgstr "Passwort ändern"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Passwort wurde geändert."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
@@ -965,16 +946,12 @@ msgid "Supermarket"
 msgstr "Supermarkt"
 
 #: .\cookbook\templates\base.html:163
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarket Category"
-msgstr "Supermarkt"
+msgstr "Supermarkt-Kategorie"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:195
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Information"
+msgstr "Automatisierungen"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:215
 msgid "Files"
@@ -1035,7 +1012,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Tandoor übersetzen"
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
@@ -1182,11 +1159,11 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
-msgstr ""
+msgstr "Geschützt"
 
 #: .\cookbook\templates\generic\delete_template.html:41
 msgid "Cascade"
-msgstr ""
+msgstr "Kaskadierung"
 
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Cancel"
@@ -1942,23 +1919,28 @@ msgstr "oder"
 msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
-msgstr ""
+msgstr "Die Suche kann je nach Präferenz vielfältig Individualisiert werden."
 
 #: .\cookbook\templates\settings.html:167
 msgid ""
 "Usually you do <b>not need</b> to configure any of them and can just stick "
 "with either the default or one of the following presets."
 msgstr ""
+"Im Normalfall ist es <b>nicht notwendig</b> die Einstellung zu verändern. "
+"Meist erreichen die Standardeinstellungen oder eine der folgenden "
+"Suchprofile sehr gute Suchergebnisse."
 
 #: .\cookbook\templates\settings.html:168
 msgid ""
 "If you do want to configure the search you can read about the different "
 "options <a href=\"/docs/search/\">here</a>."
 msgstr ""
+"Weitere Informationen zu den einzelnen Optionen sind <a href=\"/docs/search/"
+"\">hier</a> zu finden."
 
 #: .\cookbook\templates\settings.html:173
 msgid "Fuzzy"
-msgstr ""
+msgstr "Unscharf"
 
 #: .\cookbook\templates\settings.html:174
 msgid ""
@@ -1966,29 +1948,33 @@ msgid ""
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Liefert alle erwartbaren Suchergebnisse auch wenn Tippfehler im Suchbegriff "
+"sind. Kann jedoch mehr Ergebnisse als notwendig liefern."
 
 #: .\cookbook\templates\settings.html:175
 msgid "This is the default behavior"
-msgstr ""
+msgstr "Dies ist die Standardeinstellung"
 
 #: .\cookbook\templates\settings.html:176
 #: .\cookbook\templates\settings.html:184
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 #: .\cookbook\templates\settings.html:181
 msgid "Precise"
-msgstr ""
+msgstr "Präzise"
 
 #: .\cookbook\templates\settings.html:182
 msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Erlaubt eine feine Steuerung der Suchergebnisse, aber es könnten keine "
+"Ergebnisse geliefert werden, wenn zu viele Tippfehler gemacht wurden."
 
 #: .\cookbook\templates\settings.html:183
 msgid "Perfect for large Databases"
-msgstr ""
+msgstr "Ideal für große Datenbanken"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -2016,10 +2002,8 @@ msgid "Shopping List"
 msgstr "Einkaufsliste"
 
 #: .\cookbook\templates\shopping_list.html:34
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Try the new shopping list"
-msgstr "Einkaufsliste öffnen"
+msgstr "Neue Einkaufsliste ausprobieren"
 
 #: .\cookbook\templates\shopping_list.html:63
 msgid "Search Recipe"
@@ -2288,7 +2272,7 @@ msgstr "Alles in Ordnung!"
 
 #: .\cookbook\templates\system.html:62
 msgid "Secret Key"
-msgstr "Secret Key"
+msgstr "Geheimer Schlüssel"
 
 #: .\cookbook\templates\system.html:66
 msgid ""
@@ -2367,11 +2351,11 @@ msgstr "Lesezeichen speichern!"
 
 #: .\cookbook\templates\url_import.html:36
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\cookbook\templates\url_import.html:38
 msgid "App"
-msgstr ""
+msgstr "Anwendung"
 
 #: .\cookbook\templates\url_import.html:62
 msgid "Enter website URL"
@@ -2612,10 +2596,8 @@ msgstr ""
 
 #: .\cookbook\views\api.py:723 .\cookbook\views\data.py:42
 #: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "Diese Funktion ist in der Demo-Version nicht verfügbar!"
+msgstr "Diese Funktion ist in dieser Version von Tandoor noch nicht verfügbar!"
 
 #: .\cookbook\views\api.py:745
 msgid "Sync successful!"
@@ -2755,10 +2737,8 @@ msgid "Shopping Categories"
 msgstr "Einkaufskategorien"
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Einkaufsliste"
+msgstr "Neue Einkaufsliste"
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
