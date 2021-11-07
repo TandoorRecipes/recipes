@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col col-md-12">
           <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
+            <div class="col-12 col-lg-10 mt-3 mb-3">
               <b-input-group>
                 <b-input class="form-control form-control-lg form-control-borderless form-control-search"
                          v-model="search"
