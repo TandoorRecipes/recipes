@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-04 14:56+0100\n"
+"POT-Creation-Date: 2021-11-07 17:31+0100\n"
 "PO-Revision-Date: 2020-06-02 19:28+0000\n"
 "Last-Translator: Miguel Canteras <mcanteras@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/django-recipes/"
@@ -28,11 +28,78 @@ msgstr ""
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:28
-#: .\cookbook\templates\url_import.html:272
+#: .\cookbook\templates\url_import.html:274
 msgid "Ingredients"
 msgstr "Ingredientes"
 
-#: .\cookbook\forms.py:53
+#: .\cookbook\forms.py:54
+#, fuzzy
+#| msgid "Default"
+msgid "Default unit"
+msgstr "Por defecto"
+
+#: .\cookbook\forms.py:55
+#, fuzzy
+#| msgid "System Information"
+msgid "Use fractions"
+msgstr "Información del Sistema"
+
+#: .\cookbook\forms.py:56
+msgid "Use KJ"
+msgstr ""
+
+#: .\cookbook\forms.py:57
+msgid "Theme"
+msgstr ""
+
+#: .\cookbook\forms.py:58
+msgid "Navbar color"
+msgstr ""
+
+#: .\cookbook\forms.py:59
+msgid "Sticky navbar"
+msgstr ""
+
+#: .\cookbook\forms.py:60
+#, fuzzy
+#| msgid "Default"
+msgid "Default page"
+msgstr "Por defecto"
+
+#: .\cookbook\forms.py:61
+#, fuzzy
+#| msgid "Shopping Recipes"
+msgid "Show recent recipes"
+msgstr "Recetas en el carro de la compra"
+
+#: .\cookbook\forms.py:62
+#, fuzzy
+#| msgid "Search"
+msgid "Search style"
+msgstr "Buscar"
+
+#: .\cookbook\forms.py:63
+msgid "Plan sharing"
+msgstr ""
+
+#: .\cookbook\forms.py:64
+#, fuzzy
+#| msgid "Ingredients"
+msgid "Ingredient decimal places"
+msgstr "Ingredientes"
+
+#: .\cookbook\forms.py:65
+#, fuzzy
+#| msgid "Shopping list currently empty"
+msgid "Shopping list auto sync period"
+msgstr "Lista de la compra vacía"
+
+#: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
+#: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
+msgid "Comments"
+msgstr "Comentarios"
+
+#: .\cookbook\forms.py:70
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
@@ -40,13 +107,13 @@ msgstr ""
 "Color de la barra de navegación superior. No todos los colores funcionan con "
 "todos los temas, ¡pruébalos!"
 
-#: .\cookbook\forms.py:55
+#: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
 msgstr ""
 "Unidad predeterminada que se utilizará al insertar un nuevo ingrediente en "
 "una receta."
 
-#: .\cookbook\forms.py:57
+#: .\cookbook\forms.py:74
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
@@ -54,11 +121,11 @@ msgstr ""
 "Permite utilizar fracciones en cantidades de ingredientes (e.g. convierte "
 "los decimales en fracciones automáticamente)"
 
-#: .\cookbook\forms.py:59
+#: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr ""
 
-#: .\cookbook\forms.py:61
+#: .\cookbook\forms.py:78
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
@@ -66,19 +133,19 @@ msgstr ""
 "Usuarios con los que las entradas recién creadas del plan de comida/lista de "
 "la compra deben compartirse de forma predeterminada."
 
-#: .\cookbook\forms.py:63
+#: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
 msgstr "Muestra recetas vistas recientemente en la página de búsqueda."
 
-#: .\cookbook\forms.py:64
+#: .\cookbook\forms.py:81
 msgid "Number of decimals to round ingredients."
 msgstr "Número de decimales para redondear los ingredientes."
 
-#: .\cookbook\forms.py:65
+#: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr "Si desea poder crear y ver comentarios debajo de las recetas."
 
-#: .\cookbook\forms.py:67
+#: .\cookbook\forms.py:84
 msgid ""
 "Setting to 0 will disable auto sync. When viewing a shopping list the list "
 "is updated every set seconds to sync changes someone else might have made. "
@@ -92,11 +159,11 @@ msgstr ""
 "valor establecido es inferior al límite de la instancia, este se "
 "restablecerá al guardar."
 
-#: .\cookbook\forms.py:70
+#: .\cookbook\forms.py:87
 msgid "Makes the navbar stick to the top of the page."
 msgstr "Hace la barra de navegación fija en la parte superior de la página."
 
-#: .\cookbook\forms.py:86
+#: .\cookbook\forms.py:103
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
@@ -108,60 +175,60 @@ msgstr ""
 " \n"
 " "
 
-#: .\cookbook\forms.py:107 .\cookbook\forms.py:266
-#: .\cookbook\templates\url_import.html:156
+#: .\cookbook\forms.py:124 .\cookbook\forms.py:289
+#: .\cookbook\templates\url_import.html:158
 msgid "Name"
 msgstr "Nombre"
 
-#: .\cookbook\forms.py:108 .\cookbook\forms.py:267
+#: .\cookbook\forms.py:125 .\cookbook\forms.py:290
 #: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
-#: .\cookbook\templates\url_import.html:190
-#: .\cookbook\templates\url_import.html:575 .\cookbook\views\lists.py:112
+#: .\cookbook\templates\url_import.html:192
+#: .\cookbook\templates\url_import.html:578 .\cookbook\views\lists.py:112
 msgid "Keywords"
 msgstr "Palabras clave"
 
-#: .\cookbook\forms.py:109
+#: .\cookbook\forms.py:126
 msgid "Preparation time in minutes"
 msgstr "Tiempo de preparación en minutos"
 
-#: .\cookbook\forms.py:110
+#: .\cookbook\forms.py:127
 msgid "Waiting time (cooking/baking) in minutes"
 msgstr "Tiempo de espera (cocinar/hornear) en minutos"
 
-#: .\cookbook\forms.py:111 .\cookbook\forms.py:268
+#: .\cookbook\forms.py:128 .\cookbook\forms.py:259 .\cookbook\forms.py:291
 msgid "Path"
 msgstr "Ruta"
 
-#: .\cookbook\forms.py:112
+#: .\cookbook\forms.py:129
 msgid "Storage UID"
 msgstr "UID de almacenamiento"
 
-#: .\cookbook\forms.py:140
+#: .\cookbook\forms.py:157
 msgid "Default"
 msgstr "Por defecto"
 
-#: .\cookbook\forms.py:151 .\cookbook\templates\url_import.html:92
+#: .\cookbook\forms.py:168 .\cookbook\templates\url_import.html:94
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
 
-#: .\cookbook\forms.py:173
+#: .\cookbook\forms.py:190
 msgid "Add your comment: "
 msgstr "Añada su comentario:"
 
-#: .\cookbook\forms.py:188
+#: .\cookbook\forms.py:205
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
 "Déjelo vacío para Dropbox e ingrese la contraseña de la aplicación para "
 "nextcloud."
 
-#: .\cookbook\forms.py:195
+#: .\cookbook\forms.py:212
 msgid "Leave empty for nextcloud and enter api token for dropbox."
 msgstr ""
 "Déjelo en blanco para nextcloud e ingrese el token de api para dropbox."
 
-#: .\cookbook\forms.py:204
+#: .\cookbook\forms.py:221
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
@@ -169,25 +236,33 @@ msgstr ""
 "Dejar vació para Dropbox e introducir sólo la URL base para Nextcloud "
 "(<code>/remote.php/webdav/</code> se añade automáticamente)"
 
-#: .\cookbook\forms.py:242
+#: .\cookbook\forms.py:258 .\cookbook\views\edit.py:166
+msgid "Storage"
+msgstr "Almacenamiento"
+
+#: .\cookbook\forms.py:260
+msgid "Active"
+msgstr ""
+
+#: .\cookbook\forms.py:265
 msgid "Search String"
 msgstr "Cadena de búsqueda"
 
-#: .\cookbook\forms.py:269
+#: .\cookbook\forms.py:292
 msgid "File ID"
 msgstr "ID de Fichero"
 
-#: .\cookbook\forms.py:290
+#: .\cookbook\forms.py:313
 msgid "You must provide at least a recipe or a title."
 msgstr "Debe proporcionar al menos una receta o un título."
 
-#: .\cookbook\forms.py:303
+#: .\cookbook\forms.py:326
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
 "Puede enumerar los usuarios predeterminados con los que compartir recetas en "
 "la configuración."
 
-#: .\cookbook\forms.py:304
+#: .\cookbook\forms.py:327
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
@@ -195,105 +270,105 @@ msgstr ""
 "Puede utilizar Markdown para formatear este campo. Vea la <a href=\"/docs/"
 "markdown/\">documentación aqui</a>"
 
-#: .\cookbook\forms.py:329
+#: .\cookbook\forms.py:353
 msgid "Maximum number of users for this space reached."
 msgstr ""
 
-#: .\cookbook\forms.py:335
+#: .\cookbook\forms.py:359
 msgid "Email address already taken!"
 msgstr ""
 
-#: .\cookbook\forms.py:343
+#: .\cookbook\forms.py:367
 msgid ""
 "An email address is not required but if present the invite link will be send "
 "to the user."
 msgstr ""
 
-#: .\cookbook\forms.py:358
+#: .\cookbook\forms.py:382
 msgid "Name already taken."
 msgstr ""
 
-#: .\cookbook\forms.py:369
+#: .\cookbook\forms.py:393
 msgid "Accept Terms and Privacy"
 msgstr ""
 
-#: .\cookbook\forms.py:399
+#: .\cookbook\forms.py:425
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
 
-#: .\cookbook\forms.py:407
+#: .\cookbook\forms.py:435
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
 
-#: .\cookbook\forms.py:408
+#: .\cookbook\forms.py:436
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
 
-#: .\cookbook\forms.py:409
+#: .\cookbook\forms.py:438
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
 
-#: .\cookbook\forms.py:410
+#: .\cookbook\forms.py:440
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
 
-#: .\cookbook\forms.py:411
+#: .\cookbook\forms.py:442
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
 
-#: .\cookbook\forms.py:412
+#: .\cookbook\forms.py:444
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
 
-#: .\cookbook\forms.py:413
+#: .\cookbook\forms.py:446
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
 
-#: .\cookbook\forms.py:417
+#: .\cookbook\forms.py:450
 #, fuzzy
 #| msgid "Search"
 msgid "Search Method"
 msgstr "Buscar"
 
-#: .\cookbook\forms.py:418
+#: .\cookbook\forms.py:451
 msgid "Fuzzy Lookups"
 msgstr ""
 
-#: .\cookbook\forms.py:419
+#: .\cookbook\forms.py:452
 msgid "Ignore Accent"
 msgstr ""
 
-#: .\cookbook\forms.py:420
+#: .\cookbook\forms.py:453
 msgid "Partial Match"
 msgstr ""
 
-#: .\cookbook\forms.py:421
+#: .\cookbook\forms.py:454
 msgid "Starts Wtih"
 msgstr ""
 
-#: .\cookbook\forms.py:422
+#: .\cookbook\forms.py:455
 #, fuzzy
 #| msgid "Search"
 msgid "Fuzzy Search"
 msgstr "Buscar"
 
-#: .\cookbook\forms.py:423
+#: .\cookbook\forms.py:456
 #, fuzzy
 #| msgid "Text"
 msgid "Full Text"
@@ -316,7 +391,7 @@ msgstr "¡No ha iniciado sesión y por lo tanto no puede ver esta página!"
 #: .\cookbook\helper\permission_helper.py:216
 #: .\cookbook\helper\permission_helper.py:230
 #: .\cookbook\helper\permission_helper.py:241
-#: .\cookbook\helper\permission_helper.py:252 .\cookbook\views\data.py:42
+#: .\cookbook\helper\permission_helper.py:252 .\cookbook\views\data.py:47
 #: .\cookbook\views\views.py:160 .\cookbook\views\views.py:167
 #: .\cookbook\views\views.py:233
 msgid "You do not have the required permissions to view this page!"
@@ -338,11 +413,11 @@ msgstr ""
 #: .\cookbook\templates\import_response.html:7
 #: .\cookbook\templates\test.html:14 .\cookbook\templates\test.html:20
 #: .\cookbook\templates\url_import.html:27
-#: .\cookbook\templates\url_import.html:103
-#: .\cookbook\templates\url_import.html:125
-#: .\cookbook\templates\url_import.html:319
-#: .\cookbook\templates\url_import.html:606 .\cookbook\views\delete.py:89
-#: .\cookbook\views\edit.py:197
+#: .\cookbook\templates\url_import.html:105
+#: .\cookbook\templates\url_import.html:127
+#: .\cookbook\templates\url_import.html:321
+#: .\cookbook\templates\url_import.html:609 .\cookbook\views\delete.py:89
+#: .\cookbook\views\edit.py:200
 msgid "Import"
 msgstr "Importar"
 
@@ -382,14 +457,14 @@ msgstr "Nota"
 msgid "Nutritional Information"
 msgstr "Información"
 
-#: .\cookbook\integration\paprika.py:53
+#: .\cookbook\integration\paprika.py:53 .\cookbook\templates\url_import.html:40
 msgid "Source"
 msgstr ""
 
 #: .\cookbook\integration\safron.py:23
 #: .\cookbook\templates\include\log_cooking.html:16
-#: .\cookbook\templates\url_import.html:226
-#: .\cookbook\templates\url_import.html:457
+#: .\cookbook\templates\url_import.html:228
+#: .\cookbook\templates\url_import.html:459
 msgid "Servings"
 msgstr "Raciones"
 
@@ -457,7 +532,7 @@ msgstr "Buscar"
 #: .\cookbook\models.py:203 .\cookbook\templates\base.html:82
 #: .\cookbook\templates\meal_plan.html:7
 #: .\cookbook\templates\meal_plan_new.html:7 .\cookbook\views\delete.py:181
-#: .\cookbook\views\edit.py:217 .\cookbook\views\new.py:180
+#: .\cookbook\views\edit.py:220 .\cookbook\views\new.py:184
 msgid "Meal-Plan"
 msgstr "Régimen de comidas"
 
@@ -482,7 +557,7 @@ msgstr "Nuevo"
 msgid " is part of a recipe step and cannot be deleted"
 msgstr ""
 
-#: .\cookbook\models.py:441
+#: .\cookbook\models.py:441 .\cookbook\templates\url_import.html:42
 msgid "Text"
 msgstr "Texto"
 
@@ -490,7 +565,7 @@ msgstr "Texto"
 msgid "Time"
 msgstr "Tiempo"
 
-#: .\cookbook\models.py:441
+#: .\cookbook\models.py:441 .\cookbook\templates\url_import.html:44
 #, fuzzy
 #| msgid "File ID"
 msgid "File"
@@ -498,8 +573,8 @@ msgstr "ID de Fichero"
 
 #: .\cookbook\models.py:441
 #: .\cookbook\templates\include\recipe_open_modal.html:7
-#: .\cookbook\views\delete.py:39 .\cookbook\views\edit.py:257
-#: .\cookbook\views\new.py:52
+#: .\cookbook\views\delete.py:39 .\cookbook\views\edit.py:260
+#: .\cookbook\views\new.py:53
 msgid "Recipe"
 msgstr "Receta"
 
@@ -981,7 +1056,7 @@ msgstr ""
 "Agregue las palabras clave especificadas a todas las recetas que contengan "
 "una palabra"
 
-#: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:83
+#: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:82
 msgid "Sync"
 msgstr "Sincronizar"
 
@@ -1000,6 +1075,18 @@ msgstr ""
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
 msgstr "La ruta debe tener el siguiente formato"
+
+#: .\cookbook\templates\batch\monitor.html:20
+#: .\cookbook\templates\forms\edit_import_recipe.html:14
+#: .\cookbook\templates\generic\edit_template.html:23
+#: .\cookbook\templates\generic\new_template.html:23
+#: .\cookbook\templates\include\log_cooking.html:28
+#: .\cookbook\templates\settings.html:63 .\cookbook\templates\settings.html:105
+#: .\cookbook\templates\settings.html:123
+#: .\cookbook\templates\settings.html:195
+#: .\cookbook\templates\shopping_list.html:360
+msgid "Save"
+msgstr "Guardar"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
@@ -1046,17 +1133,6 @@ msgstr "Exportar recetas"
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
 msgstr "Importar nueva receta"
-
-#: .\cookbook\templates\forms\edit_import_recipe.html:14
-#: .\cookbook\templates\generic\edit_template.html:23
-#: .\cookbook\templates\generic\new_template.html:23
-#: .\cookbook\templates\include\log_cooking.html:28
-#: .\cookbook\templates\settings.html:63 .\cookbook\templates\settings.html:105
-#: .\cookbook\templates\settings.html:123
-#: .\cookbook\templates\settings.html:195
-#: .\cookbook\templates\shopping_list.html:360
-msgid "Save"
-msgstr "Guardar"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
@@ -1510,33 +1586,28 @@ msgstr ""
 "porque las has visto recientemente. Ten en cuenta que los datos pueden estar "
 "desactualizados."
 
-#: .\cookbook\templates\recipe_view.html:21 .\cookbook\templates\space.html:62
-#: .\cookbook\templates\stats.html:47
-msgid "Comments"
-msgstr "Comentarios"
-
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
 msgstr "por"
 
 #: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:147
-#: .\cookbook\views\edit.py:177
+#: .\cookbook\views\edit.py:180
 msgid "Comment"
 msgstr "Comentario"
 
 #: .\cookbook\templates\recipes_table.html:19
 #: .\cookbook\templates\recipes_table.html:23
-#: .\cookbook\templates\url_import.html:442
+#: .\cookbook\templates\url_import.html:444
 msgid "Recipe Image"
 msgstr "Imagen de la receta"
 
 #: .\cookbook\templates\recipes_table.html:51
-#: .\cookbook\templates\url_import.html:447
+#: .\cookbook\templates\url_import.html:449
 msgid "Preparation time ca."
 msgstr "Tiempo de preparación ca."
 
 #: .\cookbook\templates\recipes_table.html:57
-#: .\cookbook\templates\url_import.html:452
+#: .\cookbook\templates\url_import.html:454
 msgid "Waiting time ca."
 msgstr "Tiempo de espera ca."
 
@@ -1909,8 +1980,8 @@ msgstr "Seleccionar unidad"
 #: .\cookbook\templates\shopping_list.html:218
 #: .\cookbook\templates\shopping_list.html:248
 #: .\cookbook\templates\shopping_list.html:272
-#: .\cookbook\templates\url_import.html:497
-#: .\cookbook\templates\url_import.html:529
+#: .\cookbook\templates\url_import.html:500
+#: .\cookbook\templates\url_import.html:532
 msgid "Select"
 msgstr "Seleccionar"
 
@@ -2240,164 +2311,172 @@ msgstr ""
 msgid "Bookmark Me!"
 msgstr "¡Marcador guardado!"
 
-#: .\cookbook\templates\url_import.html:61
+#: .\cookbook\templates\url_import.html:36
+msgid "URL"
+msgstr ""
+
+#: .\cookbook\templates\url_import.html:38
+msgid "App"
+msgstr ""
+
+#: .\cookbook\templates\url_import.html:62
 msgid "Enter website URL"
 msgstr "Introduce la URL del sitio web"
 
-#: .\cookbook\templates\url_import.html:99
+#: .\cookbook\templates\url_import.html:101
 msgid "Select recipe files to import or drop them here..."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:120
+#: .\cookbook\templates\url_import.html:122
 msgid "Paste json or html source here to load recipe."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:148
+#: .\cookbook\templates\url_import.html:150
 #, fuzzy
 #| msgid "View Recipe"
 msgid "Preview Recipe Data"
 msgstr "Ver la receta"
 
-#: .\cookbook\templates\url_import.html:149
+#: .\cookbook\templates\url_import.html:151
 msgid "Drag recipe attributes from the right into the appropriate box below."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:158
-#: .\cookbook\templates\url_import.html:175
-#: .\cookbook\templates\url_import.html:192
-#: .\cookbook\templates\url_import.html:211
-#: .\cookbook\templates\url_import.html:229
-#: .\cookbook\templates\url_import.html:244
-#: .\cookbook\templates\url_import.html:259
-#: .\cookbook\templates\url_import.html:275
-#: .\cookbook\templates\url_import.html:302
-#: .\cookbook\templates\url_import.html:353
+#: .\cookbook\templates\url_import.html:160
+#: .\cookbook\templates\url_import.html:177
+#: .\cookbook\templates\url_import.html:194
+#: .\cookbook\templates\url_import.html:213
+#: .\cookbook\templates\url_import.html:231
+#: .\cookbook\templates\url_import.html:246
+#: .\cookbook\templates\url_import.html:261
+#: .\cookbook\templates\url_import.html:277
+#: .\cookbook\templates\url_import.html:304
+#: .\cookbook\templates\url_import.html:355
 msgid "Clear Contents"
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:160
+#: .\cookbook\templates\url_import.html:162
 msgid "Text dragged here will be appended to the name."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:173
+#: .\cookbook\templates\url_import.html:175
 msgid "Description"
 msgstr "Descripción"
 
-#: .\cookbook\templates\url_import.html:177
+#: .\cookbook\templates\url_import.html:179
 msgid "Text dragged here will be appended to the description."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:194
+#: .\cookbook\templates\url_import.html:196
 msgid "Keywords dragged here will be appended to current list"
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:209
+#: .\cookbook\templates\url_import.html:211
 msgid "Image"
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:241
+#: .\cookbook\templates\url_import.html:243
 #, fuzzy
 #| msgid "Preparation Time"
 msgid "Prep Time"
 msgstr "Tiempo de Preparación"
 
-#: .\cookbook\templates\url_import.html:256
+#: .\cookbook\templates\url_import.html:258
 #, fuzzy
 #| msgid "Time"
 msgid "Cook Time"
 msgstr "Tiempo"
 
-#: .\cookbook\templates\url_import.html:277
+#: .\cookbook\templates\url_import.html:279
 msgid "Ingredients dragged here will be appended to current list."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:299
-#: .\cookbook\templates\url_import.html:569
+#: .\cookbook\templates\url_import.html:301
+#: .\cookbook\templates\url_import.html:572
 msgid "Instructions"
 msgstr "Instrucciones"
 
-#: .\cookbook\templates\url_import.html:304
+#: .\cookbook\templates\url_import.html:306
 msgid ""
 "Recipe instructions dragged here will be appended to current instructions."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:327
+#: .\cookbook\templates\url_import.html:329
 #, fuzzy
 #| msgid "Discovered Recipes"
 msgid "Discovered Attributes"
 msgstr "Recetas Descubiertas"
 
-#: .\cookbook\templates\url_import.html:329
+#: .\cookbook\templates\url_import.html:331
 msgid ""
 "Drag recipe attributes from below into the appropriate box on the left. "
 "Click any node to display its full properties."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:346
+#: .\cookbook\templates\url_import.html:348
 #, fuzzy
 #| msgid "Show as header"
 msgid "Show Blank Field"
 msgstr "Mostrar como encabezado"
 
-#: .\cookbook\templates\url_import.html:351
+#: .\cookbook\templates\url_import.html:353
 msgid "Blank Field"
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:355
+#: .\cookbook\templates\url_import.html:357
 msgid "Items dragged to Blank Field will be appended."
 msgstr ""
 
-#: .\cookbook\templates\url_import.html:402
+#: .\cookbook\templates\url_import.html:404
 #, fuzzy
 #| msgid "Delete Step"
 msgid "Delete Text"
 msgstr "Eliminar paso"
 
-#: .\cookbook\templates\url_import.html:415
+#: .\cookbook\templates\url_import.html:417
 #, fuzzy
 #| msgid "Delete Recipe"
 msgid "Delete image"
 msgstr "Eliminar receta"
 
-#: .\cookbook\templates\url_import.html:431
+#: .\cookbook\templates\url_import.html:433
 msgid "Recipe Name"
 msgstr "Nombre de la Receta"
 
-#: .\cookbook\templates\url_import.html:435
+#: .\cookbook\templates\url_import.html:437
 #, fuzzy
 #| msgid "Description"
 msgid "Recipe Description"
 msgstr "Descripción"
 
-#: .\cookbook\templates\url_import.html:496
-#: .\cookbook\templates\url_import.html:528
-#: .\cookbook\templates\url_import.html:584
+#: .\cookbook\templates\url_import.html:499
+#: .\cookbook\templates\url_import.html:531
+#: .\cookbook\templates\url_import.html:587
 msgid "Select one"
 msgstr "Seleccione uno"
 
-#: .\cookbook\templates\url_import.html:544
+#: .\cookbook\templates\url_import.html:547
 msgid "Note"
 msgstr "Nota"
 
-#: .\cookbook\templates\url_import.html:585
+#: .\cookbook\templates\url_import.html:588
 #, fuzzy
 #| msgid "All Keywords"
 msgid "Add Keyword"
 msgstr "Todas las palabras clave."
 
-#: .\cookbook\templates\url_import.html:598
+#: .\cookbook\templates\url_import.html:601
 msgid "All Keywords"
 msgstr "Todas las palabras clave."
 
-#: .\cookbook\templates\url_import.html:601
+#: .\cookbook\templates\url_import.html:604
 msgid "Import all keywords, not only the ones already existing."
 msgstr "Importar todas las palabras clave, no solo las ya existentes."
 
-#: .\cookbook\templates\url_import.html:628
+#: .\cookbook\templates\url_import.html:631
 msgid "Information"
 msgstr "Información"
 
-#: .\cookbook\templates\url_import.html:630
+#: .\cookbook\templates\url_import.html:633
 msgid ""
 " Only websites containing ld+json or microdata information can currently\n"
 "                                    be imported. Most big recipe pages "
@@ -2416,109 +2495,112 @@ msgstr ""
 "no dudes en poner un ejemplo en las\n"
 "                                    propuestas de GitHub."
 
-#: .\cookbook\templates\url_import.html:638
+#: .\cookbook\templates\url_import.html:641
 msgid "Google ld+json Info"
 msgstr "Información de Google ld+json"
 
-#: .\cookbook\templates\url_import.html:641
+#: .\cookbook\templates\url_import.html:644
 msgid "GitHub Issues"
 msgstr "Propuestas de GitHub"
 
-#: .\cookbook\templates\url_import.html:643
+#: .\cookbook\templates\url_import.html:646
 msgid "Recipe Markup Specification"
 msgstr "Especificación de anotaciones de la receta"
 
-#: .\cookbook\views\api.py:82 .\cookbook\views\api.py:131
+#: .\cookbook\views\api.py:83 .\cookbook\views\api.py:132
 #, fuzzy
 #| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "Parámetro filter_list formateado incorrectamente"
 
-#: .\cookbook\views\api.py:151
+#: .\cookbook\views\api.py:152
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:155
+#: .\cookbook\views\api.py:156
 msgid "Cannot merge with the same object!"
 msgstr "¡No se puede unir con el mismo objeto!"
 
-#: .\cookbook\views\api.py:162
+#: .\cookbook\views\api.py:163
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:167
+#: .\cookbook\views\api.py:168
 #, fuzzy
 #| msgid "Cannot merge with the same object!"
 msgid "Cannot merge with child object!"
 msgstr "¡No se puede unir con el mismo objeto!"
 
-#: .\cookbook\views\api.py:200
+#: .\cookbook\views\api.py:201
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr ""
 
-#: .\cookbook\views\api.py:204
+#: .\cookbook\views\api.py:205
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr ""
 
-#: .\cookbook\views\api.py:248
+#: .\cookbook\views\api.py:249
 #, python-brace-format
 msgid "No {self.basename} with id {child} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:257
+#: .\cookbook\views\api.py:258
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
 msgstr ""
 
-#: .\cookbook\views\api.py:260 .\cookbook\views\api.py:278
+#: .\cookbook\views\api.py:261 .\cookbook\views\api.py:279
 msgid "An error occurred attempting to move "
 msgstr ""
 
-#: .\cookbook\views\api.py:263
+#: .\cookbook\views\api.py:264
 msgid "Cannot move an object to itself!"
 msgstr ""
 
-#: .\cookbook\views\api.py:269
+#: .\cookbook\views\api.py:270
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:275
+#: .\cookbook\views\api.py:276
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr ""
 
-#: .\cookbook\views\api.py:723 .\cookbook\views\views.py:277
-msgid "This feature is not available in the demo version!"
+#: .\cookbook\views\api.py:723 .\cookbook\views\data.py:42
+#: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
+#, fuzzy
+#| msgid "This feature is not available in the demo version!"
+msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "¡Esta funcionalidad no está disponible en la versión demo!"
 
-#: .\cookbook\views\api.py:746
+#: .\cookbook\views\api.py:745
 msgid "Sync successful!"
 msgstr "¡Sincronización exitosa!"
 
-#: .\cookbook\views\api.py:751
+#: .\cookbook\views\api.py:750
 msgid "Error synchronizing with Storage"
 msgstr "Error de sincronización con el almacenamiento"
 
-#: .\cookbook\views\api.py:829
+#: .\cookbook\views\api.py:828
 msgid "Nothing to do."
 msgstr ""
 
-#: .\cookbook\views\api.py:844
+#: .\cookbook\views\api.py:843
 msgid "The requested site provided malformed data and cannot be read."
 msgstr ""
 "El sitio solicitado proporcionó datos con formato incorrecto y no se puede "
 "leer."
 
-#: .\cookbook\views\api.py:851
+#: .\cookbook\views\api.py:850
 msgid "The requested page could not be found."
 msgstr "La página solicitada no pudo ser encontrada."
 
-#: .\cookbook\views\api.py:860
+#: .\cookbook\views\api.py:859
 msgid ""
 "The requested site does not provide any recognized data format to import the "
 "recipe from."
@@ -2526,29 +2608,29 @@ msgstr ""
 "El sitio solicitado no proporciona ningún formato de datos reconocido para "
 "importar la receta."
 
-#: .\cookbook\views\api.py:874
+#: .\cookbook\views\api.py:873
 #, fuzzy
 #| msgid "The requested page could not be found."
 msgid "No useable data could be found."
 msgstr "La página solicitada no pudo ser encontrada."
 
-#: .\cookbook\views\api.py:890
+#: .\cookbook\views\api.py:889
 msgid "I couldn't find anything to do."
 msgstr ""
 
-#: .\cookbook\views\data.py:33 .\cookbook\views\data.py:124
-#: .\cookbook\views\edit.py:50 .\cookbook\views\import_export.py:73
-#: .\cookbook\views\new.py:32
+#: .\cookbook\views\data.py:34 .\cookbook\views\data.py:129
+#: .\cookbook\views\edit.py:49 .\cookbook\views\import_export.py:73
+#: .\cookbook\views\new.py:33
 msgid "You have reached the maximum number of recipes for your space."
 msgstr ""
 
-#: .\cookbook\views\data.py:37 .\cookbook\views\data.py:128
-#: .\cookbook\views\edit.py:54 .\cookbook\views\import_export.py:77
-#: .\cookbook\views\new.py:36
+#: .\cookbook\views\data.py:38 .\cookbook\views\data.py:133
+#: .\cookbook\views\edit.py:53 .\cookbook\views\import_export.py:77
+#: .\cookbook\views\new.py:37
 msgid "You have more users than allowed in your space."
 msgstr ""
 
-#: .\cookbook\views\data.py:106
+#: .\cookbook\views\data.py:111
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
@@ -2560,7 +2642,7 @@ msgid "Monitor"
 msgstr "Monitor"
 
 #: .\cookbook\views\delete.py:125 .\cookbook\views\lists.py:86
-#: .\cookbook\views\new.py:97
+#: .\cookbook\views\new.py:101
 msgid "Storage Backend"
 msgstr "Backend de Almacenamiento"
 
@@ -2579,31 +2661,27 @@ msgstr "Libro de recetas"
 msgid "Bookmarks"
 msgstr "Marcadores"
 
-#: .\cookbook\views\delete.py:192 .\cookbook\views\new.py:231
+#: .\cookbook\views\delete.py:192 .\cookbook\views\new.py:235
 msgid "Invite Link"
 msgstr "Enlace de invitación"
 
-#: .\cookbook\views\edit.py:126
+#: .\cookbook\views\edit.py:125
 msgid "You cannot edit this storage!"
 msgstr "¡No puede editar este almacenamiento!"
 
-#: .\cookbook\views\edit.py:146
+#: .\cookbook\views\edit.py:149
 msgid "Storage saved!"
 msgstr "¡Almacenamiento guardado!"
 
-#: .\cookbook\views\edit.py:152
+#: .\cookbook\views\edit.py:155
 msgid "There was an error updating this storage backend!"
 msgstr "¡Hubo un error al actualizar este backend de almacenamiento!"
 
-#: .\cookbook\views\edit.py:163
-msgid "Storage"
-msgstr "Almacenamiento"
-
-#: .\cookbook\views\edit.py:245
+#: .\cookbook\views\edit.py:248
 msgid "Changes saved!"
 msgstr "¡Cambios guardados!"
 
-#: .\cookbook\views\edit.py:249
+#: .\cookbook\views\edit.py:252
 msgid "Error saving changes!"
 msgstr "¡Error al guardar los cambios!"
 
@@ -2651,59 +2729,59 @@ msgstr "Recetas en el carro de la compra"
 msgid "New Shopping List"
 msgstr "Lista de la Compra"
 
-#: .\cookbook\views\new.py:122
+#: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
 msgstr "¡Nueva receta importada!"
 
-#: .\cookbook\views\new.py:125
+#: .\cookbook\views\new.py:129
 msgid "There was an error importing this recipe!"
 msgstr "¡Hubo un error al importar esta receta!"
 
-#: .\cookbook\views\new.py:205
+#: .\cookbook\views\new.py:209
 msgid "Hello"
 msgstr ""
 
-#: .\cookbook\views\new.py:205
+#: .\cookbook\views\new.py:209
 msgid "You have been invited by "
 msgstr ""
 
-#: .\cookbook\views\new.py:206
+#: .\cookbook\views\new.py:210
 msgid " to join their Tandoor Recipes space "
 msgstr ""
 
-#: .\cookbook\views\new.py:207
+#: .\cookbook\views\new.py:211
 msgid "Click the following link to activate your account: "
 msgstr ""
 
-#: .\cookbook\views\new.py:208
+#: .\cookbook\views\new.py:212
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
 
-#: .\cookbook\views\new.py:209
+#: .\cookbook\views\new.py:213
 msgid "The invitation is valid until "
 msgstr ""
 
-#: .\cookbook\views\new.py:210
+#: .\cookbook\views\new.py:214
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
 
-#: .\cookbook\views\new.py:213
+#: .\cookbook\views\new.py:217
 msgid "Tandoor Recipes Invite"
 msgstr ""
 
-#: .\cookbook\views\new.py:220
+#: .\cookbook\views\new.py:224
 msgid "Invite link successfully send to user."
 msgstr ""
 
-#: .\cookbook\views\new.py:223
+#: .\cookbook\views\new.py:227
 msgid ""
 "You have send to many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
 
-#: .\cookbook\views\new.py:225
+#: .\cookbook\views\new.py:229
 msgid "Email to user could not be send, please share link manually."
 msgstr ""
 
@@ -2720,6 +2798,10 @@ msgstr "¡No tienes los permisos necesarios para realizar esta acción!"
 #: .\cookbook\views\views.py:186
 msgid "Comment saved!"
 msgstr "¡Comentario guardado!"
+
+#: .\cookbook\views\views.py:277
+msgid "This feature is not available in the demo version!"
+msgstr "¡Esta funcionalidad no está disponible en la versión demo!"
 
 #: .\cookbook\views\views.py:340
 msgid "You must select at least one field to search!"
@@ -2829,9 +2911,6 @@ msgstr ""
 
 #~ msgid "Create only note"
 #~ msgstr "Crear sólo una nota"
-
-#~ msgid "Shopping list currently empty"
-#~ msgstr "Lista de la compra vacía"
 
 #~ msgid "Plan"
 #~ msgstr "Menú"

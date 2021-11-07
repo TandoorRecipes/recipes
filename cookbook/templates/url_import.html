@@ -29,26 +29,25 @@
                style="height:50%"
                href="{% bookmarklet request %}"
                title="{% trans 'Drag me to your bookmarks to import recipes from anywhere' %}">
-            <img src="{% static 'assets/favicon-16x16.png' %}">{% trans 'Bookmark Me!' %} </a>
+                <img src="{% static 'assets/favicon-16x16.png' %}">{% trans 'Bookmark Me!' %} </a>
         </div>
-        <nav class="nav nav-pills flex-sm-row" style="margin-bottom:10px">
+        <nav class="nav nav-pills flex-sm-row mb-2">
             <a class="nav-link active" href="#nav-url" data-toggle="tab" role="tab" aria-controls="nav-url"
-               aria-selected="true" @click="mode='url'">URL</a>
+               aria-selected="true" @click="mode='url'">{% trans 'URL' %}</a>
             <a class="nav-link" href="#nav-app" data-toggle="tab" role="tab" aria-controls="nav-app"
-               @click="mode='app'">App</a>
+               @click="mode='app'">{% trans 'App' %}</a>
             <a class="nav-link" href="#nav-source" data-toggle="tab" role="tab" aria-controls="nav-source"
-               @click="mode='source'">Source</a>
+               @click="mode='source'">{% trans 'Source' %}</a>
             <a class="nav-link disabled" href="#nav-text" data-toggle="tab" role="tab" aria-controls="nav-text"
-               @click="mode='text'">Text</a>
+               @click="mode='text'">{% trans 'Text' %}</a>
             <a class="nav-link disabled" href="#nav-file" data-toggle="tab" role="tab" aria-controls="nav-file"
-               @click="mode='file'">File</a>
+               @click="mode='file'">{% trans 'File' %}</a>
         </nav>
 
 
         <div class="tab-content" id="nav-tabContent">
-            <!-- Import URL -->
             <div class="tab-pane fade show active" id="nav-url" role="tabpanel">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="automatic=true">
                         <input type="radio" autocomplete="off" checked> Automatic
                     </label>
@@ -57,10 +56,13 @@
                         <input type="radio" autocomplete="off"> Manual
                     </label>
                 </div>
-                <div class="input-group my-2">
-                    <input class="form-control" v-model="remote_url" placeholder="{% trans 'Enter website URL' %}">
+                <div role="group" class="input-group mt-4">
+                    <input type="text" v-model="remote_url"
+                           class="form-control form-control-lg form-control-borderless form-control-search form-control"
+                           placeholder="{% trans 'Enter website URL' %}">
                     <div class="input-group-append">
-                        <button @click="loadRecipe()" class="btn btn-primary shadow-none" type="button"
+                        <button @click="loadRecipe()" class="btn btn-primary shadow-none"
+                                type="button"
                                 id="id_btn_search"><i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -106,7 +108,7 @@
 
             <!-- Import JSON or HTML -->
             <div class=" tab-pane fade show" id="nav-source" role="tabpanel">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
                     <label class="btn btn-outline-info btn-sm active" @click="automatic=true">
                         <input type="radio" autocomplete="off" checked> Automatic
                     </label>
@@ -115,7 +117,7 @@
                         <input type="radio" autocomplete="off"> Manual
                     </label>
                 </div>
-                <div class="input-group my-2">
+                <div class="input-group mt-4">
                     <textarea class="form-control input-group-append" v-model="source_data" rows=10
                               placeholder="{% trans 'Paste json or html source here to load recipe.' %}"
                               style="font-size: 12px">
@@ -455,7 +457,8 @@
 
                         <div class="form-group">
                             <label for="id_servings">{% trans 'Servings' %}</label>
-                            <b-form-input id="id_servings" class="form-control" v-model="recipe_data.servings" @change="recipe_data.servings = Math.round($event.replace(',','.'))"></b-form-input>
+                            <b-form-input id="id_servings" class="form-control" v-model="recipe_data.servings"
+                                          @change="recipe_data.servings = Math.round($event.replace(',','.'))"></b-form-input>
                         </div>
                     </div>
 

@@ -51,7 +51,19 @@ class UserPreferenceForm(forms.ModelForm):
         )
 
         labels = {
-            'use_kj': 'Use KJ'
+            'default_unit': _('Default unit'),
+            'use_fractions': _('Use fractions'),
+            'use_kj': _('Use KJ'),
+            'theme': _('Theme'),
+            'nav_color': _('Navbar color'),
+            'sticky_navbar': _('Sticky navbar'),
+            'default_page': _('Default page'),
+            'show_recent': _('Show recent recipes'),
+            'search_style': _('Search style'),
+            'plan_share': _('Plan sharing'),
+            'ingredient_decimals': _('Ingredient decimal places'),
+            'shopping_auto_sync': _('Shopping list auto sync period'),
+            'comments': _('Comments')
         }
 
         help_texts = {
@@ -61,7 +73,7 @@ class UserPreferenceForm(forms.ModelForm):
             'use_fractions': _(
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
             # noqa: E501
-            'use_kj': _('Display nutritional energy amounts in joules instead of calories'), # noqa: E501
+            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  # noqa: E501
             'plan_share': _(
                 'Users with whom newly created meal plan/shopping list entries should be shared by default.'),
             # noqa: E501
@@ -242,6 +254,12 @@ class SyncForm(forms.ModelForm):
             'storage': SafeModelChoiceField,
         }
 
+        labels = {
+            'storage': _('Storage'),
+            'path': _('Path'),
+            'active': _('Active')
+        }
+
 
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
@@ -330,7 +348,8 @@ class InviteLinkForm(forms.ModelForm):
 
     def clean(self):
         space = self.cleaned_data['space']
-        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(space=space).count()) >= space.max_users:
+        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(
+                space=space).count()) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
@@ -400,22 +419,31 @@ class UserCreateForm(forms.Form):
 
 class SearchPreferenceForm(forms.ModelForm):
     prefix = 'search'
-    trigram_threshold = forms.DecimalField(min_value=0.01, max_value=1, decimal_places=2, widget=NumberInput(attrs={'class': "form-control-range", 'type': 'range'}),
-                                           help_text=_('Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
-    preset = forms.CharField(widget=forms.HiddenInput(),required=False)
+    trigram_threshold = forms.DecimalField(min_value=0.01, max_value=1, decimal_places=2,
+                                           widget=NumberInput(attrs={'class': "form-control-range", 'type': 'range'}),
+                                           help_text=_(
+                                               'Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
+    preset = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = SearchPreference
-        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
+        fields = (
+            'search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
 
         help_texts = {
-            'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
+            'search': _(
+                'Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
             'lookup': _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'),
-            'unaccent': _('Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
-            'icontains': _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
-            'istartswith': _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
-            'trigram': _("Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
-            'fulltext': _("Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields."),
+            'unaccent': _(
+                'Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
+            'icontains': _(
+                "Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
+            'istartswith': _(
+                "Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
+            'trigram': _(
+                "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
+            'fulltext': _(
+                "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields."),
         }
 
         labels = {
