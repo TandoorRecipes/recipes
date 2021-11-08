@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-07 17:31+0100\n"
+"POT-Creation-Date: 2021-11-08 16:27+0100\n"
 "PO-Revision-Date: 2020-06-02 19:28+0000\n"
 "Last-Translator: Emre S, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/django-recipes/"
@@ -245,7 +245,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:367
 msgid ""
-"An email address is not required but if present the invite link will be send "
+"An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
 

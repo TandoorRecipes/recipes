@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-07 17:31+0100\n"
+"POT-Creation-Date: 2021-11-08 16:27+0100\n"
 "PO-Revision-Date: 2021-08-20 19:28+0000\n"
 "Last-Translator: Danny Tsui <dannytszho@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
@@ -247,8 +247,12 @@ msgid "Email address already taken!"
 msgstr "电子邮件地址已被注册!"
 
 #: .\cookbook\forms.py:367
+#, fuzzy
+#| msgid ""
+#| "An email address is not required but if present the invite link will be "
+#| "send to the user."
 msgid ""
-"An email address is not required but if present the invite link will be send "
+"An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr "电子邮件地址不是必需的，但如果存在，邀请链接将被发送给用户。"
 
