@@ -123,8 +123,6 @@ class Integration:
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
         with scope(space=self.request.space):
-            self.keyword.name = _('Import') + ' ' + str(il.pk)
-            self.keyword.save()
 
             try:
                 self.files = files

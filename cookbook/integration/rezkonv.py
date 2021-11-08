@@ -62,7 +62,7 @@ class RezKonv(Integration):
         current_recipe = ''
 
         for fl in file.readlines():
-            line = fl.decode("ANSI")
+            line = fl.decode("windows-1250")
             if line.startswith('=====') and 'rezkonv' in line.lower():
                 if current_recipe != '':
                     recipe_list.append(current_recipe)
