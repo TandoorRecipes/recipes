@@ -364,7 +364,7 @@ class InviteLinkForm(forms.ModelForm):
         model = InviteLink
         fields = ('email', 'group', 'valid_until', 'space')
         help_texts = {
-            'email': _('An email address is not required but if present the invite link will be send to the user.'),
+            'email': _('An email address is not required but if present the invite link will be sent to the user.'),
         }
         field_classes = {
             'space': SafeModelChoiceField,
