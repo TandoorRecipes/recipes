@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-09 18:01+0100\n"
-"PO-Revision-Date: 2021-10-23 09:06+0000\n"
-"Last-Translator: Tomasz Klimczak <klemensble@gmail.com>\n"
+"PO-Revision-Date: 2021-11-06 14:06+0000\n"
+"Last-Translator: retmas gh <tandoor@oppai.ovh>\n"
 "Language-Team: Polish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/pl/>\n"
 "Language: pl\n"
@@ -385,7 +385,7 @@ msgstr "Zabierz mnie na stronę główną"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr "Raprtuj błąd"
+msgstr "Raportuj błąd"
 
 #: .\cookbook\templates\account\login.html:7
 #: .\cookbook\templates\base.html:166

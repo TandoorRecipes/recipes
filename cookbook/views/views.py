@@ -287,7 +287,7 @@ def user_settings(request):
     if request.method == "POST":
         if 'preference_form' in request.POST:
             active_tab = 'preferences'
-            form = UserPreferenceForm(request.POST, prefix='preference')
+            form = UserPreferenceForm(request.POST, prefix='preference', space=request.space)
             if form.is_valid():
                 if not up:
                     up = UserPreference(user=request.user)
@@ -380,9 +380,9 @@ def user_settings(request):
 
                     sp.save()
     if up:
-        preference_form = UserPreferenceForm(instance=up)
+        preference_form = UserPreferenceForm(instance=up, space=request.space)
     else:
-        preference_form = UserPreferenceForm()
+        preference_form = UserPreferenceForm( space=request.space)
 
     fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
         sp.fulltext.all())
