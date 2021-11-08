@@ -28,6 +28,7 @@ nav:
       - Unraid: install/unraid.md
       - Synology: install/synology.md
       - Kubernetes: install/kubernetes.md
+      - KubeSail or PiBox: install/kubesail.md
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:
