@@ -12,11 +12,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2021-10-26 10:06+0000\n"
+"POT-Creation-Date: 2021-11-07 17:31+0100\n"
+"PO-Revision-Date: 2021-11-09 12:06+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,66 +32,52 @@ msgid "Ingredients"
 msgstr "Ingrediënten"
 
 #: .\cookbook\forms.py:54
-#, fuzzy
-#| msgid "Default"
 msgid "Default unit"
-msgstr "Standaard waarde"
+msgstr "Standaard eenheid"
 
 #: .\cookbook\forms.py:55
-#, fuzzy
-#| msgid "System Information"
 msgid "Use fractions"
-msgstr "Systeeminformatie"
+msgstr "Gebruik fracties"
 
 #: .\cookbook\forms.py:56
 msgid "Use KJ"
-msgstr ""
+msgstr "Gebruik KJ"
 
 #: .\cookbook\forms.py:57
 msgid "Theme"
-msgstr ""
+msgstr "Thema"
 
 #: .\cookbook\forms.py:58
 msgid "Navbar color"
-msgstr ""
+msgstr "Navbar kleur"
 
 #: .\cookbook\forms.py:59
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Plak navbar"
 
 #: .\cookbook\forms.py:60
-#, fuzzy
-#| msgid "Default"
 msgid "Default page"
-msgstr "Standaard waarde"
+msgstr "Standaard pagina"
 
 #: .\cookbook\forms.py:61
-#, fuzzy
-#| msgid "Show Recipes"
 msgid "Show recent recipes"
-msgstr "Toon Recepten"
+msgstr "Toon recente recepten"
 
 #: .\cookbook\forms.py:62
-#, fuzzy
-#| msgid "Search Index"
 msgid "Search style"
-msgstr "Zoekindex"
+msgstr "Zoekstijl"
 
 #: .\cookbook\forms.py:63
 msgid "Plan sharing"
-msgstr ""
+msgstr "Plan delen"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Ingrediënten"
+msgstr "Ingrediënt decimalen"
 
 #: .\cookbook\forms.py:65
-#, fuzzy
-#| msgid "Shopping list currently empty"
 msgid "Shopping list auto sync period"
-msgstr "Boodschappenlijst is momenteel leeg"
+msgstr "Boodschappenlijst auto sync periode"
 
 #: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
@@ -122,7 +108,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Geef energiewaarde in joules in plaats van calorieën weer."
 
 #: .\cookbook\forms.py:78
 msgid ""
@@ -235,7 +221,7 @@ msgstr "Opslag"
 
 #: .\cookbook\forms.py:260
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #: .\cookbook\forms.py:265
 msgid "Search String"
@@ -296,6 +282,8 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Bepaalt hoe 'fuzzy' een zoekopdracht is als het trigram vergelijken gebruikt "
+"(lage waarden betekenen bijvoorbeeld dat meer typefouten genegeerd worden)"
 
 #: .\cookbook\forms.py:435
 msgid ""
@@ -604,22 +592,16 @@ msgid "Raw"
 msgstr "Raw"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Foods"
 msgid "Food Alias"
-msgstr "Ingrediënten"
+msgstr "Ingrediënt alias"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Eenheden"
+msgstr "Eenheid alias"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Etiketten"
+msgstr "Etiket alias"
 
 #: .\cookbook\serializer.py:157
 msgid "File uploads are not enabled for this Space."
@@ -859,10 +841,8 @@ msgstr ""
 "minuten ontvangen hebt."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "API Token"
+msgstr "Bad token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -872,17 +852,19 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"De link voor het opnieuw instellen van het wachtwoord was ongeldig, mogelijk "
+"omdat hij al gebruikt is.\n"
+"                    Vraag een <a href=\"%(passwd_reset_url)s\">nieuwe link "
+"voor een wachtwoord reset aan</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Change Password"
 msgid "change password"
 msgstr "Wijzig wachtwoord"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Je wachtwoord is nu gewijzigd."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
@@ -962,16 +944,12 @@ msgid "Supermarket"
 msgstr "Supermarkt"
 
 #: .\cookbook\templates\base.html:163
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarket Category"
-msgstr "Supermarkt"
+msgstr "Supermarktcategorie"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:195
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Informatie"
+msgstr "Automatiseringen"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:215
 msgid "Files"
@@ -1032,7 +1010,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Vertaal Tandoor"
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
@@ -1176,11 +1154,11 @@ msgstr "Weet je zeker dat je %(title)s: <b>%(object)s</b> wil verwijderen "
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
-msgstr ""
+msgstr "Beschermd"
 
 #: .\cookbook\templates\generic\delete_template.html:41
 msgid "Cascade"
-msgstr ""
+msgstr "Cascade"
 
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Cancel"
@@ -1942,22 +1920,29 @@ msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
 msgstr ""
+"Er zijn vele mogelijkheden om het zoeken te configureren die afhangen van je "
+"persoonlijke voorkeur."
 
 #: .\cookbook\templates\settings.html:167
 msgid ""
 "Usually you do <b>not need</b> to configure any of them and can just stick "
 "with either the default or one of the following presets."
 msgstr ""
+"Normaal gesproken is het <b>niet nodig</b> ze te configureren en kan je "
+"gebruikmaken van het standaard profiel of de volgende vooraf ingestelde "
+"profielen."
 
 #: .\cookbook\templates\settings.html:168
 msgid ""
 "If you do want to configure the search you can read about the different "
 "options <a href=\"/docs/search/\">here</a>."
 msgstr ""
+"Als je het zoeken wil configureren kan je <a href=\"/docs/search/\">hier</a> "
+"over de verschillende opties lezen."
 
 #: .\cookbook\templates\settings.html:173
 msgid "Fuzzy"
-msgstr ""
+msgstr "Fuzzy"
 
 #: .\cookbook\templates\settings.html:174
 msgid ""
@@ -1965,29 +1950,34 @@ msgid ""
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Vind wat je nodig hebt, zelfs als je zoekopdracht of het recept typefouten "
+"bevat. Mogelijk krijg je meer resultaten dan je nodig hebt, om zeker te "
+"weten dat je vindt wat je nodig hebt."
 
 #: .\cookbook\templates\settings.html:175
 msgid "This is the default behavior"
-msgstr ""
+msgstr "Dit is het standaard gedrag"
 
 #: .\cookbook\templates\settings.html:176
 #: .\cookbook\templates\settings.html:184
 msgid "Apply"
-msgstr ""
+msgstr "Pas toe"
 
 #: .\cookbook\templates\settings.html:181
 msgid "Precise"
-msgstr ""
+msgstr "Nauwkeurig"
 
 #: .\cookbook\templates\settings.html:182
 msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Staat fijnmazige controle over zoekresultaten toe, maar toont mogelijk geen "
+"resultaten als er te veel spelfouten gemaakt zijn."
 
 #: .\cookbook\templates\settings.html:183
 msgid "Perfect for large Databases"
-msgstr ""
+msgstr "Perfect voor grote databases"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -2014,10 +2004,8 @@ msgid "Shopping List"
 msgstr "Boodschappenlijst"
 
 #: .\cookbook\templates\shopping_list.html:34
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Try the new shopping list"
-msgstr "Open boodschappenlijst"
+msgstr "Probeer de nieuwe boodschappenlijst"
 
 #: .\cookbook\templates\shopping_list.html:63
 msgid "Search Recipe"
@@ -2367,11 +2355,11 @@ msgstr "Sla mij op als bladwijzer!"
 
 #: .\cookbook\templates\url_import.html:36
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\cookbook\templates\url_import.html:38
 msgid "App"
-msgstr ""
+msgstr "App"
 
 #: .\cookbook\templates\url_import.html:62
 msgid "Enter website URL"
@@ -2612,10 +2600,8 @@ msgstr "{child.name} is succesvol verplaatst naar {parent.name}"
 
 #: .\cookbook\views\api.py:723 .\cookbook\views\data.py:42
 #: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "Deze optie is niet beschikbaar in de demo versie!"
+msgstr "Deze optie is nog niet beschikbaar in de gehoste versie van Tandoor!"
 
 #: .\cookbook\views\api.py:745
 msgid "Sync successful!"
@@ -2755,10 +2741,8 @@ msgid "Shopping Categories"
 msgstr "Boodschappencategorieën"
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Boodschappenlijst"
+msgstr "Nieuwe boodschappenlijst"
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
