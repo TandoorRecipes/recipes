@@ -93,7 +93,7 @@
                   <table class="table table-sm">
                     <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                     <template v-for="s in recipe.steps" >
-                      <template v-if="s.show_as_header && s.name !== ''">
+                      <template v-if="s.show_as_header && s.name !== '' && s.ingredients.length > 0">
                         <b v-bind:key="s.id">{{s.name}}</b>
                       </template>
                       <template v-for="i in s.ingredients">

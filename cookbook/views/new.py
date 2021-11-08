@@ -19,6 +19,7 @@ from cookbook.helper.permission_helper import (GroupRequiredMixin,
 from cookbook.models import (InviteLink, MealPlan, MealType, Recipe,
                              RecipeBook, RecipeImport, ShareLink, Step, UserPreference)
 from cookbook.views.edit import SpaceFormMixing
+from recipes import settings
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
@@ -90,6 +91,9 @@ class StorageCreate(GroupRequiredMixin, CreateView):
         obj.created_by = self.request.user
         obj.space = self.request.space
         obj.save()
+        if self.request.space.demo or settings.HOSTED:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+            return redirect('index')
         return HttpResponseRedirect(reverse('edit_storage', kwargs={'pk': obj.pk}))
 
     def get_context_data(self, **kwargs):

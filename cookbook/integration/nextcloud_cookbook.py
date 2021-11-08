@@ -41,9 +41,9 @@ class NextcloudCookbook(Integration):
 
                 ingredient_parser = IngredientParser(self.request, True)
                 for ingredient in recipe_json['recipeIngredient']:
-                    amount, unit, ingredient, note = parse(ingredient)
-                    f = get_food(ingredient, self.request.space)
-                    u = get_unit(unit, self.request.space)
+                    amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
+                    f = ingredient_parser.get_food(ingredient)
+                    u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(
                         food=f, unit=u, amount=amount, note=note, space=self.request.space,
                     ))
@@ -53,7 +53,7 @@ class NextcloudCookbook(Integration):
             if '.zip' in f['name']:
                 import_zip = ZipFile(f['file'])
                 for z in import_zip.filelist:
-                    if re.match(f'^Recipes/{recipe.name}/full.jpg$', z.filename):
+                    if re.match(f'^{recipe.name}/full.jpg$', z.filename):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
 
         return recipe

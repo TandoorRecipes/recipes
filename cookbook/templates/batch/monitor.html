@@ -17,7 +17,7 @@
             </p>
             <form method="POST" class="post-form">{% csrf_token %}
                 {{ form|crispy }}
-                <input type="submit" value="Submit" class="btn btn-success">
+                <input type="submit" value="{% trans 'Save' %}" class="btn btn-success">
                 <a href="{% url 'list_storage' %}"><button type="button" class="btn btn-primary">{% trans 'Manage External Storage' %}</button></a>
             </form>
 

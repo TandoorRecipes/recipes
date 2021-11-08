@@ -1,14 +1,12 @@
 import os
 
 from django.contrib import messages
-from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
-from django_scopes import scopes_disabled
 
 from cookbook.forms import (CommentForm, ExternalRecipeForm,
                             MealPlanForm,
@@ -17,12 +15,13 @@ from cookbook.forms import (CommentForm, ExternalRecipeForm,
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                OwnerRequiredMixin,
                                                group_required)
-from cookbook.models import (Comment, Ingredient, MealPlan,
-                             MealType, Recipe, RecipeBook, RecipeImport,
+from cookbook.models import (Comment, MealPlan,
+                             MealType, Recipe, RecipeImport,
                              Storage, Sync, UserPreference)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
+from recipes import settings
 
 
 @group_required('guest')
@@ -125,6 +124,10 @@ def edit_storage(request, pk):
     if not (instance.created_by == request.user or request.user.is_superuser):
         messages.add_message(request, messages.ERROR, _('You cannot edit this storage!'))
         return HttpResponseRedirect(reverse('list_storage'))
+
+    if request.space.demo or settings.HOSTED:
+        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+        return redirect('index')
 
     if request.method == "POST":
         form = StorageForm(request.POST, instance=instance)

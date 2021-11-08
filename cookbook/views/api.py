@@ -63,6 +63,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
                                  BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer, AutomationSerializer)
+from recipes import settings
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -718,10 +719,8 @@ def get_recipe_file(request, recipe_id):
 
 @group_required('user')
 def sync_all(request):
-    if request.space.demo:
-        messages.add_message(
-            request, messages.ERROR, _('This feature is not available in the demo version!')
-        )
+    if request.space.demo or settings.HOSTED:
+        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
 
     monitors = Sync.objects.filter(active=True).filter(space=request.user.userpreference.space)
