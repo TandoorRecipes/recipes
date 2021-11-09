@@ -5,8 +5,9 @@ from zipfile import ZipFile
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient
+from cookbook.models import Recipe, Step, Ingredient, Keyword
 
 
 class NextcloudCookbook(Integration):
@@ -24,9 +25,24 @@ class NextcloudCookbook(Integration):
             created_by=self.request.user, internal=True,
             servings=recipe_json['recipeYield'], space=self.request.space)
 
-        # TODO parse times (given in PT2H3M )
-        # @vabene check recipe_url_import.iso_duration_to_minutes  I think it does what you are looking for
-        # TODO parse keywords
+        try:
+            recipe.working_time = iso_duration_to_minutes(recipe_json['prepTime'])
+            recipe.waiting_time = iso_duration_to_minutes(recipe_json['cookTime'])
+        except Exception:
+            pass
+
+        if 'recipeCategory' in recipe_json:
+            try:
+                recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=recipe_json['recipeCategory'])[0])
+            except Exception:
+                pass
+
+        if 'keywords' in recipe_json:
+            try:
+                for x in recipe_json['keywords'].split(','):
+                    recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=x)[0])
+            except Exception:
+                pass
 
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
@@ -49,11 +65,20 @@ class NextcloudCookbook(Integration):
                     ))
             recipe.steps.add(step)
 
+        if 'nutrition' in recipe_json:
+            try:
+                recipe.nutrition.calories = recipe_json['nutrition']['calories'].replace(' kcal', '').replace(' ', '')
+                recipe.nutrition.proteins = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
+                recipe.nutrition.fats = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
+                recipe.nutrition.carbohydrates = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
+            except Exception:
+                pass
+
         for f in self.files:
             if '.zip' in f['name']:
                 import_zip = ZipFile(f['file'])
                 for z in import_zip.filelist:
-                    if re.match(f'^{recipe.name}/full.jpg$', z.filename):
+                    if re.match(f'^(.)+{recipe.name}/full.jpg$', z.filename):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
 
         return recipe
