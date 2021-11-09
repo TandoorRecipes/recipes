@@ -19,13 +19,14 @@ def rescale_image_jpeg(image_object, base_width=1020):
 
 
 def rescale_image_png(image_object, base_width=1020):
+    image_object = Image.open(image_object)
     wpercent = (base_width / float(image_object.size[0]))
     hsize = int((float(image_object.size[1]) * float(wpercent)))
     img = image_object.resize((base_width, hsize), Image.ANTIALIAS)
 
     im_io = BytesIO()
     img.save(im_io, 'PNG', quality=90)
-    return img
+    return im_io
 
 
 def get_filetype(name):
@@ -35,6 +36,8 @@ def get_filetype(name):
         return '.jpeg'
 
 
+# TODO this whole file needs proper documentation, refactoring, and testing
+# TODO also add env variable to define which images sizes should be compressed
 def handle_image(request, image_object, filetype='.jpeg'):
     if (image_object.size / 1000) > 500:  # if larger than 500 kb compress
         if filetype == '.jpeg' or filetype == '.jpg':
