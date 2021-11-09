@@ -14,7 +14,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scope
 
 from cookbook.forms import ImportExportBase
-from cookbook.helper.image_processing import get_filetype
+from cookbook.helper.image_processing import get_filetype, handle_image
 from cookbook.models import Keyword, Recipe
 from recipes.settings import DATABASES, DEBUG
 
@@ -52,7 +52,7 @@ class Integration:
                 icon=icon,
                 space=request.space
             )
-        except IntegrityError: # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
+        except IntegrityError:  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
             self.keyword = parent.add_child(
                 name=f'{name} {str(uuid.uuid4())[0:8]}',
                 description=description,
@@ -229,15 +229,14 @@ class Integration:
             self.ignored_recipes.append(recipe.name)
             recipe.delete()
 
-    @staticmethod
-    def import_recipe_image(recipe, image_file, filetype='.jpeg'):
+    def import_recipe_image(self, recipe, image_file, filetype='.jpeg'):
         """
         Adds an image to a recipe naming it correctly
         :param recipe: Recipe object
         :param image_file: ByteIO stream containing the image
         :param filetype: type of file to write bytes to, default to .jpeg if unknown
         """
-        recipe.image = File(image_file, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
+        recipe.image = File(handle_image(self.request, File(image_file, name='image'), filetype=filetype)[0], name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
         recipe.save()
 
     def get_recipe_from_file(self, file):
