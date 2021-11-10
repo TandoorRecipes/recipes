@@ -63,7 +63,7 @@ class MealMaster(Integration):
         current_recipe = ''
 
         for fl in file.readlines():
-            line = fl.decode("ANSI")
+            line = fl.decode("windows-1250")
             if (line.startswith('MMMMM') or line.startswith('-----')) and 'meal-master' in line.lower():
                 if current_recipe != '':
                     recipe_list.append(current_recipe)
