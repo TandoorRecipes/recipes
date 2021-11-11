@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-07 17:31+0100\n"
-"PO-Revision-Date: 2021-11-09 12:06+0000\n"
+"PO-Revision-Date: 2021-11-12 20:06+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -368,7 +368,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:136
 #: .\cookbook\helper\permission_helper.py:159 .\cookbook\views\views.py:149
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Non hai fatto l'accesso e quindi non puoi visualizzare questa pagina!"
+msgstr "Non sei loggato e quindi non puoi visualizzare questa pagina!"
 
 #: .\cookbook\helper\permission_helper.py:140
 #: .\cookbook\helper\permission_helper.py:146
@@ -462,7 +462,7 @@ msgstr "Tempo di preparazione"
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "Ricettario"
+msgstr "Ricette"
 
 #: .\cookbook\integration\safron.py:31
 msgid "Section"
@@ -976,7 +976,7 @@ msgstr "Ricette esterne"
 #: .\cookbook\templates\base.html:262 .\cookbook\templates\space.html:7
 #: .\cookbook\templates\space.html:19
 msgid "Space Settings"
-msgstr "Impostazioni Istanza"
+msgstr "Impostazioni istanza"
 
 #: .\cookbook\templates\base.html:267 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1868,7 +1868,7 @@ msgstr ""
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr "Configurazione del ricettario"
+msgstr "Configurazione Recipes"
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
@@ -1992,7 +1992,7 @@ msgid ""
 "        %(site_name)s. As a final step, please complete the following form:"
 msgstr ""
 "Stai per usare il tuo:\n"
-"        Account %(provider_name)s per fare l'accesso a\n"
+"        account %(provider_name)s per fare l'accesso a\n"
 "        %(site_name)s. Per finire, completa il modulo qui sotto:"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
