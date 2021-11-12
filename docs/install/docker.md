@@ -65,47 +65,11 @@ This configuration exposes the application through an nginx web server on port 8
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
 ```
 
-```yaml
-version: "3"
-services:
-  db_recipes:
-    restart: always
-    image: postgres:11-alpine
-    volumes:
-      - ./postgresql:/var/lib/postgresql/data
-    env_file:
-      - ./.env
-
-  web_recipes:
-    image: vabene1111/recipes
-    restart: always
-    env_file:
-      - ./.env
-    volumes:
-      - staticfiles:/opt/recipes/staticfiles
-      - nginx_config:/opt/recipes/nginx/conf.d
-      - ./mediafiles:/opt/recipes/mediafiles
-    depends_on:
-      - db_recipes
-
-  nginx_recipes:
-    image: nginx:mainline-alpine
-    restart: always
-    ports:
-      - 80:80
-    env_file:
-      - ./.env
-    depends_on:
-      - web_recipes
-    volumes:
-      - nginx_config:/etc/nginx/conf.d:ro
-      - staticfiles:/static
-      - ./mediafiles:/media
-
-volumes:
-  nginx_config:
-  staticfiles:
-```
+{%
+  include "./docker/plain/docker-compose.yml"
+  start="```yaml"
+  end="```\n"
+%}
 
 ### Reverse Proxy
 
@@ -123,62 +87,11 @@ If you use traefik, this configuration is the one for you.
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
 ```
 
-```yaml
-version: "3"
-services:
-  db_recipes:
-    restart: always
-    image: postgres:11-alpine
-    volumes:
-      - ./postgresql:/var/lib/postgresql/data
-    env_file:
-      - ./.env
-    networks:
-      - default
-
-  web_recipes:
-    image: vabene1111/recipes
-    restart: always
-    env_file:
-      - ./.env
-    volumes:
-      - staticfiles:/opt/recipes/staticfiles
-      - nginx_config:/opt/recipes/nginx/conf.d
-      - ./mediafiles:/opt/recipes/mediafiles
-    depends_on:
-      - db_recipes
-    networks:
-      - default
-
-  nginx_recipes:
-    image: nginx:mainline-alpine
-    restart: always
-    env_file:
-      - ./.env
-    volumes:
-      - nginx_config:/etc/nginx/conf.d:ro
-      - staticfiles:/static
-      - ./mediafiles:/media
-    labels: # traefik example labels
-      - "traefik.enable=true"
-      - "traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`, `recipes.myotherdomain.com`)"
-      - "traefik.http.routers.recipes.entrypoints=web_secure" # your https endpoint
-      - "traefik.http.routers.recipes.tls.certresolver=le_resolver" # your cert resolver
-    depends_on:
-      - web_recipes
-    networks:
-      - default
-      - traefik
-
-networks:
-  default:
-  traefik: # This is you external traefik network
-    external: true
-
-volumes:
-  nginx_config:
-  staticfiles:
-```
+{%
+  include "./docker/traefik-nginx/docker-compose.yml"
+  start="```yaml"
+  end="```\n"
+%}
 
 #### nginx-proxy
 
@@ -198,58 +111,11 @@ LETSENCRYPT_EMAIL=
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
 ```
 
-```yaml
-version: "3"
-services:
-  db_recipes:
-    restart: always
-    image: postgres:11-alpine
-    volumes:
-      - ./postgresql:/var/lib/postgresql/data
-    env_file:
-      - ./.env
-    networks:
-      - default
-
-  web_recipes:
-    image: vabene1111/recipes
-    restart: always
-    env_file:
-      - ./.env
-    volumes:
-      - staticfiles:/opt/recipes/staticfiles
-      - nginx_config:/opt/recipes/nginx/conf.d
-      - ./mediafiles:/opt/recipes/mediafiles
-    depends_on:
-      - db_recipes
-    networks:
-      - default
-
-  nginx_recipes:
-    image: nginx:mainline-alpine
-    restart: always
-    env_file:
-      - ./.env
-    depends_on:
-      - web_recipes
-    volumes:
-      - nginx_config:/etc/nginx/conf.d:ro
-      - staticfiles:/static
-      - ./mediafiles:/media
-    networks:
-      - default
-      - nginx-proxy
-
-networks:
-  default:
-  nginx-proxy:
-    external:
-      name: nginx-proxy
-
-volumes:
-  nginx_config:
-  staticfiles:
-```
+{%
+  include "./docker/nginx-proxy/docker-compose.yml"
+  start="```yaml"
+  end="```\n"
+%}
 
 ## Additional Information
 
