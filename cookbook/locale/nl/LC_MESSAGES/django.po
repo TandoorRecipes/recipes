@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-07 17:31+0100\n"
-"PO-Revision-Date: 2021-11-09 12:06+0000\n"
-"Last-Translator: Jesse <jesse.kamps@pm.me>\n"
+"PO-Revision-Date: 2021-11-14 14:06+0000\n"
+"Last-Translator: Job Putters <me@ixbitz.com>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
 "Language: nl\n"
@@ -108,7 +108,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr "Geef energiewaarde in joules in plaats van calorieën weer."
+msgstr "Geef energiewaardes weer in joules in plaats van calorieën"
 
 #: .\cookbook\forms.py:78
 msgid ""
@@ -258,10 +258,6 @@ msgid "Email address already taken!"
 msgstr "E-mailadres reeds in gebruik!"
 
 #: .\cookbook\forms.py:367
-#, fuzzy
-#| msgid ""
-#| "An email address is not required but if present the invite link will be "
-#| "send to the user."
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
@@ -283,7 +279,7 @@ msgid ""
 "g. low values mean more typos are ignored)."
 msgstr ""
 "Bepaalt hoe 'fuzzy' een zoekopdracht is als het trigram vergelijken gebruikt "
-"(lage waarden betekenen bijvoorbeeld dat meer typefouten genegeerd worden)"
+"(lage waarden betekenen bijvoorbeeld dat meer typefouten genegeerd worden)."
 
 #: .\cookbook\forms.py:435
 msgid ""
@@ -589,7 +585,7 @@ msgstr "Web"
 
 #: .\cookbook\models.py:874 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr "Raw"
+msgstr "Rauw"
 
 #: .\cookbook\models.py:912
 msgid "Food Alias"
@@ -979,7 +975,7 @@ msgstr "Recept importeren"
 #: .\cookbook\templates\shopping_list.html:195
 #: .\cookbook\templates\shopping_list.html:217
 msgid "Create"
-msgstr "Nieuw recept"
+msgstr "Aanmaken"
 
 #: .\cookbook\templates\base.html:259
 #: .\cookbook\templates\generic\list_template.html:14
@@ -1245,11 +1241,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Het <b>wachtwoord en token</b> veld worden als <b>plain text</b> in "
-"de database opgeslagen.\n"
-" Dit is nodig omdat deze benodigd zijn voor de API requests, Echter verhoogt "
-"dit ook het risico van diefstal.<br/>\n"
-" Om mogelijke schade te beperken kun je gebruik maken van account met "
+"        Het <b>wachtwoord en token</b> veld worden als <b>plain text</b> "
+"opgeslagen in de database.\n"
+" Dit is nodig omdat deze benodigd zijn voor de API requests, Dit verhoogt "
+"echter ook het risico van diefstal.<br/>\n"
+" Om mogelijke schade te beperken kun je gebruik maken van accounts met "
 "gelimiteerde toegang.\n"
 "    "
 
