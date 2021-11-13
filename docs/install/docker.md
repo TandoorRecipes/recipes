@@ -65,11 +65,9 @@ This configuration exposes the application through an nginx web server on port 8
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
 ```
 
-{%
-  include "./docker/plain/docker-compose.yml"
-  start="```yaml"
-  end="```\n"
-%}
+~~~yaml
+{% include "./docker/plain/docker-compose.yml" %}
+~~~
 
 ### Reverse Proxy
 
@@ -87,11 +85,9 @@ If you use traefik, this configuration is the one for you.
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
 ```
 
-{%
-  include "./docker/traefik-nginx/docker-compose.yml"
-  start="```yaml"
-  end="```\n"
-%}
+~~~yaml
+{% include "./docker/traefik-nginx/docker-compose.yml" %}
+~~~
 
 #### nginx-proxy
 
@@ -111,11 +107,9 @@ LETSENCRYPT_EMAIL=
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
 ```
 
-{%
-  include "./docker/nginx-proxy/docker-compose.yml"
-  start="```yaml"
-  end="```\n"
-%}
+~~~yaml
+{% include "./docker/nginx-proxy/docker-compose.yml" %}
+~~~
 
 ## Additional Information
 
