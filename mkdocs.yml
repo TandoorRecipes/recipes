@@ -21,6 +21,9 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
 
+plugins:
+  - include-markdown
+
 nav:
   - Home: 'index.md'
   - Installation:
