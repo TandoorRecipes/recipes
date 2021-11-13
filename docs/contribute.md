@@ -59,8 +59,6 @@ folder of the GitHub repository.
 
 In order to contribute to the documentation you can fork the repository and edit the markdown files in the browser.
 
-Now install mkdocs and dependencies: `pip install mkdocs-material mkdocs-include-markdown-plugin`.
-
 If you want to test the documentation locally run `mkdocs serve` from the project root.
 
 ## Contribute Translations
