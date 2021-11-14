@@ -371,14 +371,25 @@ export class Models {
         'name': i18n.t('Recipe'),
         'apiName': 'Recipe',
         'list': {
-            'params': ['query', 'keywords', 'foods', 'units', 'rating', 'books', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
+            'params': ['query', 'keywords', 'foods', 'units', 'rating', 'books', 'steps', 'keywordsOr', 'foodsOr', 'booksOr', 'internal', 'random', '_new', 'page', 'pageSize', 'options'],
             'config': {
                 'foods': {'type': 'string'},
                 'keywords': {'type': 'string'},
                 'books': {'type': 'string'},
             }
         },
+    }
 
+    static STEP = {
+        'name': i18n.t('Step'),
+        'apiName': 'Step',
+        'paginated': true,
+        'list': {
+            'header_component': {
+                'name': 'BetaWarning'
+            },
+            'params': ['query', 'page', 'pageSize', 'options'],
+        },
     }
 
     static USER_NAME = {
