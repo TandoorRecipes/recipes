@@ -222,6 +222,23 @@ def user_file(request):
 
 
 @group_required('user')
+def step(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Steps"),
+            "config": {
+                'model': "STEP",  # *REQUIRED* name of the model in models.js
+                'recipe_param': 'steps',
+            }
+        }
+    )
+
+
+@group_required('user')
 def shopping_list_new(request):
     # recipe-param is the name of the parameters used when filtering recipes by this attribute
     # model-name is the models.js name of the model, probably ALL-CAPS
