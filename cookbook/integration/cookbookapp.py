@@ -4,9 +4,12 @@ import json
 import re
 from io import BytesIO
 
+import requests
 import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_html_import import get_recipe_from_source
+from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient, Keyword
 from gettext import gettext as _
@@ -15,53 +18,51 @@ from gettext import gettext as _
 class CookBookApp(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        return zip_info_object.filename.endswith('.yml')
+        return zip_info_object.filename.endswith('.html')
 
     def get_recipe_from_file(self, file):
-        recipe_yml = yaml.safe_load(file.getvalue().decode("utf-8"))
+        recipe_html = file.getvalue().decode("utf-8")
+
+        recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
 
         recipe = Recipe.objects.create(
-            name=recipe_yml['name'].strip(),
+            name=recipe_json['name'].strip(),
             created_by=self.request.user, internal=True,
             space=self.request.space)
 
         try:
-            recipe.servings = re.findall('([0-9])+', recipe_yml['recipeYield'])[0]
+            recipe.servings = re.findall('([0-9])+', recipe_json['recipeYield'])[0]
         except Exception as e:
             pass
 
         try:
-            recipe.working_time = recipe_yml['prep_time'].replace(' minutes', '')
-            recipe.waiting_time = recipe_yml['cook_time'].replace(' minutes', '')
+            recipe.working_time = iso_duration_to_minutes(recipe_json['prepTime'])
+            recipe.waiting_time = iso_duration_to_minutes(recipe_json['cookTime'])
         except Exception:
             pass
 
-        if recipe_yml['on_favorites']:
-            recipe.keywords.add(Keyword.objects.get_or_create(name=_('Favorites'), space=self.request.space))
+        step = Step.objects.create(instruction=recipe_json['recipeInstructions'], space=self.request.space, )
 
-        step = Step.objects.create(instruction=recipe_yml['directions'], space=self.request.space, )
-
-        if 'notes' in recipe_yml and recipe_yml['notes'].strip() != '':
-            step.instruction = step.instruction + '\n\n' + recipe_yml['notes']
-
-        if 'nutritional_info' in recipe_yml:
-            step.instruction = step.instruction + '\n\n' + recipe_yml['nutritional_info']
-
-        if 'source' in recipe_yml and recipe_yml['source'].strip() != '':
-            step.instruction = step.instruction + '\n\n' + recipe_yml['source']
+        if 'nutrition' in recipe_json:
+            step.instruction = step.instruction + '\n\n' + recipe_json['nutrition']
 
         step.save()
         recipe.steps.add(step)
 
         ingredient_parser = IngredientParser(self.request, True)
-        for ingredient in recipe_yml['ingredients'].split('\n'):
-            if ingredient.strip() != '':
-                amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-                f = ingredient_parser.get_food(ingredient)
-                u = ingredient_parser.get_unit(unit)
+        for ingredient in recipe_json['recipeIngredient']:
+                f = ingredient_parser.get_food(ingredient['ingredient']['text'])
+                u = ingredient_parser.get_unit(ingredient['unit']['text'])
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                    food=f, unit=u, amount=ingredient['amount'], note=ingredient['note'], space=self.request.space,
                 ))
+
+        if len(images) > 0:
+            try:
+                response = requests.get(images[0])
+                self.import_recipe_image(recipe, BytesIO(response.content))
+            except Exception as e:
+                print('failed to import image ', str(e))
 
         recipe.save()
         return recipe

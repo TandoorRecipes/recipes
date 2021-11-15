@@ -40,8 +40,8 @@
             <table class="table table-sm">
               <!-- eslint-disable vue/no-v-for-template-key-on-child -->
               <template v-for="i in step.ingredients">
-                <Ingredient v-bind:ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
-                            @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient>
+                <Ingredient-component v-bind:ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
+                            @checked-state-changed="$emit('checked-state-changed', i)"></Ingredient-component>
               </template>
               <!-- eslint-enable vue/no-v-for-template-key-on-child -->
             </table>
@@ -158,25 +158,24 @@
 
 import {calculateAmount} from "@/utils/utils";
 
-import Ingredient from "@/components/Ingredient";
 import {GettextMixin} from "@/utils/utils";
 
 import CompileComponent from "@/components/CompileComponent";
 import Vue from "vue";
 import moment from "moment";
-import Keywords from "@/components/Keywords";
 import {ResolveUrlMixin} from "@/utils/utils";
+import IngredientComponent from "@/components/IngredientComponent";
 
 Vue.prototype.moment = moment
 
 export default {
-  name: 'Step',
+  name: 'StepComponent',
   mixins: [
     GettextMixin,
     ResolveUrlMixin,
   ],
   components: {
-    Ingredient,
+    IngredientComponent,
     CompileComponent,
   },
   props: {

@@ -221,11 +221,6 @@ def meal_plan(request):
 
 
 @group_required('user')
-def meal_plan_new(request):
-    return render(request, 'meal_plan_new.html', {})
-
-
-@group_required('user')
 def supermarket(request):
     return render(request, 'supermarket.html', {})
 
@@ -292,7 +287,7 @@ def user_settings(request):
     if request.method == "POST":
         if 'preference_form' in request.POST:
             active_tab = 'preferences'
-            form = UserPreferenceForm(request.POST, prefix='preference')
+            form = UserPreferenceForm(request.POST, prefix='preference', space=request.space)
             if form.is_valid():
                 if not up:
                     up = UserPreference(user=request.user)
@@ -307,6 +302,7 @@ def user_settings(request):
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']  # noqa: E501
                 up.comments = form.cleaned_data['comments']
                 up.use_fractions = form.cleaned_data['use_fractions']
+                up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
 
                 up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
@@ -343,10 +339,13 @@ def user_settings(request):
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
                     search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
-                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
+                        search_form.cleaned_data['fulltext']) == 0:
+                    search_form.add_error('search',
+                                          _('To use this search method you must select at least one full text search field!'))
                     search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
+                        search_form.cleaned_data['trigram']) > 0:
                     search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
                     search_error = True
                 else:
@@ -381,11 +380,12 @@ def user_settings(request):
 
                     sp.save()
     if up:
-        preference_form = UserPreferenceForm(instance=up)
+        preference_form = UserPreferenceForm(instance=up, space=request.space)
     else:
-        preference_form = UserPreferenceForm()
+        preference_form = UserPreferenceForm( space=request.space)
 
-    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
+    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
+        sp.fulltext.all())
     if sp and not search_error and fields_searched > 0:
         search_form = SearchPreferenceForm(instance=sp)
     elif not search_error:
@@ -395,7 +395,8 @@ def user_settings(request):
         api_token = Token.objects.create(user=request.user)
 
     # these fields require postgress - just disable them if postgress isn't available
-    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                                       'django.db.backends.postgresql']:
         search_form.fields['search'].disabled = True
         search_form.fields['lookup'].disabled = True
         search_form.fields['trigram'].disabled = True

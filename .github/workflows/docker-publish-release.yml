@@ -1,13 +1,12 @@
 name: publish tagged release docker
 
 on:
-  push:
-    tags:
-    - '*'
+  release:
+    types: [published]
 
 jobs:
   build:
-    if: github.repository_owner == 'vabene1111'
+    if: github.repository_owner == 'TandoorRecipes'
     runs-on: ubuntu-latest
     name: Build image job
     steps:
@@ -50,4 +49,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
-          args: '🚀 A new Version of tandoor has been released 🥳 \n https://github.com/vabene1111/recipes/releases/tag/{{GITHUB_REF/refs\/tags\//}}'
+          args: '🚀 Version {{ EVENT_PAYLOAD.release.tag_name }} of tandoor has been released 🥳 \nCheck it out https://github.com/vabene1111/recipes/releases/tag/{{ EVENT_PAYLOAD.release.tag_name }}'

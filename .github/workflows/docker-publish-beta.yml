@@ -5,7 +5,7 @@ on:
       - 'beta'
 jobs:
   build:
-    if: github.repository_owner == 'vabene1111'
+    if: github.repository_owner == 'TandoorRecipes'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master

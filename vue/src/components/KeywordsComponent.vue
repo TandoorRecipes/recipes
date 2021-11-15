@@ -9,7 +9,7 @@
 <script>
 
 export default {
-  name: 'Keywords',
+  name: 'KeywordsComponent',
   props: {
     recipe: Object,
   },

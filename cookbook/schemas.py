@@ -40,6 +40,11 @@ class RecipeSchema(AutoSchema):
             'schema': {'type': 'string', },
         })
         parameters.append({
+            "name": 'steps', "in": "query", "required": False,
+            "description": 'Id of a step a recipe should have. For multiple repeat parameter.',
+            'schema': {'type': 'string', },
+        })
+        parameters.append({
             "name": 'keywords_or', "in": "query", "required": False,
             "description": 'If recipe should have all (AND) or any (OR) of the provided keywords.',
             'schema': {'type': 'string', },
@@ -86,7 +91,8 @@ class TreeSchema(AutoSchema):
         })
         parameters.append({
             "name": 'root', "in": "query", "required": False,
-            "description": 'Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.'.format(obj=api_name),
+            "description": 'Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.'.format(
+                obj=api_name),
             'schema': {'type': 'int', },
         })
         parameters.append({
@@ -107,6 +113,20 @@ class FilterSchema(AutoSchema):
         parameters.append({
             "name": 'query', "in": "query", "required": False,
             "description": 'Query string matched against {} name.'.format(api_name),
+            'schema': {'type': 'string', },
+        })
+        return parameters
+
+
+class QueryOnlySchema(AutoSchema):
+    def get_path_parameters(self, path, method):
+        if not is_list_view(path, method, self.view):
+            return super(QueryOnlySchema, self).get_path_parameters(path, method)
+
+        parameters = super().get_path_parameters(path, method)
+        parameters.append({
+            "name": 'query', "in": "query", "required": False,
+            "description": 'Query string matched (fuzzy) against object name.',
             'schema': {'type': 'string', },
         })
         return parameters
