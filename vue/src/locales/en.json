@@ -66,6 +66,7 @@
   "Fats": "Fats",
   "Carbohydrates": "Carbohydrates",
   "Calories": "Calories",
+  "Energy": "Energy",
   "Nutrition": "Nutrition",
   "Date": "Date",
   "Share": "Share",
@@ -200,5 +201,10 @@
   "Previous_Period": "Previous Period",
   "Current_Period": "Current Period",
   "Next_Day": "Next Day",
-  "Previous_Day": "Previous Day"
+  "Previous_Day": "Previous Day",
+  "Coming_Soon": "Coming-Soon",
+  "Auto_Planner": "Auto-Planner",
+  "New_Cookbook": "New cookbook",
+  "Hide_Keyword": "Hide keywords",
+  "Clear": "Clear"
 }

@@ -12,11 +12,11 @@
         </a>
       </div>
       <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2"
-           v-if="recipe.waiting_time !== 0">
-        <b-badge pill variant="light" class="mt-1 font-weight-normal"><i class="fa fa-clock"></i>
+           v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
+        <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"><i class="fa fa-clock"></i>
           {{ recipe.working_time }} {{ $t('min') }}
         </b-badge>
-        <b-badge pill variant="secondary" class="mt-1 font-weight-normal"><i class="fa fa-pause"></i>
+        <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"><i class="fa fa-pause"></i>
           {{ recipe.waiting_time }} {{ $t('min') }}
         </b-badge>
       </div>
@@ -42,7 +42,7 @@
           </template>
           <p class="mt-1">
             <last-cooked :recipe="recipe"></last-cooked>
-            <keywords :recipe="recipe" style="margin-top: 4px"></keywords>
+            <keywords-component :recipe="recipe" style="margin-top: 4px"></keywords-component>
           </p>
           <transition name="fade" mode="in-out">
             <div class="row mt-3" v-if="detailed">
@@ -52,7 +52,7 @@
                   <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                   <template v-for="s in recipe.steps">
                     <template v-for="i in s.ingredients">
-                      <Ingredient :detailed="false" :ingredient="i" :ingredient_factor="1" :key="i.id"></Ingredient>
+                      <Ingredient-component :detailed="false" :ingredient="i" :ingredient_factor="1" :key="i.id"></Ingredient-component>
                     </template>
                   </template>
                   <!-- eslint-enable vue/no-v-for-template-key-on-child -->
@@ -82,13 +82,13 @@
 
 <script>
 import RecipeContextMenu from "@/components/RecipeContextMenu";
-import Keywords from "@/components/Keywords";
 import {resolveDjangoUrl, ResolveUrlMixin} from "@/utils/utils";
 import RecipeRating from "@/components/RecipeRating";
 import moment from "moment/moment";
 import Vue from "vue";
 import LastCooked from "@/components/LastCooked";
-import Ingredient from "./Ingredient";
+import KeywordsComponent from "@/components/KeywordsComponent";
+import IngredientComponent from "@/components/IngredientComponent";
 
 Vue.prototype.moment = moment
 
@@ -97,7 +97,7 @@ export default {
   mixins: [
     ResolveUrlMixin,
   ],
-  components: {LastCooked, RecipeRating, Keywords, RecipeContextMenu, Ingredient},
+  components: {LastCooked, RecipeRating, KeywordsComponent, RecipeContextMenu, IngredientComponent},
   props: {
     recipe: Object,
     meal_plan: Object,

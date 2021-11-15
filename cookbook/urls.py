@@ -10,7 +10,8 @@ from cookbook.helper import dal
 
 from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
-                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, get_model_name, Automation, UserFile)
+                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, get_model_name, Automation,
+                     UserFile, Step)
 from .views import api, data, delete, edit, import_export, lists, new, views, telegram
 
 router = routers.DefaultRouter()
@@ -58,7 +59,6 @@ urlpatterns = [
     path('search/v2/', views.search_v2, name='view_search_v2'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
-    path('plan_new/', views.meal_plan_new, name='view_plan_new'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
     path('shopping/', views.shopping_list, name='view_shopping'),
     path('shopping/<int:pk>', views.shopping_list, name='view_shopping'),
@@ -178,7 +178,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

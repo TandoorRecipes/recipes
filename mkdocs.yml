@@ -21,6 +21,9 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
 
+plugins:
+  - include-markdown
+
 nav:
   - Home: 'index.md'
   - Installation:
@@ -28,6 +31,7 @@ nav:
       - Unraid: install/unraid.md
       - Synology: install/synology.md
       - Kubernetes: install/kubernetes.md
+      - KubeSail or PiBox: install/kubesail.md
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:

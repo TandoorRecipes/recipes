@@ -25,6 +25,7 @@ from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
                              RecipeImport, Step, Sync, Unit, UserPreference)
 from cookbook.tables import SyncTable
+from recipes import settings
 
 
 @group_required('user')
@@ -36,6 +37,10 @@ def sync(request):
     if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
         messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
         return HttpResponseRedirect(reverse('index'))
+
+    if request.space.demo or settings.HOSTED:
+        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+        return redirect('index')
 
     if request.method == "POST":
         if not has_group_permission(request.user, ['admin']):
@@ -186,13 +191,12 @@ def import_url(request):
 
             ingredient.save()
             step.ingredients.add(ingredient)
-            print(ingredient)
 
         if 'image' in data and data['image'] != '' and data['image'] is not None:
             try:
                 response = requests.get(data['image'])
 
-                img, filetype = handle_image(request, BytesIO(response.content))
+                img, filetype = handle_image(request, File(BytesIO(response.content), name='image'))
                 recipe.image = File(
                     img, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}'
                 )

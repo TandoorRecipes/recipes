@@ -34,6 +34,10 @@
             <i class="fas fa-file fa-fw"></i> {{ Models['USERFILE'].name }}
           </b-dropdown-item>
 
+          <b-dropdown-item :href="resolveDjangoUrl('list_step')">
+            <i class="fas fa-puzzle-piece fa-fw"></i>{{ Models['STEP'].name }}
+          </b-dropdown-item>
+
         </b-dropdown>
     </span>
 </template>

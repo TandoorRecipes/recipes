@@ -48,7 +48,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema
+from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema, QueryOnlySchema
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookSerializer,
@@ -63,6 +63,7 @@ from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
                                  RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
                                  BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer, AutomationSerializer)
+from recipes import settings
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -409,7 +410,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -497,9 +498,16 @@ class StepViewSet(viewsets.ModelViewSet):
     queryset = Step.objects
     serializer_class = StepSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
+    schema = QueryOnlySchema()
 
     def get_queryset(self):
-        return self.queryset.filter(recipe__space=self.request.space)
+        queryset = self.queryset.filter(recipe__space=self.request.space)
+
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(Q(name__icontains=query) | Q(recipe__name__icontains=query))
+        return queryset
 
 
 class RecipePagination(PageNumberPagination):
@@ -718,10 +726,8 @@ def get_recipe_file(request, recipe_id):
 
 @group_required('user')
 def sync_all(request):
-    if request.space.demo:
-        messages.add_message(
-            request, messages.ERROR, _('This feature is not available in the demo version!')
-        )
+    if request.space.demo or settings.HOSTED:
+        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
 
     monitors = Sync.objects.filter(active=True).filter(space=request.user.userpreference.space)

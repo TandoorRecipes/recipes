@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col col-md-12">
           <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
+            <div class="col-12 col-lg-10 mt-3 mb-3">
               <b-input-group>
                 <b-input class="form-control form-control-lg form-control-borderless form-control-search"
                          v-model="search"
@@ -61,10 +61,10 @@ import Vue from 'vue'
 import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import {ApiApiFactory} from "../../utils/openapi/api";
-import CookbookSlider from "../../components/CookbookSlider";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import {StandardToasts} from "../../utils/utils";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import CookbookSlider from "@/components/CookbookSlider";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import {StandardToasts} from "@/utils/utils";
 
 Vue.use(BootstrapVue)
 
@@ -119,7 +119,7 @@ export default {
     createNew: function () {
       let apiClient = new ApiApiFactory()
 
-      apiClient.createRecipeBook({name: 'New Book', description: '', icon: '', shared: []}).then(result => {
+      apiClient.createRecipeBook({name: this.$t('New_Cookbook'), description: '', icon: '', shared: []}).then(result => {
         let new_book = result.data
         this.refreshData()
         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)

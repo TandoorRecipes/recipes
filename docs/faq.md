@@ -38,3 +38,12 @@ For Tandoor that means all people that work together on one recipe collection ca
 If you want to host the collection of your friends family or your neighbor you can create a separate space for them (trough the admin interface).
 
 Sharing between spaces is currently not possible but is planned for future releases.
+
+## Create Admin user / reset passwords
+To create a superuser or reset a lost password if access to the container is lost you need to 
+
+1. execute into the container using `docker-compose exec web_recipes sh`
+2. activate the virtual environment `source venv/bin/activate`
+3. run `python manage.py createsuperuser` and follow the steps shown.
+
+To change a password enter `python manage.py changepassword <username>` in step 3.

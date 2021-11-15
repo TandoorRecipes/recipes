@@ -28,8 +28,8 @@
                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                 <model-menu/>
                 <span>{{ this.this_model.name }}</span>
-                <span><b-button variant="link" @click="startAction({'action':'new'})"><i
-                    class="fas fa-plus-circle fa-2x"></i></b-button></span>
+                <span v-if="this_model.name !== 'Step'"><b-button variant="link" @click="startAction({'action':'new'})"><i
+                    class="fas fa-plus-circle fa-2x"></i></b-button></span><!-- TODO add proper field to model config to determine if create should be available or not -->
               </h3>
             </div>
             <div class="col-md-3" style="position: relative; margin-top: 1vh">
@@ -156,7 +156,7 @@ export default {
         this.getItems({page:1},'left')
       }
     })
-
+    this.$i18n.locale = window.CUSTOM_LOCALE
   },
   methods: {
     // this.genericAPI inherited from ApiMixin
@@ -431,7 +431,7 @@ export default {
       // TODO: make this generic
       let params = {'pageSize': 50}
       params[this.this_recipe_param] = item.id
-
+      console.log('RECIPE PARAM', this.this_recipe_param, params, item.id)
       this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
         parent = this.findCard(item.id, this['items_' + col])
         if (parent) {

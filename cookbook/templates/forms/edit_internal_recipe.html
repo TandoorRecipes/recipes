@@ -32,6 +32,9 @@
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
         window.RECIPE_ID = {{ recipe.pk }}
         window.DEFAULT_UNIT = '{{request.user.userpreference.default_unit}}'
+        window.USER_PREF = {
+            'use_kj': {% if request.user.userpreference.use_kj %} true {% else %} false {% endif %},
+        }
 
     </script>
 

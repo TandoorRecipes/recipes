@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db import models
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -24,30 +25,36 @@ class RecipeDelete(GroupRequiredMixin, DeleteView):
     success_url = reverse_lazy('index')
 
     def delete(self, request, *args, **kwargs):
-        obj = self.get_object()
-
-        related_objects = []
-        for x in obj._meta.get_fields():
-            try:
-                related = x.related_model.objects.filter(**{x.field.name: obj})
-                if related.exists():
-                    related_objects.append(related)
-            except AttributeError:
-                pass
-
-        if related_objects:
-            self.object = obj
-            return render(request, template_name=self.template_name, context=self.get_context_data(related_objects=related_objects))
+        self.object = self.get_object()
+        # TODO make this more generic so that all delete functions benefit from this
+        if self.get_context_data()['protected_objects']:
+            return render(request, template_name=self.template_name, context=self.get_context_data())
 
         success_url = self.get_success_url()
-        obj.delete()
+        self.object.delete()
         return HttpResponseRedirect(success_url)
 
     def get_context_data(self, **kwargs):
         context = super(RecipeDelete, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
-        if 'related_objects' in kwargs:
-            context['related_objects'] = kwargs.pop('related_objects')
+
+        # TODO make this more generic so that all delete functions benefit from this
+        self.object = self.get_object()
+        context['protected_objects'] = []
+        context['cascading_objects'] = []
+        context['set_null_objects'] = []
+        for x in self.object._meta.get_fields():
+            try:
+                related = x.related_model.objects.filter(**{x.field.name: self.object})
+                if related.exists() and x.on_delete == models.PROTECT:
+                    context['protected_objects'].append(related)
+                if related.exists() and x.on_delete == models.CASCADE:
+                    context['cascading_objects'].append(related)
+                if related.exists() and x.on_delete == models.SET_NULL:
+                    context['set_null_objects'].append(related)
+            except AttributeError:
+                pass
+
         return context
 
 
