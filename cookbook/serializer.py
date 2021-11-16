@@ -99,15 +99,15 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
-            data = data.filter(userpreference__space=self.context['request'].space)
+            data = data.filter(userpreference__space=self.context['request'].space or self.context['request'].user.userpreference.space)
         else:
-            data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
+            data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space or self.context['request'].user.userpreference.space})
         return super().to_representation(data)
 
 
 class SpacedModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
 
@@ -156,24 +156,24 @@ class UserFileSerializer(serializers.ModelSerializer):
 
     def check_file_limit(self, validated_data):
         if 'file' in validated_data:
-            if self.context['request'].space.max_file_storage_mb == -1:
+            if self.context['request'].space or self.context['request'].user.userpreference.space.max_file_storage_mb == -1:
                 raise ValidationError(_('File uploads are not enabled for this Space.'))
 
             try:
                 current_file_size_mb = \
-                    UserFile.objects.filter(space=self.context['request'].space).aggregate(Sum('file_size_kb'))[
+                    UserFile.objects.filter(space=self.context['request'].space or self.context['request'].user.userpreference.space).aggregate(Sum('file_size_kb'))[
                         'file_size_kb__sum'] / 1000
             except TypeError:
                 current_file_size_mb = 0
 
             if ((validated_data['file'].size / 1000 / 1000 + current_file_size_mb - 5)
-                    > self.context['request'].space.max_file_storage_mb != 0):
+                    > self.context['request'].space or self.context['request'].user.userpreference.space.max_file_storage_mb != 0):
                 raise ValidationError(_('You have reached your file upload limit.'))
 
     def create(self, validated_data):
         self.check_file_limit(validated_data)
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
@@ -271,13 +271,13 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     #        return None
 
     # def count_recipes(self, obj):
-    #     return obj.recipe_set.filter(space=self.context['request'].space).all().count()
+    #     return obj.recipe_set.filter(space=self.context['request'].space or self.context['request'].user.userpreference.space).all().count()
 
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
         validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         obj, created = Keyword.objects.get_or_create(**validated_data)
         return obj
 
@@ -307,7 +307,7 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         obj, created = Unit.objects.get_or_create(**validated_data)
         return obj
 
@@ -325,7 +325,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         obj, created = SupermarketCategory.objects.get_or_create(**validated_data)
         return obj
 
@@ -392,12 +392,12 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
             validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
                 name=validated_data.pop('supermarket_category')['name'],
-                space=self.context['request'].space)
+                space=self.context['request'].space or self.context['request'].user.userpreference.space)
         obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 
@@ -420,7 +420,7 @@ class IngredientSerializer(WritableNestedModelSerializer):
     amount = CustomDecimalField()
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -440,7 +440,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     recipe_filter = 'steps'
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     def get_ingredients_vue(self, obj):
@@ -479,7 +479,7 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
 class NutritionInformationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -555,7 +555,7 @@ class RecipeSerializer(RecipeBaseSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
 
@@ -673,7 +673,7 @@ class ShoppingListSerializer(WritableNestedModelSerializer):
     supermarket = SupermarketSerializer(allow_null=True)
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
@@ -704,7 +704,7 @@ class ShareLinkSerializer(SpacedModelSerializer):
 class CookLogSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -716,7 +716,7 @@ class CookLogSerializer(serializers.ModelSerializer):
 class ViewLogSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -730,7 +730,7 @@ class ImportLogSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -744,7 +744,7 @@ class AutomationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -809,7 +809,7 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
     amount = CustomDecimalField()
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -821,7 +821,7 @@ class StepExportSerializer(WritableNestedModelSerializer):
     ingredients = IngredientExportSerializer(many=True)
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
     class Meta:
@@ -843,5 +843,5 @@ class RecipeExportSerializer(WritableNestedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].space
+        validated_data['space'] = self.context['request'].space or self.context['request'].user.userpreference.space
         return super().create(validated_data)
