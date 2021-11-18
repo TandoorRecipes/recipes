@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
+from rest_framework.authtoken.models import Token
 
 from cookbook.views import views
 
@@ -33,6 +34,11 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
+            if request.path.startswith('/api/'):
+                if token := Token.objects.filter(key=request.headers['Authorization'].replace('Token ', '')).first():
+                    request.space = token.user.userpreference.space
+                    with scope(space=request.space):
+                        return self.get_response(request)
             with scopes_disabled():
                 request.space = None
                 return self.get_response(request)
