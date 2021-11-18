@@ -1,6 +1,8 @@
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import AuthenticationFailed
 
 from cookbook.views import views
 
@@ -35,10 +37,14 @@ class ScopeMiddleware:
                 return self.get_response(request)
         else:
             if request.path.startswith('/api/'):
-                if token := Token.objects.filter(key=request.headers['Authorization'].replace('Token ', '')).first():
-                    request.space = token.user.userpreference.space
-                    with scope(space=request.space):
-                        return self.get_response(request)
+                try:
+                    if auth := TokenAuthentication().authenticate(request):
+                        request.space = auth[0].userpreference.space
+                        with scope(space=request.space):
+                            return self.get_response(request)
+                except AuthenticationFailed:
+                    pass
+
             with scopes_disabled():
                 request.space = None
                 return self.get_response(request)
