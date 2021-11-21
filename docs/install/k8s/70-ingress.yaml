@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    #cert-manager.io/cluster-issuer: letsencrypt-prod
+    #kubernetes.io/ingress.class: nginx
+  name: recipes
+  namespace: default
+spec:
+  rules:
+  - host: recipes.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: recipes
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: recipes
+            port:
+              number: 80
+        path: /media
+        pathType: Prefix
+      - backend:
+          service:
+            name: recipes
+            port:
+              number: 80
+        path: /static
+        pathType: Prefix
+  #tls:
+  #- hosts:
+  #  - recipes.local
+  #  secretName: recipes-local-tls
