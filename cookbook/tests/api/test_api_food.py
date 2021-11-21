@@ -7,7 +7,6 @@ from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import Food, FoodInheritField, Ingredient, ShoppingList, ShoppingListEntry
-from cookbook.tests.conftest import get_random_json_recipe
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
                                       SupermarketCategoryFactory)
 
