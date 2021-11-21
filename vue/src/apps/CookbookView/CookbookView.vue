@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col col-md-12">
                     <div class="row justify-content-center">
-                        <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
+                        <div class="col-12 col-lg-10 mt-3 mb-3">
                             <b-input-group>
                                 <b-input
                                     class="form-control form-control-lg form-control-borderless form-control-search"
@@ -26,12 +26,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <b-card class="d-flex flex-column" v-hover v-on:click="openBook(book.id)">
-                        <b-row no-gutters style="height:inherit;">
-                            <b-col no-gutters md="2" style="height:inherit;">
+                        <b-row no-gutters style="height: inherit">
+                            <b-col no-gutters md="2" style="height: inherit">
                                 <h3>{{ book.icon }}</h3>
                             </b-col>
-                            <b-col no-gutters md="10" style="height:inherit;">
-                                <b-card-body class="m-0 py-0" style="height:inherit;">
+                            <b-col no-gutters md="10" style="height: inherit">
+                                <b-card-body class="m-0 py-0" style="height: inherit">
                                     <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                                         <h5 class="m-0 mt-1 text-truncate">
                                             {{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span>
@@ -93,7 +93,11 @@ export default {
             })
         },
     },
-    mounted() {
+    createNew: function () {
+      let apiClient = new ApiApiFactory()
+
+      apiClient.createRecipeBook({name: this.$t('New_Cookbook'), description: '', icon: '', shared: []}).then(result => {
+        let new_book = result.data
         this.refreshData()
         this.$i18n.locale = window.CUSTOM_LOCALE
     },
@@ -156,8 +160,7 @@ export default {
 }
 
 .slide-fade-enter, .slide-fade-leave-to
-  /* .slide-fade-leave-active below version 2.1.8 */
- {
+  /* .slide-fade-leave-active below version 2.1.8 */ {
     transform: translateX(10px);
     opacity: 0;
 }
