@@ -8,6 +8,12 @@ from django.contrib.auth.models import User
 from django_scopes import scopes_disabled
 from faker import Factory as FakerFactory
 
+# this code will run immediately prior to creating the model object useful when you want a reverse relationship
+# log = factory.RelatedFactory(
+#     UserLogFactory,
+#     factory_related_name='user',
+#     action=models.UserLog.ACTION_CREATE,
+# )
 faker = FakerFactory.create()
 
 
@@ -95,6 +101,17 @@ class UnitFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.Unit'
 
 
+class KeywordFactory(factory.django.DjangoModelFactory):
+    """Keyword factory."""
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3))
+    # icon = models.CharField(max_length=16, blank=True, null=True)
+    description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
+    space = factory.SubFactory(SpaceFactory)
+
+    class Meta:
+        model = 'cookbook.Keyword'
+
+
 class IngredientFactory(factory.django.DjangoModelFactory):
     """Ingredient factory."""
     food = factory.SubFactory(FoodFactory)
@@ -167,7 +184,7 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
     )
     food = factory.SubFactory(FoodFactory)
     unit = factory.SubFactory(UnitFactory)
-    ingredient = factory.SubFactory(IngredientFactory)
+    # ingredient = factory.SubFactory(IngredientFactory)
     amount = factory.LazyAttribute(lambda x: Decimal(faker.random_int(min=1, max=10))/100)
     order = 0
     checked = False
@@ -216,7 +233,7 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     servings = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=20))
     servings_text = factory.LazyAttribute(lambda x: faker.sentence(nb_words=1))
-    # image = models.ImageField(upload_to='recipes/', blank=True, null=True)
+    # image = models.ImageField(upload_to='recipes/', blank=True, null=True)  #TODO test recipe image api
     # storage = models.ForeignKey(
     #     Storage, on_delete=models.PROTECT, blank=True, null=True
     # )
@@ -224,7 +241,7 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     # file_path = models.CharField(max_length=512, default="", blank=True)
     # link = models.CharField(max_length=512, null=True, blank=True)
     # cors_link = models.CharField(max_length=1024, null=True, blank=True)
-    # keywords = factory.SubFactory(KeywordFactory)
+    keywords = factory.SubFactory(KeywordFactory)
     steps = factory.SubFactory(StepFactory)
     working_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
     waiting_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
@@ -239,10 +256,3 @@ class RecipeFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Recipe'
-
-    # this code will run immediately prior to creating the model object useful when you want a reverse relationship
-    # log = factory.RelatedFactory(
-    #     UserLogFactory,
-    #     factory_related_name='user',
-    #     action=models.UserLog.ACTION_CREATE,
-    # )
