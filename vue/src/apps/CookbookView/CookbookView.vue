@@ -87,29 +87,25 @@ export default {
         }
     },
     computed: {
-        filteredBooks: function() {
+        filteredBooks: function () {
             return this.cookbooks.filter((book) => {
                 return book.name.toLowerCase().includes(this.search.toLowerCase())
             })
         },
     },
-    createNew: function () {
-      let apiClient = new ApiApiFactory()
-
-      apiClient.createRecipeBook({name: this.$t('New_Cookbook'), description: '', icon: '', shared: []}).then(result => {
-        let new_book = result.data
+    mounted() {
         this.refreshData()
         this.$i18n.locale = window.CUSTOM_LOCALE
     },
     methods: {
-        refreshData: function() {
+        refreshData: function () {
             let apiClient = new ApiApiFactory()
 
             apiClient.listRecipeBooks().then((result) => {
                 this.cookbooks = result.data
             })
         },
-        openBook: function(book) {
+        openBook: function (book) {
             if (book === this.current_book) {
                 this.current_book = undefined
                 this.recipes = []
@@ -124,11 +120,11 @@ export default {
                 this.loading = false
             })
         },
-        createNew: function() {
+        createNew: function () {
             let apiClient = new ApiApiFactory()
 
             apiClient
-                .createRecipeBook({ name: "New Book", description: "", icon: "", shared: [] })
+                .createRecipeBook({ name: this.$t("New_Cookbook"), description: "", icon: "", shared: [] })
                 .then((result) => {
                     let new_book = result.data
                     this.refreshData()
@@ -141,7 +137,7 @@ export default {
     },
     directives: {
         hover: {
-            inserted: function(el) {
+            inserted: function (el) {
                 el.addEventListener("mouseenter", () => {
                     el.classList.add("shadow")
                 })

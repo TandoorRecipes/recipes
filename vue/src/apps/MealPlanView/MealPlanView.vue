@@ -1,105 +1,57 @@
 <template>
-  <div>
-    <b-tabs content-class="mt-3" v-model="current_tab">
-      <b-tab :title="$t('Planner')" active>
-        <div class="row">
-          <div class="col-12 calender-parent">
-            <calendar-view
-                :show-date="showDate" :enable-date-selection="true" class="theme-default"
-                :items="plan_items"
-                :display-period-uom="settings.displayPeriodUom"
-                :period-changed-callback="periodChangedCallback" :enable-drag-drop="true"
-                :item-content-height="item_height"
-                @click-date="createEntryClick" @drop-on-date="moveEntry"
-                :display-period-count="settings.displayPeriodCount"
-                :starting-day-of-week="settings.startingDayOfWeek"
-                :display-week-numbers="settings.displayWeekNumbers">
-              <template #item="{ value, weekStartDate, top }">
-                <meal-plan-card :value="value" :week-start-date="weekStartDate" :top="top" :detailed="detailed_items"
-                                :item_height="item_height" @dragstart="dragged_item = value" @click-item="entryClick"
-                                @open-context-menu="openContextMenu"/>
-              </template>
-              <template #header="{ headerProps }">
-                <meal-plan-calender-header ref="header"
-                                           :header-props="headerProps"
-                                           @input="setShowDate" @delete-dragged="deleteEntry(dragged_item)"
-                                           @create-new="createEntryClick(new Date())"
-                                           @set-starting-day-back="setStartingDay(-1)"
-                                           @set-starting-day-forward="setStartingDay(1)" :i-cal-url="iCalUrl"
-                                           :options="options"
-                                           :settings_prop="settings"/>
-              </template>
-            </calendar-view>
-          </div>
-        </div>
-      </b-tab>
-      <b-tab :title="$t('Settings')">
-        <div class="row mt-3">
-          <div class="col-12 col-md-3 calender-options">
-            <h5>{{ $t('Planner_Settings') }}</h5>
-            <b-form>
-              <b-form-group id="UomInput"
-                            :label="$t('Period')"
-                            :description="$t('Plan_Period_To_Show')"
-                            label-for="UomInput">
-                <b-form-select
-                    id="UomInput"
-                    v-model="settings.displayPeriodUom"
-                    :options="options.displayPeriodUom"
-                ></b-form-select>
-              </b-form-group>
-              <b-form-group id="PeriodInput"
-                            :label="$t('Periods')"
-                            :description="$t('Plan_Show_How_Many_Periods')"
-                            label-for="PeriodInput">
-                <b-form-select
-                    id="PeriodInput"
-                    v-model="settings.displayPeriodCount"
-                    :options="options.displayPeriodCount"
-                ></b-form-select>
-              </b-form-group>
-              <b-form-group id="DaysInput"
-                            :label="$t('Starting_Day')"
-                            :description="$t('Starting_Day')"
-                            label-for="DaysInput">
-                <b-form-select
-                    id="DaysInput"
-                    v-model="settings.startingDayOfWeek"
-                    :options="dayNames"
-                ></b-form-select>
-              </b-form-group>
-              <b-form-group id="WeekNumInput"
-                            :label="$t('Week_Numbers')">
-                <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
-                  {{ $t('Show_Week_Numbers') }}
-                </b-form-checkbox>
-              </b-form-group>
-            </b-form>
-          </div>
-          <div class="col-12 col-md-9 col-lg-6">
-            <h5>{{ $t('Meal_Types') }}</h5>
-            <div>
-              <draggable :list="meal_types" group="meal_types"
-                         :empty-insert-threshold="10" handle=".handle" @sort="sortMealTypes()">
-                <b-card no-body class="mt-1" v-for="(meal_type, index) in meal_types" v-hover :key="meal_type.id">
-                  <b-card-header class="p-4">
-                    <div class="row">
-                      <div class="col-2 handle">
-                        <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v "></i>
-                        </button>
-                      </div>
-                      <div class="col-10">
-                        <h5>{{ meal_type.icon }} {{ meal_type.name }}<span class="float-right text-primary"><i
-                            class="fa" v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
-                            @click="editOrSaveMealType(index)"
-                            aria-hidden="true"></i></span></h5>
-                      </div>
+    <div>
+        <b-tabs content-class="mt-3" v-model="current_tab">
+            <b-tab :title="$t('Planner')" active>
+                <div class="row">
+                    <div class="col-12 calender-parent">
+                        <calendar-view
+                            :show-date="showDate"
+                            :enable-date-selection="true"
+                            class="theme-default"
+                            :items="plan_items"
+                            :display-period-uom="settings.displayPeriodUom"
+                            :period-changed-callback="periodChangedCallback"
+                            :enable-drag-drop="true"
+                            :item-content-height="item_height"
+                            @click-date="createEntryClick"
+                            @drop-on-date="moveEntry"
+                            :display-period-count="settings.displayPeriodCount"
+                            :starting-day-of-week="settings.startingDayOfWeek"
+                            :display-week-numbers="settings.displayWeekNumbers"
+                        >
+                            <template #item="{ value, weekStartDate, top }">
+                                <meal-plan-card
+                                    :value="value"
+                                    :week-start-date="weekStartDate"
+                                    :top="top"
+                                    :detailed="detailed_items"
+                                    :item_height="item_height"
+                                    @dragstart="dragged_item = value"
+                                    @click-item="entryClick"
+                                    @open-context-menu="openContextMenu"
+                                />
+                            </template>
+                            <template #header="{ headerProps }">
+                                <meal-plan-calender-header
+                                    ref="header"
+                                    :header-props="headerProps"
+                                    @input="setShowDate"
+                                    @delete-dragged="deleteEntry(dragged_item)"
+                                    @create-new="createEntryClick(new Date())"
+                                    @set-starting-day-back="setStartingDay(-1)"
+                                    @set-starting-day-forward="setStartingDay(1)"
+                                    :i-cal-url="iCalUrl"
+                                    :options="options"
+                                    :settings_prop="settings"
+                                />
+                            </template>
+                        </calendar-view>
                     </div>
                 </div>
             </b-tab>
             <b-tab :title="$t('Settings')">
                 <div class="row mt-3">
-                    <div class="col-3 calender-options">
+                    <div class="col-12 col-md-3 calender-options">
                         <h5>{{ $t("Planner_Settings") }}</h5>
                         <b-form>
                             <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')" label-for="UomInput">
@@ -118,7 +70,7 @@
                             </b-form-group>
                         </b-form>
                     </div>
-                    <div class="col-9 col-lg-6">
+                    <div class="col-12 col-md-9 col-lg-6">
                         <h5>{{ $t("Meal_Types") }}</h5>
                         <div>
                             <draggable :list="meal_types" group="meal_types" :empty-insert-threshold="10" handle=".handle" @sort="sortMealTypes()">
@@ -126,7 +78,7 @@
                                     <b-card-header class="p-4">
                                         <div class="row">
                                             <div class="col-2 handle">
-                                                <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v "></i></button>
+                                                <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v"></i></button>
                                             </div>
                                             <div class="col-10">
                                                 <h5>
@@ -214,7 +166,6 @@
                 >
                     <a class="dropdown-item p-2" href="#"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
                 </ContextMenuItem>
-                <!-- TODO: Add new shopping Modal -->
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
@@ -262,70 +213,44 @@
                 </b-sidebar>
             </div>
         </template>
-        <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background:rgba(255,255,255,0.6);">
-            <div class="col-md-3 col-6">
-                <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i class="fas fa-calendar-plus"></i> {{ $t("Create") }}</button>
+        <transition name="slide-fade">
+            <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
+                <div class="col-md-3 col-6">
+                    <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i class="fas fa-calendar-plus"></i> {{ $t("Create") }}</button>
+                </div>
+                <div class="col-md-3 col-6">
+                    <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i class="fas fa-shopping-cart"></i> {{ $t("Shopping_list") }}</button>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"
+                        ><i class="fas fa-download"></i>
+                        {{ $t("Export_To_ICal") }}
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top :title="$t('Coming_Soon')">
+                        {{ $t("Auto_Planner") }}
+                    </button>
+                </div>
+                <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
+                    <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+                        <b-button-group class="mx-1">
+                            <b-button v-html="'<<'" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+                            <b-button v-html="'<'" @click="setStartingDay(-1)"></b-button>
+                        </b-button-group>
+                        <b-button-group class="mx-1">
+                            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i> </b-button>
+                            <b-form-datepicker button-only button-variant="secondary"></b-form-datepicker>
+                        </b-button-group>
+                        <b-button-group class="mx-1">
+                            <b-button v-html="'>'" @click="setStartingDay(1)"></b-button>
+                            <b-button v-html="'>>'" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+                        </b-button-group>
+                    </b-button-toolbar>
+                </div>
             </div>
-            <div class="col-md-3 col-6">
-                <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i class="fas fa-shopping-cart"></i> {{ $t("Shopping_list") }}</button>
-            </div>
-            <div class="col-md-3 col-6">
-                <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"
-                    ><i class="fas fa-download"></i>
-                    {{ $t("Export_To_ICal") }}
-                </a>
-            </div>
-          </div>
-        </b-sidebar>
-      </div>
-    </template>
-    <transition name="slide-fade">
-      <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background:rgba(255,255,255,0.6);"
-           v-if="current_tab === 0">
-        <div class="col-md-3 col-6">
-          <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
-              class="fas fa-calendar-plus"></i> {{ $t('Create') }}
-          </button>
-        </div>
-        <div class="col-md-3 col-6">
-          <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i
-              class="fas fa-shopping-cart"></i> {{ $t('Shopping_list') }}
-          </button>
-        </div>
-        <div class="col-md-3 col-6">
-          <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
-            {{ $t('Export_To_ICal') }}
-          </a>
-        </div>
-        <div class="col-md-3 col-6">
-          <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top
-                  :title="$t('Coming_Soon')">
-            {{ $t('Auto_Planner') }}
-          </button>
-        </div>
-        <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
-          <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-            <b-button-group class="mx-1">
-              <b-button v-html="'<<'" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-              <b-button v-html="'<'" @click="setStartingDay(-1)"></b-button>
-            </b-button-group>
-            <b-button-group class="mx-1">
-              <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i>
-              </b-button>
-              <b-form-datepicker
-                  button-only
-                  button-variant="secondary"
-              ></b-form-datepicker>
-            </b-button-group>
-            <b-button-group class="mx-1">
-              <b-button v-html="'>'" @click="setStartingDay(1)"></b-button>
-              <b-button v-html="'>>'" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-            </b-button-group>
-          </b-button-toolbar>
-        </div>
-      </div>
-    </transition>
-  </div>
+        </transition>
+    </div>
 </template>
 
 <script>
@@ -357,239 +282,106 @@ Vue.use(VueCookies)
 let SETTINGS_COOKIE_NAME = "mealplan_settings"
 
 export default {
-  name: "MealPlanView",
-  components: {
-    MealPlanEditModal,
-    MealPlanCard,
-    CalendarView,
-    ContextMenu,
-    ContextMenuItem,
-    MealPlanCalenderHeader,
-    EmojiInput,
-    draggable
-  },
-  mixins: [CalendarMathMixin, ApiMixin],
-  data: function () {
-    return {
-      showDate: new Date(),
-      plan_entries: [],
-      recipe_viewed: {},
-      settings: {
-        displayPeriodUom: 'week',
-        displayPeriodCount: 2,
-        startingDayOfWeek: 1,
-        displayWeekNumbers: true
-      },
-      dragged_item: null,
-      current_tab: 0,
-      meal_types: [],
-      current_context_menu_item: null,
-      options: {
-        displayPeriodUom: [{text: this.$t('Week'), value: 'week'}, {
-          text: this.$t('Month'),
-          value: 'month'
-        }, {text: this.$t('Year'), value: 'year'}],
-        displayPeriodCount: [1, 2, 3],
-        entryEditing: {
-          date: null,
-          id: -1,
-          meal_type: null,
-          note: "",
-          note_markdown: "",
-          recipe: null,
-          servings: 1,
-          shared: [],
-          title: '',
-          title_placeholder: this.$t('Title')
+    name: "MealPlanView",
+    components: {
+        MealPlanEditModal,
+        MealPlanCard,
+        CalendarView,
+        ContextMenu,
+        ContextMenuItem,
+        MealPlanCalenderHeader,
+        EmojiInput,
+        draggable,
+    },
+    mixins: [CalendarMathMixin, ApiMixin],
+    data: function () {
+        return {
+            showDate: new Date(),
+            plan_entries: [],
+            recipe_viewed: {},
+            settings: {
+                displayPeriodUom: "week",
+                displayPeriodCount: 2,
+                startingDayOfWeek: 1,
+                displayWeekNumbers: true,
+            },
+            dragged_item: null,
+            current_tab: 0,
+            meal_types: [],
+            current_context_menu_item: null,
+            options: {
+                displayPeriodUom: [
+                    { text: this.$t("Week"), value: "week" },
+                    {
+                        text: this.$t("Month"),
+                        value: "month",
+                    },
+                    { text: this.$t("Year"), value: "year" },
+                ],
+                displayPeriodCount: [1, 2, 3],
+                entryEditing: {
+                    date: null,
+                    id: -1,
+                    meal_type: null,
+                    note: "",
+                    note_markdown: "",
+                    recipe: null,
+                    servings: 1,
+                    shared: [],
+                    title: "",
+                    title_placeholder: this.$t("Title"),
+                },
+            },
+            shopping_list: [],
+            current_period: null,
+            entryEditing: {},
+            edit_modal_show: false,
+            ical_url: window.ICAL_URL,
         }
-      },
-      shopping_list: [],
-      current_period: null,
-      entryEditing: {},
-      edit_modal_show: false,
-      ical_url: window.ICAL_URL
-    }
-  },
-  computed: {
-    modal_title: function () {
-      if (this.entryEditing.id === -1) {
-        return this.$t('Create_Meal_Plan_Entry')
-      } else {
-        return this.$t('Edit_Meal_Plan_Entry')
-      }
-    },
-    entryEditing_initial_recipe: function () {
-      if (this.entryEditing.recipe != null) {
-        return [this.entryEditing.recipe]
-      } else {
-        return []
-      }
-    },
-    entryEditing_initial_meal_type: function () {
-      if (this.entryEditing.meal_type != null) {
-        return [this.entryEditing.meal_type]
-      } else {
-        return []
-      }
-    },
-    plan_items: function () {
-      let items = []
-      this.plan_entries.forEach((entry) => {
-        items.push(this.buildItem(entry))
-      })
-      return items
-    },
-    detailed_items: function () {
-      return this.settings.displayPeriodUom === 'week';
-    },
-    dayNames: function () {
-      let options = []
-      this.getFormattedWeekdayNames(this.userLocale, "long", 0).forEach((day, index) => {
-        options.push({text: day, value: index})
-      })
-      return options
-    },
-    userLocale: function () {
-      return this.getDefaultBrowserLocale
-    },
-    item_height: function () {
-      if (this.settings.displayPeriodUom === 'week') {
-        return "10rem"
-      } else {
-        return "1.6rem"
-      }
-    },
-    iCalUrl() {
-      if (this.current_period !== null) {
-        let start = moment(this.current_period.periodStart).format('YYYY-MM-DD')
-        let end = moment(this.current_period.periodEnd).format('YYYY-MM-DD')
-        return this.ical_url.replace(/12345/, start).replace(/6789/, end)
-      } else {
-        return ""
-      }
-    }
-  },
-  mounted() {
-    this.$nextTick(function () {
-      if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-        this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
-      }
-    })
-    this.$root.$on('change', this.updateEmoji);
-    this.$i18n.locale = window.CUSTOM_LOCALE
-  },
-  watch: {
-    settings: {
-      handler() {
-        this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, '360d')
-      },
-      deep: true
-    },
-  },
-  methods: {
-    addToShopping(entry) {
-      if (entry.originalItem.entry.recipe !== null) {
-        this.shopping_list.push(entry.originalItem.entry)
-        makeToast(this.$t("Success"), this.$t("Added_To_Shopping_List"), 'success')
-      } else {
-        makeToast(this.$t("Failure"), this.$t("Cannot_Add_Notes_To_Shopping"), 'danger')
-      }
-    },
-    saveShoppingList() {
-      let url = window.SHOPPING_URL
-      let first = true
-      for (let se of this.shopping_list) {
-        if (first) {
-          url += `?r=[${se.recipe.id},${se.servings}]`
-          first = false
-        } else {
-          url += `&r=[${se.recipe.id},${se.servings}]`
-        }
-      }
-      window.open(url)
-    },
-    setStartingDay(days) {
-      if (this.settings.startingDayOfWeek + days < 0) {
-        this.settings.startingDayOfWeek = 6
-      } else if (this.settings.startingDayOfWeek + days > 6) {
-        this.settings.startingDayOfWeek = 0
-      } else {
-        this.settings.startingDayOfWeek = this.settings.startingDayOfWeek + days
-      }
-    },
-    newMealType() {
-      let apiClient = new ApiApiFactory()
-
-      apiClient.createMealType({name: this.$t('Meal_Type')}).then(e => {
-        this.periodChangedCallback(this.current_period)
-      }).catch(error => {
-        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-      })
-
-      this.refreshMealTypes()
-    },
-    sortMealTypes() {
-      this.meal_types.forEach(function (element, index) {
-        element.order = index
-      });
-      let updated = 0
-      this.meal_types.forEach((meal_type) => {
-        let apiClient = new ApiApiFactory()
-
-        apiClient.updateMealType(meal_type.id, meal_type).then(e => {
-          if (updated === (this.meal_types.length - 1)) {
-            this.periodChangedCallback(this.current_period)
-          } else {
-            updated++
-          }
-        }).catch(error => {
-          StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-        })
-      })
     },
     computed: {
-        modal_title: function() {
+        modal_title: function () {
             if (this.entryEditing.id === -1) {
                 return this.$t("Create_Meal_Plan_Entry")
             } else {
                 return this.$t("Edit_Meal_Plan_Entry")
             }
         },
-        entryEditing_initial_recipe: function() {
+        entryEditing_initial_recipe: function () {
             if (this.entryEditing.recipe != null) {
                 return [this.entryEditing.recipe]
             } else {
                 return []
             }
         },
-        entryEditing_initial_meal_type: function() {
+        entryEditing_initial_meal_type: function () {
             if (this.entryEditing.meal_type != null) {
                 return [this.entryEditing.meal_type]
             } else {
                 return []
             }
         },
-        plan_items: function() {
+        plan_items: function () {
             let items = []
             this.plan_entries.forEach((entry) => {
                 items.push(this.buildItem(entry))
             })
             return items
         },
-        detailed_items: function() {
+        detailed_items: function () {
             return this.settings.displayPeriodUom === "week"
         },
-        dayNames: function() {
+        dayNames: function () {
             let options = []
             this.getFormattedWeekdayNames(this.userLocale, "long", 0).forEach((day, index) => {
                 options.push({ text: day, value: index })
             })
             return options
         },
-        userLocale: function() {
+        userLocale: function () {
             return this.getDefaultBrowserLocale
         },
-        item_height: function() {
+        item_height: function () {
             if (this.settings.displayPeriodUom === "week") {
                 return "10rem"
             } else {
@@ -607,12 +399,13 @@ export default {
         },
     },
     mounted() {
-        this.$nextTick(function() {
+        this.$nextTick(function () {
             if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
                 this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
         this.$root.$on("change", this.updateEmoji)
+        this.$i18n.locale = window.CUSTOM_LOCALE
     },
     watch: {
         settings: {
@@ -657,7 +450,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient
-                .createMealType({ name: "Mealtype" })
+                .createMealType({ name: this.$t("Meal_Type") })
                 .then((e) => {
                     this.periodChangedCallback(this.current_period)
                 })
@@ -668,7 +461,7 @@ export default {
             this.refreshMealTypes()
         },
         sortMealTypes() {
-            this.meal_types.forEach(function(element, index) {
+            this.meal_types.forEach(function (element, index) {
                 element.order = index
             })
             let updated = 0
@@ -721,7 +514,7 @@ export default {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
                 })
         },
-        updateEmoji: function(field, value) {
+        updateEmoji: function (field, value) {
             this.meal_types.forEach((meal_type) => {
                 if (meal_type.editing) {
                     meal_type.icon = value
@@ -870,7 +663,7 @@ export default {
     },
     directives: {
         hover: {
-            inserted: function(el) {
+            inserted: function (el) {
                 el.addEventListener("mouseenter", () => {
                     el.classList.add("shadow")
                 })
@@ -885,16 +678,17 @@ export default {
 
 <style>
 .slide-fade-enter-active {
-  transition: all .3s ease;
+    transition: all 0.3s ease;
 }
 
 .slide-fade-leave-active {
-  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.slide-fade-enter, .slide-fade-leave-to {
-  transform: translateY(10px);
-  opacity: 0;
+.slide-fade-enter,
+.slide-fade-leave-to {
+    transform: translateY(10px);
+    opacity: 0;
 }
 
 .calender-parent {
