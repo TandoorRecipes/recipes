@@ -48,7 +48,8 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodI
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
+from cookbook.schemas import (FilterSchema, QueryOnlySchema, QueryParam, QueryParamAutoSchema,
+                              RecipeSchema, TreeSchema)
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, ImportLogSerializer,
@@ -536,8 +537,7 @@ class StepViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
     query_params = [
-        QueryParam(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'),
-                   qtype='int'),
+        QueryParam(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), qtype='int'),
         QueryParam(name='query', description=_('Query string matched (fuzzy) against object name.'), qtype='string'),
     ]
     schema = QueryParamAutoSchema()

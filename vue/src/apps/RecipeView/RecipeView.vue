@@ -226,7 +226,6 @@ export default {
         updateStartTime: function (e) {
             this.start_time = e
         },
-
         updateIngredientCheckedState: function (e) {
             for (let step of this.recipe.steps) {
                 for (let ingredient of step.ingredients) {
