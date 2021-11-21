@@ -48,8 +48,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodI
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import (FilterSchema, QueryOnlySchema, QueryParam, QueryParamAutoSchema,
-                              RecipeSchema, TreeSchema)
+from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, ImportLogSerializer,
