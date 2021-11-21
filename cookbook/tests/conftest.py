@@ -10,7 +10,7 @@ from django_scopes import scopes_disabled
 from pytest_factoryboy import register
 
 from cookbook.models import Food, Ingredient, Recipe, Space, Step, Unit
-from cookbook.tests.factories import FoodFactory, SpaceFactory
+from cookbook.tests.factories import SpaceFactory
 
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
