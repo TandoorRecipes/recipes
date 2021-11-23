@@ -7,21 +7,21 @@
 # Henrique Diogo Silva <hdiogosilva@gmail.com>, 2020
 # João Cunha <st0rmss95@gmail.com>, 2020
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: João Cunha <st0rmss95@gmail.com>, 2020\n"
-"Language-Team: Portuguese (https://www.transifex.com/django-recipes/"
-"teams/110507/pt/)\n"
+"PO-Revision-Date: 2021-11-12 20:06+0000\n"
+"Last-Translator: Henrique Silva <hds@mailbox.org>\n"
+"Language-Team: Portuguese <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 4.8\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -32,64 +32,56 @@ msgstr "Ingredientes"
 
 #: .\cookbook\forms.py:54
 msgid "Default unit"
-msgstr ""
+msgstr "Unidade predefinida"
 
 #: .\cookbook\forms.py:55
-#, fuzzy
-#| msgid "Instructions"
 msgid "Use fractions"
-msgstr "Instruções"
+msgstr "Usar frações"
 
 #: .\cookbook\forms.py:56
 msgid "Use KJ"
-msgstr ""
+msgstr "Usar KJ"
 
 #: .\cookbook\forms.py:57
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:58
 msgid "Navbar color"
-msgstr ""
+msgstr "Cor de barra de navegação"
 
 #: .\cookbook\forms.py:59
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Prender barra de navegação"
 
 #: .\cookbook\forms.py:60
 msgid "Default page"
-msgstr ""
+msgstr "Página predefinida"
 
 #: .\cookbook\forms.py:61
-#, fuzzy
-#| msgid "Recipes"
 msgid "Show recent recipes"
-msgstr "Receitas"
+msgstr "Mostrar receitas recentes"
 
 #: .\cookbook\forms.py:62
-#, fuzzy
-#| msgid "Search"
 msgid "Search style"
-msgstr "Procurar"
+msgstr "Estilo de pesquisa"
 
 #: .\cookbook\forms.py:63
 msgid "Plan sharing"
-msgstr ""
+msgstr "Partilha de planos"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Ingredientes"
+msgstr "Casas decimais de ingredientes"
 
 #: .\cookbook\forms.py:65
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Período de sincronização automática"
 
 #: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "Comentários"
 
 #: .\cookbook\forms.py:70
 msgid ""
@@ -106,16 +98,20 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Utilizar frações para apresentar quantidades de ingredientes decimais ("
+"converter quantidades decimais para frações automáticamente)"
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Mostrar quantidades de energia nutricional em joules em vez de calorias"
 
 #: .\cookbook\forms.py:78
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
 msgstr ""
+"Utilizadores com os quais novos planos de refeições/listas de compras devem "
+"ser partilhados por defeito."
 
 #: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
@@ -127,7 +123,7 @@ msgstr "Número de casas decimais para arredondamentos."
 
 #: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "Ativar a funcionalidade comentar receitas."
 
 #: .\cookbook\forms.py:84
 msgid ""
@@ -136,10 +132,15 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"Definir esta opção como 0 desativará a sincronização automática. Ao "
+"visualizar uma lista de compras, a lista é atualizada a cada período aqui "
+"definido para sincronizar as alterações que outro utilizador possa ter "
+"feito. Útil ao fazer compras com vários utilizadores, mas pode aumentar o "
+"uso de dados móveis."
 
 #: .\cookbook\forms.py:87
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "Mantém a barra de navegação no topo da página."
 
 #: .\cookbook\forms.py:103
 msgid ""
@@ -147,7 +148,7 @@ msgid ""
 "instead"
 msgstr ""
 "Ambos os campos são opcionais. Se nenhum for preenchido o nome de utilizador "
-"será apresentado."
+"será apresentado"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:289
 #: .\cookbook\templates\url_import.html:158
@@ -179,13 +180,15 @@ msgstr "UID de armazenamento"
 
 #: .\cookbook\forms.py:157
 msgid "Default"
-msgstr ""
+msgstr "Predefinição"
 
 #: .\cookbook\forms.py:168 .\cookbook\templates\url_import.html:94
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Para evitar repetições, receitas com o mesmo nome de receitas já existentes "
+"são ignoradas. Marque esta caixa para importar tudo."
 
 #: .\cookbook\forms.py:190
 msgid "Add your comment: "
@@ -211,11 +214,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:258 .\cookbook\views\edit.py:166
 msgid "Storage"
-msgstr ""
+msgstr "Armazenamento"
 
 #: .\cookbook\forms.py:260
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #: .\cookbook\forms.py:265
 msgid "Search String"
@@ -245,49 +248,60 @@ msgstr ""
 
 #: .\cookbook\forms.py:353
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Número máximo de utilizadores alcançado."
 
 #: .\cookbook\forms.py:359
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Endereço email já utilizado!"
 
 #: .\cookbook\forms.py:367
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"Um endereço de email não é obrigatório mas se fornecido será enviada uma "
+"mensagem ao utilizador."
 
 #: .\cookbook\forms.py:382
 msgid "Name already taken."
-msgstr ""
+msgstr "Nome já existente."
 
 #: .\cookbook\forms.py:393
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Aceitar Termos e Condições"
 
 #: .\cookbook\forms.py:425
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Determina o quão difusa uma pesquisa é se esta utilizar uma correspondência "
+"de semelhança de trigrama (valores mais baixos significam que mais erros são "
+"ignorados)."
 
 #: .\cookbook\forms.py:435
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
+"Selecionar o método de pesquisa.  Uma descrição completa das opções pode ser "
+"encontrada <a href=\"/docs/search/\">aqui</a>."
 
 #: .\cookbook\forms.py:436
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Utilizar correspondência difusa em unidades, palavras-chave e ingredientes "
+"ao editar e importar receitas."
 
 #: .\cookbook\forms.py:438
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Campos de pesquisa que ignoram pontuação.  Esta opção pode aumentar ou "
+"diminuir a qualidade de pesquisa dependendo da língua em uso"
 
 #: .\cookbook\forms.py:440
 msgid ""

@@ -191,13 +191,12 @@ def import_url(request):
 
             ingredient.save()
             step.ingredients.add(ingredient)
-            print(ingredient)
 
         if 'image' in data and data['image'] != '' and data['image'] is not None:
             try:
                 response = requests.get(data['image'])
 
-                img, filetype = handle_image(request, BytesIO(response.content))
+                img, filetype = handle_image(request, File(BytesIO(response.content), name='image'))
                 recipe.image = File(
                     img, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}'
                 )
