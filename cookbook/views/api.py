@@ -48,7 +48,7 @@ from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema
+from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema, QueryOnlySchema
 from cookbook.serializer import (FoodSerializer, IngredientSerializer,
                                  KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookSerializer,
@@ -410,7 +410,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space)
         return super().get_queryset()
 
 
@@ -498,9 +498,16 @@ class StepViewSet(viewsets.ModelViewSet):
     queryset = Step.objects
     serializer_class = StepSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
+    schema = QueryOnlySchema()
 
     def get_queryset(self):
-        return self.queryset.filter(recipe__space=self.request.space)
+        queryset = self.queryset.filter(recipe__space=self.request.space)
+
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(Q(name__icontains=query) | Q(recipe__name__icontains=query))
+        return queryset
 
 
 class RecipePagination(PageNumberPagination):

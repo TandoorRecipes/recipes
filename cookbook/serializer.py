@@ -34,7 +34,8 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
         try:
-            if bool(int(self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+            if bool(int(
+                    self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
                 return fields
         except AttributeError:
             pass
@@ -49,11 +50,13 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 
     def get_image(self, obj):
         # TODO add caching
-        recipes = Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')
+        recipes = Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).exclude(
+            image__isnull=True).exclude(image__exact='')
         try:
             if recipes.count() == 0 and obj.has_children():
                 obj__in = self.recipe_filter + '__in'
-                recipes = Recipe.objects.filter(**{obj__in: obj.get_descendants()}, space=obj.space).exclude(image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
+                recipes = Recipe.objects.filter(**{obj__in: obj.get_descendants()}, space=obj.space).exclude(
+                    image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
         except AttributeError:
             # probably not a tree
             pass
@@ -404,7 +407,10 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     class Meta:
         model = Food
-        fields = ('id', 'name', 'description', 'recipe', 'ignore_shopping', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe')
+        fields = (
+            'id', 'name', 'description', 'recipe', 'ignore_shopping', 'supermarket_category', 'image', 'parent',
+            'numchild',
+            'numrecipe')
         read_only_fields = ('id', 'numchild', 'parent', 'image')
 
 
@@ -425,12 +431,13 @@ class IngredientSerializer(WritableNestedModelSerializer):
         )
 
 
-class StepSerializer(WritableNestedModelSerializer):
+class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     ingredients = IngredientSerializer(many=True)
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
     file = UserFileViewSerializer(allow_null=True, required=False)
     step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
+    recipe_filter = 'steps'
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -442,6 +449,9 @@ class StepSerializer(WritableNestedModelSerializer):
     def get_ingredients_markdown(self, obj):
         return obj.get_instruction_render()
 
+    def get_step_recipes(self, obj):
+        return list(obj.recipe_set.values_list('id', flat=True).all())
+
     def get_step_recipe_data(self, obj):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
@@ -452,7 +462,7 @@ class StepSerializer(WritableNestedModelSerializer):
         model = Step
         fields = (
             'id', 'name', 'type', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data'
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data', 'numrecipe'
         )
 
 

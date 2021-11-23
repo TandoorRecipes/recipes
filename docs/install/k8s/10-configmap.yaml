@@ -4,12 +4,14 @@ metadata:
   labels:
     app: recipes
   name: recipes-nginx-config
+  namespace: default
 data:
   nginx-config: |-
     events {
       worker_connections 1024;
     }
     http {
+      include mime.types;
       server {
         listen 80;
         server_name _;
@@ -23,11 +25,6 @@ data:
         # serve media files
         location /media/ {
           alias /media/;
-        }
-        # pass requests for dynamic content to gunicorn
-        location / {
-          proxy_set_header Host $host;
-          proxy_pass http://localhost:8080;
         }
       }
     }
