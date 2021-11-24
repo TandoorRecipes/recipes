@@ -2,11 +2,11 @@ import io
 import json
 import re
 import uuid
+from collections import OrderedDict
 
 import requests
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
-from collections import OrderedDict
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -15,12 +15,12 @@ from django.core.files import File
 from django.db.models import Case, ProtectedError, Q, Value, When
 from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
-from django_scopes import scopes_disabled
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
-from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
+from recipe_scrapers import NoSchemaFoundInWildMode, WebsiteNotImplementedError, scrape_me
 from rest_framework import decorators, status, viewsets
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
@@ -28,41 +28,39 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
-from treebeard.exceptions import PathOverflow, InvalidMoveToDescendant, InvalidPosition
+from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
-                                               CustomIsOwner, CustomIsShare,
-                                               CustomIsShared, CustomIsUser,
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
+                                               CustomIsShare, CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-
-from cookbook.helper.recipe_search import search_recipes, get_facet
+from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
-from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
-                             MealType, Recipe, RecipeBook, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Step,
-                             Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation, Automation)
+from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, ImportLog, Ingredient,
+                             Keyword, MealPlan, MealType, Recipe, RecipeBook, RecipeBookEntry,
+                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Step,
+                             Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
+                             Sync, SyncLog, Unit, UserFile, UserPreference, ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema, QueryOnlySchema
-from cookbook.serializer import (FoodSerializer, IngredientSerializer,
-                                 KeywordSerializer, MealPlanSerializer,
-                                 MealTypeSerializer, RecipeBookSerializer,
-                                 RecipeImageSerializer, RecipeSerializer,
-                                 ShoppingListAutoSyncSerializer,
-                                 ShoppingListEntrySerializer,
-                                 ShoppingListRecipeSerializer,
-                                 ShoppingListSerializer, StepSerializer,
-                                 StorageSerializer, SyncLogSerializer,
-                                 SyncSerializer, UnitSerializer,
-                                 UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
-                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer, AutomationSerializer)
+from cookbook.schemas import FilterSchema, QueryOnlySchema, RecipeSchema, TreeSchema
+from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
+                                 CookLogSerializer, FoodSerializer, ImportLogSerializer,
+                                 IngredientSerializer, KeywordSerializer, MealPlanSerializer,
+                                 MealTypeSerializer, RecipeBookEntrySerializer,
+                                 RecipeBookSerializer, RecipeImageSerializer,
+                                 RecipeOverviewSerializer, RecipeSerializer,
+                                 ShoppingListAutoSyncSerializer, ShoppingListEntrySerializer,
+                                 ShoppingListRecipeSerializer, ShoppingListSerializer,
+                                 StepSerializer, StorageSerializer,
+                                 SupermarketCategoryRelationSerializer,
+                                 SupermarketCategorySerializer, SupermarketSerializer,
+                                 SyncLogSerializer, SyncSerializer, UnitSerializer,
+                                 UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
+                                 ViewLogSerializer)
 from recipes import settings
 
 
@@ -547,7 +545,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return super().get_queryset()
 
+    def list(self, request, *args, **kwargs):
+        if self.request.GET.get('debug', False):
+            return JsonResponse({
+                'new': str(self.get_queryset().query),
+                'old': str(old_search(request).query)
+            })
+        return super().list(request, *args, **kwargs)
+
     # TODO write extensive tests for permissions
+
     def get_serializer_class(self):
         if self.action == 'list':
             return RecipeOverviewSerializer
