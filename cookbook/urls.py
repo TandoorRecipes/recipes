@@ -2,17 +2,17 @@ from pydoc import locate
 
 from django.urls import include, path
 from django.views.generic import TemplateView
-from recipes.version import VERSION_NUMBER
-from rest_framework import routers, permissions
+from rest_framework import permissions, routers
 from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
+from recipes.settings import DEBUG
+from recipes.version import VERSION_NUMBER
 
-from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
-                     RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
-                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, get_model_name, Automation,
-                     UserFile, Step)
-from .views import api, data, delete, edit, import_export, lists, new, views, telegram
+from .models import (Automation, Comment, Food, InviteLink, Keyword, MealPlan, Recipe, RecipeBook,
+                     RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage, Supermarket,
+                     SupermarketCategory, Sync, SyncLog, Unit, UserFile, get_model_name)
+from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 
 router = routers.DefaultRouter()
 router.register(r'user-name', api.UserNameViewSet, basename='username')
@@ -68,8 +68,6 @@ urlpatterns = [
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
-    path('test/', views.test, name='view_test'),
-    path('test2/', views.test2, name='view_test2'),
 
     path('import/', import_export.import_recipe, name='view_import'),
     path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
@@ -189,3 +187,7 @@ for m in vue_models:
                 f'list/{url_name}/', c, name=f'list_{py_name}'
             )
         )
+
+if DEBUG:
+    urlpatterns.append(path('test/', views.test, name='view_test'))
+    urlpatterns.append(path('test2/', views.test2, name='view_test2'))
