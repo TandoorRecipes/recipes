@@ -143,16 +143,8 @@ export default {
       let apiClient = new ApiApiFactory()
 
       apiClient.listUserPreferences().then(result => {
-        let default_share = result.data[0].plan_share;
-
-        if (default_share !== []) {
-          let apiClient = new ApiApiFactory()
-
-          apiClient.listUsers(default_share).then(result => {
-            if (this.entry.id === -1) {
-              this.entryEditing.shared = result.data
-            }
-          })
+        if (this.entry.id === -1) {
+          this.entryEditing.shared = result.data[0].plan_share
         }
       })
     },
