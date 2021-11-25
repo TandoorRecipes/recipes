@@ -137,6 +137,7 @@ class UserNameSerializer(WritableNestedModelSerializer):
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
+    plan_share = UserNameSerializer(many=True)
 
     def create(self, validated_data):
         if validated_data['user'] != self.context['request'].user:
