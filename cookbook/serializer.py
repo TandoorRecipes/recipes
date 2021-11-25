@@ -620,6 +620,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')  # TODO deprecate once old meal plan was removed
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
+    shared = UserNameSerializer(many=True)
 
     def get_note_markdown(self, obj):
         return markdown(obj.note)

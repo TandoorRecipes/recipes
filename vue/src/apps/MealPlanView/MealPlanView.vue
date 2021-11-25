@@ -513,11 +513,17 @@ export default {
         return entry.id === id
       })[0]
     },
-    moveEntry(null_object, target_date) {
+    moveEntry(null_object, target_date, drag_event) {
       this.plan_entries.forEach((entry) => {
         if (entry.id === this.dragged_item.id) {
-          entry.date = target_date
-          this.saveEntry(entry)
+          if (drag_event.ctrlKey) {
+            let new_entry = Object.assign({}, entry)
+            new_entry.date = target_date
+            this.createEntry(new_entry)
+          } else {
+            entry.date = target_date
+            this.saveEntry(entry)
+          }
         }
       })
     },
