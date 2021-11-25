@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="modal_id" size="lg" :title="modal_title" hide-footer aria-label="">
+  <b-modal :id="modal_id" size="lg" :title="modal_title" hide-footer aria-label="" @show="showModal">
     <div class="row">
       <div class="col col-md-12">
         <div class="row">
@@ -60,6 +60,18 @@
                             :placeholder="$t('Servings')"></b-form-input>
             </b-input-group>
             <small tabindex="-1" class="form-text text-muted">{{ $t("Servings") }}</small>
+            <b-form-group class="mt-3">
+              <generic-multiselect required
+                                   @change="entryEditing.shared = $event.val" parent_variable="entryEditing.shared"
+                                   :label="'username'"
+                                   :model="Models.USER_NAME"
+                                   style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                   v-bind:placeholder="$t('Share')" :limit="10"
+                                   :multiple="true"
+                                   :initial_selection="entryEditing.shared"
+              ></generic-multiselect>
+              <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
+            </b-form-group>
           </div>
           <div class="col-lg-6 d-none d-lg-block d-xl-block">
             <recipe-card :recipe="entryEditing.recipe" v-if="entryEditing.recipe != null"></recipe-card>
@@ -103,7 +115,7 @@ export default {
     allow_delete: {
       type: Boolean,
       default: true
-    },
+    }
   },
   mixins: [ApiMixin],
   components: {
@@ -114,7 +126,8 @@ export default {
     return {
       entryEditing: {},
       missing_recipe: false,
-      missing_meal_type: false
+      missing_meal_type: false,
+      default_plan_share: []
     }
   },
   watch: {
@@ -126,6 +139,23 @@ export default {
     }
   },
   methods: {
+    showModal() {
+      let apiClient = new ApiApiFactory()
+
+      apiClient.listUserPreferences().then(result => {
+        let default_share = result.data[0].plan_share;
+
+        if (default_share !== []) {
+          let apiClient = new ApiApiFactory()
+
+          apiClient.listUsers(default_share).then(result => {
+            if (this.entry.id === -1) {
+              this.entryEditing.shared = result.data
+            }
+          })
+        }
+      })
+    },
     editEntry() {
       this.missing_meal_type = false
       this.missing_recipe = false
@@ -151,6 +181,13 @@ export default {
       this.missing_meal_type = false
       if (event.val != null) {
         this.entryEditing.meal_type = event.val;
+      } else {
+        this.entryEditing.meal_type = null;
+      }
+    },
+    selectShared(event) {
+      if (event.val != null) {
+        this.entryEditing.shared = event.val;
       } else {
         this.entryEditing.meal_type = null;
       }
