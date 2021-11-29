@@ -62,7 +62,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             # probably not a tree
             pass
         if recipes.count() != 0:
-            return recipes.order_by('?')[:1][0].image.url
+            return random.choice(recipes).image.url
         else:
             return None
 
@@ -96,7 +96,7 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if (type(data) == QuerySet and data.query.is_sliced):
+        if (type(data) == QuerySet and data.query.is_sliced) or not self.context.get('request', None):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:

@@ -107,7 +107,7 @@ import { makeToast, resolveDjangoUrl, ResolveUrlMixin, StandardToasts } from "@/
 import CookLog from "@/components/CookLog"
 import axios from "axios"
 import AddRecipeToBook from "@/components/Modals/AddRecipeToBook"
-import MealPlanEditModal from "@/components/Modals/MealPlanEditModal"
+import MealPlanEditModal from "@/components/MealPlanEditModal"
 import ShoppingModal from "@/components/Modals/ShoppingModal"
 import moment from "moment"
 import Vue from "vue"
