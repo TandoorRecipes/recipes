@@ -84,12 +84,7 @@
                                                 <h5>
                                                     {{ meal_type.icon }} {{ meal_type.name
                                                     }}<span class="float-right text-primary"
-                                                        ><i
-                                                            class="fa"
-                                                            v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
-                                                            @click="editOrSaveMealType(index)"
-                                                            aria-hidden="true"
-                                                        ></i
+                                                        ><i class="fa" v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }" @click="editOrSaveMealType(index)" aria-hidden="true"></i
                                                     ></span>
                                                 </h5>
                                             </div>
@@ -132,7 +127,7 @@
                         openEntryEdit(contextData.originalItem.entry)
                     "
                 >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -140,7 +135,7 @@
                         moveEntryLeft(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -148,7 +143,7 @@
                         moveEntryRight(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -156,7 +151,7 @@
                         createEntry(contextData.originalItem.entry)
                     "
                 >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -164,7 +159,7 @@
                         addToShopping(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -172,7 +167,7 @@
                         deleteEntry(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2 text-danger" href="#"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
+                    <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
                 </ContextMenuItem>
             </template>
         </ContextMenu>
@@ -210,61 +205,7 @@
                             </b-button-group>
                         </div>
                     </div>
-                    <b-form-checkbox
-                        id="checkbox-1"
-                        v-model="meal_type.default"
-                        name="default_checkbox"
-                        class="mb-2">
-                      {{ $t('Default') }}
-                    </b-form-checkbox>
-                    <button class="btn btn-danger" @click="deleteMealType(index)">{{ $t('Delete') }}</button>
-                    <button class="btn btn-primary float-right" @click="editOrSaveMealType(index)">{{
-                        $t('Save')
-                      }}
-                    </button>
-                  </b-card-body>
-                </b-card>
-              </draggable>
-              <button class="btn btn-success float-right mt-1" @click="newMealType"><i class="fas fa-plus"></i>
-                {{ $t('New_Meal_Type') }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </b-tab>
-    </b-tabs>
-    <ContextMenu ref="menu">
-      <template #menu="{ contextData }">
-        <ContextMenuItem @click="$refs.menu.close();openEntryEdit(contextData.originalItem.entry)">
-          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
-        </ContextMenuItem>
-        <ContextMenuItem @click="$refs.menu.close();moveEntryLeft(contextData)">
-          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
-        </ContextMenuItem>
-        <ContextMenuItem @click="$refs.menu.close();moveEntryRight(contextData)">
-          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
-        </ContextMenuItem>
-        <ContextMenuItem @click="$refs.menu.close();createEntry(contextData.originalItem.entry)">
-          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
-        </ContextMenuItem>
-        <ContextMenuItem @click="$refs.menu.close();addToShopping(contextData)">
-          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
-        </ContextMenuItem>
-        <ContextMenuItem @click="$refs.menu.close();deleteEntry(contextData)">
-          <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
-        </ContextMenuItem>
-      </template>
-    </ContextMenu>
-    <meal-plan-edit-modal :entry="entryEditing" :entryEditing_initial_recipe="entryEditing_initial_recipe"
-                          :entry-editing_initial_meal_type="entryEditing_initial_meal_type" :modal_title="modal_title"
-                          :edit_modal_show="edit_modal_show" @save-entry="editEntry"
-                          @delete-entry="deleteEntry" @reload-meal-types="refreshMealTypes"></meal-plan-edit-modal>
-    <template>
-      <div>
-        <b-sidebar id="sidebar-shopping" :title="$t('Shopping_list')" backdrop right shadow="sm">
-          <div class="row p-1 no-gutters">
-            <div class="col-12 mt-1" v-if="shopping_list.length === 0">
-              <p class="p-3">{{ $t("Shopping_List_Empty") }}</p>
+                </b-sidebar>
             </div>
         </template>
         <transition name="slide-fade">
@@ -315,7 +256,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import MealPlanCard from "@/components/MealPlanCard"
-import MealPlanEditModal from "@/components/Modals/MealPlanEditModal"
+import MealPlanEditModal from "@/components/MealPlanEditModal"
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader"
 import EmojiInput from "@/components/Modals/EmojiInput"
 
@@ -458,124 +399,280 @@ export default {
                 this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
-      } else {
-        this.createEntry(edit_entry)
-      }
+        this.$root.$on("change", this.updateEmoji)
+        this.$i18n.locale = window.CUSTOM_LOCALE
     },
-    setShowDate(d) {
-      this.showDate = d;
+    watch: {
+        settings: {
+            handler() {
+                this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, "360d")
+            },
+            deep: true,
+        },
     },
-    createEntryClick(data) {
-      this.entryEditing = this.options.entryEditing
-      this.entryEditing.date = moment(data).format('YYYY-MM-DD')
-      this.$bvModal.show(`edit-modal`)
-    },
-    findEntry(id) {
-      return this.plan_entries.filter(entry => {
-        return entry.id === id
-      })[0]
-    },
-    moveEntry(null_object, target_date, drag_event) {
-      this.plan_entries.forEach((entry) => {
-        if (entry.id === this.dragged_item.id) {
-          if (drag_event.ctrlKey) {
-            let new_entry = Object.assign({}, entry)
-            new_entry.date = target_date
-            this.createEntry(new_entry)
-          } else {
-            entry.date = target_date
-            this.saveEntry(entry)
-          }
-        }
-      })
-    },
-    moveEntryLeft(data) {
-      this.plan_entries.forEach((entry) => {
-        if (entry.id === data.id) {
-          entry.date = moment(entry.date).subtract(1, 'd')
-          this.saveEntry(entry)
-        }
-      })
-    },
-    moveEntryRight(data) {
-      this.plan_entries.forEach((entry) => {
-        if (entry.id === data.id) {
-          entry.date = moment(entry.date).add(1, 'd')
-          this.saveEntry(entry)
-        }
-      })
-    },
-    deleteEntry(data) {
-      this.plan_entries.forEach((entry, index, list) => {
-        if (entry.id === data.id) {
-          let apiClient = new ApiApiFactory()
+    methods: {
+        addToShopping(entry) {
+            if (entry.originalItem.entry.recipe !== null) {
+                this.shopping_list.push(entry.originalItem.entry)
+                makeToast(this.$t("Success"), this.$t("Added_To_Shopping_List"), "success")
+            } else {
+                makeToast(this.$t("Failure"), this.$t("Cannot_Add_Notes_To_Shopping"), "danger")
+            }
+        },
+        saveShoppingList() {
+            let url = window.SHOPPING_URL
+            let first = true
+            for (let se of this.shopping_list) {
+                if (first) {
+                    url += `?r=[${se.recipe.id},${se.servings}]`
+                    first = false
+                } else {
+                    url += `&r=[${se.recipe.id},${se.servings}]`
+                }
+            }
+            window.open(url)
+        },
+        setStartingDay(days) {
+            if (this.settings.startingDayOfWeek + days < 0) {
+                this.settings.startingDayOfWeek = 6
+            } else if (this.settings.startingDayOfWeek + days > 6) {
+                this.settings.startingDayOfWeek = 0
+            } else {
+                this.settings.startingDayOfWeek = this.settings.startingDayOfWeek + days
+            }
+        },
+        newMealType() {
+            let apiClient = new ApiApiFactory()
 
-          apiClient.destroyMealPlan(entry.id).then(e => {
-            list.splice(index, 1)
-          }).catch(error => {
-            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-          })
-        }
-      })
-    },
-    entryClick(data) {
-      let entry = this.findEntry(data.id)
-      this.openEntryEdit(entry)
-    },
-    openContextMenu($event, value) {
-      this.$refs.menu.open($event, value)
-    },
-    openEntryEdit(entry) {
-      this.$bvModal.show(`edit-modal`)
-      this.entryEditing = entry
-      this.entryEditing.date = moment(entry.date).format('YYYY-MM-DD')
-      if (this.entryEditing.recipe != null) {
-        this.entryEditing.title_placeholder = this.entryEditing.recipe.name
-      }
-    },
-    periodChangedCallback(date) {
-      this.current_period = date
-      let apiClient = new ApiApiFactory()
+            apiClient
+                .createMealType({ name: this.$t("Meal_Type") })
+                .then((e) => {
+                    this.periodChangedCallback(this.current_period)
+                })
+                .catch((error) => {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                })
 
-      apiClient.listMealPlans({
-        query: {
-          from_date: moment(date.periodStart).format('YYYY-MM-DD'),
-          to_date: moment(date.periodEnd).format('YYYY-MM-DD')
-        }
-      }).then(result => {
-        this.plan_entries = result.data
-      })
-      this.refreshMealTypes()
+            this.refreshMealTypes()
+        },
+        sortMealTypes() {
+            this.meal_types.forEach(function (element, index) {
+                element.order = index
+            })
+            let updated = 0
+            this.meal_types.forEach((meal_type) => {
+                let apiClient = new ApiApiFactory()
+
+                apiClient
+                    .updateMealType(meal_type.id, meal_type)
+                    .then((e) => {
+                        if (updated === this.meal_types.length - 1) {
+                            this.periodChangedCallback(this.current_period)
+                        } else {
+                            updated++
+                        }
+                    })
+                    .catch((error) => {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    })
+            })
+        },
+        editOrSaveMealType(index) {
+            let meal_type = this.meal_types[index]
+            if (meal_type.editing) {
+                this.$set(this.meal_types[index], "editing", false)
+                let apiClient = new ApiApiFactory()
+
+                apiClient
+                    .updateMealType(this.meal_types[index].id, this.meal_types[index])
+                    .then((e) => {
+                        this.periodChangedCallback(this.current_period)
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    })
+                    .catch((error) => {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    })
+            } else {
+                this.$set(this.meal_types[index], "editing", true)
+            }
+        },
+        deleteMealType(index) {
+            let apiClient = new ApiApiFactory()
+
+            apiClient
+                .destroyMealType(this.meal_types[index].id)
+                .then((e) => {
+                    this.periodChangedCallback(this.current_period)
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                })
+                .catch((error) => {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                })
+        },
+        updateEmoji: function (field, value) {
+            this.meal_types.forEach((meal_type) => {
+                if (meal_type.editing) {
+                    meal_type.icon = value
+                }
+            })
+        },
+        editEntry(edit_entry) {
+            if (edit_entry.id !== -1) {
+                this.plan_entries.forEach((entry, index) => {
+                    if (entry.id === edit_entry.id) {
+                        this.$set(this.plan_entries, index, edit_entry)
+                        this.saveEntry(this.plan_entries[index])
+                    }
+                })
+            } else {
+                this.createEntry(edit_entry)
+            }
+        },
+        setShowDate(d) {
+            this.showDate = d
+        },
+        createEntryClick(data) {
+            this.entryEditing = this.options.entryEditing
+            this.entryEditing.date = moment(data).format("YYYY-MM-DD")
+            this.$bvModal.show(`edit-modal`)
+        },
+        findEntry(id) {
+            return this.plan_entries.filter((entry) => {
+                return entry.id === id
+            })[0]
+        },
+        moveEntry(null_object, target_date, drag_event) {
+            this.plan_entries.forEach((entry) => {
+                if (entry.id === this.dragged_item.id) {
+                    if (drag_event.ctrlKey) {
+                        let new_entry = Object.assign({}, entry)
+                        new_entry.date = target_date
+                        this.createEntry(new_entry)
+                    } else {
+                        entry.date = target_date
+                        this.saveEntry(entry)
+                    }
+                }
+            })
+        },
+        moveEntryLeft(data) {
+            this.plan_entries.forEach((entry) => {
+                if (entry.id === data.id) {
+                    entry.date = moment(entry.date).subtract(1, "d")
+                    this.saveEntry(entry)
+                }
+            })
+        },
+        moveEntryRight(data) {
+            this.plan_entries.forEach((entry) => {
+                if (entry.id === data.id) {
+                    entry.date = moment(entry.date).add(1, "d")
+                    this.saveEntry(entry)
+                }
+            })
+        },
+        deleteEntry(data) {
+            this.plan_entries.forEach((entry, index, list) => {
+                if (entry.id === data.id) {
+                    let apiClient = new ApiApiFactory()
+
+                    apiClient
+                        .destroyMealPlan(entry.id)
+                        .then((e) => {
+                            list.splice(index, 1)
+                        })
+                        .catch((error) => {
+                            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        })
+                }
+            })
+        },
+        entryClick(data) {
+            let entry = this.findEntry(data.id)
+            this.openEntryEdit(entry)
+        },
+        openContextMenu($event, value) {
+            this.$refs.menu.open($event, value)
+        },
+        openEntryEdit(entry) {
+            this.$bvModal.show(`edit-modal`)
+            this.entryEditing = entry
+            this.entryEditing.date = moment(entry.date).format("YYYY-MM-DD")
+            if (this.entryEditing.recipe != null) {
+                this.entryEditing.title_placeholder = this.entryEditing.recipe.name
+            }
+        },
+        periodChangedCallback(date) {
+            this.current_period = date
+            let apiClient = new ApiApiFactory()
+
+            apiClient
+                .listMealPlans({
+                    query: {
+                        from_date: moment(date.periodStart).format("YYYY-MM-DD"),
+                        to_date: moment(date.periodEnd).format("YYYY-MM-DD"),
+                    },
+                })
+                .then((result) => {
+                    this.plan_entries = result.data
+                })
+            this.refreshMealTypes()
+        },
+        refreshMealTypes() {
+            let apiClient = new ApiApiFactory()
+
+            apiClient.listMealTypes().then((result) => {
+                result.data.forEach((meal_type) => {
+                    meal_type.editing = false
+                })
+                this.meal_types = result.data
+            })
+        },
+        saveEntry(entry) {
+            entry.date = moment(entry.date).format("YYYY-MM-DD")
+
+            let apiClient = new ApiApiFactory()
+
+            apiClient.updateMealPlan(entry.id, entry).catch((error) => {
+                StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+            })
+        },
+        createEntry(entry) {
+            entry.date = moment(entry.date).format("YYYY-MM-DD")
+
+            let apiClient = new ApiApiFactory()
+
+            apiClient
+                .createMealPlan(entry)
+                .catch((error) => {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                })
+                .then((entry_result) => {
+                    this.plan_entries.push(entry_result.data)
+                })
+        },
+        buildItem(plan_entry) {
+            //dirty hack to order items within a day
+            let date = moment(plan_entry.date).add(plan_entry.meal_type.order, "m")
+            return {
+                id: plan_entry.id,
+                startDate: date,
+                endDate: date,
+                entry: plan_entry,
+            }
+        },
     },
-    refreshMealTypes() {
-      let apiClient = new ApiApiFactory()
-
-      apiClient.listMealTypes().then(result => {
-        result.data.forEach((meal_type) => {
-          meal_type.editing = false
-        })
-        this.meal_types = result.data
-      })
-    },
-    saveEntry(entry) {
-      entry.date = moment(entry.date).format("YYYY-MM-DD")
-
-      let apiClient = new ApiApiFactory()
-
-      apiClient.updateMealPlan(entry.id, entry).catch(error => {
-        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-      })
-    },
-    createEntry(entry) {
-      entry.date = moment(entry.date).format("YYYY-MM-DD")
-
-      let apiClient = new ApiApiFactory()
-
-      apiClient.createMealPlan(entry).catch(error => {
-        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-      }).then((entry_result) => {
-        this.plan_entries.push(entry_result.data)
-      })
+    directives: {
+        hover: {
+            inserted: function (el) {
+                el.addEventListener("mouseenter", () => {
+                    el.classList.add("shadow")
+                })
+                el.addEventListener("mouseleave", () => {
+                    el.classList.remove("shadow")
+                })
+            },
+        },
     },
 }
 </script>

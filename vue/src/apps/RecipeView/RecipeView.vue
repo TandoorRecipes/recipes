@@ -151,7 +151,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import { apiLoadRecipe } from "@/utils/api"
 
 import StepComponent from "@/components/StepComponent"
-import RecipeContextMenu from "@/components/ContextMenu/RecipeContextMenu"
+import RecipeContextMenu from "@/components/RecipeContextMenu"
 import { ResolveUrlMixin, ToastMixin } from "@/utils/utils"
 
 import PdfViewer from "@/components/PdfViewer"

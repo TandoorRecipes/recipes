@@ -675,7 +675,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(self.serializer_class(qs, many=True).data)
 
 
-# TODO deprecate
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
