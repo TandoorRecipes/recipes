@@ -1,21 +1,96 @@
 <template>
-    <b-modal :id="modal_id" size="lg" :title="modal_title" hide-footer aria-label="">
+    <b-modal :id="modal_id" size="lg" :title="modal_title" hide-footer aria-label="" @show="showModal">
         <div class="row">
             <div class="col col-md-12">
                 <div class="row">
-                    <div class="col-6 col-lg-9">
-                        <b-input-group>
-                            <b-form-input id="TitleInput" v-model="entryEditing.title" :placeholder="entryEditing.title_placeholder" @change="missing_recipe = false"></b-form-input>
-                            <b-input-group-append class="d-none d-lg-block">
-                                <b-button variant="primary" @click="entryEditing.title = ''"><i class="fa fa-eraser"></i></b-button>
-                            </b-input-group-append>
-                        </b-input-group>
-                        <span class="text-danger" v-if="missing_recipe">{{ $t("Title_or_Recipe_Required") }}</span>
-                        <small tabindex="-1" class="form-text text-muted" v-if="!missing_recipe">{{ $t("Title") }}</small>
-                    </div>
-                    <div class="col-6 col-lg-3">
-                        <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date" />
-                        <small tabindex="-1" class="form-text text-muted">{{ $t("Date") }}</small>
+                    <div class="col col-md-12">
+                        <div class="row">
+                            <div class="col-6 col-lg-9">
+                                <b-input-group>
+                                    <b-form-input id="TitleInput" v-model="entryEditing.title" :placeholder="entryEditing.title_placeholder" @change="missing_recipe = false"></b-form-input>
+                                    <b-input-group-append class="d-none d-lg-block">
+                                        <b-button variant="primary" @click="entryEditing.title = ''"><i class="fa fa-eraser"></i></b-button>
+                                    </b-input-group-append>
+                                </b-input-group>
+                                <span class="text-danger" v-if="missing_recipe">{{ $t("Title_or_Recipe_Required") }}</span>
+                                <small tabindex="-1" class="form-text text-muted" v-if="!missing_recipe">{{ $t("Title") }}</small>
+                            </div>
+                            <div class="col-6 col-lg-3">
+                                <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date" />
+                                <small tabindex="-1" class="form-text text-muted">{{ $t("Date") }}</small>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-lg-6 col-xl-6">
+                                <b-form-group>
+                                    <generic-multiselect
+                                        @change="selectRecipe"
+                                        :initial_selection="entryEditing_initial_recipe"
+                                        :label="'name'"
+                                        :model="Models.RECIPE"
+                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                        v-bind:placeholder="$t('Recipe')"
+                                        :limit="10"
+                                        :multiple="false"
+                                    ></generic-multiselect>
+                                    <small tabindex="-1" class="form-text text-muted">{{ $t("Recipe") }}</small>
+                                </b-form-group>
+                                <b-form-group class="mt-3">
+                                    <generic-multiselect
+                                        required
+                                        @change="selectMealType"
+                                        :label="'name'"
+                                        :model="Models.MEAL_TYPE"
+                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                        v-bind:placeholder="$t('Meal_Type')"
+                                        :limit="10"
+                                        :multiple="false"
+                                        :initial_selection="entryEditing_initial_meal_type"
+                                        :allow_create="true"
+                                        :create_placeholder="$t('Create_New_Meal_Type')"
+                                        @new="createMealType"
+                                    ></generic-multiselect>
+                                    <span class="text-danger" v-if="missing_meal_type">{{ $t("Meal_Type_Required") }}</span>
+                                    <small tabindex="-1" class="form-text text-muted" v-if="!missing_meal_type">{{ $t("Meal_Type") }}</small>
+                                </b-form-group>
+                                <b-form-group label-for="NoteInput" :description="$t('Note')" class="mt-3">
+                                    <textarea class="form-control" id="NoteInput" v-model="entryEditing.note" :placeholder="$t('Note')"></textarea>
+                                </b-form-group>
+                                <b-input-group>
+                                    <b-form-input id="ServingsInput" v-model="entryEditing.servings" :placeholder="$t('Servings')"></b-form-input>
+                                </b-input-group>
+                                <small tabindex="-1" class="form-text text-muted">{{ $t("Servings") }}</small>
+                                <b-form-group class="mt-3">
+                                    <generic-multiselect
+                                        required
+                                        @change="entryEditing.shared = $event.val"
+                                        parent_variable="entryEditing.shared"
+                                        :label="'username'"
+                                        :model="Models.USER_NAME"
+                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                        v-bind:placeholder="$t('Share')"
+                                        :limit="10"
+                                        :multiple="true"
+                                        :initial_selection="entryEditing.shared"
+                                    ></generic-multiselect>
+                                    <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
+                                </b-form-group>
+                                <!-- TODO: hide this checkbox if autoadding menuplans, but allow editing on-hand -->
+                                <b-input-group v-if="!autoMealPlan">
+                                    <b-form-checkbox id="AddToShopping" v-model="entryEditing.addshopping" />
+                                    <small tabindex="-1" class="form-text text-muted">{{ $t("AddToShopping") }}</small>
+                                </b-input-group>
+                            </div>
+                            <div class="col-lg-6 d-none d-lg-block d-xl-block">
+                                <recipe-card :recipe="entryEditing.recipe" v-if="entryEditing.recipe != null"></recipe-card>
+                            </div>
+                        </div>
+                        <div class="row mt-3 mb-3">
+                            <div class="col-12">
+                                <b-button variant="danger" @click="deleteEntry" v-if="allow_delete">{{ $t("Delete") }} </b-button>
+                                <b-button class="float-right" variant="primary" @click="editEntry">{{ $t("Save") }}</b-button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -73,11 +148,6 @@
                             ></generic-multiselect>
                             <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
                         </b-form-group>
-                        <!-- TODO: hide this checkbox if autoadding menuplans, but allow editing on-hand -->
-                        <b-input-group v-if="!autoMealPlan">
-                            <b-form-checkbox id="AddToShopping" v-model="entryEditing.addshopping" />
-                            <small tabindex="-1" class="form-text text-muted">{{ $t("AddToShopping") }}</small>
-                        </b-input-group>
                     </div>
                     <div class="col-lg-6 d-none d-lg-block d-xl-block">
                         <recipe-card :recipe="entryEditing.recipe" v-if="entryEditing.recipe != null"></recipe-card>
@@ -215,7 +285,6 @@ export default {
             }
         },
         selectRecipe(event) {
-            console.log(event, this.entryEditing)
             this.missing_recipe = false
             if (event.val != null) {
                 this.entryEditing.recipe = event.val

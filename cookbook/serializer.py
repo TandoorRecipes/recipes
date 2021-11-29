@@ -155,6 +155,7 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin):
 class UserPreferenceSerializer(serializers.ModelSerializer):
     # food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', read_only=True)
     food_ignore_default = serializers.SerializerMethodField('get_ignore_default')
+    plan_share = UserNameSerializer(many=True)
 
     def get_ignore_default(self, obj):
         return FoodInheritFieldSerializer(Food.inherit_fields.difference(obj.space.food_inherit.all()), many=True).data
