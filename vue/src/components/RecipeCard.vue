@@ -8,12 +8,8 @@
                 </a>
             </div>
             <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2" v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
-                <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"
-                    ><i class="fa fa-clock"></i> {{ recipe.working_time }} {{ $t("min") }}
-                </b-badge>
-                <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"
-                    ><i class="fa fa-pause"></i> {{ recipe.waiting_time }} {{ $t("min") }}
-                </b-badge>
+                <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"><i class="fa fa-clock"></i> {{ recipe.working_time }} {{ $t("min") }} </b-badge>
+                <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"><i class="fa fa-pause"></i> {{ recipe.waiting_time }} {{ $t("min") }} </b-badge>
             </div>
         </a>
 
@@ -25,7 +21,7 @@
                 </a>
             </h6>
 
-            <b-card-text style="text-overflow: ellipsis;">
+            <b-card-text style="text-overflow: ellipsis">
                 <template v-if="recipe !== null">
                     <recipe-rating :recipe="recipe"></recipe-rating>
                     <template v-if="recipe.description !== null">
@@ -61,7 +57,7 @@
 </template>
 
 <script>
-import RecipeContextMenu from "@/components/ContextMenu/RecipeContextMenu"
+import RecipeContextMenu from "@/components/RecipeContextMenu"
 import KeywordsComponent from "@/components/KeywordsComponent"
 import { resolveDjangoUrl, ResolveUrlMixin } from "@/utils/utils"
 import RecipeRating from "@/components/RecipeRating"
@@ -86,17 +82,17 @@ export default {
         console.log(this.recipe)
     },
     computed: {
-        detailed: function() {
+        detailed: function () {
             return this.recipe?.steps !== undefined
         },
-        text_length: function() {
+        text_length: function () {
             if (this.detailed) {
                 return 200
             } else {
                 return 120
             }
         },
-        recipe_image: function() {
+        recipe_image: function () {
             if (this.recipe == null || this.recipe.image === null) {
                 return window.IMAGE_PLACEHOLDER
             } else {
@@ -106,7 +102,7 @@ export default {
     },
     methods: {
         // TODO: convert this to genericAPI
-        clickUrl: function() {
+        clickUrl: function () {
             if (this.recipe !== null) {
                 return resolveDjangoUrl("view_recipe", this.recipe.id)
             } else {
@@ -116,7 +112,7 @@ export default {
     },
     directives: {
         hover: {
-            inserted: function(el) {
+            inserted: function (el) {
                 el.addEventListener("mouseenter", () => {
                     el.classList.add("shadow")
                 })
