@@ -5,12 +5,7 @@
                 <div class="row">
                     <div class="col-6 col-lg-9">
                         <b-input-group>
-                            <b-form-input
-                                id="TitleInput"
-                                v-model="entryEditing.title"
-                                :placeholder="entryEditing.title_placeholder"
-                                @change="missing_recipe = false"
-                            ></b-form-input>
+                            <b-form-input id="TitleInput" v-model="entryEditing.title" :placeholder="entryEditing.title_placeholder" @change="missing_recipe = false"></b-form-input>
                             <b-input-group-append class="d-none d-lg-block">
                                 <b-button variant="primary" @click="entryEditing.title = ''"><i class="fa fa-eraser"></i></b-button>
                             </b-input-group-append>
@@ -63,6 +58,21 @@
                             <b-form-input id="ServingsInput" v-model="entryEditing.servings" :placeholder="$t('Servings')"></b-form-input>
                         </b-input-group>
                         <small tabindex="-1" class="form-text text-muted">{{ $t("Servings") }}</small>
+                        <b-form-group class="mt-3">
+                            <generic-multiselect
+                                required
+                                @change="entryEditing.shared = $event.val"
+                                parent_variable="entryEditing.shared"
+                                :label="'username'"
+                                :model="Models.USER_NAME"
+                                style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                v-bind:placeholder="$t('Share')"
+                                :limit="10"
+                                :multiple="true"
+                                :initial_selection="entryEditing.shared"
+                            ></generic-multiselect>
+                            <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
+                        </b-form-group>
                         <!-- TODO: hide this checkbox if autoadding menuplans, but allow editing on-hand -->
                         <b-input-group v-if="!autoMealPlan">
                             <b-form-checkbox id="AddToShopping" v-model="entryEditing.addshopping" />
@@ -123,6 +133,7 @@ export default {
             entryEditing: {},
             missing_recipe: false,
             missing_meal_type: false,
+            default_plan_share: [],
         }
     },
     watch: {
@@ -136,13 +147,23 @@ export default {
             deep: true,
         },
     },
-    mounted: function() {},
+    mounted: function () {},
     computed: {
-        autoMealPlan: function() {
+        autoMealPlan: function () {
             return getUserPreference("mealplan_autoadd_shopping")
         },
     },
     methods: {
+        showModal() {
+            let apiClient = new ApiApiFactory()
+
+            apiClient.listUserPreferences().then((result) => {
+                if (this.entry.id === -1) {
+                    this.entryEditing.shared = result.data[0].plan_share
+                }
+            })
+        },
+
         editEntry() {
             this.missing_meal_type = false
             this.missing_recipe = false
@@ -168,6 +189,13 @@ export default {
             this.missing_meal_type = false
             if (event.val != null) {
                 this.entryEditing.meal_type = event.val
+            } else {
+                this.entryEditing.meal_type = null
+            }
+        },
+        selectShared(event) {
+            if (event.val != null) {
+                this.entryEditing.shared = event.val
             } else {
                 this.entryEditing.meal_type = null
             }
