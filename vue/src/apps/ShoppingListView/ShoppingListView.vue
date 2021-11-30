@@ -6,8 +6,15 @@
                 <b-button variant="link" class="px-0">
                     <i class="btn fas fa-plus-circle fa-lg px-0" @click="entrymode = !entrymode" :class="entrymode ? 'text-success' : 'text-muted'" />
                 </b-button>
-                <b-button variant="link" class="px-0 text-muted">
-                    <i class="btn fas fa-download fa-lg px-0" @click="entrymode = !entrymode" />
+                <b-button variant="link" class="px-0">
+                    <i class="fas fa-download fa-lg nav-link dropdown-toggle text-muted px-0" id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+
+                    <div class="dropdown-menu dropdown-menu-center" aria-labelledby="downloadShoppingLink">
+                        <a class="dropdown-item" @click="download('CSV')"><i class="fas fa-file-import"></i> {{ $t("Download csv") }}</a>
+                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
+                        <a class="dropdown-item" @click="download('clipboard')"><i class="fas fa-plus"></i> {{ $t("copy to clipboard") }}</a>
+                        <a class="dropdown-item" @click="download('markdown')"><i class="fas fa-plus"></i> {{ $t("copy as markdown") }}</a>
+                    </div>
                 </b-button>
                 <b-button variant="link" id="id_filters_button" class="px-0">
                     <i class="btn fas fa-filter text-decoration-none fa-lg px-0" :class="filterApplied ? 'text-danger' : 'text-muted'" />
@@ -19,7 +26,7 @@
             <!-- shopping list tab -->
             <b-tab active>
                 <template #title> <b-spinner v-if="loading" type="border" small></b-spinner> {{ $t("Shopping_list") }} </template>
-                <div class="container">
+                <div class="container" id="shoppinglist">
                     <div class="row">
                         <div class="col col-md-12">
                             <div role="tablist" v-if="items && items.length > 0">
@@ -352,6 +359,7 @@
                 <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
                     <b-form-select v-model="selected_supermarket" :options="supermarkets" text-field="name" value-field="id" size="sm"></b-form-select>
                 </b-form-group>
+                <!-- TODO: shade filters red when they are actually filtering content -->
                 <b-form-group v-bind:label="$t('ShowDelayed')" label-for="popover-input-3" content-cols="1" class="mb-1">
                     <b-form-checkbox v-model="show_delay"></b-form-checkbox>
                 </b-form-group>
@@ -442,6 +450,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import ShoppingLineItem from "@/components/ShoppingLineItem"
+import DownloadPDF from "@/components/Buttons/DownloadPDF"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import GenericPill from "@/components/GenericPill"
 import LookupInput from "@/components/Modals/LookupInput"
@@ -456,7 +465,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingListView",
     mixins: [ApiMixin],
-    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable, LookupInput },
+    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable, LookupInput, DownloadPDF },
 
     data() {
         return {
@@ -644,9 +653,8 @@ export default {
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
-        test(e) {
-            this.new_item.unit = e
-            console.log(e, this.new_item, this.formUnit)
+        download(type) {
+            console.log("you just downloaded", type)
         },
         addItem() {
             let api = new ApiApiFactory()
