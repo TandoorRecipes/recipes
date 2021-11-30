@@ -36,7 +36,10 @@ class UserPreferenceForm(forms.ModelForm):
     prefix = 'preference'
 
     def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
+        if x := kwargs.get('instance', None):
+            space = x.space
+        else:
+            space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
         self.fields['plan_share'].queryset = User.objects.filter(userpreference__space=space).all()
 
@@ -483,7 +486,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
 
         fields = (
             'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
-            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days'
+            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim'
         )
 
         help_texts = {
@@ -498,6 +501,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'default_delay': _('Default number of hours to delay a shopping list entry.'),
             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
             'shopping_recent_days':  _('Days of recent shopping list entries to display.'),
+            'csv_delim': _('Delimiter to use for CSV exports.'),
         }
         labels = {
             'shopping_share': _('Share Shopping List'),
@@ -507,7 +511,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'mealplan_autoinclude_related': _('Include Related'),
             'default_delay': _('Default Delay Hours'),
             'filter_to_supermarket': _('Filter to Supermarket'),
-            'shopping_recent_days': _('Recent Days')
+            'shopping_recent_days': _('Recent Days'),
+            'csv_delim': _('CSV Delimiter'),
         }
 
         widgets = {
