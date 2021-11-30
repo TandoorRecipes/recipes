@@ -1,11 +1,11 @@
 import json
 
 import pytest
-from django.db.models import Subquery, OuterRef
+from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Step, Ingredient
+from cookbook.models import Ingredient, Step
 
 LIST_URL = 'api:step-list'
 DETAIL_URL = 'api:step-detail'
@@ -34,7 +34,7 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
 
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 2
-
+    
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
