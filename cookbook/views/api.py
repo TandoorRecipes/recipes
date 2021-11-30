@@ -46,7 +46,9 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, Impor
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
+
+from cookbook.schemas import FilterSchema, QueryOnlySchema, RecipeSchema, TreeSchema,QueryParamAutoSchema
+
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, FoodSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
@@ -408,7 +410,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space)
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
         return super().get_queryset()
 
 
@@ -564,7 +566,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return super().get_queryset()
 
+    def list(self, request, *args, **kwargs):
+        if self.request.GET.get('debug', False):
+            return JsonResponse({
+                'new': str(self.get_queryset().query),
+                'old': str(old_search(request).query)
+            })
+        return super().list(request, *args, **kwargs)
+
     # TODO write extensive tests for permissions
+
     def get_serializer_class(self):
         if self.action == 'list':
             return RecipeOverviewSerializer

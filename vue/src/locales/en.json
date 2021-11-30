@@ -213,5 +213,6 @@
     "Clear": "Clear",
     "err_move_self": "Cannot move item to itself",
     "nothing": "Nothing to do",
-    "err_merge_self": "Cannot merge item with itself"
+    "err_merge_self": "Cannot merge item with itself",
+    "show_sql": "Show SQL"
 }

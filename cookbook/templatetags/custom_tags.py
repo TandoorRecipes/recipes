@@ -94,10 +94,10 @@ def recipe_last(recipe, user):
 @register.simple_tag
 def page_help(page_name):
     help_pages = {
-        'edit_storage': 'https://vabene1111.github.io/recipes/features/external_recipes/',
-        'view_shopping': 'https://vabene1111.github.io/recipes/features/shopping/',
-        'view_import': 'https://vabene1111.github.io/recipes/features/import_export/',
-        'view_export': 'https://vabene1111.github.io/recipes/features/import_export/',
+        'edit_storage': 'https://docs.tandoor.dev/features/external_recipes/',
+        'view_shopping': 'https://docs.tandoor.dev/features/shopping/',
+        'view_import': 'https://docs.tandoor.dev/features/import_export/',
+        'view_export': 'https://docs.tandoor.dev/features/import_export/',
     }
 
     link = help_pages.get(page_name, '')

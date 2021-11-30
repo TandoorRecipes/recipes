@@ -18,10 +18,10 @@ def test_add(u1_s1, u2_s1):
     with scopes_disabled():
         UserPreference.objects.filter(user=auth.get_user(u1_s1)).delete()
 
-    r = u2_s1.post(reverse(LIST_URL), {'user': auth.get_user(u1_s1).id}, content_type='application/json')
+    r = u2_s1.post(reverse(LIST_URL), {'user': auth.get_user(u1_s1).id, 'plan_share': []}, content_type='application/json')
     assert r.status_code == 404
 
-    r = u1_s1.post(reverse(LIST_URL), {'user': auth.get_user(u1_s1).id}, content_type='application/json')
+    r = u1_s1.post(reverse(LIST_URL), {'user': auth.get_user(u1_s1).id, 'plan_share': []}, content_type='application/json')
     assert r.status_code == 200
 
 
