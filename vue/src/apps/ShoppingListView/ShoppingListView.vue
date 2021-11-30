@@ -1,13 +1,16 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
-        <div class="row  float-top">
+        <div class="row float-top">
             <div class="offset-md-10 col-md-2 no-gutter text-right">
                 <b-button variant="link" class="px-0">
                     <i class="btn fas fa-plus-circle fa-lg px-0" @click="entrymode = !entrymode" :class="entrymode ? 'text-success' : 'text-muted'" />
                 </b-button>
+                <b-button variant="link" class="px-0 text-muted">
+                    <i class="btn fas fa-download fa-lg px-0" @click="entrymode = !entrymode" />
+                </b-button>
                 <b-button variant="link" id="id_filters_button" class="px-0">
-                    <i class="btn fas fa-filter text-decoration-none  fa-lg px-0" :class="filterApplied ? 'text-danger' : 'text-muted'" />
+                    <i class="btn fas fa-filter text-decoration-none fa-lg px-0" :class="filterApplied ? 'text-danger' : 'text-muted'" />
                 </b-button>
             </div>
         </div>
@@ -21,7 +24,7 @@
                         <div class="col col-md-12">
                             <div role="tablist" v-if="items && items.length > 0">
                                 <div class="row justify-content-md-center w-75" v-if="entrymode">
-                                    <div class="col col-md-2 ">
+                                    <div class="col col-md-2">
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
                                     </div>
                                     <div class="col col-md-3">
@@ -30,7 +33,7 @@
                                     <div class="col col-md-4">
                                         <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" />
                                     </div>
-                                    <div class="col col-md-1 ">
+                                    <div class="col col-md-1">
                                         <b-button variant="link" class="px-0">
                                             <i class="btn fas fa-cart-plus fa-lg px-0 text-success" @click="addItem" />
                                         </b-button>
@@ -102,7 +105,7 @@
                                 <h4 class="mb-0">
                                     {{ $t("Supermarkets") }}
                                     <b-button variant="link" class="p-0 m-0 float-right" @click="new_supermarket.entrymode = !new_supermarket.entrymode">
-                                        <i class="btn fas fa-plus-circle fa-lg px-0 " :class="new_supermarket.entrymode ? 'text-success' : 'text-muted'" />
+                                        <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_supermarket.entrymode ? 'text-success' : 'text-muted'" />
                                     </b-button>
                                 </h4>
                             </template>
@@ -122,7 +125,7 @@
                             </b-card>
 
                             <b-card-body class="m-0 p-0">
-                                <b-card class=" no-body mb-2" v-for="s in supermarkets" v-bind:key="s.id">
+                                <b-card class="no-body mb-2" v-for="s in supermarkets" v-bind:key="s.id">
                                     <b-card-title
                                         >{{ s.name }}
                                         <b-button
@@ -133,7 +136,7 @@
                                                 editSupermarket(s)
                                             "
                                         >
-                                            <i class="btn fas fa-edit fa-lg px-0 " :class="s.editmode ? 'text-success' : 'text-muted'" />
+                                            <i class="btn fas fa-edit fa-lg px-0" :class="s.editmode ? 'text-success' : 'text-muted'" />
                                         </b-button>
                                     </b-card-title>
 
@@ -150,7 +153,7 @@
                                 <h4 class="mb-0">
                                     {{ $t("Shopping_Categories") }}
                                     <b-button variant="link" class="p-0 m-0 float-right" @click="new_category.entrymode = !new_category.entrymode">
-                                        <i class="btn fas fa-plus-circle fa-lg px-0 " :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
+                                        <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
                                     </b-button>
                                 </h4>
                             </template>
@@ -170,14 +173,9 @@
                             </b-card>
 
                             <b-card-sub-title v-if="new_supermarket.editmode" class="pt-0 pb-3">{{ $t("CategoryInstruction") }}</b-card-sub-title>
-                            <b-card
-                                v-if="new_supermarket.editmode && supermarketCategory.length === 0"
-                                class="m-0 p-0  font-weight-bold no-body"
-                                border-variant="success"
-                                v-bind:key="-1"
-                            />
+                            <b-card v-if="new_supermarket.editmode && supermarketCategory.length === 0" class="m-0 p-0 font-weight-bold no-body" border-variant="success" v-bind:key="-1" />
                             <draggable
-                                class="list-group "
+                                class="list-group"
                                 :list="supermarketCategory"
                                 group="category"
                                 @start="drag = true"
@@ -188,7 +186,7 @@
                             >
                                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
                                     <b-card
-                                        class="m-0 p-0  font-weight-bold no-body list-group-item"
+                                        class="m-0 p-0 font-weight-bold no-body list-group-item"
                                         :style="new_supermarket.editmode ? 'cursor:move' : ''"
                                         v-for="c in supermarketCategory"
                                         v-bind:key="c.id"
@@ -198,15 +196,10 @@
                                     </b-card>
                                 </transition-group>
                             </draggable>
-                            <hr style="height:2px;;background-color:black" v-if="new_supermarket.editmode" />
-                            <b-card
-                                v-if="new_supermarket.editmode && notSupermarketCategory.length === 0"
-                                v-bind:key="-2"
-                                class="m-0 p-0 font-weight-bold no-body"
-                                border-variant="danger"
-                            />
+                            <hr style="height: 2px; background-color: black" v-if="new_supermarket.editmode" />
+                            <b-card v-if="new_supermarket.editmode && notSupermarketCategory.length === 0" v-bind:key="-2" class="m-0 p-0 font-weight-bold no-body" border-variant="danger" />
                             <draggable
-                                class="list-group "
+                                class="list-group"
                                 :list="notSupermarketCategory"
                                 group="category"
                                 v-if="new_supermarket.editmode"
@@ -216,13 +209,7 @@
                                 v-bind="{ animation: 200 }"
                             >
                                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-                                    <b-card
-                                        class="m-0 p-0 font-weight-bold no-body list-group-item"
-                                        style="cursor:move"
-                                        v-for="c in notSupermarketCategory"
-                                        v-bind:key="c.id"
-                                        :border-variant="'danger'"
-                                    >
+                                    <b-card class="m-0 p-0 font-weight-bold no-body list-group-item" style="cursor: move" v-for="c in notSupermarketCategory" v-bind:key="c.id" :border-variant="'danger'">
                                         {{ categoryName(c) }}
                                     </b-card>
                                 </transition-group>
@@ -234,7 +221,7 @@
             <!-- settings tab -->
             <b-tab :title="$t('Settings')">
                 <div class="row justify-content-center">
-                    <div class="col col-md-4 col-sm-8  ">
+                    <div class="col col-md-4 col-sm-8">
                         <b-card class="no-body">
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
@@ -375,8 +362,8 @@
                     <b-form-checkbox v-model="supermarket_categories_only"></b-form-checkbox>
                 </b-form-group>
             </div>
-            <div class="row " style="margin-top: 1vh;min-width:300px">
-                <div class="col-12 " style="text-align: right;">
+            <div class="row" style="margin-top: 1vh; min-width: 300px">
+                <div class="col-12" style="text-align: right">
                     <b-button size="sm" variant="primary" class="mx-1" @click="resetFilters">{{ $t("Reset") }} </b-button>
                     <b-button size="sm" variant="secondary" class="mr-3" @click="$root.$emit('bv::hide::popover')">{{ $t("Close") }} </b-button>
                 </div>
@@ -396,7 +383,7 @@
                         </template>
                         <span @click.prevent.stop @mouseup.prevent.stop>
                             <!-- would like to hide the dropdown value and only display value in button - not sure how to do that -->
-                            <b-form-select class="mt-2  border-0" :options="shopping_categories" text-field="name" value-field="id" v-model="shopcat"></b-form-select>
+                            <b-form-select class="mt-2 border-0" :options="shopping_categories" text-field="name" value-field="id" v-model="shopcat"></b-form-select>
                         </span>
                     </b-form-group>
                 </ContextMenuItem>
@@ -575,7 +562,7 @@ export default {
             return groups
         },
         defaultDelay() {
-            return getUserPreference("default_delay") || 2
+            return Number(getUserPreference("default_delay")) || 2
         },
         formUnit() {
             let unit = this.Models.SHOPPING_LIST.create.form.unit
@@ -620,10 +607,10 @@ export default {
         selected_supermarket(newVal, oldVal) {
             this.supermarket_categories_only = this.settings.filter_to_supermarket
         },
-        "settings.filter_to_supermarket": function(newVal, oldVal) {
+        "settings.filter_to_supermarket": function (newVal, oldVal) {
             this.supermarket_categories_only = this.settings.filter_to_supermarket
         },
-        "settings.shopping_auto_sync": function(newVal, oldVal) {
+        "settings.shopping_auto_sync": function (newVal, oldVal) {
             clearInterval(this.autosync_id)
             this.autosync_id = undefined
             if (!newVal) {
@@ -678,32 +665,38 @@ export default {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
         },
-        resetFilters: function() {
+        resetFilters: function () {
             this.selected_supermarket = undefined
             this.supermarket_categories_only = this.settings.filter_to_supermarket
             this.show_undefined_categories = true
             this.group_by = "category"
             this.show_delay = false
         },
-        delayThis: function(item) {
+        delayThis: function (item) {
             let entries = []
             let promises = []
+            let delay_date = new Date(Date.now() + this.delay * (60 * 60 * 1000))
+
             if (Array.isArray(item)) {
+                item = item.map((x) => {
+                    return { ...x, delay_until: delay_date }
+                })
                 entries = item.map((x) => x.id)
             } else {
+                item.delay_until = delay_date
                 entries = [item.id]
             }
-            let delay_date = new Date(Date.now() + this.delay * (60 * 60 * 1000))
 
             entries.forEach((entry) => {
                 promises.push(this.saveThis({ id: entry, delay_until: delay_date }, false))
             })
             Promise.all(promises).then(() => {
                 StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                this.items = this.items.filter((x) => !entries.includes(x.id))
                 this.delay = this.defaultDelay
             })
         },
-        deleteRecipe: function(e, recipe) {
+        deleteRecipe: function (e, recipe) {
             let api = new ApiApiFactory()
             api.destroyShoppingListRecipe(recipe)
                 .then((x) => {
@@ -715,7 +708,7 @@ export default {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
                 })
         },
-        deleteThis: function(item) {
+        deleteThis: function (item) {
             let api = new ApiApiFactory()
             let entries = []
             let promises = []
@@ -749,16 +742,16 @@ export default {
                 this.supermarkets.filter((x) => x.id !== s.id).map((x) => (x.editmode = false))
             }
         },
-        foodName: function(value) {
+        foodName: function (value) {
             return value?.food?.name ?? value?.[0]?.food?.name ?? ""
         },
-        getShoppingCategories: function() {
+        getShoppingCategories: function () {
             let api = new ApiApiFactory()
             api.listSupermarketCategorys().then((result) => {
                 this.shopping_categories = result.data
             })
         },
-        getShoppingList: function(autosync = false) {
+        getShoppingList: function (autosync = false) {
             let params = {}
             params.supermarket = this.selected_supermarket
 
@@ -788,23 +781,23 @@ export default {
                     }
                 })
         },
-        getSupermarkets: function() {
+        getSupermarkets: function () {
             let api = new ApiApiFactory()
             api.listSupermarkets().then((result) => {
                 this.supermarkets = result.data
             })
         },
-        getThis: function(id) {
+        getThis: function (id) {
             return this.genericAPI(this.Models.SHOPPING_CATEGORY, this.Actions.FETCH, { id: id })
         },
-        ignoreThis: function(item) {
+        ignoreThis: function (item) {
             let food = {
                 id: item?.[0]?.food.id ?? item.food.id,
                 ignore_shopping: true,
             }
             this.updateFood(food, "ignore_shopping")
         },
-        mergeShoppingList: function(data) {
+        mergeShoppingList: function (data) {
             this.items.map((x) =>
                 data.map((y) => {
                     if (y.id === x.id) {
@@ -815,7 +808,7 @@ export default {
             )
             this.auto_sync_running = false
         },
-        moveEntry: function(e, item) {
+        moveEntry: function (e, item) {
             if (!e) {
                 makeToast(this.$t("Warning"), this.$t("NoCategory"), "warning")
             }
@@ -826,7 +819,7 @@ export default {
             this.updateFood(food, "supermarket_category")
             this.shopcat = null
         },
-        onHand: function(item) {
+        onHand: function (item) {
             let api = new ApiApiFactory()
             let food = {
                 id: item?.[0]?.food.id ?? item?.food?.id,
@@ -849,7 +842,7 @@ export default {
             this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
             this.$refs.menu.open(e, value)
         },
-        saveSettings: function() {
+        saveSettings: function () {
             let api = ApiApiFactory()
             api.partialUpdateUserPreference(this.settings.user, this.settings)
                 .then((result) => {
@@ -860,7 +853,7 @@ export default {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
                 })
         },
-        saveThis: function(thisItem, toast = true) {
+        saveThis: function (thisItem, toast = true) {
             let api = new ApiApiFactory()
             if (!thisItem?.id) {
                 // if there is no item id assume it's a new item
@@ -889,10 +882,10 @@ export default {
                     })
             }
         },
-        sectionID: function(a, b) {
+        sectionID: function (a, b) {
             return (a + b).replace(/\W/g, "")
         },
-        updateChecked: function(update) {
+        updateChecked: function (update) {
             // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
             let promises = []
             update.entries.forEach((x) => {
@@ -911,7 +904,7 @@ export default {
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
             })
         },
-        updateFood: function(food, field) {
+        updateFood: function (food, field) {
             let api = new ApiApiFactory()
             let ignore_category
             if (field) {
@@ -947,7 +940,7 @@ export default {
                 this.getShoppingList()
             })
         },
-        addCategory: function() {
+        addCategory: function () {
             let api = new ApiApiFactory()
             api.createSupermarketCategory({ name: this.new_category.value })
                 .then((result) => {
@@ -960,7 +953,7 @@ export default {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
         },
-        addSupermarket: function() {
+        addSupermarket: function () {
             let api = new ApiApiFactory()
             api.createSupermarket({ name: this.new_supermarket.value })
                 .then((result) => {
@@ -978,7 +971,7 @@ export default {
             let apiClient = new ApiApiFactory()
             let supermarket = this.new_supermarket.value
             let temp_supermarkets = [...this.supermarkets]
-            const updateMoved = function(supermarket) {
+            const updateMoved = function (supermarket) {
                 var promises = []
                 supermarket.category_to_supermarket.forEach((x, i) => {
                     x.order = i

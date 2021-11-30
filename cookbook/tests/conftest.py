@@ -15,6 +15,7 @@ from cookbook.tests.factories import SpaceFactory
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
 
+# TODO refactor user fixtures https://stackoverflow.com/questions/40966571/how-to-create-a-field-with-a-list-of-instances-in-factory-boy
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
 # does not work on yield fixtures as only one yield can be used per fixture (i think)
