@@ -6,8 +6,8 @@
         <div class="col-12">
             <div class="row">
                 <div class="col col-md-1">
-                    <div style="position: static;" class=" btn-group">
-                        <div class="dropdown b-dropdown position-static inline-block">
+                    <div style="position: static" class="btn-group">
+                        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
                             <button
                                 aria-haspopup="true"
                                 aria-expanded="false"
@@ -29,7 +29,7 @@
                 <div class="col col-md-6">
                     {{ formatFood }} <span class="small text-muted">{{ formatHint }}</span>
                 </div>
-                <div class="col col-md-1">
+                <div class="col col-md-1" data-html2canvas-ignore="true">
                     <b-button size="sm" @click="showDetails = !showDetails" class="mr-2" variant="link">
                         <div class="text-nowrap">{{ showDetails ? "Hide" : "Show" }} Details</div>
                     </b-button>
@@ -44,7 +44,7 @@
                                 aria-expanded="false"
                                 type="button"
                                 class="btn btn-link btn-sm m-0 p-0"
-                                style="text-overflow: ellipsis;"
+                                style="text-overflow: ellipsis"
                                 @click.stop="openRecipeCard($event, e)"
                                 @mouseover="openRecipeCard($event, e)"
                             >
@@ -59,8 +59,8 @@
                     </div>
                     <div class="row ml-2 light">
                         <div class="col-sm-1 text-nowrap">
-                            <div style="position: static;" class=" btn-group ">
-                                <div class="dropdown b-dropdown position-static inline-block">
+                            <div style="position: static" class="btn-group">
+                                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
                                     <button
                                         aria-haspopup="true"
                                         aria-expanded="false"
@@ -89,7 +89,7 @@
             </div>
             <hr class="m-1" />
         </div>
-        <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width:300">
+        <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width: 300">
             <template #menu="{ contextData }" v-if="recipe">
                 <ContextMenuItem><RecipeCard :recipe="contextData" :detail="false"></RecipeCard></ContextMenuItem>
                 <ContextMenuItem @click="$refs.menu.close()">
@@ -138,7 +138,7 @@ export default {
         }
     },
     computed: {
-        formatAmount: function() {
+        formatAmount: function () {
             let amount = {}
             this.entries.forEach((entry) => {
                 let unit = entry?.unit?.name ?? "----"
@@ -152,26 +152,26 @@ export default {
             })
             return amount
         },
-        formatCategory: function() {
+        formatCategory: function () {
             return this.formatOneCategory(this.entries[0]) || this.$t("Undefined")
         },
-        formatChecked: function() {
+        formatChecked: function () {
             return this.entries.map((x) => x.checked).every((x) => x === true)
         },
-        formatHint: function() {
+        formatHint: function () {
             if (this.groupby == "recipe") {
                 return this.formatCategory
             } else {
                 return this.formatRecipe
             }
         },
-        formatFood: function() {
+        formatFood: function () {
             return this.formatOneFood(this.entries[0])
         },
-        formatUnit: function() {
+        formatUnit: function () {
             return this.formatOneUnit(this.entries[0])
         },
-        formatRecipe: function() {
+        formatRecipe: function () {
             if (this.entries?.length == 1) {
                 return this.formatOneMealPlan(this.entries[0]) || ""
             } else {
@@ -179,7 +179,7 @@ export default {
                 return [this.formatOneMealPlan(mealplan_name?.[0]), this.$t("CountMore", { count: this.entries?.length - 1 })].join("  ")
             }
         },
-        formatNotes: function() {
+        formatNotes: function () {
             if (this.entries?.length == 1) {
                 return this.formatOneNote(this.entries[0]) || ""
             }
@@ -193,49 +193,49 @@ export default {
     methods: {
         // this.genericAPI inherited from ApiMixin
 
-        formatDate: function(datetime) {
+        formatDate: function (datetime) {
             if (!datetime) {
                 return
             }
             return Intl.DateTimeFormat(window.navigator.language, { dateStyle: "short", timeStyle: "short" }).format(Date.parse(datetime))
         },
-        formatOneAmount: function(item) {
+        formatOneAmount: function (item) {
             return item?.amount ?? 1
         },
-        formatOneUnit: function(item) {
+        formatOneUnit: function (item) {
             return item?.unit?.name ?? ""
         },
-        formatOneCategory: function(item) {
+        formatOneCategory: function (item) {
             return item?.food?.supermarket_category?.name
         },
-        formatOneCompletedAt: function(item) {
+        formatOneCompletedAt: function (item) {
             if (!item.completed_at) {
                 return ""
             }
             return [this.$t("Completed"), "@", this.formatDate(item.completed_at)].join(" ")
         },
-        formatOneFood: function(item) {
+        formatOneFood: function (item) {
             return item.food.name
         },
-        formatOneChecked: function(item) {
+        formatOneChecked: function (item) {
             return item.checked
         },
-        formatOneMealPlan: function(item) {
+        formatOneMealPlan: function (item) {
             return item?.recipe_mealplan?.name
         },
-        formatOneRecipe: function(item) {
+        formatOneRecipe: function (item) {
             return item?.recipe_mealplan?.recipe_name
         },
-        formatOneNote: function(item) {
+        formatOneNote: function (item) {
             if (!item) {
                 item = this.entries[0]
             }
             return [item?.recipe_mealplan?.mealplan_note, item?.ingredient_note].filter(String)
         },
-        formatOneCreatedBy: function(item) {
+        formatOneCreatedBy: function (item) {
             return [item?.created_by.username, "@", this.formatDate(item.created_at)].join(" ")
         },
-        openRecipeCard: function(e, item) {
+        openRecipeCard: function (e, item) {
             this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, { id: item.recipe_mealplan.recipe }).then((result) => {
                 let recipe = result.data
                 recipe.steps = undefined
@@ -243,7 +243,7 @@ export default {
                 this.$refs.recipe_card.open(e, recipe)
             })
         },
-        updateChecked: function(e, item) {
+        updateChecked: function (e, item) {
             if (!item) {
                 let update = { entries: this.entries.map((x) => x.id), checked: !this.formatChecked }
                 this.$emit("update-checkbox", update)
