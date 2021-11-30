@@ -1081,10 +1081,10 @@ export interface MealPlan {
     created_by?: string;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<MealPlanShared>}
      * @memberof MealPlan
      */
-    shared?: Array<number>;
+    shared?: Array<MealPlanShared> | null;
     /**
      * 
      * @type {string}
@@ -1268,6 +1268,25 @@ export interface MealPlanRecipeKeywords {
      * @memberof MealPlanRecipeKeywords
      */
     label?: string;
+}
+/**
+ * 
+ * @export
+ * @interface MealPlanShared
+ */
+export interface MealPlanShared {
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanShared
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanShared
+     */
+    username?: string;
 }
 /**
  * 
@@ -1465,10 +1484,10 @@ export interface RecipeBook {
     icon?: string | null;
     /**
      * 
-     * @type {Array<RecipeBookShared>}
+     * @type {Array<MealPlanShared>}
      * @memberof RecipeBook
      */
-    shared: Array<RecipeBookShared>;
+    shared: Array<MealPlanShared>;
     /**
      * 
      * @type {string}
@@ -1512,25 +1531,6 @@ export interface RecipeBookEntry {
      * @memberof RecipeBookEntry
      */
     recipe_content?: string;
-}
-/**
- * 
- * @export
- * @interface RecipeBookShared
- */
-export interface RecipeBookShared {
-    /**
-     * 
-     * @type {number}
-     * @memberof RecipeBookShared
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeBookShared
-     */
-    username?: string;
 }
 /**
  * 
@@ -2029,10 +2029,10 @@ export interface ShoppingList {
     entries: Array<ShoppingListEntries> | null;
     /**
      * 
-     * @type {Array<RecipeBookShared>}
+     * @type {Array<MealPlanShared>}
      * @memberof ShoppingList
      */
-    shared: Array<RecipeBookShared>;
+    shared: Array<MealPlanShared>;
     /**
      * 
      * @type {boolean}
@@ -2960,10 +2960,10 @@ export interface UserPreference {
     show_recent?: boolean;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<MealPlanShared>}
      * @memberof UserPreference
      */
-    plan_share?: Array<number>;
+    plan_share?: Array<MealPlanShared> | null;
     /**
      * 
      * @type {number}
