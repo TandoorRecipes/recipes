@@ -155,7 +155,7 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin):
 class UserPreferenceSerializer(serializers.ModelSerializer):
     # food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', read_only=True)
     food_ignore_default = serializers.SerializerMethodField('get_ignore_default')
-    plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
+    plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
 
     def get_ignore_default(self, obj):
         return FoodInheritFieldSerializer(Food.inherit_fields.difference(obj.space.food_inherit.all()), many=True).data
@@ -165,14 +165,19 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
             raise NotFound()
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        # don't allow writing to FoodInheritField via API
+        return super().update(instance, validated_data)
+
     class Meta:
         model = UserPreference
         fields = (
             'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_kj',
             'search_style', 'show_recent', 'plan_share', 'ingredient_decimals',
             'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default', 'default_delay',
-            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days'
+            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim'
         )
+        read_only_fields = ['user']
 
 
 class UserFileSerializer(serializers.ModelSerializer):

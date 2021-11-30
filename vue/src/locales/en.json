@@ -265,11 +265,9 @@
     "CategoryInstruction": "Drag categories to change the order categories appear in shopping list.",
     "shopping_recent_days_desc": "Days of recent shopping list entries to display.",
     "shopping_recent_days": "Recent Days",
-    "Coming_Soon": "Coming-Soon",
-    "Auto_Planner": "Auto-Planner",
-    "New_Cookbook": "New cookbook",
-    "Hide_Keyword": "Hide keywords",
-    "Clear": "Clear",
     "create_shopping_new": "NEW: Add to Shopping List",
-    "download_pdf": "Download PDF"
+    "download_pdf": "Download PDF",
+    "download_csv": "Download CSV",
+    "csv_delim_help": "Delimiter to use for CSV exports.",
+    "csv_delim_label": "CSV Delimiter"
 }

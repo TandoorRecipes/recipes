@@ -333,6 +333,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     filter_to_supermarket = models.BooleanField(default=False)
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
+    csv_delim = models.CharField(max_length=2, default=",")
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
