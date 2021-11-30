@@ -155,7 +155,7 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin):
 class UserPreferenceSerializer(serializers.ModelSerializer):
     # food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', read_only=True)
     food_ignore_default = serializers.SerializerMethodField('get_ignore_default')
-    plan_share = UserNameSerializer(many=True)
+    plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
 
     def get_ignore_default(self, obj):
         return FoodInheritFieldSerializer(Food.inherit_fields.difference(obj.space.food_inherit.all()), many=True).data
@@ -604,7 +604,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')  # TODO deprecate once old meal plan was removed
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
-    shared = UserNameSerializer(many=True)
+    shared = UserNameSerializer(many=True, required=False, allow_null=True)
 
     def get_note_markdown(self, obj):
         return markdown(obj.note)
