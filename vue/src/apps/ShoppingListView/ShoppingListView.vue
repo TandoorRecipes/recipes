@@ -10,10 +10,11 @@
                     <i class="fas fa-download fa-lg nav-link dropdown-toggle text-muted px-0" id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
 
                     <div class="dropdown-menu dropdown-menu-center" aria-labelledby="downloadShoppingLink">
-                        <a class="dropdown-item" @click="download('CSV')"><i class="fas fa-file-import"></i> {{ $t("Download csv") }}</a>
+                        <a class="dropdown-item disabled" @click="download('CSV')"><i class="fas fa-file-import"></i> {{ $t("Download csv") }}</a>
                         <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
-                        <a class="dropdown-item" @click="download('clipboard')"><i class="fas fa-plus"></i> {{ $t("copy to clipboard") }}</a>
-                        <a class="dropdown-item" @click="download('markdown')"><i class="fas fa-plus"></i> {{ $t("copy as markdown") }}</a>
+                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
+                        <a class="dropdown-item disabled" @click="download('clipboard')"><i class="fas fa-plus"></i> {{ $t("copy to clipboard") }}</a>
+                        <a class="dropdown-item disabled" @click="download('markdown')"><i class="fas fa-plus"></i> {{ $t("copy as markdown") }}</a>
                     </div>
                 </b-button>
                 <b-button variant="link" id="id_filters_button" class="px-0">
@@ -346,6 +347,19 @@
                                     </em>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("csv_delim_label") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="string" size="sm" v-model="settings.csv_delim" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("csv_delim_help") }}
+                                    </em>
+                                </div>
+                            </div>
                         </b-card>
                     </div>
                 </div>
@@ -451,6 +465,7 @@ import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import ShoppingLineItem from "@/components/ShoppingLineItem"
 import DownloadPDF from "@/components/Buttons/DownloadPDF"
+import DownloadCSV from "@/components/Buttons/DownloadCSV"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import GenericPill from "@/components/GenericPill"
 import LookupInput from "@/components/Modals/LookupInput"
@@ -465,7 +480,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingListView",
     mixins: [ApiMixin],
-    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable, LookupInput, DownloadPDF },
+    components: { ContextMenu, ContextMenuItem, ShoppingLineItem, GenericMultiselect, GenericPill, draggable, LookupInput, DownloadPDF, DownloadCSV },
 
     data() {
         return {
@@ -488,6 +503,7 @@ export default {
                 mealplan_autoexclude_onhand: true,
                 filter_to_supermarket: false,
                 shopping_recent_days: 7,
+                csv_delim: ",",
             },
             new_supermarket: { entrymode: false, value: undefined, editmode: undefined },
             new_category: { entrymode: false, value: undefined },
@@ -570,6 +586,11 @@ export default {
             })
             return groups
         },
+        csvData() {
+            return this.items.map((x) => {
+                return { amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? "" }
+            })
+        },
         defaultDelay() {
             return Number(getUserPreference("default_delay")) || 2
         },
@@ -595,7 +616,6 @@ export default {
         supermarketCategory() {
             return this.new_supermarket.editmode ? this.new_supermarket.value.category_to_supermarket : this.shopping_categories
         },
-
         notSupermarketCategory() {
             let supercats = this.new_supermarket.value.category_to_supermarket
                 .map((x) => x.category)
@@ -645,6 +665,7 @@ export default {
 
         this.settings = getUserPreference()
         this.delay = this.settings.default_delay || 4
+        this.delim = this.settings.csv_delim || ","
         this.supermarket_categories_only = this.settings.filter_to_supermarket
         if (this.settings.shopping_auto_sync) {
             window.addEventListener("online", this.updateOnlineStatus)
