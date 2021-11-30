@@ -7,14 +7,18 @@ from django.urls import reverse
 from django_scopes import scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, ShoppingListEntry
-from cookbook.tests.factories import ShoppingListEntryFactory
+from cookbook.models import ShoppingListEntry
+from cookbook.tests.factories import FoodFactory, ShoppingListEntryFactory
 
 LIST_URL = 'api:shoppinglistentry-list'
 DETAIL_URL = 'api:shoppinglistentry-detail'
 
+# register(FoodFactory, 'food_1', space=LazyFixture('space_1'))
+# register(FoodFactory, 'food_2', space=LazyFixture('space_1'))
+# register(ShoppingListEntryFactory, 'sle_1', space=LazyFixture('space_1'), food=LazyFixture('food_1'))
+# register(ShoppingListEntryFactory, 'sle_2', space=LazyFixture('space_1'), food=LazyFixture('food_2'))
 register(ShoppingListEntryFactory, 'sle_1', space=LazyFixture('space_1'))
-register(ShoppingListEntryFactory, 'sle_2', space=LazyFixture('space_2'))
+register(ShoppingListEntryFactory, 'sle_2', space=LazyFixture('space_1'))
 
 
 @pytest.mark.parametrize("arg", [
@@ -28,25 +32,25 @@ def test_list_permission(arg, request):
     assert c.get(reverse(LIST_URL)).status_code == arg[1]
 
 
-def test_list_space(sle_1, sle_2, u1_s1, u1_s2, space_2):
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 2
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
+def test_list_space(sle_1, u1_s1, u1_s2, space_2):
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
     with scopes_disabled():
         e = ShoppingListEntry.objects.first()
         e.space = space_2
         e.save()
 
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
 
-def test_get_detail(sle_1):
+def test_get_detail(u1_s1, sle_1):
     # r = u1_s1.get(reverse(
     #     DETAIL_URL,
     #     args={sle_1.id}
     # ))
-    # assert sle_1.id == 1
+    # assert json.loads(r.content)['id'] == sle_1.id
     pass
 
 
