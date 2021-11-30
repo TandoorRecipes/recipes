@@ -349,6 +349,7 @@
     localStorage.setItem('SCRIPT_NAME', "{% base_path request 'script' %}")
     localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
     localStorage.setItem('STATIC_URL', "{% base_path request 'static_base' %}")
+    localStorage.setItem('DEBUG', "{% is_debug %}")
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {

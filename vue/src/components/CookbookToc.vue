@@ -6,7 +6,7 @@
     <b-card-body class="p-4">
       <ol style="max-height: 60vh;overflow-y:auto;-webkit-overflow-scrolling: touch;" class="mb-1">
         <li v-for="(recipe, index) in recipes" v-bind:key="index" v-on:click="$emit('switchRecipe', index)">
-          <a href="#">{{ recipe.recipe_content.name }} <recipe-rating :recipe="recipe"></recipe-rating> </a>
+          <a href="javascript:void(0)">{{ recipe.recipe_content.name }} <recipe-rating :recipe="recipe"></recipe-rating> </a>
         </li>
       </ol>
       <b-card-text v-if="recipes.length === 0">

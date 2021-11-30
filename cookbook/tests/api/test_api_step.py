@@ -23,8 +23,8 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
-    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
-    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 2
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 0
 
     with scopes_disabled():
         recipe_1_s1.space = space_2
@@ -32,9 +32,9 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
         Step.objects.update(space=Subquery(Step.objects.filter(pk=OuterRef('pk')).values('recipe__space')[:1]))
         Ingredient.objects.update(space=Subquery(Ingredient.objects.filter(pk=OuterRef('pk')).values('step__recipe__space')[:1]))
 
-    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 0
-    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
-
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 2
+    
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
