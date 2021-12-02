@@ -19,9 +19,7 @@
             </td>
             <td @click="done">
                 <template v-if="ingredient.food !== null">
-                    <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">{{
-                        ingredient.food.name
-                    }}</a>
+                    <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">{{ ingredient.food.name }}</a>
                     <span v-if="ingredient.food.recipe === null">{{ ingredient.food.name }}</span>
                 </template>
             </td>
@@ -179,19 +177,16 @@ export default {
         },
     },
     methods: {
-        calculateAmount: function(x) {
+        calculateAmount: function (x) {
             return calculateAmount(x, this.ingredient_factor)
         },
         // sends parent recipe ingredient to notify complete has been toggled
-        done: function() {
+        done: function () {
             this.$emit("checked-state-changed", this.ingredient)
         },
         // sends true/false to parent to save all ingredient shopping updates as a batch
-        changeShopping: function() {
+        changeShopping: function () {
             this.$emit("add-to-shopping", { item: this.ingredient, add: this.shop })
-        },
-        editFood: function() {
-            console.log("edit the food")
         },
     },
 }

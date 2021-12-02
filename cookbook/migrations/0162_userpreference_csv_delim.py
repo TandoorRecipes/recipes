@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userpreference',
             name='csv_prefix',
-            field=models.CharField(blank=True, max_length=3),
+            field=models.CharField(blank=True, max_length=10),
         ),
     ]

@@ -211,7 +211,6 @@ export default {
             if (e !== "cancel") {
                 switch (this.this_action) {
                     case this.Actions.DELETE:
-                        console.log("delete")
                         this.deleteThis(this.this_item.id)
                         break
                     case this.Actions.CREATE:
