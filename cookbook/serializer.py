@@ -610,9 +610,13 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
     shared = UserNameSerializer(many=True, required=False, allow_null=True)
+    shopping = serializers.SerializerMethodField('in_shopping')
 
     def get_note_markdown(self, obj):
         return markdown(obj.note)
+
+    def in_shopping(self, obj):
+        return ShoppingListRecipe.objects.filter(mealplan=obj.id).exists()
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -626,7 +630,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
             'date', 'meal_type', 'created_by', 'shared', 'recipe_name',
-            'meal_type_name'
+            'meal_type_name', 'shopping'
         )
         read_only_fields = ('created_by',)
 
