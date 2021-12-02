@@ -17,7 +17,7 @@
                 <a class="dropdown-item" :href="`${resolveDjangoUrl('view_shopping')}?r=[${recipe.id},${servings_value}]`" v-if="recipe.internal" target="_blank" rel="noopener noreferrer">
                     <i class="fas fa-shopping-cart fa-fw"></i> {{ $t("Add_to_Shopping") }}
                 </a>
-                <a class="dropdown-item" v-if="recipe.internal" @click="addToShopping" href="#"> <i class="fas fa-shopping-cart fa-fw"></i> New {{ $t("create_shopping_new") }} </a>
+                <a class="dropdown-item" v-if="recipe.internal" @click="addToShopping" href="#"> <i class="fas fa-shopping-cart fa-fw"></i> {{ $t("create_shopping_new") }} </a>
 
                 <a class="dropdown-item" @click="createMealPlan" href="javascript:void(0);"><i class="fas fa-calendar fa-fw"></i> {{ $t("Add_to_Plan") }} </a>
 
