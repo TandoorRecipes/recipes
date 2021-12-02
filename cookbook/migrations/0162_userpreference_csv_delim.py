@@ -15,4 +15,9 @@ class Migration(migrations.Migration):
             name='csv_delim',
             field=models.CharField(default=',', max_length=2),
         ),
+        migrations.AddField(
+            model_name='userpreference',
+            name='csv_prefix',
+            field=models.CharField(blank=True, max_length=3),
+        ),
     ]
