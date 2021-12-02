@@ -502,6 +502,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
             'shopping_recent_days':  _('Days of recent shopping list entries to display.'),
             'csv_delim': _('Delimiter to use for CSV exports.'),
+            'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
+
         }
         labels = {
             'shopping_share': _('Share Shopping List'),
@@ -513,6 +515,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'filter_to_supermarket': _('Filter to Supermarket'),
             'shopping_recent_days': _('Recent Days'),
             'csv_delim': _('CSV Delimiter'),
+            "csv_prefix_label": _("List Prefix")
         }
 
         widgets = {

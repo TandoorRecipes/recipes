@@ -269,5 +269,10 @@
     "download_pdf": "Download PDF",
     "download_csv": "Download CSV",
     "csv_delim_help": "Delimiter to use for CSV exports.",
-    "csv_delim_label": "CSV Delimiter"
+    "csv_delim_label": "CSV Delimiter",
+    "SuccessClipboard": "Shopping list copied to clipboard",
+    "copy_to_clipboard": "Copy to Clipboard",
+    "csv_prefix_help": "Prefix to add when copying list to the clipboard.",
+    "csv_prefix_label": "List Prefix",
+    "copy_markdown_table": "Copy as Markdown Table"
 }
