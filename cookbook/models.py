@@ -334,7 +334,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
     csv_delim = models.CharField(max_length=2, default=",")
-    csv_prefix = models.CharField(max_length=3, blank=True,)
+    csv_prefix = models.CharField(max_length=10, blank=True,)
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
