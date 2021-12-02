@@ -60,7 +60,41 @@ Creating recipes_web_recipes_1   ... done
 - Browse to 192.168.1.1:2000 or whatever your IP and port are
 - While the containers are starting and doing whatever they need to do, you might still get HTTP errors e.g. 500 or 502. Just be patient and try again in a moment
 
-5. Additional SSL Setup
+5. Firewall
+You need to set up firewall rules in order for the recipes_web container to be able to connect to the recipes_db container.
+
+- Control Panel -> Security -> Firewall -> Edit Rules -> Create
+	-  Ports: All
+	-  Source IP: Specific IP -> Select -> Subnet
+		- insert docker network ip (can be found in the docker application, network tab)
+		- Example: IP address: 172.18.0.0 and Subnet mask/Prefix length: 255.255.255.0
+	-  Action: Allow
+- Save and make sure it's above the deny rules
+
+6. Additional SSL Setup
+Easiest way is to do it via Reverse Proxy
+- Control Panel -> Login Portal (renamed Since DSM 7, previously Application Portal) -> Advanced -> Reverse Proxy
+- Create
+	- insert name
+	- Source:
+		- Protocol: HTTPS
+		- Hostname: URL if you acces from outside, otherwise ip in network
+		- Port: The port you want to access, has to be a different one that the one in the docker-compose file
+		- HSTS can be enabled
+	- Destination:
+		- Protocol: HTTP
+		- Hostname: localhost
+		- Port: port in docker-compose file
+	- Click on Custom Header and press Create -> Websocket
+	- Save
+- Control Panel -> Security -> Firewall -> Edit Rules -> Create
+	- Ports: Select form a list of build-in applications -> Select -> You find your Reverse Proxy, enable it
+	- Source IP: Depends, All allows access from outside, i use specific to only connect in my network
+	- Action: Allow
+- Save and make sure it's above the deny rules
+
+[Deprecated, Note: ssl Path changed for DSM 7]
+6.1 Additional SSL Setup 
 - create foler `ssl` inside `nginx` folder
 	- download your ssl certificate from `security` tab in dsm `control panel`
 	- or create a task in `task manager` because Synology will update the certificate every few months
