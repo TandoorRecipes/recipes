@@ -687,9 +687,7 @@ export default {
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
-        download(type) {
-            console.log("you just downloaded", type)
-        },
+
         addItem() {
             let api = new ApiApiFactory()
             api.createShoppingListEntry(this.new_item)
