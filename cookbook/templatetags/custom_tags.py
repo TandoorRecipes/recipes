@@ -164,6 +164,6 @@ def user_prefs(request):
     from cookbook.serializer import \
         UserPreferenceSerializer  # putting it with imports caused circular execution
     try:
-        return UserPreferenceSerializer(request.user.userpreference).data
+        return UserPreferenceSerializer(request.user.userpreference, context={'request': request}).data
     except AttributeError:
         pass
