@@ -1,5 +1,5 @@
 Django==3.2.9
-cryptography==35.0.0
+cryptography==36.0.0
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
 django-cleanup==5.2.0
@@ -30,7 +30,7 @@ Jinja2==3.0.2
 django-webpack-loader==1.4.1
 django-js-reverse==0.9.1
 django-allauth==0.45.0
-recipe-scrapers==13.5.0
+recipe-scrapers==13.7.0
 django-scopes==1.2.0
 pytest==6.2.5
 pytest-django==4.4.0
