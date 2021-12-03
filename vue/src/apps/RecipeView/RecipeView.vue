@@ -88,15 +88,15 @@
                 </div>
               </div>
               <br/>
-              <template v-for="s in recipe.steps" >                
-                <div class="row" v-bind:key="s.id">
+              <template v-for="s in recipe.steps" v-bind:key="s.id">
+                <div class="row" >
                   <div class="col-md-12">
                     <template v-if="s.show_as_header && s.name !== '' && s.ingredients.length > 0">
                       <b v-bind:key="s.id">{{s.name}}</b>
                     </template>
                     <table class="table table-sm">                        
-                        <template v-for="i in s.ingredients">
-                          <ingredient-component :ingredient="i" :ingredient_factor="ingredient_factor" :key="i.id"
+                        <template v-for="i in s.ingredients" :key="i.id">
+                          <ingredient-component :ingredient="i" :ingredient_factor="ingredient_factor"
                                       @checked-state-changed="updateIngredientCheckedState"></ingredient-component>
                         </template>
                     </table>
