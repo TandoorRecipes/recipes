@@ -11,7 +11,7 @@ drf-writable-nested==0.6.3
 bleach==4.1.0
 bleach-allowlist==1.0.3
 gunicorn==20.1.0
-lxml==4.6.3
+lxml==4.6.4
 Markdown==3.3.6
 Pillow==8.4.0
 psycopg2-binary==2.9.2
@@ -29,11 +29,11 @@ microdata==0.7.2
 Jinja2==3.0.3
 django-webpack-loader==1.4.1
 django-js-reverse==0.9.1
-django-allauth==0.45.0
+django-allauth==0.46.0
 recipe-scrapers==13.7.0
 django-scopes==1.2.0
 pytest==6.2.5
-pytest-django==4.4.0
+pytest-django==4.5.1
 django-treebeard==4.5.1
 django-cors-headers==3.10.0
 django-storages==1.12.3
