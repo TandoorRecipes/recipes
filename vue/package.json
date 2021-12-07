@@ -81,8 +81,20 @@
         "last 2 versions",
         "not dead"
     ],
-    "resolutions": {
-        "@vue/cli-plugin-pwa/workbox-webpack-plugin": "^5.1.3",
-        "coa": "2.0.2"
+    "parserOptions": {
+      "parser": "@typescript-eslint/parser"
+    },
+    "rules": {
+      "no-unused-vars": "off"
     }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "resolutions": {
+    "@vue/cli-plugin-pwa/workbox-webpack-plugin": "^5.1.3",
+    "coa": "2.0.2"
+  }
 }
