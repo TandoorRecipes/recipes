@@ -1097,6 +1097,12 @@ export interface MealPlan {
      * @memberof MealPlan
      */
     meal_type_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlan
+     */
+    shopping?: string;
 }
 /**
  * 
@@ -3024,6 +3030,18 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     shopping_recent_days?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    csv_delim?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    csv_prefix?: string;
 }
 
 /**
