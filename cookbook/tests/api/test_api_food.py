@@ -53,11 +53,11 @@ def non_exist():
 @pytest.fixture()
 def obj_tree_1(request, space_1):
     try:
-        params = request.param
+        params = request.param  # request.param is a magic variable
     except AttributeError:
         params = {}
     objs = []
-    objs.extend(FoodFactory.create_batch(3, space=space_1, **params))  # request.param is a magic variable
+    objs.extend(FoodFactory.create_batch(3, space=space_1, **params))
     objs[0].move(objs[1], node_location)
     objs[1].move(objs[2], node_location)
     return Food.objects.get(id=objs[1].id)  # whenever you move/merge a tree it's safest to re-get the object

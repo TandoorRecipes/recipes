@@ -21,6 +21,18 @@ def sle(space_1, u1_s1):
     return ShoppingListEntryFactory.create_batch(10, space=space_1, created_by=user)
 
 
+@pytest.fixture
+def sle_2(request):
+    try:
+        params = request.param  # request.param is a magic variable
+    except AttributeError:
+        params = {}
+    u = request.getfixturevalue(params.get('user', 'u1_s1'))
+    user = auth.get_user(u)
+    count = params.get('count', 10)
+    return ShoppingListEntryFactory.create_batch(count, space=user.userpreference.space, created_by=user)
+
+
 @ pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 200],
@@ -118,7 +130,31 @@ def test_delete(u1_s1, u1_s2, sle):
     assert r.status_code == 204
 
 
-# TODO test sharing
+@pytest.mark.parametrize("shared, count, sle_2", [
+    ('g1_s1', 20, {'user': 'g1_s1'}),
+    ('g1_s2', 10, {'user': 'g1_s2'}),
+    ('u2_s1', 20, {'user': 'u2_s1'}),
+    ('u1_s2', 10, {'user': 'u1_s2'}),
+    ('a1_s1', 20, {'user': 'a1_s1'}),
+    ('a1_s2', 10, {'user': 'a1_s2'}),
+], indirect=['sle_2'])
+def test_sharing(request, shared, count, sle_2, sle, u1_s1):
+    user = auth.get_user(u1_s1)
+    shared_client = request.getfixturevalue(shared)
+    shared_user = auth.get_user(shared_client)
+
+    # confirm shared user can't access shopping list items created by u1_s1
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 10
+    assert len(json.loads(shared_client.get(reverse(LIST_URL)).content)) == 10
+
+    user.userpreference.shopping_share.add(shared_user)
+    # confirm sharing user only sees their shopping list
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 10
+    r = shared_client.get(reverse(LIST_URL))
+    # confirm shared user sees their list and the list that's shared with them
+    assert len(json.loads(r.content)) == count
+
+
 # TODO test completed entries still visible if today, but not yesterday
 # TODO test create shopping list from recipe
 # TODO test delete shopping list from recipe -  include created by, shared with and not shared with
