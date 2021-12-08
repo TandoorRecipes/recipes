@@ -55,7 +55,8 @@
                         <div class="col-md-4 text-muted text-right">{{ formatOneCreatedBy(e) }}</div>
                     </div>
                     <div class="row ml-2 small">
-                        <div class="col-md-4 offset-md-8 text-muted text-right">{{ formatOneCompletedAt(e) }}</div>
+                        <div class="col-md-4 offset-md-8 text-muted text-right" v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
+                        <div class="col-md-4 offset-md-8 text-muted text-right" v-if="formatOneDelayUntil(e)">{{ formatOneDelayUntil(e) }}</div>
                     </div>
                     <div class="row ml-2 light">
                         <div class="col-sm-1 text-nowrap">
@@ -210,7 +211,7 @@ export default {
         },
         formatOneCompletedAt: function (item) {
             if (!item.completed_at) {
-                return ""
+                return false
             }
             return [this.$t("Completed"), "@", this.formatDate(item.completed_at)].join(" ")
         },
@@ -219,6 +220,12 @@ export default {
         },
         formatOneChecked: function (item) {
             return item.checked
+        },
+        formatOneDelayUntil: function (item) {
+            if (!item.delay_until && item.checked) {
+                return false
+            }
+            return [this.$t("DelayUntil"), "-", this.formatDate(item.delay_until)].join(" ")
         },
         formatOneMealPlan: function (item) {
             return item?.recipe_mealplan?.name
@@ -233,7 +240,7 @@ export default {
             return [item?.recipe_mealplan?.mealplan_note, item?.ingredient_note].filter(String)
         },
         formatOneCreatedBy: function (item) {
-            return [item?.created_by.username, "@", this.formatDate(item.created_at)].join(" ")
+            return [this.$t("Added_by"), item?.created_by.username, "@", this.formatDate(item.created_at)].join(" ")
         },
         openRecipeCard: function (e, item) {
             this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, { id: item.recipe_mealplan.recipe }).then((result) => {

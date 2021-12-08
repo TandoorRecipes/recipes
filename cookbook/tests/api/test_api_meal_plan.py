@@ -106,7 +106,7 @@ def test_add(arg, request, u1_s2, recipe_1_s1, meal_type):
     r = c.post(
         reverse(LIST_URL),
         {'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []}, 'meal_type': {'id': meal_type.id, 'name': meal_type.name},
-         'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test','shared':[]},
+         'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test', 'shared': []},
         content_type='application/json'
     )
     response = json.loads(r.content)
@@ -139,3 +139,7 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert MealPlan.objects.count() == 0
+
+
+# TODO test auto creating shopping list from meal plan
+# TODO test excluding on-hand when auto creating shopping list
