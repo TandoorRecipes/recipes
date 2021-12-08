@@ -179,7 +179,6 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
             'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
         )
-        # read_only_fields = ['user']  # making user read_only removes it from validated_data, moved read_only attribute to serializer
 
 
 class UserFileSerializer(serializers.ModelSerializer):

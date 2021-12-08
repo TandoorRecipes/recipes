@@ -7,14 +7,14 @@ import pytest
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django_scopes import scopes_disabled
-from pytest_factoryboy import register
+from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import Food, Ingredient, Recipe, Space, Step, Unit
-from cookbook.tests.factories import SpaceFactory
+from cookbook.tests.factories import FoodFactory, SpaceFactory, UserFactory
 
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
-
+# register(FoodFactory, space=LazyFixture('space_2'))
 # TODO refactor user fixtures https://stackoverflow.com/questions/40966571/how-to-create-a-field-with-a-list-of-instances-in-factory-boy
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
@@ -184,25 +184,17 @@ def create_user(client, space, **kwargs):
     c = copy.deepcopy(client)
     with scopes_disabled():
         group = kwargs.pop('group', None)
-        username = kwargs.pop('username', uuid.uuid4())
+        user = UserFactory(space=space, groups=group)
 
-        user = User.objects.create(username=username, **kwargs)
-        if group:
-            user.groups.add(Group.objects.get(name=group))
-
-        user.userpreference.space = space
-        user.userpreference.save()
         c.force_login(user)
         return c
 
 
-# anonymous user
 @pytest.fixture()
 def a_u(client):
     return copy.deepcopy(client)
 
 
-# users without any group
 @pytest.fixture()
 def ng1_s1(client, space_1):
     return create_user(client, space_1)
