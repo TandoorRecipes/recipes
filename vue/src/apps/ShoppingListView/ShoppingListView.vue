@@ -436,7 +436,7 @@
                         delayThis(contextData)
                     "
                 >
-                    <b-form-group label-cols="10" content-cols="2" class="text-nowrap m-0 mr-2">
+                    <b-form-group label-cols="9" content-cols="3" class="text-nowrap m-0 mr-2">
                         <template #label>
                             <a class="dropdown-item p-2" href="#"><i class="far fa-hourglass"></i> {{ $t("DelayFor", { hours: delay }) }}</a>
                         </template>
@@ -550,7 +550,7 @@ export default {
 
             // filter out list items that are delayed
             if (!this.show_delay && shopping_list) {
-                shopping_list = shopping_list.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) > new Date(Date.now()))
+                shopping_list = shopping_list.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) < new Date(Date.now()))
             }
 
             // if a supermarket is selected and filtered to only supermarket categories filter out everything else
@@ -671,6 +671,9 @@ export default {
                 }
             }, this.settings.shopping_auto_sync * 1000)
         },
+        "settings.default_delay": function (newVal, oldVal) {
+            this.delay = Number(newVal)
+        },
     },
     mounted() {
         this.getShoppingList()
@@ -678,7 +681,8 @@ export default {
         this.getShoppingCategories()
 
         this.settings = getUserPreference()
-        this.delay = this.settings.default_delay || 4
+        this.delay = Number(this.settings.default_delay || 4)
+        console.log(this.delay)
         this.supermarket_categories_only = this.settings.filter_to_supermarket
         if (this.settings.shopping_auto_sync) {
             window.addEventListener("online", this.updateOnlineStatus)
