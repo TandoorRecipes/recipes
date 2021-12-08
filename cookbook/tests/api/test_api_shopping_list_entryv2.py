@@ -1,10 +1,12 @@
 import json
+from datetime import timedelta
 
 import factory
 import pytest
 from django.contrib import auth
 from django.forms import model_to_dict
 from django.urls import reverse
+from django.utils import timezone
 from django_scopes import scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
@@ -155,15 +157,73 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1):
     assert len(json.loads(r.content)) == count
 
 
-# TODO test completed entries still visible if today, but not yesterday
+def test_completed(sle, u1_s1):
+    # check 1 entry
+    #
+    u1_s1.patch(
+        reverse(DETAIL_URL, args={sle[0].id}),
+        {'checked': True},
+        content_type='application/json'
+    )
+    r = json.loads(u1_s1.get(reverse(LIST_URL)).content)
+    assert len(r) == 10
+    # count unchecked entries
+    assert [x['checked'] for x in r].count(False) == 9
+    # confirm completed_at is populated
+    assert [(x['completed_at'] != None) for x in r if x['checked']].count(True) == 1
+
+    assert len(json.loads(u1_s1.get(f'{reverse(LIST_URL)}?checked=0').content)) == 9
+    assert len(json.loads(u1_s1.get(f'{reverse(LIST_URL)}?checked=1').content)) == 1
+
+    # uncheck entry
+    u1_s1.patch(
+        reverse(DETAIL_URL, args={sle[0].id}),
+        {'checked': False},
+        content_type='application/json'
+    )
+    r = json.loads(u1_s1.get(reverse(LIST_URL)).content)
+    assert [x['checked'] for x in r].count(False) == 10
+    # confirm completed_at value cleared
+    assert [(x['completed_at'] != None) for x in r if x['checked']].count(True) == 0
+
+
+def test_recent(sle, u1_s1):
+    user = auth.get_user(u1_s1)
+    today_start = timezone.now().replace(hour=0, minute=0, second=0)
+
+    # past_date within recent_days threshold
+    past_date = today_start - timedelta(days=user.userpreference.shopping_recent_days - 1)
+    sle[0].checked = True
+    sle[0].completed_at = past_date
+    sle[0].save()
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?recent=1').content)
+    assert len(r) == 10
+    assert [x['checked'] for x in r].count(False) == 9
+
+    # past_date outside recent_days threshold
+    past_date = today_start - timedelta(days=user.userpreference.shopping_recent_days + 2)
+    sle[0].completed_at = past_date
+    sle[0].save()
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?recent=1').content)
+    assert len(r) == 9
+    assert [x['checked'] for x in r].count(False) == 9
+
+    # user preference moved to include entry again
+    user.userpreference.shopping_recent_days = user.userpreference.shopping_recent_days + 4
+    user.userpreference.save()
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?recent=1').content)
+    assert len(r) == 10
+    assert [x['checked'] for x in r].count(False) == 9
+
+
 # TODO test create shopping list from recipe
 # TODO test delete shopping list from recipe -  include created by, shared with and not shared with
 # TODO test create shopping list from food
 # TODO test delete shopping list from food -  include created by, shared with and not shared with
 # TODO test create shopping list from mealplan
 # TODO test create shopping list from recipe, excluding ingredients
-# TODO test auto creating shopping list from meal plan
-# TODO test excluding on-hand when auto creating shopping list
+
 # test delay
-# test completed_at when checked
-# test completed_at cleared when unchecked

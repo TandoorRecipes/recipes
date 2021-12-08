@@ -716,7 +716,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         if pk := self.request.query_params.getlist('id', []):
             self.queryset = self.queryset.filter(food__id__in=[int(i) for i in pk])
 
-        if bool(int(self.request.query_params.get('recent', False))):
+        if 'checked' in self.request.query_params or 'recent' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
 
         # TODO once old shopping list is removed this needs updated to sharing users in preferences

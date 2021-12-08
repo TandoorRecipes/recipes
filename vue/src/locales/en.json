@@ -275,5 +275,6 @@
     "csv_prefix_help": "Prefix to add when copying list to the clipboard.",
     "csv_prefix_label": "List Prefix",
     "copy_markdown_table": "Copy as Markdown Table",
-    "in_shopping": "In Shopping List"
+    "in_shopping": "In Shopping List",
+    "DelayUntil": "Delay Until"
 }
