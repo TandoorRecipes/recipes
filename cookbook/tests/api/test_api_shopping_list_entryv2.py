@@ -1,5 +1,6 @@
 import json
 
+import factory
 import pytest
 from django.contrib import auth
 from django.forms import model_to_dict
@@ -13,15 +14,14 @@ from cookbook.tests.factories import FoodFactory, ShoppingListEntryFactory
 LIST_URL = 'api:shoppinglistentry-list'
 DETAIL_URL = 'api:shoppinglistentry-detail'
 
-# register(FoodFactory, 'food_1', space=LazyFixture('space_1'))
-# register(FoodFactory, 'food_2', space=LazyFixture('space_1'))
-# register(ShoppingListEntryFactory, 'sle_1', space=LazyFixture('space_1'), food=LazyFixture('food_1'))
-# register(ShoppingListEntryFactory, 'sle_2', space=LazyFixture('space_1'), food=LazyFixture('food_2'))
-register(ShoppingListEntryFactory, 'sle_1', space=LazyFixture('space_1'))
-register(ShoppingListEntryFactory, 'sle_2', space=LazyFixture('space_1'))
+
+@pytest.fixture
+def sle(space_1, u1_s1):
+    user = auth.get_user(u1_s1)
+    return ShoppingListEntryFactory.create_batch(10, space=space_1, created_by=user)
 
 
-@pytest.mark.parametrize("arg", [
+@ pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 200],
     ['u1_s1', 200],
@@ -32,29 +32,28 @@ def test_list_permission(arg, request):
     assert c.get(reverse(LIST_URL)).status_code == arg[1]
 
 
-def test_list_space(sle_1, u1_s1, u1_s2, space_2):
-    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
-    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
+def test_list_space(sle,  u1_s1, u1_s2, space_2):
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 10
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
 
     with scopes_disabled():
         e = ShoppingListEntry.objects.first()
         e.space = space_2
         e.save()
 
-    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
-    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 9
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
 
 
-def test_get_detail(u1_s1, sle_1):
-    # r = u1_s1.get(reverse(
-    #     DETAIL_URL,
-    #     args={sle_1.id}
-    # ))
-    # assert json.loads(r.content)['id'] == sle_1.id
-    pass
+def test_get_detail(u1_s1, sle):
+    r = u1_s1.get(reverse(
+        DETAIL_URL,
+        args={sle[0].id}
+    ))
+    assert json.loads(r.content)['id'] == sle[0].id
 
 
-@pytest.mark.parametrize("arg", [
+@ pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 404],
     ['u1_s1', 200],
@@ -63,20 +62,21 @@ def test_get_detail(u1_s1, sle_1):
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])
-def test_update(arg, request, sle_1):
+def test_update(arg, request, sle):
     c = request.getfixturevalue(arg[0])
+    new_val = float(sle[0].amount + 1)
     r = c.patch(
         reverse(
             DETAIL_URL,
-            args={sle_1.id}
+            args={sle[0].id}
         ),
-        {'amount': 2},
+        {'amount': new_val},
         content_type='application/json'
     )
     assert r.status_code == arg[1]
     if r.status_code == 200:
         response = json.loads(r.content)
-        assert response['amount'] == 2
+        assert response['amount'] == new_val
 
 
 @pytest.mark.parametrize("arg", [
@@ -85,25 +85,25 @@ def test_update(arg, request, sle_1):
     ['u1_s1', 201],
     ['a1_s1', 201],
 ])
-def test_add(arg, request, sle_1):
+def test_add(arg, request, sle):
     c = request.getfixturevalue(arg[0])
     r = c.post(
         reverse(LIST_URL),
-        {'food': model_to_dict(sle_1.food), 'amount': 1},
+        {'food': model_to_dict(sle[0].food), 'amount': 1},
         content_type='application/json'
     )
     response = json.loads(r.content)
     print(r.content)
     assert r.status_code == arg[1]
     if r.status_code == 201:
-        assert response['food']['id'] == sle_1.food.pk
+        assert response['food']['id'] == sle[0].food.pk
 
 
-def test_delete(u1_s1, u1_s2, sle_1):
+def test_delete(u1_s1, u1_s2, sle):
     r = u1_s2.delete(
         reverse(
             DETAIL_URL,
-            args={sle_1.id}
+            args={sle[0].id}
         )
     )
     assert r.status_code == 404
@@ -111,7 +111,7 @@ def test_delete(u1_s1, u1_s2, sle_1):
     r = u1_s1.delete(
         reverse(
             DETAIL_URL,
-            args={sle_1.id}
+            args={sle[0].id}
         )
     )
 

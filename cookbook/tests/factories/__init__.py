@@ -4,9 +4,10 @@ from decimal import Decimal
 import factory
 import pytest
 from django.contrib import auth
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django_scopes import scopes_disabled
 from faker import Factory as FakerFactory
+from pytest_factoryboy import register
 
 # this code will run immediately prior to creating the model object useful when you want a reverse relationship
 # log = factory.RelatedFactory(
@@ -31,6 +32,7 @@ def pytest_fixture_setup(fixturedef, request):
             yield
 
 
+@register
 class SpaceFactory(factory.django.DjangoModelFactory):
     """Space factory."""
     name = factory.LazyAttribute(lambda x: faker.word())
@@ -44,18 +46,41 @@ class SpaceFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.Space'
 
 
+@register
 class UserFactory(factory.django.DjangoModelFactory):
+
     """User factory."""
-    username = factory.LazyAttribute(lambda x: faker.word())
+    username = factory.LazyAttribute(lambda x: faker.simple_profile()['username'])
     first_name = factory.LazyAttribute(lambda x: faker.first_name())
     last_name = factory.LazyAttribute(lambda x: faker.last_name())
     email = factory.LazyAttribute(lambda x: faker.email())
     space = factory.SubFactory(SpaceFactory)
 
+    @factory.post_generation
+    def groups(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            self.groups.add(Group.objects.get(name=extracted))
+
+    @factory.post_generation
+    def userpreference(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # TODO this doesn't work and needs saved
+            for prefs in extracted:
+                self.userpreference[prefs] = prefs
+        self.userpreference.space = self.space
+        self.userpreference.save()
+
     class Meta:
         model = User
 
 
+@register
 class SupermarketCategoryFactory(factory.django.DjangoModelFactory):
     """SupermarketCategory factory."""
     name = factory.LazyAttribute(lambda x: faker.word())
@@ -64,9 +89,11 @@ class SupermarketCategoryFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.SupermarketCategory'
+        django_get_or_create = ('name', 'space',)
 
 
 # @factory.django.mute_signals(post_save)
+@register
 class FoodFactory(factory.django.DjangoModelFactory):
     """Food factory."""
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3))
@@ -89,8 +116,10 @@ class FoodFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Food'
+        django_get_or_create = ('name', 'space',)
 
 
+@register
 class UnitFactory(factory.django.DjangoModelFactory):
     """Unit factory."""
     name = factory.LazyAttribute(lambda x: faker.word())
@@ -99,8 +128,10 @@ class UnitFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Unit'
+        django_get_or_create = ('name', 'space',)
 
 
+@register
 class KeywordFactory(factory.django.DjangoModelFactory):
     """Keyword factory."""
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3))
@@ -110,8 +141,10 @@ class KeywordFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Keyword'
+        django_get_or_create = ('name', 'space',)
 
 
+@register
 class IngredientFactory(factory.django.DjangoModelFactory):
     """Ingredient factory."""
     food = factory.SubFactory(FoodFactory, space=factory.SelfAttribute('..space'))
@@ -124,6 +157,7 @@ class IngredientFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.Ingredient'
 
 
+@register
 class MealTypeFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=5))
     order = 0
@@ -137,6 +171,7 @@ class MealTypeFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.MealType'
 
 
+@register
 class MealPlanFactory(factory.django.DjangoModelFactory):
     recipe = factory.Maybe(
         factory.LazyAttribute(lambda x:  x.has_recipe),
@@ -158,6 +193,7 @@ class MealPlanFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.MealPlan'
 
 
+@register
 class ShoppingListRecipeFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=5))
     recipe = factory.Maybe(
@@ -175,6 +211,7 @@ class ShoppingListRecipeFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.ShoppingListRecipe'
 
 
+@register
 class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
     """ShoppingListEntry factory."""
 
@@ -184,16 +221,16 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
         no_declaration=None
     )
     food = factory.SubFactory(FoodFactory, space=factory.SelfAttribute('..space'))
-    # unit = factory.SubFactory(UnitFactory, space=factory.SelfAttribute('..space'))
+    unit = factory.SubFactory(UnitFactory, space=factory.SelfAttribute('..space'))
     # # ingredient = factory.SubFactory(IngredientFactory)
-    amount = factory.LazyAttribute(lambda x: Decimal(faker.random_int(min=1, max=10))/100)
-    order = 0
+    amount = factory.LazyAttribute(lambda x: Decimal(faker.random_int(min=1, max=100))/10)
+    order = factory.Sequence(int)
     checked = False
     created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
     created_at = factory.LazyAttribute(lambda x: faker.past_date())
     completed_at = None
     delay_until = None
-    space = factory.SubFactory('cookbook.tests.factories.SpaceFactory')
+    space = factory.SubFactory(SpaceFactory)
 
     class Params:
         has_mealplan = False
@@ -202,6 +239,7 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.ShoppingListEntry'
 
 
+@register
 class StepFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=5))
     # type = models.CharField(
@@ -229,6 +267,7 @@ class StepFactory(factory.django.DjangoModelFactory):
         model = 'cookbook.Step'
 
 
+@register
 class RecipeFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=7))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))

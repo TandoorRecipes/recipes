@@ -25,7 +25,7 @@
             </div>
 
             <div style="text-align: center">
-                <keywords-component :recipe="recipe" />
+                <keywords-component :recipe="recipe"></keywords-component>
             </div>
 
             <hr />
@@ -57,21 +57,32 @@
                         </div>
                     </div>
                 </div>
-              </div>
-              <br/>
-              <template v-for="s in recipe.steps" v-bind:key="s.id">
-                <div class="row" >
-                  <div class="col-md-12">
-                    <template v-if="s.show_as_header && s.name !== '' && s.ingredients.length > 0">
-                      <b v-bind:key="s.id">{{s.name}}</b>
-                    </template>
-                    <table class="table table-sm">
-                        <template v-for="i in s.ingredients" :key="i.id">
-                          <ingredient-component :ingredient="i" :ingredient_factor="ingredient_factor"
-                                      @checked-state-changed="updateIngredientCheckedState"></ingredient-component>
-                        </template>
-                    </table>
-                  </div>
+
+                <div class="col col-md-4 col-10 mt-2 mt-md-0 mt-lg-0 mt-xl-0">
+                    <div class="row d-flex" style="padding-left: 16px">
+                        <div class="my-auto" style="padding-right: 4px">
+                            <i class="fas fa-pizza-slice fa-2x text-primary"></i>
+                        </div>
+                        <div class="my-auto" style="padding-right: 4px">
+                            <input
+                                style="text-align: right; border-width: 0px; border: none; padding: 0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
+                                value="1"
+                                maxlength="3"
+                                min="0"
+                                type="number"
+                                class="form-control form-control-lg"
+                                v-model.number="servings"
+                            />
+                        </div>
+                        <div class="my-auto">
+                            <span class="text-primary"
+                                ><b
+                                    ><template v-if="recipe.servings_text === ''">{{ $t("Servings") }}</template
+                                    ><template v-else>{{ recipe.servings_text }}</template></b
+                                ></span
+                            >
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col col-md-2 col-2 my-auto" style="text-align: right; padding-right: 1vw">
@@ -82,7 +93,30 @@
 
             <div class="row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
-                    <ingredients-card :steps="recipe.steps" :ingredient_factor="ingredient_factor" :servings="servings" :header="true" @checked-state-changed="updateIngredientCheckedState" />
+                    <div class="card border-primary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-md-8">
+                                    <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h4>
+                                </div>
+                            </div>
+                            <br />
+                            <template v-for="s in recipe.steps" v-bind:key="s.id">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <template v-if="s.show_as_header && s.name !== '' && s.ingredients.length > 0">
+                                            <b v-bind:key="s.id">{{ s.name }}</b>
+                                        </template>
+                                        <table class="table table-sm">
+                                            <template v-for="i in s.ingredients" :key="i.id">
+                                                <ingredient-component :ingredient="i" :ingredient_factor="ingredient_factor" @checked-state-changed="updateIngredientCheckedState"></ingredient-component>
+                                            </template>
+                                        </table>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
@@ -139,21 +173,25 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import { apiLoadRecipe } from "@/utils/api"
 
-import StepComponent from "@/components/StepComponent"
+import Step from "@/components/StepComponent"
 import RecipeContextMenu from "@/components/RecipeContextMenu"
 import { ResolveUrlMixin, ToastMixin } from "@/utils/utils"
+import Ingredient from "@/components/IngredientComponent"
 
 import PdfViewer from "@/components/PdfViewer"
 import ImageViewer from "@/components/ImageViewer"
-import IngredientsCard from "@/components/IngredientsCard"
+import Nutrition from "@/components/NutritionComponent"
 
 import moment from "moment"
-import KeywordsComponent from "@/components/KeywordsComponent"
-import NutritionComponent from "@/components/NutritionComponent"
+import Keywords from "@/components/KeywordsComponent"
 import LoadingSpinner from "@/components/LoadingSpinner"
-import AddRecipeToBook from "@/components/Modals/AddRecipeToBook"
+import AddRecipeToBook from "@/components/AddRecipeToBook"
 import RecipeRating from "@/components/RecipeRating"
 import LastCooked from "@/components/LastCooked"
+import IngredientComponent from "@/components/IngredientComponent"
+import StepComponent from "@/components/StepComponent"
+import KeywordsComponent from "@/components/KeywordsComponent"
+import NutritionComponent from "@/components/NutritionComponent"
 
 Vue.prototype.moment = moment
 
@@ -167,7 +205,7 @@ export default {
         RecipeRating,
         PdfViewer,
         ImageViewer,
-        IngredientsCard,
+        IngredientComponent,
         StepComponent,
         RecipeContextMenu,
         NutritionComponent,
