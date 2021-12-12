@@ -9,6 +9,8 @@ from django_scopes import scopes_disabled
 from faker import Factory as FakerFactory
 from pytest_factoryboy import register
 
+from cookbook.models import Step
+
 # this code will run immediately prior to creating the model object useful when you want a reverse relationship
 # log = factory.RelatedFactory(
 #     UserLogFactory,
@@ -138,15 +140,21 @@ class KeywordFactory(factory.django.DjangoModelFactory):
     # icon = models.CharField(max_length=16, blank=True, null=True)
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     space = factory.SubFactory(SpaceFactory)
+    num = None  # used on upstream factories to generate num keywords
+
+    class Params:
+        num = None
 
     class Meta:
         model = 'cookbook.Keyword'
         django_get_or_create = ('name', 'space',)
+        exclude = ('num')
 
 
 @register
 class IngredientFactory(factory.django.DjangoModelFactory):
     """Ingredient factory."""
+    # TODO add optional recipe food
     food = factory.SubFactory(FoodFactory, space=factory.SelfAttribute('..space'))
     unit = factory.SubFactory(UnitFactory, space=factory.SelfAttribute('..space'))
     amount = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=10))
@@ -203,6 +211,7 @@ class ShoppingListRecipeFactory(factory.django.DjangoModelFactory):
     )
     servings = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=10))
     mealplan = factory.SubFactory(MealPlanFactory, space=factory.SelfAttribute('..space'))
+    space = factory.SubFactory(SpaceFactory)
 
     class Params:
         has_recipe = False
@@ -242,26 +251,43 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
 @register
 class StepFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=5))
-    # type = models.CharField(
-    #     choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')), (RECIPE, _('Recipe')),),
-    #     default=TEXT,
-    #     max_length=16
-    # )
     instruction = factory.LazyAttribute(lambda x: ''.join(faker.paragraphs(nb=5)))
-    ingredients = factory.SubFactory(IngredientFactory, space=factory.SelfAttribute('..space'))
+    # TODO add optional recipe food, make dependent on recipe, make number of recipes a Params
+    ingredients__count = 10  # default number of ingredients to add
     time = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=1000))
-    order = 0
+    order = factory.Sequence(lambda x: x)
     # file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = True
-    step_recipe = factory.Maybe(
-        factory.LazyAttribute(lambda x:  x.has_recipe),
-        yes_declaration=factory.SubFactory('cookbook.tests.factories.RecipeFactory', space=factory.SelfAttribute('..space')),
-        no_declaration=None
-    )
+    step_recipe__has_recipe = False
+    ingredients__food_recipe_count = 0
     space = factory.SubFactory(SpaceFactory)
 
-    class Params:
-        has_recipe = False
+    @factory.post_generation
+    def step_recipe(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if kwargs.get('has_recipe', False):
+            step_recipe = RecipeFactory(space=self.space)
+            self.type = Step.RECIPE
+
+    @factory.post_generation
+    def ingredients(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        num_ing = kwargs.get('count', 0)
+        num_food_recipe = kwargs.get('food_recipe_count', 0)
+        if num_ing > 0:
+            for i in range(num_ing):
+                if num_food_recipe > 0:
+                    has_recipe = True
+                    num_food_recipe = num_food_recipe-1
+                else:
+                    has_recipe = False
+                self.ingredients.add(IngredientFactory(space=self.space, food__has_recipe=has_recipe))
+        elif extracted:
+            for ing in extracted:
+                self.ingredients.add(ing)
 
     class Meta:
         model = 'cookbook.Step'
@@ -272,8 +298,54 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=7))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     servings = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=20))
-    servings_text = factory.LazyAttribute(lambda x: faker.sentence(nb_words=1))
-    # image = models.ImageField(upload_to='recipes/', blank=True, null=True)  #TODO test recipe image api
+    servings_text = factory.LazyAttribute(lambda x: faker.sentence(nb_words=1))  # TODO generate list of expected servings text that can be iterated through
+    keywords__count = 5  # default number of keywords to generate
+    steps__count = 1  # default number of steps to create
+    steps__recipe_count = 0  # default number of step recipes to create
+    steps__food_recipe_count = {}  # by default, don't create food recipes, to override {'steps__food_recipe_count': {'step': 0, 'count': 1}}
+    working_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
+    waiting_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
+    internal = False
+    created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    created_at = factory.LazyAttribute(lambda x: faker.date_this_decade())
+    space = factory.SubFactory(SpaceFactory)
+
+    @factory.post_generation
+    def keywords(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        num_kw = kwargs.get('count', 0)
+        if num_kw > 0:
+            for i in range(num_kw):
+                self.keywords.add(KeywordFactory(space=self.space))
+        elif extracted:
+            for kw in extracted:
+                self.keywords.add(kw)
+
+    @factory.post_generation
+    def steps(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        food_recipe_count = kwargs.get('food_recipe_count', {})  # TODO - pass this
+        num_steps = kwargs.get('count', 0)
+        num_recipe_steps = kwargs.get('recipe_count', 0)
+        if num_steps > 0:
+            for i in range(num_steps):
+                ing_recipe_count = 0
+                if food_recipe_count.get('step', None) == i:
+                    ing_recipe_count = food_recipe_count.get('count', 0)
+                self.steps.add(StepFactory(space=self.space, ingredients__food_recipe_count=ing_recipe_count))
+        if num_recipe_steps > 0:
+            for j in range(num_recipe_steps):
+                self.steps.add(StepFactory(space=self.space, step_recipe__has_recipe=True))
+        if extracted and (num_steps + num_recipe_steps == 0):
+            for step in extracted:
+                self.steps.add(step)
+
+    # image = models.ImageField(upload_to='recipes/', blank=True, null=True)  #TODO test recipe image api https://factoryboy.readthedocs.io/en/stable/orms.html#factory.django.ImageField
     # storage = models.ForeignKey(
     #     Storage, on_delete=models.PROTECT, blank=True, null=True
     # )
@@ -281,18 +353,8 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     # file_path = models.CharField(max_length=512, default="", blank=True)
     # link = models.CharField(max_length=512, null=True, blank=True)
     # cors_link = models.CharField(max_length=1024, null=True, blank=True)
-    keywords = factory.SubFactory(KeywordFactory, space=factory.SelfAttribute('..space'))
-    steps = factory.SubFactory(StepFactory, space=factory.SelfAttribute('..space'))
-    working_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
-    waiting_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
-    internal = False
-    # nutrition = models.ForeignKey(
-    #     NutritionInformation, blank=True, null=True, on_delete=models.CASCADE
-    # )
-    created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
-    created_at = factory.LazyAttribute(lambda x: faker.date_this_decade())
+    # nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
     # updated_at = models.DateTimeField(auto_now=True)
-    space = factory.SubFactory(SpaceFactory)
 
     class Meta:
         model = 'cookbook.Recipe'
