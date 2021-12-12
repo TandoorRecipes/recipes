@@ -58,6 +58,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
 
     if type(servings) not in [int, float]:
         servings = getattr(mealplan, 'servings', 1.0)
+    servings_factor = servings / r.servings
 
     shared_users = list(created_by.get_shopping_share())
     shared_users.append(created_by)
@@ -75,7 +76,44 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     else:
         ingredients = Ingredient.objects.filter(step__recipe=r, space=space)
 
-    add_ingredients = ingredients.values_list('id', flat=True)
+        if exclude_onhand := created_by.userpreference.mealplan_autoexclude_onhand:
+            ingredients = ingredients.exclude(food__on_hand=True)
+
+        related_step_ing = []
+        if related := created_by.userpreference.mealplan_autoinclude_related:
+            # TODO: add levels of related recipes to use when auto-adding mealplans
+            related_recipes = r.get_related_recipes()
+
+            for x in related_recipes:
+                # related recipe is a Step serving size is driven by recipe serving size
+                # TODO once Steps can have a serving size this needs to be refactored
+                if exclude_onhand:
+                    # if steps are used more than once in a recipe or subrecipe - I don' think this results in the desired behavior
+                    related_step_ing += Ingredient.objects.filter(step__recipe=x, food__on_hand=False, space=space).values_list('id', flat=True)
+                else:
+                    related_step_ing += Ingredient.objects.filter(step__recipe=x, space=space).values_list('id', flat=True)
+
+                x_ing = []
+                if ingredients.filter(food__recipe=x).exists():
+                    for ing in ingredients.filter(food__recipe=x):
+                        if exclude_onhand:
+                            x_ing = Ingredient.objects.filter(step__recipe=x, food__on_hand=False, space=space)
+                        else:
+                            x_ing = Ingredient.objects.filter(step__recipe=x, space=space)
+                            for i in [x for x in x_ing if not x.food.ignore_shopping]:
+                                ShoppingListEntry.objects.create(
+                                    list_recipe=list_recipe,
+                                    food=i.food,
+                                    unit=i.unit,
+                                    ingredient=i,
+                                    amount=i.amount * Decimal(servings_factor),
+                                    created_by=created_by,
+                                    space=space,
+                                )
+                    # dont' add food to the shopping list that are actually recipes that will be added as ingredients
+                    ingredients = ingredients.exclude(food__recipe=x)
+
+    add_ingredients = list(ingredients.values_list('id', flat=True)) + related_step_ing
     if not append:
         existing_list = ShoppingListEntry.objects.filter(list_recipe=list_recipe)
         # delete shopping list entries not included in ingredients
@@ -87,7 +125,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     # if servings have changed, update the ShoppingListRecipe and existing Entrys
     if servings <= 0:
         servings = 1
-    servings_factor = servings / r.servings
+
     if not created and list_recipe.servings != servings:
         update_ingredients = set(ingredients.values_list('id', flat=True)) - set(add_ingredients.values_list('id', flat=True))
         for sle in ShoppingListEntry.objects.filter(list_recipe=list_recipe, ingredient__id__in=update_ingredients):
