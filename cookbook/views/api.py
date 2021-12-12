@@ -412,7 +412,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
 
-    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
+    ''
+    @decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
     def shopping(self, request, pk):
         obj = self.get_object()
         shared_users = list(self.request.user.get_shopping_share())
@@ -594,6 +595,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     schema = QueryParamAutoSchema()
 
     def get_queryset(self):
+
+        if self.detail:
+            self.queryset = self.queryset.filter(space=self.request.space)
+            return super().get_queryset()
+
         share = self.request.query_params.get('share', None)
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)

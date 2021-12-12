@@ -11,7 +11,7 @@ from django_scopes import scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import ShoppingListEntry
-from cookbook.tests.factories import FoodFactory, ShoppingListEntryFactory
+from cookbook.tests.factories import ShoppingListEntryFactory
 
 LIST_URL = 'api:shoppinglistentry-list'
 DETAIL_URL = 'api:shoppinglistentry-detail'
@@ -219,11 +219,6 @@ def test_recent(sle, u1_s1):
     assert [x['checked'] for x in r].count(False) == 9
 
 
-# TODO test create shopping list from recipe
-# TODO test delete shopping list from recipe -  include created by, shared with and not shared with
 # TODO test create shopping list from food
 # TODO test delete shopping list from food -  include created by, shared with and not shared with
 # TODO test create shopping list from mealplan
-# TODO test create shopping list from recipe, excluding ingredients
-
-# test delay
