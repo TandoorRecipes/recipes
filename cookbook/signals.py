@@ -94,17 +94,19 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=MealPlan)
 def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs):
     user = instance.get_owner()
-    if not created or not user.userpreference.mealplan_autoadd_shopping:
+    if not user.userpreference.mealplan_autoadd_shopping:
         return
 
-    # if creating a mealplan - perform shopping list activities
-    space = instance.space
-    if user.userpreference.mealplan_autoadd_shopping:
+    if not created and instance.shoppinglistrecipe_set.exists():
+        for x in instance.shoppinglistrecipe_set.all():
+            if instance.servings != x.servings:
+                list_recipe = list_from_recipe(list_recipe=x, servings=instance.servings, space=instance.space)
+    elif created:
+        # if creating a mealplan - perform shopping list activities
         kwargs = {
             'mealplan': instance,
-            'space': space,
+            'space': instance.space,
             'created_by': user,
             'servings': instance.servings
         }
-
         list_recipe = list_from_recipe(**kwargs)

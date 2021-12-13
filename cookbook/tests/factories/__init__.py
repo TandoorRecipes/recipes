@@ -195,7 +195,7 @@ class MealPlanFactory(factory.django.DjangoModelFactory):
     space = factory.SubFactory(SpaceFactory)
 
     class Params:
-        has_recipe = False
+        has_recipe = True
 
     class Meta:
         model = 'cookbook.MealPlan'
