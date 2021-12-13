@@ -267,7 +267,10 @@ class StepFactory(factory.django.DjangoModelFactory):
         if not create:
             return
         if kwargs.get('has_recipe', False):
-            step_recipe = RecipeFactory(space=self.space)
+            self.step_recipe = RecipeFactory(space=self.space)
+            self.type = Step.RECIPE
+        elif extracted:
+            self.step_recipe = extracted
             self.type = Step.RECIPE
 
     @factory.post_generation
@@ -340,7 +343,7 @@ class RecipeFactory(factory.django.DjangoModelFactory):
                 self.steps.add(StepFactory(space=self.space, ingredients__food_recipe_count=ing_recipe_count))
         if num_recipe_steps > 0:
             for j in range(num_recipe_steps):
-                self.steps.add(StepFactory(space=self.space, step_recipe__has_recipe=True))
+                self.steps.add(StepFactory(space=self.space, step_recipe__has_recipe=True, ingredients__count=0))
         if extracted and (num_steps + num_recipe_steps == 0):
             for step in extracted:
                 self.steps.add(step)

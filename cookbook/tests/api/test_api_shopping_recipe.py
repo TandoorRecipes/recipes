@@ -10,8 +10,8 @@ from django.utils import timezone
 from django_scopes import scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Ingredient, ShoppingListEntry
-from cookbook.tests.factories import MealPlanFactory, RecipeFactory, UserFactory
+from cookbook.models import Food, Ingredient, ShoppingListEntry
+from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
 
 SHOPPING_LIST_URL = 'api:shoppinglistentry-list'
 SHOPPING_RECIPE_URL = 'api:recipe-shopping'
@@ -24,11 +24,10 @@ def user2(request, u1_s1):
     except AttributeError:
         params = {}
     user = auth.get_user(u1_s1)
-    user.userpreference.mealplan_autoadd_shopping = True
-    user.userpreference.mealplan_autoinclude_related = True
-    key = list(params)[0]
-    setattr(user.userpreference, key, params[key])
-    user.userpreference.save
+    user.userpreference.mealplan_autoadd_shopping = params.get('mealplan_autoadd_shopping', True)
+    user.userpreference.mealplan_autoinclude_related = params.get('mealplan_autoinclude_related', True)
+    user.userpreference.mealplan_autoexclude_onhand = params.get('mealplan_autoexclude_onhand', True)
+    user.userpreference.save()
     return u1_s1
 
 
@@ -106,94 +105,123 @@ def test_shopping_recipe_method(request, arg, recipe, sle_count,  u1_s1, u2_s1):
 @pytest.mark.parametrize("use_mealplan", [(False), (True), ])
 def test_shopping_recipe_edit(request, recipe, sle_count, use_mealplan, u1_s1, u2_s1):
     # tests editing shopping list via recipe or mealplan
-    user = auth.get_user(u1_s1)
-    user2 = auth.get_user(u2_s1)
-    user.userpreference.mealplan_autoinclude_related = True
-    user.userpreference.mealplan_autoadd_shopping = True
-    user.userpreference.shopping_share.add(user2)
-    user.userpreference.save()
+    with scopes_disabled():
+        user = auth.get_user(u1_s1)
+        user2 = auth.get_user(u2_s1)
+        user.userpreference.mealplan_autoinclude_related = True
+        user.userpreference.mealplan_autoadd_shopping = True
+        user.userpreference.shopping_share.add(user2)
+        user.userpreference.save()
 
-    if use_mealplan:
-        mealplan = MealPlanFactory(space=recipe.space, created_by=user, servings=recipe.servings, recipe=recipe)
-    else:
-        u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
-    r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
-    assert [x['created_by']['id'] for x in r].count(user.id) == sle_count
-    all_ing = [x['ingredient'] for x in r]
-    keep_ing = all_ing[1:-1]  # remove first and last element
-    del keep_ing[int(len(keep_ing)/2)]  # remove a middle element
-    list_recipe = r[0]['list_recipe']
-    amount_sum = sum([x['amount'] for x in r])
+        if use_mealplan:
+            mealplan = MealPlanFactory(space=recipe.space, created_by=user, servings=recipe.servings, recipe=recipe)
+        else:
+            u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
+        r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
+        assert [x['created_by']['id'] for x in r].count(user.id) == sle_count
+        all_ing = [x['ingredient'] for x in r]
+        keep_ing = all_ing[1:-1]  # remove first and last element
+        del keep_ing[int(len(keep_ing)/2)]  # remove a middle element
+        list_recipe = r[0]['list_recipe']
+        amount_sum = sum([x['amount'] for x in r])
 
-    # test modifying shopping list as different user
-    # test increasing servings size of recipe shopping list
-    if use_mealplan:
-        mealplan.servings = 2*recipe.servings
-        mealplan.save()
-    else:
+        # test modifying shopping list as different user
+        # test increasing servings size of recipe shopping list
+        if use_mealplan:
+            mealplan.servings = 2*recipe.servings
+            mealplan.save()
+        else:
+            u2_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
+                      {'list_recipe': list_recipe, 'servings': 2*recipe.servings},
+                      content_type='application/json'
+                      )
+        r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
+        assert sum([x['amount'] for x in r]) == amount_sum * 2
+        assert len(r) == sle_count
+        assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
+
+        # testing decreasing servings size of recipe shopping list
+        if use_mealplan:
+            mealplan.servings = .5 * recipe.servings
+            mealplan.save()
+        else:
+            u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
+                      {'list_recipe': list_recipe, 'servings': .5 * recipe.servings},
+                      content_type='application/json'
+                      )
+        r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
+        assert sum([x['amount'] for x in r]) == amount_sum * .5
+        assert len(r) == sle_count
+        assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
+
+        # test removing 2 items from shopping list
         u2_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
-                  {'list_recipe': list_recipe, 'servings': 2*recipe.servings},
+                  {'list_recipe': list_recipe, 'ingredients': keep_ing},
                   content_type='application/json'
                   )
-    r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
-    assert sum([x['amount'] for x in r]) == amount_sum * 2
-    assert len(r) == sle_count
-    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
+        r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
+        assert len(r) == sle_count - 3
+        assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count - 3
 
-    # testing decreasing servings size of recipe shopping list
-    if use_mealplan:
-        mealplan.servings = .5 * recipe.servings
-        mealplan.save()
-    else:
-        u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
-                  {'list_recipe': list_recipe, 'servings': .5 * recipe.servings},
+        # add all ingredients to existing shopping list - don't change serving size
+        u2_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
+                  {'list_recipe': list_recipe, 'ingredients': all_ing},
                   content_type='application/json'
                   )
-    r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
-    assert sum([x['amount'] for x in r]) == amount_sum * .5
-    assert len(r) == sle_count
-    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
-
-    # test removing 2 items from shopping list
-    u2_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
-              {'list_recipe': list_recipe, 'ingredients': keep_ing},
-              content_type='application/json'
-              )
-    r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
-    assert len(r) == sle_count - 3
-    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count - 3
-
-    # add all ingredients to existing shopping list - don't change serving size
-    u2_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
-              {'list_recipe': list_recipe, 'ingredients': all_ing},
-              content_type='application/json'
-              )
-    r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
-    assert sum([x['amount'] for x in r]) == amount_sum * .5
-    assert len(r) == sle_count
-    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
+        r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
+        assert sum([x['amount'] for x in r]) == amount_sum * .5
+        assert len(r) == sle_count
+        assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
 
 
-# auto add shopping, no
-# auto include related, no
-# auto ignore onhand
-# ignore shopping food
 @pytest.mark.parametrize("user2, sle_count", [
-    ({'mealplan_autoadd_shopping': False}, 0),
-    ({'mealplan_autoinclude_related': False}, 9),
-    ({'mealplan_autoexclude_onhand': True}, 27),  # shopping list from recipe with StepRecipe
+    ({'mealplan_autoadd_shopping': False}, (0, 17)),
+    ({'mealplan_autoinclude_related': False}, (7, 7)),
+    ({'mealplan_autoexclude_onhand': False}, (19, 19)),
 ], indirect=['user2'])
 @pytest.mark.parametrize("use_mealplan", [(False), (True), ])
 @pytest.mark.parametrize("recipe", [({'steps__recipe_count': 1})], indirect=['recipe'])
-def test_shopping_recipe_userpreference(request, recipe, sle_count, use_mealplan, user2):
+def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
     with scopes_disabled():
         user = auth.get_user(user2)
-        # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 1 food onhand, 1 food ignore shopping
-        recipe.step.all()
+        # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 2 food onhand(from recipe and step_recipe), 1 food ignore shopping
+        ingredients = Ingredient.objects.filter(step__recipe=recipe)
+        food = Food.objects.get(id=ingredients[0].food.id)
+        food.on_hand = True
+        food.save()
+        food = Step.objects.filter(type=Step.RECIPE).first().ingredients.first()
+        food.on_hand = True
+        food.save()
+        food = Food.objects.get(id=ingredients[2].food.id)
+        food.ignore_shopping = True
+        food.save()
+
+        if use_mealplan:
+            mealplan = MealPlanFactory(space=recipe.space, created_by=user, servings=recipe.servings, recipe=recipe)
+            assert len(json.loads(user2.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count[0]
+        else:
+            user2.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
+            assert len(json.loads(user2.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count[1]
 
 
-def test_shopping_recipe_mixed_authors(request, user2):
-    assert 1 == 1
+def test_shopping_recipe_mixed_authors(u1_s1, u2_s1):
+    with scopes_disabled():
+        user1 = auth.get_user(u1_s1)
+        user2 = auth.get_user(u2_s1)
+        space = user1.userpreference.space
+        user3 = UserFactory(space=space)
+        recipe1 = RecipeFactory(created_by=user1, space=space)
+        recipe2 = RecipeFactory(created_by=user2, space=space)
+        recipe3 = RecipeFactory(created_by=user3, space=space)
+        food = Food.objects.get(id=recipe1.steps.first().ingredients.first().food.id)
+        food.recipe = recipe2
+        food.save()
+        recipe1.steps.add(StepFactory(step_recipe=recipe3, ingredients__count=0,  space=space))
+        recipe1.save()
+
+        u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe1.id}))
+        assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 29
+        assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 0
 
 
 # TODO test creating shopping list from recipe that includes recipes from multiple users
