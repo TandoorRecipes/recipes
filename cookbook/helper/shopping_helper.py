@@ -5,6 +5,7 @@ from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import F, OuterRef, Q, Subquery, Value
 from django.db.models.functions import Coalesce
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.models import (Ingredient, ShoppingListEntry, ShoppingListRecipe,
@@ -52,6 +53,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     if not r:
         raise ValueError(_("You must supply a recipe or mealplan"))
 
+    created_by = created_by or getattr(ShoppingListEntry.objects.filter(list_recipe=list_recipe).first(), 'created_by', None)
     if not created_by:
         raise ValueError(_("You must supply a created_by"))
 
