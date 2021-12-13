@@ -52,12 +52,14 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     if not r:
         raise ValueError(_("You must supply a recipe or mealplan"))
 
-    created_by = created_by or getattr(mealplan, 'created_by', None) or getattr(list_recipe, 'created_by', None)
     if not created_by:
         raise ValueError(_("You must supply a created_by"))
 
-    if type(servings) not in [int, float]:
+    try:
+        servings = float(servings)
+    except ValueError:
         servings = getattr(mealplan, 'servings', 1.0)
+
     servings_factor = servings / r.servings
 
     shared_users = list(created_by.get_shopping_share())
@@ -68,6 +70,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
         list_recipe = ShoppingListRecipe.objects.create(recipe=r, mealplan=mealplan, servings=servings)
         created = True
 
+    related_step_ing = []
     if servings == 0 and not created:
         list_recipe.delete()
         return []
@@ -79,7 +82,6 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
         if exclude_onhand := created_by.userpreference.mealplan_autoexclude_onhand:
             ingredients = ingredients.exclude(food__on_hand=True)
 
-        related_step_ing = []
         if related := created_by.userpreference.mealplan_autoinclude_related:
             # TODO: add levels of related recipes to use when auto-adding mealplans
             related_recipes = r.get_related_recipes()
@@ -128,6 +130,8 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
 
     if not created and list_recipe.servings != servings:
         update_ingredients = set(ingredients.values_list('id', flat=True)) - set(add_ingredients.values_list('id', flat=True))
+        list_recipe.servings = servings
+        list_recipe.save()
         for sle in ShoppingListEntry.objects.filter(list_recipe=list_recipe, ingredient__id__in=update_ingredients):
             sle.amount = sle.ingredient.amount * Decimal(servings_factor)
             sle.save()
