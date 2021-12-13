@@ -661,10 +661,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def shopping(self, request, pk):
         obj = self.get_object()
         ingredients = request.data.get('ingredients', None)
-        servings = request.data.get('servings', obj.servings)
-        list_recipe = request.data.get('list_recipe', None)
+        servings = request.data.get('servings', None)
+        list_recipe = ShoppingListRecipe.objects.filter(id=request.data.get('list_recipe', None)).first()
+        if servings is None:
+            servings = getattr(list_recipe, 'servings', obj.servings)
+        # created_by needs to be sticky to original creator as it is 'their' shopping list
+        # changing shopping list created_by can shift some items to new owner which may not share in the other direction
+        created_by = getattr(ShoppingListEntry.objects.filter(list_recipe=list_recipe).first(), 'created_by', request.user)
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-        list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=request.user)
+        list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=created_by)
 
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
