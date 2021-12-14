@@ -491,11 +491,11 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
-    ignore_shopping = models.BooleanField(default=False)
+    ignore_shopping = models.BooleanField(default=False)  # inherited field
     description = models.TextField(default='', blank=True)
     on_hand = models.BooleanField(default=False)
     inherit = models.BooleanField(default=False)
-    ignore_inherit = models.ManyToManyField(FoodInheritField,  blank=True)  # is this better as inherit instead of ignore inherit?  which is more intuitive?
+    ignore_inherit = models.ManyToManyField(FoodInheritField,  blank=True)  # inherited field:  is this name better as inherit instead of ignore inherit?  which is more intuitive?
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -511,6 +511,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     @staticmethod
     def reset_inheritance(space=None):
+        # resets inheritted fields to the space defaults and updates all inheritted fields to root object values
         inherit = space.food_inherit.all()
         ignore_inherit = Food.inherit_fields.difference(inherit)
 
