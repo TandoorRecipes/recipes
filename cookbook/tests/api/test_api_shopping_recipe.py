@@ -222,7 +222,3 @@ def test_shopping_recipe_mixed_authors(u1_s1, u2_s1):
         u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe1.id}))
         assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 29
         assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 0
-
-
-# TODO test creating shopping list from recipe that includes recipes from multiple users
-# TODO meal plan recipe with all the user preferences tested

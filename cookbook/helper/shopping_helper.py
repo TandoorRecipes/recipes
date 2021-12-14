@@ -85,12 +85,12 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
             ingredients = ingredients.exclude(food__on_hand=True)
 
         if related := created_by.userpreference.mealplan_autoinclude_related:
-            # TODO: add levels of related recipes to use when auto-adding mealplans
+            # TODO: add levels of related recipes (related recipes of related recipes) to use when auto-adding mealplans
             related_recipes = r.get_related_recipes()
 
             for x in related_recipes:
                 # related recipe is a Step serving size is driven by recipe serving size
-                # TODO once Steps can have a serving size this needs to be refactored
+                # TODO once/if Steps can have a serving size this needs to be refactored
                 if exclude_onhand:
                     # if steps are used more than once in a recipe or subrecipe - I don' think this results in the desired behavior
                     related_step_ing += Ingredient.objects.filter(step__recipe=x, food__on_hand=False, space=space).values_list('id', flat=True)

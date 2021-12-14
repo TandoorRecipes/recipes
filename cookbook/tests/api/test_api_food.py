@@ -526,4 +526,24 @@ def test_ignoreinherit_field(request, obj_tree_1, field, inherit, new_val, u1_s1
     assert getattr(child, field) == new_val
 
 
-# TODO test reset_inheritance
+@pytest.mark.parametrize("obj_tree_1", [
+    ({'has_category': True, 'inherit': False, 'ignore_shopping': True}),
+], indirect=['obj_tree_1'])
+def test_reset_inherit(obj_tree_1, space_1):
+    with scope(space=space_1):
+        space_1.food_inherit.add(*Food.inherit_fields.values_list('id', flat=True))  # set default inherit fields
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        obj_tree_1.ignore_shopping = False
+        assert parent.ignore_shopping == child.ignore_shopping
+        assert parent.ignore_shopping != obj_tree_1.ignore_shopping
+        assert parent.supermarket_category != child.supermarket_category
+        assert parent.supermarket_category != obj_tree_1.supermarket_category
+
+        parent.reset_inheritance(space=space_1)
+        # djangotree bypasses ORM and need to be retrieved again
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        assert parent.ignore_shopping == obj_tree_1.ignore_shopping == child.ignore_shopping
+        assert parent.supermarket_category == obj_tree_1.supermarket_category == child.supermarket_category
