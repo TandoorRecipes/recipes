@@ -496,11 +496,11 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     assert (getattr(child, field) == new_val) == inherit
 
 
-# This is more about the model than the API - should this be moved to a different test?
 @pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
     ({'has_category': True, 'inherit': True, },  'supermarket_category', True, 'cat_1'),
     ({'ignore_shopping': True, 'inherit': True, }, 'ignore_shopping',  True, 'false'),
-], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
+], indirect=['obj_tree_1'])
+# This is more about the model than the API - should this be moved to a different test?
 def test_ignoreinherit_field(request, obj_tree_1, field, inherit, new_val, u1_s1):
     with scope(space=obj_tree_1.space):
         parent = obj_tree_1.get_parent()

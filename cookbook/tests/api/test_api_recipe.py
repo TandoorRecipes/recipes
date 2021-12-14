@@ -1,6 +1,6 @@
 import json
-import pytest
 
+import pytest
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
@@ -111,16 +111,3 @@ def test_delete(u1_s1, u1_s2, recipe_1_s1):
 
         assert r.status_code == 204
         assert not Recipe.objects.filter(pk=recipe_1_s1.id).exists()
-
-
-# TODO test related_recipes api
-#   -- step recipes
-#   -- ingredient recipes
-#   -- recipe wrong space
-#   -- steps wrong space
-#   -- ingredients wrong space
-#   -- step recipes included in step recipes
-#   -- step recipes included in food recipes
-#   -- food recipes included in step recipes
-#   -- food recipes included in food recipes
-#   -- included recipes in the wrong space
