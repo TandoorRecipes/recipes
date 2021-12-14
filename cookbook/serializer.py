@@ -157,6 +157,8 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     food_ignore_default = serializers.SerializerMethodField('get_ignore_default')
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
 
+    # TODO decide: default inherit field values for foods are being handled via VUE client through user preference
+    ##  should inherit field instead be set during the django model create?
     def get_ignore_default(self, obj):
         return FoodInheritFieldSerializer(Food.inherit_fields.difference(obj.space.food_inherit.all()), many=True).data
 

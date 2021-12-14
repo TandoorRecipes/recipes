@@ -11,6 +11,8 @@ from cookbook.models import Food, MealPlan, MealType
 LIST_URL = 'api:mealplan-list'
 DETAIL_URL = 'api:mealplan-detail'
 
+# NOTE: auto adding shopping list from meal plan is tested in test_shopping_recipe as tests are identical
+
 
 @pytest.fixture()
 def meal_type(space_1, u1_s1):
@@ -139,7 +141,3 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert MealPlan.objects.count() == 0
-
-
-# TODO test auto creating shopping list from meal plan
-# TODO test excluding on-hand when auto creating shopping list
