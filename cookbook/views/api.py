@@ -412,7 +412,6 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
 
-    ''
     @decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
     def shopping(self, request, pk):
         obj = self.get_object()
@@ -457,7 +456,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
         - **recipe**: id of recipe - only return books for that recipe
         - **book**: id of book - only return recipes in that book
 
-        """
+    """
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [CustomIsOwner]
@@ -682,7 +681,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         obj = self.get_object()
         if obj.get_space() != request.space:
             raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
-        qs = obj.get_related_recipes(levels=2)  # TODO: make levels a user setting, included in request data, keep solely in the backend?
+        qs = obj.get_related_recipes(levels=1)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
+        # mealplans= TODO get todays mealplans
         return Response(self.serializer_class(qs, many=True).data)
 
 
