@@ -163,12 +163,12 @@ if ENABLE_METRICS:
 AUTHENTICATION_BACKENDS = []
 
 # LDAP
-LDAP_AUTH=bool(os.getenv('LDAP_AUTH', False))
+LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
 if LDAP_AUTH:
     import ldap
     from django_auth_ldap.config import LDAPSearch
     AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
-    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI') 
+    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
     AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
     AUTH_LDAP_USER_SEARCH = LDAPSearch(
@@ -307,14 +307,14 @@ else:
 # }
 
 # SQLite testing DB
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-#         'NAME': 'db.sqlite3',
-#         'CONN_MAX_AGE': 600,
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
+        'NAME': 'db.sqlite3',
+        'CONN_MAX_AGE': 600,
+    }
+}
 
 CACHES = {
     'default': {
