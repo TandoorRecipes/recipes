@@ -93,30 +93,7 @@
 
             <div class="row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
-                    <div class="card border-primary">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col col-md-8">
-                                    <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h4>
-                                </div>
-                            </div>
-                            <br />
-                            <template v-for="s in recipe.steps" v-bind:key="s.id">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <template v-if="s.show_as_header && s.name !== '' && s.ingredients.length > 0">
-                                            <b v-bind:key="s.id">{{ s.name }}</b>
-                                        </template>
-                                        <table class="table table-sm">
-                                            <template v-for="i in s.ingredients" :key="i.id">
-                                                <ingredient-component :ingredient="i" :ingredient_factor="ingredient_factor" @checked-state-changed="updateIngredientCheckedState"></ingredient-component>
-                                            </template>
-                                        </table>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
+                    <ingredients-card :steps="recipe.steps" :ingredient_factor="ingredient_factor" :servings="servings" :header="true" @checked-state-changed="updateIngredientCheckedState" />
                 </div>
 
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
@@ -173,22 +150,18 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import { apiLoadRecipe } from "@/utils/api"
 
-import Step from "@/components/StepComponent"
 import RecipeContextMenu from "@/components/RecipeContextMenu"
 import { ResolveUrlMixin, ToastMixin } from "@/utils/utils"
-import Ingredient from "@/components/IngredientComponent"
 
 import PdfViewer from "@/components/PdfViewer"
 import ImageViewer from "@/components/ImageViewer"
-import Nutrition from "@/components/NutritionComponent"
 
 import moment from "moment"
-import Keywords from "@/components/KeywordsComponent"
 import LoadingSpinner from "@/components/LoadingSpinner"
-import AddRecipeToBook from "@/components/AddRecipeToBook"
+import AddRecipeToBook from "@/components/Modals/AddRecipeToBook"
 import RecipeRating from "@/components/RecipeRating"
 import LastCooked from "@/components/LastCooked"
-import IngredientComponent from "@/components/IngredientComponent"
+import IngredientsCard from "@/components/IngredientsCard"
 import StepComponent from "@/components/StepComponent"
 import KeywordsComponent from "@/components/KeywordsComponent"
 import NutritionComponent from "@/components/NutritionComponent"
@@ -205,7 +178,7 @@ export default {
         RecipeRating,
         PdfViewer,
         ImageViewer,
-        IngredientComponent,
+        IngredientsCard,
         StepComponent,
         RecipeContextMenu,
         NutritionComponent,
