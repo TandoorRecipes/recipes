@@ -10,7 +10,7 @@ from django.utils import timezone
 from django_scopes import scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry
+from cookbook.models import Food, Ingredient, ShoppingListEntry, Step
 from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
 
 SHOPPING_LIST_URL = 'api:shoppinglistentry-list'
@@ -176,8 +176,9 @@ def test_shopping_recipe_edit(request, recipe, sle_count, use_mealplan, u1_s1, u
 
 @pytest.mark.parametrize("user2, sle_count", [
     ({'mealplan_autoadd_shopping': False}, (0, 17)),
-    ({'mealplan_autoinclude_related': False}, (7, 7)),
+    ({'mealplan_autoinclude_related': False}, (8, 8)),
     ({'mealplan_autoexclude_onhand': False}, (19, 19)),
+    ({'mealplan_autoexclude_onhand': False, 'mealplan_autoinclude_related': False}, (9, 9)),
 ], indirect=['user2'])
 @pytest.mark.parametrize("use_mealplan", [(False), (True), ])
 @pytest.mark.parametrize("recipe", [({'steps__recipe_count': 1})], indirect=['recipe'])
@@ -186,13 +187,14 @@ def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
         user = auth.get_user(user2)
         # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 2 food onhand(from recipe and step_recipe), 1 food ignore shopping
         ingredients = Ingredient.objects.filter(step__recipe=recipe)
-        food = Food.objects.get(id=ingredients[0].food.id)
-        food.on_hand = True
-        food.save()
-        food = Step.objects.filter(type=Step.RECIPE).first().ingredients.first()
-        food.on_hand = True
-        food.save()
         food = Food.objects.get(id=ingredients[2].food.id)
+        food.on_hand = True
+        food.save()
+        food = recipe.steps.filter(type=Step.RECIPE).first().step_recipe.steps.first().ingredients.first().food
+        food = Food.objects.get(id=food.id)
+        food.on_hand = True
+        food.save()
+        food = Food.objects.get(id=ingredients[4].food.id)
         food.ignore_shopping = True
         food.save()
 
