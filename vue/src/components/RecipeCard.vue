@@ -37,11 +37,11 @@
                         <keywords-component :recipe="recipe" style="margin-top: 4px"></keywords-component>
                     </p>
                     <transition name="fade" mode="in-out">
-                        <div class="row mt-3" v-if="detailed">
+                        <div class="row mt-3" v-if="show_detail">
                             <div class="col-md-12">
                                 <h6 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h6>
 
-                                <ingredients-card :steps="recipe.steps" :header="false" :detailed="false" />
+                                <ingredients-card :steps="recipe.steps" :header="false" :detailed="false" :servings="recipe.servings" />
                             </div>
                         </div>
                     </transition>
@@ -77,14 +77,15 @@ export default {
         meal_plan: Object,
         footer_text: String,
         footer_icon: String,
+        detailed: { type: Boolean, default: true },
     },
     mounted() {},
     computed: {
-        detailed: function () {
-            return this.recipe?.steps !== undefined
+        show_detail: function () {
+            return this.recipe?.steps !== undefined && this.detailed
         },
         text_length: function () {
-            if (this.detailed) {
+            if (this.show_detail) {
                 return 200
             } else {
                 return 120
