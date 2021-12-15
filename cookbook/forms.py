@@ -523,6 +523,10 @@ class SpacePreferenceForm(forms.ModelForm):
     reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
                                             help_text=_("Reset all food to inherit the fields configured."))
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)  # populates the post
+        self.fields['food_inherit'].queryset = Food.inherit_fields
+
     class Meta:
         model = Space
 
