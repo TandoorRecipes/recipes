@@ -747,12 +747,13 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingListSerializer
     permission_classes = [CustomIsOwner | CustomIsShared]
 
-    # TODO update to include settings shared user - make both work for a period of time
     def get_queryset(self):
-        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct()
+        return self.queryset.filter(
+            Q(created_by=self.request.user)
+            | Q(shared=self.request.user)
+            | Q(created_by__in=list(self.request.user.get_shopping_share()))
+        ).filter(space=self.request.space).distinct()
 
-    # TODO deprecate
     def get_serializer_class(self):
         try:
             autosync = self.request.query_params.get('autosync', False)

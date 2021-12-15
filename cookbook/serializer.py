@@ -4,7 +4,6 @@ from decimal import Decimal
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db import transaction
 from django.db.models import Avg, QuerySet, Sum
 from django.urls import reverse
 from django.utils import timezone
@@ -96,7 +95,9 @@ class CustomDecimalField(serializers.Field):
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
-        if (type(data) == QuerySet and data.query.is_sliced) or not self.context.get('request', None):
+        if self.context.get('request', None) is None:
+            return
+        if (type(data) == QuerySet and data.query.is_sliced):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
@@ -158,7 +159,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
 
     # TODO decide: default inherit field values for foods are being handled via VUE client through user preference
-    ##  should inherit field instead be set during the django model create?
+    # should inherit field instead be set during the django model create?
     def get_ignore_default(self, obj):
         return FoodInheritFieldSerializer(Food.inherit_fields.difference(obj.space.food_inherit.all()), many=True).data
 
@@ -307,7 +308,6 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
 
 class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
-
     recipe_filter = 'steps__ingredients__unit'
 
     def create(self, validated_data):
