@@ -682,7 +682,6 @@ export default {
 
         this.settings = getUserPreference()
         this.delay = Number(this.settings.default_delay || 4)
-        console.log(this.delay)
         this.supermarket_categories_only = this.settings.filter_to_supermarket
         if (this.settings.shopping_auto_sync) {
             window.addEventListener("online", this.updateOnlineStatus)
