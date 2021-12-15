@@ -89,7 +89,7 @@ module.exports = {
                     },
                 },
             },
-            config.optimization.minimize(false)
+            config.optimization.minimize(true)
         )
 
         config.plugin("BundleTracker").use(BundleTracker, [{ relativePath: true, path: "../vue/" }])

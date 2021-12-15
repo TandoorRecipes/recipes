@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import RecipeBook, Storage, Sync, SyncLog, ShoppingList
+from cookbook.models import RecipeBook, ShoppingList, Storage, Sync, SyncLog
 
 LIST_URL = 'api:shoppinglist-list'
 DETAIL_URL = 'api:shoppinglist-detail'
@@ -50,6 +50,21 @@ def test_share(obj_1, u1_s1, u2_s1, u1_s2):
 
     obj_1.shared.add(auth.get_user(u2_s1))
     obj_1.shared.add(auth.get_user(u1_s2))
+
+    assert u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200
+    assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200
+    assert u1_s2.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 404
+
+
+def test_new_share(request, obj_1, u1_s1, u2_s1, u1_s2):
+    assert u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200
+    assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 404
+    assert u1_s2.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 404
+
+    with scopes_disabled():
+        user = auth.get_user(u1_s1)
+        user.userpreference.shopping_share.add(auth.get_user(u2_s1))
+        user.userpreference.save()
 
     assert u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200
     assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200

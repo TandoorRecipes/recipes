@@ -77,16 +77,20 @@ def test_shopping_food_delete(request, arg, food):
 
 def test_shopping_food_share(u1_s1, u2_s1, food, space_1):
     with scope(space=space_1):
+        user1 = auth.get_user(u1_s1)
+        user2 = auth.get_user(u2_s1)
         food2 = FoodFactory(space=space_1)
     r = u1_s1.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
-    r = u2_s1.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
-    assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 1
-    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 1
+    r = u2_s1.put(reverse(SHOPPING_FOOD_URL, args={food2.id}))
+    sl_1 = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
+    sl_2 = json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)
+    assert len(sl_1) == 1
+    assert len(sl_2) == 1
+    sl_1[0]['created_by']['id'] == user1.id
+    sl_2[0]['created_by']['id'] == user2.id
 
     with scopes_disabled():
-        user = auth.get_user(u1_s1)
-        user2 = auth.get_user(u2_s1)
-        user.userpreference.shopping_share.add(user2)
-        user.userpreference.save()
+        user1.userpreference.shopping_share.add(user2)
+        user1.userpreference.save()
     assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 1
     assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 2
