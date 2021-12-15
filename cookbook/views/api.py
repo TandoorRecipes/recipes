@@ -413,7 +413,10 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
     @decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
+    # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
+        if self.request.space.demo:
+            raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
         shared_users = list(self.request.user.get_shopping_share())
         shared_users.append(request.user)
@@ -652,12 +655,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, 400)
 
+    # TODO: refactor API to use post/put/delete or leave as put and change VUE to use list_recipe after creating
+    # DRF only allows one action in a decorator action without overriding get_operation_id_base()
     @decorators.action(
         detail=True,
         methods=['PUT'],
         serializer_class=RecipeShoppingUpdateSerializer,
     )
     def shopping(self, request, pk):
+        if self.request.space.demo:
+            raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
         ingredients = request.data.get('ingredients', None)
         servings = request.data.get('servings', None)
