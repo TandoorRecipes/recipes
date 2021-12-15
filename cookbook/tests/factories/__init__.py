@@ -72,9 +72,8 @@ class UserFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            # TODO this doesn't work and needs saved
             for prefs in extracted:
-                self.userpreference[prefs] = prefs
+                self.userpreference[prefs] = extracted[prefs]/0   # intentionally break so it can be debugged later
         self.userpreference.space = self.space
         self.userpreference.save()
 
@@ -154,7 +153,6 @@ class KeywordFactory(factory.django.DjangoModelFactory):
 @register
 class IngredientFactory(factory.django.DjangoModelFactory):
     """Ingredient factory."""
-    # TODO add optional recipe food
     food = factory.SubFactory(FoodFactory, space=factory.SelfAttribute('..space'))
     unit = factory.SubFactory(UnitFactory, space=factory.SelfAttribute('..space'))
     amount = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=10))
@@ -332,7 +330,7 @@ class RecipeFactory(factory.django.DjangoModelFactory):
         if not create:
             return
 
-        food_recipe_count = kwargs.get('food_recipe_count', {})  # TODO - pass this
+        food_recipe_count = kwargs.get('food_recipe_count', {})
         num_steps = kwargs.get('count', 0)
         num_recipe_steps = kwargs.get('recipe_count', 0)
         if num_steps > 0:
