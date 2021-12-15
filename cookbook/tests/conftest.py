@@ -15,7 +15,7 @@ from cookbook.tests.factories import FoodFactory, SpaceFactory, UserFactory
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
 # register(FoodFactory, space=LazyFixture('space_2'))
-# TODO refactor user fixtures https://stackoverflow.com/questions/40966571/how-to-create-a-field-with-a-list-of-instances-in-factory-boy
+# TODO refactor clients to be factories
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
 # does not work on yield fixtures as only one yield can be used per fixture (i think)

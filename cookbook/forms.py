@@ -17,7 +17,6 @@ class SelectWidget(widgets.Select):
 
 
 class MultiSelectWidget(widgets.SelectMultiple):
-
     class Media:
         js = ('custom/js/form_multiselect.js',)
 
@@ -75,13 +74,10 @@ class UserPreferenceForm(forms.ModelForm):
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
             # noqa: E501
             'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  # noqa: E501
-            'plan_share': _(
-                'Users with whom newly created meal plans should be shared by default.'),
-            'shopping_share': _(
-            'Users with whom to share shopping lists.'),
+            'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
+            'shopping_share': _('Users with whom to share shopping lists.'),
             # noqa: E501
             'show_recent': _('Show recently viewed recipes on search page.'),  # noqa: E501
-
             'ingredient_decimals': _('Number of decimals to round ingredients.'),  # noqa: E501
             'comments': _('If you want to be able to create and see comments underneath recipes.'),  # noqa: E501
             'shopping_auto_sync': _(
@@ -96,7 +92,6 @@ class UserPreferenceForm(forms.ModelForm):
         widgets = {
             'plan_share': MultiSelectWidget,
             'shopping_share': MultiSelectWidget,
-
         }
 
 
