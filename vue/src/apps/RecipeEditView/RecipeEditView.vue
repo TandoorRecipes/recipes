@@ -623,6 +623,10 @@ export default {
         this.sortIngredients(s)
       }
 
+      if (this.recipe.waiting_time === ''){ this.recipe.waiting_time = 0}
+      if (this.recipe.working_time === ''){ this.recipe.working_time = 0}
+      if (this.recipe.servings === ''){ this.recipe.servings = 0}
+
       apiFactory.updateRecipe(this.recipe_id, this.recipe,
           {}).then((response) => {
         console.log(response)
