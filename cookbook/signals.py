@@ -1,6 +1,7 @@
 from decimal import Decimal
 from functools import wraps
 
+from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -11,8 +12,14 @@ from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
                              ShoppingListEntry, Step)
 
+SQLITE = True
+if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                               'django.db.backends.postgresql']:
+    SQLITE = False
 
 # wraps a signal with the ability to set 'skip_signal' to avoid creating recursive signals
+
+
 def skip_signal(signal_func):
     @wraps(signal_func)
     def _decorator(sender, instance, **kwargs):
@@ -27,6 +34,8 @@ def skip_signal(signal_func):
 @receiver(post_save, sender=Recipe)
 @skip_signal
 def update_recipe_search_vector(sender, instance=None, created=False, **kwargs):
+    if SQLITE:
+        return
     language = DICTIONARY.get(translation.get_language(), 'simple')
     instance.name_search_vector = SearchVector('name__unaccent', weight='A', config=language)
     instance.desc_search_vector = SearchVector('description__unaccent', weight='C', config=language)
@@ -40,6 +49,8 @@ def update_recipe_search_vector(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=Step)
 @skip_signal
 def update_step_search_vector(sender, instance=None, created=False, **kwargs):
+    if SQLITE:
+        return
     language = DICTIONARY.get(translation.get_language(), 'simple')
     instance.search_vector = SearchVector('instruction__unaccent', weight='B', config=language)
     try:

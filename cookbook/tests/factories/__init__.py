@@ -97,7 +97,7 @@ class SupermarketCategoryFactory(factory.django.DjangoModelFactory):
 @register
 class FoodFactory(factory.django.DjangoModelFactory):
     """Food factory."""
-    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3))
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3, variable_nb_words=False))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     supermarket_category = factory.Maybe(
         factory.LazyAttribute(lambda x:  x.has_category),
@@ -135,7 +135,7 @@ class UnitFactory(factory.django.DjangoModelFactory):
 @register
 class KeywordFactory(factory.django.DjangoModelFactory):
     """Keyword factory."""
-    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3))
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=2, variable_nb_words=False))
     # icon = models.CharField(max_length=16, blank=True, null=True)
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     space = factory.SubFactory(SpaceFactory)
@@ -156,7 +156,7 @@ class IngredientFactory(factory.django.DjangoModelFactory):
     food = factory.SubFactory(FoodFactory, space=factory.SelfAttribute('..space'))
     unit = factory.SubFactory(UnitFactory, space=factory.SelfAttribute('..space'))
     amount = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=10))
-    note = factory.LazyAttribute(lambda x: faker.sentence(nb_words=5))
+    note = factory.LazyAttribute(lambda x: faker.sentence(nb_words=8))
     space = factory.SubFactory(SpaceFactory)
 
     class Meta:
