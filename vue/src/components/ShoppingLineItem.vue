@@ -151,6 +151,9 @@ export default {
                     }
                 }
             })
+            for (const [k, v] of Object.entries(amount)) {
+                amount[k] = Math.round(v * 100 + Number.EPSILON) / 100 // javascript hack to force rounding at 2 places
+            }
             return amount
         },
         formatCategory: function () {
