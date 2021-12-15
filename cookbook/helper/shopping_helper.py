@@ -104,18 +104,18 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
                             x_ing = Ingredient.objects.filter(step__recipe=x, food__on_hand=False, space=space)
                         else:
                             x_ing = Ingredient.objects.filter(step__recipe=x, space=space)
-                            for i in [x for x in x_ing if not x.food.ignore_shopping]:
-                                ShoppingListEntry.objects.create(
-                                    list_recipe=list_recipe,
-                                    food=i.food,
-                                    unit=i.unit,
-                                    ingredient=i,
-                                    amount=i.amount * Decimal(servings_factor),
-                                    created_by=created_by,
-                                    space=space,
-                                )
-                    # dont' add food to the shopping list that are actually recipes that will be added as ingredients
-                    ingredients = ingredients.exclude(food__recipe=x)
+                        for i in [x for x in x_ing if not x.food.ignore_shopping]:
+                            ShoppingListEntry.objects.create(
+                                list_recipe=list_recipe,
+                                food=i.food,
+                                unit=i.unit,
+                                ingredient=i,
+                                amount=i.amount * Decimal(servings_factor),
+                                created_by=created_by,
+                                space=space,
+                            )
+                # dont' add food to the shopping list that are actually recipes that will be added as ingredients
+                ingredients = ingredients.exclude(food__recipe=x)
 
     add_ingredients = list(ingredients.values_list('id', flat=True)) + related_step_ing
     if not append:
