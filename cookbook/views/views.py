@@ -254,13 +254,13 @@ def latest_shopping_list(request):
 
 
 @group_required('user')
-def shopping_list(request, pk=None):
+def shopping_list(request, pk=None):  # TODO deprecate
     html_list = request.GET.getlist('r')
 
     recipes = []
     for r in html_list:
         r = r.replace('[', '').replace(']', '')
-        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
+        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):  # vulnerable to DoS
             rid, multiplier = r.split(',')
             if recipe := Recipe.objects.filter(pk=int(rid), space=request.space).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
