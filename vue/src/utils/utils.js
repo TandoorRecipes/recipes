@@ -220,7 +220,7 @@ export const ApiMixin = {
         return {
             Models: Models,
             Actions: Actions,
-            FoodCreateDefault: function(form) {
+            FoodCreateDefault: function (form) {
                 form.inherit_ignore = getUserPreference("food_ignore_default")
                 form.inherit = form.supermarket_category.length > 0
                 return form
@@ -538,7 +538,7 @@ const specialCases = {
 }
 
 export const formFunctions = {
-    FoodCreateDefault: function(form) {
+    FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "ignore_inherit")[0].value = getUserPreference("food_ignore_default")
         form.fields.filter((x) => x.field === "inherit")[0].value = getUserPreference("food_ignore_default").length > 0
         return form

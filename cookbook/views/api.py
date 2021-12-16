@@ -1066,7 +1066,7 @@ def ingredient_from_string(request):
 
 @group_required('user')
 def get_facets(request):
-    key = request.GET['hash']
+    key = request.GET.get('hash', None)
 
     return JsonResponse(
         {
