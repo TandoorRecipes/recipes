@@ -9,7 +9,7 @@
                                 <b-input-group>
                                     <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
                                     <b-input-group-append>
-                                        <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()">
+                                        <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()" v-if="debug">
                                             <i class="fas fa-bug" style="font-size: 1.5em"></i>
                                         </b-button>
                                         <b-button variant="light" v-b-tooltip.hover :title="$t('Random Recipes')" @click="openRandom()">
@@ -238,7 +238,7 @@ Vue.use(VueCookies)
 
 import { ApiMixin, ResolveUrlMixin } from "@/utils/utils"
 
-import LoadingSpinner from "@/components/LoadingSpinner" // is this deprecated?
+import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
 
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
