@@ -7,24 +7,15 @@
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
                                 <b-input-group>
-                                    <b-input
-                                        class="form-control form-control-lg form-control-borderless form-control-search"
-                                        v-model="settings.search_input"
-                                        v-bind:placeholder="$t('Search')"
-                                    ></b-input>
+                                    <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
                                     <b-input-group-append>
-                                        <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()">
+                                        <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()" v-if="debug">
                                             <i class="fas fa-bug" style="font-size: 1.5em"></i>
                                         </b-button>
                                         <b-button variant="light" v-b-tooltip.hover :title="$t('Random Recipes')" @click="openRandom()">
                                             <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
                                         </b-button>
-                                        <b-button
-                                            v-b-toggle.collapse_advanced_search
-                                            v-b-tooltip.hover
-                                            :title="$t('Advanced Settings')"
-                                            v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'"
-                                        >
+                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'">
                                             <!-- TODO consider changing this icon to a filter -->
                                             <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
                                             <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
@@ -78,13 +69,7 @@
                                                 <b-form-checkbox switch v-model="settings.show_meal_plan" id="popover-input-2" size="sm"></b-form-checkbox>
                                             </b-form-group>
 
-                                            <b-form-group
-                                                v-if="settings.show_meal_plan"
-                                                v-bind:label="$t('Meal_Plan_Days')"
-                                                label-for="popover-input-5"
-                                                label-cols="6"
-                                                class="mb-3"
-                                            >
+                                            <b-form-group v-if="settings.show_meal_plan" v-bind:label="$t('Meal_Plan_Days')" label-for="popover-input-5" label-cols="6" class="mb-3">
                                                 <b-form-input type="number" v-model="settings.meal_plan_days" id="popover-input-5" size="sm"></b-form-input>
                                             </b-form-group>
 
@@ -99,9 +84,7 @@
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
                                             <div class="col-12" style="text-align: right">
-                                                <b-button size="sm" variant="secondary" style="margin-right: 8px" @click="$root.$emit('bv::hide::popover')"
-                                                    >{{ $t("Close") }}
-                                                </b-button>
+                                                <b-button size="sm" variant="secondary" style="margin-right: 8px" @click="$root.$emit('bv::hide::popover')">{{ $t("Close") }} </b-button>
                                             </div>
                                         </div>
                                     </b-popover>
@@ -123,13 +106,7 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox
-                                                            v-model="settings.search_keywords_or"
-                                                            name="check-button"
-                                                            @change="refreshData(false)"
-                                                            class="shadow-none"
-                                                            switch
-                                                        >
+                                                        <b-form-checkbox v-model="settings.search_keywords_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch>
                                                             <span class="text-uppercase" v-if="settings.search_keywords_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -156,13 +133,7 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox
-                                                            v-model="settings.search_foods_or"
-                                                            name="check-button"
-                                                            @change="refreshData(false)"
-                                                            class="shadow-none"
-                                                            switch
-                                                        >
+                                                        <b-form-checkbox v-model="settings.search_foods_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch>
                                                             <span class="text-uppercase" v-if="settings.search_foods_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -187,14 +158,7 @@
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox
-                                                            v-model="settings.search_books_or"
-                                                            name="check-button"
-                                                            @change="refreshData(false)"
-                                                            class="shadow-none"
-                                                            tyle="width: 100%"
-                                                            switch
-                                                        >
+                                                        <b-form-checkbox v-model="settings.search_books_or" name="check-button" @change="refreshData(false)" class="shadow-none" tyle="width: 100%" switch>
                                                             <span class="text-uppercase" v-if="settings.search_books_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -242,14 +206,7 @@
                     <div class="col col-md-12">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); grid-gap: 0.8rem">
                             <template v-if="!searchFiltered">
-                                <recipe-card
-                                    v-bind:key="`mp_${m.id}`"
-                                    v-for="m in meal_plans"
-                                    :recipe="m.recipe"
-                                    :meal_plan="m"
-                                    :footer_text="m.meal_type_name"
-                                    footer_icon="far fa-calendar-alt"
-                                ></recipe-card>
+                                <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe" :meal_plan="m" :footer_text="m.meal_type_name" footer_icon="far fa-calendar-alt"></recipe-card>
                             </template>
                             <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r" :footer_text="isRecentOrNew(r)[0]" :footer_icon="isRecentOrNew(r)[1]"> </recipe-card>
                         </div>
@@ -258,8 +215,7 @@
 
                 <div class="row" style="margin-top: 2vh" v-if="!random_search">
                     <div class="col col-md-12">
-                        <b-pagination pills v-model="settings.pagination_page" :total-rows="pagination_count" :per-page="settings.page_count" @change="pageChange" align="center">
-                        </b-pagination>
+                        <b-pagination pills v-model="settings.pagination_page" :total-rows="pagination_count" :per-page="settings.page_count" @change="pageChange" align="center"> </b-pagination>
                     </div>
                 </div>
             </div>
@@ -389,7 +345,7 @@ export default {
             this.refreshData(false)
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
-        this.debug = localStorage.getItem("DEBUG") || false
+        this.debug = localStorage.getItem("DEBUG") == "True" || false
     },
     watch: {
         settings: {
@@ -420,6 +376,7 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: function (random) {
             this.random_search = random
+            console.log(this.debug, typeof this.debug)
             let params = {
                 query: this.settings.search_input,
                 keywords: this.settings.search_keywords,
