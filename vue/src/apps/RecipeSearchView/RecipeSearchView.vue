@@ -238,7 +238,7 @@ Vue.use(VueCookies)
 
 import { ApiMixin, ResolveUrlMixin } from "@/utils/utils"
 
-import LoadingSpinner from "@/components/LoadingSpinner" // is this deprecated?
+import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
 
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
