@@ -36,7 +36,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                CustomIsShare, CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_search import get_facet, search_recipes, old_search
+from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, ImportLog, Ingredient,
                              Keyword, MealPlan, MealType, Recipe, RecipeBook, RecipeBookEntry,
@@ -46,9 +46,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, Impor
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-
-from cookbook.schemas import FilterSchema, TreeSchema, QueryParamAutoSchema, QueryParam
-
+from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, FoodSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
@@ -985,7 +983,7 @@ def ingredient_from_string(request):
 
 @group_required('user')
 def get_facets(request):
-    key = request.GET['hash']
+    key = request.GET.get('hash', None)
 
     return JsonResponse(
         {
