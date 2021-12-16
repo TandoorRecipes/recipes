@@ -376,7 +376,6 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: function (random) {
             this.random_search = random
-            console.log(this.debug, typeof this.debug)
             let params = {
                 query: this.settings.search_input,
                 keywords: this.settings.search_keywords,
