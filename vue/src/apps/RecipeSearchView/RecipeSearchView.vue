@@ -304,7 +304,7 @@ export default {
                 this.settings?.search_keywords?.length === 0 &&
                 this.settings?.search_foods?.length === 0 &&
                 this.settings?.search_books?.length === 0 &&
-                this.settings?.pagination_page === 1 &&
+                // this.settings?.pagination_page === 1 &&
                 !this.random_search &&
                 this.settings?.search_ratings === undefined
             ) {
@@ -396,7 +396,7 @@ export default {
             if (!this.searchFiltered) {
                 params.options = { query: { last_viewed: this.settings.recently_viewed } }
             }
-            console.log(params)
+            console.log(2, params)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
                 window.scrollTo(0, 0)
                 this.pagination_count = result.data.count
