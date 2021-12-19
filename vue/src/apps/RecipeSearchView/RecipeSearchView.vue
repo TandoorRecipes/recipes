@@ -396,6 +396,7 @@ export default {
             if (!this.searchFiltered) {
                 params.options = { query: { last_viewed: this.settings.recently_viewed } }
             }
+            console.log(params)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
                 window.scrollTo(0, 0)
                 this.pagination_count = result.data.count
