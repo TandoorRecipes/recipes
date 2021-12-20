@@ -92,6 +92,15 @@ module.exports = {
             config.optimization.minimize(true)
         )
 
+        //TODO somehow remov them as they are also added to the manifest config of the service worker
+        /*
+        Object.keys(pages).forEach(page => {
+            config.plugins.delete(`html-${page}`);
+            config.plugins.delete(`preload-${page}`);
+            config.plugins.delete(`prefetch-${page}`);
+        })
+        */
+
         config.plugin("BundleTracker").use(BundleTracker, [{ relativePath: true, path: "../vue/" }])
 
         config.resolve.alias.set("__STATIC__", "static")

@@ -345,7 +345,7 @@ export default {
             this.refreshData(false)
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
-        this.debug = localStorage.getItem("DEBUG") || false
+        this.debug = localStorage.getItem("DEBUG") == "True" || false
     },
     watch: {
         settings: {
