@@ -2,10 +2,10 @@
     <div :class="{ 'card border-primary no-border': header }">
         <div :class="{ 'card-body': header }">
             <div class="row" v-if="header">
-                <div class="col col-md-8">
+                <div class="col col-md-6">
                     <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h4>
                 </div>
-                <div class="col col-md-4 text-right" v-if="header">
+                <div class="col col-md-6 text-right" v-if="header">
                     <h4>
                         <i v-if="show_shopping && ShoppingRecipes.length > 0" class="fas fa-trash text-danger px-2" @click="saveShopping(true)"></i>
                         <i v-if="show_shopping" class="fas fa-save text-success px-2" @click="saveShopping()"></i>
@@ -94,14 +94,14 @@ export default {
         },
     },
     watch: {
-        ShoppingRecipes: function(newVal, oldVal) {
+        ShoppingRecipes: function (newVal, oldVal) {
             if (newVal.length === 0 || this.add_shopping_mode) {
                 this.selected_shoppingrecipe = undefined
             } else if (newVal.length === 1) {
                 this.selected_shoppingrecipe = newVal[0].value
             }
         },
-        selected_shoppingrecipe: function(newVal, oldVal) {
+        selected_shoppingrecipe: function (newVal, oldVal) {
             this.update_shopping = this.shopping_list.filter((x) => x.list_recipe === newVal).map((x) => x.ingredient)
         },
     },
@@ -112,7 +112,7 @@ export default {
         }
     },
     methods: {
-        getShopping: function(toggle_shopping = true) {
+        getShopping: function (toggle_shopping = true) {
             if (toggle_shopping) {
                 this.show_shopping = !this.show_shopping
             }
@@ -132,7 +132,7 @@ export default {
                 })
             }
         },
-        saveShopping: function(del_shopping = false) {
+        saveShopping: function (del_shopping = false) {
             let servings = this.servings
             if (del_shopping) {
                 servings = 0
@@ -171,7 +171,7 @@ export default {
                     this.$emit("shopping-failed")
                 })
         },
-        addShopping: function(e) {
+        addShopping: function (e) {
             // ALERT: this will all break if ingredients are re-used between recipes
             if (e.add) {
                 this.update_shopping.push(e.item.id)

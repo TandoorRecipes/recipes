@@ -93,7 +93,14 @@
 
             <div class="row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
-                    <ingredients-card :steps="recipe.steps" :ingredient_factor="ingredient_factor" :servings="servings" :header="true" @checked-state-changed="updateIngredientCheckedState" />
+                    <ingredients-card
+                        :recipe="recipe.id"
+                        :steps="recipe.steps"
+                        :ingredient_factor="ingredient_factor"
+                        :servings="servings"
+                        :header="true"
+                        @checked-state-changed="updateIngredientCheckedState"
+                    />
                 </div>
 
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
