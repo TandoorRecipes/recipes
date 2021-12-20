@@ -269,13 +269,13 @@ export interface FoodIgnoreInherit {
      * @type {string}
      * @memberof FoodIgnoreInherit
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof FoodIgnoreInherit
      */
-    field: string;
+    field?: string;
 }
 /**
  * 
@@ -294,13 +294,13 @@ export interface FoodInheritField {
      * @type {string}
      * @memberof FoodInheritField
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof FoodInheritField
      */
-    field: string;
+    field?: string;
 }
 /**
  * 
