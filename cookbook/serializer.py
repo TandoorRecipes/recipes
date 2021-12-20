@@ -138,7 +138,9 @@ class UserNameSerializer(WritableNestedModelSerializer):
         fields = ('id', 'username')
 
 
-class FoodInheritFieldSerializer(UniqueFieldsMixin):
+class FoodInheritFieldSerializer(WritableNestedModelSerializer):
+    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
 
     def create(self, validated_data):
         # don't allow writing to FoodInheritField via API
@@ -150,7 +152,8 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin):
 
     class Meta:
         model = FoodInheritField
-        fields = ['id', 'name', 'field', ]
+        fields = ('id', 'name', 'field', )
+        read_only_fields = ['id']
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):

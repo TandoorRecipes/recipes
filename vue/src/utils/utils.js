@@ -369,6 +369,9 @@ export function getForm(model, action, item1, item2) {
     if (f === "partialUpdate" && Object.keys(config).length == 0) {
         config = { ...Actions.CREATE?.form, ...model.model_type?.["create"]?.form, ...model?.["create"]?.form }
         config["title"] = { ...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title }
+        if (config["form_function"].includes("Create")) {
+            delete config["form_function"]
+        }
     }
     let form = { fields: [] }
     let value = ""
@@ -541,6 +544,7 @@ export const formFunctions = {
     FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "ignore_inherit")[0].value = getUserPreference("food_ignore_default")
         form.fields.filter((x) => x.field === "inherit")[0].value = getUserPreference("food_ignore_default").length > 0
+        console.log(form)
         return form
     },
 }

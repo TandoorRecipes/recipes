@@ -1,22 +1,21 @@
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import SearchVector
+from django.utils import translation
+from django_scopes import scopes_disabled
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User, Group
-from django_scopes import scopes_disabled
-from django.utils import translation
-
-from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
-                     MealPlan, MealType, NutritionInformation, Recipe,
-                     RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
-                     ShoppingList, ShoppingListEntry, ShoppingListRecipe,
-                     Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport, UserFile, SearchPreference)
 
 from cookbook.managers import DICTIONARY
+
+from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField, ImportLog,
+                     Ingredient, InviteLink, Keyword, MealPlan, MealType, NutritionInformation,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
+                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
+                     TelegramBot, Unit, UserFile, UserPreference, ViewLog)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -129,6 +128,7 @@ def sort_tree(modeladmin, request, queryset):
 class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    search_fields = ('name', )
     actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
@@ -171,11 +171,13 @@ class RecipeAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 
 admin.site.register(Unit)
+# admin.site.register(FoodInheritField)
 
 
 class FoodAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    search_fields = ('name', )
     actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 

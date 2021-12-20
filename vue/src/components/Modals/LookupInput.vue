@@ -81,6 +81,7 @@ export default {
                 arrayValues = [{ id: -1, name: this_value }]
             }
 
+            console.log(arrayValues)
             if (this.form?.ordered && this.first_run) {
                 return this.flattenItems(arrayValues)
             } else {
