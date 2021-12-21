@@ -544,7 +544,6 @@ export const formFunctions = {
     FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "ignore_inherit")[0].value = getUserPreference("food_ignore_default")
         form.fields.filter((x) => x.field === "inherit")[0].value = getUserPreference("food_ignore_default").length > 0
-        console.log(form)
         return form
     },
 }
