@@ -920,7 +920,7 @@ export default {
                 makeToast(this.$t("Warning"), this.$t("NoCategory"), "warning")
             }
 
-            // TODO make decision - should inheritance always be turned off when category set manually or give user a choice at front-end or make it a setting?
+            // TODO make decision - should inheritance always be set manually or give user a choice at front-end or make it a setting?
             let food = this.items.filter((x) => x.food.id == item?.[0]?.food.id ?? item.food.id)[0].food
             food.supermarket_category = this.shopping_categories.filter((x) => x?.id === this.shopcat)?.[0]
             this.updateFood(food, "supermarket_category")
