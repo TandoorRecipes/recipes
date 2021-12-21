@@ -315,7 +315,6 @@ export default {
             this.genericAPI(this.this_model, this.Actions.MOVE, { source: source_id, target: target_id })
                 .then((result) => {
                     this.moveUpdateItem(source_id, target_id)
-                    // TODO make standard toast
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
@@ -355,7 +354,6 @@ export default {
             })
                 .then((result) => {
                     this.mergeUpdateItem(source_id, target_id)
-                    // TODO make standard toast
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
@@ -416,7 +414,7 @@ export default {
         getRecipes: function (col, item) {
             let parent = {}
             // TODO: make this generic
-            let params = { pageSize: 50 }
+            let params = { pageSize: 50, random: true }
             params[this.this_recipe_param] = item.id
             console.log("RECIPE PARAM", this.this_recipe_param, params, item.id)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)

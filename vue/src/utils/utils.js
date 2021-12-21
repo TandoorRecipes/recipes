@@ -369,7 +369,7 @@ export function getForm(model, action, item1, item2) {
     if (f === "partialUpdate" && Object.keys(config).length == 0) {
         config = { ...Actions.CREATE?.form, ...model.model_type?.["create"]?.form, ...model?.["create"]?.form }
         config["title"] = { ...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title }
-        if (config["form_function"].includes("Create")) {
+        if (config?.["form_function"]?.includes("Create")) {
             delete config["form_function"]
         }
     }
