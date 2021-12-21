@@ -75,7 +75,6 @@
                                     ></generic-multiselect>
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
                                 </b-form-group>
-                                <!-- TODO: hide this checkbox if autoadding menuplans, but allow editing on-hand -->
                                 <b-input-group v-if="!autoMealPlan">
                                     <b-form-checkbox id="AddToShopping" v-model="entryEditing.addshopping" />
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("AddToShopping") }}</small>
