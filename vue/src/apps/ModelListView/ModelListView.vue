@@ -315,7 +315,6 @@ export default {
             this.genericAPI(this.this_model, this.Actions.MOVE, { source: source_id, target: target_id })
                 .then((result) => {
                     this.moveUpdateItem(source_id, target_id)
-                    // TODO make standard toast
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
@@ -355,7 +354,6 @@ export default {
             })
                 .then((result) => {
                     this.mergeUpdateItem(source_id, target_id)
-                    // TODO make standard toast
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
