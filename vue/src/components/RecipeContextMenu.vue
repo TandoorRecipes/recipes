@@ -125,8 +125,6 @@ export default {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
 
             let apiClient = new ApiApiFactory()
-            console.log("etnry", entry)
-
             apiClient
                 .createMealPlan(entry)
                 .then((result) => {
