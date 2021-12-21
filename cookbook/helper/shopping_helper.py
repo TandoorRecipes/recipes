@@ -59,7 +59,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
 
     try:
         servings = float(servings)
-    except ValueError:
+    except (ValueError, TypeError):
         servings = getattr(mealplan, 'servings', 1.0)
 
     servings_factor = servings / r.servings
@@ -139,7 +139,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
             sle.save()
 
     # add any missing Entrys
-    for i in [x for x in add_ingredients if not x.food.ignore_shopping]:
+    for i in [x for x in add_ingredients if x.food and not x.food.ignore_shopping]:
 
         ShoppingListEntry.objects.create(
             list_recipe=list_recipe,
