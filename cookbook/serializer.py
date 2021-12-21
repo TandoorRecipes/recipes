@@ -628,7 +628,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         validated_data['created_by'] = self.context['request'].user
         mealplan = super().create(validated_data)
         if self.context['request'].data.get('addshopping', False):
-            list_from_recipe(mealplan=mealplan, space=validated_data['space'], created_by=validated_data['created_by'])
+            list_from_recipe(mealplan=mealplan, servings=validated_data['servings'], created_by=validated_data['created_by'], space=validated_data['space'])
         return mealplan
 
     class Meta:

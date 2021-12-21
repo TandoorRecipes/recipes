@@ -1,7 +1,4 @@
 <template>
-    <!-- add alert at top if offline -->
-    <!-- get autosync time from preferences and put fetching checked items on timer -->
-    <!-- allow reordering or items -->
     <div id="shopping_line_item">
         <div class="col-12">
             <div class="row">
@@ -231,10 +228,10 @@ export default {
             return [this.$t("DelayUntil"), "-", this.formatDate(item.delay_until)].join(" ")
         },
         formatOneMealPlan: function (item) {
-            return item?.recipe_mealplan?.name
+            return item?.recipe_mealplan?.name ?? ""
         },
         formatOneRecipe: function (item) {
-            return item?.recipe_mealplan?.recipe_name
+            return item?.recipe_mealplan?.recipe_name ?? ""
         },
         formatOneNote: function (item) {
             if (!item) {
