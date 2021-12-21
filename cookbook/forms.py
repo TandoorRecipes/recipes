@@ -480,7 +480,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
 
         fields = (
             'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
-            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim'
+            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
         )
 
         help_texts = {
