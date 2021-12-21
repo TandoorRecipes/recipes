@@ -29,7 +29,7 @@
                 <div class="container" id="shoppinglist">
                     <div class="row">
                         <div class="col col-md-12">
-                            <div role="tablist" v-if="items && items.length > 0">
+                            <div role="tablist">
                                 <div class="row justify-content-md-center w-75" v-if="entrymode">
                                     <div class="col col-md-2">
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
@@ -46,31 +46,33 @@
                                         </b-button>
                                     </div>
                                 </div>
-                                <div v-for="(done, x) in Sections" :key="x">
-                                    <div v-if="x == 'true'">
-                                        <hr />
-                                        <hr />
-                                        <h4>{{ $t("Completed") }}</h4>
-                                    </div>
+                                <div v-if="items && items.length > 0">
+                                    <div v-for="(done, x) in Sections" :key="x">
+                                        <div v-if="x == 'true'">
+                                            <hr />
+                                            <hr />
+                                            <h4>{{ $t("Completed") }}</h4>
+                                        </div>
 
-                                    <div v-for="(s, i) in done" :key="i">
-                                        <h5 v-if="Object.entries(s).length > 0">
-                                            <b-button
-                                                class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
-                                                variant="link"
-                                                data-toggle="collapse"
-                                                :href="'#section-' + sectionID(x, i)"
-                                                :aria-expanded="'true' ? x == 'false' : 'true'"
-                                            >
-                                                <i class="fa fa-chevron-right rotate" />
-                                                {{ i }}
-                                            </b-button>
-                                        </h5>
+                                        <div v-for="(s, i) in done" :key="i">
+                                            <h5 v-if="Object.entries(s).length > 0">
+                                                <b-button
+                                                    class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
+                                                    variant="link"
+                                                    data-toggle="collapse"
+                                                    :href="'#section-' + sectionID(x, i)"
+                                                    :aria-expanded="'true' ? x == 'false' : 'true'"
+                                                >
+                                                    <i class="fa fa-chevron-right rotate" />
+                                                    {{ i }}
+                                                </b-button>
+                                            </h5>
 
-                                        <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
-                                            <!-- passing an array of values to the table grouped by Food -->
-                                            <div v-for="(entries, x) in Object.entries(s)" :key="x">
-                                                <ShoppingLineItem :entries="entries[1]" :groupby="group_by" @open-context-menu="openContextMenu" @update-checkbox="updateChecked" />
+                                            <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
+                                                <!-- passing an array of values to the table grouped by Food -->
+                                                <div v-for="(entries, x) in Object.entries(s)" :key="x">
+                                                    <ShoppingLineItem :entries="entries[1]" :groupby="group_by" @open-context-menu="openContextMenu" @update-checkbox="updateChecked" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -106,16 +108,30 @@
             <!-- supermarkets tab -->
             <b-tab :title="$t('Supermarkets')">
                 <div class="row justify-content-center">
+                    <!-- supermarkets column -->
                     <div class="col col-md-5">
                         <b-card>
                             <template #header>
                                 <h4 class="mb-0">
                                     {{ $t("Supermarkets") }}
-                                    <b-button variant="link" class="p-0 m-0 float-right" @click="new_supermarket.entrymode = !new_supermarket.entrymode">
+                                    <b-button
+                                        variant="link"
+                                        class="p-0 m-0 float-right"
+                                        @click="
+                                            new_supermarket.entrymode = !new_supermarket.entrymode
+                                            new_supermarket.value = undefined
+                                            new_supermarket.editmode = false
+                                            new_category.entrymode = false
+                                            supermarkets = supermarkets.map((x) => {
+                                                return { ...x, editmode: false }
+                                            })
+                                        "
+                                    >
                                         <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_supermarket.entrymode ? 'text-success' : 'text-muted'" />
                                     </b-button>
                                 </h4>
                             </template>
+
                             <b-card
                                 class="m-1 p-1 no-body"
                                 border-variant="success"
@@ -135,15 +151,21 @@
                                 <b-card class="no-body mb-2" v-for="s in supermarkets" v-bind:key="s.id">
                                     <b-card-title
                                         >{{ s.name }}
+
                                         <b-button
                                             variant="link"
                                             class="p-0 m-0 float-right"
                                             @click="
                                                 s.editmode = !s.editmode
+                                                new_category.entrymode = false
+                                                new_supermarket.entrymode = false
                                                 editSupermarket(s)
                                             "
                                         >
                                             <i class="btn fas fa-edit fa-lg px-0" :class="s.editmode ? 'text-success' : 'text-muted'" />
+                                        </b-button>
+                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteSupermarket(s)">
+                                            <i class="btn fas fa-trash fa-lg px-2 text-muted" />
                                         </b-button>
                                     </b-card-title>
 
@@ -154,12 +176,20 @@
                             </b-card-body>
                         </b-card>
                     </div>
+                    <!-- supermarket category column -->
                     <div class="col col-md-5">
                         <b-card class="no-body">
                             <template #header>
                                 <h4 class="mb-0">
                                     {{ $t("Shopping_Categories") }}
-                                    <b-button variant="link" class="p-0 m-0 float-right" @click="new_category.entrymode = !new_category.entrymode">
+                                    <b-button
+                                        variant="link"
+                                        class="p-0 m-0 float-right"
+                                        @click="
+                                            new_category.entrymode = !new_category.entrymode
+                                            new_supermarket.entrymode = false
+                                        "
+                                    >
                                         <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
                                     </b-button>
                                 </h4>
@@ -200,6 +230,9 @@
                                         :border-variant="new_supermarket.editmode ? 'success' : ''"
                                     >
                                         {{ categoryName(c) }}
+                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteCategory(c)">
+                                            <i class="btn fas fa-trash fa-lg px-2 text-muted" />
+                                        </b-button>
                                     </b-card>
                                 </transition-group>
                             </draggable>
@@ -218,6 +251,9 @@
                                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
                                     <b-card class="m-0 p-0 font-weight-bold no-body list-group-item" style="cursor: move" v-for="c in notSupermarketCategory" v-bind:key="c.id" :border-variant="'danger'">
                                         {{ categoryName(c) }}
+                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteCategory(c)">
+                                            <i class="btn fas fa-trash fa-lg px-2 text-muted" />
+                                        </b-button>
                                     </b-card>
                                 </transition-group>
                             </draggable>
@@ -706,6 +742,34 @@ export default {
                 .catch((err) => {
                     console.log(err)
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                })
+        },
+        deleteSupermarket: function (s) {
+            let api = new ApiApiFactory()
+            api.destroySupermarket(s.id)
+                .then(() => {
+                    this.getSupermarkets()
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                })
+                .catch((err) => {
+                    console.log(err)
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                })
+        },
+        deleteCategory: function (c) {
+            // could be category relation or a catory
+            let c_id = c?.category?.id ?? c.id
+            let api = new ApiApiFactory()
+            api.destroySupermarketCategory(c_id)
+                .then(() => {
+                    this.getSupermarkets()
+                    this.getShoppingCategories()
+                    this.new_supermarket.value.category_to_supermarket = this.new_supermarket.value.category_to_supermarket.filter((x) => x.category.id != c_id)
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                })
+                .catch((err) => {
+                    console.log(err)
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
                 })
         },
         resetFilters: function () {
