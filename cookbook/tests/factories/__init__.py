@@ -157,6 +157,8 @@ class IngredientFactory(factory.django.DjangoModelFactory):
     unit = factory.SubFactory(UnitFactory, space=factory.SelfAttribute('..space'))
     amount = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=10))
     note = factory.LazyAttribute(lambda x: faker.sentence(nb_words=8))
+    is_header = False
+    no_amount = False
     space = factory.SubFactory(SpaceFactory)
 
     class Meta:
@@ -252,6 +254,7 @@ class StepFactory(factory.django.DjangoModelFactory):
     instruction = factory.LazyAttribute(lambda x: ''.join(faker.paragraphs(nb=5)))
     # TODO add optional recipe food, make dependent on recipe, make number of recipes a Params
     ingredients__count = 10  # default number of ingredients to add
+    ingredients__header = 0
     time = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=1000))
     order = factory.Sequence(lambda x: x)
     # file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
@@ -286,6 +289,12 @@ class StepFactory(factory.django.DjangoModelFactory):
                 else:
                     has_recipe = False
                 self.ingredients.add(IngredientFactory(space=self.space, food__has_recipe=has_recipe))
+        num_header = kwargs.get('header', 0)
+        #######################################################
+        #######################################################
+        if num_header > 0:
+            for i in range(num_header):
+                self.ingredients.add(IngredientFactory(food=None, unit=None, amount=0, is_header=True, space=self.space))
         elif extracted:
             for ing in extracted:
                 self.ingredients.add(ing)
@@ -333,12 +342,14 @@ class RecipeFactory(factory.django.DjangoModelFactory):
         food_recipe_count = kwargs.get('food_recipe_count', {})
         num_steps = kwargs.get('count', 0)
         num_recipe_steps = kwargs.get('recipe_count', 0)
+        num_ing_headers = kwargs.get('ingredients__header', 0)
         if num_steps > 0:
             for i in range(num_steps):
                 ing_recipe_count = 0
                 if food_recipe_count.get('step', None) == i:
                     ing_recipe_count = food_recipe_count.get('count', 0)
-                self.steps.add(StepFactory(space=self.space, ingredients__food_recipe_count=ing_recipe_count))
+                self.steps.add(StepFactory(space=self.space, ingredients__food_recipe_count=ing_recipe_count, ingredients__header=num_ing_headers))
+                num_ing_headers+-1
         if num_recipe_steps > 0:
             for j in range(num_recipe_steps):
                 self.steps.add(StepFactory(space=self.space, step_recipe__has_recipe=True, ingredients__count=0))

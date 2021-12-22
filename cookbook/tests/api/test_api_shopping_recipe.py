@@ -7,11 +7,12 @@ from django.contrib import auth
 from django.forms import model_to_dict
 from django.urls import reverse
 from django.utils import timezone
-from django_scopes import scopes_disabled
+from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import Food, Ingredient, ShoppingListEntry, Step
-from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
+from cookbook.tests.factories import (IngredientFactory, MealPlanFactory, RecipeFactory,
+                                      StepFactory, UserFactory)
 
 SHOPPING_LIST_URL = 'api:shoppinglistentry-list'
 SHOPPING_RECIPE_URL = 'api:recipe-shopping'
@@ -37,17 +38,19 @@ def recipe(request, space_1, u1_s1):
         params = request.param  # request.param is a magic variable
     except AttributeError:
         params = {}
-    step_recipe = params.get('steps__count', 1)
-    steps__recipe_count = params.get('steps__recipe_count', 0)
-    steps__food_recipe_count = params.get('steps__food_recipe_count', {})
-    created_by = params.get('created_by', auth.get_user(u1_s1))
+    # step_recipe = params.get('steps__count', 1)
+    # steps__recipe_count = params.get('steps__recipe_count', 0)
+    # steps__food_recipe_count = params.get('steps__food_recipe_count', {})
+    params['created_by'] = params.get('created_by', auth.get_user(u1_s1))
+    params['space'] = space_1
+    return RecipeFactory.create(**params)
 
-    return RecipeFactory.create(
-        steps__recipe_count=steps__recipe_count,
-        steps__food_recipe_count=steps__food_recipe_count,
-        created_by=created_by,
-        space=space_1,
-    )
+    # return RecipeFactory.create(
+    #     steps__recipe_count=steps__recipe_count,
+    #     steps__food_recipe_count=steps__food_recipe_count,
+    #     created_by=created_by,
+    #     space=space_1,
+    # )
 
 
 @pytest.mark.parametrize("arg", [
@@ -226,4 +229,11 @@ def test_shopping_recipe_mixed_authors(u1_s1, u2_s1):
         assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 0
 
 
-# TODO test failing to adding recipe with ingredients that are not food
+# TODO test adding recipe with ingredients that are not food
+@pytest.mark.parametrize("recipe", [{'steps__ingredients__header': 1}], indirect=['recipe'])
+def test_shopping_with_header_ingredient(u1_s1, recipe):
+    # with scope(space=recipe.space):
+    #     recipe.step_set.first().ingredient_set.add(IngredientFactory(ingredients__header=1))
+    u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
+    assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 10
+    assert len(json.loads(u1_s1.get(reverse('api:ingredient-list')).content)) == 11
