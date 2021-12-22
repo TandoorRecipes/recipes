@@ -746,7 +746,7 @@ export default {
                     } else {
                         console.log("no data returned")
                     }
-                    this.new_item = { amount: 1 }
+                    this.new_item = { amount: 1, unit: undefined, food: undefined }
                 })
                 .catch((err) => {
                     console.log(err)
