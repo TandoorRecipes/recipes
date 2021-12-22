@@ -688,8 +688,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         obj = self.get_object()
         if obj.get_space() != request.space:
             raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
-        qs = obj.get_related_recipes(levels=1)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
-        # mealplans= TODO get todays mealplans
+        try:
+            levels = int(request.query_params.get('levels', 1))
+        except (ValueError, TypeError):
+            levels = 1
+        qs = obj.get_related_recipes(levels=levels)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
         return Response(self.serializer_class(qs, many=True).data)
 
 
