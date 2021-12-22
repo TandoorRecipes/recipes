@@ -106,7 +106,7 @@ export default {
                         ...this.steps
                             .map((x) => x.ingredients)
                             .flat()
-                            .filter((x) => !x.food.on_hand && !x.food.ignore_shopping)
+                            .filter((x) => !x?.food?.on_hand && !x?.food?.ignore_shopping)
                             .map((x) => x.id),
                     ]
                     this.recipe_servings = result.data?.servings

@@ -2,7 +2,7 @@
     <div id="app" style="margin-bottom: 4vh">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
         <div class="row float-top">
-            <div class="offset-md-10 col-md-2 no-gutter text-right">
+            <div class="col-auto no-gutter ml-auto">
                 <b-button variant="link" class="px-0">
                     <i class="btn fas fa-plus-circle fa-lg px-0" @click="entrymode = !entrymode" :class="entrymode ? 'text-success' : 'text-muted'" />
                 </b-button>
@@ -149,24 +149,28 @@
 
                             <b-card-body class="m-0 p-0">
                                 <b-card class="no-body mb-2" v-for="s in supermarkets" v-bind:key="s.id">
-                                    <b-card-title
-                                        >{{ s.name }}
+                                    <b-card-title>
+                                        <div class="row">
+                                            <div class="col">{{ s.name }}</div>
 
-                                        <b-button
-                                            variant="link"
-                                            class="p-0 m-0 float-right"
-                                            @click="
-                                                s.editmode = !s.editmode
-                                                new_category.entrymode = false
-                                                new_supermarket.entrymode = false
-                                                editSupermarket(s)
-                                            "
-                                        >
-                                            <i class="btn fas fa-edit fa-lg px-0" :class="s.editmode ? 'text-success' : 'text-muted'" />
-                                        </b-button>
-                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteSupermarket(s)">
-                                            <i class="btn fas fa-trash fa-lg px-2 text-muted" />
-                                        </b-button>
+                                            <div class="col-auto text-right ml-auto">
+                                                <b-button
+                                                    variant="link"
+                                                    class="p-0 m-0"
+                                                    @click="
+                                                        s.editmode = !s.editmode
+                                                        new_category.entrymode = false
+                                                        new_supermarket.entrymode = false
+                                                        editSupermarket(s)
+                                                    "
+                                                >
+                                                    <i class="btn fas fa-edit fa-lg px-0" :class="s.editmode ? 'text-success' : 'text-muted'" />
+                                                </b-button>
+                                                <b-button variant="link" class="p-0 m-0" @click="deleteSupermarket(s)">
+                                                    <i class="btn fas fa-trash fa-lg px-2 text-muted" />
+                                                </b-button>
+                                            </div>
+                                        </div>
                                     </b-card-title>
 
                                     <b-card-body class="py-0">
@@ -180,19 +184,24 @@
                     <div class="col col-md-5">
                         <b-card class="no-body">
                             <template #header>
-                                <h4 class="mb-0">
-                                    {{ $t("Shopping_Categories") }}
-                                    <b-button
-                                        variant="link"
-                                        class="p-0 m-0 float-right"
-                                        @click="
-                                            new_category.entrymode = !new_category.entrymode
-                                            new_supermarket.entrymode = false
-                                        "
-                                    >
-                                        <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
-                                    </b-button>
-                                </h4>
+                                <div class="row">
+                                    <div class="col">
+                                        {{ $t("Shopping_Categories") }}
+                                    </div>
+
+                                    <div class="col-auto text-right ml-auto">
+                                        <b-button
+                                            variant="link"
+                                            class="p-0 m-0"
+                                            @click="
+                                                new_category.entrymode = !new_category.entrymode
+                                                new_supermarket.entrymode = false
+                                            "
+                                        >
+                                            <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
+                                        </b-button>
+                                    </div>
+                                </div>
                             </template>
                             <b-card
                                 class="m-1 p-1 no-body"
