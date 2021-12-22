@@ -134,6 +134,11 @@ export class Models {
                     list: "FOOD_INHERIT_FIELDS",
                     label: i18n.t("IgnoreInherit"),
                 },
+                full_name: {
+                    form_field: true,
+                    type: "smalltext",
+                    field: "full_name",
+                },
                 form_function: "FoodCreateDefault",
             },
         },
@@ -179,6 +184,11 @@ export class Models {
                     type: "emoji",
                     field: "icon",
                     label: i18n.t("Icon"),
+                },
+                full_name: {
+                    form_field: true,
+                    type: "smalltext",
+                    field: "full_name",
                 },
             },
         },

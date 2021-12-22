@@ -17,13 +17,14 @@
         >
             <b-row no-gutters>
                 <b-col no-gutters class="col-sm-3">
-                    <b-card-img-lazy style="object-fit: cover; height: 6em;" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
+                    <b-card-img-lazy style="object-fit: cover; height: 6em" :src="item_image" v-bind:alt="$t('Recipe_Image')"></b-card-img-lazy>
                 </b-col>
                 <b-col no-gutters class="col-sm-9">
                     <b-card-body class="m-0 py-0">
-                        <b-card-text class=" h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
+                        <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                             <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
                             <div class="m-0 text-truncate">{{ item[subtitle] }}</div>
+                            <div class="m-0 text-truncate small text-muted" v-if="getFullname">{{ getFullname }}</div>
 
                             <generic-pill v-for="x in itemTags" :key="x.field" :item_list="item[x.field]" :label="x.label" :color="x.color" />
                             <generic-ordered-pill
@@ -37,21 +38,11 @@
                                 @finish-action="finishAction"
                             />
                             <div class="mt-auto mb-1" align="right">
-                                <span
-                                    v-if="item[child_count]"
-                                    class="mx-2 btn btn-link btn-sm"
-                                    style="z-index: 800;"
-                                    v-on:click="$emit('item-action', { action: 'get-children', source: item })"
-                                >
+                                <span v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800" v-on:click="$emit('item-action', { action: 'get-children', source: item })">
                                     <div v-if="!item.show_children">{{ item[child_count] }} {{ itemName }}</div>
                                     <div v-else>{{ text.hide_children }}</div>
                                 </span>
-                                <span
-                                    v-if="item[recipe_count]"
-                                    class="mx-2 btn btn-link btn-sm"
-                                    style="z-index: 800;"
-                                    v-on:click="$emit('item-action', { action: 'get-recipes', source: item })"
-                                >
+                                <span v-if="item[recipe_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800" v-on:click="$emit('item-action', { action: 'get-recipes', source: item })">
                                     <div v-if="!item.show_recipes">{{ item[recipe_count] }} {{ $t("Recipes") }}</div>
                                     <div v-else>{{ $t("Hide_Recipes") }}</div>
                                 </span>
@@ -77,20 +68,19 @@
         <!-- recursively add child cards -->
         <div class="row" v-if="item.show_children">
             <div class="col-md-10 offset-md-2">
-                <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id" :item="child" :model="model" @item-action="$emit('item-action', $event)">
-                </generic-horizontal-card>
+                <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id" :item="child" :model="model" @item-action="$emit('item-action', $event)"> </generic-horizontal-card>
             </div>
         </div>
         <!-- conditionally view recipes -->
         <div class="row" v-if="item.show_recipes">
             <div class="col-md-10 offset-md-2">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));grid-gap: 1rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); grid-gap: 1rem">
                     <recipe-card v-for="r in item[recipes]" v-bind:key="r.id" :recipe="r"> </recipe-card>
                 </div>
             </div>
         </div>
         <!-- this should be made a generic component, would also require mixin for functions that generate the popup and put in parent container-->
-        <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index:9999; cursor:pointer">
+        <b-list-group ref="tooltip" variant="light" v-show="show_menu" v-on-clickaway="closeMenu" style="z-index: 9999; cursor: pointer">
             <b-list-group-item
                 v-if="useMove"
                 action
@@ -176,47 +166,53 @@ export default {
         this.text.hide_children = this.$t("Hide_" + this.itemName)
     },
     computed: {
-        itemName: function() {
+        itemName: function () {
             return this.model?.name ?? "You Forgot To Set Model Name in model.js"
         },
-        useMove: function() {
+        useMove: function () {
             return this.model?.["move"] ?? false ? true : false
         },
-        useMerge: function() {
+        useMerge: function () {
             return this.model?.["merge"] ?? false ? true : false
         },
-        useShopping: function() {
+        useShopping: function () {
             return this.model?.["shop"] ?? false ? true : false
         },
-        useOnhand: function() {
+        useOnhand: function () {
             return this.model?.["onhand"] ?? false ? true : false
         },
-        useDrag: function() {
+        useDrag: function () {
             return this.useMove || this.useMerge
         },
-        itemTags: function() {
+        itemTags: function () {
             return this.model?.tags ?? []
         },
-        itemOrderedTags: function() {
+        itemOrderedTags: function () {
             return this.model?.ordered_tags ?? []
+        },
+        getFullname: function () {
+            if (!this.item?.full_name.includes(">")) {
+                return undefined
+            }
+            return this.item?.full_name
         },
     },
     methods: {
-        handleDragStart: function(e) {
+        handleDragStart: function (e) {
             this.isError = false
             e.dataTransfer.setData("source", JSON.stringify(this.item))
         },
-        handleDragEnter: function(e) {
+        handleDragEnter: function (e) {
             if (!e.currentTarget.contains(e.relatedTarget) && e.relatedTarget != null) {
                 this.over = true
             }
         },
-        handleDragLeave: function(e) {
+        handleDragLeave: function (e) {
             if (!e.currentTarget.contains(e.relatedTarget)) {
                 this.over = false
             }
         },
-        handleDragDrop: function(e) {
+        handleDragDrop: function (e) {
             let source = JSON.parse(e.dataTransfer.getData("source"))
             if (source.id != this.item.id) {
                 this.source = source
@@ -247,7 +243,7 @@ export default {
                 this.isError = true
             }
         },
-        generateLocation: function(x = 0, y = 0) {
+        generateLocation: function (x = 0, y = 0) {
             return () => ({
                 width: 0,
                 height: 0,
@@ -257,10 +253,10 @@ export default {
                 left: x,
             })
         },
-        closeMenu: function() {
+        closeMenu: function () {
             this.show_menu = false
         },
-        finishAction: function(e) {
+        finishAction: function (e) {
             this.$emit("finish-action", e)
         },
     },

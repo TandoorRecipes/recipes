@@ -14,6 +14,7 @@
                 <choice-input v-if="f.type == 'choice'" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
                 <emoji-input v-if="f.type == 'emoji'" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <file-input v-if="f.type == 'file'" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
+                <small-text v-if="f.type == 'smalltext'" :value="f.value" />
             </div>
 
             <template v-slot:modal-footer>
@@ -39,10 +40,11 @@ import TextInput from "@/components/Modals/TextInput"
 import EmojiInput from "@/components/Modals/EmojiInput"
 import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
+import SmallText from "@/components/Modals/SmallText"
 
 export default {
     name: "GenericModalForm",
-    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput },
+    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText },
     mixins: [ApiMixin, ToastMixin],
     props: {
         model: { required: true, type: Object },
