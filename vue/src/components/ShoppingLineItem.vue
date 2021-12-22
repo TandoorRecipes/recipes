@@ -46,57 +46,60 @@
             </b-container>
             <!-- detail rows -->
             <div class="card no-body" v-if="showDetails">
-                <div v-for="(e, z) in entries" :key="z">
-                    <div class="row ml-2 small">
-                        <div class="col-md-4 overflow-hidden text-nowrap">
-                            <button
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                type="button"
-                                class="btn btn-link btn-sm m-0 p-0"
-                                style="text-overflow: ellipsis"
-                                @click.stop="openRecipeCard($event, e)"
-                                @mouseover="openRecipeCard($event, e)"
-                            >
-                                {{ formatOneRecipe(e) }}
-                            </button>
-                        </div>
-                        <div class="col-md-4 text-muted">{{ formatOneMealPlan(e) }}</div>
-                        <div class="col-md-4 text-muted text-right">{{ formatOneCreatedBy(e) }}</div>
-                    </div>
-                    <div class="row ml-2 small">
-                        <div class="col-md-4 offset-md-8 text-muted text-right" v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
-                        <div class="col-md-4 offset-md-8 text-muted text-right" v-if="formatOneDelayUntil(e)">{{ formatOneDelayUntil(e) }}</div>
-                    </div>
-                    <div class="row ml-2 light">
-                        <div class="col-sm-1 text-nowrap">
-                            <div style="position: static" class="btn-group">
-                                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
-                                    <button
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                        type="button"
-                                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                                        @click.stop="$emit('open-context-menu', $event, e)"
-                                    >
-                                        <i class="fas fa-ellipsis-v fa-lg"></i>
-                                    </button>
+                <b-container fluid>
+                    <div v-for="(e, z) in entries" :key="z">
+                        <b-row class="ml-2 small">
+                            <b-col cols="6" md="4" class="overflow-hidden text-nowrap">
+                                <button
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    type="button"
+                                    class="btn btn-link btn-sm m-0 p-0"
+                                    style="text-overflow: ellipsis"
+                                    @click.stop="openRecipeCard($event, e)"
+                                    @mouseover="openRecipeCard($event, e)"
+                                >
+                                    {{ formatOneRecipe(e) }}
+                                </button>
+                            </b-col>
+                            <b-col cols="6" md="4" class="col-md-4 text-muted">{{ formatOneMealPlan(e) }}</b-col>
+                            <b-col cols="12" md="4" class="col-md-4 text-muted text-right overflow-hidden text-nowrap">{{ formatOneCreatedBy(e) }}</b-col>
+                        </b-row>
+
+                        <b-row class="ml-2 light">
+                            <b-col cols="12" sm="2">
+                                <div style="position: static" class="btn-group">
+                                    <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
+                                        <button
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            type="button"
+                                            class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                                            @click.stop="$emit('open-context-menu', $event, e)"
+                                        >
+                                            <i class="fas fa-ellipsis-v fa-lg"></i>
+                                        </button>
+                                    </div>
+                                    <input type="checkbox" class="text-right mx-3 mt-2" :checked="e.checked" @change="updateChecked($event, e)" />
                                 </div>
-                                <input type="checkbox" class="text-right mx-3 mt-2" :checked="e.checked" @change="updateChecked($event, e)" />
-                            </div>
-                        </div>
-                        <div class="col-sm-1">{{ formatOneAmount(e) }}</div>
-                        <div class="col-sm-2">{{ formatOneUnit(e) }}</div>
+                            </b-col>
+                            <b-col cols="12" sm="10">
+                                <b-row>
+                                    <b-col cols="2" sm="2" md="1" class="text-nowrap">{{ formatOneAmount(e) }}</b-col>
+                                    <b-col cols="10" sm="4" md="2" class="text-nowrap">{{ formatOneUnit(e) }}</b-col>
 
-                        <div class="col-sm-3">{{ formatOneFood(e) }}</div>
+                                    <b-col cols="12" sm="6" md="4" class="text-nowrap">{{ formatOneFood(e) }}</b-col>
 
-                        <div class="col-sm-4">
-                            <div class="small" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
-                        </div>
+                                    <b-col cols="12" sm="6" md="5">
+                                        <div class="small" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                        </b-row>
+
+                        <hr class="w-75" />
                     </div>
-
-                    <hr class="w-75" />
-                </div>
+                </b-container>
             </div>
             <hr class="m-1" />
         </div>
@@ -241,7 +244,7 @@ export default {
             return item.checked
         },
         formatOneDelayUntil: function (item) {
-            if (!item.delay_until && item.checked) {
+            if (!item.delay_until || (item.delay_until && item.checked)) {
                 return false
             }
             return [this.$t("DelayUntil"), "-", this.formatDate(item.delay_until)].join(" ")
