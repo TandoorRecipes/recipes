@@ -305,7 +305,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         model = Keyword
         fields = (
             'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
-            'updated_at')
+            'updated_at', 'full_name')
         read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
 
@@ -403,7 +403,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'ignore_shopping', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'inherit', 'ignore_inherit',
+            'image', 'parent', 'numchild', 'numrecipe', 'on_hand', 'inherit', 'ignore_inherit', 'full_name'
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
