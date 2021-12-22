@@ -34,9 +34,11 @@
 
 <script>
 const { ApiApiFactory } = require("@/utils/openapi/api")
+import { ResolveUrlMixin } from "@/utils/utils"
 
 export default {
     name: "RecipeSwitcher",
+    mixins: [ResolveUrlMixin],
     props: {
         recipe: { type: Number, default: undefined },
         name: { type: String, default: undefined },
@@ -64,7 +66,14 @@ export default {
     },
     mounted() {
         this.recipes = []
-        this.loadRecipes()
+        switch (this.mode) {
+            case "recipe":
+                this.loadRecipes()
+                break
+            case "mealplan":
+                this.loadMealPlans()
+                break
+        }
     },
 
     methods: {
@@ -74,7 +83,8 @@ export default {
                     this.$emit("switch", recipe)
                     break
                 case "mealplan":
-                    console.log("navigate to", recipe)
+                    console.log("navigate to")
+                    window.location.href = this.resolveDjangoUrl("view_recipe", recipe.id)
                     break
                 default:
                     console.log(this.mode, " isn't defined.")
@@ -82,7 +92,7 @@ export default {
         },
         loadRecipes: function () {
             let apiClient = new ApiApiFactory()
-            let today = new Date(Date.now()).toISOString().split("T")[0]
+
             apiClient
                 .relatedRecipe(this.recipe, { query: { levels: 2 } })
                 // get related recipes and save them for later
@@ -91,39 +101,44 @@ export default {
                 })
                 // get all recipes for today
                 .then(() => {
-                    apiClient
-                        .listMealPlans({
-                            query: {
-                                from_date: today,
-                                to_date: today,
-                            },
-                        })
-                        .then((result) => {
-                            let promises = []
-                            result.data.forEach((mealplan) => {
-                                this.recipe_list.push(mealplan?.recipe)
+                    this.loadMealPlans()
+                })
+        },
+        loadMealPlans: function () {
+            let apiClient = new ApiApiFactory()
+            let today = new Date(Date.now()).toISOString().split("T")[0]
+            apiClient
+                .listMealPlans({
+                    query: {
+                        from_date: today,
+                        to_date: today,
+                    },
+                })
+                .then((result) => {
+                    let promises = []
+                    result.data.forEach((mealplan) => {
+                        this.recipe_list.push(mealplan?.recipe)
+                        promises.push(
+                            apiClient.relatedRecipe(mealplan?.recipe?.id, { query: { levels: 2 } }).then((r) => {
+                                this.recipe_list = [...this.recipe_list, ...r.data]
+                            })
+                        )
+                    })
+                    return Promise.all(promises).then(() => {
+                        let promises = []
+                        let dedup = []
+                        this.recipe_list.forEach((recipe) => {
+                            if (!dedup.includes(recipe.id)) {
+                                dedup.push(recipe.id)
                                 promises.push(
-                                    apiClient.relatedRecipe(mealplan?.recipe?.id, { query: { levels: 2 } }).then((r) => {
-                                        this.recipe_list = [...this.recipe_list, ...r.data]
+                                    apiClient.retrieveRecipe(recipe.id).then((result) => {
+                                        this.recipes.push(result.data)
                                     })
                                 )
-                            })
-                            return Promise.all(promises).then(() => {
-                                let promises = []
-                                let dedup = []
-                                this.recipe_list.forEach((recipe) => {
-                                    if (!dedup.includes(recipe.id)) {
-                                        dedup.push(recipe.id)
-                                        promises.push(
-                                            apiClient.retrieveRecipe(recipe.id).then((result) => {
-                                                this.recipes.push(result.data)
-                                            })
-                                        )
-                                    }
-                                })
-                                return Promise.all(promises)
-                            })
+                            }
                         })
+                        return Promise.all(promises)
+                    })
                 })
         },
     },

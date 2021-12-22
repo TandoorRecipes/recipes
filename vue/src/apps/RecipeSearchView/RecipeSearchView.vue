@@ -1,5 +1,6 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
+        <RecipeSwitcher mode="mealplan" />
         <div class="row">
             <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
                 <div class="row">
@@ -244,6 +245,7 @@ import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
+import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 
 Vue.use(BootstrapVue)
 
@@ -252,7 +254,7 @@ let SETTINGS_COOKIE_NAME = "search_settings"
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin],
-    components: { GenericMultiselect, RecipeCard, Treeselect },
+    components: { GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher },
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
