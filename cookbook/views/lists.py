@@ -225,8 +225,6 @@ def step(request):
 
 @group_required('user')
 def shopping_list_new(request):
-    # recipe-param is the name of the parameters used when filtering recipes by this attribute
-    # model-name is the models.js name of the model, probably ALL-CAPS
     return render(
         request,
         'shoppinglist_template.html',

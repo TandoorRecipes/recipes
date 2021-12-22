@@ -1,37 +1,50 @@
 <template>
     <div id="shopping_line_item">
         <div class="col-12">
-            <div class="row">
-                <div class="col col-md-1">
-                    <div style="position: static" class="btn-group">
-                        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
-                            <button
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                type="button"
-                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                                @click.stop="$emit('open-context-menu', $event, entries)"
-                            >
-                                <i class="fas fa-ellipsis-v fa-lg"></i>
-                            </button>
+            <b-container fluid>
+                <!-- summary rows -->
+                <b-row align-h="start">
+                    <b-col cols="12" sm="2">
+                        <div style="position: static" class="btn-group">
+                            <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
+                                <button
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    type="button"
+                                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                                    @click.stop="$emit('open-context-menu', $event, entries)"
+                                >
+                                    <i class="fas fa-ellipsis-v fa-lg"></i>
+                                </button>
+                            </div>
+                            <input type="checkbox" class="text-right mx-3 mt-2" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                         </div>
-                        <input type="checkbox" class="text-right mx-3 mt-2" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div v-if="Object.entries(formatAmount).length == 1">{{ Object.entries(formatAmount)[0][1] }} &ensp; {{ Object.entries(formatAmount)[0][0] }}</div>
-                    <div class="small" v-else v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp; {{ x[0] }}</div>
-                </div>
+                    </b-col>
+                    <b-col cols="12" sm="10">
+                        <b-row>
+                            <b-col cols="6" sm="3">
+                                <div v-if="Object.entries(formatAmount).length == 1">{{ Object.entries(formatAmount)[0][1] }} &ensp; {{ Object.entries(formatAmount)[0][0] }}</div>
+                                <div class="small" v-else v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp; {{ x[0] }}</div>
+                            </b-col>
 
-                <div class="col col-md-6">
-                    {{ formatFood }} <span class="small text-muted">{{ formatHint }}</span>
-                </div>
-                <div class="col col-md-1" data-html2canvas-ignore="true">
-                    <b-button size="sm" @click="showDetails = !showDetails" class="mr-2" variant="link">
-                        <div class="text-nowrap">{{ showDetails ? "Hide" : "Show" }} Details</div>
-                    </b-button>
-                </div>
-            </div>
+                            <b-col cols="6" sm="7">
+                                {{ formatFood }}
+                            </b-col>
+                            <b-col cols="6" sm="2" data-html2canvas-ignore="true">
+                                <b-button size="sm" @click="showDetails = !showDetails" class="mr-2" variant="link">
+                                    <div class="text-nowrap">{{ showDetails ? "Hide" : "Show" }} Details</div>
+                                </b-button>
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                </b-row>
+                <b-row align-h="center">
+                    <b-col cols="12">
+                        <div class="small text-muted text-truncate">{{ formatHint }}</div>
+                    </b-col>
+                </b-row>
+            </b-container>
+            <!-- detail rows -->
             <div class="card no-body" v-if="showDetails">
                 <div v-for="(e, z) in entries" :key="z">
                     <div class="row ml-2 small">
@@ -177,7 +190,13 @@ export default {
                 return this.formatOneMealPlan(this.entries[0]) || ""
             } else {
                 let mealplan_name = this.entries.filter((x) => x?.recipe_mealplan?.name)
-                return [this.formatOneMealPlan(mealplan_name?.[0]), this.$t("CountMore", { count: this.entries?.length - 1 })].join("  ")
+                // return [this.formatOneMealPlan(mealplan_name?.[0]), this.$t("CountMore", { count: this.entries?.length - 1 })].join("  ")
+
+                return mealplan_name
+                    .map((x) => {
+                        return this.formatOneMealPlan(x)
+                    })
+                    .join(" - ")
             }
         },
         formatNotes: function () {
