@@ -89,9 +89,9 @@ export default {
     data() {
         return {
             checked: false,
-            shopping_status: null,
+            shopping_status: null, // in any shopping list: boolean + null=in shopping list, but not for this recipe
             shopping_items: [],
-            shop: false,
+            shop: false, // in shopping list for this recipe: boolean
             dirty: undefined,
         }
     },
@@ -99,6 +99,13 @@ export default {
         ShoppingListAndFilter: {
             immediate: true,
             handler(newVal, oldVal) {
+                // this whole sections is overly complicated
+                // trying to infer status of shopping for THIS recipe and THIS ingredient
+                // without know which recipe it is.
+                // If refactored:
+                // ## Needs to handle same recipe (multiple mealplans) being in shopping list multiple times
+                // ## Needs to handle same recipe being added as ShoppingListRecipe AND ingredients added from recipe as one-off
+
                 let filtered_list = this.shopping_list
                 // if a recipe list is provided, filter the shopping list
                 if (this.recipe_list) {
@@ -108,34 +115,39 @@ export default {
                 let count_shopping_recipes = [...new Set(filtered_list.map((x) => x.list_recipe))].length
                 let count_shopping_ingredient = filtered_list.filter((x) => x.ingredient == this.ingredient.id).length
 
-                if (count_shopping_recipes > 1) {
+                if (count_shopping_recipes >= 1) {
+                    // This recipe is in the shopping list
                     this.shop = false // don't check any boxes until user selects a shopping list to edit
                     if (count_shopping_ingredient >= 1) {
-                        this.shopping_status = true
+                        this.shopping_status = true // ingredient is in the shopping list - probably (but not definitely, this ingredient)
                     } else if (this.ingredient.food.shopping) {
                         this.shopping_status = null // food is in the shopping list, just not for this ingredient/recipe
                     } else {
-                        this.shopping_status = false // food is not in any shopping list
+                        // food is not in any shopping list
+                        this.shopping_status = false
                     }
                 } else {
+                    // there are not recipes in the shopping list
+                    // set default value
+                    this.shop = !this.ingredient?.food?.on_hand && !this.ingredient?.food?.ignore_shopping && !this.ingredient?.food?.recipe
+                    this.$emit("add-to-shopping", { item: this.ingredient, add: this.shop })
                     // mark checked if the food is in the shopping list for this ingredient/recipe
                     if (count_shopping_ingredient >= 1) {
-                        // ingredient is in this shopping list
-                        this.shop = true
+                        // ingredient is in this shopping list (not entirely sure how this could happen?)
                         this.shopping_status = true
                     } else if (count_shopping_ingredient == 0 && this.ingredient.food.shopping) {
                         // food is in the shopping list, just not for this ingredient/recipe
-                        this.shop = false
                         this.shopping_status = null
                     } else {
                         // the food is not in any shopping list
-                        this.shop = false
                         this.shopping_status = false
                     }
                 }
-                // if we are in add shopping mode start with all checks marked
+
                 if (this.add_shopping_mode) {
-                    this.shop = !this.ingredient.food.on_hand && !this.ingredient.food.ignore_shopping && !this.ingredient.food.recipe
+                    // if we are in add shopping mode (e.g. recipe_shopping_modal) start with all checks marked
+                    // except if on_hand and ignore_shopping (could be if recipe too?)
+                    this.shop = !this.ingredient?.food?.on_hand && !this.ingredient?.food?.ignore_shopping && !this.ingredient?.food?.recipe
                 }
             },
         },
