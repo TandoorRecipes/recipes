@@ -67,7 +67,7 @@
     </button>
 
     {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
-        <a class="navbar-brand p-0 me-2 justify-content-center" href="/" aria-label="Tandoor">
+        <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}" aria-label="Tandoor">
             <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="" style="height: 5vh;">
         </a>
     {% endif %}
