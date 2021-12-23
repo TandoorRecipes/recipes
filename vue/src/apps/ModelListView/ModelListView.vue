@@ -435,7 +435,7 @@ export default {
         getRecipes: function (col, item) {
             let parent = {}
             // TODO: make this generic
-            let params = { pageSize: 50 }
+            let params = { pageSize: 50, random: true }
             params[this.this_recipe_param] = item.id
             console.log("RECIPE PARAM", this.this_recipe_param, params, item.id)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
