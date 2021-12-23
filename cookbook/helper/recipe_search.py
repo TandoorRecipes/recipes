@@ -1,17 +1,17 @@
 from collections import Counter
 from datetime import timedelta
 
-from recipes import settings
-from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, TrigramSimilarity
-)
+from django.contrib.postgres.search import SearchQuery, SearchRank, TrigramSimilarity
 from django.core.cache import caches
 from django.db.models import Avg, Case, Count, Func, Max, Q, Subquery, Value, When
 from django.db.models.functions import Coalesce
 from django.utils import timezone, translation
 
+from cookbook.filters import RecipeFilter
+from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
-from cookbook.models import Food, Keyword, ViewLog, SearchPreference
+from cookbook.models import Food, Keyword, Recipe, SearchPreference, ViewLog
+from recipes import settings
 
 
 class Round(Func):
@@ -62,7 +62,7 @@ def search_recipes(request, queryset, params):
 
         # return queryset.annotate(last_view=Max('viewlog__pk')).annotate(new=Case(When(pk__in=last_viewed_recipes, then=('last_view')), default=Value(0))).filter(new__gt=0).order_by('-new')
         # queryset that only annotates most recent view (higher pk = lastest view)
-        queryset = queryset.annotate(recent=Coalesce(Max('viewlog__pk'), Value(0)))
+        queryset = queryset.annotate(recent=Coalesce(Max(Case(When(viewlog__created_by=request.user, then='viewlog__pk'))), Value(0)))
         orderby += ['-recent']
 
     # TODO create setting for default ordering - most cooked, rating,
@@ -143,9 +143,9 @@ def search_recipes(request, queryset, params):
 
             # TODO add order by user settings - only do search rank and annotation if rank order is configured
             search_rank = (
-                    SearchRank('name_search_vector', search_query, cover_density=True)
-                    + SearchRank('desc_search_vector', search_query, cover_density=True)
-                    + SearchRank('steps__search_vector', search_query, cover_density=True)
+                SearchRank('name_search_vector', search_query, cover_density=True)
+                + SearchRank('desc_search_vector', search_query, cover_density=True)
+                + SearchRank('steps__search_vector', search_query, cover_density=True)
             )
             queryset = queryset.filter(query_filter).annotate(rank=search_rank)
             orderby += ['-rank']
@@ -400,3 +400,13 @@ def annotated_qs(qs, root=False, fill=False):
     if start_depth and start_depth > 0:
         info['close'] = list(range(0, prev_depth - start_depth + 1))
     return result
+
+
+def old_search(request):
+    if has_group_permission(request.user, ('guest',)):
+        params = dict(request.GET)
+        params['internal'] = None
+        f = RecipeFilter(params,
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
+                         space=request.space)
+        return f.qs

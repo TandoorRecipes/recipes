@@ -1,17 +1,19 @@
+import re
+from gettext import gettext as _
+
 import bleach
 import markdown as md
-import re
 from bleach_allowlist import markdown_attrs, markdown_tags
-from cookbook.helper.mdx_attributes import MarkdownFormatExtension
-from cookbook.helper.mdx_urlize import UrlizeExtension
-from cookbook.models import Space, get_model_name
 from django import template
 from django.db.models import Avg
 from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
-from recipes import settings
 from rest_framework.authtoken.models import Token
-from gettext import gettext as _
+
+from cookbook.helper.mdx_attributes import MarkdownFormatExtension
+from cookbook.helper.mdx_urlize import UrlizeExtension
+from cookbook.models import Space, get_model_name
+from recipes import settings
 
 register = template.Library()
 
@@ -92,10 +94,10 @@ def recipe_last(recipe, user):
 @register.simple_tag
 def page_help(page_name):
     help_pages = {
-        'edit_storage': 'https://vabene1111.github.io/recipes/features/external_recipes/',
-        'view_shopping': 'https://vabene1111.github.io/recipes/features/shopping/',
-        'view_import': 'https://vabene1111.github.io/recipes/features/import_export/',
-        'view_export': 'https://vabene1111.github.io/recipes/features/import_export/',
+        'edit_storage': 'https://docs.tandoor.dev/features/external_recipes/',
+        'view_shopping': 'https://docs.tandoor.dev/features/shopping/',
+        'view_import': 'https://docs.tandoor.dev/features/import_export/',
+        'view_export': 'https://docs.tandoor.dev/features/import_export/',
     }
 
     link = help_pages.get(page_name, '')
@@ -124,10 +126,10 @@ def markdown_link():
 @register.simple_tag
 def bookmarklet(request):
     if request.is_secure():
-        prefix = "https://"
+        protocol = "https://"
     else:
-        prefix = "http://"
-    server = prefix + request.get_host()
+        protocol = "http://"
+    server = protocol + request.get_host()
     prefix = settings.JS_REVERSE_SCRIPT_PREFIX
     # TODO is it safe to store the token in clear text in a bookmark?
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
@@ -155,3 +157,13 @@ def base_path(request, path_type):
         return request.META.get('HTTP_X_SCRIPT_NAME', '')
     elif path_type == 'static_base':
         return static('vue/manifest.json').replace('vue/manifest.json', '')
+
+
+@register.simple_tag
+def user_prefs(request):
+    from cookbook.serializer import \
+        UserPreferenceSerializer  # putting it with imports caused circular execution
+    try:
+        return UserPreferenceSerializer(request.user.userpreference, context={'request': request}).data
+    except AttributeError:
+        pass
