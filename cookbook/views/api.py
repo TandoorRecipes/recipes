@@ -2,11 +2,11 @@ import io
 import json
 import re
 import uuid
+from collections import OrderedDict
 
 import requests
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
-from collections import OrderedDict
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -15,12 +15,12 @@ from django.core.files import File
 from django.db.models import Case, ProtectedError, Q, Value, When
 from django.db.models.fields.related import ForeignObjectRel
 from django.http import FileResponse, HttpResponse, JsonResponse
-from django_scopes import scopes_disabled
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
-from recipe_scrapers import scrape_me, WebsiteNotImplementedError, NoSchemaFoundInWildMode
+from recipe_scrapers import NoSchemaFoundInWildMode, WebsiteNotImplementedError, scrape_me
 from rest_framework import decorators, status, viewsets
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
@@ -28,41 +28,39 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
-from treebeard.exceptions import PathOverflow, InvalidMoveToDescendant, InvalidPosition
+from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest,
-                                               CustomIsOwner, CustomIsShare,
-                                               CustomIsShared, CustomIsUser,
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
+                                               CustomIsShare, CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-
-from cookbook.helper.recipe_search import search_recipes, get_facet
+from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
-from cookbook.models import (CookLog, Food, Ingredient, Keyword, MealPlan,
-                             MealType, Recipe, RecipeBook, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Step,
-                             Storage, Sync, SyncLog, Unit, UserPreference,
-                             ViewLog, RecipeBookEntry, Supermarket, ImportLog, BookmarkletImport, SupermarketCategory, UserFile, ShareLink, SupermarketCategoryRelation, Automation)
+from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, ImportLog, Ingredient,
+                             Keyword, MealPlan, MealType, Recipe, RecipeBook, RecipeBookEntry,
+                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Step,
+                             Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
+                             Sync, SyncLog, Unit, UserFile, UserPreference, ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, RecipeSchema, TreeSchema, QueryOnlySchema
-from cookbook.serializer import (FoodSerializer, IngredientSerializer,
-                                 KeywordSerializer, MealPlanSerializer,
-                                 MealTypeSerializer, RecipeBookSerializer,
-                                 RecipeImageSerializer, RecipeSerializer,
-                                 ShoppingListAutoSyncSerializer,
-                                 ShoppingListEntrySerializer,
-                                 ShoppingListRecipeSerializer,
-                                 ShoppingListSerializer, StepSerializer,
-                                 StorageSerializer, SyncLogSerializer,
-                                 SyncSerializer, UnitSerializer,
-                                 UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, CookLogSerializer, RecipeBookEntrySerializer,
-                                 RecipeOverviewSerializer, SupermarketSerializer, ImportLogSerializer,
-                                 BookmarkletImportSerializer, SupermarketCategorySerializer, UserFileSerializer, SupermarketCategoryRelationSerializer, AutomationSerializer)
+from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
+from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
+                                 CookLogSerializer, FoodSerializer, ImportLogSerializer,
+                                 IngredientSerializer, KeywordSerializer, MealPlanSerializer,
+                                 MealTypeSerializer, RecipeBookEntrySerializer,
+                                 RecipeBookSerializer, RecipeImageSerializer,
+                                 RecipeOverviewSerializer, RecipeSerializer,
+                                 ShoppingListAutoSyncSerializer, ShoppingListEntrySerializer,
+                                 ShoppingListRecipeSerializer, ShoppingListSerializer,
+                                 StepSerializer, StorageSerializer,
+                                 SupermarketCategoryRelationSerializer,
+                                 SupermarketCategorySerializer, SupermarketSerializer,
+                                 SyncLogSerializer, SyncSerializer, UnitSerializer,
+                                 UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
+                                 ViewLogSerializer)
 from recipes import settings
 
 
@@ -110,7 +108,8 @@ class FuzzyFilterMixin(ViewSetMixin):
             if fuzzy:
                 self.queryset = (
                     self.queryset
-                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))),
+                                             default=Value(0)))  # put exact matches at the top of the result set
                         .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
                         .order_by('-exact', '-trigram')
                 )
@@ -118,7 +117,8 @@ class FuzzyFilterMixin(ViewSetMixin):
                 # TODO have this check unaccent search settings or other search preferences?
                 self.queryset = (
                     self.queryset
-                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))), default=Value(0)))  # put exact matches at the top of the result set
+                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))),
+                                             default=Value(0)))  # put exact matches at the top of the result set
                         .filter(name__icontains=query).order_by('-exact', 'name')
                 )
 
@@ -202,7 +202,8 @@ class MergeMixin(ViewSetMixin):
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
             except Exception:
-                content = {'error': True, 'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
+                content = {'error': True,
+                           'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -218,7 +219,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             if root.isnumeric():
                 try:
                     root = int(root)
-                except self.model.DoesNotExist:
+                except ValueError:
                     self.queryset = self.model.objects.none()
                 if root == 0:
                     self.queryset = self.model.get_root_nodes()
@@ -246,7 +247,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         try:
             child = self.model.objects.get(pk=pk, space=self.request.space)
         except (self.model.DoesNotExist):
-            content = {'error': True, 'msg': _(f'No {self.basename} with id {child} exists')}
+            content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
             return Response(content, status=status.HTTP_404_NOT_FOUND)
 
         parent = int(parent)
@@ -275,7 +276,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                 child.move(parent, f'{node_location}-child')
             content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
             return Response(content, status=status.HTTP_200_OK)
-        except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
+        except (PathOverflow, InvalidMoveToDescendant, InvalidPosition) as e:
             content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
@@ -410,7 +411,8 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space)
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
+            space=self.request.space).distinct()
         return super().get_queryset()
 
 
@@ -428,7 +430,9 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     permission_classes = [CustomIsOwner]
 
     def get_queryset(self):
-        queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space).distinct()
+        queryset = self.queryset.filter(
+            Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(
+            book__space=self.request.space).distinct()
 
         recipe_id = self.request.query_params.get('recipe', None)
         if recipe_id is not None:
@@ -499,15 +503,21 @@ class StepViewSet(viewsets.ModelViewSet):
     serializer_class = StepSerializer
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
-    schema = QueryOnlySchema()
+    query_params = [
+        QueryParam(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'),
+                   qtype='int'),
+        QueryParam(name='query', description=_('Query string matched (fuzzy) against object name.'), qtype='string'),
+    ]
+    schema = QueryParamAutoSchema()
 
     def get_queryset(self):
-        queryset = self.queryset.filter(recipe__space=self.request.space)
-
+        recipes = self.request.query_params.getlist('recipe', [])
         query = self.request.query_params.get('query', None)
+        if len(recipes) > 0:
+            self.queryset = self.queryset.filter(recipe__in=recipes)
         if query is not None:
-            queryset = queryset.filter(Q(name__icontains=query) | Q(recipe__name__icontains=query))
-        return queryset
+            self.queryset = self.queryset.filter(Q(name__icontains=query) | Q(recipe__name__icontains=query))
+        return self.queryset.filter(recipe__space=self.request.space)
 
 
 class RecipePagination(PageNumberPagination):
@@ -535,8 +545,31 @@ class RecipeViewSet(viewsets.ModelViewSet):
     # TODO split read and write permission for meal plan guest
     permission_classes = [CustomIsShare | CustomIsGuest]
     pagination_class = RecipePagination
-
-    schema = RecipeSchema()
+    # TODO the boolean params below (keywords_or through new) should be updated to boolean types with front end refactored accordingly
+    query_params = [
+        QueryParam(name='query', description=_(
+            'Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
+        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter.'),
+                   qtype='int'),
+        QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'),
+                   qtype='int'),
+        QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
+        QueryParam(name='rating', description=_('Rating a recipe should have. [0 - 5]'), qtype='int'),
+        QueryParam(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
+        QueryParam(name='keywords_or', description=_(
+            'If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided keywords.')),
+        QueryParam(name='foods_or', description=_(
+            'If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided foods.')),
+        QueryParam(name='books_or', description=_(
+            'If recipe should be in all (AND=''false'') or any (OR=''<b>true</b>'') of the provided books.')),
+        QueryParam(name='internal',
+                   description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
+        QueryParam(name='random',
+                   description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
+        QueryParam(name='new',
+                   description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
+    ]
+    schema = QueryParamAutoSchema()
 
     def get_queryset(self):
         share = self.request.query_params.get('share', None)
@@ -547,7 +580,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return super().get_queryset()
 
+    def list(self, request, *args, **kwargs):
+        if self.request.GET.get('debug', False):
+            return JsonResponse({
+                'new': str(self.get_queryset().query),
+                'old': str(old_search(request).query)
+            })
+        return super().list(request, *args, **kwargs)
+
     # TODO write extensive tests for permissions
+
     def get_serializer_class(self):
         if self.action == 'list':
             return RecipeOverviewSerializer
@@ -599,6 +641,20 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [CustomIsOwner | CustomIsShared]
+    query_params = [
+        QueryParam(name='id',
+                   description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'),
+                   qtype='int'),
+        QueryParam(
+            name='checked',
+            description=_(
+                'Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
+        ),
+        QueryParam(name='supermarket',
+                   description=_('Returns the shopping list entries sorted by supermarket category order.'),
+                   qtype='int'),
+    ]
+    schema = QueryParamAutoSchema()
 
     def get_queryset(self):
         return self.queryset.filter(
@@ -639,7 +695,7 @@ class ViewLogViewSet(viewsets.ModelViewSet):
 class CookLogViewSet(viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
-    permission_classes = [CustomIsOwner]  # CustomIsShared? since ratings are in the cooklog?
+    permission_classes = [CustomIsOwner]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -727,7 +783,8 @@ def get_recipe_file(request, recipe_id):
 @group_required('user')
 def sync_all(request):
     if request.space.demo or settings.HOSTED:
-        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+        messages.add_message(request, messages.ERROR,
+                             _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
 
     monitors = Sync.objects.filter(active=True).filter(space=request.user.userpreference.space)
@@ -764,7 +821,8 @@ def share_link(request, pk):
     if request.space.allow_sharing:
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-        return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+        return JsonResponse({'pk': pk, 'share': link.uuid,
+                             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
     else:
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
@@ -925,7 +983,7 @@ def ingredient_from_string(request):
 
 @group_required('user')
 def get_facets(request):
-    key = request.GET['hash']
+    key = request.GET.get('hash', None)
 
     return JsonResponse(
         {

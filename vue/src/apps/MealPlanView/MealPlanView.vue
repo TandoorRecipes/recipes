@@ -136,22 +136,22 @@
     <ContextMenu ref="menu">
       <template #menu="{ contextData }">
         <ContextMenuItem @click="$refs.menu.close();openEntryEdit(contextData.originalItem.entry)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();moveEntryLeft(contextData)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();moveEntryRight(contextData)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();createEntry(contextData.originalItem.entry)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();addToShopping(contextData)">
-          <a class="dropdown-item p-2" href="#"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();deleteEntry(contextData)">
-          <a class="dropdown-item p-2 text-danger" href="#"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
+          <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
         </ContextMenuItem>
       </template>
     </ContextMenu>
@@ -513,11 +513,17 @@ export default {
         return entry.id === id
       })[0]
     },
-    moveEntry(null_object, target_date) {
+    moveEntry(null_object, target_date, drag_event) {
       this.plan_entries.forEach((entry) => {
         if (entry.id === this.dragged_item.id) {
-          entry.date = target_date
-          this.saveEntry(entry)
+          if (drag_event.ctrlKey) {
+            let new_entry = Object.assign({}, entry)
+            new_entry.date = target_date
+            this.createEntry(new_entry)
+          } else {
+            entry.date = target_date
+            this.saveEntry(entry)
+          }
         }
       })
     },

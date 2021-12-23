@@ -2,25 +2,30 @@ import operator
 import pathlib
 import re
 import uuid
+from collections import OrderedDict
 from datetime import date, timedelta
+from decimal import Decimal
 
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
-from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
+from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
-from django.db import models, IntegrityError
-from django.db.models import Index, ProtectedError
+from django.db import IntegrityError, models
+from django.db.models import Index, ProtectedError, Q, Subquery
+from django.db.models.fields.related import ManyToManyField
+from django.db.models.functions import Substr
+from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from treebeard.mp_tree import MP_Node, MP_NodeManager
-from django_scopes import ScopedManager, scopes_disabled
 from django_prometheus.models import ExportModelOperationsMixin
-from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
-                              KJ_PREF_DEFAULT, STICKY_NAV_PREF_DEFAULT,
-                              SORT_TREE_BY_NAME)
+from django_scopes import ScopedManager, scopes_disabled
+from treebeard.mp_tree import MP_Node, MP_NodeManager
+
+from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PREF_DEFAULT,
+                              SORT_TREE_BY_NAME, STICKY_NAV_PREF_DEFAULT)
 
 
 def get_user_name(self):
@@ -38,15 +43,26 @@ def get_model_name(model):
 
 
 class TreeManager(MP_NodeManager):
+    def create(self, *args, **kwargs):
+        return self.get_or_create(*args, **kwargs)[0]
+
     # model.Manager get_or_create() is not compatible with MP_Tree
-    def get_or_create(self, **kwargs):
+    def get_or_create(self, *args, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
         try:
             return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
             with scopes_disabled():
                 try:
-                    return self.model.add_root(**kwargs), True
+                    # ManyToMany fields can't be set this way, so pop them out to save for later
+                    fields = [field.name for field in self.model._meta.get_fields() if issubclass(type(field), ManyToManyField)]
+                    many_to_many = {field: kwargs.pop(field) for field in list(kwargs) if field in fields}
+                    obj = self.model.add_root(**kwargs)
+                    for field in many_to_many:
+                        field_model = getattr(obj, field).model
+                        for related_obj in many_to_many[field]:
+                            getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
+                    return obj, True
                 except IntegrityError as e:
                     if 'Key (path)' in e.args[0]:
                         self.model.fix_tree(fix_paths=True)

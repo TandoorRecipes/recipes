@@ -67,7 +67,7 @@
     </button>
 
     {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
-        <a class="navbar-brand p-0 me-2 justify-content-center" href="/" aria-label="Tandoor">
+        <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}" aria-label="Tandoor">
             <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="" style="height: 5vh;">
         </a>
     {% endif %}
@@ -336,6 +336,10 @@
     {% block content_fluid %}
     {% endblock %}
 
+    {% user_prefs request as prefs%}
+    {{ prefs|json_script:'user_preference' }}
+
+
 </div>
 
 {% block script %}
@@ -345,6 +349,7 @@
     localStorage.setItem('SCRIPT_NAME', "{% base_path request 'script' %}")
     localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
     localStorage.setItem('STATIC_URL', "{% base_path request 'static_base' %}")
+    localStorage.setItem('DEBUG', "{% is_debug %}")
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {

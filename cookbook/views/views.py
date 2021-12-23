@@ -13,7 +13,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -22,16 +22,15 @@ from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
-from cookbook.forms import (CommentForm, Recipe, User,
-                            UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
-                            SearchPreferenceForm)
-from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
-from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
-                             Food, UserFile, ShareLink, SearchPreference, SearchFields)
-from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
-                             ViewLogTable, InviteLinkTable)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm,
+                            SpaceJoinForm, User, UserCreateForm, UserNameForm, UserPreference,
+                            UserPreferenceForm)
+from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
+from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword, MealPlan, RecipeImport,
+                             SearchFields, SearchPreference, ShareLink, ShoppingList, Space, Unit,
+                             UserFile, ViewLog)
+from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
+                             ViewLogTable)
 from cookbook.views.data import Object
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
@@ -331,10 +330,10 @@ def user_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                        len(search_form.cleaned_data['icontains'])
-                        + len(search_form.cleaned_data['istartswith'])
-                        + len(search_form.cleaned_data['trigram'])
-                        + len(search_form.cleaned_data['fulltext'])
+                    len(search_form.cleaned_data['icontains'])
+                    + len(search_form.cleaned_data['istartswith'])
+                    + len(search_form.cleaned_data['trigram'])
+                    + len(search_form.cleaned_data['fulltext'])
                 )
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
@@ -382,7 +381,7 @@ def user_settings(request):
     if up:
         preference_form = UserPreferenceForm(instance=up, space=request.space)
     else:
-        preference_form = UserPreferenceForm( space=request.space)
+        preference_form = UserPreferenceForm(space=request.space)
 
     fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
         sp.fulltext.all())

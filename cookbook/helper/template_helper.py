@@ -5,7 +5,7 @@ from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
 from jinja2 import Template, TemplateSyntaxError, UndefinedError
 from gettext import gettext as _
-
+from markdown.extensions.tables import TableExtension
 
 class IngredientObject(object):
     amount = ""
@@ -41,7 +41,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     parsed_md = md.markdown(
         instructions,
         extensions=[
-            'markdown.extensions.fenced_code', 'tables',
+            'markdown.extensions.fenced_code', TableExtension(),
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )

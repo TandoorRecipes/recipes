@@ -8,26 +8,28 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-11-16 06:06+0000\n"
+"Last-Translator: Luka <storek00@gmail.com>\n"
+"Language-Team: Slovenian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
 "%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 4.8\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:274
 msgid "Ingredients"
-msgstr ""
+msgstr "Sestavine"
 
 #: .\cookbook\forms.py:54
 msgid "Default unit"
-msgstr ""
+msgstr "Privzeta enota"
 
 #: .\cookbook\forms.py:55
 msgid "Use fractions"
@@ -76,7 +78,7 @@ msgstr ""
 #: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "Komentarji"
 
 #: .\cookbook\forms.py:70
 msgid ""
@@ -144,7 +146,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:192
 #: .\cookbook\templates\url_import.html:578 .\cookbook\views\lists.py:112
 msgid "Keywords"
-msgstr ""
+msgstr "Ključne besede"
 
 #: .\cookbook\forms.py:126
 msgid "Preparation time in minutes"
@@ -192,7 +194,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:258 .\cookbook\views\edit.py:166
 msgid "Storage"
-msgstr ""
+msgstr "Shramba"
 
 #: .\cookbook\forms.py:260
 msgid "Active"
@@ -226,7 +228,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:359
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Email naslov je že v uporabi!"
 
 #: .\cookbook\forms.py:367
 msgid ""
@@ -403,7 +405,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:228
 #: .\cookbook\templates\url_import.html:459
 msgid "Servings"
-msgstr ""
+msgstr "Porcije"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
@@ -411,7 +413,7 @@ msgstr ""
 
 #: .\cookbook\integration\safron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "Čas Priprave"
 
 #: .\cookbook\integration\safron.py:29 .\cookbook\templates\base.html:78
 #: .\cookbook\templates\forms\ingredients.html:7
@@ -441,19 +443,19 @@ msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "Zajtrk"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "Kosilo"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "Večerja"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr ""
+msgstr "Ostalo"
 
 #: .\cookbook\models.py:150
 msgid ""
@@ -475,7 +477,7 @@ msgstr ""
 
 #: .\cookbook\models.py:204 .\cookbook\templates\base.html:90
 msgid "Books"
-msgstr ""
+msgstr "Knjige"
 
 #: .\cookbook\models.py:212
 msgid "Small"
@@ -511,7 +513,7 @@ msgstr ""
 #: .\cookbook\views\delete.py:39 .\cookbook\views\edit.py:260
 #: .\cookbook\views\new.py:53
 msgid "Recipe"
-msgstr ""
+msgstr "Recept"
 
 #: .\cookbook\models.py:871 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -555,7 +557,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:40
 #: .\cookbook\templates\space.html:90
 msgid "Edit"
-msgstr ""
+msgstr "Uredi"
 
 #: .\cookbook\tables.py:115 .\cookbook\tables.py:138
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -563,7 +565,7 @@ msgstr ""
 #: .\cookbook\templates\generic\edit_template.html:28
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr ""
+msgstr "Izbriši"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
@@ -579,12 +581,12 @@ msgstr ""
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "Prijavi Napako"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "E-mail Naslovi"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -593,7 +595,7 @@ msgstr ""
 #: .\cookbook\templates\settings.html:17
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid "Settings"
-msgstr ""
+msgstr "Nastavitve"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
@@ -631,7 +633,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "Opozorilo:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -645,7 +647,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "Dodaj E-mail"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
@@ -680,7 +682,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:289
 msgid "Login"
-msgstr ""
+msgstr "Prijava"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -717,7 +719,7 @@ msgstr ""
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "Odjava"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
@@ -1131,7 +1133,7 @@ msgstr ""
 #: .\cookbook\templates\include\log_cooking.html:27
 #: .\cookbook\templates\include\recipe_open_modal.html:18
 msgid "Close"
-msgstr ""
+msgstr "Zapri"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
@@ -1160,7 +1162,7 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Nov Recept"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
@@ -1434,7 +1436,7 @@ msgstr ""
 #: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:147
 #: .\cookbook\views\edit.py:180
 msgid "Comment"
-msgstr ""
+msgstr "Komentar"
 
 #: .\cookbook\templates\recipes_table.html:19
 #: .\cookbook\templates\recipes_table.html:23
@@ -1656,7 +1658,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:84
 msgid "Language"
-msgstr ""
+msgstr "Jezik"
 
 #: .\cookbook\templates\settings.html:114
 msgid "Style"
@@ -2443,7 +2445,7 @@ msgstr ""
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
-msgstr ""
+msgstr "Nov recept uvožen!"
 
 #: .\cookbook\views\new.py:129
 msgid "There was an error importing this recipe!"

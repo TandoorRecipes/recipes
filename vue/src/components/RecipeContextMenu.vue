@@ -2,7 +2,7 @@
   <div>
 
     <div class="dropdown d-print-none">
-      <a class="btn shadow-none" href="#" role="button" id="dropdownMenuLink"
+      <a class="btn shadow-none" href="javascript:void(0);" role="button" id="dropdownMenuLink"
          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-ellipsis-v fa-lg"></i>
       </a>
@@ -15,7 +15,7 @@
         <a class="dropdown-item" :href="resolveDjangoUrl('edit_convert_recipe', recipe.id)" v-if="!recipe.internal"><i
             class="fas fa-exchange-alt fa-fw"></i> {{ $t('convert_internal') }}</a>
 
-        <a href="#">
+        <a href="javascript:void(0);">
           <button class="dropdown-item" @click="$bvModal.show(`id_modal_add_book_${modal_id}`)">
             <i class="fas fa-bookmark fa-fw"></i> {{ $t('Manage_Books') }}
           </button>
@@ -26,17 +26,17 @@
           <i class="fas fa-shopping-cart fa-fw"></i> {{ $t('Add_to_Shopping') }}
         </a>
 
-        <a class="dropdown-item" @click="createMealPlan" href="#"><i
+        <a class="dropdown-item" @click="createMealPlan" href="javascript:void(0);"><i
             class="fas fa-calendar fa-fw"></i> {{ $t('Add_to_Plan') }}
         </a>
 
-        <a href="#">
+        <a href="javascript:void(0);">
           <button class="dropdown-item" @click="$bvModal.show(`id_modal_cook_log_${modal_id}`)"><i
               class="fas fa-clipboard-list fa-fw"></i> {{ $t('Log_Cooking') }}
           </button>
         </a>
 
-        <a href="#">
+        <a href="javascript:void(0);">
           <button class="dropdown-item" onclick="window.print()"><i
               class="fas fa-print fa-fw"></i> {{ $t('Print') }}
           </button>
@@ -45,7 +45,7 @@
         <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank"
            rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t('Export') }}</a>
 
-        <a href="#">
+        <a href="javascript:void(0);">
           <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i
               class="fas fa-share-alt fa-fw"></i> {{ $t('Share') }}
           </button>
