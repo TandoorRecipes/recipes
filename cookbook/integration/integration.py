@@ -5,6 +5,7 @@ import uuid
 from io import BytesIO, StringIO
 from zipfile import ZipFile, BadZipFile
 
+from bs4 import Tag
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.db import IntegrityError
@@ -16,7 +17,7 @@ from django_scopes import scope
 from cookbook.forms import ImportExportBase
 from cookbook.helper.image_processing import get_filetype, handle_image
 from cookbook.models import Keyword, Recipe
-from recipes.settings import DATABASES, DEBUG
+from recipes.settings import DEBUG
 
 
 class Integration:
@@ -153,9 +154,17 @@ class Integration:
                                 file_list.append(z)
                         il.total_recipes += len(file_list)
 
+                        import cookbook
+                        if isinstance(self, cookbook.integration.copymethat.CopyMeThat):
+                            file_list = self.split_recipe_file(BytesIO(import_zip.read('recipes.html')))
+                            il.total_recipes += len(file_list)
+
                         for z in file_list:
                             try:
-                                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                if isinstance(z, Tag):
+                                    recipe = self.get_recipe_from_file(z)
+                                else:
+                                    recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                                 recipe.keywords.add(self.keyword)
                                 il.msg += f'{recipe.pk} - {recipe.name} \n'
                                 self.handle_duplicates(recipe, import_duplicates)
