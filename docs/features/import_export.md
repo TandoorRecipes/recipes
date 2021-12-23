@@ -37,6 +37,7 @@ Overview of the capabilities of the different integrations.
 | OpenEats     | ✔️      | ❌      |  ⌚        |
 | Plantoeat     | ✔️      | ❌      |  ✔        |
 | CookBookApp     | ✔️      | ⌚      |  ✔️        |
+| CopyMeThat     | ✔️      | ❌      |  ✔️        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -218,3 +219,7 @@ Plan to eat allows you to export a text file containing all your recipes. Simply
 ## CookBookApp
 
 CookBookApp can export .zip files containing .html files. Upload the entire ZIP to Tandoor to import all included recipes.
+
+## CopyMeThat
+
+CopyMeThat can export .zip files containing an `.html` file as well as a folder containing all the images. Upload the entire ZIP to Tandoor to import all included recipes.
