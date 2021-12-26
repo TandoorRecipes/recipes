@@ -56,6 +56,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_REDIRECT_URL = "index"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
@@ -163,12 +164,12 @@ if ENABLE_METRICS:
 AUTHENTICATION_BACKENDS = []
 
 # LDAP
-LDAP_AUTH=bool(os.getenv('LDAP_AUTH', False))
+LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
 if LDAP_AUTH:
     import ldap
     from django_auth_ldap.config import LDAPSearch
     AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
-    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI') 
+    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
     AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
     AUTH_LDAP_USER_SEARCH = LDAPSearch(
