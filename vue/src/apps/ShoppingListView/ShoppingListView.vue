@@ -30,22 +30,24 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div role="tablist">
-                                <div class="row justify-content-md-center w-75" v-if="entrymode">
-                                    <div class="col col-md-2">
+                                <!-- add to shopping form -->
+                                <b-row class="row justify-content-md-center" v-if="entrymode">
+                                    <b-col cols="12" sm="4" md="2">
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
-                                    </div>
-                                    <div class="col col-md-3">
+                                    </b-col>
+                                    <b-col cols="12" sm="8" md="3">
                                         <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" />
-                                    </div>
-                                    <div class="col col-md-4">
+                                    </b-col>
+                                    <b-col cols="12" sm="8" md="4">
                                         <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" />
-                                    </div>
-                                    <div class="col col-md-1">
+                                    </b-col>
+                                    <b-col cols="12" sm="4" md="1">
                                         <b-button variant="link" class="px-0">
                                             <i class="btn fas fa-cart-plus fa-lg px-0 text-success" @click="addItem" />
                                         </b-button>
-                                    </div>
-                                </div>
+                                    </b-col>
+                                </b-row>
+                                <!-- shopping list table -->
                                 <div v-if="items && items.length > 0">
                                     <div v-for="(done, x) in Sections" :key="x">
                                         <div v-if="x == 'true'">
