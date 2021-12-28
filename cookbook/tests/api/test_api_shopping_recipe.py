@@ -3,6 +3,8 @@ from datetime import timedelta
 
 import factory
 import pytest
+# work around for bug described here https://stackoverflow.com/a/70312265/15762829
+from django.conf import settings
 from django.contrib import auth
 from django.forms import model_to_dict
 from django.urls import reverse
@@ -13,6 +15,11 @@ from pytest_factoryboy import LazyFixture, register
 from cookbook.models import Food, Ingredient, ShoppingListEntry, Step
 from cookbook.tests.factories import (IngredientFactory, MealPlanFactory, RecipeFactory,
                                       StepFactory, UserFactory)
+
+if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                               'django.db.backends.postgresql']:
+    from django.db.backends.postgresql.features import DatabaseFeatures
+    DatabaseFeatures.can_defer_constraint_checks = False
 
 SHOPPING_LIST_URL = 'api:shoppinglistentry-list'
 SHOPPING_RECIPE_URL = 'api:recipe-shopping'
@@ -43,7 +50,7 @@ def recipe(request, space_1, u1_s1):
     # steps__food_recipe_count = params.get('steps__food_recipe_count', {})
     params['created_by'] = params.get('created_by', auth.get_user(u1_s1))
     params['space'] = space_1
-    return RecipeFactory.create(**params)
+    return RecipeFactory(**params)
 
     # return RecipeFactory.create(
     #     steps__recipe_count=steps__recipe_count,
