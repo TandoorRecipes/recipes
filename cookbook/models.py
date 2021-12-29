@@ -490,9 +490,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
-    ignore_shopping = models.BooleanField(default=False)  # inherited field
+    food_onhand = models.BooleanField(default=False)  # inherited field
     description = models.TextField(default='', blank=True)
-    on_hand = models.BooleanField(default=False)
+    # on_hand = models.BooleanField(default=False)
     inherit = models.BooleanField(default=False)
     ignore_inherit = models.ManyToManyField(FoodInheritField,  blank=True)  # inherited field:  is this name better as inherit instead of ignore inherit?  which is more intuitive?
 
@@ -528,10 +528,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
                 ])
 
             inherit = inherit.values_list('field', flat=True)
-            if 'ignore_shopping' in inherit:
+            if 'food_onhand' in inherit:
                 # get food at root that have children that need updated
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=True)).update(ignore_shopping=True)
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=False)).update(ignore_shopping=False)
+                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, food_onhand=True)).update(food_onhand=True)
+                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, food_onhand=False)).update(food_onhand=False)
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
                 # find top node that has category set

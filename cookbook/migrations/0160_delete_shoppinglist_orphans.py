@@ -21,7 +21,7 @@ def delete_orphaned_sle(apps, schema_editor):
 
 def create_inheritfields(apps, schema_editor):
     FoodInheritField.objects.create(name='Supermarket Category', field='supermarket_category')
-    FoodInheritField.objects.create(name='Ignore Shopping', field='ignore_shopping')
+    FoodInheritField.objects.create(name='On Hand', field='food_onhand')
     FoodInheritField.objects.create(name='Diet', field='diet')
     FoodInheritField.objects.create(name='Substitute', field='substitute')
     FoodInheritField.objects.create(name='Substitute Children', field='substitute_children')

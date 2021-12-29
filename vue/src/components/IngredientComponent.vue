@@ -33,31 +33,20 @@
                 </div>
             </td>
             <td v-else-if="show_shopping" class="text-right text-nowrap">
-                <!-- in shopping mode and ingredient is not ignored -->
-                <div v-if="!ingredient.food.ignore_shopping">
-                    <b-button
-                        class="btn text-decoration-none fas fa-shopping-cart px-2 user-select-none"
-                        variant="link"
-                        v-b-popover.hover.click.blur.html.top="{ title: ShoppingPopover, variant: 'outline-dark' }"
-                        :class="{
-                            'text-success': shopping_status === true,
-                            'text-muted': shopping_status === false,
-                            'text-warning': shopping_status === null,
-                        }"
-                    />
-                    <span class="px-2">
-                        <input type="checkbox" class="align-middle" v-model="shop" @change="changeShopping" />
-                    </span>
-                    <on-hand-badge :item="ingredient.food" />
-                </div>
-                <div v-else>
-                    <!-- or in shopping mode and food is ignored: Shopping Badge bypasses linking ingredient to Recipe which would get ignored -->
-                    <shopping-badge :item="ingredient.food" :override_ignore="true" class="px-1" />
-                    <span class="px-2">
-                        <input type="checkbox" class="align-middle" disabled v-b-popover.hover.click.blur :title="$t('IgnoredFood', { food: ingredient.food.name })" />
-                    </span>
-                    <on-hand-badge :item="ingredient.food" />
-                </div>
+                <b-button
+                    class="btn text-decoration-none fas fa-shopping-cart px-2 user-select-none"
+                    variant="link"
+                    v-b-popover.hover.click.blur.html.top="{ title: ShoppingPopover, variant: 'outline-dark' }"
+                    :class="{
+                        'text-success': shopping_status === true,
+                        'text-muted': shopping_status === false,
+                        'text-warning': shopping_status === null,
+                    }"
+                />
+                <span class="px-2">
+                    <input type="checkbox" class="align-middle" v-model="shop" @change="changeShopping" />
+                </span>
+                <on-hand-badge :item="ingredient.food" />
             </td>
         </template>
     </tr>
@@ -66,11 +55,10 @@
 <script>
 import { calculateAmount, ResolveUrlMixin, ApiMixin } from "@/utils/utils"
 import OnHandBadge from "@/components/Badges/OnHand"
-import ShoppingBadge from "@/components/Badges/Shopping"
 
 export default {
     name: "IngredientComponent",
-    components: { OnHandBadge, ShoppingBadge },
+    components: { OnHandBadge },
     props: {
         ingredient: Object,
         ingredient_factor: { type: Number, default: 1 },
@@ -129,7 +117,7 @@ export default {
                 } else {
                     // there are not recipes in the shopping list
                     // set default value
-                    this.shop = !this.ingredient?.food?.on_hand && !this.ingredient?.food?.ignore_shopping && !this.ingredient?.food?.recipe
+                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe
                     this.$emit("add-to-shopping", { item: this.ingredient, add: this.shop })
                     // mark checked if the food is in the shopping list for this ingredient/recipe
                     if (count_shopping_ingredient >= 1) {
@@ -146,8 +134,8 @@ export default {
 
                 if (this.add_shopping_mode) {
                     // if we are in add shopping mode (e.g. recipe_shopping_modal) start with all checks marked
-                    // except if on_hand and ignore_shopping (could be if recipe too?)
-                    this.shop = !this.ingredient?.food?.on_hand && !this.ingredient?.food?.ignore_shopping && !this.ingredient?.food?.recipe
+                    // except if on_hand (could be if recipe too?)
+                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe
                 }
             },
         },

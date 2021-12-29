@@ -28,11 +28,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='food',
-            name='on_hand',
-            field=models.BooleanField(default=False),
-        ),
+        # migrations.AddField(
+        #     model_name='food',
+        #     name='on_hand',
+        #     field=models.BooleanField(default=False),
+        # ),
         migrations.AddField(
             model_name='shoppinglistentry',
             name='completed_at',

@@ -496,15 +496,6 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        ignoreThis(contextData)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-ban"></i> {{ $t("IgnoreThis", { food: foodName(contextData) }) }}</a>
-                </ContextMenuItem>
-
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
                         deleteThis(contextData)
                     "
                 >
@@ -908,13 +899,6 @@ export default {
         getThis: function (id) {
             return this.genericAPI(this.Models.SHOPPING_CATEGORY, this.Actions.FETCH, { id: id })
         },
-        ignoreThis: function (item) {
-            let food = {
-                id: item?.[0]?.food.id ?? item.food.id,
-                ignore_shopping: true,
-            }
-            this.updateFood(food, "ignore_shopping")
-        },
         mergeShoppingList: function (data) {
             this.items.map((x) =>
                 data.map((y) => {
@@ -941,10 +925,10 @@ export default {
             let api = new ApiApiFactory()
             let food = {
                 id: item?.[0]?.food.id ?? item?.food?.id,
-                on_hand: true,
+                food_onhand: true,
             }
 
-            this.updateFood(food)
+            this.updateFood(food, "food_onhand")
                 .then((result) => {
                     let entries = this.items.filter((x) => x.food.id == food.id).map((x) => x.id)
                     this.items = this.items.filter((x) => x.food.id !== food.id)

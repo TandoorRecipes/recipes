@@ -19,8 +19,10 @@
                                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                                 <model-menu />
                                 <span>{{ this.this_model.name }}</span>
-                                <span v-if="this_model.name !== 'Step'"
-                                    ><b-button variant="link" @click="startAction({ action: 'new' })"><i class="fas fa-plus-circle fa-2x"></i></b-button></span
+                                <span v-if="apiName !== 'Step'">
+                                    <b-button variant="link" @click="startAction({ action: 'new' })">
+                                        <i class="fas fa-plus-circle fa-2x"></i>
+                                    </b-button> </span
                                 ><!-- TODO add proper field to model config to determine if create should be available or not -->
                             </h3>
                         </div>
@@ -111,6 +113,9 @@ export default {
             // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
             // TODO this is not necessarily bad but maybe there are better options to do this
             return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.header_component_name}`)
+        },
+        apiName() {
+            return this.this_model?.apiName
         },
     },
     mounted() {
@@ -291,11 +296,6 @@ export default {
                 this.refreshCard({ ...food }, this.items_right)
             })
         },
-        addOnhand: function (item) {
-            item.on_hand = true
-            this.saveThis(item)
-        },
-
         updateThis: function (item) {
             this.refreshThis(item.id)
         },
