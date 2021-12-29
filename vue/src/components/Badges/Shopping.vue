@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button class="btn text-decoration-none px-1 border-0" variant="link" v-if="ShowBadge" :id="`shopping${item.id}`" @click="addShopping()">
+        <b-button class="btn text-decoration-none px-1 border-0" variant="link" :id="`shopping${item.id}`" @click="addShopping()">
             <i
                 class="fas"
                 v-b-popover.hover.html
@@ -27,7 +27,6 @@ export default {
     name: "ShoppingBadge",
     props: {
         item: { type: Object },
-        override_ignore: { type: Boolean, default: false },
     },
     mixins: [ApiMixin],
     data() {
@@ -40,13 +39,6 @@ export default {
         this.shopping = this.item?.shopping //?? random[Math.floor(Math.random() * random.length)]
     },
     computed: {
-        ShowBadge() {
-            if (this.override_ignore) {
-                return true
-            } else {
-                return !this.item.ignore_shopping
-            }
-        },
         DeleteConfirmation() {
             return this.$t("DeleteShoppingConfirm", { food: this.item.name })
         },
@@ -59,7 +51,7 @@ export default {
         },
     },
     watch: {
-        "item.shopping": function(newVal, oldVal) {
+        "item.shopping": function (newVal, oldVal) {
             this.shopping = newVal
         },
     },

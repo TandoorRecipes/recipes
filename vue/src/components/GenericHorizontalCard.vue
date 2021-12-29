@@ -191,7 +191,7 @@ export default {
             return this.model?.ordered_tags ?? []
         },
         getFullname: function () {
-            if (!this.item?.full_name.includes(">")) {
+            if (!this.item?.full_name?.includes(">")) {
                 return undefined
             }
             return this.item?.full_name
