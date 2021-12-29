@@ -7,7 +7,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+from .models import (Comment, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook, Food,
                      RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference)
 
 
