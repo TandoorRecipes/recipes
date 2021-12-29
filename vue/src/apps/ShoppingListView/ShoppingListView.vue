@@ -1007,16 +1007,18 @@ export default {
             // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
             let promises = []
             update.entries.forEach((x) => {
-                promises.push(this.saveThis({ id: x, checked: update.checked }, false))
-                let item = this.items.filter((entry) => entry.id == x)[0]
-
-                Vue.set(item, "checked", update.checked)
+                const id = x?.id ?? x
+                let completed_at = undefined
                 if (update.checked) {
-                    Vue.set(item, "completed_at", new Date().toISOString())
-                } else {
-                    Vue.set(item, "completed_at", undefined)
+                    completed_at = new Date().toISOString()
                 }
+                promises.push(this.saveThis({ id: id, checked: update.checked }, false))
+
+                let item = this.items.filter((entry) => entry.id == id)[0]
+                Vue.set(item, "checked", update.checked)
+                Vue.set(item, "completed_at", completed_at)
             })
+
             Promise.all(promises).catch((err) => {
                 console.log(err, err.response)
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
