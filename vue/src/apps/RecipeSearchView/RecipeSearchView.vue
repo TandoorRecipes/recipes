@@ -304,7 +304,7 @@ export default {
                 this.settings?.search_keywords?.length === 0 &&
                 this.settings?.search_foods?.length === 0 &&
                 this.settings?.search_books?.length === 0 &&
-                this.settings?.pagination_page === 1 &&
+                // this.settings?.pagination_page === 1 &&
                 !this.random_search &&
                 this.settings?.search_ratings === undefined
             ) {
