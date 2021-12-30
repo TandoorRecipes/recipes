@@ -112,8 +112,8 @@
           <a :href="resolveDjangoUrl('view_recipe',step.step_recipe_data.id)">{{ step.step_recipe_data.name }}</a>
         </h2>
         <div v-for="(sub_step, index) in step.step_recipe_data.steps" v-bind:key="`substep_${sub_step.id}`">
-          <Step :recipe="step.step_recipe_data" :step="sub_step" :ingredient_factor="ingredient_factor" :index="index"
-                :start_time="start_time" :force_ingredients="true"></Step>
+          <step-component :recipe="step.step_recipe_data" :step="sub_step" :ingredient_factor="ingredient_factor" :index="index"
+                :start_time="start_time" :force_ingredients="true"></step-component>
         </div>
       </div>
     </b-collapse>
