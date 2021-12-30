@@ -130,7 +130,6 @@ export default {
                     })
 
                     return Promise.all(promises).then(() => {
-                        console.log(this.recipe_list)
                         let promises = []
                         let dedup = []
                         this.recipe_list.forEach((recipe) => {
