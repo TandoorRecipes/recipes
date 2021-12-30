@@ -83,7 +83,6 @@ export default {
                     this.$emit("switch", recipe)
                     break
                 case "mealplan":
-                    console.log("navigate to")
                     window.location.href = this.resolveDjangoUrl("view_recipe", recipe.id)
                     break
                 default:
@@ -117,14 +116,21 @@ export default {
                 .then((result) => {
                     let promises = []
                     result.data.forEach((mealplan) => {
-                        this.recipe_list.push(mealplan?.recipe)
+                        this.recipe_list.push({ ...mealplan?.recipe, servings: mealplan?.servings })
+                        const serving_factor = (mealplan?.servings ?? mealplan?.recipe?.servings ?? 1) / (mealplan?.recipe?.servings ?? 1)
                         promises.push(
                             apiClient.relatedRecipe(mealplan?.recipe?.id, { query: { levels: 2 } }).then((r) => {
+                                // scale all recipes to mealplan servings
+                                r.data = r.data.map((x) => {
+                                    return { ...x, factor: serving_factor }
+                                })
                                 this.recipe_list = [...this.recipe_list, ...r.data]
                             })
                         )
                     })
+
                     return Promise.all(promises).then(() => {
+                        console.log(this.recipe_list)
                         let promises = []
                         let dedup = []
                         this.recipe_list.forEach((recipe) => {
@@ -132,6 +138,8 @@ export default {
                                 dedup.push(recipe.id)
                                 promises.push(
                                     apiClient.retrieveRecipe(recipe.id).then((result) => {
+                                        // scale all recipes to mealplan servings
+                                        result.data.servings = recipe?.servings ?? result.data.servings * (recipe?.factor ?? 1)
                                         this.recipes.push(result.data)
                                     })
                                 )
