@@ -51,7 +51,7 @@ There are different versions (tags) released on docker hub.
 The main, and also recommended, installation option is to install this application using Docker Compose.
 
 1. Choose your `docker-compose.yml` from the examples below.
-2. Download the `.env` configuration file with `wget`, then **edit it accordingly**.
+2. Download the `.env` configuration file with `wget`, then **edit it accordingly** (you NEED to set `SECRET_KEY` and `POSTGRES_PASSWORD`).
    ```shell
    wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
    ```
