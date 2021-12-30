@@ -201,7 +201,10 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.created_by = self.request.user
-        obj.space = self.request.space
+
+        # verify given space is actually owned by the user creating the link
+        if obj.space.created_by != self.request.user:
+            obj.space = self.request.space
         obj.save()
         if obj.email:
             try:

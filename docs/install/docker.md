@@ -51,7 +51,7 @@ There are different versions (tags) released on docker hub.
 The main, and also recommended, installation option is to install this application using Docker Compose.
 
 1. Choose your `docker-compose.yml` from the examples below.
-2. Download the `.env` configuration file with `wget`, then **edit it accordingly**.
+2. Download the `.env` configuration file with `wget`, then **edit it accordingly** (you NEED to set `SECRET_KEY` and `POSTGRES_PASSWORD`).
    ```shell
    wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
    ```
@@ -110,6 +110,28 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/d
 ~~~yaml
 {% include "./docker/nginx-proxy/docker-compose.yml" %}
 ~~~
+
+#### Nginx Swag by LinuxServer
+[This container](https://github.com/linuxserver/docker-swag) is an all in one solution created by LinuxServer.io.
+
+It contains templates for popular apps, including Tandoor Recipes, so you don't have to manually configure nginx and discard the template provided in Tandoor repo. Tandoor config is called `recipes.subdomain.conf.sample` which you can adapt for your instance.
+
+If you're running Swag on the default port, you'll just need to change the container name to yours.
+
+If your running Swag on a custom port, some headers must be changed: 
+
+- Create a copy of `proxy.conf`
+- Replace `proxy_set_header X-Forwarded-Host $host;` and `proxy_set_header Host $host;` to 
+   - `proxy_set_header X-Forwarded-Host $http_host;` and `proxy_set_header Host $http_host;`
+- Update `recipes.subdomain.conf` to use the new file
+- Restart the linuxserver/swag container and Recipes will work correctly
+
+More information [here](https://github.com/TandoorRecipes/recipes/issues/959#issuecomment-962648627).
+
+
+In both cases, also make sure to mount `/media/` in your swag container to point to your Tandoor Recipes Media directory.
+
+Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
 
 ## Additional Information
 
