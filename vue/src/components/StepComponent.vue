@@ -120,8 +120,8 @@
                 </div>
                 <div class="row" style="margin-top: 1vh">
                     <div class="col-12" style="text-align: right">
-                        <b-button @click="closePopover" size="sm" variant="secondary" style="margin-right: 8px">Cancel</b-button>
-                        <b-button @click="updateTime" size="sm" variant="primary">Ok</b-button>
+                        <b-button @click="closePopover" size="sm" variant="secondary" style="margin-right: 8px">{{ $t("Cancel") }}</b-button>
+                        <b-button @click="updateTime" size="sm" variant="primary">{{ $t("Ok") }}</b-button>
                     </div>
                 </div>
             </b-popover>
