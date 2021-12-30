@@ -11,6 +11,7 @@ from django.utils.translation import gettext as _
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
 from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.copymethat import CopyMeThat
 from cookbook.integration.pepperplate import Pepperplate
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
@@ -65,6 +66,8 @@ def get_integration(request, export_type):
         return Plantoeat(request, export_type)
     if export_type == ImportExportBase.COOKBOOKAPP:
         return CookBookApp(request, export_type)
+    if export_type == ImportExportBase.COPYMETHAT:
+        return CopyMeThat(request, export_type)
 
 
 @group_required('user')

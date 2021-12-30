@@ -1,7 +1,7 @@
 <template>
     <span>
         <b-button
-            class="btn text-decoration-none fas px-1 py-0  border-0"
+            class="btn text-decoration-none fas px-1 py-0 border-0"
             variant="link"
             v-b-popover.hover.html
             :title="[onhand ? $t('FoodOnHand', { food: item.name }) : $t('FoodNotOnHand', { food: item.name })]"
@@ -26,16 +26,16 @@ export default {
         }
     },
     mounted() {
-        this.onhand = this.item.on_hand
+        this.onhand = this.item.food_onhand
     },
     watch: {
-        "item.on_hand": function(newVal, oldVal) {
+        "item.food_onhand": function (newVal, oldVal) {
             this.onhand = newVal
         },
     },
     methods: {
         toggleOnHand() {
-            let params = { id: this.item.id, on_hand: !this.onhand }
+            let params = { id: this.item.id, food_onhand: !this.onhand }
             this.genericAPI(this.Models.FOOD, this.Actions.UPDATE, params).then(() => {
                 this.onhand = !this.onhand
             })

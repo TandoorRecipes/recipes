@@ -47,7 +47,7 @@
             <!-- detail rows -->
             <div class="card no-body" v-if="showDetails">
                 <b-container fluid>
-                    <div v-for="(e, z) in entries" :key="z">
+                    <div v-for="e in entries" :key="e.id">
                         <b-row class="ml-2 small">
                             <b-col cols="6" md="4" class="overflow-hidden text-nowrap">
                                 <button
@@ -63,7 +63,10 @@
                                 </button>
                             </b-col>
                             <b-col cols="6" md="4" class="col-md-4 text-muted">{{ formatOneMealPlan(e) }}</b-col>
-                            <b-col cols="12" md="4" class="col-md-4 text-muted text-right overflow-hidden text-nowrap">{{ formatOneCreatedBy(e) }}</b-col>
+                            <b-col cols="12" md="4" class="col-md-4 text-muted text-right overflow-hidden text-nowrap">
+                                {{ formatOneCreatedBy(e) }}
+                                <div v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
+                            </b-col>
                         </b-row>
 
                         <b-row class="ml-2 light">
@@ -240,9 +243,6 @@ export default {
         formatOneFood: function (item) {
             return item.food.name
         },
-        formatOneChecked: function (item) {
-            return item.checked
-        },
         formatOneDelayUntil: function (item) {
             if (!item.delay_until || (item.delay_until && item.checked)) {
                 return false
@@ -273,12 +273,13 @@ export default {
             })
         },
         updateChecked: function (e, item) {
+            let update = undefined
             if (!item) {
-                let update = { entries: this.entries.map((x) => x.id), checked: !this.formatChecked }
-                this.$emit("update-checkbox", update)
+                update = { entries: this.entries.map((x) => x.id), checked: !this.formatChecked }
             } else {
-                this.$emit("update-checkbox", { id: item.id, checked: !item.checked })
+                update = { entries: [item], checked: !item.checked }
             }
+            this.$emit("update-checkbox", update)
         },
     },
 }

@@ -214,7 +214,7 @@ export interface Food {
      * @type {boolean}
      * @memberof Food
      */
-    ignore_shopping?: boolean;
+    food_onhand?: boolean;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -235,47 +235,16 @@ export interface Food {
     numchild?: number;
     /**
      * 
-     * @type {boolean}
+     * @type {Array<FoodInheritFields>}
      * @memberof Food
      */
-    on_hand?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Food
-     */
-    inherit?: boolean;
-    /**
-     * 
-     * @type {Array<FoodIgnoreInherit>}
-     * @memberof Food
-     */
-    ignore_inherit?: Array<FoodIgnoreInherit> | null;
-}
-/**
- * 
- * @export
- * @interface FoodIgnoreInherit
- */
-export interface FoodIgnoreInherit {
-    /**
-     * 
-     * @type {number}
-     * @memberof FoodIgnoreInherit
-     */
-    id?: number;
+    inherit_fields?: Array<FoodInheritFields> | null;
     /**
      * 
      * @type {string}
-     * @memberof FoodIgnoreInherit
+     * @memberof Food
      */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof FoodIgnoreInherit
-     */
-    field?: string;
+    full_name?: string;
 }
 /**
  * 
@@ -294,13 +263,38 @@ export interface FoodInheritField {
      * @type {string}
      * @memberof FoodInheritField
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FoodInheritField
      */
-    field?: string;
+    field?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface FoodInheritFields
+ */
+export interface FoodInheritFields {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodInheritFields
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritFields
+     */
+    name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritFields
+     */
+    field?: string | null;
 }
 /**
  * 
@@ -513,6 +507,12 @@ export interface ImportLogKeyword {
      * @memberof ImportLogKeyword
      */
     updated_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ImportLogKeyword
+     */
+    full_name?: string;
 }
 /**
  * 
@@ -610,7 +610,7 @@ export interface IngredientFood {
      * @type {boolean}
      * @memberof IngredientFood
      */
-    ignore_shopping?: boolean;
+    food_onhand?: boolean;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -631,22 +631,16 @@ export interface IngredientFood {
     numchild?: number;
     /**
      * 
-     * @type {boolean}
+     * @type {Array<FoodInheritFields>}
      * @memberof IngredientFood
      */
-    on_hand?: boolean;
+    inherit_fields?: Array<FoodInheritFields> | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof IngredientFood
      */
-    inherit?: boolean;
-    /**
-     * 
-     * @type {Array<FoodIgnoreInherit>}
-     * @memberof IngredientFood
-     */
-    ignore_inherit?: Array<FoodIgnoreInherit> | null;
+    full_name?: string;
 }
 /**
  * 
@@ -1018,6 +1012,12 @@ export interface Keyword {
      * @memberof Keyword
      */
     updated_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Keyword
+     */
+    full_name?: string;
 }
 /**
  * 
@@ -1691,6 +1691,12 @@ export interface RecipeKeywords {
      * @memberof RecipeKeywords
      */
     updated_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeKeywords
+     */
+    full_name?: string;
 }
 /**
  * 
@@ -2996,10 +3002,10 @@ export interface UserPreference {
     mealplan_autoadd_shopping?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {Array<FoodInheritFields>}
      * @memberof UserPreference
      */
-    food_ignore_default?: string;
+    food_inherit_default?: Array<FoodInheritFields> | null;
     /**
      * 
      * @type {string}
@@ -3042,6 +3048,12 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     csv_prefix?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    filter_to_supermarket?: boolean;
 }
 
 /**

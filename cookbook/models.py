@@ -482,7 +482,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     # exclude fields not implemented yet
-    inherit_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
+    inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
 
     # WARNING: Food inheritance relies on post_save signals, avoid using UPDATE to update Food objects unless you intend to bypass those signals
     if SORT_TREE_BY_NAME:
@@ -490,11 +490,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)
-    ignore_shopping = models.BooleanField(default=False)  # inherited field
+    food_onhand = models.BooleanField(default=False)  # inherited field
     description = models.TextField(default='', blank=True)
-    on_hand = models.BooleanField(default=False)
-    inherit = models.BooleanField(default=False)
-    ignore_inherit = models.ManyToManyField(FoodInheritField,  blank=True)  # inherited field:  is this name better as inherit instead of ignore inherit?  which is more intuitive?
+    inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True)  # inherited field:  is this name better as inherit instead of ignore inherit?  which is more intuitive?
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -512,34 +510,30 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     def reset_inheritance(space=None):
         # resets inheritted fields to the space defaults and updates all inheritted fields to root object values
         inherit = space.food_inherit.all()
-        ignore_inherit = Food.inherit_fields.difference(inherit)
 
+        # remove all inherited fields from food
+        Through = Food.objects.filter(space=space).first().inherit_fields.through
+        Through.objects.all().delete()
         # food is going to inherit attributes
         if space.food_inherit.all().count() > 0:
-            # using update to avoid creating a N*depth! save signals
-            Food.objects.filter(space=space).update(inherit=True)
             # ManyToMany cannot be updated through an UPDATE operation
-            Through = Food.objects.first().ignore_inherit.through
-            Through.objects.all().delete()
-            for i in ignore_inherit:
+            for i in inherit:
                 Through.objects.bulk_create([
                     Through(food_id=x, foodinheritfield_id=i.id)
                     for x in Food.objects.filter(space=space).values_list('id', flat=True)
                 ])
 
             inherit = inherit.values_list('field', flat=True)
-            if 'ignore_shopping' in inherit:
+            if 'food_onhand' in inherit:
                 # get food at root that have children that need updated
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=True)).update(ignore_shopping=True)
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=False)).update(ignore_shopping=False)
+                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, food_onhand=True)).update(food_onhand=True)
+                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, food_onhand=False)).update(food_onhand=False)
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
                 # find top node that has category set
                 category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
                 for root in category_roots:
                     root.get_descendants().update(supermarket_category=root.supermarket_category)
-        else:  # food is not going to inherit any attributes
-            Food.objects.filter(space=space).update(inherit=False)
 
     class Meta:
         constraints = [

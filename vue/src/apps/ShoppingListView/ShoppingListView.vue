@@ -30,22 +30,24 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div role="tablist">
-                                <div class="row justify-content-md-center w-75" v-if="entrymode">
-                                    <div class="col col-md-2">
+                                <!-- add to shopping form -->
+                                <b-row class="row justify-content-md-center" v-if="entrymode">
+                                    <b-col cols="12" sm="4" md="2">
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
-                                    </div>
-                                    <div class="col col-md-3">
+                                    </b-col>
+                                    <b-col cols="12" sm="8" md="3">
                                         <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" />
-                                    </div>
-                                    <div class="col col-md-4">
+                                    </b-col>
+                                    <b-col cols="12" sm="8" md="4">
                                         <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" />
-                                    </div>
-                                    <div class="col col-md-1">
+                                    </b-col>
+                                    <b-col cols="12" sm="4" md="1">
                                         <b-button variant="link" class="px-0">
                                             <i class="btn fas fa-cart-plus fa-lg px-0 text-success" @click="addItem" />
                                         </b-button>
-                                    </div>
-                                </div>
+                                    </b-col>
+                                </b-row>
+                                <!-- shopping list table -->
                                 <div v-if="items && items.length > 0">
                                     <div v-for="(done, x) in Sections" :key="x">
                                         <div v-if="x == 'true'">
@@ -494,15 +496,6 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        ignoreThis(contextData)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-ban"></i> {{ $t("IgnoreThis", { food: foodName(contextData) }) }}</a>
-                </ContextMenuItem>
-
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
                         deleteThis(contextData)
                     "
                 >
@@ -746,7 +739,7 @@ export default {
                     } else {
                         console.log("no data returned")
                     }
-                    this.new_item = { amount: 1 }
+                    this.new_item = { amount: 1, unit: undefined, food: undefined }
                 })
                 .catch((err) => {
                     console.log(err)
@@ -906,13 +899,6 @@ export default {
         getThis: function (id) {
             return this.genericAPI(this.Models.SHOPPING_CATEGORY, this.Actions.FETCH, { id: id })
         },
-        ignoreThis: function (item) {
-            let food = {
-                id: item?.[0]?.food.id ?? item.food.id,
-                ignore_shopping: true,
-            }
-            this.updateFood(food, "ignore_shopping")
-        },
         mergeShoppingList: function (data) {
             this.items.map((x) =>
                 data.map((y) => {
@@ -939,10 +925,10 @@ export default {
             let api = new ApiApiFactory()
             let food = {
                 id: item?.[0]?.food.id ?? item?.food?.id,
-                on_hand: true,
+                food_onhand: true,
             }
 
-            this.updateFood(food)
+            this.updateFood(food, "food_onhand")
                 .then((result) => {
                     let entries = this.items.filter((x) => x.food.id == food.id).map((x) => x.id)
                     this.items = this.items.filter((x) => x.food.id !== food.id)
@@ -1005,16 +991,18 @@ export default {
             // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
             let promises = []
             update.entries.forEach((x) => {
-                promises.push(this.saveThis({ id: x, checked: update.checked }, false))
-                let item = this.items.filter((entry) => entry.id == x)[0]
-
-                Vue.set(item, "checked", update.checked)
+                const id = x?.id ?? x
+                let completed_at = undefined
                 if (update.checked) {
-                    Vue.set(item, "completed_at", new Date().toISOString())
-                } else {
-                    Vue.set(item, "completed_at", undefined)
+                    completed_at = new Date().toISOString()
                 }
+                promises.push(this.saveThis({ id: id, checked: update.checked }, false))
+
+                let item = this.items.filter((entry) => entry.id == id)[0]
+                Vue.set(item, "checked", update.checked)
+                Vue.set(item, "completed_at", completed_at)
             })
+
             Promise.all(promises).catch((err) => {
                 console.log(err, err.response)
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
@@ -1024,8 +1012,8 @@ export default {
             let api = new ApiApiFactory()
             let ignore_category
             if (field) {
-                ignore_category = food.ignore_inherit
-                    .map((x) => food.ignore_inherit.fields)
+                ignore_category = food.inherit_fields
+                    .map((x) => food.inherit_fields.fields)
                     .flat()
                     .includes(field)
             } else {
@@ -1035,7 +1023,7 @@ export default {
             return api
                 .partialUpdateFood(food.id, food)
                 .then((result) => {
-                    if (food.inherit && food.supermarket_category && !ignore_category && food.parent) {
+                    if (food.supermarket_category && !ignore_category && food.parent) {
                         makeToast(this.$t("Warning"), this.$t("InheritWarning", { food: food.name }), "warning")
                     } else {
                         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)

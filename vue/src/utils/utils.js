@@ -220,11 +220,6 @@ export const ApiMixin = {
         return {
             Models: Models,
             Actions: Actions,
-            FoodCreateDefault: function (form) {
-                form.inherit_ignore = getUserPreference("food_ignore_default")
-                form.inherit = form.supermarket_category.length > 0
-                return form
-            },
         }
     },
     methods: {
@@ -369,6 +364,7 @@ export function getForm(model, action, item1, item2) {
     if (f === "partialUpdate" && Object.keys(config).length == 0) {
         config = { ...Actions.CREATE?.form, ...model.model_type?.["create"]?.form, ...model?.["create"]?.form }
         config["title"] = { ...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title }
+        // form functions should not be inherited
         if (config?.["form_function"]?.includes("Create")) {
             delete config["form_function"]
         }
@@ -542,8 +538,7 @@ const specialCases = {
 
 export const formFunctions = {
     FoodCreateDefault: function (form) {
-        form.fields.filter((x) => x.field === "ignore_inherit")[0].value = getUserPreference("food_ignore_default")
-        form.fields.filter((x) => x.field === "inherit")[0].value = getUserPreference("food_ignore_default").length > 0
+        form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
         return form
     },
 }

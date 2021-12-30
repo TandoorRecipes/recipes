@@ -3,6 +3,8 @@ from datetime import timedelta
 
 import factory
 import pytest
+# work around for bug described here https://stackoverflow.com/a/70312265/15762829
+from django.conf import settings
 from django.contrib import auth
 from django.forms import model_to_dict
 from django.urls import reverse
@@ -13,6 +15,11 @@ from pytest_factoryboy import LazyFixture, register
 from cookbook.models import Food, Ingredient, ShoppingListEntry, Step
 from cookbook.tests.factories import (IngredientFactory, MealPlanFactory, RecipeFactory,
                                       StepFactory, UserFactory)
+
+if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                               'django.db.backends.postgresql']:
+    from django.db.backends.postgresql.features import DatabaseFeatures
+    DatabaseFeatures.can_defer_constraint_checks = False
 
 SHOPPING_LIST_URL = 'api:shoppinglistentry-list'
 SHOPPING_RECIPE_URL = 'api:recipe-shopping'
@@ -43,7 +50,7 @@ def recipe(request, space_1, u1_s1):
     # steps__food_recipe_count = params.get('steps__food_recipe_count', {})
     params['created_by'] = params.get('created_by', auth.get_user(u1_s1))
     params['space'] = space_1
-    return RecipeFactory.create(**params)
+    return RecipeFactory(**params)
 
     # return RecipeFactory.create(
     #     steps__recipe_count=steps__recipe_count,
@@ -178,27 +185,24 @@ def test_shopping_recipe_edit(request, recipe, sle_count, use_mealplan, u1_s1, u
 
 
 @pytest.mark.parametrize("user2, sle_count", [
-    ({'mealplan_autoadd_shopping': False}, (0, 17)),
-    ({'mealplan_autoinclude_related': False}, (8, 8)),
-    ({'mealplan_autoexclude_onhand': False}, (19, 19)),
-    ({'mealplan_autoexclude_onhand': False, 'mealplan_autoinclude_related': False}, (9, 9)),
+    ({'mealplan_autoadd_shopping': False}, (0, 18)),
+    ({'mealplan_autoinclude_related': False}, (9, 9)),
+    ({'mealplan_autoexclude_onhand': False}, (20, 20)),
+    ({'mealplan_autoexclude_onhand': False, 'mealplan_autoinclude_related': False}, (10, 10)),
 ], indirect=['user2'])
 @pytest.mark.parametrize("use_mealplan", [(False), (True), ])
 @pytest.mark.parametrize("recipe", [({'steps__recipe_count': 1})], indirect=['recipe'])
 def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
     with scopes_disabled():
         user = auth.get_user(user2)
-        # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 2 food onhand(from recipe and step_recipe), 1 food ignore shopping
+        # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 2 food onhand(from recipe and step_recipe)
         ingredients = Ingredient.objects.filter(step__recipe=recipe)
         food = Food.objects.get(id=ingredients[2].food.id)
-        food.on_hand = True
+        food.food_onhand = True
         food.save()
         food = recipe.steps.filter(type=Step.RECIPE).first().step_recipe.steps.first().ingredients.first().food
         food = Food.objects.get(id=food.id)
-        food.on_hand = True
-        food.save()
-        food = Food.objects.get(id=ingredients[4].food.id)
-        food.ignore_shopping = True
+        food.food_onhand = True
         food.save()
 
         if use_mealplan:
