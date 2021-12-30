@@ -1,13 +1,14 @@
 import json
 import re
+from json import JSONDecodeError
+from urllib.parse import unquote
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from recipe_scrapers._utils import get_host_name, normalize_string
+
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.scrapers.scrapers import text_scraper
-from json import JSONDecodeError
-from recipe_scrapers._utils import get_host_name, normalize_string
-from urllib.parse import unquote
 
 
 def get_recipe_from_source(text, url, request):
@@ -58,7 +59,7 @@ def get_recipe_from_source(text, url, request):
         return kid_list
 
     recipe_json = {
-                'name': '',
+        'name': '',
                 'url': '',
                 'description': '',
                 'image': '',
@@ -188,6 +189,6 @@ def remove_graph(el):
                 for x in el['@graph']:
                     if '@type' in x and x['@type'] == 'Recipe':
                         el = x
-        except TypeError:
+        except (TypeError, JSONDecodeError):
             pass
     return el
