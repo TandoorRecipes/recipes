@@ -24,8 +24,8 @@ class CookbookConfig(AppConfig):
             with scopes_disabled():
                 try:
                     from cookbook.models import Keyword, Food
-                    Keyword.fix_tree(fix_paths=True)
-                    Food.fix_tree(fix_paths=True)
+                    #Keyword.fix_tree(fix_paths=True) # disabled for now, causes to many unknown issues
+                    #Food.fix_tree(fix_paths=True)
                 except OperationalError:
                     if DEBUG:
                         traceback.print_exc()
