@@ -200,6 +200,9 @@ export default {
         ingredient_factor: function () {
             return this.servings / this.recipe.servings
         },
+        title() {
+            return this.recipe?.steps?.map((x) => x?.ingredients).flat()
+        },
     },
     data() {
         return {
@@ -212,9 +215,11 @@ export default {
             share_uid: window.SHARE_UID,
         }
     },
+
     mounted() {
         this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
+        console.log(this.recipe)
     },
     methods: {
         loadRecipe: function (recipe_id) {

@@ -69,14 +69,14 @@ export class Models {
         onhand: true,
         badges: {
             linked_recipe: true,
-            on_hand: true,
+            food_onhand: true,
             shopping: true,
         },
         tags: [{ field: "supermarket_category", label: "name", color: "info" }],
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "ignore_shopping", "supermarket_category", "on_hand", "inherit", "ignore_inherit"]],
+            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields"]],
 
             form: {
                 name: {
@@ -103,13 +103,7 @@ export class Models {
                 shopping: {
                     form_field: true,
                     type: "checkbox",
-                    field: "ignore_shopping",
-                    label: i18n.t("Ignore_Shopping"),
-                },
-                onhand: {
-                    form_field: true,
-                    type: "checkbox",
-                    field: "on_hand",
+                    field: "food_onhand",
                     label: i18n.t("OnHand"),
                 },
                 shopping_category: {
@@ -120,19 +114,19 @@ export class Models {
                     label: i18n.t("Shopping_Category"),
                     allow_create: true,
                 },
-                inherit: {
-                    form_field: true,
-                    type: "checkbox",
-                    field: "inherit",
-                    label: i18n.t("Inherit"),
-                },
-                ignore_inherit: {
+                inherit_fields: {
                     form_field: true,
                     type: "lookup",
                     multiple: true,
-                    field: "ignore_inherit",
+                    field: "inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
-                    label: i18n.t("IgnoreInherit"),
+                    label: i18n.t("InheritFields"),
+                    condition: { field: "parent", value: true, condition: "exists" },
+                },
+                full_name: {
+                    form_field: true,
+                    type: "smalltext",
+                    field: "full_name",
                 },
                 form_function: "FoodCreateDefault",
             },
@@ -179,6 +173,11 @@ export class Models {
                     type: "emoji",
                     field: "icon",
                     label: i18n.t("Icon"),
+                },
+                full_name: {
+                    form_field: true,
+                    type: "smalltext",
+                    field: "full_name",
                 },
             },
         },
@@ -496,6 +495,14 @@ export class Models {
         name: i18n.t("User"),
         apiName: "User",
         paginated: false,
+    }
+
+    static STEP = {
+        name: i18n.t("Step"),
+        apiName: "Step",
+        list: {
+            params: ["recipe", "query", "page", "pageSize", "options"],
+        },
     }
 }
 

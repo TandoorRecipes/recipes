@@ -11,11 +11,7 @@
                         <small style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fas fa-user-clock"></i> {{ step.time }} {{ $t("min") }} </small>
                         <small v-if="start_time !== ''" class="d-print-none">
                             <b-link :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#">
-                                {{
-                                    moment(start_time)
-                                        .add(step.time_offset, "minutes")
-                                        .format("HH:mm")
-                                }}
+                                {{ moment(start_time).add(step.time_offset, "minutes").format("HH:mm") }}
                             </b-link>
                         </small>
                     </h5>
@@ -57,11 +53,7 @@
                     </h4>
                     <span style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i class="fa fa-stopwatch"></i> {{ step.time }} {{ $t("min") }}</span>
                     <b-link class="d-print-none" :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#" v-if="start_time !== ''">
-                        {{
-                            moment(start_time)
-                                .add(step.time_offset, "minutes")
-                                .format("HH:mm")
-                        }}
+                        {{ moment(start_time).add(step.time_offset, "minutes").format("HH:mm") }}
                     </b-link>
                 </div>
 
@@ -106,14 +98,14 @@
                         <a :href="resolveDjangoUrl('view_recipe', step.step_recipe_data.id)">{{ step.step_recipe_data.name }}</a>
                     </h2>
                     <div v-for="(sub_step, index) in step.step_recipe_data.steps" v-bind:key="`substep_${sub_step.id}`">
-                        <Step
+                        <step-component
                             :recipe="step.step_recipe_data"
                             :step="sub_step"
                             :ingredient_factor="ingredient_factor"
                             :index="index"
                             :start_time="start_time"
                             :force_ingredients="true"
-                        ></Step>
+                        ></step-component>
                     </div>
                 </div>
             </b-collapse>
@@ -128,8 +120,8 @@
                 </div>
                 <div class="row" style="margin-top: 1vh">
                     <div class="col-12" style="text-align: right">
-                        <b-button @click="closePopover" size="sm" variant="secondary" style="margin-right:8px">Cancel</b-button>
-                        <b-button @click="updateTime" size="sm" variant="primary">Ok</b-button>
+                        <b-button @click="closePopover" size="sm" variant="secondary" style="margin-right: 8px">{{ $t("Cancel") }}</b-button>
+                        <b-button @click="updateTime" size="sm" variant="primary">{{ $t("Ok") }}</b-button>
                     </div>
                 </div>
             </b-popover>
@@ -172,16 +164,14 @@ export default {
         }
     },
     mounted() {
-        this.set_time_input = moment(this.start_time)
-            .add(this.step.time_offset, "minutes")
-            .format("yyyy-MM-DDTHH:mm")
+        this.set_time_input = moment(this.start_time).add(this.step.time_offset, "minutes").format("yyyy-MM-DDTHH:mm")
     },
     methods: {
-        calculateAmount: function(x) {
+        calculateAmount: function (x) {
             // used by the jinja2 template
             return calculateAmount(x, this.ingredient_factor)
         },
-        updateTime: function() {
+        updateTime: function () {
             let new_start_time = moment(this.set_time_input)
                 .add(this.step.time_offset * -1, "minutes")
                 .format("yyyy-MM-DDTHH:mm")
@@ -189,10 +179,10 @@ export default {
             this.$emit("update-start-time", new_start_time)
             this.closePopover()
         },
-        closePopover: function() {
+        closePopover: function () {
             this.$refs[`id_reactive_popover_${this.step.id}`].$emit("close")
         },
-        openPopover: function() {
+        openPopover: function () {
             this.$refs[`id_reactive_popover_${this.step.id}`].$emit("open")
         },
     },

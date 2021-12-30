@@ -29,11 +29,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='food',
-            name='on_hand',
-            field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
             model_name='shoppinglistentry',
             name='completed_at',
             field=models.DateTimeField(blank=True, null=True),
@@ -106,18 +101,13 @@ class Migration(migrations.Migration):
             bases=(models.Model, PermissionModelMixin),
         ),
         migrations.AddField(
-            model_name='food',
-            name='inherit',
-            field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
             model_name='userpreference',
             name='mealplan_autoinclude_related',
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
             model_name='food',
-            name='ignore_inherit',
+            name='inherit_fields',
             field=models.ManyToManyField(blank=True, to='cookbook.FoodInheritField'),
         ),
         migrations.AddField(
@@ -144,6 +134,11 @@ class Migration(migrations.Migration):
             model_name='userpreference',
             name='shopping_recent_days',
             field=models.PositiveIntegerField(default=7),
+        ),
+        migrations.RenameField(
+            model_name='food',
+            old_name='ignore_shopping',
+            new_name='food_onhand',
         ),
         migrations.RunPython(copy_values_to_sle),
     ]

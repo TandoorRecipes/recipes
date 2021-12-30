@@ -112,30 +112,29 @@ def test_preference_delete(u1_s1, u2_s1):
 
 
 def test_default_inherit_fields(u1_s1, u1_s2, space_1, space_2):
-    food_inherit_fields = Food.inherit_fields.all()
-
-    r = u1_s1.get(
-        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
-    )
+    food_inherit_fields = Food.inheritable_fields
+    assert len([x.field for x in food_inherit_fields]) > 0
 
     # by default space food will not inherit any fields, so all of them will be ignored
     assert space_1.food_inherit.all().count() == 0
-    assert len([x.field for x in food_inherit_fields]) == len([x['field'] for x in json.loads(r.content)['food_ignore_default']]) > 0
-
-    # inherit all possible fields
-    with scope(space=space_1):
-        space_1.food_inherit.add(*Food.inherit_fields.values_list('id', flat=True))
     r = u1_s1.get(
         reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
     )
+    assert len([x['field'] for x in json.loads(r.content)['food_inherit_default']]) == 0
 
-    assert space_1.food_inherit.all().count() == Food.inherit_fields.all().count() > 0
-    # now by default, food is not ignoring inheritance on any field
-    assert len([x['field'] for x in json.loads(r.content)['food_ignore_default']]) == 0
+    # inherit all possible fields
+    with scope(space=space_1):
+        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))
 
-    # other spaces and users in those spaced not effected
+    assert space_1.food_inherit.all().count() == Food.inheritable_fields.count() > 0
+    # now by default, food is inheriting all of the possible fields
+    r = u1_s1.get(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+    )
+    assert len([x['field'] for x in json.loads(r.content)['food_inherit_default']]) == space_1.food_inherit.all().count()
+
+    # other spaces and users in those spaces not effected
     r = u1_s2.get(
         reverse(DETAIL_URL, args={auth.get_user(u1_s2).id}),
     )
-    assert space_2.food_inherit.all().count() == 0
-    assert len([x.field for x in food_inherit_fields]) == len([x['field'] for x in json.loads(r.content)['food_ignore_default']]) > 0
+    assert space_2.food_inherit.all().count() == 0 == len([x['field'] for x in json.loads(r.content)['food_inherit_default']])
