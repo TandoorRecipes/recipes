@@ -76,12 +76,12 @@
                             />
                         </div>
                         <div class="my-auto">
-                            <span class="text-primary"
-                                ><b
-                                    ><template v-if="recipe.servings_text === ''">{{ $t("Servings") }}</template
-                                    ><template v-else>{{ recipe.servings_text }}</template></b
-                                ></span
-                            >
+                            <span class="text-primary">
+                                <b>
+                                    <template v-if="recipe.servings_text === ''">{{ $t("Servings") }}</template>
+                                    <template v-else>{{ recipe.servings_text }}</template>
+                                </b>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -200,8 +200,8 @@ export default {
         ingredient_factor: function () {
             return this.servings / this.recipe.servings
         },
-        title() {
-            return this.recipe?.steps?.map((x) => x?.ingredients).flat()
+        ingredient_count() {
+            return this.recipe?.steps.map((x) => x.ingredients).flat().length
         },
     },
     data() {
@@ -209,17 +209,20 @@ export default {
             loading: true,
             recipe: undefined,
             rootrecipe: undefined,
-            ingredient_count: 0,
             servings: 1,
+            servings_cache: {},
             start_time: "",
             share_uid: window.SHARE_UID,
         }
     },
-
+    watch: {
+        servings(newVal, oldVal) {
+            this.servings_cache[this.recipe.id] = this.servings
+        },
+    },
     mounted() {
         this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
-        console.log(this.recipe)
     },
     methods: {
         loadRecipe: function (recipe_id) {
@@ -227,12 +230,9 @@ export default {
                 if (window.USER_SERVINGS !== 0) {
                     recipe.servings = window.USER_SERVINGS
                 }
-                this.servings = recipe.servings
 
                 let total_time = 0
                 for (let step of recipe.steps) {
-                    this.ingredient_count += step.ingredients.length
-
                     for (let ingredient of step.ingredients) {
                         this.$set(ingredient, "checked", false)
                     }
@@ -247,6 +247,7 @@ export default {
                 }
 
                 this.recipe = this.rootrecipe = recipe
+                this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
                 this.loading = false
             })
         },
@@ -265,8 +266,10 @@ export default {
         quickSwitch: function (e) {
             if (e === -1) {
                 this.recipe = this.rootrecipe
+                this.servings = this.servings_cache[this.rootrecipe?.id ?? 1]
             } else {
                 this.recipe = e
+                this.servings = this.servings_cache?.[e.id] ?? e.servings
             }
         },
     },
