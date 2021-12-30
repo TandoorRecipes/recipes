@@ -222,7 +222,7 @@
     "Next_Day": "Next Day",
     "Previous_Day": "Previous Day",
     "Inherit": "Inherit",
-    "IgnoreInherit": "Do Not Inherit Fields",
+    "InheritFields": "Inherit Fields Values",
     "FoodInherit": "Food Inheritable Fields",
     "ShowUncategorizedFood": "Show Undefined",
     "GroupBy": "Group By",

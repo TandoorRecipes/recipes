@@ -1,20 +1,18 @@
 <template>
     <div>
         <b-modal :id="'modal_' + id" @hidden="cancelAction">
-            <template v-slot:modal-title
-                ><h4>{{ form.title }}</h4></template
-            >
+            <template v-slot:modal-title>
+                <h4>{{ form.title }}</h4>
+            </template>
             <div v-for="(f, i) in form.fields" v-bind:key="i">
-                <p v-if="f.type == 'instruction'">{{ f.label }}</p>
-                <!-- this lookup is single selection -->
-                <lookup-input v-if="f.type == 'lookup'" :form="f" :model="listModel(f.list)" @change="storeValue" />
-                <!-- TODO: add multi-selection input list -->
-                <checkbox-input v-if="f.type == 'checkbox'" :label="f.label" :value="f.value" :field="f.field" />
-                <text-input v-if="f.type == 'text'" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" />
-                <choice-input v-if="f.type == 'choice'" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
-                <emoji-input v-if="f.type == 'emoji'" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
-                <file-input v-if="f.type == 'file'" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
-                <small-text v-if="f.type == 'smalltext'" :value="f.value" />
+                <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
+                <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" />
+                <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" />
+                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" />
+                <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
+                <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
+                <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
+                <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
             </div>
 
             <template v-slot:modal-footer>
@@ -48,7 +46,12 @@ export default {
     mixins: [ApiMixin, ToastMixin],
     props: {
         model: { required: true, type: Object },
-        action: { type: Object },
+        action: {
+            type: Object,
+            default() {
+                return {}
+            },
+        },
         item1: {
             type: Object,
             default() {
@@ -248,6 +251,21 @@ export default {
 
                 apiClient.createAutomation(automation)
             }
+        },
+        visibleCondition(field, field_type) {
+            let type_match = field?.type == field_type
+            let checks = true
+            if (type_match && field?.condition) {
+                if (field.condition?.condition === "exists") {
+                    if ((this.item1[field.condition.field] != undefined) === field.condition.value) {
+                        checks = true
+                    } else {
+                        checks = false
+                    }
+                }
+            }
+
+            return type_match && checks
         },
     },
 }

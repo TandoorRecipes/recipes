@@ -7,7 +7,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook, Food,
+from .models import (Comment, Food, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
                      RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference)
 
 
@@ -525,7 +525,7 @@ class SpacePreferenceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)  # populates the post
-        self.fields['food_inherit'].queryset = Food.inherit_fields
+        self.fields['food_inherit'].queryset = Food.inheritable_fields
 
     class Meta:
         model = Space

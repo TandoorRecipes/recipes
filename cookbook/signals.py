@@ -66,14 +66,14 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
     if not instance:
         return
 
-    inherit = Food.inherit_fields.difference(instance.ignore_inherit.all())
+    inherit = instance.inherit_fields.all()
     # nothing to apply from parent and nothing to apply to children
-    if (not instance.inherit or not instance.parent or inherit.count() == 0) and instance.numchild == 0:
+    if (not instance.parent or inherit.count() == 0) and instance.numchild == 0:
         return
 
     inherit = inherit.values_list('field', flat=True)
     # apply changes from parent to instance for each inheritted field
-    if instance.inherit and instance.parent and inherit.count() > 0:
+    if instance.parent and inherit.count() > 0:
         parent = instance.get_parent()
         if 'food_onhand' in inherit:
             instance.food_onhand = parent.food_onhand
@@ -89,13 +89,13 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
     # TODO figure out how to generalize this
     # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
     _save = []
-    for child in instance.get_children().filter(inherit=True).exclude(ignore_inherit__field='food_onhand'):
+    for child in instance.get_children().filter(inherit_fields__field='food_onhand'):
         child.food_onhand = instance.food_onhand
         _save.append(child)
     # don't cascade empty supermarket category
     if instance.supermarket_category:
         # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
-        for child in instance.get_children().filter(inherit=True).exclude(ignore_inherit__field='supermarket_category'):
+        for child in instance.get_children().filter(inherit_fields__field='supermarket_category'):
             child.supermarket_category = instance.supermarket_category
             _save.append(child)
     for child in set(_save):

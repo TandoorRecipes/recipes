@@ -402,7 +402,8 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         # exclude fields not yet implemented
-        return Food.inherit_fields
+        self.queryset = Food.inheritable_fields
+        return super().get_queryset()
 
 
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):

@@ -57,7 +57,19 @@ def obj_tree_1(request, space_1):
     except AttributeError:
         params = {}
     objs = []
+    inherit = params.pop('inherit', False)
     objs.extend(FoodFactory.create_batch(3, space=space_1, **params))
+
+    # set all foods to inherit everything
+    if inherit:
+        inherit = Food.inheritable_fields
+        Through = Food.objects.filter(space=space_1).first().inherit_fields.through
+        for i in inherit:
+            Through.objects.bulk_create([
+                Through(food_id=x, foodinheritfield_id=i.id)
+                for x in Food.objects.filter(space=space_1).values_list('id', flat=True)
+            ])
+
     objs[0].move(objs[1], node_location)
     objs[1].move(objs[2], node_location)
     return Food.objects.get(id=objs[1].id)  # whenever you move/merge a tree it's safest to re-get the object
@@ -496,42 +508,12 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     assert (getattr(child, field) == new_val) == inherit
 
 
-@pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
-    ({'has_category': True, 'inherit': True, },  'supermarket_category', True, 'cat_1'),
-    ({'food_onhand': True, 'inherit': True, }, 'food_onhand',  True, 'false'),
-], indirect=['obj_tree_1'])
-# This is more about the model than the API - should this be moved to a different test?
-def test_ignoreinherit_field(request, obj_tree_1, field, inherit, new_val, u1_s1):
-    with scope(space=obj_tree_1.space):
-        parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
-        obj_tree_1.ignore_inherit.add(FoodInheritField.objects.get(field=field))
-    new_val = request.getfixturevalue(new_val)
-
-    # change parent to a new value
-    setattr(parent, field, new_val)
-    with scope(space=parent.space):
-        parent.save()  # trigger post-save signal
-        # get the objects again because values are cached
-        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
-    # inheritance is blocked - should not get new value
-    assert getattr(obj_tree_1, field) != new_val
-
-    setattr(obj_tree_1, field, new_val)
-    with scope(space=parent.space):
-        obj_tree_1.save()  # trigger post-save signal
-        # get the objects again because values are cached
-        child = Food.objects.get(id=child.id)
-    # inherit with child should still work
-    assert getattr(child, field) == new_val
-
-
 @pytest.mark.parametrize("obj_tree_1", [
     ({'has_category': True, 'inherit': False, 'food_onhand': True}),
 ], indirect=['obj_tree_1'])
 def test_reset_inherit(obj_tree_1, space_1):
     with scope(space=space_1):
-        space_1.food_inherit.add(*Food.inherit_fields.values_list('id', flat=True))  # set default inherit fields
+        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
         parent = obj_tree_1.get_parent()
         child = obj_tree_1.get_descendants()[0]
         obj_tree_1.food_onhand = False
