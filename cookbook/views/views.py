@@ -561,7 +561,7 @@ def space(request):
 
     space_form = SpacePreferenceForm(instance=request.space)
 
-    space_form.base_fields['food_inherit'].queryset = Food.inherit_fields
+    space_form.base_fields['food_inherit'].queryset = Food.inheritable_fields
     if request.method == "POST" and 'space_form' in request.POST:
         form = SpacePreferenceForm(request.POST, prefix='space')
         if form.is_valid():

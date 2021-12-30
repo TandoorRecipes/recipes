@@ -1012,8 +1012,8 @@ export default {
             let api = new ApiApiFactory()
             let ignore_category
             if (field) {
-                ignore_category = food.ignore_inherit
-                    .map((x) => food.ignore_inherit.fields)
+                ignore_category = food.inherit_fields
+                    .map((x) => food.inherit_fields.fields)
                     .flat()
                     .includes(field)
             } else {
@@ -1023,7 +1023,7 @@ export default {
             return api
                 .partialUpdateFood(food.id, food)
                 .then((result) => {
-                    if (food.inherit && food.supermarket_category && !ignore_category && food.parent) {
+                    if (food.supermarket_category && !ignore_category && food.parent) {
                         makeToast(this.$t("Warning"), this.$t("InheritWarning", { food: food.name }), "warning")
                     } else {
                         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)

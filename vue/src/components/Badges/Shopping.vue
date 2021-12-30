@@ -8,13 +8,13 @@
                 :class="[shopping ? 'text-success fa-shopping-cart' : 'text-muted fa-cart-plus']"
             />
         </b-button>
-        <b-popover :target="`${ShowConfirmation}`" :ref="'shopping' + item.id" triggers="focus" placement="top">
+        <b-popover v-if="shopping" :target="`${ShowConfirmation}`" :ref="'shopping' + item.id" triggers="focus" placement="top">
             <template #title>{{ DeleteConfirmation }}</template>
             <b-row align-h="end">
-                <b-col cols="auto"
-                    ><b-button class="btn btn-sm btn-info shadow-none px-1 border-0" @click="cancelDelete()">{{ $t("Cancel") }}</b-button>
-                    <b-button class="btn btn-sm btn-danger shadow-none px-1" @click="confirmDelete()">{{ $t("Confirm") }}</b-button></b-col
-                >
+                <b-col cols="auto">
+                    <b-button class="btn btn-sm btn-info shadow-none px-1 border-0" @click="cancelDelete()">{{ $t("Cancel") }}</b-button>
+                    <b-button class="btn btn-sm btn-danger shadow-none px-1" @click="confirmDelete()">{{ $t("Confirm") }}</b-button>
+                </b-col>
             </b-row>
         </b-popover>
     </span>
@@ -46,7 +46,7 @@ export default {
             if (this.shopping) {
                 return "shopping" + this.item.id
             } else {
-                return "NoDialog"
+                return ""
             }
         },
     },

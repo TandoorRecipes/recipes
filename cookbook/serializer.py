@@ -157,14 +157,8 @@ class FoodInheritFieldSerializer(WritableNestedModelSerializer):
 
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
-    # food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', read_only=True)
-    food_ignore_default = serializers.SerializerMethodField('get_ignore_default')
+    food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', many=True, allow_null=True, required=False, read_only=True)
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
-
-    # TODO decide: default inherit field values for foods are being handled via VUE client through user preference
-    # should inherit field instead be set during the django model create?
-    def get_ignore_default(self, obj):
-        return FoodInheritFieldSerializer(Food.inherit_fields.difference(obj.space.food_inherit.all()), many=True).data
 
     def create(self, validated_data):
         if not validated_data.get('user', None):
@@ -181,7 +175,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         model = UserPreference
         fields = (
             'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_kj', 'search_style', 'show_recent', 'plan_share',
-            'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_ignore_default', 'default_delay',
+            'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix', 'filter_to_supermarket'
         )
 
@@ -376,7 +370,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
-    ignore_inherit = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
+    inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
 
     recipe_filter = 'steps__ingredients__food'
 
@@ -403,7 +397,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'inherit', 'ignore_inherit', 'full_name'
+            'image', 'parent', 'numchild', 'numrecipe',  'inherit_fields', 'full_name'
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 

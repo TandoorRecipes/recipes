@@ -76,7 +76,7 @@ export class Models {
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "ignore_inherit"]],
+            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields"]],
 
             form: {
                 name: {
@@ -114,19 +114,14 @@ export class Models {
                     label: i18n.t("Shopping_Category"),
                     allow_create: true,
                 },
-                inherit: {
-                    form_field: true,
-                    type: "checkbox",
-                    field: "inherit",
-                    label: i18n.t("Inherit"),
-                },
-                ignore_inherit: {
+                inherit_fields: {
                     form_field: true,
                     type: "lookup",
                     multiple: true,
-                    field: "ignore_inherit",
+                    field: "inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
-                    label: i18n.t("IgnoreInherit"),
+                    label: i18n.t("InheritFields"),
+                    condition: { field: "parent", value: true, condition: "exists" },
                 },
                 full_name: {
                     form_field: true,
