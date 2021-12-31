@@ -105,7 +105,9 @@ export default {
         },
         loadMealPlans: function () {
             let apiClient = new ApiApiFactory()
-            let today = new Date(Date.now()).toISOString().split("T")[0]
+            // TODO move to utility function moment is in maintenance mode https://momentjs.com/docs/
+            var tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
+            let today = new Date(Date.now() - tzoffset).toISOString().split("T")[0]
             apiClient
                 .listMealPlans({
                     query: {
