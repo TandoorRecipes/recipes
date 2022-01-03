@@ -65,59 +65,32 @@ class Integration:
         """
         Perform the export based on a list of recipes
         :param recipes: list of recipe objects
-        :return: HttpResponse with a ZIP file that is directly downloaded
+        :return: HttpResponse with the file of the requested export format that is directly downloaded (When that format involve multiple files they are zipped together) 
         """
-        # TODO this is temporary, find a better solution for different export formats when doing other exporters
-        if self.export_type == ImportExportBase.PDF:
 
-            export_zip_stream = BytesIO()
-            export_zip_obj = ZipFile(export_zip_stream, 'w')
+        files = self.get_files_from_recipes(recipes, self.request.COOKIES)
 
-            files = self.get_files_from_recipes(recipes, self.request.COOKIES)
-            for filename, data in files:
-                export_zip_obj.writestr(filename, data)
+        if len(files) == 1:
+            filename, file = files[0]
+            export_filename = filename
+            export_file = file
 
-            export_zip_obj.close()
-
-            response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="export.zip"'
-            return response
-
-        elif self.export_type != ImportExportBase.RECIPESAGE:
-            export_zip_stream = BytesIO()
-            export_zip_obj = ZipFile(export_zip_stream, 'w')
-
-            for r in recipes:
-                if r.internal and r.space == self.request.space:
-                    recipe_zip_stream = BytesIO()
-                    recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
-
-                    recipe_stream = StringIO()
-                    filename, data = self.get_file_from_recipe(r)
-                    recipe_stream.write(data)
-                    recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
-                    recipe_stream.close()
-                    try:
-                        recipe_zip_obj.writestr(f'image{get_filetype(r.image.file.name)}', r.image.file.read())
-                    except ValueError:
-                        pass
-
-                    recipe_zip_obj.close()
-                    export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
-
-            export_zip_obj.close()
-
-            response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="export.zip"'
-            return response
         else:
-            json_list = []
-            for r in recipes:
-                json_list.append(self.get_file_from_recipe(r))
+            export_filename = "export.zip"
+            export_stream = BytesIO()
+            export_obj = ZipFile(export_stream, 'w')
 
-            response = HttpResponse(json.dumps(json_list), content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="recipes.json"'
-            return response
+            for filename, file in files:
+                export_obj.writestr(filename, file)
+
+            export_obj.close()
+            export_file = export_stream.getvalue()
+
+
+        response = HttpResponse(export_file, content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename="'+export_filename+'"'
+        return response
+
 
     def import_file_name_filter(self, zip_info_object):
         """

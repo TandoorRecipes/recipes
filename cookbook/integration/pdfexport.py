@@ -23,7 +23,7 @@ class PDFexport(Integration):
 
 
 
-    async def gen_pdf(self, recipes, sessionid):
+    async def get_files_from_recipes_async(self, recipes, cookie):
         cmd = runserver.Command()
 
         browser = await launch(
@@ -33,7 +33,7 @@ class PDFexport(Integration):
             ignoreHTTPSErrors=True
         )
 
-        cookies = {'domain': cmd.default_addr, 'name': 'sessionid', 'value': sessionid,}
+        cookies = {'domain': cmd.default_addr, 'name': 'sessionid', 'value': cookie['sessionid'],}
         options = { 'format': 'letter',
                     'margin': {
                         'top': '0.75in',
@@ -59,4 +59,4 @@ class PDFexport(Integration):
 
 
     def get_files_from_recipes(self, recipes, cookie):
-        return asyncio.run(self.gen_pdf(recipes, cookie['sessionid']))
+        return asyncio.run(self.get_files_from_recipes_async(recipes, cookie))
