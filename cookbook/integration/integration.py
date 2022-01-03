@@ -67,9 +67,23 @@ class Integration:
         :param recipes: list of recipe objects
         :return: HttpResponse with a ZIP file that is directly downloaded
         """
-
         # TODO this is temporary, find a better solution for different export formats when doing other exporters
-        if self.export_type != ImportExportBase.RECIPESAGE:
+        if self.export_type == ImportExportBase.PDF:
+
+            export_zip_stream = BytesIO()
+            export_zip_obj = ZipFile(export_zip_stream, 'w')
+
+            files = self.get_files_from_recipes(recipes, self.request.COOKIES)
+            for filename, data in files:
+                export_zip_obj.writestr(filename, data)
+
+            export_zip_obj.close()
+
+            response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="export.zip"'
+            return response
+
+        elif self.export_type != ImportExportBase.RECIPESAGE:
             export_zip_stream = BytesIO()
             export_zip_obj = ZipFile(export_zip_stream, 'w')
 
