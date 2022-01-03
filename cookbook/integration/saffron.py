@@ -5,7 +5,7 @@ from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient
 
 
-class Safron(Integration):
+class Saffron(Integration):
 
     def get_recipe_from_file(self, file):
         ingredient_mode = False
@@ -58,4 +58,39 @@ class Safron(Integration):
         return recipe
 
     def get_file_from_recipe(self, recipe):
-        raise NotImplementedError('Method not implemented in storage integration')
+
+        data = "Title: "+recipe.name if recipe.name else ""+"\n"
+        data += "Description: "+recipe.description if recipe.description else ""+"\n"
+        data += "Source: \n"
+        data += "Original URL: \n"
+        data += "Yield: "+str(recipe.servings)+"\n"
+        data += "Cookbook: \n"
+        data += "Section: \n"
+        data += "Image: \n"
+
+        recipeInstructions = []
+        recipeIngredient = []
+        for s in recipe.steps.all():
+            if s.type != Step.TIME:
+                recipeInstructions.append(s.instruction)
+
+                for i in s.ingredients.all():
+                    recipeIngredient.append(f'{float(i.amount)} {i.unit} {i.food}')
+       
+        data += "Ingredients: \n"
+        for ingredient in recipeIngredient:
+            data += ingredient+"\n"
+
+        data += "Instructions: \n"
+        for instruction in recipeInstructions:
+            data += instruction+"\n"
+
+        return recipe.name+'.txt', data
+
+    def get_files_from_recipes(self, recipes, cookie):
+        files = []
+        for r in recipes:
+            filename, data = self.get_file_from_recipe(r)
+            files.append([ filename, data ])
+
+        return files
