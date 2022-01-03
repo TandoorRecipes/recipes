@@ -262,6 +262,17 @@ class Integration:
         """
         raise NotImplementedError('Method not implemented in integration')
 
+
+    def get_files_from_recipes(self, recipes, cookie):
+        """
+        Takes a list of recipe object and converts it to a array containing each file.
+        Each file is represented as an array [filename, data] where data is a string of the content of the file.
+        :param recipe: Recipe object that should be converted
+        :returns:
+            [[filename, data], ...]
+        """
+        raise NotImplementedError('Method not implemented in integration')
+
     @staticmethod
     def handle_exception(exception, log=None, message=''):
         if log:
