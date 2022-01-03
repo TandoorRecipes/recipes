@@ -272,6 +272,8 @@ export default {
 </script>
 
 <style>
-
+  #app > div > div{
+    break-inside: avoid;
+  }
 
 </style>
