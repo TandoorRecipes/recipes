@@ -1,12 +1,14 @@
 import json
+
 import pytest
-
 from django.contrib import auth
-from django_scopes import scopes_disabled
 from django.urls import reverse
+from django_scopes import scope, scopes_disabled
+from pytest_factoryboy import LazyFixture, register
 
-
-from cookbook.models import Food, Ingredient, ShoppingList, ShoppingListEntry
+from cookbook.models import Food, FoodInheritField, Ingredient, ShoppingList, ShoppingListEntry
+from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
+                                      SupermarketCategoryFactory)
 
 #    ------------------ IMPORTANT -------------------
 #
@@ -27,78 +29,50 @@ else:
     node_location = 'last-child'
 
 
-@pytest.fixture()
-def obj_1(space_1):
-    return Food.objects.get_or_create(name='test_1', space=space_1)[0]
+register(FoodFactory, 'obj_1', space=LazyFixture('space_1'))
+register(FoodFactory, 'obj_2', space=LazyFixture('space_1'))
+register(FoodFactory, 'obj_3', space=LazyFixture('space_2'))
+register(SupermarketCategoryFactory, 'cat_1', space=LazyFixture('space_1'))
 
 
-@pytest.fixture()
-def obj_1_1(obj_1, space_1):
-    return obj_1.add_child(name='test_1_1', space=space_1)
-
-
-@pytest.fixture()
-def obj_1_1_1(obj_1_1, space_1):
-    return obj_1_1.add_child(name='test_1_1_1', space=space_1)
+# @pytest.fixture
+# def true():
+#     return True
 
 
 @pytest.fixture
-def obj_2(space_1):
-    return Food.objects.get_or_create(name='test_2', space=space_1)[0]
+def false():
+    return False
+
+
+@pytest.fixture
+def non_exist():
+    return {}
 
 
 @pytest.fixture()
-def obj_3(space_2):
-    return Food.objects.get_or_create(name='test_3', space=space_2)[0]
+def obj_tree_1(request, space_1):
+    try:
+        params = request.param  # request.param is a magic variable
+    except AttributeError:
+        params = {}
+    objs = []
+    inherit = params.pop('inherit', False)
+    objs.extend(FoodFactory.create_batch(3, space=space_1, **params))
 
+    # set all foods to inherit everything
+    if inherit:
+        inherit = Food.inheritable_fields
+        Through = Food.objects.filter(space=space_1).first().inherit_fields.through
+        for i in inherit:
+            Through.objects.bulk_create([
+                Through(food_id=x, foodinheritfield_id=i.id)
+                for x in Food.objects.filter(space=space_1).values_list('id', flat=True)
+            ])
 
-@pytest.fixture()
-def ing_1_s1(obj_1, space_1):
-    return Ingredient.objects.create(food=obj_1, space=space_1)
-
-
-@pytest.fixture()
-def ing_2_s1(obj_2, space_1):
-    return Ingredient.objects.create(food=obj_2, space=space_1)
-
-
-@pytest.fixture()
-def ing_3_s2(obj_3, space_2):
-    return Ingredient.objects.create(food=obj_3, space=space_2)
-
-
-@pytest.fixture()
-def ing_1_1_s1(obj_1_1, space_1):
-    return Ingredient.objects.create(food=obj_1_1, space=space_1)
-
-
-@pytest.fixture()
-def sle_1_s1(obj_1, u1_s1, space_1):
-    e = ShoppingListEntry.objects.create(food=obj_1)
-    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
-    s.entries.add(e)
-    return e
-
-
-@pytest.fixture()
-def sle_2_s1(obj_2, u1_s1, space_1):
-    return ShoppingListEntry.objects.create(food=obj_2)
-
-
-@pytest.fixture()
-def sle_3_s2(obj_3, u1_s2, space_2):
-    e = ShoppingListEntry.objects.create(food=obj_3)
-    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s2), space=space_2, )
-    s.entries.add(e)
-    return e
-
-
-@pytest.fixture()
-def sle_1_1_s1(obj_1_1, u1_s1, space_1):
-    e = ShoppingListEntry.objects.create(food=obj_1_1)
-    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
-    s.entries.add(e)
-    return e
+    objs[0].move(objs[1], node_location)
+    objs[1].move(objs[2], node_location)
+    return Food.objects.get(id=objs[1].id)  # whenever you move/merge a tree it's safest to re-get the object
 
 
 @pytest.mark.parametrize("arg", [
@@ -128,7 +102,10 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     assert r.status_code == 200
     response = json.loads(r.content)
     assert response['count'] == 2
-    assert response['results'][0]['name'] == obj_1.name
+
+    assert obj_1.name in [x['name'] for x in response['results']]
+    assert obj_2.name in [x['name'] for x in response['results']]
+    assert response['results'][0]['name'] < response['results'][1]['name']
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?page_size=1').content)
     assert len(response['results']) == 1
@@ -142,7 +119,7 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=chicken').content)
     assert response['count'] == 0
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[4:]}').content)
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[:-4]}').content)
     assert response['count'] == 1
 
 
@@ -194,7 +171,6 @@ def test_add(arg, request, u1_s2):
         assert r.status_code == 404
 
 
-@pytest.mark.django_db(transaction=True)
 def test_add_duplicate(u1_s1, u1_s2, obj_1, obj_3):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
@@ -220,9 +196,9 @@ def test_add_duplicate(u1_s1, u1_s2, obj_1, obj_3):
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
 
 
-def test_delete(u1_s1, u1_s2, obj_1, obj_1_1, obj_1_1_1):
+def test_delete(u1_s1, u1_s2, obj_1, obj_tree_1):
     with scopes_disabled():
-        assert Food.objects.count() == 3
+        assert Food.objects.count() == 4
 
     r = u1_s2.delete(
         reverse(
@@ -232,18 +208,19 @@ def test_delete(u1_s1, u1_s2, obj_1, obj_1_1, obj_1_1_1):
     )
     assert r.status_code == 404
     with scopes_disabled():
-        assert Food.objects.count() == 3
+        assert Food.objects.count() == 4
 
+    # should delete self and child, leaving parent
     r = u1_s1.delete(
         reverse(
             DETAIL_URL,
-            args={obj_1_1.id}
+            args={obj_tree_1.id}
         )
     )
 
     assert r.status_code == 204
     with scopes_disabled():
-        assert Food.objects.count() == 1
+        assert Food.objects.count() == 2
         assert Food.find_problems() == ([], [], [], [], [])
 
 
@@ -283,12 +260,15 @@ def test_integrity(u1_s1, recipe_1_s1):
         assert Ingredient.objects.count() == 9
 
 
-def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
-    url = reverse(MOVE_URL, args=[obj_1_1.id, obj_2.id])
-    with scopes_disabled():
-        assert obj_1.get_num_children() == 1
-        assert obj_1.get_descendant_count() == 2
+def test_move(u1_s1, obj_tree_1, obj_2, obj_3, space_1):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        assert parent.get_num_children() == 1
+        assert parent.get_descendant_count() == 2
         assert Food.get_root_nodes().filter(space=space_1).count() == 2
+
+    url = reverse(MOVE_URL, args=[obj_tree_1.id, obj_2.id])
 
     # move child to new parent, only HTTP put method should work
     r = u1_s1.get(url)
@@ -301,61 +281,107 @@ def test_move(u1_s1, obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, space_1):
     assert r.status_code == 200
     with scopes_disabled():
         # django-treebeard bypasses django ORM so object needs retrieved again
-        obj_1 = Food.objects.get(pk=obj_1.id)
+        parent = Food.objects.get(pk=parent.id)
         obj_2 = Food.objects.get(pk=obj_2.id)
-        assert obj_1.get_num_children() == 0
-        assert obj_1.get_descendant_count() == 0
+        assert parent.get_num_children() == 0
+        assert parent.get_descendant_count() == 0
         assert obj_2.get_num_children() == 1
         assert obj_2.get_descendant_count() == 2
-
-    # move child to root
-    r = u1_s1.put(reverse(MOVE_URL, args=[obj_1_1.id, 0]))
-    assert r.status_code == 200
-    with scopes_disabled():
-        assert Food.get_root_nodes().filter(space=space_1).count() == 3
-
-    # attempt to move to non-existent parent
-    r = u1_s1.put(
-        reverse(MOVE_URL, args=[obj_1.id, 9999])
-    )
-    assert r.status_code == 404
-
-    # attempt to move to wrong space
-    r = u1_s1.put(
-        reverse(MOVE_URL, args=[obj_1_1.id, obj_3.id])
-    )
-    assert r.status_code == 404
 
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
         assert Food.find_problems() == ([], [], [], [], [])
 
 
-def test_merge(
-    u1_s1,
-    obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3,
-    ing_1_s1, ing_2_s1, ing_3_s2, ing_1_1_s1,
-    sle_1_s1, sle_2_s1, sle_3_s2, sle_1_1_s1,
-    space_1
-):
+def test_move_errors(u1_s1, obj_tree_1, obj_3, space_1):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+    # move child to root
+    r = u1_s1.put(reverse(MOVE_URL, args=[obj_tree_1.id, 0]))
+    assert r.status_code == 200
     with scopes_disabled():
-        assert obj_1.get_num_children() == 1
-        assert obj_1.get_descendant_count() == 2
         assert Food.get_root_nodes().filter(space=space_1).count() == 2
-        assert Food.objects.filter(space=space_1).count() == 4
-        assert obj_1.ingredient_set.count() == 1
-        assert obj_2.ingredient_set.count() == 1
-        assert obj_3.ingredient_set.count() == 1
-        assert obj_1_1.ingredient_set.count() == 1
-        assert obj_1_1_1.ingredient_set.count() == 0
-        assert obj_1.shoppinglistentry_set.count() == 1
-        assert obj_2.shoppinglistentry_set.count() == 1
-        assert obj_3.shoppinglistentry_set.count() == 1
-        assert obj_1_1.shoppinglistentry_set.count() == 1
-        assert obj_1_1_1.shoppinglistentry_set.count() == 0
 
-    # merge food with no children and no ingredient/shopping list entry with another food, only HTTP put method should work
-    url = reverse(MERGE_URL, args=[obj_1_1_1.id, obj_2.id])
+    # attempt to move to non-existent parent
+    r = u1_s1.put(
+        reverse(MOVE_URL, args=[parent.id, 9999])
+    )
+    assert r.status_code == 404
+
+    # attempt to move non-existent mode to parent
+    r = u1_s1.put(
+        reverse(MOVE_URL, args=[9999, parent.id])
+    )
+    assert r.status_code == 404
+
+    # attempt to move to wrong space
+    r = u1_s1.put(
+        reverse(MOVE_URL, args=[obj_tree_1.id, obj_3.id])
+    )
+    assert r.status_code == 404
+
+
+# TODO: figure out how to generalize this to be all related objects
+def test_merge_ingredients(obj_tree_1, u1_s1, space_1):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        IngredientFactory.create(food=parent, space=space_1)
+        IngredientFactory.create(food=child, space=space_1)
+        assert parent.get_num_children() == 1
+        assert parent.get_descendant_count() == 2
+        assert Ingredient.objects.count() == 2
+        assert parent.ingredient_set.count() == 1
+        assert obj_tree_1.ingredient_set.count() == 0
+        assert child.ingredient_set.count() == 1
+
+    # merge food (with connected ingredient) with children to another food
+    r = u1_s1.put(reverse(MERGE_URL, args=[child.id, obj_tree_1.id]))
+    assert r.status_code == 200
+    with scope(space=space_1):
+        # django-treebeard bypasses django ORM so object needs retrieved again
+        with pytest.raises(Food.DoesNotExist):
+            Food.objects.get(pk=child.id)
+        obj_tree_1 = Food.objects.get(pk=obj_tree_1.id)
+        assert obj_tree_1.ingredient_set.count() == 1  # now has child's ingredient
+
+
+def test_merge_shopping_entries(obj_tree_1, u1_s1, space_1):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        ShoppingListEntryFactory.create(food=parent,  space=space_1)
+        ShoppingListEntryFactory.create(food=child, space=space_1)
+        assert parent.get_num_children() == 1
+        assert parent.get_descendant_count() == 2
+        assert ShoppingListEntry.objects.count() == 2
+        assert parent.shopping_entries.count() == 1
+        assert obj_tree_1.shopping_entries.count() == 0
+        assert child.shopping_entries.count() == 1
+
+    # merge food (with connected shoppinglistentry) with children to another food
+    r = u1_s1.put(reverse(MERGE_URL, args=[child.id, obj_tree_1.id]))
+    assert r.status_code == 200
+    with scope(space=space_1):
+        # django-treebeard bypasses django ORM so object needs retrieved again
+        with pytest.raises(Food.DoesNotExist):
+            Food.objects.get(pk=child.id)
+        obj_tree_1 = Food.objects.get(pk=obj_tree_1.id)
+        assert obj_tree_1.shopping_entries.count() == 1  # now has child's ingredient
+
+
+def test_merge(u1_s1,  obj_tree_1, obj_1, obj_3, space_1):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        assert parent.get_num_children() == 1
+        assert parent.get_descendant_count() == 2
+        assert Food.get_root_nodes().filter(space=space_1).count() == 2
+        assert Food.objects.count() == 4
+
+    # merge food with no children with another food, only HTTP put method should work
+    url = reverse(MERGE_URL, args=[child.id, obj_tree_1.id])
     r = u1_s1.get(url)
     assert r.status_code == 405
     r = u1_s1.post(url)
@@ -364,88 +390,142 @@ def test_merge(
     assert r.status_code == 405
     r = u1_s1.put(url)
     assert r.status_code == 200
-    with scopes_disabled():
+    with scope(space=space_1):
         # django-treebeard bypasses django ORM so object needs retrieved again
+        with pytest.raises(Food.DoesNotExist):
+            Food.objects.get(pk=child.id)
+        obj_tree_1 = Food.objects.get(pk=obj_tree_1.id)
+        assert parent.get_num_children() == 1
+        assert parent.get_descendant_count() == 1
+
+    # merge food with children with another food
+    r = u1_s1.put(reverse(MERGE_URL, args=[parent.id, obj_1.id]))
+    assert r.status_code == 200
+    with scope(space=space_1):
+        # django-treebeard bypasses django ORM so object needs retrieved again
+        with pytest.raises(Food.DoesNotExist):
+            Food.objects.get(pk=parent.id)
         obj_1 = Food.objects.get(pk=obj_1.id)
-        obj_2 = Food.objects.get(pk=obj_2.id)
-        assert Food.objects.filter(pk=obj_1_1_1.id).count() == 0
         assert obj_1.get_num_children() == 1
         assert obj_1.get_descendant_count() == 1
-        assert obj_2.get_num_children() == 0
-        assert obj_2.get_descendant_count() == 0
-        assert obj_1.ingredient_set.count() == 1
-        assert obj_2.ingredient_set.count() == 1
-        assert obj_3.ingredient_set.count() == 1
-        assert obj_1_1.ingredient_set.count() == 1
-        assert obj_1.shoppinglistentry_set.count() == 1
-        assert obj_2.shoppinglistentry_set.count() == 1
-        assert obj_3.shoppinglistentry_set.count() == 1
-        assert obj_1_1.shoppinglistentry_set.count() == 1
-
-    # merge food (with connected ingredient/shoppinglistentry) with children to another food
-    r = u1_s1.put(reverse(MERGE_URL, args=[obj_1.id, obj_2.id]))
-    assert r.status_code == 200
-    with scopes_disabled():
-        # django-treebeard bypasses django ORM so object needs retrieved again
-        obj_2 = Food.objects.get(pk=obj_2.id)
-        assert Food.objects.filter(pk=obj_1.id).count() == 0
-        assert obj_2.get_num_children() == 1
-        assert obj_2.get_descendant_count() == 1
-        assert obj_2.ingredient_set.count() == 2
-        assert obj_3.ingredient_set.count() == 1
-        assert obj_1_1.ingredient_set.count() == 1
-        assert obj_2.shoppinglistentry_set.count() == 2
-        assert obj_3.shoppinglistentry_set.count() == 1
-        assert obj_1_1.shoppinglistentry_set.count() == 1
-
-    # attempt to merge with non-existent parent
-    r = u1_s1.put(
-        reverse(MERGE_URL, args=[obj_1_1.id, 9999])
-    )
-    assert r.status_code == 404
-
-    # attempt to move to wrong space
-    r = u1_s1.put(
-        reverse(MERGE_URL, args=[obj_2.id, obj_3.id])
-    )
-    assert r.status_code == 404
-
-    # attempt to merge with child
-    r = u1_s1.put(
-        reverse(MERGE_URL, args=[obj_2.id, obj_1_1.id])
-    )
-    assert r.status_code == 403
-
-    # attempt to merge with self
-    r = u1_s1.put(
-        reverse(MERGE_URL, args=[obj_2.id, obj_2.id])
-    )
-    assert r.status_code == 403
 
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
         assert Food.find_problems() == ([], [], [], [], [])
 
 
-def test_root_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
+def test_merge_errors(u1_s1, obj_tree_1, obj_3, space_1):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+
+    # attempt to merge with non-existent parent
+    r = u1_s1.put(
+        reverse(MERGE_URL, args=[obj_tree_1.id, 9999])
+    )
+    assert r.status_code == 404
+
+    # attempt to merge non-existent node to parent
+    r = u1_s1.put(
+        reverse(MERGE_URL, args=[9999, obj_tree_1.id])
+    )
+    assert r.status_code == 404
+    # attempt to move to wrong space
+    r = u1_s1.put(
+        reverse(MERGE_URL, args=[obj_tree_1.id, obj_3.id])
+    )
+    assert r.status_code == 404
+
+    # attempt to merge with child
+    r = u1_s1.put(
+        reverse(MERGE_URL, args=[parent.id, obj_tree_1.id])
+    )
+    assert r.status_code == 403
+
+    # attempt to merge with self
+    r = u1_s1.put(
+        reverse(MERGE_URL, args=[obj_tree_1.id, obj_tree_1.id])
+    )
+    assert r.status_code == 403
+
+
+def test_root_filter(obj_tree_1, obj_2, obj_3, u1_s1):
+    with scope(space=obj_tree_1.space):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+
     # should return root objects in the space (obj_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root=0').content)
     assert len(response['results']) == 2
 
     with scopes_disabled():
-        obj_2.move(obj_1, node_location)
-    # should return direct children of obj_1 (obj_1_1, obj_2), ignoring query filters
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={obj_1.id}').content)
+        obj_2.move(parent, node_location)
+    # should return direct children of parent (obj_tree_1, obj_2), ignoring query filters
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={parent.id}').content)
     assert response['count'] == 2
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={obj_1.id}&query={obj_2.name[4:]}').content)
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={parent.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 2
 
 
-def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
-    with scopes_disabled():
-        obj_2.move(obj_1, node_location)
-    # should return full tree starting at obj_1 (obj_1_1_1, obj_2), ignoring query filters
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}').content)
+def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
+    with scope(space=obj_tree_1.space):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        obj_2.move(parent, node_location)
+    # should return full tree starting at parent (obj_tree_1, obj_2), ignoring query filters
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}').content)
     assert response['count'] == 4
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}&query={obj_2.name[4:]}').content)
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
+
+
+# This is more about the model than the API - should this be moved to a different test?
+@pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
+    ({'has_category': True, 'inherit': True},  'supermarket_category', True, 'cat_1'),
+    ({'has_category': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
+    ({'food_onhand': True, 'inherit': True}, 'food_onhand',  True, 'false'),
+    ({'food_onhand': True, 'inherit': False}, 'food_onhand', False, 'false'),
+], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
+def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
+    with scope(space=obj_tree_1.space):
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+
+    new_val = request.getfixturevalue(new_val)
+    # if this test passes it demonstrates that inheritance works
+    #  when moving to a parent as each food is created with a different category
+    assert (getattr(parent, field) == getattr(obj_tree_1, field)) in [inherit, True]
+    assert (getattr(obj_tree_1, field) == getattr(child, field)) in [inherit, True]
+    # change parent to a new value
+    setattr(parent, field, new_val)
+    with scope(space=parent.space):
+        parent.save()  # trigger post-save signal
+        # get the objects again because values are cached
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        child = Food.objects.get(id=child.id)
+    # when changing parent value the obj value should be same if inherited
+    assert (getattr(obj_tree_1, field) == new_val) == inherit
+    assert (getattr(child, field) == new_val) == inherit
+
+
+@pytest.mark.parametrize("obj_tree_1", [
+    ({'has_category': True, 'inherit': False, 'food_onhand': True}),
+], indirect=['obj_tree_1'])
+def test_reset_inherit(obj_tree_1, space_1):
+    with scope(space=space_1):
+        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        obj_tree_1.food_onhand = False
+        assert parent.food_onhand == child.food_onhand
+        assert parent.food_onhand != obj_tree_1.food_onhand
+        assert parent.supermarket_category != child.supermarket_category
+        assert parent.supermarket_category != obj_tree_1.supermarket_category
+
+        parent.reset_inheritance(space=space_1)
+        # djangotree bypasses ORM and need to be retrieved again
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        parent = obj_tree_1.get_parent()
+        child = obj_tree_1.get_descendants()[0]
+        assert parent.food_onhand == obj_tree_1.food_onhand == child.food_onhand
+        assert parent.supermarket_category == obj_tree_1.supermarket_category == child.supermarket_category
