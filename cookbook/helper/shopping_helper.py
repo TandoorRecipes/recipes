@@ -17,8 +17,7 @@ def shopping_helper(qs, request):
     supermarket = request.query_params.get('supermarket', None)
     checked = request.query_params.get('checked', 'recent')
     user = request.user
-
-    supermarket_order = ['food__supermarket_category__name', 'food__name']
+    supermarket_order = [F('food__supermarket_category__name').asc(nulls_first=True), 'food__name']
 
     # TODO created either scheduled task or startup task to delete very old shopping list entries
     # TODO create user preference to define 'very old'

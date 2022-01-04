@@ -58,16 +58,28 @@
 
                                         <div v-for="(s, i) in done" :key="i">
                                             <h5 v-if="Object.entries(s).length > 0">
-                                                <b-button
-                                                    class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
-                                                    variant="link"
-                                                    data-toggle="collapse"
-                                                    :href="'#section-' + sectionID(x, i)"
-                                                    :aria-expanded="'true' ? x == 'false' : 'true'"
-                                                >
-                                                    <i class="fa fa-chevron-right rotate" />
-                                                    {{ i }}
-                                                </b-button>
+                                                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
+                                                    <button
+                                                        aria-haspopup="true"
+                                                        aria-expanded="false"
+                                                        type="button"
+                                                        class="btn dropdown-toggle btn-link text-decoration-none text-dark pr-2 dropdown-toggle-no-caret"
+                                                        @click.stop="openContextMenu($event, s, true)"
+                                                    >
+                                                        <i class="fas fa-ellipsis-v fa-lg"></i>
+                                                    </button>
+
+                                                    <b-button
+                                                        class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
+                                                        variant="link"
+                                                        data-toggle="collapse"
+                                                        :href="'#section-' + sectionID(x, i)"
+                                                        :aria-expanded="'true' ? x == 'false' : 'true'"
+                                                    >
+                                                        <i class="fa fa-chevron-right rotate" />
+                                                        {{ i }}
+                                                    </b-button>
+                                                </div>
                                             </h5>
 
                                             <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
@@ -594,6 +606,7 @@ export default {
             // if a supermarket is selected and filtered to only supermarket categories filter out everything else
             if (this.selected_supermarket && this.supermarket_categories_only) {
                 let shopping_categories = this.supermarkets // category IDs configured on supermarket
+                    .filter((x) => x.id === this.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
                     .flat()
                     .map((x) => x.category.id)
@@ -603,7 +616,7 @@ export default {
                 shopping_list = shopping_list.filter((x) => x?.food?.supermarket_category)
             }
 
-            let groups = { false: {}, true: {} } // force unchecked to always be first
+            var groups = { false: {}, true: {} } // force unchecked to always be first
             if (this.selected_supermarket) {
                 let super_cats = this.supermarkets
                     .filter((x) => x.id === this.selected_supermarket)
@@ -611,10 +624,13 @@ export default {
                     .flat()
                     .map((x) => x.category.name)
                 new Set([...super_cats, ...this.shopping_categories.map((x) => x.name)]).forEach((cat) => {
-                    groups["false"][cat.name] = {}
-                    groups["true"][cat.name] = {}
+                    groups["false"][cat] = {}
+                    groups["true"][cat] = {}
                 })
             } else {
+                // TODO: make nulls_first a user setting
+                groups.false[this.$t("Undefined")] = {}
+                groups.true[this.$t("Undefined")] = {}
                 this.shopping_categories.forEach((cat) => {
                     groups.false[cat.name] = {}
                     groups.true[cat.name] = {}
@@ -917,8 +933,17 @@ export default {
 
             // TODO make decision - should inheritance always be set manually or give user a choice at front-end or make it a setting?
             let food = this.items.filter((x) => x.food.id == item?.[0]?.food.id ?? item.food.id)[0].food
-            food.supermarket_category = this.shopping_categories.filter((x) => x?.id === this.shopcat)?.[0]
-            this.updateFood(food, "supermarket_category")
+            let supermarket_category = this.shopping_categories.filter((x) => x?.id === this.shopcat)?.[0]
+            food.supermarket_category = supermarket_category
+            this.updateFood(food, "supermarket_category").then((result) => {
+                this.items = this.items.map((x) => {
+                    if (x.food.id === food.id) {
+                        return { ...x, food: { ...x.food, supermarket_category: supermarket_category } }
+                    } else {
+                        return x
+                    }
+                })
+            })
             this.shopcat = null
         },
         onHand: function (item) {
@@ -940,8 +965,13 @@ export default {
                     })
                 })
         },
-        openContextMenu(e, value) {
-            this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
+        openContextMenu(e, value, section = false) {
+            if (section) {
+                value = Object.values(value).flat()
+            } else {
+                this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
+            }
+
             this.$refs.menu.open(e, value)
         },
         saveSettings: function () {
@@ -1010,24 +1040,15 @@ export default {
         },
         updateFood: function (food, field) {
             let api = new ApiApiFactory()
-            let ignore_category
             if (field) {
-                ignore_category = food.inherit_fields
-                    .map((x) => food.inherit_fields.fields)
-                    .flat()
-                    .includes(field)
-            } else {
-                ignore_category = true
+                // assume if field is changing it should no longer be inheritted
+                food.inherit_fields = food.inherit_fields.filter((x) => x.field !== field)
             }
 
             return api
                 .partialUpdateFood(food.id, food)
                 .then((result) => {
-                    if (food.supermarket_category && !ignore_category && food.parent) {
-                        makeToast(this.$t("Warning"), this.$t("InheritWarning", { food: food.name }), "warning")
-                    } else {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
-                    }
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
                     if (food?.numchild > 0) {
                         this.getShoppingList() // if food has children, just get the whole list.  probably could be more efficient
                     }
