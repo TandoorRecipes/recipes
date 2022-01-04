@@ -8,22 +8,11 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone, translation
 
 from cookbook.filters import RecipeFilter
+from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
 from cookbook.models import Food, Keyword, Recipe, SearchPreference, ViewLog
 from recipes import settings
-
-
-class Round(Func):
-    function = 'ROUND'
-    template = '%(function)s(%(expressions)s, 0)'
-
-
-def str2bool(v):
-    if type(v) == bool:
-        return v
-    else:
-        return v.lower() in ("yes", "true", "1")
 
 
 # TODO create extensive tests to make sure ORs ANDs and various filters, sorting, etc work as expected
@@ -41,7 +30,6 @@ def search_recipes(request, queryset, params):
     search_steps = params.getlist('steps', [])
     search_units = params.get('units', None)
 
-    # TODO I think default behavior should be 'AND' which is how most sites operate with facet/filters based on results
     search_keywords_or = str2bool(params.get('keywords_or', True))
     search_foods_or = str2bool(params.get('foods_or', True))
     search_books_or = str2bool(params.get('books_or', True))
@@ -49,7 +37,7 @@ def search_recipes(request, queryset, params):
     search_internal = str2bool(params.get('internal', False))
     search_random = str2bool(params.get('random', False))
     search_new = str2bool(params.get('new', False))
-    search_last_viewed = int(params.get('last_viewed', 0))
+    search_last_viewed = int(params.get('last_viewed', 0))  # not included in schema currently?
     orderby = []
 
     # only sort by recent not otherwise filtering/sorting
@@ -208,24 +196,18 @@ def search_recipes(request, queryset, params):
     return queryset
 
 
+# TODO:  This might be faster https://github.com/django-treebeard/django-treebeard/issues/115
 def get_facet(qs=None, request=None, use_cache=True, hash_key=None):
     """
     Gets an annotated list from a queryset.
     :param qs:
-
         recipe queryset to build facets from
-
     :param request:
-
         the web request that contains the necessary query parameters
-
     :param use_cache:
-
         will find results in cache, if any, and return them or empty list.
         will save the list of recipes IDs in the cache for future processing
-
     :param hash_key:
-
         the cache key of the recipe list to process
         only evaluated if the use_cache parameter is false
     """
@@ -300,7 +282,6 @@ def get_facet(qs=None, request=None, use_cache=True, hash_key=None):
         foods = Food.objects.filter(ingredient__step__recipe__in=recipe_list, space=request.space).annotate(recipe_count=Count('ingredient'))
     food_a = annotated_qs(foods, root=True, fill=True)
 
-    # TODO add rating facet
     facets['Keywords'] = fill_annotated_parents(kw_a, keyword_list)
     facets['Foods'] = fill_annotated_parents(food_a, food_list)
     # TODO add book facet
@@ -373,8 +354,6 @@ def annotated_qs(qs, root=False, fill=False):
             dirty = False
             current_node = node_queue[-1]
             depth = current_node.get_depth()
-            # TODO if node is at the wrong depth for some reason this fails
-            # either create a 'fix node' page, or automatically move the node to the root
             parent_id = current_node.parent
             if root and depth > 1 and parent_id not in nodes_list:
                 parent_id = current_node.parent
