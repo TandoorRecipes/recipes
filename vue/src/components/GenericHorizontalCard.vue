@@ -26,7 +26,7 @@
                             <div class="m-0 text-truncate">{{ item[subtitle] }}</div>
                             <div class="m-0 text-truncate small text-muted" v-if="getFullname">{{ getFullname }}</div>
 
-                            <generic-pill v-for="x in itemTags" :key="x.field" :item_list="item[x.field]" :label="x.label" :color="x.color" />
+                            <generic-pill v-for="x in itemTags" :key="x.field" :item_list="itemList(x)" :label="x.label" :color="x.color" />
                             <generic-ordered-pill
                                 v-for="x in itemOrderedTags"
                                 :key="x.field"
@@ -258,6 +258,14 @@ export default {
         },
         finishAction: function (e) {
             this.$emit("finish-action", e)
+        },
+        itemList: function (tag) {
+            let itemlist = this.item?.[tag?.field] ?? []
+            if (Array.isArray(itemlist)) {
+                return itemlist
+            } else {
+                return [itemlist]
+            }
         },
     },
 }

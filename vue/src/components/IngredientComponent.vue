@@ -108,7 +108,7 @@ export default {
                     this.shop = false // don't check any boxes until user selects a shopping list to edit
                     if (count_shopping_ingredient >= 1) {
                         this.shopping_status = true // ingredient is in the shopping list - probably (but not definitely, this ingredient)
-                    } else if (this.ingredient.food.shopping) {
+                    } else if (this.ingredient?.food?.shopping) {
                         this.shopping_status = null // food is in the shopping list, just not for this ingredient/recipe
                     } else {
                         // food is not in any shopping list
@@ -123,7 +123,7 @@ export default {
                     if (count_shopping_ingredient >= 1) {
                         // ingredient is in this shopping list (not entirely sure how this could happen?)
                         this.shopping_status = true
-                    } else if (count_shopping_ingredient == 0 && this.ingredient.food.shopping) {
+                    } else if (count_shopping_ingredient == 0 && this.ingredient?.food?.shopping) {
                         // food is in the shopping list, just not for this ingredient/recipe
                         this.shopping_status = null
                     } else {
