@@ -1,4 +1,4 @@
-Django==4.0.1
+Django==3.2.11
 cryptography==36.0.1
 django-annoying==0.10.6
 django-autocomplete-light==3.8.2
