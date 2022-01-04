@@ -37,8 +37,9 @@ class Default(Integration):
         return 'recipe.json', JSONRenderer().render(export).decode("utf-8")
 
     def get_files_from_recipes(self, recipes, cookie):
+        export_zip_stream = BytesIO()
+        export_zip_obj = ZipFile(export_zip_stream, 'w')
 
-        files = []
         for r in recipes:
             if r.internal and r.space == self.request.space:
                 recipe_zip_stream = BytesIO()
@@ -55,7 +56,7 @@ class Default(Integration):
                     pass
 
                 recipe_zip_obj.close()
+                export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
+        export_zip_obj.close()
 
-                files.append([ str(r.pk) + '.zip', recipe_zip_stream.getvalue() ])
-
-        return files
+        return [[ 'export.zip', export_zip_stream.getvalue() ]]
