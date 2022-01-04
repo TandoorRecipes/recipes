@@ -687,20 +687,21 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         return fields
 
     def run_validation(self, data):
-        if (
-            data.get('checked', False)
-            and self.root.instance
-            and not self.root.instance.checked
-        ):
-            # if checked flips from false to true set completed datetime
-            data['completed_at'] = timezone.now()
-        elif not data.get('checked', False):
-            # if not checked set completed to None
-            data['completed_at'] = None
-        else:
-            # otherwise don't write anything
-            if 'completed_at' in data:
-                del data['completed_at']
+        if self.root.instance.__class__.__name__ == 'ShoppingListEntry':
+            if (
+                data.get('checked', False)
+                and self.root.instance
+                and not self.root.instance.checked
+            ):
+                # if checked flips from false to true set completed datetime
+                data['completed_at'] = timezone.now()
+            elif not data.get('checked', False):
+                # if not checked set completed to None
+                data['completed_at'] = None
+            else:
+                # otherwise don't write anything
+                if 'completed_at' in data:
+                    del data['completed_at']
 
         return super().run_validation(data)
 

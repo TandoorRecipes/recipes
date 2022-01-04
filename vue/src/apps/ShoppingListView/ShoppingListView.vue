@@ -504,6 +504,14 @@
                         </div>
                     </b-form-group>
                 </ContextMenuItem>
+                <ContextMenuItem
+                    @click="
+                        $refs.menu.close()
+                        updateChecked({ entries: contextData, checked: true })
+                    "
+                >
+                    <a class="dropdown-item p-2" href="#"><i class="fas fa-check-square"></i> {{ $t("mark_complete") }}</a>
+                </ContextMenuItem>
 
                 <ContextMenuItem
                     @click="
