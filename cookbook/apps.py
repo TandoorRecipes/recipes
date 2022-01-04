@@ -35,3 +35,4 @@ class CookbookConfig(AppConfig):
         #             if DEBUG:
         #                 traceback.print_exc()
         #             pass  # dont break startup just because fix could not run, need to investigate cases when this happens
+
