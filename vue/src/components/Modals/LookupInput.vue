@@ -80,8 +80,7 @@ export default {
             } else {
                 arrayValues = [{ id: -1, name: this_value }]
             }
-
-            if (this.form?.ordered && this.first_run) {
+            if (this.form?.ordered && this.first_run && arrayValues.length > 0) {
                 return this.flattenItems(arrayValues)
             } else {
                 return arrayValues
