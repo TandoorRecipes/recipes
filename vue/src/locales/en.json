@@ -278,5 +278,7 @@
     "in_shopping": "In Shopping List",
     "DelayUntil": "Delay Until",
     "mark_complete": "Mark Complete",
-    "QuickEntry": "Quick Entry"
+    "QuickEntry": "Quick Entry",
+    "shopping_add_onhand_desc": "Mark food 'On Hand' when checked off shopping list.",
+    "shopping_add_onhand": "Auto On Hand"
 }

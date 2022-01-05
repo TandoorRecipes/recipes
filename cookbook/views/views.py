@@ -388,6 +388,7 @@ def user_settings(request):
                 up.filter_to_supermarket = shopping_form.cleaned_data['filter_to_supermarket']
                 up.default_delay = shopping_form.cleaned_data['default_delay']
                 up.shopping_recent_days = shopping_form.cleaned_data['shopping_recent_days']
+                up.shopping_add_onhand = shopping_form.cleaned_data['shopping_add_onhand']
                 up.csv_delim = shopping_form.cleaned_data['csv_delim']
                 up.csv_prefix = shopping_form.cleaned_data['csv_prefix']
                 if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:

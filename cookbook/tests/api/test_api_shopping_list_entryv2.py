@@ -217,3 +217,6 @@ def test_recent(sle, u1_s1):
     r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?recent=1').content)
     assert len(r) == 10
     assert [x['checked'] for x in r].count(False) == 9
+
+
+# TODO test auto onhand
