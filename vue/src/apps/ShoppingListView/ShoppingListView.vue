@@ -37,7 +37,7 @@
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
                                     </b-col>
                                     <b-col cols="12" sm="8" md="3" v-if="!entry_mode_simple">
-                                        <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" />
+                                        <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" :clear="clear" />
                                     </b-col>
                                     <b-col cols="12" sm="8" md="4" v-if="!entry_mode_simple">
                                         <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" :clear="clear" />
