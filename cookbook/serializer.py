@@ -10,7 +10,7 @@ from django.utils import timezone
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.fields import SkipField
+from rest_framework.fields import empty
 
 from cookbook.helper.shopping_helper import list_from_recipe
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
@@ -93,13 +93,16 @@ class CustomDecimalField(serializers.Field):
                 raise ValidationError('A valid number is required')
 
 
-class CustomOnHandField(serializers.BooleanField):
+class CustomOnHandField(serializers.Field):
     def get_attribute(self, instance):
         return instance
 
     def to_representation(self, obj):
         shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
         return obj.onhand_users.filter(id__in=shared_users).exists()
+
+    def to_internal_value(self, data):
+        return data
 
 
 class SpaceFilterSerializer(serializers.ListSerializer):
@@ -378,32 +381,12 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
-    food_onhand = CustomOnHandField(required=False)
+    food_onhand = CustomOnHandField(required=False, allow_null=True)
 
     recipe_filter = 'steps__ingredients__food'
 
     def get_shopping_status(self, obj):
         return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
-
-    def run_validation(self, data):
-        try:
-            validated_data = super().run_validation(data)
-        except SkipField:
-            return super().run_validation(data)
-        # convert boolean food_onhand to onhand_users
-        # TODO maybe this should be moved to pre_save signal to ensure shopping_share users are always included?
-        if (
-            self.root.instance.__class__.__name__ == 'Food'
-            and not onhand is None
-        ):
-            # assuming if on hand for user also onhand for shopping_share users
-            shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
-            if onhand:
-                validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
-            else:
-                validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
-
-        return validated_data
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -413,12 +396,29 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
                 name=validated_data.pop('supermarket_category')['name'],
                 space=self.context['request'].space)
+        onhand = validated_data.get('food_onhand', None)
+
+        # assuming if on hand for user also onhand for shopping_share users
+        if not onhand is None:
+            shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
+            if onhand:
+                validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
+            else:
+                validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
         obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 
     def update(self, instance, validated_data):
         if name := validated_data.get('name', None):
             validated_data['name'] = name.strip()
+        # assuming if on hand for user also onhand for shopping_share users
+        onhand = validated_data.get('food_onhand', None)
+        if not onhand is None:
+            shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
+            if onhand:
+                validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
+            else:
+                validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
         return super(FoodSerializer, self).update(instance, validated_data)
 
     class Meta:
@@ -741,12 +741,12 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
+        # update the onhand for food if shopping_add_onhand is True
         if user.userpreference.shopping_add_onhand:
             if checked := validated_data.get('checked', None):
                 instance.food.onhand_users.add(*user.userpreference.shopping_share.all(), user)
             elif checked == False:
                 instance.food.onhand_users.remove(*user.userpreference.shopping_share.all(), user)
-
         return super().update(instance, validated_data)
 
     class Meta:
