@@ -526,10 +526,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
                 ])
 
             inherit = inherit.values_list('field', flat=True)
-            if 'food_onhand' in inherit:
+            if 'ignore_shopping' in inherit:
                 # get food at root that have children that need updated
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, food_onhand=True)).update(food_onhand=True)
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, food_onhand=False)).update(food_onhand=False)
+                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=True)).update(ignore_shopping=True)
+                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=False)).update(ignore_shopping=False)
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
                 # find top node that has category set

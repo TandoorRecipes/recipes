@@ -376,6 +376,19 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col col-md-6">{{ $t("shopping_add_onhand") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="checkbox" size="sm" v-model="settings.shopping_add_onhand" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("shopping_add_onhand_desc") }}
+                                    </em>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col col-md-6">{{ $t("shopping_recent_days") }}</div>
                                 <div class="col col-md-6 text-right">
                                     <input type="number" size="sm" v-model="settings.shopping_recent_days" @change="saveSettings" />
@@ -590,6 +603,7 @@ export default {
                 shopping_recent_days: 7,
                 csv_delim: ",",
                 csv_prefix: undefined,
+                shopping_add_onhand: true,
             },
             new_supermarket: { entrymode: false, value: undefined, editmode: undefined },
             new_category: { entrymode: false, value: undefined },

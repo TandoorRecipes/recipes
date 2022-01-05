@@ -10,6 +10,7 @@ from django.utils import timezone
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.fields import SkipField
 
 from cookbook.helper.shopping_helper import list_from_recipe
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
@@ -176,16 +177,13 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
             raise NotFound()
         return super().create(validated_data)
 
-    def update(self, instance, validated_data):
-        # don't allow writing to FoodInheritField via API
-        return super().update(instance, validated_data)
-
     class Meta:
         model = UserPreference
         fields = (
             'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_kj', 'search_style', 'show_recent', 'plan_share',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_inherit_default', 'default_delay',
-            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix', 'filter_to_supermarket'
+            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix',
+            'filter_to_supermarket', 'shopping_add_onhand'
         )
 
 
@@ -380,23 +378,23 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
-    food_onhand = CustomOnHandField()
+    food_onhand = CustomOnHandField(required=False)
 
     recipe_filter = 'steps__ingredients__food'
 
     def get_shopping_status(self, obj):
         return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
 
-    # def get_food_onhand(self, obj):
-    #     shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
-    #     return obj.onhand_users.filter(id__in=shared_users).exists()
-
     def run_validation(self, data):
-        validated_data = super().run_validation(data)
+        try:
+            validated_data = super().run_validation(data)
+        except SkipField:
+            return super().run_validation(data)
         # convert boolean food_onhand to onhand_users
+        # TODO maybe this should be moved to pre_save signal to ensure shopping_share users are always included?
         if (
             self.root.instance.__class__.__name__ == 'Food'
-            and not (onhand := data.pop('food_onhand', None)) is None
+            and not onhand is None
         ):
             # assuming if on hand for user also onhand for shopping_share users
             shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
@@ -404,6 +402,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
                 validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
             else:
                 validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
+
         return validated_data
 
     def create(self, validated_data):
@@ -724,6 +723,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             ):
                 # if checked flips from false to true set completed datetime
                 data['completed_at'] = timezone.now()
+
             elif not data.get('checked', False):
                 # if not checked set completed to None
                 data['completed_at'] = None
@@ -738,6 +738,16 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if user.userpreference.shopping_add_onhand:
+            if checked := validated_data.get('checked', None):
+                instance.food.onhand_users.add(*user.userpreference.shopping_share.all(), user)
+            elif checked == False:
+                instance.food.onhand_users.remove(*user.userpreference.shopping_share.all(), user)
+
+        return super().update(instance, validated_data)
 
     class Meta:
         model = ShoppingListEntry
@@ -891,7 +901,7 @@ class FoodExportSerializer(FoodSerializer):
 
     class Meta:
         model = Food
-        fields = ('name', 'food_onhand', 'supermarket_category',)
+        fields = ('name', 'ignore_shopping', 'supermarket_category',)
 
 
 class IngredientExportSerializer(WritableNestedModelSerializer):

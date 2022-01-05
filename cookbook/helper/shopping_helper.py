@@ -81,7 +81,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
         ingredients = Ingredient.objects.filter(step__recipe=r, space=space)
 
         if exclude_onhand := created_by.userpreference.mealplan_autoexclude_onhand:
-            ingredients = ingredients.exclude(food__food_onhand=True)
+            ingredients = ingredients.exclude(food__onhand_users__id__in=[x.id for x in shared_users])
 
         if related := created_by.userpreference.mealplan_autoinclude_related:
             # TODO: add levels of related recipes (related recipes of related recipes) to use when auto-adding mealplans
@@ -92,7 +92,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
                 # TODO once/if Steps can have a serving size this needs to be refactored
                 if exclude_onhand:
                     # if steps are used more than once in a recipe or subrecipe - I don' think this results in the desired behavior
-                    related_step_ing += Ingredient.objects.filter(step__recipe=x, food__food_onhand=False, space=space).values_list('id', flat=True)
+                    related_step_ing += Ingredient.objects.filter(step__recipe=x, space=space).exclude(food__onhand_users__id__in=[x.id for x in shared_users]).values_list('id', flat=True)
                 else:
                     related_step_ing += Ingredient.objects.filter(step__recipe=x, space=space).values_list('id', flat=True)
 
@@ -100,7 +100,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
                 if ingredients.filter(food__recipe=x).exists():
                     for ing in ingredients.filter(food__recipe=x):
                         if exclude_onhand:
-                            x_ing = Ingredient.objects.filter(step__recipe=x, food__food_onhand=False, space=space)
+                            x_ing = Ingredient.objects.filter(step__recipe=x,  space=space).exclude(food__onhand_users__id__in=[x.id for x in shared_users])
                         else:
                             x_ing = Ingredient.objects.filter(step__recipe=x, space=space)
                         for i in [x for x in x_ing]:

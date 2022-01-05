@@ -198,11 +198,11 @@ def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
         # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 2 food onhand(from recipe and step_recipe)
         ingredients = Ingredient.objects.filter(step__recipe=recipe)
         food = Food.objects.get(id=ingredients[2].food.id)
-        food.food_onhand = True
+        food.onhand_users.add(user)
         food.save()
         food = recipe.steps.filter(type=Step.RECIPE).first().step_recipe.steps.first().ingredients.first().food
         food = Food.objects.get(id=food.id)
-        food.food_onhand = True
+        food.onhand_users.add(user)
         food.save()
 
         if use_mealplan:
