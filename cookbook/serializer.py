@@ -92,6 +92,15 @@ class CustomDecimalField(serializers.Field):
                 raise ValidationError('A valid number is required')
 
 
+class CustomOnHandField(serializers.BooleanField):
+    def get_attribute(self, instance):
+        return instance
+
+    def to_representation(self, obj):
+        shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+        return obj.onhand_users.filter(id__in=shared_users).exists()
+
+
 class SpaceFilterSerializer(serializers.ListSerializer):
 
     def to_representation(self, data):
@@ -371,11 +380,31 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.SerializerMethodField('get_shopping_status')
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
+    food_onhand = CustomOnHandField()
 
     recipe_filter = 'steps__ingredients__food'
 
     def get_shopping_status(self, obj):
         return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
+
+    # def get_food_onhand(self, obj):
+    #     shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+    #     return obj.onhand_users.filter(id__in=shared_users).exists()
+
+    def run_validation(self, data):
+        validated_data = super().run_validation(data)
+        # convert boolean food_onhand to onhand_users
+        if (
+            self.root.instance.__class__.__name__ == 'Food'
+            and not (onhand := data.pop('food_onhand', None)) is None
+        ):
+            # assuming if on hand for user also onhand for shopping_share users
+            shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
+            if onhand:
+                validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
+            else:
+                validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
+        return validated_data
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
