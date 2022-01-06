@@ -234,7 +234,14 @@ export const ApiMixin = {
             return apiClient[func](...parameters)
         },
         genericGetAPI: function (url, options) {
-            return axios.get(this.resolveDjangoUrl(url), { params: options, emulateJSON: true })
+            return axios.get(resolveDjangoUrl(url), { params: options, emulateJSON: true })
+        },
+        genericPostAPI: function (url, form) {
+            let data = new FormData()
+            Object.keys(form).forEach((field) => {
+                data.append(field, form[field])
+            })
+            return axios.post(resolveDjangoUrl(url), data)
         },
     },
 }

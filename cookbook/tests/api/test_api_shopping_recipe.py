@@ -198,11 +198,11 @@ def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
         # setup recipe with 10 ingredients, 1 step recipe with 10 ingredients, 2 food onhand(from recipe and step_recipe)
         ingredients = Ingredient.objects.filter(step__recipe=recipe)
         food = Food.objects.get(id=ingredients[2].food.id)
-        food.food_onhand = True
+        food.onhand_users.add(user)
         food.save()
         food = recipe.steps.filter(type=Step.RECIPE).first().step_recipe.steps.first().ingredients.first().food
         food = Food.objects.get(id=food.id)
-        food.food_onhand = True
+        food.onhand_users.add(user)
         food.save()
 
         if use_mealplan:
@@ -233,7 +233,6 @@ def test_shopping_recipe_mixed_authors(u1_s1, u2_s1):
         assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 0
 
 
-# TODO test adding recipe with ingredients that are not food
 @pytest.mark.parametrize("recipe", [{'steps__ingredients__header': 1}], indirect=['recipe'])
 def test_shopping_with_header_ingredient(u1_s1, recipe):
     # with scope(space=recipe.space):

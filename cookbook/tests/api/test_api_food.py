@@ -483,8 +483,8 @@ def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
 @pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
     ({'has_category': True, 'inherit': True},  'supermarket_category', True, 'cat_1'),
     ({'has_category': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
-    ({'food_onhand': True, 'inherit': True}, 'food_onhand',  True, 'false'),
-    ({'food_onhand': True, 'inherit': False}, 'food_onhand', False, 'false'),
+    ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping',  True, 'false'),
+    ({'ignore_shopping': True, 'inherit': False}, 'ignore_shopping', False, 'false'),
 ], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
 def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     with scope(space=obj_tree_1.space):
@@ -509,16 +509,16 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
 
 
 @pytest.mark.parametrize("obj_tree_1", [
-    ({'has_category': True, 'inherit': False, 'food_onhand': True}),
+    ({'has_category': True, 'inherit': False, 'ignore_shopping': True}),
 ], indirect=['obj_tree_1'])
 def test_reset_inherit(obj_tree_1, space_1):
     with scope(space=space_1):
         space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
         parent = obj_tree_1.get_parent()
         child = obj_tree_1.get_descendants()[0]
-        obj_tree_1.food_onhand = False
-        assert parent.food_onhand == child.food_onhand
-        assert parent.food_onhand != obj_tree_1.food_onhand
+        obj_tree_1.ignore_shopping = False
+        assert parent.ignore_shopping == child.ignore_shopping
+        assert parent.ignore_shopping != obj_tree_1.ignore_shopping
         assert parent.supermarket_category != child.supermarket_category
         assert parent.supermarket_category != obj_tree_1.supermarket_category
 
@@ -527,5 +527,26 @@ def test_reset_inherit(obj_tree_1, space_1):
         obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
         child = obj_tree_1.get_descendants()[0]
-        assert parent.food_onhand == obj_tree_1.food_onhand == child.food_onhand
+        assert parent.ignore_shopping == obj_tree_1.ignore_shopping == child.ignore_shopping
         assert parent.supermarket_category == obj_tree_1.supermarket_category == child.supermarket_category
+
+
+def test_onhand(obj_1, u1_s1, u2_s1):
+    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
+
+    u1_s1.patch(
+        reverse(
+            DETAIL_URL,
+            args={obj_1.id}
+        ),
+        {'food_onhand': True},
+        content_type='application/json'
+    )
+    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == True
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
+
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+    user1.userpreference.shopping_share.add(user2)
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == True

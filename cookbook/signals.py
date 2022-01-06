@@ -75,8 +75,8 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
     # apply changes from parent to instance for each inheritted field
     if instance.parent and inherit.count() > 0:
         parent = instance.get_parent()
-        if 'food_onhand' in inherit:
-            instance.food_onhand = parent.food_onhand
+        if 'ignore_shopping' in inherit:
+            instance.ignore_shopping = parent.ignore_shopping
         # if supermarket_category is not set, do not cascade - if this becomes non-intuitive can change
         if 'supermarket_category' in inherit and parent.supermarket_category:
             instance.supermarket_category = parent.supermarket_category
@@ -89,8 +89,8 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
     # TODO figure out how to generalize this
     # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
     _save = []
-    for child in instance.get_children().filter(inherit_fields__field='food_onhand'):
-        child.food_onhand = instance.food_onhand
+    for child in instance.get_children().filter(inherit_fields__field='ignore_shopping'):
+        child.ignore_shopping = instance.ignore_shopping
         _save.append(child)
     # don't cascade empty supermarket category
     if instance.supermarket_category:
@@ -121,3 +121,11 @@ def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs
             'servings': instance.servings
         }
         list_recipe = list_from_recipe(**kwargs)
+
+
+# user = self.context['request'].user
+#       if user.userpreference.shopping_add_onhand:
+#            if checked := validated_data.get('checked', None):
+#                 instance.food.onhand_users.add(*user.userpreference.shopping_share.all(), user)
+#             elif checked == False:
+#                 instance.food.onhand_users.remove(*user.userpreference.shopping_share.all(), user)

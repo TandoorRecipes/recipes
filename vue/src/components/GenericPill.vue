@@ -10,7 +10,7 @@
 export default {
     name: "GenericPill",
     props: {
-        item_list: { type: Object },
+        item_list: { type: Array },
         label: { type: String, default: "name" },
         color: { type: String, default: "light" },
     },
