@@ -13,6 +13,7 @@
                 :sticky_options="sticky_options"
                 :allow_create="form.allow_create"
                 :create_placeholder="createPlaceholder"
+                :clear="clear"
                 style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                 :placeholder="modelName"
                 @new="addNew"
@@ -44,6 +45,7 @@ export default {
             },
         },
         show_label: { type: Boolean, default: true },
+        clear: { type: Number },
     },
     data() {
         return {

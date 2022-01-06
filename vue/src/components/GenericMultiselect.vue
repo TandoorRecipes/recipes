@@ -62,11 +62,15 @@ export default {
         multiple: { type: Boolean, default: true },
         allow_create: { type: Boolean, default: false },
         create_placeholder: { type: String, default: "You Forgot to Add a Tag Placeholder" },
+        clear: { type: Number },
     },
     watch: {
         initial_selection: function (newVal, oldVal) {
             // watch it
             this.selected_objects = newVal
+        },
+        clear: function (newVal, oldVal) {
+            this.selected_objects = []
         },
     },
     mounted() {

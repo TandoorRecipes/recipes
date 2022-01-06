@@ -31,21 +31,31 @@
                         <div class="col col-md-12">
                             <div role="tablist">
                                 <!-- add to shopping form -->
+
                                 <b-row class="row justify-content-md-center" v-if="entrymode">
-                                    <b-col cols="12" sm="4" md="2">
+                                    <b-col cols="12" sm="4" md="2" v-if="!entry_mode_simple">
                                         <b-form-input min="1" type="number" :description="$t('Amount')" v-model="new_item.amount"></b-form-input>
                                     </b-col>
-                                    <b-col cols="12" sm="8" md="3">
-                                        <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" />
+                                    <b-col cols="12" sm="8" md="3" v-if="!entry_mode_simple">
+                                        <lookup-input :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" :clear="clear" />
                                     </b-col>
-                                    <b-col cols="12" sm="8" md="4">
-                                        <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" />
+                                    <b-col cols="12" sm="8" md="4" v-if="!entry_mode_simple">
+                                        <lookup-input :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" :clear="clear" />
+                                    </b-col>
+                                    <b-col cols="12" sm="8" v-if="entry_mode_simple">
+                                        <b-form-input type="text" :placeholder="$t('QuickEntry')" v-model="new_item.ingredient" @keyup.enter="addItem"></b-form-input>
                                     </b-col>
                                     <b-col cols="12" sm="4" md="1">
                                         <b-button variant="link" class="px-0">
                                             <i class="btn fas fa-cart-plus fa-lg px-0 text-success" @click="addItem" />
                                         </b-button>
                                     </b-col>
+                                </b-row>
+
+                                <b-row class="row justify-content-md-end" v-if="entrymode">
+                                    <b-form-checkbox switch v-model="entry_mode_simple">
+                                        {{ $t("QuickEntry") }}
+                                    </b-form-checkbox>
                                 </b-row>
                                 <!-- shopping list table -->
                                 <div v-if="items && items.length > 0">
@@ -58,16 +68,28 @@
 
                                         <div v-for="(s, i) in done" :key="i">
                                             <h5 v-if="Object.entries(s).length > 0">
-                                                <b-button
-                                                    class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
-                                                    variant="link"
-                                                    data-toggle="collapse"
-                                                    :href="'#section-' + sectionID(x, i)"
-                                                    :aria-expanded="'true' ? x == 'false' : 'true'"
-                                                >
-                                                    <i class="fa fa-chevron-right rotate" />
-                                                    {{ i }}
-                                                </b-button>
+                                                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
+                                                    <button
+                                                        aria-haspopup="true"
+                                                        aria-expanded="false"
+                                                        type="button"
+                                                        class="btn dropdown-toggle btn-link text-decoration-none text-dark pr-2 dropdown-toggle-no-caret"
+                                                        @click.stop="openContextMenu($event, s, true)"
+                                                    >
+                                                        <i class="fas fa-ellipsis-v fa-lg"></i>
+                                                    </button>
+
+                                                    <b-button
+                                                        class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
+                                                        variant="link"
+                                                        data-toggle="collapse"
+                                                        :href="'#section-' + sectionID(x, i)"
+                                                        :aria-expanded="'true' ? x == 'false' : 'true'"
+                                                    >
+                                                        <i class="fa fa-chevron-right rotate" />
+                                                        {{ i }}
+                                                    </b-button>
+                                                </div>
                                             </h5>
 
                                             <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
@@ -354,6 +376,19 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col col-md-6">{{ $t("shopping_add_onhand") }}</div>
+                                <div class="col col-md-6 text-right">
+                                    <input type="checkbox" size="sm" v-model="settings.shopping_add_onhand" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("shopping_add_onhand_desc") }}
+                                    </em>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col col-md-6">{{ $t("shopping_recent_days") }}</div>
                                 <div class="col col-md-6 text-right">
                                     <input type="number" size="sm" v-model="settings.shopping_recent_days" @change="saveSettings" />
@@ -492,6 +527,14 @@
                         </div>
                     </b-form-group>
                 </ContextMenuItem>
+                <ContextMenuItem
+                    @click="
+                        $refs.menu.close()
+                        updateChecked({ entries: contextData, checked: true })
+                    "
+                >
+                    <a class="dropdown-item p-2" href="#"><i class="fas fa-check-square"></i> {{ $t("mark_complete") }}</a>
+                </ContextMenuItem>
 
                 <ContextMenuItem
                     @click="
@@ -510,6 +553,7 @@
 import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
+import VueCookies from "vue-cookies"
 
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
@@ -522,11 +566,12 @@ import GenericPill from "@/components/GenericPill"
 import LookupInput from "@/components/Modals/LookupInput"
 import draggable from "vuedraggable"
 
-import { ApiMixin, getUserPreference } from "@/utils/utils"
+import { ApiMixin, getUserPreference, StandardToasts, makeToast } from "@/utils/utils"
 import { ApiApiFactory } from "@/utils/openapi/api"
-import { StandardToasts, makeToast } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
+Vue.use(VueCookies)
+let SETTINGS_COOKIE_NAME = "shopping_settings"
 
 export default {
     name: "ShoppingListView",
@@ -546,6 +591,8 @@ export default {
             supermarket_categories_only: false,
             shopcat: null,
             delay: 0,
+            clear: Math.random(),
+            entry_mode_simple: false,
             settings: {
                 shopping_auto_sync: 0,
                 default_delay: 4,
@@ -556,6 +603,7 @@ export default {
                 shopping_recent_days: 7,
                 csv_delim: ",",
                 csv_prefix: undefined,
+                shopping_add_onhand: true,
             },
             new_supermarket: { entrymode: false, value: undefined, editmode: undefined },
             new_category: { entrymode: false, value: undefined },
@@ -567,7 +615,7 @@ export default {
             fields: ["checked", "amount", "category", "unit", "food", "recipe", "details"],
             loading: true,
             entrymode: false,
-            new_item: { amount: 1, unit: undefined, food: undefined },
+            new_item: { amount: 1, unit: undefined, food: undefined, ingredient: undefined },
             online: true,
         }
     },
@@ -594,6 +642,7 @@ export default {
             // if a supermarket is selected and filtered to only supermarket categories filter out everything else
             if (this.selected_supermarket && this.supermarket_categories_only) {
                 let shopping_categories = this.supermarkets // category IDs configured on supermarket
+                    .filter((x) => x.id === this.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
                     .flat()
                     .map((x) => x.category.id)
@@ -603,7 +652,7 @@ export default {
                 shopping_list = shopping_list.filter((x) => x?.food?.supermarket_category)
             }
 
-            let groups = { false: {}, true: {} } // force unchecked to always be first
+            var groups = { false: {}, true: {} } // force unchecked to always be first
             if (this.selected_supermarket) {
                 let super_cats = this.supermarkets
                     .filter((x) => x.id === this.selected_supermarket)
@@ -611,10 +660,13 @@ export default {
                     .flat()
                     .map((x) => x.category.name)
                 new Set([...super_cats, ...this.shopping_categories.map((x) => x.name)]).forEach((cat) => {
-                    groups["false"][cat.name] = {}
-                    groups["true"][cat.name] = {}
+                    groups["false"][cat] = {}
+                    groups["true"][cat] = {}
                 })
             } else {
+                // TODO: make nulls_first a user setting
+                groups.false[this.$t("Undefined")] = {}
+                groups.true[this.$t("Undefined")] = {}
                 this.shopping_categories.forEach((cat) => {
                     groups.false[cat.name] = {}
                     groups.true[cat.name] = {}
@@ -712,6 +764,9 @@ export default {
         "settings.default_delay": function (newVal, oldVal) {
             this.delay = Number(newVal)
         },
+        entry_mode_simple(newVal) {
+            this.$cookies.set(SETTINGS_COOKIE_NAME, newVal)
+        },
     },
     mounted() {
         this.getShoppingList()
@@ -725,11 +780,29 @@ export default {
             window.addEventListener("online", this.updateOnlineStatus)
             window.addEventListener("offline", this.updateOnlineStatus)
         }
+        this.$nextTick(function () {
+            if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
+                this.entry_mode_simple = this.$cookies.get(SETTINGS_COOKIE_NAME)
+            }
+        })
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
-
-        addItem() {
+        addItem: function () {
+            if (this.entry_mode_simple) {
+                this.genericPostAPI("api_ingredient_from_string", { text: this.new_item.ingredient }).then((result) => {
+                    this.new_item = {
+                        amount: result.data.amount,
+                        unit: { name: result.data.unit },
+                        food: { name: result.data.food },
+                    }
+                    this.addEntry()
+                })
+            } else {
+                this.addEntry()
+            }
+        },
+        addEntry: function (x) {
             let api = new ApiApiFactory()
             api.createShoppingListEntry(this.new_item)
                 .then((results) => {
@@ -739,7 +812,8 @@ export default {
                     } else {
                         console.log("no data returned")
                     }
-                    this.new_item = { amount: 1, unit: undefined, food: undefined }
+                    this.new_item = { amount: 1, unit: undefined, food: undefined, ingredient: undefined }
+                    this.clear += 1
                 })
                 .catch((err) => {
                     console.log(err)
@@ -917,8 +991,17 @@ export default {
 
             // TODO make decision - should inheritance always be set manually or give user a choice at front-end or make it a setting?
             let food = this.items.filter((x) => x.food.id == item?.[0]?.food.id ?? item.food.id)[0].food
-            food.supermarket_category = this.shopping_categories.filter((x) => x?.id === this.shopcat)?.[0]
-            this.updateFood(food, "supermarket_category")
+            let supermarket_category = this.shopping_categories.filter((x) => x?.id === this.shopcat)?.[0]
+            food.supermarket_category = supermarket_category
+            this.updateFood(food, "supermarket_category").then((result) => {
+                this.items = this.items.map((x) => {
+                    if (x.food.id === food.id) {
+                        return { ...x, food: { ...x.food, supermarket_category: supermarket_category } }
+                    } else {
+                        return x
+                    }
+                })
+            })
             this.shopcat = null
         },
         onHand: function (item) {
@@ -940,8 +1023,13 @@ export default {
                     })
                 })
         },
-        openContextMenu(e, value) {
-            this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
+        openContextMenu(e, value, section = false) {
+            if (section) {
+                value = Object.values(value).flat()
+            } else {
+                this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
+            }
+
             this.$refs.menu.open(e, value)
         },
         saveSettings: function () {
@@ -1010,24 +1098,15 @@ export default {
         },
         updateFood: function (food, field) {
             let api = new ApiApiFactory()
-            let ignore_category
             if (field) {
-                ignore_category = food.inherit_fields
-                    .map((x) => food.inherit_fields.fields)
-                    .flat()
-                    .includes(field)
-            } else {
-                ignore_category = true
+                // assume if field is changing it should no longer be inheritted
+                food.inherit_fields = food.inherit_fields.filter((x) => x.field !== field)
             }
 
             return api
                 .partialUpdateFood(food.id, food)
                 .then((result) => {
-                    if (food.supermarket_category && !ignore_category && food.parent) {
-                        makeToast(this.$t("Warning"), this.$t("InheritWarning", { food: food.name }), "warning")
-                    } else {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
-                    }
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
                     if (food?.numchild > 0) {
                         this.getShoppingList() // if food has children, just get the whole list.  probably could be more efficient
                     }
