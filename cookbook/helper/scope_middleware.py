@@ -13,9 +13,9 @@ class ScopeMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        prefix = settings.JS_REVERSE_SCRIPT_PREFIX or ''
         if request.user.is_authenticated:
 
-            prefix = settings.JS_REVERSE_SCRIPT_PREFIX or ''
             if request.path.startswith(prefix + '/admin/'):
                 with scopes_disabled():
                     return self.get_response(request)
