@@ -192,5 +192,13 @@
     "Edit_Recipe": "Modifier une Recette",
     "Move_Up": "Monter",
     "Time": "Temps",
-    "Coming_Soon": "Bientôt disponible"
+    "Coming_Soon": "Bientôt disponible",
+    "Create_New_Shopping Category": "Ajouter une catégorie de courses",
+    "success_moving_resource": "Ressource correctement déplacée !",
+    "err_moving_resource": "Il y a eu une erreur pour déplacer une ressource !",
+    "err_merging_resource": "Il y a eu une erreur pour fusionner une ressource !",
+    "success_merging_resource": "Ressource correctement fusionnée !",
+    "Added_by": "Ajouter par",
+    "Added_on": "Ajouter le",
+    "Shopping_Categories": "Catégories de courses"
 }
