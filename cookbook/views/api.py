@@ -1000,7 +1000,16 @@ def recipe_from_source(request):
                 },
                 status=400
             )
-        if len(scrape.ingredients()) and len(scrape.instructions()) == 0:
+
+        try:
+            instructions = scrape.instructions()
+        except Exception:
+            instructions = ""
+        try:
+            ingredients = scrape.ingredients()
+        except Exception:
+            ingredients = []
+        if len(ingredients) + len(instructions) == 0:
             return JsonResponse(
                 {
                     'error': True,
