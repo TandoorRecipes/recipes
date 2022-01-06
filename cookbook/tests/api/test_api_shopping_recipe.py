@@ -233,7 +233,6 @@ def test_shopping_recipe_mixed_authors(u1_s1, u2_s1):
         assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 0
 
 
-# TODO test adding recipe with ingredients that are not food
 @pytest.mark.parametrize("recipe", [{'steps__ingredients__header': 1}], indirect=['recipe'])
 def test_shopping_with_header_ingredient(u1_s1, recipe):
     # with scope(space=recipe.space):
