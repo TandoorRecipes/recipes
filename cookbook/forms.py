@@ -481,7 +481,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
 
         fields = (
             'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
-            'mealplan_autoinclude_related', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
+            'mealplan_autoinclude_related', 'shopping_add_onhand', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
         )
 
         help_texts = {
@@ -496,6 +496,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'default_delay': _('Default number of hours to delay a shopping list entry.'),
             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
             'shopping_recent_days':  _('Days of recent shopping list entries to display.'),
+            'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
             'csv_delim': _('Delimiter to use for CSV exports.'),
             'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
 
@@ -510,7 +511,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'filter_to_supermarket': _('Filter to Supermarket'),
             'shopping_recent_days': _('Recent Days'),
             'csv_delim': _('CSV Delimiter'),
-            "csv_prefix_label": _("List Prefix")
+            "csv_prefix_label": _("List Prefix"),
+            'shopping_add_onhand': _("Auto On Hand"),
         }
 
         widgets = {

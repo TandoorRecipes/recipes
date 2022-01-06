@@ -7,7 +7,7 @@
             <div class="col-xl-8 col-12">
                 <div class="container-fluid d-flex flex-column flex-grow-1">
                     <!-- dynamically loaded header components -->
-                    <div class="row" v-if="header_component_name !== ''">
+                    <div class="row" v-if="header_component_name">
                         <div class="col-md-12">
                             <component :is="headerComponent"></component>
                         </div>
