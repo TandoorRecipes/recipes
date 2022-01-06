@@ -280,5 +280,7 @@
     "mark_complete": "Mark Complete",
     "QuickEntry": "Quick Entry",
     "shopping_add_onhand_desc": "Mark food 'On Hand' when checked off shopping list.",
-    "shopping_add_onhand": "Auto On Hand"
+    "shopping_add_onhand": "Auto On Hand",
+    "related_recipes": "Related Recipes",
+    "today_recipes": "Today's Recipes"
 }
