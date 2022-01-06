@@ -38,7 +38,7 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
-            if request.path.startswith('/api/'):
+            if request.path.startswith(prefix + '/api/'):
                 try:
                     if auth := TokenAuthentication().authenticate(request):
                         request.space = auth[0].userpreference.space
