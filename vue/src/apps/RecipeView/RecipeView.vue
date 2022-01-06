@@ -5,6 +5,7 @@
         </template>
 
         <div v-if="!loading">
+            <RecipeSwitcher :recipe="rootrecipe.id" :name="rootrecipe.name" mode="recipe" @switch="quickSwitch($event)" />
             <div class="row">
                 <div class="col-12" style="text-align: center">
                     <h3>{{ recipe.name }}</h3>
@@ -75,12 +76,12 @@
                             />
                         </div>
                         <div class="my-auto">
-                            <span class="text-primary"
-                                ><b
-                                    ><template v-if="recipe.servings_text === ''">{{ $t("Servings") }}</template
-                                    ><template v-else>{{ recipe.servings_text }}</template></b
-                                ></span
-                            >
+                            <span class="text-primary">
+                                <b>
+                                    <template v-if="recipe.servings_text === ''">{{ $t("Servings") }}</template>
+                                    <template v-else>{{ recipe.servings_text }}</template>
+                                </b>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -172,6 +173,7 @@ import IngredientsCard from "@/components/IngredientsCard"
 import StepComponent from "@/components/StepComponent"
 import KeywordsComponent from "@/components/KeywordsComponent"
 import NutritionComponent from "@/components/NutritionComponent"
+import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 
 Vue.prototype.moment = moment
 
@@ -192,21 +194,31 @@ export default {
         KeywordsComponent,
         LoadingSpinner,
         AddRecipeToBook,
+        RecipeSwitcher,
     },
     computed: {
         ingredient_factor: function () {
             return this.servings / this.recipe.servings
+        },
+        ingredient_count() {
+            return this.recipe?.steps.map((x) => x.ingredients).flat().length
         },
     },
     data() {
         return {
             loading: true,
             recipe: undefined,
-            ingredient_count: 0,
+            rootrecipe: undefined,
             servings: 1,
+            servings_cache: {},
             start_time: "",
             share_uid: window.SHARE_UID,
         }
+    },
+    watch: {
+        servings(newVal, oldVal) {
+            this.servings_cache[this.recipe.id] = this.servings
+        },
     },
     mounted() {
         this.loadRecipe(window.RECIPE_ID)
@@ -218,12 +230,9 @@ export default {
                 if (window.USER_SERVINGS !== 0) {
                     recipe.servings = window.USER_SERVINGS
                 }
-                this.servings = recipe.servings
 
                 let total_time = 0
                 for (let step of recipe.steps) {
-                    this.ingredient_count += step.ingredients.length
-
                     for (let ingredient of step.ingredients) {
                         this.$set(ingredient, "checked", false)
                     }
@@ -237,7 +246,8 @@ export default {
                     this.start_time = moment().format("yyyy-MM-DDTHH:mm")
                 }
 
-                this.recipe = recipe
+                this.recipe = this.rootrecipe = recipe
+                this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
                 this.loading = false
             })
         },
@@ -251,6 +261,15 @@ export default {
                         this.$set(ingredient, "checked", !ingredient.checked)
                     }
                 }
+            }
+        },
+        quickSwitch: function (e) {
+            if (e === -1) {
+                this.recipe = this.rootrecipe
+                this.servings = this.servings_cache[this.rootrecipe?.id ?? 1]
+            } else {
+                this.recipe = e
+                this.servings = this.servings_cache?.[e.id] ?? e.servings
             }
         },
     },

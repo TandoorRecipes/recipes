@@ -65,7 +65,6 @@ def test_related_mixed_space(request, recipe,  u1_s2):
             reverse(RELATED_URL, args={recipe.id})).content)) == 0
 
 
-# TODO add tests for mealplan related when thats added
 # TODO if/when related recipes includes multiple levels (related recipes of related recipes) add the following tests
 #   -- step recipes included in step recipes
 #   -- step recipes included in food recipes
