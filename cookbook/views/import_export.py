@@ -27,7 +27,8 @@ from cookbook.integration.recipekeeper import RecipeKeeper
 from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.rezkonv import RezKonv
-from cookbook.integration.safron import Safron
+from cookbook.integration.saffron import Saffron
+from cookbook.integration.pdfexport import PDFexport
 from cookbook.models import Recipe, ImportLog, UserPreference
 
 
@@ -42,8 +43,8 @@ def get_integration(request, export_type):
         return Mealie(request, export_type)
     if export_type == ImportExportBase.CHOWDOWN:
         return Chowdown(request, export_type)
-    if export_type == ImportExportBase.SAFRON:
-        return Safron(request, export_type)
+    if export_type == ImportExportBase.SAFFRON:
+        return Saffron(request, export_type)
     if export_type == ImportExportBase.CHEFTAP:
         return ChefTap(request, export_type)
     if export_type == ImportExportBase.PEPPERPLATE:
@@ -68,6 +69,8 @@ def get_integration(request, export_type):
         return CookBookApp(request, export_type)
     if export_type == ImportExportBase.COPYMETHAT:
         return CopyMeThat(request, export_type)
+    if export_type == ImportExportBase.PDF:
+        return PDFexport(request, export_type)
 
 
 @group_required('user')
