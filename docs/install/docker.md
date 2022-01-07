@@ -73,6 +73,8 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/d
 
 Most deployments will likely use a reverse proxy.
 
+If your reverse proxy is not listed here, please refer to [Others](https://docs.tandoor.dev/install/docker/#others).
+
 #### Traefik
 
 If you use traefik, this configuration is the one for you.
@@ -156,6 +158,12 @@ More information [here](https://github.com/TandoorRecipes/recipes/issues/959#iss
 In both cases, also make sure to mount `/media/` in your swag container to point to your Tandoor Recipes Media directory.
 
 Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
+
+### Others
+
+If you use none of the above mentioned reverse proxies or want to use an existing one on your host machine (like a local nginx or Caddy), simply use the [PLAIN](https://docs.tandoor.dev/install/docker/#plain) setup above and change the outbound port to one of your liking.
+
+An example port config (inside the respective docker-compose.yml) would be: `8123:80` instead of the `80:80` or if you want to be sure, that Tandoor is **just** accessible via your proxy and don't wanna bother with your firewall, then `127.0.0.1:8123:80` is a viable option too.
 
 ## Additional Information
 
