@@ -47,7 +47,7 @@ class UserPreferenceForm(forms.ModelForm):
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'show_recent', 'search_style',
-            'plan_share', 'ingredient_decimals',  'comments',
+            'plan_share', 'ingredient_decimals', 'comments',
         )
 
         labels = {
@@ -496,7 +496,7 @@ class ShoppingPreferenceForm(forms.ModelForm):
             'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
             'default_delay': _('Default number of hours to delay a shopping list entry.'),
             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
-            'shopping_recent_days':  _('Days of recent shopping list entries to display.'),
+            'shopping_recent_days': _('Days of recent shopping list entries to display.'),
             'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
             'csv_delim': _('Delimiter to use for CSV exports.'),
             'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
