@@ -137,6 +137,8 @@ ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
 ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
 
+ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',

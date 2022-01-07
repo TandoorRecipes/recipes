@@ -30,6 +30,7 @@ from cookbook.integration.rezkonv import RezKonv
 from cookbook.integration.saffron import Saffron
 from cookbook.integration.pdfexport import PDFexport
 from cookbook.models import Recipe, ImportLog, UserPreference
+from recipes import settings
 
 
 def get_integration(request, export_type):
@@ -121,6 +122,10 @@ def export_recipe(request):
                 recipes = form.cleaned_data['recipes']
                 if form.cleaned_data['all']:
                     recipes = Recipe.objects.filter(space=request.space, internal=True).all()
+
+                if form.cleaned_data['type'] == ImportExportBase.PDF and not settings.ENABLE_PDF_EXPORT:
+                    messages.add_message(request, messages.ERROR, _('The PDF Exporter is not enabled on this instance as it is still in an experimental state.'))
+                    return render(request, 'export.html', {'form': form})
                 integration = get_integration(request, form.cleaned_data['type'])
                 return integration.do_export(recipes)
             except NotImplementedError:
