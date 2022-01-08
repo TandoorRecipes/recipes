@@ -107,7 +107,7 @@
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
                     <div class="row">
                         <div class="col-12">
-                            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh" :alt="$t('Recipe_Image')" v-if="recipe.image !== null" />
+                            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh" :alt="$t('Recipe_Image')" v-if="recipe.image !== null" @load="onImgLoad" />
                         </div>
                     </div>
 
@@ -246,6 +246,9 @@ export default {
                     this.start_time = moment().format("yyyy-MM-DDTHH:mm")
                 }
 
+                
+                if(recipe.image === null) this.printReady()
+
                 this.recipe = this.rootrecipe = recipe
                 this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
                 this.loading = false
@@ -271,6 +274,14 @@ export default {
                 this.recipe = e
                 this.servings = this.servings_cache?.[e.id] ?? e.servings
             }
+        },
+        printReady: function(){
+            const template = document.createElement("template");
+            template.id = "printReady";
+            document.body.appendChild(template);
+        },
+        onImgLoad: function(){
+            this.printReady()
         },
     },
 }

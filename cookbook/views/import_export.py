@@ -143,12 +143,13 @@ def export_recipe(request):
                 )
 
     else:
+        pk = ''
         recipe = request.GET.get('r')
         if recipe:
             if re.match(r'^([0-9])+$', recipe):
-                recipe = Recipe.objects.filter(pk=int(recipe), space=request.space).first()
+                pk = Recipe.objects.filter(pk=int(recipe), space=request.space).first().pk
 
-    return render(request, 'export.html', {'pk': recipe.pk})
+    return render(request, 'export.html', {'pk': pk})
 
 
 @group_required('user')
