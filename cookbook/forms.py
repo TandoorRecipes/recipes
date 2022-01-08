@@ -167,7 +167,6 @@ class ImportExportBase(forms.Form):
     ))
 
 
-#TODO deprecated
 class ImportForm(ImportExportBase):
     files = forms.FileField(required=True, widget=forms.ClearableFileInput(attrs={'multiple': True}))
     duplicates = forms.BooleanField(help_text=_(
@@ -175,7 +174,6 @@ class ImportForm(ImportExportBase):
         required=False)
 
 
-#TODO deprecated
 class ExportForm(ImportExportBase):
     recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none(), required=False)
     all = forms.BooleanField(required=False)
