@@ -93,8 +93,7 @@ export default {
   components: {Multiselect},
   data() {
     return {
-      import_id: window.EXPORT_ID,
-      import_info: undefined, 
+      export_id: window.EXPORT_ID,
       loading: false,
       disabled_multiselect: false,
 
@@ -107,11 +106,29 @@ export default {
   },
   mounted() {
 
-    this.searchRecipes('')
+    this.insertRequested()
+
   },
   methods: {
 
+    insertRequested: function(){
+
+      let apiFactory = new ApiApiFactory()
+
+      this.recipes_loading = true
+      
+      apiFactory.retrieveRecipe(this.export_id).then((response) => {
+        this.recipes_loading = false
+        this.recipe_list.push(response.data)
+
+      }).catch((err) => {
+        console.log(err)
+        StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+      }).then(e => this.searchRecipes(''))
+    },
+
     searchRecipes: function (query) {
+
       let apiFactory = new ApiApiFactory()
 
       this.recipes_loading = true
@@ -120,6 +137,7 @@ export default {
       apiFactory.listRecipes(query, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1, maxResultLenght).then((response) => {
         this.recipes = response.data.results;
         this.recipes_loading = false
+
       }).catch((err) => {
         console.log(err)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
