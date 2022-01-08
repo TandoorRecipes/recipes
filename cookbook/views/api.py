@@ -40,7 +40,7 @@ from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import list_from_recipe, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
-                             ImportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+                             ImportLog, ExportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
                              RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
@@ -51,7 +51,7 @@ from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
-                                 FoodShoppingUpdateSerializer, ImportLogSerializer,
+                                 FoodShoppingUpdateSerializer, ImportLogSerializer, ExportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookEntrySerializer,
                                  RecipeBookSerializer, RecipeImageSerializer,
@@ -797,6 +797,17 @@ class ImportLogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
+
+
+class ExportLogViewSet(viewsets.ModelViewSet):
+    queryset = ExportLog.objects
+    serializer_class = ExportLogSerializer
+    permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
 
 
 class BookmarkletImportViewSet(viewsets.ModelViewSet):

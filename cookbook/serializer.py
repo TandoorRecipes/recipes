@@ -14,7 +14,7 @@ from rest_framework.fields import empty
 
 from cookbook.helper.shopping_helper import list_from_recipe
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
-                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
+                             FoodInheritField, ImportLog, ExportLog, Ingredient, Keyword, MealPlan, MealType,
                              NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
                              RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
@@ -839,6 +839,20 @@ class ImportLogSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
+
+
+class ExportLogSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = ExportLog
+        fields = ('id', 'type', 'msg', 'running', 'total_recipes', 'exported_recipes', 'cache_duration', 'possibly_not_expired', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
+
 
 
 class AutomationSerializer(serializers.ModelSerializer):

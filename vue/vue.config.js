@@ -17,6 +17,14 @@ const pages = {
         entry: "./src/apps/ImportResponseView/main.js",
         chunks: ["chunk-vendors"],
     },
+    export_response_view: {
+        entry: "./src/apps/ExportResponseView/main.js",
+        chunks: ["chunk-vendors"],
+    },
+    export_view: {
+        entry: "./src/apps/ExportView/main.js",
+        chunks: ["chunk-vendors"],
+    },
     supermarket_view: {
         entry: "./src/apps/SupermarketView/main.js",
         chunks: ["chunk-vendors"],

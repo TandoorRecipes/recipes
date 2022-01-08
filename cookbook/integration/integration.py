@@ -1,9 +1,12 @@
+import time
 import datetime
 import json
 import traceback
 import uuid
 from io import BytesIO, StringIO
 from zipfile import BadZipFile, ZipFile
+from django.core.cache import cache
+
 
 from bs4 import Tag
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,6 +21,7 @@ from cookbook.forms import ImportExportBase
 from cookbook.helper.image_processing import get_filetype, handle_image
 from cookbook.models import Keyword, Recipe
 from recipes.settings import DEBUG
+from recipes.settings import EXPORT_FILE_CACHE_DURATION
 
 
 class Integration:
@@ -61,35 +65,37 @@ class Integration:
                 space=request.space
             )
 
-    def do_export(self, recipes):
-        """
-        Perform the export based on a list of recipes
-        :param recipes: list of recipe objects
-        :return: HttpResponse with the file of the requested export format that is directly downloaded (When that format involve multiple files they are zipped together) 
-        """
-
-        files = self.get_files_from_recipes(recipes, self.request.COOKIES)
-
-        if len(files) == 1:
-            filename, file = files[0]
-            export_filename = filename
-            export_file = file
-
-        else:
-            export_filename = "export.zip"
-            export_stream = BytesIO()
-            export_obj = ZipFile(export_stream, 'w')
-
-            for filename, file in files:
-                export_obj.writestr(filename, file)
-
-            export_obj.close()
-            export_file = export_stream.getvalue()
 
 
-        response = HttpResponse(export_file, content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="'+export_filename+'"'
-        return response
+    def do_export(self, recipes, el):
+
+        with scope(space=self.request.space):
+            el.total_recipes = len(recipes) 
+            el.cache_duration = EXPORT_FILE_CACHE_DURATION
+            el.save()
+
+            files = self.get_files_from_recipes(recipes, el, self.request.COOKIES)
+
+            if len(files) == 1:
+                filename, file = files[0]
+                export_filename = filename
+                export_file = file
+
+            else:
+                export_filename = "export.zip"
+                export_stream = BytesIO()
+                export_obj = ZipFile(export_stream, 'w')
+
+                for filename, file in files:
+                    export_obj.writestr(filename, file)
+
+                export_obj.close()
+                export_file = export_stream.getvalue()
+
+
+            cache.set('export_file_'+str(el.pk), {'filename': export_filename, 'file': export_file}, EXPORT_FILE_CACHE_DURATION)
+            el.running = False
+            el.save()
 
 
     def import_file_name_filter(self, zip_info_object):
@@ -128,7 +134,7 @@ class Integration:
                             for d in data_list:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                il.msg += self.recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -153,7 +159,7 @@ class Integration:
                                 else:
                                     recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                                 recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                il.msg += self.recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -168,7 +174,7 @@ class Integration:
                             try:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                il.msg += self.recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -185,7 +191,7 @@ class Integration:
                                     try:
                                         recipe = self.get_recipe_from_file(d)
                                         recipe.keywords.add(self.keyword)
-                                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                        il.msg += self.recipe_processed_msg(recipe)
                                         self.handle_duplicates(recipe, import_duplicates)
                                         il.imported_recipes += 1
                                         il.save()
@@ -195,7 +201,7 @@ class Integration:
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
                         recipe.keywords.add(self.keyword)
-                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                        il.msg += self.recipe_processed_msg(recipe)
                         self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
                 il.msg += 'ERROR ' + _(
@@ -263,7 +269,7 @@ class Integration:
         raise NotImplementedError('Method not implemented in integration')
 
 
-    def get_files_from_recipes(self, recipes, cookie):
+    def get_files_from_recipes(self, recipes, el, cookie):
         """
         Takes a list of recipe object and converts it to a array containing each file.
         Each file is represented as an array [filename, data] where data is a string of the content of the file.
@@ -282,3 +288,6 @@ class Integration:
                 log.msg += exception.msg
         if DEBUG:
             traceback.print_exc()
+
+    def recipe_processed_msg(self, recipe):
+        return f'{recipe.pk} - {recipe.name} \n'

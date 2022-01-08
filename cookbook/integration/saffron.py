@@ -87,10 +87,14 @@ class Saffron(Integration):
 
         return recipe.name+'.txt', data
 
-    def get_files_from_recipes(self, recipes, cookie):
+    def get_files_from_recipes(self, recipes, el, cookie):
         files = []
         for r in recipes:
             filename, data = self.get_file_from_recipe(r)
             files.append([ filename, data ])
 
+            el.exported_recipes += 1
+            el.msg += self.recipe_processed_msg(r)
+            el.save()
+            
         return files
