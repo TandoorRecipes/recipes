@@ -115,7 +115,9 @@ export default {
       let apiFactory = new ApiApiFactory()
 
       this.recipes_loading = true
-      apiFactory.listRecipes(query).then((response) => {
+
+      let maxResultLenght = 1000
+      apiFactory.listRecipes(query, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1, maxResultLenght).then((response) => {
         this.recipes = response.data.results;
         this.recipes_loading = false
       }).catch((err) => {
