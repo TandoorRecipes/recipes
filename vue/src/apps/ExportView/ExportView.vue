@@ -105,9 +105,10 @@ export default {
     }
   },
   mounted() {
-
-    this.insertRequested()
-
+    if(this.export_id)
+      this.insertRequested()
+    else 
+      this.searchRecipes('')
   },
   methods: {
 

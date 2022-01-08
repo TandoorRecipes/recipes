@@ -51,7 +51,7 @@ class PDFexport(Integration):
             await page.setCookie(cookies)
 
             await page.goto('http://'+cmd.default_addr+':'+cmd.default_port+'/view/recipe/'+str(recipe.id), {'waitUntil': 'domcontentloaded'})
-            await page.waitForSelector('h3');
+            await page.waitForSelector('#printReady');
 
             files.append([recipe.name + '.pdf', await page.pdf(options)])
             await page.close();
