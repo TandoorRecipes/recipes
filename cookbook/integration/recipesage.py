@@ -88,10 +88,14 @@ class RecipeSage(Integration):
 
         return data
 
-    def get_files_from_recipes(self, recipes, cookie):
+    def get_files_from_recipes(self, recipes, el, cookie):
         json_list = []
         for r in recipes:
             json_list.append(self.get_file_from_recipe(r))
+
+            el.exported_recipes += 1
+            el.msg += self.recipe_processed_msg(r)
+            el.save()
 
         return [['export.json', json.dumps(json_list)]]
 
