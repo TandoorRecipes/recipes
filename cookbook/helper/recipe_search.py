@@ -389,3 +389,43 @@ def old_search(request):
                          queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
                          space=request.space)
         return f.qs
+
+
+# from django.db.models import fields
+# from cookbook.models import Food, Recipe, Keyword, RecipeBook, Unit
+# many_to_many = {}
+# one_to_many = {}
+# many_to_one = {}
+# char = {}
+# boolean = {}
+# number = {}
+# other = {}
+# image = {}
+# date = {}
+# for model in [Food, Recipe, Keyword, RecipeBook, Unit]:
+#     print(name:=model.__name__, ":")
+#     for x in model._meta.get_fields():
+
+#         if x.name in ['space', 'id']:
+#             continue
+#         elif x.many_to_many:
+#             many_to_many[name]=[*many_to_many.get(name, []), x.name]
+#         elif x.one_to_many:
+#             one_to_many[name] = [*one_to_many.get(name, []), x.name]
+#         elif x.many_to_one:
+#             many_to_one[name] = [*many_to_one.get(name, []), x.name]
+#         elif isinstance(x, fields.CharField):
+#             char[name] = [*char.get(name, []), x.name]
+#         elif isinstance(x, fields.BooleanField):
+#             boolean[name] = [*boolean.get(name, []), x.name]
+#         elif isinstance(x, fields.IntegerField) or isinstance(x, fields.DecimalField):
+#             number[name] = [*number.get(name, []), x.name]
+#         elif isinstance(x, fields.DateField):
+#             date[name] = [*date.get(name, []), x.name]
+#         elif isinstance(x, fields.files.ImageField):
+#             image[name] = [*image.get(name, []), x.name]
+#         else:
+#             other[name] = [*other.get(name, []), x.name]
+#         if x.hidden:
+#             hidden[name] = [*hidden.get(name, []), x.name]
+#         print('---', x.name, ' - ', x.db_type, x.remote_name)
