@@ -57,7 +57,7 @@ class PDFexport(Integration):
             await page.close();
 
             el.exported_recipes += 1
-            el.msg += self.recipe_processed_msg(recipe)
+            el.msg += self.get_recipe_processed_msg(recipe)
             await sync_to_async(el.save, thread_sensitive=True)()
 
 

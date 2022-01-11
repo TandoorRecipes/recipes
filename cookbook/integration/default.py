@@ -61,9 +61,9 @@ class Default(Integration):
                 export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
 
             el.exported_recipes += 1
-            el.msg += self.recipe_processed_msg(r)
+            el.msg += self.get_recipe_processed_msg(r)
             el.save()
 
         export_zip_obj.close()
 
-        return [[ 'export.zip', export_zip_stream.getvalue() ]]
+        return [[ self.get_export_file_name(), export_zip_stream.getvalue() ]]

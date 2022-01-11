@@ -6,7 +6,7 @@ import uuid
 from io import BytesIO, StringIO
 from zipfile import BadZipFile, ZipFile
 from django.core.cache import cache
-
+import datetime
 
 from bs4 import Tag
 from django.core.exceptions import ObjectDoesNotExist
@@ -82,7 +82,8 @@ class Integration:
                 export_file = file
 
             else:
-                export_filename = "export.zip"
+                #zip the files if there is more then one file
+                export_filename = self.get_export_file_name()
                 export_stream = BytesIO()
                 export_obj = ZipFile(export_stream, 'w')
 
@@ -134,7 +135,7 @@ class Integration:
                             for d in data_list:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
-                                il.msg += self.recipe_processed_msg(recipe)
+                                il.msg += self.get_recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -159,7 +160,7 @@ class Integration:
                                 else:
                                     recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                                 recipe.keywords.add(self.keyword)
-                                il.msg += self.recipe_processed_msg(recipe)
+                                il.msg += self.get_recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -174,7 +175,7 @@ class Integration:
                             try:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
-                                il.msg += self.recipe_processed_msg(recipe)
+                                il.msg += self.get_recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -191,7 +192,7 @@ class Integration:
                                     try:
                                         recipe = self.get_recipe_from_file(d)
                                         recipe.keywords.add(self.keyword)
-                                        il.msg += self.recipe_processed_msg(recipe)
+                                        il.msg += self.get_recipe_processed_msg(recipe)
                                         self.handle_duplicates(recipe, import_duplicates)
                                         il.imported_recipes += 1
                                         il.save()
@@ -201,7 +202,7 @@ class Integration:
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
                         recipe.keywords.add(self.keyword)
-                        il.msg += self.recipe_processed_msg(recipe)
+                        il.msg += self.get_recipe_processed_msg(recipe)
                         self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
                 il.msg += 'ERROR ' + _(
@@ -289,5 +290,9 @@ class Integration:
         if DEBUG:
             traceback.print_exc()
 
-    def recipe_processed_msg(self, recipe):
+
+    def get_export_file_name(self, format='zip'):
+        return "export_{}.{}".format(datetime.datetime.now().strftime("%Y-%m-%d"), format)
+
+    def get_recipe_processed_msg(self, recipe):
         return f'{recipe.pk} - {recipe.name} \n'
