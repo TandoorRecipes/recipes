@@ -94,7 +94,7 @@ class Saffron(Integration):
             files.append([ filename, data ])
 
             el.exported_recipes += 1
-            el.msg += self.recipe_processed_msg(r)
+            el.msg += self.get_recipe_processed_msg(r)
             el.save()
             
         return files
