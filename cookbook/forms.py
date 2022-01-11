@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -357,7 +359,7 @@ class InviteLinkForm(forms.ModelForm):
     def clean(self):
         space = self.cleaned_data['space']
         if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(
-                space=space).count()) >= space.max_users:
+                space=space).filter(valid_until__gte=datetime.today()).count()) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
