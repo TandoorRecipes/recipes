@@ -12,6 +12,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.fields import empty
 
+from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import list_from_recipe
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
@@ -21,13 +22,18 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Fo
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
                              UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
+from recipes.settings import MEDIA_URL, SCRIPT_NAME
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
     # adds image and recipe count to serializer when query param extended=1
-    image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.SerializerMethodField('count_recipes')
+    # ORM path to this object from Recipe
     recipe_filter = None
+    # list of ORM paths to any image
+    images = None
+
+    image = serializers.SerializerMethodField('get_image')
+    numrecipe = serializers.ReadOnlyField(source='count_recipes_test')
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -37,8 +43,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
         try:
-            if bool(int(
-                    self.context['request'].query_params.get('extended', False))) and self.__class__ == api_serializer:
+            if str2bool(self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
                 return fields
         except (AttributeError, KeyError) as e:
             pass
@@ -50,21 +55,8 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
         return fields
 
     def get_image(self, obj):
-        # TODO add caching
-        recipes = Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).exclude(
-            image__isnull=True).exclude(image__exact='')
-        try:
-            if recipes.count() == 0 and obj.has_children():
-                obj__in = self.recipe_filter + '__in'
-                recipes = Recipe.objects.filter(**{obj__in: obj.get_descendants()}, space=obj.space).exclude(
-                    image__isnull=True).exclude(image__exact='')  # if no recipes found - check whole tree
-        except AttributeError:
-            # probably not a tree
-            pass
-        if recipes.count() != 0:
-            return random.choice(recipes).image.url
-        else:
-            return None
+        if obj.recipe_image:
+            return SCRIPT_NAME + MEDIA_URL + obj.recipe_image
 
     def count_recipes(self, obj):
         return Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).count()
@@ -98,7 +90,11 @@ class CustomOnHandField(serializers.Field):
         return instance
 
     def to_representation(self, obj):
-        shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+        shared_users = []
+        if request := self.context.get('request', None):
+            shared_users = request._shared_users
+        else:
+            shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
         return obj.onhand_users.filter(id__in=shared_users).exists()
 
     def to_internal_value(self, data):
@@ -379,14 +375,16 @@ class RecipeSimpleSerializer(serializers.ModelSerializer):
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
-    shopping = serializers.SerializerMethodField('get_shopping_status')
+    # shopping = serializers.SerializerMethodField('get_shopping_status')
+    shopping = serializers.ReadOnlyField(source='shopping_status')
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     food_onhand = CustomOnHandField(required=False, allow_null=True)
 
     recipe_filter = 'steps__ingredients__food'
+    images = ['recipe__image']
 
-    def get_shopping_status(self, obj):
-        return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
+    # def get_shopping_status(self, obj):
+    #     return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()

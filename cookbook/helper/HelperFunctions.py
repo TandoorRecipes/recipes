@@ -7,7 +7,7 @@ class Round(Func):
 
 
 def str2bool(v):
-    if type(v) == bool:
+    if type(v) == bool or v is None:
         return v
     else:
         return v.lower() in ("yes", "true", "1")
