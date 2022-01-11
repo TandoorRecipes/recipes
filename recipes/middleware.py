@@ -13,10 +13,9 @@ class CustomRemoteUser(RemoteUserMiddleware):
 Gist code by vstoykov, you can check his original gist at:
 https://gist.github.com/vstoykov/1390853/5d2e8fac3ca2b2ada8c7de2fb70c021e50927375
 Changes:
-Ignoring static file requests and a certain useless admin request from triggering the logger. 
+Ignoring static file requests and a certain useless admin request from triggering the logger.
 Updated statements to make it Python 3 friendly.
 """
-
 
 
 def terminal_width():
@@ -25,7 +24,9 @@ def terminal_width():
     """
     width = 0
     try:
-        import struct, fcntl, termios
+        import fcntl
+        import struct
+        import termios
         s = struct.pack('HHHH', 0, 0, 0, 0)
         x = fcntl.ioctl(1, termios.TIOCGWINSZ, s)
         width = struct.unpack('HHHH', x)[1]
