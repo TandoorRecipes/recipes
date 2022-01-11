@@ -270,7 +270,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
         else:
-            self.queryset = super().get_queryset()
+            return self.annotate_recipe(queryset=super().get_queryset(), request=self.request, serializer=self.serializer_class, tree=True)
         self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class, tree=True)

@@ -90,10 +90,10 @@ class CustomOnHandField(serializers.Field):
         return instance
 
     def to_representation(self, obj):
-        shared_users = []
+        shared_users = None
         if request := self.context.get('request', None):
-            shared_users = request._shared_users
-        else:
+            shared_users = getattr(request, '_shared_users', None)
+        if shared_users is None:
             shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
         return obj.onhand_users.filter(id__in=shared_users).exists()
 
