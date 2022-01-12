@@ -147,8 +147,32 @@ def get_from_scraper(scrape, request):
     if scrape.url:
         recipe_json['url'] = scrape.url
         recipe_json['recipeInstructions'] += "\n\nImported from " + scrape.url
+
+    try:
+        nutrients = scrape.schema.nutrients()
+        # {'calories': '250 kcal', 'carbohydrateContent': '31 g', 'fatContent': '11 g', 'proteinContent': '5 g'}
+        #TODO: #1270 add these into the proper fields for recipe_json instead of just adding them as text
+        #recipe_json['nutrition'] = dict()
+        #recipe_json['nutrition']['carbohydrates'] = remove_non_digts(nutrients['carbohydrateContent'])
+        #recipe_json['nutrition']['fats'] = remove_non_digts(nutrients['fatContent'])
+        #recipe_json['nutrition']['calories'] = remove_non_digts(nutrients['calories'])
+        #recipe_json['nutrition']['proteins'] = remove_non_digts(nutrients['proteinContent'])
+        recipe_json['recipeInstructions'] += "\n\nnutritional information:"
+        if nutrients['calories']:
+            recipe_json['recipeInstructions'] += "\n  calories(kcal)=" + remove_non_digts(nutrients['calories'])
+        if nutrients['proteinContent']:
+            recipe_json['recipeInstructions'] += "\n  proteins(g)=" + remove_non_digts(nutrients['proteinContent'])
+        if nutrients['carbohydrateContent']:
+            recipe_json['recipeInstructions'] += "\n  carbohydrates(g)=" + remove_non_digts(nutrients['carbohydrateContent'])
+        if nutrients['fatContent']:
+            recipe_json['recipeInstructions'] += "\n  fats(g)=" + remove_non_digts(nutrients['fatContent'])
+    except Exception:
+        recipe_json['recipeInstructions'] += "\n\nDEBUG could not import nutrition=" + repr(scrape.schema.nutrients())
+
     return recipe_json
 
+def remove_non_digts(input):
+    return ''.join("" if not c.isdigit() else c for c in input)
 
 def parse_name(name):
     if type(name) == list:

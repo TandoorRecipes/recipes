@@ -66,6 +66,7 @@ def get_recipe_from_source(text, url, request):
                 'keywords': [],
                 'recipeIngredient': [],
                 'recipeInstructions': '',
+                'nutrition': [],
                 'servings': '',
                 'prepTime': '',
                 'cookTime': ''
@@ -104,6 +105,7 @@ def get_recipe_from_source(text, url, request):
                 parse_list.append(el)
         scrape = text_scraper(text, url=url)
 
+    print('DEBUG: receipt_html_import calling get_from_scraper()')
     recipe_json = helper.get_from_scraper(scrape, request)
 
     for el in parse_list:
@@ -139,6 +141,7 @@ def get_recipe_from_source(text, url, request):
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
 
+    print('DEBUG: receipt_html_import called get_from_scraper() temp_tree=' + repr(temp_tree))
     return recipe_json, recipe_tree, html_data, images
 
 
