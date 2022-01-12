@@ -201,12 +201,11 @@ def search_recipes(request, queryset, params):
     return queryset
 
 
-class CacheEmpty(Exception):
-    pass
-
-
 class RecipeFacet():
-    def __init__(self, request, queryset=None, hash_key=None, cache_timeout=600):
+    class CacheEmpty(Exception):
+        pass
+
+    def __init__(self, request, queryset=None, hash_key=None, cache_timeout=3600):
         if hash_key is None and queryset is None:
             raise ValueError(_("One of queryset or hash_key must be provided"))
 
@@ -215,15 +214,15 @@ class RecipeFacet():
         self.hash_key = hash_key or str(hash(frozenset(self._queryset.values_list('pk'))))
         self._SEARCH_CACHE_KEY = f"recipes_filter_{self.hash_key}"
         self._cache_timeout = cache_timeout
-        self._cache = caches['default'].get(self._SEARCH_CACHE_KEY, None)
+        self._cache = caches['default'].get(self._SEARCH_CACHE_KEY, {})
         if self._cache is None and self._queryset is None:
-            raise CacheEmpty("No queryset provided and cache empty")
+            raise self.CacheEmpty("No queryset provided and cache empty")
 
-        self.Keywords = getattr(self._cache, 'Keywords', None)
-        self.Foods = getattr(self._cache, 'Foods', None)
-        self.Books = getattr(self._cache, 'Books', None)
-        self.Ratings = getattr(self._cache, 'Ratings', None)
-        self.Recent = getattr(self._cache, 'Recent', None)
+        self.Keywords = self._cache.get('Keywords', None)
+        self.Foods = self._cache.get('Foods', None)
+        self.Books = self._cache.get('Books', None)
+        self.Ratings = self._cache.get('Ratings', None)
+        self.Recent = self._cache.get('Recent', None)
 
         if self._queryset:
             self._recipe_list = list(self._queryset.values_list('id', flat=True))
@@ -292,16 +291,9 @@ class RecipeFacet():
             else:
                 keywords = Keyword.objects.filter(Q(recipe__in=self._recipe_list) | Q(depth=1)).filter(space=self._request.space).distinct()
 
-            # Subquery that counts recipes for keyword including children
-            kw_recipe_count = Recipe.objects.filter(**{'keywords__path__startswith': OuterRef('path')}, id__in=self._recipe_list, space=self._request.space
-                                                    ).values(kw=Substr('keywords__path',  1, Keyword.steplen)
-                                                             ).annotate(count=Count('pk', distinct=True)).values('count')
-
             # set keywords to root objects only
-            keywords = keywords.annotate(count=Coalesce(Subquery(kw_recipe_count), 0)
-                                         ).filter(depth=1, count__gt=0
-                                                  ).values('id', 'name', 'count', 'numchild').order_by('name')
-            self.Keywords = list(keywords)
+            keywords = self._keyword_queryset(keywords)
+            self.Keywords = [{**x, 'children': None} if x['numchild'] > 0 else x for x in list(keywords)]
             self.set_cache('Keywords', self.Keywords)
         return self.Keywords
 
@@ -313,16 +305,10 @@ class RecipeFacet():
             else:
                 foods = Food.objects.filter(Q(ingredient__step__recipe__in=self._recipe_list) | Q(depth=1)).filter(space=self._request.space).distinct()
 
-            food_recipe_count = Recipe.objects.filter(**{'steps__ingredients__food__path__startswith': OuterRef('path')}, id__in=self._recipe_list, space=self._request.space
-                                                      ).values(kw=Substr('steps__ingredients__food__path',  1, Food.steplen)
-                                                               ).annotate(count=Count('pk', distinct=True)).values('count')
-
             # set keywords to root objects only
-            foods = foods.annotate(count=Coalesce(Subquery(food_recipe_count), 0)
-                                   ).filter(depth=1, count__gt=0
-                                            ).values('id', 'name', 'count', 'numchild'
-                                                     ).order_by('name')
-            self.Foods = list(foods)
+            foods = self._food_queryset(foods)
+
+            self.Foods = [{**x, 'children': None} if x['numchild'] > 0 else x for x in list(foods)]
             self.set_cache('Foods', self.Foods)
         return self.Foods
 
@@ -348,6 +334,59 @@ class RecipeFacet():
             self.Recent = list(recent_recipes)
             self.set_cache('Recent', self.Recent)
         return self.Recent
+
+    def add_food_children(self, id):
+        try:
+            food = Food.objects.get(id=id)
+            nodes = food.get_ancestors()
+        except Food.DoesNotExist:
+            return self.get_facets()
+        foods = self._food_queryset(Food.objects.filter(path__startswith=food.path, depth=food.depth+1), food)
+        deep_search = self.Foods
+        for node in nodes:
+            index = next((i for i, x in enumerate(deep_search) if x["id"] == node.id), None)
+            deep_search = deep_search[index]['children']
+        index = next((i for i, x in enumerate(deep_search) if x["id"] == food.id), None)
+        deep_search[index]['children'] = [{**x, 'children': None} if x['numchild'] > 0 else x for x in list(foods)]
+        self.set_cache('Foods', self.Foods)
+        return self.get_facets()
+
+    def add_keyword_children(self, id):
+        try:
+            keyword = Keyword.objects.get(id=id)
+            nodes = keyword.get_ancestors()
+        except Keyword.DoesNotExist:
+            return self.get_facets()
+        keywords = self._keyword_queryset(Keyword.objects.filter(path__startswith=keyword.path, depth=keyword.depth+1), keyword)
+        deep_search = self.Keywords
+        for node in nodes:
+            index = next((i for i, x in enumerate(deep_search) if x["id"] == node.id), None)
+            deep_search = deep_search[index]['children']
+        index = next((i for i, x in enumerate(deep_search) if x["id"] == keyword.id), None)
+        deep_search[index]['children'] = [{**x, 'children': None} if x['numchild'] > 0 else x for x in list(keywords)]
+        self.set_cache('Keywords', self.Keywords)
+        return self.get_facets()
+
+    def _recipe_count_queryset(self, field, depth=1, steplen=4):
+        return Recipe.objects.filter(**{f'{field}__path__startswith': OuterRef('path')}, id__in=self._recipe_list, space=self._request.space
+                                     ).values(child=Substr(f'{field}__path',  1, steplen)
+                                              ).annotate(count=Count('pk', distinct=True)).values('count')
+
+    def _keyword_queryset(self, queryset, keyword=None):
+        depth = getattr(keyword, 'depth', 0) + 1
+        steplen = depth * Keyword.steplen
+
+        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
+                                 ).filter(depth=depth, count__gt=0
+                                          ).values('id', 'name', 'count', 'numchild').order_by('name')
+
+    def _food_queryset(self, queryset, food=None):
+        depth = getattr(food, 'depth', 0) + 1
+        steplen = depth * Food.steplen
+
+        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
+                                 ).filter(depth__lte=depth, count__gt=0
+                                          ).values('id', 'name', 'count', 'numchild').order_by('name')
 
 
 # # TODO:  This might be faster https://github.com/django-treebeard/django-treebeard/issues/115

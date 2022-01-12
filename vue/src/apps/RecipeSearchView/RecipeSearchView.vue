@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
                                             <div class="col-12">
-                                                <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Advanced Search Settings") }}</a>
+                                                <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Search Settings") }}</a>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
@@ -97,6 +97,7 @@
                                                 <treeselect
                                                     v-model="settings.search_keywords"
                                                     :options="facets.Keywords"
+                                                    :load-options="loadKeywordChildren"
                                                     :flat="true"
                                                     searchNested
                                                     :multiple="true"
@@ -123,7 +124,7 @@
                                             <b-input-group class="mt-2">
                                                 <treeselect
                                                     v-model="settings.search_foods"
-                                                    :options="foodFacet"
+                                                    :options="facets.Foods"
                                                     :load-options="loadFoodChildren"
                                                     :flat="true"
                                                     searchNested
@@ -291,16 +292,6 @@ export default {
         }
     },
     computed: {
-        foodFacet: function () {
-            console.log("test", this.facets)
-            return this.facets?.Foods?.map((x) => {
-                if (x?.numchild > 0) {
-                    return { ...x, children: null }
-                } else {
-                    return x
-                }
-            })
-        },
         ratingOptions: function () {
             return [
                 { id: 5, label: "⭐⭐⭐⭐⭐" + " (" + (this.facets.Ratings?.["5.0"] ?? 0) + ")" },
@@ -414,10 +405,9 @@ export default {
                 this.pagination_count = result.data.count
 
                 this.facets = result.data.facets
-                console.log(this.facets)
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key)
-                }
+                // if (this.facets?.cache_key) {
+                //     this.getFacets(this.facets.cache_key)
+                // }
                 this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
                 if (!this.searchFiltered) {
                     // if meal plans are being shown - filter out any meal plan recipes from the recipe list
@@ -491,8 +481,12 @@ export default {
                 return [undefined, undefined]
             }
         },
-        getFacets: function (hash) {
-            return this.genericGetAPI("api_get_facets", { hash: hash }).then((response) => {
+        getFacets: function (hash, facet, id) {
+            let params = { hash: hash }
+            if (facet) {
+                params[facet] = id
+            }
+            return this.genericGetAPI("api_get_facets", params).then((response) => {
                 this.facets = { ...this.facets, ...response.data.facets }
             })
         },
@@ -520,9 +514,7 @@ export default {
             } else {
                 params.options = { query: { debug: true } }
             }
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
-                console.log(result.data)
-            })
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {})
         },
         loadFoodChildren({ action, parentNode, callback }) {
             // Typically, do the AJAX stuff here.
@@ -530,28 +522,25 @@ export default {
             // assign children options to the parent node & call the callback.
 
             if (action === LOAD_CHILDREN_OPTIONS) {
-                switch (parentNode.id) {
-                    case "success": {
-                        console.log(parentNode)
-                        break
-                    }
-                    // case "no-children": {
-                    //     simulateAsyncOperation(() => {
-                    //         parentNode.children = []
-                    //         callback()
-                    //     })
-                    //     break
-                    // }
-                    // case "failure": {
-                    //     simulateAsyncOperation(() => {
-                    //         callback(new Error("Failed to load options: network error."))
-                    //     })
-                    //     break
-                    // }
-                    default: /* empty */
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
                 }
+            } else {
+                callback()
             }
-            callback()
+        },
+        loadKeywordChildren({ action, parentNode, callback }) {
+            // Typically, do the AJAX stuff here.
+            // Once the server has responded,
+            // assign children options to the parent node & call the callback.
+
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
+                }
+            } else {
+                callback()
+            }
         },
     },
 }

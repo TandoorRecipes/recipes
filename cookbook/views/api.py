@@ -1135,9 +1135,16 @@ def get_facets(request):
     keyword = request.GET.get('keyword', None)
     facets = RecipeFacet(request, hash_key=key)
 
+    if food:
+        results = facets.add_food_children(food)
+    elif keyword:
+        results = facets.add_keyword_children(keyword)
+    else:
+        results = facets.get_facets()
+
     return JsonResponse(
         {
-            'facets': facets.get_facets(),
+            'facets': results,
         },
         status=200
     )
