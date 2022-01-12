@@ -130,6 +130,7 @@
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
+                    v-if="contextData.originalItem.entry.recipe != null"
                     @click="
                     $refs.menu.close()
                     recipe = contextData.originalItem.entry.recipe
