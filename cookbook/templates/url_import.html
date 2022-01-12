@@ -277,12 +277,12 @@
                                              style="display:flex; justify-content:space-between;">
                                             {% trans 'Calories' %}
                                             <i class="fas fa-eraser" style="cursor:pointer;"
-                                               @click="recipe_json.nutrition_calories=''"
+                                               @click="recipe_json.nutrition.calories=''"
                                                title="{% trans 'Clear Contents' %}"></i>
                                         </div>
-                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_calories', $event)"
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition.calories', $event)"
                                              @dragover.prevent @dragenter.prevent>
-                                            <div class="card-text">[[recipe_json.nutrition_calories]]</div>
+                                            <div class="card-text">[[recipe_json.nutrition.calories]]</div>
                                         </div>
                                     </div>
                                 </div>
@@ -292,12 +292,12 @@
                                              style="display:flex; justify-content:space-between;">
                                             {% trans 'Carbohydrates' %}
                                             <i class="fas fa-eraser" style="cursor:pointer;"
-                                               @click="recipe_json.nutrition_carbohydrates=''"
+                                               @click="recipe_json.nutrition.carbohydrates=''"
                                                title="{% trans 'Clear Contents' %}"></i>
                                         </div>
-                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_carbohydrates', $event)"
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition.carbohydrates', $event)"
                                              @dragover.prevent @dragenter.prevent>
-                                            <div class="card-text">[[recipe_json.nutrition_carbohydrates]]</div>
+                                            <div class="card-text">[[recipe_json.nutrition.carbohydrates]]</div>
                                         </div>
                                     </div>
                                 </div>
@@ -307,12 +307,12 @@
                                              style="display:flex; justify-content:space-between;">
                                             {% trans 'Fats' %}
                                             <i class="fas fa-eraser" style="cursor:pointer;"
-                                               @click="recipe_json.nutrition_fats=''"
+                                               @click="recipe_json.nutrition.fats=''"
                                                title="{% trans 'Clear Contents' %}"></i>
                                         </div>
-                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_fats', $event)"
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition.fats', $event)"
                                              @dragover.prevent @dragenter.prevent>
-                                            <div class="card-text">[[recipe_json.nutrition_fats]]</div>
+                                            <div class="card-text">[[recipe_json.nutrition.fats]]</div>
                                         </div>
                                     </div>
                                 </div>
@@ -322,12 +322,12 @@
                                              style="display:flex; justify-content:space-between;">
                                             {% trans 'Proteins' %}
                                             <i class="fas fa-eraser" style="cursor:pointer;"
-                                               @click="recipe_json.nutrition_proteins=''"
+                                               @click="recipe_json.nutrition.proteins=''"
                                                title="{% trans 'Clear Contents' %}"></i>
                                         </div>
-                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_proteins', $event)"
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition.proteins', $event)"
                                              @dragover.prevent @dragenter.prevent>
-                                            <div class="card-text">[[recipe_json.nutrition_proteins]]</div>
+                                            <div class="card-text">[[recipe_json.nutrition.proteins]]</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1035,6 +1035,18 @@
                             break;
                         case 'cookTime':
                             this.recipe_json.cookTime = v
+                            break;
+                        case 'nutrition.calories':
+                            this.recipe_json.nutrition.calories = v
+                            break;
+                        case 'nutrition.carbohydrates':
+                            this.recipe_json.nutrition.carbohydrates = v
+                            break;
+                        case 'nutrition.fats':
+                            this.recipe_json.nutrition.fats = v
+                            break;
+                        case 'nutrition.proteins':
+                            this.recipe_json.nutrition.proteins = v
                             break;
                         case 'ingredients':
                             this.$http.post('{% url 'api_ingredient_from_string' %}', {text: v}, {emulateJSON: true}).then((response) => {

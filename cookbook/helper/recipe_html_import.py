@@ -66,10 +66,12 @@ def get_recipe_from_source(text, url, request):
                 'keywords': [],
                 'recipeIngredient': [],
                 'recipeInstructions': '',
-                'nutrition_carbohydrates': '',
-                'nutrition_fats': '',
-                'nutrition_calories': '',
-                'nutrition_proteins': '',
+                'nutrition': {
+                    'calories': '',
+                    'carbohydrates': '',
+                    'fats': '',
+                    'proteins': '',
+                },
                 'servings': '',
                 'prepTime': '',
                 'cookTime': ''
@@ -144,7 +146,7 @@ def get_recipe_from_source(text, url, request):
         else:
             recipe_tree += [{'name': 'json', 'children': temp_tree}]
 
-    print('DEBUG: receipt_html_import called get_from_scraper() temp_tree=' + repr(temp_tree))
+    print('DEBUG: receipt_html_import called get_from_scraper() recipe_json=' + repr(recipe_json))
     return recipe_json, recipe_tree, html_data, images
 
 
