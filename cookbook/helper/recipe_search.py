@@ -224,7 +224,7 @@ class RecipeFacet():
         self.Ratings = self._cache.get('Ratings', None)
         self.Recent = self._cache.get('Recent', None)
 
-        if self._queryset:
+        if self._queryset is not None:
             self._recipe_list = list(self._queryset.values_list('id', flat=True))
             self._search_params = {
                 'keyword_list': self._request.query_params.getlist('keywords', []),
@@ -235,7 +235,7 @@ class RecipeFacet():
                 'search_books_or': str2bool(self._request.query_params.get('books_or', True)),
                 'space': self._request.space,
             }
-        elif self.hash_key:
+        elif self.hash_key is not None:
             self._recipe_list = self._cache.get('recipe_list', None)
             self._search_params = {
                 'keyword_list': self._cache.get('keyword_list', None),
