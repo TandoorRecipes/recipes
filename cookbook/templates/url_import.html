@@ -270,6 +270,69 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header p-1"
+                                             style="display:flex; justify-content:space-between;">
+                                            {% trans 'Calories' %}
+                                            <i class="fas fa-eraser" style="cursor:pointer;"
+                                               @click="recipe_json.nutrition_calories=''"
+                                               title="{% trans 'Clear Contents' %}"></i>
+                                        </div>
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_calories', $event)"
+                                             @dragover.prevent @dragenter.prevent>
+                                            <div class="card-text">[[recipe_json.nutrition_calories]]</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header p-1"
+                                             style="display:flex; justify-content:space-between;">
+                                            {% trans 'Carbohydrates' %}
+                                            <i class="fas fa-eraser" style="cursor:pointer;"
+                                               @click="recipe_json.nutrition_carbohydrates=''"
+                                               title="{% trans 'Clear Contents' %}"></i>
+                                        </div>
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_carbohydrates', $event)"
+                                             @dragover.prevent @dragenter.prevent>
+                                            <div class="card-text">[[recipe_json.nutrition_carbohydrates]]</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header p-1"
+                                             style="display:flex; justify-content:space-between;">
+                                            {% trans 'Fats' %}
+                                            <i class="fas fa-eraser" style="cursor:pointer;"
+                                               @click="recipe_json.nutrition_fats=''"
+                                               title="{% trans 'Clear Contents' %}"></i>
+                                        </div>
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_fats', $event)"
+                                             @dragover.prevent @dragenter.prevent>
+                                            <div class="card-text">[[recipe_json.nutrition_fats]]</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header p-1"
+                                             style="display:flex; justify-content:space-between;">
+                                            {% trans 'Proteins' %}
+                                            <i class="fas fa-eraser" style="cursor:pointer;"
+                                               @click="recipe_json.nutrition_proteins=''"
+                                               title="{% trans 'Clear Contents' %}"></i>
+                                        </div>
+                                        <div class="card-body p-2 drop-zone" @drop="replacePreview('nutrition_proteins', $event)"
+                                             @dragover.prevent @dragenter.prevent>
+                                            <div class="card-text">[[recipe_json.nutrition_proteins]]</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="card mb-2">
                                 <div class="card-header" v-b-toggle.collapse-ing>
                                     <div class="row px-3" style="display:flex; justify-content:space-between;">

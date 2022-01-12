@@ -66,7 +66,10 @@ def get_recipe_from_source(text, url, request):
                 'keywords': [],
                 'recipeIngredient': [],
                 'recipeInstructions': '',
-                'nutrition': [],
+                'nutrition_carbohydrates': '',
+                'nutrition_fats': '',
+                'nutrition_calories': '',
+                'nutrition_proteins': '',
                 'servings': '',
                 'prepTime': '',
                 'cookTime': ''

@@ -150,13 +150,10 @@ def get_from_scraper(scrape, request):
 
     try:
         nutrients = scrape.schema.nutrients()
-        # {'calories': '250 kcal', 'carbohydrateContent': '31 g', 'fatContent': '11 g', 'proteinContent': '5 g'}
-        #TODO: #1270 add these into the proper fields for recipe_json instead of just adding them as text
-        #recipe_json['nutrition'] = dict()
-        #recipe_json['nutrition']['carbohydrates'] = remove_non_digts(nutrients['carbohydrateContent'])
-        #recipe_json['nutrition']['fats'] = remove_non_digts(nutrients['fatContent'])
-        #recipe_json['nutrition']['calories'] = remove_non_digts(nutrients['calories'])
-        #recipe_json['nutrition']['proteins'] = remove_non_digts(nutrients['proteinContent'])
+        recipe_json['nutrition_carbohydrates'] = remove_non_digts(nutrients['carbohydrateContent'])
+        recipe_json['nutrition_fats'] = remove_non_digts(nutrients['fatContent'])
+        recipe_json['nutrition_calories'] = remove_non_digts(nutrients['calories'])
+        recipe_json['nutrition_proteins'] = remove_non_digts(nutrients['proteinContent'])
         recipe_json['recipeInstructions'] += "\n\nnutritional information:"
         if nutrients['calories']:
             recipe_json['recipeInstructions'] += "\n  calories(kcal)=" + remove_non_digts(nutrients['calories'])
