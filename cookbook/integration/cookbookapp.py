@@ -44,7 +44,28 @@ class CookBookApp(Integration):
         step = Step.objects.create(instruction=recipe_json['recipeInstructions'], space=self.request.space, )
 
         if 'nutrition' in recipe_json:
-            step.instruction = step.instruction + '\n\n' + recipe_json['nutrition']
+            calories = 0
+            carbohydrates = 0
+            fats = 0
+            proteins = 0
+            if recipe_json['nutrition']['calories']:
+                calories = remove_non_digts(recipe_json['nutrition']['calories'])
+            if recipe_json['nutrition']['carbohydrateContent']:
+                carbohydrates = remove_non_digts(recipe_json['nutrition']['carbohydrateContent'])
+            if recipe_json['nutrition']['fatContent']:
+                fats = remove_non_digts(recipe_json['nutrition']['fatContent'])
+            if recipe_json['nutrition']['proteinContent']:
+                proteins = remove_non_digts(recipe_json['nutrition']['proteinContent'])
+
+            recipe.nutrition = NutritionInformation.objects.create(
+                calories=calories,
+                carbohydrates=carbohydrates,
+                fats=fats,
+                proteins=proteins,
+                source='cookbookapp',
+                space=self.request.space,
+            )
+
 
         step.save()
         recipe.steps.add(step)
@@ -66,3 +87,6 @@ class CookBookApp(Integration):
 
         recipe.save()
         return recipe
+
+    def remove_non_digts(input):
+        return ''.join("" if not c.isdigit() else c for c in input)

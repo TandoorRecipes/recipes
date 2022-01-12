@@ -161,22 +161,10 @@ def get_from_scraper(scrape, request):
             recipe_json['nutrition']['fats'] = remove_non_digts(nutrients['fatContent'])
         if nutrients['proteinContent']:
             recipe_json['nutrition']['proteins'] = remove_non_digts(nutrients['proteinContent'])
-
-        recipe_json['recipeInstructions'] += "\n\nnutritional information:"
-        if nutrients['calories']:
-            recipe_json['recipeInstructions'] += "\n  calories(kcal)=" + remove_non_digts(nutrients['calories'])
-        if nutrients['proteinContent']:
-            recipe_json['recipeInstructions'] += "\n  proteins(g)=" + remove_non_digts(nutrients['proteinContent'])
-        if nutrients['carbohydrateContent']:
-            recipe_json['recipeInstructions'] += "\n  carbohydrates(g)=" + remove_non_digts(nutrients['carbohydrateContent'])
-        if nutrients['fatContent']:
-            recipe_json['recipeInstructions'] += "\n  fats(g)=" + remove_non_digts(nutrients['fatContent'])
     except Exception as e:
         print("ERROR importing nutrition")
         print(e)
-        recipe_json['recipeInstructions'] += "\n\nDEBUG(2) could not import nutrition=" + repr(scrape.schema.nutrients())
-        recipe_json['recipeInstructions'] += "\n\n" + e
-
+        recipe_json['recipeInstructions'] += "\n\nnutrition=" + repr(scrape.schema.nutrients())
 
     return recipe_json
 

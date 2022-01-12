@@ -23,7 +23,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
 from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe, RecipeImport, Step, Sync,
-                             Unit, UserPreference)
+                             Unit, UserPreference, NutritionInformation)
 from cookbook.tables import SyncTable
 from recipes import settings
 
@@ -138,12 +138,35 @@ def import_url(request):
         data['cookTime'] = parse_cooktime(data.get('cookTime', ''))
         data['prepTime'] = parse_cooktime(data.get('prepTime', ''))
 
+        calories = 0
+        carbohydrates = 0
+        fats = 0
+        proteins = 0
+        if data['nutrition']:
+            if data['nutrition']['calories']:
+                calories = data['nutrition']['calories']
+            if data['nutrition']['carbohydrates']:
+                carbohydrates = data['nutrition']['carbohydrates']
+            if data['nutrition']['fats']:
+                fats = data['nutrition']['fats']
+            if data['nutrition']['proteins']:
+                proteins = data['nutrition']['proteins']
+
+        nutrition = NutritionInformation.objects.create(
+            calories=calories,
+            carbohydrates=carbohydrates,
+            fats=fats,
+            proteins=proteins,
+            source=data['nutrition']['source'],
+            space=request.space,
+        )
         recipe = Recipe.objects.create(
             name=data['name'],
             description=data['description'],
             waiting_time=data['cookTime'],
             working_time=data['prepTime'],
             servings=data['servings'],
+            nutrition=nutrition,
             internal=True,
             created_by=request.user,
             space=request.space,
