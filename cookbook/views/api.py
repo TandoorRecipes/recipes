@@ -38,7 +38,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                CustomIsShare, CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
+from cookbook.helper.recipe_search import RecipeFacet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import list_from_recipe, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
@@ -604,7 +604,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(qs=queryset, request=request)
+        self.facets = RecipeFacet(request, queryset=queryset)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):
@@ -613,7 +613,7 @@ class RecipePagination(PageNumberPagination):
             ('next', self.get_next_link()),
             ('previous', self.get_previous_link()),
             ('results', data),
-            ('facets', self.facets)
+            ('facets', self.facets.get_facets())
         ]))
 
 
@@ -651,8 +651,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             self.queryset = self.queryset.filter(space=self.request.space)
 
         self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
-
-        return super().get_queryset()
+        return super().get_queryset().prefetch_related('cooklog_set')
 
     def list(self, request, *args, **kwargs):
         if self.request.GET.get('debug', False):
@@ -1132,10 +1131,13 @@ def ingredient_from_string(request):
 @group_required('user')
 def get_facets(request):
     key = request.GET.get('hash', None)
+    food = request.GET.get('food', None)
+    keyword = request.GET.get('keyword', None)
+    facets = RecipeFacet(request, hash_key=key)
 
     return JsonResponse(
         {
-            'facets': get_facet(request=request, use_cache=False, hash_key=key),
+            'facets': facets.get_facets(),
         },
         status=200
     )

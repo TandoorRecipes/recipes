@@ -99,7 +99,7 @@
                                                     :options="facets.Keywords"
                                                     :flat="true"
                                                     searchNested
-                                                    multiple
+                                                    :multiple="true"
                                                     :placeholder="$t('Keywords')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -123,10 +123,11 @@
                                             <b-input-group class="mt-2">
                                                 <treeselect
                                                     v-model="settings.search_foods"
-                                                    :options="facets.Foods"
+                                                    :options="foodFacet"
+                                                    :load-options="loadFoodChildren"
                                                     :flat="true"
                                                     searchNested
-                                                    multiple
+                                                    :multiple="true"
                                                     :placeholder="$t('Ingredients')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -243,7 +244,7 @@ import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprec
 
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import Treeselect from "@riophae/vue-treeselect"
+import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 
@@ -290,6 +291,16 @@ export default {
         }
     },
     computed: {
+        foodFacet: function () {
+            console.log("test", this.facets)
+            return this.facets?.Foods?.map((x) => {
+                if (x?.numchild > 0) {
+                    return { ...x, children: null }
+                } else {
+                    return x
+                }
+            })
+        },
         ratingOptions: function () {
             return [
                 { id: 5, label: "⭐⭐⭐⭐⭐" + " (" + (this.facets.Ratings?.["5.0"] ?? 0) + ")" },
@@ -403,6 +414,7 @@ export default {
                 this.pagination_count = result.data.count
 
                 this.facets = result.data.facets
+                console.log(this.facets)
                 if (this.facets?.cache_key) {
                     this.getFacets(this.facets.cache_key)
                 }
@@ -480,7 +492,7 @@ export default {
             }
         },
         getFacets: function (hash) {
-            this.genericGetAPI("api_get_facets", { hash: hash }).then((response) => {
+            return this.genericGetAPI("api_get_facets", { hash: hash }).then((response) => {
                 this.facets = { ...this.facets, ...response.data.facets }
             })
         },
@@ -511,6 +523,35 @@ export default {
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
                 console.log(result.data)
             })
+        },
+        loadFoodChildren({ action, parentNode, callback }) {
+            // Typically, do the AJAX stuff here.
+            // Once the server has responded,
+            // assign children options to the parent node & call the callback.
+
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                switch (parentNode.id) {
+                    case "success": {
+                        console.log(parentNode)
+                        break
+                    }
+                    // case "no-children": {
+                    //     simulateAsyncOperation(() => {
+                    //         parentNode.children = []
+                    //         callback()
+                    //     })
+                    //     break
+                    // }
+                    // case "failure": {
+                    //     simulateAsyncOperation(() => {
+                    //         callback(new Error("Failed to load options: network error."))
+                    //     })
+                    //     break
+                    // }
+                    default: /* empty */
+                }
+            }
+            callback()
         },
     },
 }
