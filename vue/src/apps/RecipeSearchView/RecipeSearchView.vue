@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
                                             <div class="col-12">
-                                                <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Advanced Search Settings") }}</a>
+                                                <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Search Settings") }}</a>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
@@ -97,9 +97,10 @@
                                                 <treeselect
                                                     v-model="settings.search_keywords"
                                                     :options="facets.Keywords"
+                                                    :load-options="loadKeywordChildren"
                                                     :flat="true"
                                                     searchNested
-                                                    multiple
+                                                    :multiple="true"
                                                     :placeholder="$t('Keywords')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -124,9 +125,10 @@
                                                 <treeselect
                                                     v-model="settings.search_foods"
                                                     :options="facets.Foods"
+                                                    :load-options="loadFoodChildren"
                                                     :flat="true"
                                                     searchNested
-                                                    multiple
+                                                    :multiple="true"
                                                     :placeholder="$t('Ingredients')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -243,7 +245,7 @@ import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprec
 
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import Treeselect from "@riophae/vue-treeselect"
+import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 
@@ -403,9 +405,9 @@ export default {
                 this.pagination_count = result.data.count
 
                 this.facets = result.data.facets
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key)
-                }
+                // if (this.facets?.cache_key) {
+                //     this.getFacets(this.facets.cache_key)
+                // }
                 this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
                 if (!this.searchFiltered) {
                     // if meal plans are being shown - filter out any meal plan recipes from the recipe list
@@ -479,8 +481,12 @@ export default {
                 return [undefined, undefined]
             }
         },
-        getFacets: function (hash) {
-            this.genericGetAPI("api_get_facets", { hash: hash }).then((response) => {
+        getFacets: function (hash, facet, id) {
+            let params = { hash: hash }
+            if (facet) {
+                params[facet] = id
+            }
+            return this.genericGetAPI("api_get_facets", params).then((response) => {
                 this.facets = { ...this.facets, ...response.data.facets }
             })
         },
@@ -508,9 +514,33 @@ export default {
             } else {
                 params.options = { query: { debug: true } }
             }
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
-                console.log(result.data)
-            })
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {})
+        },
+        loadFoodChildren({ action, parentNode, callback }) {
+            // Typically, do the AJAX stuff here.
+            // Once the server has responded,
+            // assign children options to the parent node & call the callback.
+
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
+                }
+            } else {
+                callback()
+            }
+        },
+        loadKeywordChildren({ action, parentNode, callback }) {
+            // Typically, do the AJAX stuff here.
+            // Once the server has responded,
+            // assign children options to the parent node & call the callback.
+
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
+                }
+            } else {
+                callback()
+            }
         },
     },
 }
