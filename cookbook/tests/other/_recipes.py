@@ -21,6 +21,13 @@ ALLRECIPES = {
             "text": "chicken marsala recipes"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        "calories": "240.9",
+        "carbohydrates": "4.9",
+        "fats": "9",
+        "proteins": "28.4",
+    },
     "recipeIngredient": [
         {
             "amount": 1,
@@ -141,6 +148,10 @@ AMERICAS_TEST_KITCHEN = {
             "text": "main courses"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        "calories": "3394"
+    },
     "recipeIngredient": [
         {
             "amount": 4.0,
@@ -373,6 +384,10 @@ CHEF_KOCH = {
             "text": "krustentier oder muscheln"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        "calories": "394"
+    },
     "recipeIngredient": [
         {
             "amount": 16,
@@ -860,6 +875,10 @@ COOKS_COUNTRY = {
             "text": "main courses"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        "calories": "2834"
+    },
     "recipeIngredient": [
         {
             "amount": 2,
@@ -1105,6 +1124,10 @@ DELISH = {
             "text": "american"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        "calories": "250"
+    },
     "recipeIngredient": [
         {
             "amount": 2,
@@ -2220,6 +2243,13 @@ TASTE_OF_HOME = {
             "text": "new england"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        "calories": "259",
+        "carbohydrates": "26",
+        "fats": "15",
+        "proteins": "4"
+    },
     "recipeIngredient": [
         {
             "amount": 1,
@@ -2614,6 +2644,7 @@ THE_SPRUCE_EATS = {
             "original": "Optional: cheddar cheese or cheddar-jack blend (shredded)"
         }
     ],
+    'nutrition': {'source': 'import'},
     "recipeInstructions": "Gather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nAdd vegetable broth, water, and potatoes.\nCover and cook for about 25 minutes, until potatoes are tender.\nWhisk flour into the heavy cream until smooth.\nStir into the hot mixture.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\nGather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes.\nCover and cook on HIGH for about 2 to 3 hours, or until the potatoes are very tender.\nWhisk flour into the heavy cream until smooth.\nStir the flour-cream mixture into the slow cooker.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\n\nImported from https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
 }
 
@@ -2640,6 +2671,10 @@ TUDOGOSTOSO = {
             "text": "tomate e ervas"
         }
     ],
+    "nutrition": {
+        'source': 'import',
+        'calories': ''
+    },
     "recipeIngredient": [
         {
             "amount": 2,

@@ -88,5 +88,10 @@ class CookBookApp(Integration):
         recipe.save()
         return recipe
 
+    # remove everything that is not part of the first, english, decimal number
     def remove_non_digts(input):
-        return ''.join("" if not c.isdigit() else c for c in input)
+        match = re.search('\d+\.?\d*', input)
+        if match:
+            return match.group()
+        else:
+            return ""

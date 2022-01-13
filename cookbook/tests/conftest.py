@@ -2,6 +2,7 @@ import copy
 import inspect
 import random
 import uuid
+import difflib
 
 import pytest
 from django.contrib import auth
@@ -112,6 +113,10 @@ def get_random_json_recipe():
 def validate_recipe(expected, recipe):
     expected_lists = {}
     target_lists = {}
+    # normalize line endings and special characterss
+    # because this test may be executed on a different platform the it was written on
+    expected['recipeInstructions'] = ''.join(e for e in expected['recipeInstructions'] if e.isalnum())
+    recipe['recipeInstructions'] = ''.join(e for e in recipe['recipeInstructions'] if e.isalnum())
     # file and url are metadata not related to the recipe
     [expected.pop(k) for k in ['file', 'url'] if k in expected]
     # if a key is a list remove it to deal with later
@@ -119,14 +124,20 @@ def validate_recipe(expected, recipe):
     for k in lists:
         expected_lists[k] = expected.pop(k)
         target_lists[k] = recipe.pop(k)
-    try:
-        # recipe dicts will have additional keys (IDs, default values, etc)
-        # this will check for an exact match from expected key:value to a superset of key:value pairs
-        assert expected.items() <= recipe.items()
-    except AssertionError:
-        for key in expected:
-            if expected[key] != recipe[key]:
-                print('Expected : ', expected[key], ' got: ', recipe[key])
+
+    # recipe dicts will have additional keys (IDs, default values, etc)
+    # this will check for an exact match from expected key:value to a superset of key:value pairs
+    print('Expected at least ', len(expected.items()), ' elements in receipt, got ', len(recipe.items()))
+    assert len(expected.items()) <= len(recipe.items())
+    for key, value in expected.items():
+        print('Comparing attribute ', key)
+        if str(expected[key]) != str(recipe[key]):
+            print('Different values for key ', key, ': \n      \'', expected[key], '\'\n got: \'', recipe[key], '\'')
+            if len(str(expected[key])) > 30:
+                print('Detailed differences:')
+                for diff in difflib.context_diff(str(expected[key]), str(recipe[key])):
+                    print(diff)
+            assert False
 
     # this is later, it may or may not work with keys that have list values
     # it also may or may not work on complex nested dicts
@@ -134,12 +145,14 @@ def validate_recipe(expected, recipe):
         for k in expected_lists[key]:
             try:
                 assert any([dict_compare(k, i) for i in target_lists[key]])
-            except AssertionError:
+            except AssertionError as e:
+                print(e)
                 for result in [dict_compare(k, i, details=True) for i in target_lists[key]]:
                     print('Added Keys: ', result[0])
                     print('Removed Keys', result[1])
                     print('Modified Value Keys', result[2])
                     print('Modified Dictionary Keys', result[3])
+                assert False
 
 
 def dict_compare(d1, d2, details=False):
