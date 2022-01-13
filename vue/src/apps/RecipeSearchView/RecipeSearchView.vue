@@ -98,9 +98,10 @@
                                                     v-model="settings.search_keywords"
                                                     :options="facets.Keywords"
                                                     :load-options="loadKeywordChildren"
-                                                    :flat="true"
-                                                    searchNested
                                                     :multiple="true"
+                                                    :flat="true"
+                                                    :auto-load-root-options="false"
+                                                    searchNested
                                                     :placeholder="$t('Keywords')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -126,9 +127,10 @@
                                                     v-model="settings.search_foods"
                                                     :options="facets.Foods"
                                                     :load-options="loadFoodChildren"
-                                                    :flat="true"
-                                                    searchNested
                                                     :multiple="true"
+                                                    :flat="true"
+                                                    :auto-load-root-options="false"
+                                                    searchNested
                                                     :placeholder="$t('Ingredients')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -400,22 +402,28 @@ export default {
             if (!this.searchFiltered) {
                 params.options = { query: { last_viewed: this.settings.recently_viewed } }
             }
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
-                window.scrollTo(0, 0)
-                this.pagination_count = result.data.count
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
+                .then((result) => {
+                    window.scrollTo(0, 0)
+                    this.pagination_count = result.data.count
 
-                this.facets = result.data.facets
-                // if (this.facets?.cache_key) {
-                //     this.getFacets(this.facets.cache_key)
-                // }
-                this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
-                if (!this.searchFiltered) {
-                    // if meal plans are being shown - filter out any meal plan recipes from the recipe list
-                    let mealPlans = []
-                    this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
-                    this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
-                }
-            })
+                    this.facets = result.data.facets
+                    // if (this.facets?.cache_key) {
+                    //     this.getFacets(this.facets.cache_key)
+                    // }
+                    this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
+                    if (!this.searchFiltered) {
+                        // if meal plans are being shown - filter out any meal plan recipes from the recipe list
+                        let mealPlans = []
+                        this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
+                        this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
+                    }
+                })
+                .then(() => {
+                    this.$nextTick(function () {
+                        this.getFacets(this.facets?.cache_key)
+                    })
+                })
         },
         openRandom: function () {
             this.refreshData(true)
@@ -525,8 +533,6 @@ export default {
                 if (this.facets?.cache_key) {
                     this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
                 }
-            } else {
-                callback()
             }
         },
         loadKeywordChildren({ action, parentNode, callback }) {
@@ -538,8 +544,6 @@ export default {
                 if (this.facets?.cache_key) {
                     this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
                 }
-            } else {
-                callback()
             }
         },
     },

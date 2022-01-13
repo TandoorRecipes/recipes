@@ -6,6 +6,7 @@ from django.core.cache import caches
 from django.db.models import Avg, Case, Count, Func, Max, OuterRef, Q, Subquery, Value, When
 from django.db.models.functions import Coalesce, Substr
 from django.utils import timezone, translation
+from django.utils.translation import gettext as _
 
 from cookbook.filters import RecipeFilter
 from cookbook.helper.HelperFunctions import Round, str2bool
@@ -259,9 +260,16 @@ class RecipeFacet():
         }
         caches['default'].set(self._SEARCH_CACHE_KEY, self._cache, self._cache_timeout)
 
-    def get_facets(self):
-        if self._cache is None:
-            pass
+    def get_facets(self, from_cache=False):
+        if from_cache:
+            return {
+                'cache_key': self.hash_key or '',
+                'Ratings': self.Ratings or {},
+                'Recent': self.Recent or [],
+                'Keywords': self.Keywords or [],
+                'Foods': self.Foods or [],
+                'Books': self.Books or []
+            }
         return {
             'cache_key': self.hash_key,
             'Ratings': self.get_ratings(),
