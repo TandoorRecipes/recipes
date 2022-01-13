@@ -22,7 +22,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Fo
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
                              UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
-from recipes.settings import MEDIA_URL, SCRIPT_NAME
+from recipes.settings import MEDIA_URL
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.recipe_image:
-            return SCRIPT_NAME + MEDIA_URL + obj.recipe_image
+            return MEDIA_URL + obj.recipe_image
 
     def count_recipes(self, obj):
         return Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).count()
