@@ -3230,3 +3230,9 @@ msgstr ""
 
 #~ msgid "This recipe is already linked to the book!"
 #~ msgstr "Dieses Rezept ist bereits mit dem Buch verlinkt!"
+
+#~ msgid "Linkslauf"
+#~ msgstr "Linkslauf"
+
+#~ msgid "Kochlöffel"
+#~ msgstr "Kochlöffel"

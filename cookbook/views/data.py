@@ -149,11 +149,14 @@ def import_url(request):
             space=request.space,
         )
 
-        step = Step.objects.create(
-            instruction=data['recipeInstructions'], space=request.space,
-        )
-
-        recipe.steps.add(step)
+        # split steps by header 1 markdown annotations
+        instructions = data['recipeInstructions'].split("#STEP")
+        steps = []
+        for instruction in instructions:
+            new_step = Step.objects.create(instruction=instruction, space=request.space)
+            steps.append(new_step)
+            new_step.save()
+            recipe.steps.add(new_step)
 
         for kw in data['keywords']:
             if data['all_keywords']: # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
@@ -190,6 +193,7 @@ def import_url(request):
             ingredient.note = ing['note'].strip() if 'note' in ing else ''
 
             ingredient.save()
+            step = find_step_for_ingredient(steps, ingredient)
             step.ingredients.add(ingredient)
 
         if 'image' in data and data['image'] != '' and data['image'] is not None:
@@ -220,6 +224,11 @@ def import_url(request):
 
     return render(request, 'url_import.html', context)
 
+def find_step_for_ingredient(steps, ingredient):
+    for step in steps:
+        if ingredient.food.name in step.instruction:
+            return step
+    return steps[0]
 
 class Object(object):
     pass

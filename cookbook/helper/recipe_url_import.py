@@ -7,7 +7,6 @@ from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
 from recipe_scrapers._utils import get_minutes
 
-from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Keyword
 
@@ -141,7 +140,8 @@ def get_from_scraper(scrape, request):
 
     try:
         recipe_json['recipeInstructions'] = parse_instructions(scrape.instructions())
-    except Exception:
+    except Exception as e:
+        print("Exception in parse_instructions(scrape.instructions())", e)
         recipe_json['recipeInstructions'] = ""
 
     if scrape.url:

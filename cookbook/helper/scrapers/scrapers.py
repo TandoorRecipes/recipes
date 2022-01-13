@@ -5,11 +5,13 @@ from recipe_scrapers._factory import SchemaScraperFactory
 from recipe_scrapers._schemaorg import SchemaOrg
 
 from .cooksillustrated import CooksIllustrated
+from .cookidoo import Cookidoo
 
 CUSTOM_SCRAPERS = {
     CooksIllustrated.host(site="cooksillustrated"): CooksIllustrated,
     CooksIllustrated.host(site="americastestkitchen"): CooksIllustrated,
     CooksIllustrated.host(site="cookscountry"): CooksIllustrated,
+    Cookidoo.host(site="cookidoo"): Cookidoo,
 }
 SCRAPERS.update(CUSTOM_SCRAPERS)
 
