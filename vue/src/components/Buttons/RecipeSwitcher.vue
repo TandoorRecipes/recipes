@@ -1,29 +1,42 @@
 <template>
-    <div v-if="recipes.length > 0">
-        <div id="switcher">
-            <i class="btn btn-outline-dark fas fa-receipt fa-xl shadow-none btn-circle" v-b-toggle.related-recipes />
+    <div v-if="recipes !== {}">
+        <div id="switcher" class="align-center">
+            <i class="btn btn-outline-dark fas fa-receipt fa-xl fa-fw shadow-none btn-circle"
+               v-b-toggle.related-recipes/>
         </div>
-        <b-sidebar id="related-recipes" :title="title" backdrop right shadow="sm" style="z-index: 10000">
+        <b-sidebar id="related-recipes" title="Quick actions" backdrop right shadow="sm" style="z-index: 10000">
             <template #default="{ hide }">
-                <nav class="mb-3">
+
+                <nav class="mb-3 ml-3">
                     <b-nav vertical>
-                        <b-nav-item
-                            variant="link"
-                            @click="
-                                navRecipe(-1)
-                                hide()
-                            "
-                            >{{ name }}</b-nav-item
-                        >
-                        <div v-for="r in recipes" :key="r.id">
-                            <b-nav-item
-                                variant="link"
-                                @click="
+                        <h5><i class="fas fa-calendar fa-fw"></i> Planned</h5>
+
+                        <div v-for="r in planned_recipes" :key="`plan${r.id}`">
+                            <b-nav-item variant="link" @click="
                                     navRecipe(r)
                                     hide()
-                                "
-                                >{{ r.name }}</b-nav-item
-                            >
+                                ">{{ r.name }}
+                            </b-nav-item>
+                        </div>
+                        <hr/>
+                        <h5><i class="fas fa-thumbtack fa-fw"></i> Pinned</h5>
+
+                        <div v-for="r in pinned_recipes" :key="`pin${r.id}`">
+                            <b-nav-item variant="link" @click="
+                                    navRecipe(r)
+                                    hide()
+                                ">{{ r.name }}
+                            </b-nav-item>
+                        </div>
+                        <hr/>
+                        <h5><i class="fas fa-link fa-fw"></i> Related</h5>
+
+                        <div v-for="r in related_recipes" :key="`related${r.id}`">
+                            <b-nav-item variant="link" @click="
+                                    navRecipe(r)
+                                    hide()
+                                ">{{ r.name }}
+                            </b-nav-item>
                         </div>
                     </b-nav>
                 </nav>
@@ -33,122 +46,101 @@
 </template>
 
 <script>
-const { ApiApiFactory } = require("@/utils/openapi/api")
-import { ResolveUrlMixin } from "@/utils/utils"
+const {ApiApiFactory} = require("@/utils/openapi/api")
+import {ResolveUrlMixin} from "@/utils/utils"
 
 export default {
     name: "RecipeSwitcher",
     mixins: [ResolveUrlMixin],
     props: {
-        recipe: { type: Number, default: undefined },
-        name: { type: String, default: undefined },
-        mode: { type: String, default: "recipe" },
+        recipe: {type: Number, default: undefined},
     },
     data() {
         return {
-            recipes: [],
-            recipe_list: [],
+            related_recipes: [],
+            planned_recipes: [],
+            pinned_recipes: [],
+            recipes: {}
         }
     },
     computed: {
-        title() {
-            let title = ""
-            switch (this.mode) {
-                case "recipe":
-                    title = this.$t("related_recipes")
-                    break
-                case "mealplan":
-                    title = this.$t("today_recipes")
-                    break
-            }
-            return title
+        is_recipe_view: function () {
+            // determine if the currently open view is the recipe view to decide if links should switch to or link to a recipe
+            return this.$root._vnode.tag.includes('RecipeView')
         },
     },
     mounted() {
-        this.recipes = []
-        switch (this.mode) {
-            case "recipe":
-                this.loadRecipes()
-                break
-            case "mealplan":
-                this.loadMealPlans()
-                break
-        }
-    },
 
+        let promises = []
+        promises.push(this.loadRelatedRecipes())
+        this.loadPinnedRecipes()
+        promises.push(this.loadMealPlans())
+
+        Promise.all(promises).then(() => {
+            this.loadRecipeData()
+        })
+    },
     methods: {
         navRecipe: function (recipe) {
-            switch (this.mode) {
-                case "recipe":
-                    this.$emit("switch", recipe)
-                    break
-                case "mealplan":
-                    window.location.href = this.resolveDjangoUrl("view_recipe", recipe.id)
-                    break
-                default:
-                    console.log(this.mode, " isn't defined.")
+
+            if (this.is_recipe_view) {
+                this.$emit("switch", this.recipes[recipe.id])
+            } else {
+                window.location.href = this.resolveDjangoUrl("view_recipe", recipe.id)
             }
         },
-        loadRecipes: function () {
+        loadRecipeData: function () {
             let apiClient = new ApiApiFactory()
 
-            apiClient
-                .relatedRecipe(this.recipe, { query: { levels: 2 } })
-                // get related recipes and save them for later
-                .then((result) => {
-                    this.recipe_list = result.data
+            let recipe_list = [...this.related_recipes, ...this.planned_recipes, ...this.pinned_recipes]
+            let recipe_ids = []
+            recipe_list.forEach((recipe) => {
+                if (!recipe_ids.includes(recipe.id)) {
+                    recipe_ids.push(recipe.id)
+                }
+            })
+
+            recipe_ids.forEach((id) => {
+                apiClient.retrieveRecipe(id).then((result) => {
+                    this.recipes[id] = result.data
                 })
-                // get all recipes for today
-                .then(() => {
-                    this.loadMealPlans()
-                })
+            })
+
+        },
+        loadRelatedRecipes: function () {
+            let apiClient = new ApiApiFactory()
+
+            // get related recipes and save them for later
+            return apiClient.relatedRecipe(this.recipe, {query: {levels: 2}}).then((result) => {
+                this.related_recipes = result.data
+            })
+        },
+        loadPinnedRecipes: function () {
+            let pinned_recipe_ids = localStorage.getItem('pinned_recipes') || []
+            this.pinned_recipes = pinned_recipe_ids
         },
         loadMealPlans: function () {
             let apiClient = new ApiApiFactory()
             // TODO move to utility function moment is in maintenance mode https://momentjs.com/docs/
             var tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
             let today = new Date(Date.now() - tzoffset).toISOString().split("T")[0]
-            apiClient
-                .listMealPlans({
-                    query: {
-                        from_date: today,
-                        to_date: today,
-                    },
-                })
-                .then((result) => {
-                    let promises = []
-                    result.data.forEach((mealplan) => {
-                        this.recipe_list.push({ ...mealplan?.recipe, servings: mealplan?.servings })
-                        const serving_factor = (mealplan?.servings ?? mealplan?.recipe?.servings ?? 1) / (mealplan?.recipe?.servings ?? 1)
-                        promises.push(
-                            apiClient.relatedRecipe(mealplan?.recipe?.id, { query: { levels: 2 } }).then((r) => {
-                                // scale all recipes to mealplan servings
-                                r.data = r.data.map((x) => {
-                                    return { ...x, factor: serving_factor }
-                                })
-                                this.recipe_list = [...this.recipe_list, ...r.data]
+            return apiClient.listMealPlans({query: {from_date: today, to_date: today,},}).then((result) => {
+                let promises = []
+                result.data.forEach((mealplan) => {
+                    this.planned_recipes.push({...mealplan?.recipe, servings: mealplan?.servings})
+                    const serving_factor = (mealplan?.servings ?? mealplan?.recipe?.servings ?? 1) / (mealplan?.recipe?.servings ?? 1)
+                    promises.push(
+                        apiClient.relatedRecipe(mealplan?.recipe?.id, {query: {levels: 2}}).then((r) => {
+                            // scale all recipes to mealplan servings
+                            r.data = r.data.map((x) => {
+                                return {...x, factor: serving_factor}
                             })
-                        )
-                    })
-
-                    return Promise.all(promises).then(() => {
-                        let promises = []
-                        let dedup = []
-                        this.recipe_list.forEach((recipe) => {
-                            if (!dedup.includes(recipe.id)) {
-                                dedup.push(recipe.id)
-                                promises.push(
-                                    apiClient.retrieveRecipe(recipe.id).then((result) => {
-                                        // scale all recipes to mealplan servings
-                                        result.data.servings = recipe?.servings ?? result.data.servings * (recipe?.factor ?? 1)
-                                        this.recipes.push(result.data)
-                                    })
-                                )
-                            }
+                            this.planned_recipes = [...this.planned_recipes, ...r.data]
                         })
-                        return Promise.all(promises)
-                    })
+                    )
                 })
+                return Promise.all(promises)
+            })
         },
     },
 }
@@ -158,7 +150,7 @@ export default {
 .btn-circle {
     width: 50px;
     height: 50px;
-    padding: 10px 16px;
+    padding: 10px 12px;
     text-align: center;
     border-radius: 35px;
     font-size: 24px;

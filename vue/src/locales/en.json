@@ -116,7 +116,7 @@
     "Information": "Information",
     "Download": "Download",
     "Create": "Create",
-    "Advanced Search Settings": "Advanced Search Settings",
+    "Search Settings": "Search Settings",
     "View": "View",
     "Recipes": "Recipes",
     "Move": "Move",
@@ -282,5 +282,9 @@
     "shopping_add_onhand_desc": "Mark food 'On Hand' when checked off shopping list.",
     "shopping_add_onhand": "Auto On Hand",
     "related_recipes": "Related Recipes",
-    "today_recipes": "Today's Recipes"
+    "today_recipes": "Today's Recipes",
+    "mark_complete": "Mark Complete",
+    "QuickEntry": "Quick Entry",
+    "shopping_add_onhand_desc": "Mark food 'On Hand' when checked off shopping list.",
+    "shopping_add_onhand": "Auto On Hand"
 }
