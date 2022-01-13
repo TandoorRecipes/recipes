@@ -604,6 +604,8 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
+        if queryset is None:
+            raise Exception
         self.facets = RecipeFacet(request, queryset=queryset)
         return super().paginate_queryset(queryset, request, view)
 
@@ -613,7 +615,7 @@ class RecipePagination(PageNumberPagination):
             ('next', self.get_next_link()),
             ('previous', self.get_previous_link()),
             ('results', data),
-            ('facets', self.facets.get_facets())
+            ('facets', self.facets.get_facets(from_cache=True))
         ]))
 
 
