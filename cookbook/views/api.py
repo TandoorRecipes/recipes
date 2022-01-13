@@ -12,8 +12,9 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, ProtectedError, Q, Value, When
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
 from django.db.models.fields.related import ForeignObjectRel
+from django.db.models.functions import Coalesce
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -30,13 +31,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
+from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsShare, CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_search import get_facet, old_search, search_recipes
+from cookbook.helper.recipe_search import RecipeFacet, old_search, search_recipes
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import list_from_recipe, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
@@ -100,7 +102,38 @@ class DefaultPagination(PageNumberPagination):
     max_page_size = 200
 
 
-class FuzzyFilterMixin(ViewSetMixin):
+class ExtendedRecipeMixin():
+    '''
+    ExtendedRecipe annotates a queryset with recipe_image and recipe_count values
+    '''
+    @classmethod
+    def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
+        extended = str2bool(request.query_params.get('extended', None))
+        if extended:
+            recipe_filter = serializer.recipe_filter
+            images = serializer.images
+            space = request.space
+
+            # add a recipe count annotation to the query
+            #  explanation on construction https://stackoverflow.com/a/43771738/15762829
+            recipe_count = Recipe.objects.filter(**{recipe_filter: OuterRef('id')}, space=space).values(recipe_filter).annotate(count=Count('pk')).values('count')
+            queryset = queryset.annotate(recipe_count_test=Coalesce(Subquery(recipe_count), 0))
+
+            # add a recipe image annotation to the query
+            image_subquery = Recipe.objects.filter(**{recipe_filter: OuterRef('id')}, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
+            if tree:
+                image_children_subquery = Recipe.objects.filter(**{f"{recipe_filter}__path__startswith": OuterRef('path')},
+                                                                space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
+            else:
+                image_children_subquery = None
+            if images:
+                queryset = queryset.annotate(recipe_image=Coalesce(*images, image_subquery, image_children_subquery))
+            else:
+                queryset = queryset.annotate(recipe_image=Coalesce(image_subquery, image_children_subquery))
+        return queryset
+
+
+class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
     schema = FilterSchema()
 
     def get_queryset(self):
@@ -141,12 +174,12 @@ class FuzzyFilterMixin(ViewSetMixin):
             if random:
                 self.queryset = self.queryset.order_by("?")
             self.queryset = self.queryset[:int(limit)]
-        return self.queryset
+        return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class)
 
 
 class MergeMixin(ViewSetMixin):
-    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
-    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    @ decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
+    @ decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def merge(self, request, pk, target):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
 
@@ -211,7 +244,7 @@ class MergeMixin(ViewSetMixin):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TreeMixin(MergeMixin, FuzzyFilterMixin):
+class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
     schema = TreeSchema()
     model = None
 
@@ -237,11 +270,13 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
         else:
-            return super().get_queryset()
-        return self.queryset.filter(space=self.request.space).order_by('name')
+            return self.annotate_recipe(queryset=super().get_queryset(), request=self.request, serializer=self.serializer_class, tree=True)
+        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
 
-    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
-    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+        return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class, tree=True)
+
+    @ decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
+    @ decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def move(self, request, pk, parent):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
         if self.model.node_order_by:
@@ -413,7 +448,15 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     permission_classes = [CustomIsUser]
     pagination_class = DefaultPagination
 
-    @decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
+    def get_queryset(self):
+        self.request._shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [self.request.user.id]
+
+        self.queryset = super().get_queryset()
+        shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'), checked=False).values('id')
+        # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
+        return self.queryset.annotate(shopping_status=Exists(shopping_status)).prefetch_related('onhand_users', 'inherit_fields').select_related('recipe', 'supermarket_category')
+
+    @ decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
         if self.request.space.demo:
@@ -561,7 +604,7 @@ class RecipePagination(PageNumberPagination):
     max_page_size = 100
 
     def paginate_queryset(self, queryset, request, view=None):
-        self.facets = get_facet(qs=queryset, request=request)
+        self.facets = RecipeFacet(request, queryset=queryset)
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):
@@ -570,7 +613,7 @@ class RecipePagination(PageNumberPagination):
             ('next', self.get_next_link()),
             ('previous', self.get_previous_link()),
             ('results', data),
-            ('facets', self.facets)
+            ('facets', self.facets.get_facets())
         ]))
 
 
@@ -608,8 +651,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             self.queryset = self.queryset.filter(space=self.request.space)
 
         self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
-
-        return super().get_queryset()
+        return super().get_queryset().prefetch_related('cooklog_set')
 
     def list(self, request, *args, **kwargs):
         if self.request.GET.get('debug', False):
@@ -1089,10 +1131,20 @@ def ingredient_from_string(request):
 @group_required('user')
 def get_facets(request):
     key = request.GET.get('hash', None)
+    food = request.GET.get('food', None)
+    keyword = request.GET.get('keyword', None)
+    facets = RecipeFacet(request, hash_key=key)
+
+    if food:
+        results = facets.add_food_children(food)
+    elif keyword:
+        results = facets.add_keyword_children(keyword)
+    else:
+        results = facets.get_facets()
 
     return JsonResponse(
         {
-            'facets': get_facet(request=request, use_cache=False, hash_key=key),
+            'facets': results,
         },
         status=200
     )
