@@ -8,7 +8,7 @@
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
                                 <b-input-group>
-                                    <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="settings.search_input" v-bind:placeholder="$t('Search')"></b-input>
+                                    <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="ui.search_input" v-bind:placeholder="$t('Search')"></b-input>
                                     <b-input-group-append>
                                         <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()" v-if="debug">
                                             <i class="fas fa-bug" style="font-size: 1.5em"></i>
@@ -18,15 +18,15 @@
                                         </b-button>
                                         <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="!isAdvancedSettingsSet() ? 'primary' : 'danger'">
                                             <!-- TODO consider changing this icon to a filter -->
-                                            <i class="fas fa-caret-down" v-if="!settings.advanced_search_visible"></i>
-                                            <i class="fas fa-caret-up" v-if="settings.advanced_search_visible"></i>
+                                            <i class="fas fa-caret-down" v-if="!ui.advanced_search_visible"></i>
+                                            <i class="fas fa-caret-up" v-if="ui.advanced_search_visible"></i>
                                         </b-button>
                                     </b-input-group-append>
                                 </b-input-group>
                             </div>
                         </div>
 
-                        <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm" v-model="settings.advanced_search_visible">
+                        <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm" v-model="ui.advanced_search_visible">
                             <div class="card">
                                 <div class="card-body p-4">
                                     <div class="row">
@@ -63,7 +63,7 @@
                                             </b-form-group>
 
                                             <b-form-group v-bind:label="$t('Recipes_per_page')" label-for="popover-input-page-count" label-cols="6" class="mb-3">
-                                                <b-form-input type="number" v-model="settings.page_count" id="popover-input-page-count" size="sm"></b-form-input>
+                                                <b-form-input type="number" v-model="ui.page_count" id="popover-input-page-count" size="sm"></b-form-input>
                                             </b-form-group>
 
                                             <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-2" label-cols="6" class="mb-3">
@@ -95,7 +95,7 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
-                                                    v-model="settings.search_keywords"
+                                                    v-model="ui.search_keywords"
                                                     :options="facets.Keywords"
                                                     :load-options="loadKeywordChildren"
                                                     :multiple="true"
@@ -109,8 +109,8 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="settings.search_keywords_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch>
-                                                            <span class="text-uppercase" v-if="settings.search_keywords_or">{{ $t("or") }}</span>
+                                                        <b-form-checkbox v-model="ui.search_keywords_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch>
+                                                            <span class="text-uppercase" v-if="ui.search_keywords_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -124,7 +124,7 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
-                                                    v-model="settings.search_foods"
+                                                    v-model="ui.search_foods"
                                                     :options="facets.Foods"
                                                     :load-options="loadFoodChildren"
                                                     :multiple="true"
@@ -138,7 +138,7 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="settings.search_foods_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch>
+                                                        <b-form-checkbox v-model="ui.search_foods_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch>
                                                             <span class="text-uppercase" v-if="settings.search_foods_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -155,7 +155,7 @@
                                                 <generic-multiselect
                                                     @change="genericSelectChanged"
                                                     parent_variable="search_books"
-                                                    :initial_selection="settings.search_books"
+                                                    :initial_selection="ui.search_books"
                                                     :model="Models.RECIPE_BOOK"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                     v-bind:placeholder="$t('Books')"
@@ -163,7 +163,7 @@
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="settings.search_books_or" name="check-button" @change="refreshData(false)" class="shadow-none" tyle="width: 100%" switch>
+                                                        <b-form-checkbox v-model="ui.search_books_or" name="check-button" @change="refreshData(false)" class="shadow-none" tyle="width: 100%" switch>
                                                             <span class="text-uppercase" v-if="settings.search_books_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -178,7 +178,7 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
-                                                    v-model="settings.search_ratings"
+                                                    v-model="ui.search_ratings"
                                                     :options="ratingOptions"
                                                     :flat="true"
                                                     :placeholder="$t('Ratings')"
@@ -201,7 +201,7 @@
                 <div class="row">
                     <div class="col col-md-12 text-right" style="margin-top: 2vh">
                         <span class="text-muted">
-                            {{ $t("Page") }} {{ settings.pagination_page }}/{{ Math.ceil(pagination_count / settings.page_count) }}
+                            {{ $t("Page") }} {{ ui.pagination_page }}/{{ Math.ceil(pagination_count / ui.page_count) }}
                             <a href="#" @click="resetSearch"><i class="fas fa-times-circle"></i> {{ $t("Reset") }}</a>
                         </span>
                     </div>
@@ -220,7 +220,7 @@
 
                 <div class="row" style="margin-top: 2vh" v-if="!random_search">
                     <div class="col col-md-12">
-                        <b-pagination pills v-model="settings.pagination_page" :total-rows="pagination_count" :per-page="settings.page_count" @change="pageChange" align="center"> </b-pagination>
+                        <b-pagination pills v-model="ui.pagination_page" :total-rows="pagination_count" :per-page="ui.page_count" @change="pageChange" align="center"></b-pagination>
                     </div>
                 </div>
             </div>
@@ -269,21 +269,24 @@ export default {
 
             settings_loaded: false,
             settings: {
-                search_input: "",
                 search_internal: false,
+                show_meal_plan: true,
+                meal_plan_days: 0,
+                recently_viewed: 5,
+                sort_by_new: true,
+                page_count: 25,
+            },
+            ui: {
+                search_input: "",
                 search_keywords: [],
                 search_foods: [],
                 search_books: [],
                 search_ratings: undefined,
 
-                search_keywords_or: true,
-                search_foods_or: true,
-                search_books_or: true,
+                search_keywords_or: false,
+                search_foods_or: false,
+                search_books_or: false,
                 advanced_search_visible: false,
-                show_meal_plan: true,
-                meal_plan_days: 0,
-                recently_viewed: 5,
-                sort_by_new: true,
                 pagination_page: 1,
                 page_count: 25,
             },
@@ -306,13 +309,13 @@ export default {
         },
         searchFiltered: function () {
             if (
-                this.settings?.search_input === "" &&
-                this.settings?.search_keywords?.length === 0 &&
-                this.settings?.search_foods?.length === 0 &&
-                this.settings?.search_books?.length === 0 &&
-                // this.settings?.pagination_page === 1 &&
+                this.ui?.search_input === "" &&
+                this.ui?.search_keywords?.length === 0 &&
+                this.ui?.search_foods?.length === 0 &&
+                this.ui?.search_books?.length === 0 &&
+                // this.ui?.pagination_page === 1 &&
                 !this.random_search &&
-                this.settings?.search_ratings === undefined
+                this.ui?.search_ratings === undefined
             ) {
                 return false
             } else {
@@ -328,23 +331,23 @@ export default {
             let urlParams = new URLSearchParams(window.location.search)
 
             if (urlParams.has("keyword")) {
-                this.settings.search_keywords = []
+                this.ui.search_keywords = []
                 this.facets.Keywords = []
                 for (let x of urlParams.getAll("keyword")) {
-                    this.settings.search_keywords.push(Number.parseInt(x))
+                    this.ui.search_keywords.push(Number.parseInt(x))
                     this.facets.Keywords.push({ id: x, name: "loading..." })
                 }
             }
             this.facets.Foods = []
-            for (let x of this.settings.search_foods) {
+            for (let x of this.ui.search_foods) {
                 this.facets.Foods.push({ id: x, name: "loading..." })
             }
             this.facets.Keywords = []
-            for (let x of this.settings.search_keywords) {
+            for (let x of this.ui.search_keywords) {
                 this.facets.Keywords.push({ id: x, name: "loading..." })
             }
             this.facets.Books = []
-            for (let x of this.settings.search_books) {
+            for (let x of this.ui.search_books) {
                 this.facets.Books.push({ id: x, name: "loading..." })
             }
             this.loadMealPlan()
@@ -356,7 +359,7 @@ export default {
     watch: {
         settings: {
             handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, "4h")
+                this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings)
             },
             deep: true,
         },
@@ -369,12 +372,12 @@ export default {
         "settings.recently_viewed": function () {
             this.refreshData(false)
         },
-        "settings.search_input": _debounce(function () {
+        "ui.search_input": _debounce(function () {
             this.settings.pagination_page = 1
             this.pagination_count = 0
             this.refreshData(false)
         }, 300),
-        "settings.page_count": _debounce(function () {
+        "ui.page_count": _debounce(function () {
             this.refreshData(false)
         }, 300),
     },
@@ -383,21 +386,21 @@ export default {
         refreshData: function (random) {
             this.random_search = random
             let params = {
-                query: this.settings.search_input,
-                keywords: this.settings.search_keywords,
-                foods: this.settings.search_foods,
-                rating: this.settings.search_ratings,
-                books: this.settings.search_books.map(function (A) {
+                query: this.ui.search_input,
+                keywords: this.ui.search_keywords,
+                foods: this.ui.search_foods,
+                rating: this.ui.search_ratings,
+                books: this.ui.search_books.map(function (A) {
                     return A["id"]
                 }),
-                keywordsOr: this.settings.search_keywords_or,
-                foodsOr: this.settings.search_foods_or,
-                booksOr: this.settings.search_books_or,
+                keywordsOr: this.ui.search_keywords_or,
+                foodsOr: this.ui.search_foods_or,
+                booksOr: this.ui.search_books_or,
                 internal: this.settings.search_internal,
                 random: this.random_search,
                 _new: this.settings.sort_by_new,
-                page: this.settings.pagination_page,
-                pageSize: this.settings.page_count,
+                page: this.ui.pagination_page,
+                pageSize: this.ui.page_count,
             }
             if (!this.searchFiltered) {
                 params.options = { query: { last_viewed: this.settings.recently_viewed } }
@@ -453,21 +456,21 @@ export default {
             this.refreshData(false)
         },
         resetSearch: function () {
-            this.settings.search_input = ""
+            this.ui.search_input = ""
             this.settings.search_internal = false
-            this.settings.search_keywords = []
-            this.settings.search_foods = []
-            this.settings.search_books = []
-            this.settings.search_ratings = undefined
-            this.settings.pagination_page = 1
+            this.ui.search_keywords = []
+            this.ui.search_foods = []
+            this.ui.search_books = []
+            this.ui.search_ratings = undefined
+            this.ui.pagination_page = 1
             this.refreshData(false)
         },
         pageChange: function (page) {
-            this.settings.pagination_page = page
+            this.ui.pagination_page = page
             this.refreshData(false)
         },
         isAdvancedSettingsSet() {
-            return this.settings.search_keywords.length + this.settings.search_foods.length + this.settings.search_books.length > 0
+            return this.ui.search_keywords.length + this.ui.search_foods.length + this.ui.search_books.length > 0
         },
         normalizer(node) {
             let count = node?.count ? " (" + node.count + ")" : ""

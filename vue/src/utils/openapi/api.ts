@@ -211,10 +211,10 @@ export interface Food {
     recipe?: FoodRecipe | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof Food
      */
-    food_onhand?: boolean;
+    food_onhand?: string | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -607,10 +607,10 @@ export interface IngredientFood {
     recipe?: FoodRecipe | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof IngredientFood
      */
-    food_onhand?: boolean;
+    food_onhand?: string | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -1182,7 +1182,7 @@ export interface MealPlanRecipe {
      * @type {any}
      * @memberof MealPlanRecipe
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<MealPlanRecipeKeywords>}
@@ -1372,7 +1372,7 @@ export interface Recipe {
      * @type {any}
      * @memberof Recipe
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<RecipeKeywords>}
@@ -1770,7 +1770,7 @@ export interface RecipeOverview {
      * @type {any}
      * @memberof RecipeOverview
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<MealPlanRecipeKeywords>}
@@ -3054,6 +3054,12 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     filter_to_supermarket?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    shopping_add_onhand?: boolean;
 }
 
 /**

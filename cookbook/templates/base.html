@@ -81,8 +81,8 @@
                 <a class="nav-link" href="{% url 'view_plan' %}"><i
                         class="fas fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
             </li>
-            <li class="nav-item {% if request.resolver_match.url_name in 'list_shopping_list,view_shopping' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'list_shopping_list' %}"><i
+            <li class="nav-item {% if request.resolver_match.url_name in 'view_shopping_new' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'view_shopping_new' %}"><i
                         class="fas fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'view_books' %}active{% endif %}">
