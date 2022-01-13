@@ -1146,6 +1146,7 @@ class ModelFilter(models.Model):
     field = models.CharField(max_length=32)
     field_type = models.CharField(max_length=32, choices=(FIELD_TYPE))
     operation = models.CharField(max_length=32, choices=(OPERATION))
+    negate = models.BooleanField(default=False,)
     target_value = models.CharField(max_length=128)
     sort = models.BooleanField(default=False,)
     ascending = models.BooleanField(default=True,)
