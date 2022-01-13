@@ -14,6 +14,8 @@ Without Feedback improvement can't happen, so don't hesitate to say what you wan
 Code contributions are always welcome. There is no special rules for what you need to do, 
 just do your best and we will work together to get your idea and code merged into the project.
 
+You may want to run "python manage.py collectstatic" and then "pytest" to make sure all unit tests are still working. 
+
 !!! info
     The dev setup is a little messy as this application combines the best (at least in my opinion) of django and Vue.js.
 
