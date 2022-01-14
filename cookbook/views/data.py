@@ -155,10 +155,12 @@ def import_url(request):
         steps = []
         next_step_name = ""
         for instruction in instructions:
+            if not instruction.strip():
+                continue
             if instruction.startswith('#'):
                 next_step_name = instruction[1:]
             else:
-                new_step = Step.objects.create(name=next_step_name, instruction=instruction, space=request.space)
+                new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
                 next_step_name = ""
                 steps.append(new_step)
                 new_step.save()
