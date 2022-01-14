@@ -238,7 +238,6 @@ export default {
                 })
                 popper.update()
                 this.over = false
-                this.$emit({ action: "drop", target: this.item, source: this.source })
             } else {
                 this.isError = true
             }

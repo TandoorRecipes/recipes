@@ -394,15 +394,20 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
                 name=validated_data.pop('supermarket_category')['name'],
                 space=self.context['request'].space)
-        onhand = validated_data.get('food_onhand', None)
+        onhand = validated_data.pop('food_onhand', None)
 
         # assuming if on hand for user also onhand for shopping_share users
         if not onhand is None:
             shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
-            if onhand:
-                validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
+            if self.instance:
+                onhand_users = self.instance.onhand_users.all()
             else:
-                validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
+                onhand_users = []
+            if onhand:
+                validated_data['onhand_users'] = list(onhand_users) + shared_users
+            else:
+                validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
+
         obj, created = Food.objects.get_or_create(**validated_data)
         return obj
 
