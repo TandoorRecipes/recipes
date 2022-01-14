@@ -77,7 +77,10 @@ class TreeManager(MP_NodeManager):
                     for field in many_to_many:
                         field_model = getattr(obj, field).model
                         for related_obj in many_to_many[field]:
-                            getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
+                            if isinstance(related_obj, User):
+                                getattr(obj, field).add(field_model.objects.get(id=related_obj.id))
+                            else:
+                                getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
                     return obj, True
                 except IntegrityError as e:
                     if 'Key (path)' in e.args[0]:
