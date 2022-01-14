@@ -30,9 +30,12 @@ class Cookidoo(AbstractScraper):
                 )
 
             # add "header 1" markdown to marks the beginning of a new step
-            return "\n\n#STEP\n\n".join(
-                self.normalize_instruction(instruction) for instruction in instructions_gist
-            )
+            step_format = "\n\n" + _("#Step {}") + "\n\n{}"
+            return "".join(step_format.format(n, self.normalize_instruction(instruction))
+                           for n, instruction in enumerate(instructions_gist, start=1))
+            #return "\n\n#STEP\n\n".join(
+            #    self.normalize_instruction(instruction) for instruction in instructions_gist
+            #)
 
         return instructions
 

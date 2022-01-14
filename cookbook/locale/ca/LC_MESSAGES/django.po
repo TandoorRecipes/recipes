@@ -2348,9 +2348,14 @@ msgstr ""
 msgid "Instructions"
 msgstr "Instruccions"
 
-#: .\cookbook\templates\url_import.html:306
+#: .\cookbook\templates\url_import.html:308
 msgid ""
 "Recipe instructions dragged here will be appended to current instructions."
+msgstr ""
+
+#: .\cookbook\templates\url_import.html:309
+msgid ""
+"The markdown # for a header marks a new step."
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:329
@@ -2813,6 +2818,18 @@ msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+
+#: .\cookbook\helper\scrapers\cookidoo.py:19
+msgid "Linkslauf"
+msgstr "Reverse"
+
+#: .\cookbook\helper\scrapers\cookidoo.py:20
+msgid "Kochlöffel"
+msgstr "spoon"
+
+#: .\cookbook\helper\scrapers\cookidoo.py:33
+msgid "#Step {}"
+msgstr "#Step {}"
 
 #~ msgid "New Unit"
 #~ msgstr "Nova Unitat"

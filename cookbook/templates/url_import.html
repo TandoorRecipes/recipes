@@ -306,11 +306,12 @@
                                            title="{% trans 'Clear Contents' %}"></i>
                                     </div>
                                     <div class="small text-muted">{% trans 'Recipe instructions dragged here will be appended to current instructions.' %}</div>
+                                    <div class="small text-muted">{% trans 'The markdown # for a header marks a new step.' %}</div>
                                 </div>
                                 <b-collapse id="collapse-instructions" visible class="mt-2">
                                     <div class="card-body drop-zone" @drop="replacePreview('instructions', $event)"
                                          @dragover.prevent @dragenter.prevent>
-                                        <div class="card-text">[[recipe_json.recipeInstructions]]</div>
+                                        <div class="card-text"><pre>[[recipe_json.recipeInstructions]]</pre></div>
                                     </div>
                                 </b-collapse>
                             </div>
@@ -572,6 +573,7 @@
 
                 <div class="form-group">
                     <label for="id_instructions">{% trans 'Instructions' %}</label>
+                    <div class="small text-muted">{% trans 'The markdown # for a header marks a new step.' %}</div>
                     <textarea id="id_instructions" class="form-control" v-model="recipe_data.recipeInstructions"
                               rows="8"></textarea>
                 </div>

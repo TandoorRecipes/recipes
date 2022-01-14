@@ -2,6 +2,7 @@ import json
 import uuid
 from datetime import datetime
 from io import BytesIO
+import re
 
 import requests
 from django.contrib import messages
@@ -150,13 +151,18 @@ def import_url(request):
         )
 
         # split steps by header 1 markdown annotations
-        instructions = data['recipeInstructions'].split("#STEP")
+        instructions = re.split('(#[^\n]+)', data['recipeInstructions'])
         steps = []
+        next_step_name = ""
         for instruction in instructions:
-            new_step = Step.objects.create(instruction=instruction, space=request.space)
-            steps.append(new_step)
-            new_step.save()
-            recipe.steps.add(new_step)
+            if instruction.startswith('#'):
+                next_step_name = instruction[1:]
+            else:
+                new_step = Step.objects.create(name=next_step_name, instruction=instruction, space=request.space)
+                next_step_name = ""
+                steps.append(new_step)
+                new_step.save()
+                recipe.steps.add(new_step)
 
         for kw in data['keywords']:
             if data['all_keywords']: # do not remove this check :) https://github.com/vabene1111/recipes/issues/645

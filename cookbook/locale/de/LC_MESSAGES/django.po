@@ -3234,5 +3234,11 @@ msgstr ""
 #~ msgid "Linkslauf"
 #~ msgstr "Linkslauf"
 
-#~ msgid "Kochlöffel"
-#~ msgstr "Kochlöffel"
+msgid "Kochlöffel"
+msgstr "Kochlöffel"
+
+msgid "Linkslauf"
+msgstr "Linkslauf"
+
+msgid "#Step {}"
+msgstr "#Schritt {}"
