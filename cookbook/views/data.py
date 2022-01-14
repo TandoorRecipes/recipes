@@ -150,21 +150,30 @@ def import_url(request):
             space=request.space,
         )
 
-        # split steps by header 1 markdown annotations
-        instructions = re.split('(#[^\n]+)', data['recipeInstructions'])
         steps = []
-        next_step_name = ""
-        for instruction in instructions:
-            if not instruction.strip():
-                continue
-            if instruction.startswith('#'):
-                next_step_name = instruction[1:]
-            else:
-                new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
-                next_step_name = ""
-                steps.append(new_step)
-                new_step.save()
-                recipe.steps.add(new_step)
+        if settings.ENABLE_IMPORT_STEPS:
+            # split steps by header 1 markdown annotations
+            instructions = re.split('(#[^\n]+)', data['recipeInstructions'])
+            next_step_name = ""
+            for instruction in instructions:
+                if not instruction.strip():
+                    continue
+                if instruction.startswith('#'):
+                    next_step_name = instruction[1:]
+                else:
+                    new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
+                    next_step_name = ""
+                    steps.append(new_step)
+                    new_step.save()
+                    recipe.steps.add(new_step)
+        else:
+            new_step = Step.objects.create(
+                instruction=data['recipeInstructions'], space=request.space,
+            )
+            steps.append(new_step)
+            new_step.save()
+            recipe.steps.add(new_step)
+
 
         for kw in data['keywords']:
             if not kw['text'].strip():
