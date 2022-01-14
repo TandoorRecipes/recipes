@@ -275,7 +275,7 @@ import moment from "moment"
 import draggable from "vuedraggable"
 import VueCookies from "vue-cookies"
 
-import { ApiMixin, StandardToasts, ResolveUrlMixin, resolveDjangoUrl } from "@/utils/utils"
+import { ApiMixin, StandardToasts, ResolveUrlMixin } from "@/utils/utils"
 import { CalendarView, CalendarMathMixin } from "vue-simple-calendar/src/components/bundle"
 import { ApiApiFactory } from "@/utils/openapi/api"
 
@@ -423,7 +423,7 @@ export default {
     },
     methods: {
         openReceipt: function(recipe) {
-            window.open(resolveDjangoUrl('view_recipe', recipe.id))
+            window.open(this.resolveDjangoUrl('view_recipe', recipe.id))
         },
         addToShopping(entry) {
             if (entry.originalItem.entry.recipe !== null) {
