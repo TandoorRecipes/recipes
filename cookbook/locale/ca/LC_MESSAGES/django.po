@@ -31,6 +31,10 @@ msgstr ""
 msgid "Ingredients"
 msgstr "Ingredients"
 
+#: .\cookbook\helper\scrapers\recipe_url_import.py:150
+msgid "Imported from"
+msgstr "Imported from"
+
 #: .\cookbook\forms.py:54
 #, fuzzy
 #| msgid "Default"

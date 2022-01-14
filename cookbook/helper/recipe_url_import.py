@@ -3,6 +3,7 @@ import re
 from html import unescape
 
 from django.utils.dateparse import parse_duration
+from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
 from recipe_scrapers._utils import get_minutes
@@ -146,7 +147,7 @@ def get_from_scraper(scrape, request):
 
     if scrape.url:
         recipe_json['url'] = scrape.url
-        recipe_json['recipeInstructions'] += "\n\nImported from " + scrape.url
+        recipe_json['recipeInstructions'] += "\n\n" + _("Imported from") + " " + scrape.url
     return recipe_json
 
 

@@ -167,12 +167,15 @@ def import_url(request):
                 recipe.steps.add(new_step)
 
         for kw in data['keywords']:
+            if not kw['text'].strip():
+                # ignore blank keywords
+                continue
             if data['all_keywords']: # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
-                k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
+                k, created = Keyword.objects.get_or_create(name=kw['text'].strip(), space=request.space)
                 recipe.keywords.add(k)
             else:
                 try:
-                    k = Keyword.objects.get(name=kw['text'], space=request.space)
+                    k = Keyword.objects.get(name=kw['text'].strip(), space=request.space)
                     recipe.keywords.add(k)
                 except ObjectDoesNotExist:
                     pass

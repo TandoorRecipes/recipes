@@ -3242,3 +3242,6 @@ msgstr "Linkslauf"
 
 msgid "#Step {}"
 msgstr "#Schritt {}"
+
+msgid "Imported from"
+msgstr "Importiert aus"
