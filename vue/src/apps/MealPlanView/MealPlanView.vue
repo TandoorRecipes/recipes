@@ -132,11 +132,11 @@
                 <ContextMenuItem
                     v-if="contextData.originalItem.entry.recipe != null"
                     @click="
-                    $refs.menu.close()
-                    recipe = contextData.originalItem.entry.recipe
-                    if (recipe != null) {
-                        navigateToURL(resolveDjangoUrl('view_recipe', recipe.id))
-                    }
+                        $refs.menu.close()
+                        recipe = contextData.originalItem.entry.recipe
+                        if (recipe != null) {
+                            openReceipt(recipe)
+                        }
                     ">
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i> {{ $t("Recipe") }}</a>
                 </ContextMenuItem>
@@ -275,7 +275,7 @@ import moment from "moment"
 import draggable from "vuedraggable"
 import VueCookies from "vue-cookies"
 
-import { ApiMixin, StandardToasts, ResolveUrlMixin } from "@/utils/utils"
+import { ApiMixin, StandardToasts, ResolveUrlMixin, resolveDjangoUrl } from "@/utils/utils"
 import { CalendarView, CalendarMathMixin } from "vue-simple-calendar/src/components/bundle"
 import { ApiApiFactory } from "@/utils/openapi/api"
 
@@ -422,8 +422,8 @@ export default {
         },
     },
     methods: {
-        navigateToURL: function(url) {
-            window.open(url)
+        openReceipt: function(recipe) {
+            window.open(resolveDjangoUrl('view_recipe', recipe.id))
         },
         addToShopping(entry) {
             if (entry.originalItem.entry.recipe !== null) {
