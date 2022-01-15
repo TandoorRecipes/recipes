@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 
 from cookbook.views import views
+from recipes import settings
 
 
 class ScopeMiddleware:
@@ -12,16 +13,17 @@ class ScopeMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        prefix = settings.JS_REVERSE_SCRIPT_PREFIX or ''
         if request.user.is_authenticated:
 
-            if request.path.startswith('/admin/'):
+            if request.path.startswith(prefix + '/admin/'):
                 with scopes_disabled():
                     return self.get_response(request)
 
-            if request.path.startswith('/signup/') or request.path.startswith('/invite/'):
+            if request.path.startswith(prefix + '/signup/') or request.path.startswith(prefix + '/invite/'):
                 return self.get_response(request)
 
-            if request.path.startswith('/accounts/'):
+            if request.path.startswith(prefix + '/accounts/'):
                 return self.get_response(request)
 
             with scopes_disabled():
@@ -36,7 +38,7 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
-            if request.path.startswith('/api/'):
+            if request.path.startswith(prefix + '/api/'):
                 try:
                     if auth := TokenAuthentication().authenticate(request):
                         request.space = auth[0].userpreference.space

@@ -1,16 +1,16 @@
+from datetime import datetime
+
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import widgets, NumberInput
+from django.forms import NumberInput, widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, InviteLink, Keyword, MealPlan, Recipe,
-                     RecipeBook, RecipeBookEntry, Storage, Sync, User,
-                     UserPreference, MealType, Space,
-                     SearchPreference)
+from .models import (Comment, Food, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+                     RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference)
 
 
 class SelectWidget(widgets.Select):
@@ -37,7 +37,10 @@ class UserPreferenceForm(forms.ModelForm):
     prefix = 'preference'
 
     def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
+        if x := kwargs.get('instance', None):
+            space = x.space
+        else:
+            space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
         self.fields['plan_share'].queryset = User.objects.filter(userpreference__space=space).all()
 
@@ -46,8 +49,7 @@ class UserPreferenceForm(forms.ModelForm):
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'show_recent', 'search_style',
-            'plan_share', 'ingredient_decimals', 'shopping_auto_sync',
-            'comments'
+            'plan_share', 'ingredient_decimals', 'comments',
         )
 
         labels = {
@@ -74,8 +76,8 @@ class UserPreferenceForm(forms.ModelForm):
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
             # noqa: E501
             'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  # noqa: E501
-            'plan_share': _(
-                'Users with whom newly created meal plan/shopping list entries should be shared by default.'),
+            'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
+            'shopping_share': _('Users with whom to share shopping lists.'),
             # noqa: E501
             'show_recent': _('Show recently viewed recipes on search page.'),  # noqa: E501
             'ingredient_decimals': _('Number of decimals to round ingredients.'),  # noqa: E501
@@ -84,11 +86,14 @@ class UserPreferenceForm(forms.ModelForm):
                 'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  # noqa: E501
                 'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
             ),
-            'sticky_navbar': _('Makes the navbar stick to the top of the page.')  # noqa: E501
+            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),  # noqa: E501
+            'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
+            'mealplan_autoexclude_onhand': _('Exclude ingredients that are on hand.'),
         }
 
         widgets = {
-            'plan_share': MultiSelectWidget
+            'plan_share': MultiSelectWidget,
+            'shopping_share': MultiSelectWidget,
         }
 
 
@@ -140,7 +145,7 @@ class ImportExportBase(forms.Form):
     NEXTCLOUD = 'NEXTCLOUD'
     MEALIE = 'MEALIE'
     CHOWDOWN = 'CHOWDOWN'
-    SAFRON = 'SAFRON'
+    SAFFRON = 'SAFFRON'
     CHEFTAP = 'CHEFTAP'
     PEPPERPLATE = 'PEPPERPLATE'
     RECIPEKEEPER = 'RECIPEKEEPER'
@@ -153,13 +158,14 @@ class ImportExportBase(forms.Form):
     PLANTOEAT = 'PLANTOEAT'
     COOKBOOKAPP = 'COOKBOOKAPP'
     COPYMETHAT = 'COPYMETHAT'
+    PDF = 'PDF'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
-        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
+        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'),
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
         (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
-        (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'),
+        (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'),
     ))
 
 
@@ -171,7 +177,7 @@ class ImportForm(ImportExportBase):
 
 
 class ExportForm(ImportExportBase):
-    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none())
+    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none(), required=False)
     all = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
@@ -223,6 +229,7 @@ class StorageForm(forms.ModelForm):
         }
 
 
+# TODO: Deprecate
 class RecipeBookEntryForm(forms.ModelForm):
     prefix = 'bookmark'
 
@@ -262,6 +269,7 @@ class SyncForm(forms.ModelForm):
         }
 
 
+# TODO deprecate
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     keywords = forms.ModelMultipleChoiceField(
@@ -298,6 +306,7 @@ class ImportRecipeForm(forms.ModelForm):
         }
 
 
+# TODO deprecate
 class MealPlanForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
@@ -350,7 +359,7 @@ class InviteLinkForm(forms.ModelForm):
     def clean(self):
         space = self.cleaned_data['space']
         if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(
-                space=space).count()) >= space.max_users:
+                space=space).filter(valid_until__gte=datetime.today()).count()) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
@@ -464,4 +473,73 @@ class SearchPreferenceForm(forms.ModelForm):
             'istartswith': MultiSelectWidget,
             'trigram': MultiSelectWidget,
             'fulltext': MultiSelectWidget,
+        }
+
+
+class ShoppingPreferenceForm(forms.ModelForm):
+    prefix = 'shopping'
+
+    class Meta:
+        model = UserPreference
+
+        fields = (
+            'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
+            'mealplan_autoinclude_related', 'shopping_add_onhand', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
+        )
+
+        help_texts = {
+            'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
+            'shopping_auto_sync': _(
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  # noqa: E501
+                'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
+            ),
+            'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
+            'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
+            'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
+            'default_delay': _('Default number of hours to delay a shopping list entry.'),
+            'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
+            'shopping_recent_days': _('Days of recent shopping list entries to display.'),
+            'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
+            'csv_delim': _('Delimiter to use for CSV exports.'),
+            'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
+
+        }
+        labels = {
+            'shopping_share': _('Share Shopping List'),
+            'shopping_auto_sync': _('Autosync'),
+            'mealplan_autoadd_shopping': _('Auto Add Meal Plan'),
+            'mealplan_autoexclude_onhand': _('Exclude On Hand'),
+            'mealplan_autoinclude_related': _('Include Related'),
+            'default_delay': _('Default Delay Hours'),
+            'filter_to_supermarket': _('Filter to Supermarket'),
+            'shopping_recent_days': _('Recent Days'),
+            'csv_delim': _('CSV Delimiter'),
+            "csv_prefix_label": _("List Prefix"),
+            'shopping_add_onhand': _("Auto On Hand"),
+        }
+
+        widgets = {
+            'shopping_share': MultiSelectWidget
+        }
+
+
+class SpacePreferenceForm(forms.ModelForm):
+    prefix = 'space'
+    reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
+                                            help_text=_("Reset all food to inherit the fields configured."))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)  # populates the post
+        self.fields['food_inherit'].queryset = Food.inheritable_fields
+
+    class Meta:
+        model = Space
+
+        fields = ('food_inherit', 'reset_food_inherit',)
+
+        help_texts = {
+            'food_inherit': _('Fields on food that should be inherited by default.'), }
+
+        widgets = {
+            'food_inherit': MultiSelectWidget
         }

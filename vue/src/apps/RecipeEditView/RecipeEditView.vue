@@ -49,13 +49,13 @@
 
         <div class="col-md-6 mt-1">
           <label for="id_name"> {{ $t('Preparation') }} {{ $t('Time') }} ({{ $t('min') }})</label>
-          <input class="form-control" id="id_prep_time" v-model="recipe.working_time">
+          <input class="form-control" id="id_prep_time" v-model="recipe.working_time" type="number">
           <br/>
           <label for="id_name"> {{ $t('Waiting') }} {{ $t('Time') }} ({{ $t('min') }})</label>
-          <input class="form-control" id="id_wait_time" v-model="recipe.waiting_time">
+          <input class="form-control" id="id_wait_time" v-model="recipe.waiting_time" type="number">
           <br/>
           <label for="id_name"> {{ $t('Servings') }}</label>
-          <input class="form-control" id="id_servings" v-model="recipe.servings">
+          <input class="form-control" id="id_servings" v-model="recipe.servings" type="number">
           <br/>
           <label for="id_name"> {{ $t('Servings') }} {{ $t('Text') }}</label>
           <input class="form-control" id="id_servings_text" v-model="recipe.servings_text" maxlength="32">
@@ -343,7 +343,7 @@
                                 </div>
                                 <div class="small-padding"
                                      v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
-                                  <input class="form-control"
+                                  <input class="form-control" maxlength="256"
                                          v-model="ingredient.note"
                                          v-bind:placeholder="$t('Note')"
                                          v-on:keydown.tab="event => {if(step.ingredients.indexOf(ingredient) === (step.ingredients.length -1)){event.preventDefault();addIngredient(step)}}">
@@ -623,13 +623,13 @@ export default {
         this.sortIngredients(s)
       }
 
-      if (this.recipe.waiting_time === ''){ this.recipe.waiting_time = 0}
-      if (this.recipe.working_time === ''){ this.recipe.working_time = 0}
-      if (this.recipe.servings === ''){ this.recipe.servings = 0}
+      if (this.recipe.waiting_time === '' || isNaN(this.recipe.waiting_time)){ this.recipe.waiting_time = 0}
+      if (this.recipe.working_time === ''|| isNaN(this.recipe.working_time)){ this.recipe.working_time = 0}
+      if (this.recipe.servings === ''|| isNaN(this.recipe.servings)){ this.recipe.servings = 0}
+
 
       apiFactory.updateRecipe(this.recipe_id, this.recipe,
           {}).then((response) => {
-        console.log(response)
         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
         this.recipe_changed = false
         if (view_after) {

@@ -1,13 +1,15 @@
 import random
 import re
+from html import unescape
+
+from django.utils.dateparse import parse_duration
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
+from recipe_scrapers._utils import get_minutes
 
+from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Keyword
-from django.utils.dateparse import parse_duration
-from html import unescape
-from recipe_scrapers._utils import get_minutes
 
 
 def get_from_scraper(scrape, request):
@@ -96,8 +98,9 @@ def get_from_scraper(scrape, request):
         recipe_json['keywords'] = keywords
 
     ingredient_parser = IngredientParser(request, True)
+
+    ingredients = []
     try:
-        ingredients = []
         for x in scrape.ingredients():
             try:
                 amount, unit, ingredient, note = ingredient_parser.parse(x)

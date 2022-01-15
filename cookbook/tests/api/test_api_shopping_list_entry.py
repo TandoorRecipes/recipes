@@ -6,7 +6,7 @@ from django.forms import model_to_dict
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import ShoppingList, ShoppingListEntry, Food
+from cookbook.models import Food, ShoppingList, ShoppingListEntry
 
 LIST_URL = 'api:shoppinglistentry-list'
 DETAIL_URL = 'api:shoppinglistentry-detail'
@@ -14,7 +14,7 @@ DETAIL_URL = 'api:shoppinglistentry-detail'
 
 @pytest.fixture()
 def obj_1(space_1, u1_s1):
-    e = ShoppingListEntry.objects.create(food=Food.objects.get_or_create(name='test 1', space=space_1)[0])
+    e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1), food=Food.objects.get_or_create(name='test 1', space=space_1)[0], space=space_1)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -22,7 +22,7 @@ def obj_1(space_1, u1_s1):
 
 @pytest.fixture
 def obj_2(space_1, u1_s1):
-    e = ShoppingListEntry.objects.create(food=Food.objects.get_or_create(name='test 2', space=space_1)[0])
+    e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1), food=Food.objects.get_or_create(name='test 2', space=space_1)[0], space=space_1)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -45,8 +45,11 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
 
     with scopes_disabled():
         s = ShoppingList.objects.first()
+        e = ShoppingListEntry.objects.first()
         s.space = space_2
+        e.space = space_2
         s.save()
+        e.save()
 
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
