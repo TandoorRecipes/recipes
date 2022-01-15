@@ -40,6 +40,7 @@ body:
         - SWAG
         - Caddy
         - Traefik
+        - Apache2
         - Others (please state below)
     validations:
       required: true
