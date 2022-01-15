@@ -29,6 +29,8 @@ services:
     restart: always
     env_file:
       - ./.env
+    ports:
+      - ${NGINX_PORT}:80
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static

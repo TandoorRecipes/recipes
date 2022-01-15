@@ -59,7 +59,7 @@ The main, and also recommended, installation option is to install this applicati
 
 ### Plain
 
-This configuration exposes the application through an nginx web server on port 80 of your machine.
+This configuration exposes the application through an nginx web server on port 80 of your machine. To avoid collisions you can specificy a different port using the NGINX_PORT variable from your .env file
 
 ```shell
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml

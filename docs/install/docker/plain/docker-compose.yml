@@ -24,7 +24,7 @@ services:
     image: nginx:mainline-alpine
     restart: always
     ports:
-      - 80:80
+      - ${NGINX_PORT}:80
     env_file:
       - ./.env
     depends_on:

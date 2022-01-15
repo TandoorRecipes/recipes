@@ -29,6 +29,8 @@ services:
     restart: always
     env_file:
       - ./.env
+    ports:
+      - ${NGINX_PORT}:80
     depends_on:
       - web_recipes
     volumes:
