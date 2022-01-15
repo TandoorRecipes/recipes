@@ -2,6 +2,22 @@ There are several questions and issues that come up from time to time. Here are 
 Please note that the existence of some questions is due the application not being perfect in some parts. 
 Many of those shortcomings are planned to be fixed in future release but simply could not be addressed yet due to time limits.
 
+## Is there a Tandoor app?
+Tandoor can be installed as a progressive web app (PWA) on mobile and desktop devices. The PWA stores recently accessed recipes locally for offline use.
+
+### Mobile browsers
+
+#### Safari (iPhone/iPad)
+Open Tandoor, click Safari's share button, select `Add to Home Screen`
+
+### Desktop browsers
+
+#### Google Chrome 
+Open Tandoor, open the menu behind the three vertical dots at the top right, select `Install Tandoor Recipes...`
+
+#### Microsoft Edge
+Open Tandoor, open the menu behind the three horizontal dots at the top right, select `Apps > Install Tandoor Recipes`
+
 ## Why am I getting CSRF Errors?
 If you are getting CSRF Errors this is most likely due to a reverse proxy not passing the correct headers.
 
