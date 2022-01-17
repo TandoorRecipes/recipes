@@ -25,13 +25,23 @@
                             <b-nav-item variant="link" @click="
                                     navRecipe(r)
                                     hide()
-                                ">{{ r.name }}
+                                ">{{ r.name }} <a href="javascript:void(0);">x</a>
                             </b-nav-item>
                         </div>
                         <hr/>
                         <h5><i class="fas fa-link fa-fw"></i> Related</h5>
 
                         <div v-for="r in related_recipes" :key="`related${r.id}`">
+                            <b-nav-item variant="link" @click="
+                                    navRecipe(r)
+                                    hide()
+                                ">{{ r.name }}
+                            </b-nav-item>
+                        </div>
+
+                        <h5><i class="fas fa-link fa-fw"></i> TEST</h5>
+
+                        <div v-for="r in test" :key="`test${r.id}`">
                             <b-nav-item variant="link" @click="
                                     navRecipe(r)
                                     hide()
@@ -60,7 +70,8 @@ export default {
             related_recipes: [],
             planned_recipes: [],
             pinned_recipes: [],
-            recipes: {}
+            recipes: {},
+            test : []
         }
     },
     computed: {
@@ -84,7 +95,7 @@ export default {
         navRecipe: function (recipe) {
 
             if (this.is_recipe_view) {
-                this.$emit("switch", this.recipes[recipe.id])
+                this.$emit("switch", recipe)
             } else {
                 window.location.href = this.resolveDjangoUrl("view_recipe", recipe.id)
             }
@@ -93,16 +104,23 @@ export default {
             let apiClient = new ApiApiFactory()
 
             let recipe_list = [...this.related_recipes, ...this.planned_recipes, ...this.pinned_recipes]
+
             let recipe_ids = []
             recipe_list.forEach((recipe) => {
-                if (!recipe_ids.includes(recipe.id)) {
-                    recipe_ids.push(recipe.id)
+                let id = recipe.id
+                if (id === undefined){
+                    id = recipe
+                }
+
+                if (!recipe_ids.includes(id)) {
+                    recipe_ids.push(id)
                 }
             })
-
+            console.log(recipe_list, recipe_ids)
             recipe_ids.forEach((id) => {
                 apiClient.retrieveRecipe(id).then((result) => {
                     this.recipes[id] = result.data
+                    this.test.push(result.data)
                 })
             })
 
@@ -111,12 +129,14 @@ export default {
             let apiClient = new ApiApiFactory()
 
             // get related recipes and save them for later
-            return apiClient.relatedRecipe(this.recipe, {query: {levels: 2}}).then((result) => {
-                this.related_recipes = result.data
-            })
+            if (this.recipe){
+                return apiClient.relatedRecipe(this.recipe, {query: {levels: 2}}).then((result) => {
+                    this.related_recipes = result.data
+                })
+            }
         },
         loadPinnedRecipes: function () {
-            let pinned_recipe_ids = localStorage.getItem('pinned_recipes') || []
+            let pinned_recipe_ids = JSON.parse(localStorage.getItem('pinned_recipes')) || []
             this.pinned_recipes = pinned_recipe_ids
         },
         loadMealPlans: function () {
