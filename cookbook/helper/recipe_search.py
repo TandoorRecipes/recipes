@@ -172,6 +172,8 @@ class RecipeSearch():
     def keyword_filters(self, keywords=None, operator=True):
         if not keywords:
             return
+        if not isinstance(keywords, list):
+            keywords = [keywords]
         if operator == True:
             # TODO creating setting to include descendants of keywords a setting
             self._queryset = self._queryset.filter(keywords__in=Keyword.include_descendants(Keyword.objects.filter(pk__in=keywords)))
@@ -184,6 +186,8 @@ class RecipeSearch():
     def food_filters(self, foods=None, operator=True):
         if not foods:
             return
+        if not isinstance(foods, list):
+            foods = [foods]
         if operator == True:
             # TODO creating setting to include descendants of food a setting
             self._queryset = self._queryset.filter(steps__ingredients__food__in=Food.include_descendants(Food.objects.filter(pk__in=foods)))
@@ -198,7 +202,9 @@ class RecipeSearch():
             raise NotImplementedError
         if not units:
             return
-        self._queryset = self._queryset.filter(steps__ingredients__unit__id=units)
+        if not isinstance(units, list):
+            units = [units]
+        self._queryset = self._queryset.filter(steps__ingredients__unit__in=units)
 
     def rating_filter(self, rating=None):
         if rating is None:
@@ -217,6 +223,8 @@ class RecipeSearch():
     def book_filters(self, books=None, operator=True):
         if not books:
             return
+        if not isinstance(books, list):
+            books = [books]
         if operator == True:
             self._queryset = self._queryset.filter(recipebookentry__book__id__in=books)
         else:
@@ -228,6 +236,8 @@ class RecipeSearch():
             raise NotImplementedError
         if not steps:
             return
+        if not isinstance(steps, list):
+            steps = [unistepsts]
         self._queryset = self._queryset.filter(steps__id__in=steps)
 
     def build_fulltext_filters(self, string=None):
@@ -490,7 +500,7 @@ class RecipeFacet():
                 'space': self._request.space,
             }
         elif self.hash_key is not None:
-            self._recipe_list = self._cache.get('recipe_list', None)
+            self._recipe_list = self._cache.get('recipe_list', [])
             self._search_params = {
                 'keyword_list': self._cache.get('keyword_list', None),
                 'food_list': self._cache.get('food_list', None),
@@ -637,7 +647,7 @@ class RecipeFacet():
         depth = getattr(keyword, 'depth', 0) + 1
         steplen = depth * Keyword.steplen
 
-        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
+        return queryset.annotate(count=Coalesce(1, 0)
                                  ).filter(depth=depth, count__gt=0
                                           ).values('id', 'name', 'count', 'numchild').order_by('name')
 
@@ -645,7 +655,7 @@ class RecipeFacet():
         depth = getattr(food, 'depth', 0) + 1
         steplen = depth * Food.steplen
 
-        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
+        return queryset.annotate(count=Coalesce(1, 0)
                                  ).filter(depth__lte=depth, count__gt=0
                                           ).values('id', 'name', 'count', 'numchild').order_by('name')
 

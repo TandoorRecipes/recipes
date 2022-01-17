@@ -655,7 +655,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         # self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
         params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x in list(self.request.GET)}
-        self.queryset = RecipeSearch(self.request, **params).get_queryset(self.queryset).prefetch_related('cooklog_set')
+        search = RecipeSearch(self.request, **params)
+        self.queryset = search.get_queryset(self.queryset).prefetch_related('cooklog_set')
         return self.queryset
 
     def list(self, request, *args, **kwargs):

@@ -5,7 +5,7 @@
         </template>
 
         <div v-if="!loading">
-            <RecipeSwitcher :recipe="rootrecipe.id" :name="rootrecipe.name" mode="recipe" @switch="quickSwitch($event)" />
+            <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)" />
             <div class="row">
                 <div class="col-12" style="text-align: center">
                     <h3>{{ recipe.name }}</h3>
