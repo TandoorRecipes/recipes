@@ -108,9 +108,6 @@ export default {
             let recipe_ids = []
             recipe_list.forEach((recipe) => {
                 let id = recipe.id
-                if (id === undefined){
-                    id = recipe
-                }
 
                 if (!recipe_ids.includes(id)) {
                     recipe_ids.push(id)
