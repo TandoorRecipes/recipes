@@ -18,12 +18,23 @@
     {% endif %}
 
     <div class="table-container">
-        <h3 style="margin-bottom: 2vh">{{ title }} {% trans 'List' %}
-            {% if create_url %}
-                <a href="{% url create_url %}"> <i class="fas fa-plus-circle"></i>
+        <span class="col col-md-9">
+            <h3 style="margin-bottom: 2vh">{{ title }} {% trans 'List' %}
+                {% if create_url %}
+                    <a href="{% url create_url %}"> <i class="fas fa-plus-circle"></i>
+                    </a>
+                {% endif %}
+            </h3>
+        </span>
+        {% if request.resolver_match.url_name in 'list_shopping_list' %}
+            <span class="col-md-3">
+                <a href="{% url 'view_shopping_new' %}" class="float-right">
+                    <button class="btn btn-outline-secondary shadow-none">
+                        <i class="fas fa-star"></i> {% trans 'Try the new shopping list' %}
+                    </button>
                 </a>
-            {% endif %}
-        </h3>
+            </span>
+        {% endif %}
 
         {% if filter %}
             <br/>

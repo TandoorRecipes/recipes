@@ -1,0 +1,82 @@
+name: Help request
+description: "If there is anything wrong with your setup"
+#title: ""
+labels: ["setup issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this help request!
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue
+      description: "Please describe your problem here."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Tandoor Version
+      description: "What version of Tandoor are you using? (can be found on the system page since v0.8.4)"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS Version
+      description: "E.g. Ubuntu 20.02"
+    validations:
+      required: true
+  - type: dropdown
+    id: setup
+    attributes:
+      label: Setup
+      description: "How is your Tandoor instance set up?"
+      options:
+        - Docker / Docker-Compose
+        - Unraid
+        - Synology
+        - Kubernetes
+        - Manual Setup
+        - Others (please state below)
+    validations:
+      required: true
+  - type: dropdown
+    id: reverse-proxy
+    attributes:
+      label: "Reverse Proxy"
+      description: "What reverse proxy do you use with Tandoor?"
+      options:
+        - No reverse proxy
+        - jwilder's nginx proxy
+        - Nginx Proxy Manager (NPM)
+        - SWAG
+        - Caddy
+        - Traefik
+        - Others (please state below)
+    validations:
+      required: true
+  - type: input
+    id: other
+    attributes:
+      label: Other
+      description: "In case you chose 'Others' above or have more info, please provide additional details here."
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment file
+      description: "Please include your `.env` config file (**make sure to remove/replace all secrets**)"
+      render: shell
+  - type: textarea
+    id: docker-compose
+    attributes:
+      label: Docker-Compose file
+      description: "When running with docker compose please provide your `docker-compose.yml`"
+      render: shell
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: "If you feel like there is anything interesting please post the output of `docker-compose logs` at container startup and when the issue happens."
+      render: shell

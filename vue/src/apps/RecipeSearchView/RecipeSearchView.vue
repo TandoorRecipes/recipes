@@ -1,5 +1,6 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
+        <RecipeSwitcher mode="mealplan" />
         <div class="row">
             <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
                 <div class="row">
@@ -79,7 +80,7 @@
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
                                             <div class="col-12">
-                                                <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Advanced Search Settings") }}</a>
+                                                <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Search Settings") }}</a>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 1vh">
@@ -96,9 +97,11 @@
                                                 <treeselect
                                                     v-model="settings.search_keywords"
                                                     :options="facets.Keywords"
+                                                    :load-options="loadKeywordChildren"
+                                                    :multiple="true"
                                                     :flat="true"
+                                                    :auto-load-root-options="false"
                                                     searchNested
-                                                    multiple
                                                     :placeholder="$t('Keywords')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -123,9 +126,11 @@
                                                 <treeselect
                                                     v-model="settings.search_foods"
                                                     :options="facets.Foods"
+                                                    :load-options="loadFoodChildren"
+                                                    :multiple="true"
                                                     :flat="true"
+                                                    :auto-load-root-options="false"
                                                     searchNested
-                                                    multiple
                                                     :placeholder="$t('Ingredients')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
@@ -238,12 +243,13 @@ Vue.use(VueCookies)
 
 import { ApiMixin, ResolveUrlMixin } from "@/utils/utils"
 
-import LoadingSpinner from "@/components/LoadingSpinner" // is this deprecated?
+import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
 
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import Treeselect from "@riophae/vue-treeselect"
+import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
+import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 
 Vue.use(BootstrapVue)
 
@@ -252,7 +258,7 @@ let SETTINGS_COOKIE_NAME = "search_settings"
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin],
-    components: { GenericMultiselect, RecipeCard, Treeselect },
+    components: { GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher },
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
@@ -295,7 +301,7 @@ export default {
                 { id: 3, label: "⭐⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["3.0"] ?? 0) + ")" },
                 { id: 2, label: "⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["2.0"] ?? 0) + ")" },
                 { id: 1, label: "⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["1.0"] ?? 0) + ")" },
-                { id: -1, label: this.$t("Unrated") + " (" + (this.facets.Ratings?.["0.0"] ?? 0) + ")" },
+                { id: 0, label: this.$t("Unrated") + " (" + (this.facets.Ratings?.["0.0"] ?? 0) + ")" },
             ]
         },
         searchFiltered: function () {
@@ -396,22 +402,28 @@ export default {
             if (!this.searchFiltered) {
                 params.options = { query: { last_viewed: this.settings.recently_viewed } }
             }
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
-                window.scrollTo(0, 0)
-                this.pagination_count = result.data.count
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
+                .then((result) => {
+                    window.scrollTo(0, 0)
+                    this.pagination_count = result.data.count
 
-                this.facets = result.data.facets
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key)
-                }
-                this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
-                if (!this.searchFiltered) {
-                    // if meal plans are being shown - filter out any meal plan recipes from the recipe list
-                    let mealPlans = []
-                    this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
-                    this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
-                }
-            })
+                    this.facets = result.data.facets
+                    // if (this.facets?.cache_key) {
+                    //     this.getFacets(this.facets.cache_key)
+                    // }
+                    this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
+                    if (!this.searchFiltered) {
+                        // if meal plans are being shown - filter out any meal plan recipes from the recipe list
+                        let mealPlans = []
+                        this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
+                        this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
+                    }
+                })
+                .then(() => {
+                    this.$nextTick(function () {
+                        this.getFacets(this.facets?.cache_key)
+                    })
+                })
         },
         openRandom: function () {
             this.refreshData(true)
@@ -471,14 +483,18 @@ export default {
             let new_recipe = [this.$t("New_Recipe"), "fas fa-splotch"]
             if (x.new) {
                 return new_recipe
-            } else if (this.facets.Recent.includes(x.id)) {
+            } else if (x.recent) {
                 return recent_recipe
             } else {
                 return [undefined, undefined]
             }
         },
-        getFacets: function (hash) {
-            this.genericGetAPI("api_get_facets", { hash: hash }).then((response) => {
+        getFacets: function (hash, facet, id) {
+            let params = { hash: hash }
+            if (facet) {
+                params[facet] = id
+            }
+            return this.genericGetAPI("api_get_facets", params).then((response) => {
                 this.facets = { ...this.facets, ...response.data.facets }
             })
         },
@@ -506,9 +522,29 @@ export default {
             } else {
                 params.options = { query: { debug: true } }
             }
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
-                console.log(result.data)
-            })
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {})
+        },
+        loadFoodChildren({ action, parentNode, callback }) {
+            // Typically, do the AJAX stuff here.
+            // Once the server has responded,
+            // assign children options to the parent node & call the callback.
+
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
+                }
+            }
+        },
+        loadKeywordChildren({ action, parentNode, callback }) {
+            // Typically, do the AJAX stuff here.
+            // Once the server has responded,
+            // assign children options to the parent node & call the callback.
+
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
+                }
+            }
         },
     },
 }

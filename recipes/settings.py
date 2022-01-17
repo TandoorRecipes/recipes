@@ -56,6 +56,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_REDIRECT_URL = "index"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
@@ -136,6 +137,8 @@ ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
 ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
 
+ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -163,12 +166,12 @@ if ENABLE_METRICS:
 AUTHENTICATION_BACKENDS = []
 
 # LDAP
-LDAP_AUTH=bool(os.getenv('LDAP_AUTH', False))
+LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
 if LDAP_AUTH:
     import ldap
     from django_auth_ldap.config import LDAPSearch
     AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
-    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI') 
+    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
     AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
     AUTH_LDAP_USER_SEARCH = LDAPSearch(
@@ -255,7 +258,7 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 # Load settings from env files
 if os.getenv('DATABASE_URL'):
     match = re.match(
-        r'(?P<schema>\w+):\/\/(?P<user>[\w\d_-]+)(:(?P<password>[^@]+))?@(?P<host>[^:/]+)(:(?P<port>\d+))?(\/(?P<database>[\w\d_-]+))?',
+        r'(?P<schema>\w+):\/\/(?P<user>[\w\d_-]+)(:(?P<password>[^@]+))?@(?P<host>[^:/]+)(:(?P<port>\d+))?(\/(?P<database>[\w\d\/\._-]+))?',
         os.getenv('DATABASE_URL')
     )
     settings = match.groupdict()
@@ -368,10 +371,10 @@ LANGUAGES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+SCRIPT_NAME = os.getenv('SCRIPT_NAME', '')
 # path for django_js_reverse to generate the javascript file containing all urls. Only done because the default command (collectstatic_js_reverse) fails to update the manifest
 JS_REVERSE_OUTPUT_PATH = os.path.join(BASE_DIR, "cookbook/static/django_js_reverse")
-
-JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', os.getenv('SCRIPT_NAME', ''))
+JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', SCRIPT_NAME)
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

@@ -1,5 +1,5 @@
 {
-    "warning_feature_beta": "Ta funkcja jest obecnie w wersji BETA (testowej). Podczas korzystania z tej funkcji należy spodziewać się błędów i ewentualnych zmian w przyszłości (prawdopodobna utrata danych powiązanych z tą funkcją).",
+    "warning_feature_beta": "Ta funkcja jest obecnie w wersji BETA (testowej). Podczas korzystania z tej funkcji mogą wystąpić błędy, a w przyszłości zmiany funkcjonalności (możliwa utrata danych powiązanych z tą funkcją).",
     "err_fetching_resource": "Wystąpił błąd podczas pobierania zasobu!",
     "err_creating_resource": "Wystąpił błąd podczas tworzenia zasobu!",
     "err_updating_resource": "Wystąpił błąd podczas aktualizowania zasobu!",
@@ -207,5 +207,22 @@
     "Auto_Planner": "Plan automatyczny",
     "New_Cookbook": "Nowa książka kucharska",
     "Hide_Keyword": "Ukryj słowa kluczowe",
-    "Clear": "Wyczyść"
+    "Clear": "Wyczyść",
+    "err_moving_resource": "Wystąpił błąd podczas przenoszenia zasobu!",
+    "err_merging_resource": "Wystąpił błąd podczas scalania zasobu!",
+    "success_moving_resource": "Pomyślnie przeniesiono zasób!",
+    "success_merging_resource": "Pomyślnie scalono zasób!",
+    "Added_by": "Dodane przez",
+    "Added_on": "Dodano dnia",
+    "IngredientInShopping": "Ten składnik znajduje się na Twojej liście zakupów.",
+    "NotInShopping": "{food} nie ma na Twojej liście zakupów.",
+    "OnHand": "Obecnie pod ręką",
+    "FoodNotOnHand": "Nie masz pod ręką {food}.",
+    "Undefined": "Nieokreślony",
+    "AddFoodToShopping": "Dodaj {food} do swojej listy zakupów",
+    "RemoveFoodFromShopping": "Usuń {food} z listy zakupów",
+    "Shopping_Categories": "Kategorie zakupów",
+    "AddToShopping": "Dodaj do listy zakupów",
+    "FoodOnHand": "Masz pod ręką {food}.",
+    "DeleteShoppingConfirm": "Czy na pewno chcesz usunąć wszystkie {food} z listy zakupów?"
 }

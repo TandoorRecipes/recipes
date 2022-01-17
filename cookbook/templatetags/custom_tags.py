@@ -3,6 +3,7 @@ from gettext import gettext as _
 
 import bleach
 import markdown as md
+from markdown.extensions.tables import TableExtension
 from bleach_allowlist import markdown_attrs, markdown_tags
 from django import template
 from django.db.models import Avg
@@ -49,7 +50,7 @@ def markdown(value):
     parsed_md = md.markdown(
         value,
         extensions=[
-            'markdown.extensions.fenced_code', 'tables',
+            'markdown.extensions.fenced_code', TableExtension(),
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )

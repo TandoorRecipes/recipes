@@ -22,13 +22,13 @@ from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
-from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm,
-                            SpaceJoinForm, User, UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
+                            SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
+                            UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
-from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword, MealPlan, RecipeImport,
-                             SearchFields, SearchPreference, ShareLink, ShoppingList, Space, Unit,
-                             UserFile, ViewLog)
+from cookbook.models import (Comment, CookLog, Food, FoodInheritField, InviteLink, Keyword,
+                             MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
+                             ShoppingList, Space, Unit, UserFile, ViewLog)
 from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
@@ -254,13 +254,13 @@ def latest_shopping_list(request):
 
 
 @group_required('user')
-def shopping_list(request, pk=None):
+def shopping_list(request, pk=None):  # TODO deprecate
     html_list = request.GET.getlist('r')
 
     recipes = []
     for r in html_list:
         r = r.replace('[', '').replace(']', '')
-        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
+        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):  # vulnerable to DoS
             rid, multiplier = r.split(',')
             if recipe := Recipe.objects.filter(pk=int(rid), space=request.space).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
@@ -303,10 +303,6 @@ def user_settings(request):
                 up.use_fractions = form.cleaned_data['use_fractions']
                 up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
-
-                up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
-                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
-                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
 
                 up.save()
 
@@ -378,10 +374,32 @@ def user_settings(request):
                         sp.trigram_threshold = 0.1
 
                     sp.save()
+        elif 'shopping_form' in request.POST:
+            shopping_form = ShoppingPreferenceForm(request.POST, prefix='shopping')
+            if shopping_form.is_valid():
+                if not up:
+                    up = UserPreference(user=request.user)
+
+                up.shopping_share.set(shopping_form.cleaned_data['shopping_share'])
+                up.mealplan_autoadd_shopping = shopping_form.cleaned_data['mealplan_autoadd_shopping']
+                up.mealplan_autoexclude_onhand = shopping_form.cleaned_data['mealplan_autoexclude_onhand']
+                up.mealplan_autoinclude_related = shopping_form.cleaned_data['mealplan_autoinclude_related']
+                up.shopping_auto_sync = shopping_form.cleaned_data['shopping_auto_sync']
+                up.filter_to_supermarket = shopping_form.cleaned_data['filter_to_supermarket']
+                up.default_delay = shopping_form.cleaned_data['default_delay']
+                up.shopping_recent_days = shopping_form.cleaned_data['shopping_recent_days']
+                up.shopping_add_onhand = shopping_form.cleaned_data['shopping_add_onhand']
+                up.csv_delim = shopping_form.cleaned_data['csv_delim']
+                up.csv_prefix = shopping_form.cleaned_data['csv_prefix']
+                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
+                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
+                up.save()
     if up:
-        preference_form = UserPreferenceForm(instance=up, space=request.space)
+        preference_form = UserPreferenceForm(instance=up)
+        shopping_form = ShoppingPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm(space=request.space)
+        shopping_form = ShoppingPreferenceForm(space=request.space)
 
     fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
         sp.fulltext.all())
@@ -406,6 +424,7 @@ def user_settings(request):
         'user_name_form': user_name_form,
         'api_token': api_token,
         'search_form': search_form,
+        'shopping_form': shopping_form,
         'active_tab': active_tab
     })
 
@@ -541,7 +560,22 @@ def space(request):
         InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(invite_links)
 
-    return render(request, 'space.html', {'space_users': space_users, 'counts': counts, 'invite_links': invite_links})
+    space_form = SpacePreferenceForm(instance=request.space)
+
+    space_form.base_fields['food_inherit'].queryset = Food.inheritable_fields
+    if request.method == "POST" and 'space_form' in request.POST:
+        form = SpacePreferenceForm(request.POST, prefix='space')
+        if form.is_valid():
+            request.space.food_inherit.set(form.cleaned_data['food_inherit'])
+            if form.cleaned_data['reset_food_inherit']:
+                Food.reset_inheritance(space=request.space)
+
+    return render(request, 'space.html', {
+        'space_users': space_users,
+        'counts': counts,
+        'invite_links': invite_links,
+        'space_form': space_form
+    })
 
 
 # TODO super hacky and quick solution, safe but needs rework
