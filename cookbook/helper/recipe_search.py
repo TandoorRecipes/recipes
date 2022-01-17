@@ -647,7 +647,7 @@ class RecipeFacet():
         depth = getattr(keyword, 'depth', 0) + 1
         steplen = depth * Keyword.steplen
 
-        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
+        return queryset.annotate(count=Coalesce(1, 0)
                                  ).filter(depth=depth, count__gt=0
                                           ).values('id', 'name', 'count', 'numchild').order_by('name')
 
@@ -655,7 +655,7 @@ class RecipeFacet():
         depth = getattr(food, 'depth', 0) + 1
         steplen = depth * Food.steplen
 
-        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
+        return queryset.annotate(count=Coalesce(1, 0)
                                  ).filter(depth__lte=depth, count__gt=0
                                           ).values('id', 'name', 'count', 'numchild').order_by('name')
 
