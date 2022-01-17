@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-07 17:31+0100\n"
-"PO-Revision-Date: 2021-11-12 20:06+0000\n"
+"PO-Revision-Date: 2022-01-17 07:56+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -260,10 +260,6 @@ msgid "Email address already taken!"
 msgstr "Questo indirizzo email è già in uso!"
 
 #: .\cookbook\forms.py:367
-#, fuzzy
-#| msgid ""
-#| "An email address is not required but if present the invite link will be "
-#| "send to the user."
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
@@ -840,6 +836,10 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Il link per il reset della password non è corretto, probabilmente perché è "
+"stato già utilizzato.\n"
+"                    Puoi richiedere un  <a href=\"%(passwd_reset_url)s\""
+">nuovo reset della password</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
@@ -932,10 +932,8 @@ msgid "Supermarket Category"
 msgstr "Categoria Supermercato"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:195
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Informazioni"
+msgstr "Automazioni"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:215
 msgid "Files"
@@ -1842,6 +1840,9 @@ msgid ""
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Cerca quello che ti serve anche se la ricerca o la ricetta contengono "
+"errori. Potrebbe mostrare più risultati di quelli necessari per mostrarti "
+"quello che stai cercando."
 
 #: .\cookbook\templates\settings.html:175
 msgid "This is the default behavior"
@@ -1864,7 +1865,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:183
 msgid "Perfect for large Databases"
-msgstr ""
+msgstr "Perfetto per database grandi"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
