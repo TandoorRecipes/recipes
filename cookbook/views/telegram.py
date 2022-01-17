@@ -45,21 +45,17 @@ def hook(request, token):
             tb.save()
 
         if tb.chat_id == str(data['message']['chat']['id']):
-            sl = ShoppingList.objects.filter(Q(created_by=tb.created_by)).filter(finished=False, space=tb.space).order_by('-created_at').first()
-            if not sl:
-                sl = ShoppingList.objects.create(created_by=tb.created_by, space=tb.space)
-
             request.space = tb.space  # TODO this is likely a bad idea. Verify and test
             request.user = tb.created_by
             ingredient_parser = IngredientParser(request, False)
             amount, unit, ingredient, note = ingredient_parser.parse(data['message']['text'])
             f = ingredient_parser.get_food(ingredient)
             u = ingredient_parser.get_unit(unit)
-            sl.entries.add(
-                ShoppingListEntry.objects.create(
-                    food=f, unit=u, amount=amount
-                )
+
+            ShoppingListEntry.objects.create(
+                food=f, unit=u, amount=amount, created_by=request.user
             )
+
             return JsonResponse({'data': data['message']['text']})
     except Exception:
         pass
