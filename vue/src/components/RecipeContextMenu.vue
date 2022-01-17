@@ -151,8 +151,8 @@ export default {
     },
     methods: {
         pinRecipe: function () {
-            let pinnedRecipes =  JSON.parse(localStorage.getItem('pinned_recipes') )|| []
-            pinnedRecipes.push(this.recipe.id)
+            let pinnedRecipes = JSON.parse(localStorage.getItem('pinned_recipes')) || []
+            pinnedRecipes.push({id: this.recipe.id, name: this.recipe.name})
             localStorage.setItem('pinned_recipes', JSON.stringify(pinnedRecipes))
         },
         saveMealPlan: function (entry) {
