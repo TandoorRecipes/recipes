@@ -165,9 +165,10 @@ class FoodInheritFieldSerializer(WritableNestedModelSerializer):
         read_only_fields = ['id']
 
 
-class UserPreferenceSerializer(serializers.ModelSerializer):
+class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', many=True, allow_null=True, required=False, read_only=True)
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
+    shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
 
     def create(self, validated_data):
         if not validated_data.get('user', None):
