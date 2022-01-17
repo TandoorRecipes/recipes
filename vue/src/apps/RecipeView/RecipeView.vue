@@ -5,7 +5,7 @@
         </template>
 
         <div v-if="!loading">
-            <RecipeSwitcher :recipe="rootrecipe.id" :name="rootrecipe.name" mode="recipe" @switch="quickSwitch($event)" />
+<!--            <RecipeSwitcher :recipe="rootrecipe.id" :name="rootrecipe.name" mode="recipe" @switch="quickSwitch($event)" />-->
             <div class="row">
                 <div class="col-12" style="text-align: center">
                     <h3>{{ recipe.name }}</h3>
@@ -173,7 +173,7 @@ import IngredientsCard from "@/components/IngredientsCard"
 import StepComponent from "@/components/StepComponent"
 import KeywordsComponent from "@/components/KeywordsComponent"
 import NutritionComponent from "@/components/NutritionComponent"
-import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
+// import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 
 Vue.prototype.moment = moment
 
@@ -194,7 +194,7 @@ export default {
         KeywordsComponent,
         LoadingSpinner,
         AddRecipeToBook,
-        RecipeSwitcher,
+        // RecipeSwitcher,
     },
     computed: {
         ingredient_factor: function () {
