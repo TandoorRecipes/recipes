@@ -248,6 +248,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     allow_sharing = models.BooleanField(default=True)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField,  blank=True)
+    show_facet_count = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

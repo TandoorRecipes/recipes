@@ -1,6 +1,6 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
-        <RecipeSwitcher ref="ref_recipe_switcher"/>
+        <RecipeSwitcher ref="ref_recipe_switcher" />
         <div class="row">
             <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
                 <div class="row">
@@ -295,13 +295,23 @@ export default {
     },
     computed: {
         ratingOptions: function () {
+            let ratingCount = undefined
+            if (Object.keys(this.facets?.Ratings ?? {}).length === 0) {
+                ratingCount = (x) => {
+                    return ""
+                }
+            } else {
+                ratingCount = (x) => {
+                    return ` (${x})`
+                }
+            }
             return [
-                { id: 5, label: "⭐⭐⭐⭐⭐" + " (" + (this.facets.Ratings?.["5.0"] ?? 0) + ")" },
-                { id: 4, label: "⭐⭐⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["4.0"] ?? 0) + ")" },
-                { id: 3, label: "⭐⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["3.0"] ?? 0) + ")" },
-                { id: 2, label: "⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["2.0"] ?? 0) + ")" },
-                { id: 1, label: "⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["1.0"] ?? 0) + ")" },
-                { id: 0, label: this.$t("Unrated") + " (" + (this.facets.Ratings?.["0.0"] ?? 0) + ")" },
+                { id: 5, label: "⭐⭐⭐⭐⭐" + ratingCount(this.facets.Ratings?.["5.0"] ?? 0) },
+                { id: 4, label: "⭐⭐⭐⭐ " + this.$t("and_up") + ratingCount(this.facets.Ratings?.["4.0"] ?? 0) },
+                { id: 3, label: "⭐⭐⭐ " + this.$t("and_up") + ratingCount(this.facets.Ratings?.["3.0"] ?? 0) },
+                { id: 2, label: "⭐⭐ " + this.$t("and_up") + ratingCount(this.facets.Ratings?.["2.0"] ?? 0) },
+                { id: 1, label: "⭐ " + this.$t("and_up") + ratingCount(this.facets.Ratings?.["1.0"] ?? 0) },
+                { id: 0, label: this.$t("Unrated") + ratingCount(this.facets.Ratings?.["0.0"] ?? 0) },
             ]
         },
         searchFiltered: function () {
