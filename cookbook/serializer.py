@@ -165,9 +165,10 @@ class FoodInheritFieldSerializer(WritableNestedModelSerializer):
         read_only_fields = ['id']
 
 
-class UserPreferenceSerializer(serializers.ModelSerializer):
+class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', many=True, allow_null=True, required=False, read_only=True)
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
+    shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
 
     def create(self, validated_data):
         if not validated_data.get('user', None):
@@ -475,7 +476,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
         if obj.step_recipe and type(self.parent.root) == RecipeSerializer:
-            return StepRecipeSerializer(obj.step_recipe).data
+            return StepRecipeSerializer(obj.step_recipe, context={'request': self.context['request']}).data
 
     class Meta:
         model = Step
@@ -496,6 +497,11 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
+    carbohydrates = CustomDecimalField()
+    fats = CustomDecimalField()
+    proteins = CustomDecimalField()
+    calories = CustomDecimalField()
+
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
