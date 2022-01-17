@@ -590,10 +590,13 @@ class RecipeFacet():
 
     def get_ratings(self):
         if self.Ratings is None:
-            if self._queryset is None:
-                self._queryset = Recipe.objects.filter(id__in=self._recipe_list)
-            rating_qs = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=Value(0)))))
-            self.Ratings = dict(Counter(r.rating for r in rating_qs))
+            if not self._request.space.demo and self._request.space.show_facet_count:
+                if self._queryset is None:
+                    self._queryset = Recipe.objects.filter(id__in=self._recipe_list)
+                rating_qs = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=Value(0)))))
+                self.Ratings = dict(Counter(r.rating for r in rating_qs))
+            else:
+                self.Rating = {}
             self.set_cache('Ratings', self.Ratings)
         return self.Ratings
 
@@ -647,17 +650,23 @@ class RecipeFacet():
         depth = getattr(keyword, 'depth', 0) + 1
         steplen = depth * Keyword.steplen
 
-        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
-                                 ).filter(depth=depth, count__gt=0
-                                          ).values('id', 'name', 'count', 'numchild').order_by('name')
+        if not self._request.space.demo and self._request.space.show_facet_count:
+            return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
+                                     ).filter(depth=depth, count__gt=0
+                                              ).values('id', 'name', 'count', 'numchild').order_by('name')
+        else:
+            return queryset.filter(depth=depth).values('id', 'name',  'numchild').order_by('name')
 
     def _food_queryset(self, queryset, food=None):
         depth = getattr(food, 'depth', 0) + 1
         steplen = depth * Food.steplen
 
-        return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
-                                 ).filter(depth__lte=depth, count__gt=0
-                                          ).values('id', 'name', 'count', 'numchild').order_by('name')
+        if not self._request.space.demo and self._request.space.show_facet_count:
+            return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
+                                     ).filter(depth__lte=depth, count__gt=0
+                                              ).values('id', 'name', 'count', 'numchild').order_by('name')
+        else:
+            return queryset.filter(depth__lte=depth).values('id', 'name', 'numchild').order_by('name')
 
 
 # # TODO:  This might be faster https://github.com/django-treebeard/django-treebeard/issues/115
