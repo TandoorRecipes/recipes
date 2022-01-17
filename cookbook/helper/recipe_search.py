@@ -490,7 +490,7 @@ class RecipeFacet():
                 'space': self._request.space,
             }
         elif self.hash_key is not None:
-            self._recipe_list = self._cache.get('recipe_list', None)
+            self._recipe_list = self._cache.get('recipe_list', [])
             self._search_params = {
                 'keyword_list': self._cache.get('keyword_list', None),
                 'food_list': self._cache.get('food_list', None),
