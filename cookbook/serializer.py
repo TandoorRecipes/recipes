@@ -519,7 +519,7 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
     def get_recipe_last_cooked(self, obj):
         try:
-            last = obj.cooklog_set.filter(created_by=self.context['request'].user).last()
+            last = obj.cooklog_set.filter(created_by=self.context['request'].user).order_by('created_at').last()
             if last:
                 return last.created_at
         except TypeError:
@@ -539,6 +539,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     rating = serializers.SerializerMethodField('get_recipe_rating')
     last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
     new = serializers.SerializerMethodField('is_recipe_new')
+    recent = serializers.ReadOnlyField()
 
     def create(self, validated_data):
         pass
@@ -551,7 +552,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new'
+            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 

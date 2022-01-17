@@ -301,7 +301,7 @@ export default {
                 { id: 3, label: "⭐⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["3.0"] ?? 0) + ")" },
                 { id: 2, label: "⭐⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["2.0"] ?? 0) + ")" },
                 { id: 1, label: "⭐ " + this.$t("and_up") + " (" + (this.facets.Ratings?.["1.0"] ?? 0) + ")" },
-                { id: -1, label: this.$t("Unrated") + " (" + (this.facets.Ratings?.["0.0"] ?? 0) + ")" },
+                { id: 0, label: this.$t("Unrated") + " (" + (this.facets.Ratings?.["0.0"] ?? 0) + ")" },
             ]
         },
         searchFiltered: function () {
@@ -483,7 +483,7 @@ export default {
             let new_recipe = [this.$t("New_Recipe"), "fas fa-splotch"]
             if (x.new) {
                 return new_recipe
-            } else if (this.facets.Recent.includes(x.id)) {
+            } else if (x.recent) {
                 return recent_recipe
             } else {
                 return [undefined, undefined]

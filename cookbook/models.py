@@ -151,6 +151,7 @@ class TreeModel(MP_Node):
             return super().add_root(**kwargs)
 
     # i'm 99% sure there is a more idiomatic way to do this subclassing MP_NodeQuerySet
+    @staticmethod
     def include_descendants(queryset=None, filter=None):
         """
         :param queryset: Model Queryset to add descendants
@@ -1095,98 +1096,81 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
 
-class ModelFilter(models.Model):
-    EQUAL = 'EQUAL'
-    NOT_EQUAL = 'NOT_EQUAL'
-    LESS_THAN = 'LESS_THAN'
-    GREATER_THAN = 'GREATER_THAN'
-    LESS_THAN_EQ = 'LESS_THAN_EQ'
-    GREATER_THAN_EQ = 'GREATER_THAN_EQ'
-    CONTAINS = 'CONTAINS'
-    NOT_CONTAINS = 'NOT_CONTAINS'
-    STARTS_WITH = 'STARTS_WITH'
-    NOT_STARTS_WITH = 'NOT_STARTS_WITH'
-    ENDS_WITH = 'ENDS_WITH'
-    NOT_ENDS_WITH = 'NOT_ENDS_WITH'
-    INCLUDES = 'INCLUDES'
-    NOT_INCLUDES = 'NOT_INCLUDES'
-    COUNT_EQ = 'COUNT_EQ'
-    COUNT_NEQ = 'COUNT_NEQ'
-    COUNT_LT = 'COUNT_LT'
-    COUNT_GT = 'COUNT_GT'
+# class ModelFilter(models.Model):
+#     EQUAL = 'EQUAL'
+#     LESS_THAN = 'LESS_THAN'
+#     GREATER_THAN = 'GREATER_THAN'
+#     LESS_THAN_EQ = 'LESS_THAN_EQ'
+#     GREATER_THAN_EQ = 'GREATER_THAN_EQ'
+#     CONTAINS = 'CONTAINS'
+#     STARTS_WITH = 'STARTS_WITH'
+#     ENDS_WITH = 'ENDS_WITH'
+#     INCLUDES = 'INCLUDES'
 
-    OPERATION = (
-        (EQUAL, _('is')),
-        (NOT_EQUAL, _('is not')),
-        (LESS_THAN, _('less than')),
-        (GREATER_THAN, _('greater than')),
-        (LESS_THAN_EQ, _('less or equal')),
-        (GREATER_THAN_EQ, _('greater or equal')),
-        (CONTAINS, _('contains')),
-        (NOT_CONTAINS, _('does not contain')),
-        (STARTS_WITH, _('starts with')),
-        (NOT_STARTS_WITH, _('does not start with')),
-        (INCLUDES, _('includes')),
-        (NOT_INCLUDES, _('does not include')),
-        (COUNT_EQ, _('count equals')),
-        (COUNT_NEQ, _('count does not equal')),
-        (COUNT_LT, _('count less than')),
-        (COUNT_GT, _('count greater than')),
-    )
+#     OPERATION = (
+#         (EQUAL, _('is')),
+#         (LESS_THAN, _('less than')),
+#         (GREATER_THAN, _('greater than')),
+#         (LESS_THAN_EQ, _('less or equal')),
+#         (GREATER_THAN_EQ, _('greater or equal')),
+#         (CONTAINS, _('contains')),
+#         (STARTS_WITH, _('starts with')),
+#         (INCLUDES, _('includes')),
+#     )
 
-    STRING = 'STRING'
-    NUMBER = 'NUMBER'
-    BOOLEAN = 'BOOLEAN'
-    DATE = 'DATE'
+#     STRING = 'STRING'
+#     NUMBER = 'NUMBER'
+#     BOOLEAN = 'BOOLEAN'
+#     DATE = 'DATE'
 
-    FIELD_TYPE = (
-        (STRING, _('string')),
-        (NUMBER, _('number')),
-        (BOOLEAN, _('boolean')),
-        (DATE, _('date')),
-    )
+#     FIELD_TYPE = (
+#         (STRING, _('string')),
+#         (NUMBER, _('number')),
+#         (BOOLEAN, _('boolean')),
+#         (DATE, _('date')),
+#     )
 
-    field = models.CharField(max_length=32)
-    field_type = models.CharField(max_length=32, choices=(FIELD_TYPE))
-    operation = models.CharField(max_length=32, choices=(OPERATION))
-    negate = models.BooleanField(default=False,)
-    target_value = models.CharField(max_length=128)
-    sort = models.BooleanField(default=False,)
-    ascending = models.BooleanField(default=True,)
+#     field = models.CharField(max_length=32)
+#     field_type = models.CharField(max_length=32, choices=(FIELD_TYPE))
+#     operation = models.CharField(max_length=32, choices=(OPERATION))
+#     negate = models.BooleanField(default=False,)
+#     target_value = models.CharField(max_length=128)
+#     sort = models.BooleanField(default=False,)
+#     ascending = models.BooleanField(default=True,)
 
-    def __str__(self):
-        return f"{self.field} - {self.operation} - {self.target_value}"
+#     def __str__(self):
+#         return f"{self.field} - {self.operation} - {self.target_value}"
 
 
-class SavedFilter(models.Model, PermissionModelMixin):
-    FOOD = 'FOOD'
-    UNIT = 'UNIT'
-    KEYWORD = "KEYWORD"
-    RECIPE = 'RECIPE'
-    BOOK = 'BOOK'
+# class SavedFilter(models.Model, PermissionModelMixin):
+#     FOOD = 'FOOD'
+#     UNIT = 'UNIT'
+#     KEYWORD = "KEYWORD"
+#     RECIPE = 'RECIPE'
+#     BOOK = 'BOOK'
 
-    MODELS = (
-        (FOOD, _('Food')),
-        (UNIT, _('Unit')),
-        (KEYWORD, _('Keyword')),
-        (RECIPE, _('Recipe')),
-        (BOOK, _('Book'))
-    )
+#     MODELS = (
+#         (FOOD, _('Food')),
+#         (UNIT, _('Unit')),
+#         (KEYWORD, _('Keyword')),
+#         (RECIPE, _('Recipe')),
+#         (BOOK, _('Book'))
+#     )
 
-    name = models.CharField(max_length=128, )
-    type = models.CharField(max_length=24, choices=(MODELS)),
-    description = models.CharField(max_length=256, blank=True)
-    shared = models.ManyToManyField(User, blank=True, related_name='filter_share')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    filter = models.ForeignKey(ModelFilter, on_delete=models.PROTECT, null=True)
+#     name = models.CharField(max_length=128, )
+#     type = models.CharField(max_length=24, choices=(MODELS)),
+#     description = models.CharField(max_length=256, blank=True)
+#     shared = models.ManyToManyField(User, blank=True, related_name='filter_share')
+#     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+#     filter = models.ForeignKey(ModelFilter, on_delete=models.PROTECT, null=True)
 
-    objects = ScopedManager(space='space')
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+#     objects = ScopedManager(space='space')
+#     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.type}: {self.name}"
+#     def __str__(self):
+#         return f"{self.type}: {self.name}"
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='sf_unique_name_per_space')
-        ]
+#     class Meta:
+#         constraints = [
+#             models.UniqueConstraint(fields=['space', 'name'], name='sf_unique_name_per_space')
+#         ]
