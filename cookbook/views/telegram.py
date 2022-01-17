@@ -52,9 +52,7 @@ def hook(request, token):
             f = ingredient_parser.get_food(ingredient)
             u = ingredient_parser.get_unit(unit)
 
-            ShoppingListEntry.objects.create(
-                food=f, unit=u, amount=amount, created_by=request.user
-            )
+            ShoppingListEntry.objects.create(food=f, unit=u, amount=amount, created_by=request.user, space=request.space)
 
             return JsonResponse({'data': data['message']['text']})
     except Exception:
