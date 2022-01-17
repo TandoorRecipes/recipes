@@ -1,22 +1,22 @@
 <template>
     <b-input-group class="mt-2">
         <treeselect
-            v-model="settings.search_keywords"
-            :options="facets.Keywords"
+            v-model="selected1"
+            :options="options"
             :load-options="loadChildren"
             :multiple="true"
             :flat="true"
             :auto-load-root-options="false"
             searchNested
-            :placeholder="$t('Keywords')"
+            :placeholder="placeholder"
             :normalizer="normalizer"
-            @input="refreshData(false)"
+            @input="change"
             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
         />
         <b-input-group-append>
             <b-input-group-text>
-                <b-form-checkbox v-model="settings.search_keywords_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch size="sm">
-                    <span class="text-uppercase" v-if="settings.search_keywords_or">{{ $t("or") }}</span>
+                <b-form-checkbox v-model="or1" name="check-button" @change="orChange()" class="shadow-none" switch>
+                    <span class="text-uppercase" v-if="or1">{{ $t("or") }}</span>
                     <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                 </b-form-checkbox>
             </b-input-group-text>
@@ -25,30 +25,64 @@
 </template>
 
 <script>
+import { ApiMixin } from "@/utils/utils"
 import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 
 export default {
     name: "AdvancedTreeSelect",
     props: {
-        selected: { type: Array },
+        initial_selected1: { type: Array },
+        initial_selected2: { type: Array },
+        initial_selected3: { type: Array },
+        placeholder: { type: String, default: "You forgot to set placeholder" },
+        options: { type: Array },
+        facet: { type: String, default: undefined },
     },
     components: { Treeselect },
     data() {
         return {
-            shopping: false,
+            selected1: [],
+            selected2: [],
+            selected3: [],
+            callbacks: [],
+            or1: true,
         }
     },
     mounted() {},
     computed: {},
-    watch: {},
+    watch: {
+        selected1: function (newVal, oldVal) {
+            console.log("test", newVal)
+            this.$emit("change", newVal)
+        },
+        options: function () {
+            this.callbacks.forEach((callback) => {
+                callback()
+            })
+        },
+    },
     methods: {
         loadChildren: function ({ action, parentNode, callback }) {
             if (action === LOAD_CHILDREN_OPTIONS) {
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
-                }
+                this.callbacks.push(callback)
+                this.$emit("load-children", { type: "keyword", parent: parentNode.id })
             }
+        },
+        normalizer(node) {
+            let count = node?.count ? " (" + node.count + ")" : ""
+            return {
+                id: node.id,
+                label: node.name + count,
+                children: node.children,
+                isDefaultExpanded: node.isDefaultExpanded,
+            }
+        },
+        orChange: function () {
+            console.log("changed!")
+        },
+        change: function (e) {
+            console.log(e)
         },
     },
 }
