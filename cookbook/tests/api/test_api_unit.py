@@ -49,7 +49,7 @@ def ing_3_s2(obj_3, space_2, u2_s2):
 
 @pytest.fixture()
 def sle_1_s1(obj_1, u1_s1, space_1):
-    e = ShoppingListEntry.objects.create(unit=obj_1, food=random_food(space_1, u1_s1))
+    e = ShoppingListEntry.objects.create(unit=obj_1, food=random_food(space_1, u1_s1), created_by=auth.get_user(u1_s1), space=space_1,)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -57,12 +57,12 @@ def sle_1_s1(obj_1, u1_s1, space_1):
 
 @pytest.fixture()
 def sle_2_s1(obj_2, u1_s1, space_1):
-    return ShoppingListEntry.objects.create(unit=obj_2, food=random_food(space_1, u1_s1))
+    return ShoppingListEntry.objects.create(unit=obj_2, food=random_food(space_1, u1_s1), created_by=auth.get_user(u1_s1), space=space_1,)
 
 
 @pytest.fixture()
 def sle_3_s2(obj_3, u2_s2, space_2):
-    e = ShoppingListEntry.objects.create(unit=obj_3, food=random_food(space_2, u2_s2))
+    e = ShoppingListEntry.objects.create(unit=obj_3, food=random_food(space_2, u2_s2), created_by=auth.get_user(u2_s2), space=space_2)
     s = ShoppingList.objects.create(created_by=auth.get_user(u2_s2), space=space_2)
     s.entries.add(e)
     return e

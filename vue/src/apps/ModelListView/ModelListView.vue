@@ -7,7 +7,7 @@
             <div class="col-xl-8 col-12">
                 <div class="container-fluid d-flex flex-column flex-grow-1">
                     <!-- dynamically loaded header components -->
-                    <div class="row" v-if="header_component_name !== ''">
+                    <div class="row" v-if="header_component_name">
                         <div class="col-md-12">
                             <component :is="headerComponent"></component>
                         </div>
@@ -19,20 +19,15 @@
                                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                                 <model-menu />
                                 <span>{{ this.this_model.name }}</span>
-                                <span v-if="this_model.name !== 'Step'"
-                                    ><b-button variant="link" @click="startAction({ action: 'new' })"><i class="fas fa-plus-circle fa-2x"></i></b-button></span
+                                <span v-if="apiName !== 'Step'">
+                                    <b-button variant="link" @click="startAction({ action: 'new' })">
+                                        <i class="fas fa-plus-circle fa-2x"></i>
+                                    </b-button> </span
                                 ><!-- TODO add proper field to model config to determine if create should be available or not -->
                             </h3>
                         </div>
                         <div class="col-md-3" style="position: relative; margin-top: 1vh">
-                            <b-form-checkbox
-                                v-model="show_split"
-                                name="check-button"
-                                v-if="paginated"
-                                class="shadow-none"
-                                style="position: relative; top: 50%; transform: translateY(-50%)"
-                                switch
-                            >
+                            <b-form-checkbox v-model="show_split" name="check-button" v-if="paginated" class="shadow-none" style="position: relative; top: 50%; transform: translateY(-50%)" switch>
                                 {{ $t("show_split_screen") }}
                             </b-form-checkbox>
                         </div>
@@ -42,46 +37,19 @@
                         <div class="col" :class="{ 'col-md-6': show_split }">
                             <!-- model isn't paginated and loads in one API call -->
                             <div v-if="!paginated">
-                                <generic-horizontal-card
-                                    v-for="i in items_left"
-                                    v-bind:key="i.id"
-                                    :item="i"
-                                    :model="this_model"
-                                    @item-action="startAction($event, 'left')"
-                                    @finish-action="finishAction"
-                                />
+                                <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id" :item="i" :model="this_model" @item-action="startAction($event, 'left')" @finish-action="finishAction" />
                             </div>
                             <!-- model is paginated and needs managed -->
                             <generic-infinite-cards v-if="paginated" :card_counts="left_counts" :scroll="show_split" @search="getItems($event, 'left')" @reset="resetList('left')">
                                 <template v-slot:cards>
-                                    <generic-horizontal-card
-                                        v-for="i in items_left"
-                                        v-bind:key="i.id"
-                                        :item="i"
-                                        :model="this_model"
-                                        @item-action="startAction($event, 'left')"
-                                        @finish-action="finishAction"
-                                    />
+                                    <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id" :item="i" :model="this_model" @item-action="startAction($event, 'left')" @finish-action="finishAction" />
                                 </template>
                             </generic-infinite-cards>
                         </div>
                         <div class="col col-md-6" v-if="show_split">
-                            <generic-infinite-cards
-                                v-if="this_model"
-                                :card_counts="right_counts"
-                                :scroll="show_split"
-                                @search="getItems($event, 'right')"
-                                @reset="resetList('right')"
-                            >
+                            <generic-infinite-cards v-if="this_model" :card_counts="right_counts" :scroll="show_split" @search="getItems($event, 'right')" @reset="resetList('right')">
                                 <template v-slot:cards>
-                                    <generic-horizontal-card
-                                        v-for="i in items_right"
-                                        v-bind:key="i.id"
-                                        :item="i"
-                                        :model="this_model"
-                                        @item-action="startAction($event, 'right')"
-                                        @finish-action="finishAction"
-                                    />
+                                    <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id" :item="i" :model="this_model" @item-action="startAction($event, 'right')" @finish-action="finishAction" />
                                 </template>
                             </generic-infinite-cards>
                         </div>
@@ -104,7 +72,7 @@ import { StandardToasts, ToastMixin } from "@/utils/utils"
 import GenericInfiniteCards from "@/components/GenericInfiniteCards"
 import GenericHorizontalCard from "@/components/GenericHorizontalCard"
 import GenericModalForm from "@/components/Modals/GenericModalForm"
-import ModelMenu from "@/components/ModelMenu"
+import ModelMenu from "@/components/ContextMenu/ModelMenu"
 import { ApiApiFactory } from "@/utils/openapi/api"
 //import StorageQuota from "@/components/StorageQuota";
 
@@ -145,6 +113,9 @@ export default {
             // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
             // TODO this is not necessarily bad but maybe there are better options to do this
             return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.header_component_name}`)
+        },
+        apiName() {
+            return this.this_model?.apiName
         },
     },
     mounted() {
@@ -236,6 +207,7 @@ export default {
             }
         },
         finishAction: function (e) {
+            let update = undefined
             switch (e?.action) {
                 case "save":
                     this.saveThis(e.form_data)
@@ -244,7 +216,6 @@ export default {
             if (e !== "cancel") {
                 switch (this.this_action) {
                     case this.Actions.DELETE:
-                        console.log("delete")
                         this.deleteThis(this.this_item.id)
                         break
                     case this.Actions.CREATE:
@@ -263,7 +234,7 @@ export default {
             }
             this.clearState()
         },
-        getItems: function (params, col) {
+        getItems: function (params = {}, col) {
             let column = col || "left"
             params.options = { query: { extended: 1 } } // returns extended values in API response
             this.genericAPI(this.this_model, this.Actions.LIST, params)
@@ -315,6 +286,16 @@ export default {
             // this creates a deep copy to make sure that columns stay independent
             this.items_right = [{ ...item }].concat(this.destroyCard(item?.id, this.items_right))
         },
+        // this currently assumes shopping is only applicable on FOOD model
+        addShopping: function (food) {
+            let api = new ApiApiFactory()
+            food.shopping = true
+            api.createShoppingListEntry({ food: food, amount: 1 }).then(() => {
+                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                this.refreshCard(food, this.items_left)
+                this.refreshCard({ ...food }, this.items_right)
+            })
+        },
         updateThis: function (item) {
             this.refreshThis(item.id)
         },
@@ -334,8 +315,7 @@ export default {
             this.genericAPI(this.this_model, this.Actions.MOVE, { source: source_id, target: target_id })
                 .then((result) => {
                     this.moveUpdateItem(source_id, target_id)
-                    // TODO make standard toast
-                    this.makeToast(this.$t("Success"), "Succesfully moved resource", "success")
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -374,8 +354,7 @@ export default {
             })
                 .then((result) => {
                     this.mergeUpdateItem(source_id, target_id)
-                    // TODO make standard toast
-                    this.makeToast(this.$t("Success"), "Succesfully merged resource", "success")
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
                     //TODO error checking not working with OpenAPI methods
@@ -429,7 +408,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    this.makeToast(this.$t("Error"), err.bodyText, "danger")
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
                 })
         },
         getRecipes: function (col, item) {

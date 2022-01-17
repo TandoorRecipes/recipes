@@ -22,8 +22,8 @@ from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
-from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
-                             RecipeImport, Step, Sync, Unit, UserPreference)
+from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe, RecipeImport, Step, Sync,
+                             Unit, UserPreference)
 from cookbook.tables import SyncTable
 from recipes import settings
 
@@ -111,8 +111,8 @@ def batch_edit(request):
                 'Batch edit done. %(count)d recipe was updated.',
                 'Batch edit done. %(count)d Recipes where updated.',
                 count) % {
-                      'count': count,
-                  }
+                'count': count,
+            }
             messages.add_message(request, messages.SUCCESS, msg)
 
             return redirect('data_batch_edit')

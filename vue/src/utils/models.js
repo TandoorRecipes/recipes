@@ -65,14 +65,19 @@ export class Models {
         paginated: true,
         move: true,
         merge: true,
+        shop: true,
+        onhand: true,
         badges: {
             linked_recipe: true,
+            food_onhand: true,
+            shopping: true,
         },
         tags: [{ field: "supermarket_category", label: "name", color: "info" }],
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "ignore_shopping", "supermarket_category"]],
+            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields"]],
+
             form: {
                 name: {
                     form_field: true,
@@ -98,8 +103,8 @@ export class Models {
                 shopping: {
                     form_field: true,
                     type: "checkbox",
-                    field: "ignore_shopping",
-                    label: i18n.t("Ignore_Shopping"),
+                    field: "food_onhand",
+                    label: i18n.t("OnHand"),
                 },
                 shopping_category: {
                     form_field: true,
@@ -109,8 +114,30 @@ export class Models {
                     label: i18n.t("Shopping_Category"),
                     allow_create: true,
                 },
+                inherit_fields: {
+                    form_field: true,
+                    type: "lookup",
+                    multiple: true,
+                    field: "inherit_fields",
+                    list: "FOOD_INHERIT_FIELDS",
+                    label: i18n.t("InheritFields"),
+                    condition: { field: "parent", value: true, condition: "exists" },
+                },
+                full_name: {
+                    form_field: true,
+                    type: "smalltext",
+                    field: "full_name",
+                },
+                form_function: "FoodCreateDefault",
             },
         },
+        shopping: {
+            params: ["id", ["id", "amount", "unit", "_delete"]],
+        },
+    }
+    static FOOD_INHERIT_FIELDS = {
+        name: i18n.t("FoodInherit"),
+        apiName: "FoodInheritField",
     }
 
     static KEYWORD = {
@@ -147,6 +174,11 @@ export class Models {
                     field: "icon",
                     label: i18n.t("Icon"),
                 },
+                full_name: {
+                    form_field: true,
+                    type: "smalltext",
+                    field: "full_name",
+                },
             },
         },
     }
@@ -180,6 +212,30 @@ export class Models {
     static SHOPPING_LIST = {
         name: i18n.t("Shopping_list"),
         apiName: "ShoppingListEntry",
+        list: {
+            params: ["id", "checked", "supermarket", "options"],
+        },
+        create: {
+            params: [["amount", "unit", "food", "checked"]],
+            form: {
+                unit: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "unit",
+                    list: "UNIT",
+                    label: i18n.t("Unit"),
+                    allow_create: true,
+                },
+                food: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "food",
+                    list: "FOOD",
+                    label: i18n.t("Food"),
+                    allow_create: true,
+                },
+            },
+        },
     }
 
     static RECIPE_BOOK = {
@@ -370,41 +426,15 @@ export class Models {
         name: i18n.t("Recipe"),
         apiName: "Recipe",
         list: {
-            params: [
-                "query",
-                "keywords",
-                "foods",
-                "units",
-                "rating",
-                "books",
-                "steps",
-                "keywordsOr",
-                "foodsOr",
-                "booksOr",
-                "internal",
-                "random",
-                "_new",
-                "page",
-                "pageSize",
-                "options",
-            ],
-            config: {
-                foods: { type: "string" },
-                keywords: { type: "string" },
-                books: { type: "string" },
-            },
+            params: ["query", "keywords", "foods", "units", "rating", "books", "keywordsOr", "foodsOr", "booksOr", "internal", "random", "_new", "page", "pageSize", "options"],
+            // 'config': {
+            //     'foods': {'type': 'string'},
+            //     'keywords': {'type': 'string'},
+            //     'books': {'type': 'string'},
+            // }
         },
-    }
-
-    static STEP = {
-        name: i18n.t("Step"),
-        apiName: "Step",
-        paginated: true,
-        list: {
-            header_component: {
-                name: "BetaWarning",
-            },
-            params: ["query", "page", "pageSize", "options"],
+        shopping: {
+            params: ["id", ["id", "list_recipe", "ingredients", "servings"]],
         },
     }
 
@@ -459,6 +489,19 @@ export class Models {
                     placeholder: "",
                 },
             },
+        },
+    }
+    static USER = {
+        name: i18n.t("User"),
+        apiName: "User",
+        paginated: false,
+    }
+
+    static STEP = {
+        name: i18n.t("Step"),
+        apiName: "Step",
+        list: {
+            params: ["recipe", "query", "page", "pageSize", "options"],
         },
     }
 }
@@ -638,5 +681,8 @@ export class Actions {
                 list: "self",
             },
         },
+    }
+    static SHOPPING = {
+        function: "shopping",
     }
 }
