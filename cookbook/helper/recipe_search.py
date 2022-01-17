@@ -172,6 +172,8 @@ class RecipeSearch():
     def keyword_filters(self, keywords=None, operator=True):
         if not keywords:
             return
+        if not isinstance(keywords, list):
+            keywords = [keywords]
         if operator == True:
             # TODO creating setting to include descendants of keywords a setting
             self._queryset = self._queryset.filter(keywords__in=Keyword.include_descendants(Keyword.objects.filter(pk__in=keywords)))
@@ -184,6 +186,8 @@ class RecipeSearch():
     def food_filters(self, foods=None, operator=True):
         if not foods:
             return
+        if not isinstance(foods, list):
+            foods = [foods]
         if operator == True:
             # TODO creating setting to include descendants of food a setting
             self._queryset = self._queryset.filter(steps__ingredients__food__in=Food.include_descendants(Food.objects.filter(pk__in=foods)))
@@ -198,7 +202,9 @@ class RecipeSearch():
             raise NotImplementedError
         if not units:
             return
-        self._queryset = self._queryset.filter(steps__ingredients__unit__id=units)
+        if not isinstance(units, list):
+            units = [units]
+        self._queryset = self._queryset.filter(steps__ingredients__unit__in=units)
 
     def rating_filter(self, rating=None):
         if rating is None:
@@ -217,6 +223,8 @@ class RecipeSearch():
     def book_filters(self, books=None, operator=True):
         if not books:
             return
+        if not isinstance(books, list):
+            books = [books]
         if operator == True:
             self._queryset = self._queryset.filter(recipebookentry__book__id__in=books)
         else:
@@ -228,6 +236,8 @@ class RecipeSearch():
             raise NotImplementedError
         if not steps:
             return
+        if not isinstance(steps, list):
+            steps = [unistepsts]
         self._queryset = self._queryset.filter(steps__id__in=steps)
 
     def build_fulltext_filters(self, string=None):
