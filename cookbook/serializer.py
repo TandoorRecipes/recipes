@@ -496,6 +496,11 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
+    carbohydrates = CustomDecimalField()
+    fats = CustomDecimalField()
+    proteins = CustomDecimalField()
+    calories = CustomDecimalField()
+
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
