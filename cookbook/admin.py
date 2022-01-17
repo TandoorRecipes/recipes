@@ -39,9 +39,9 @@ def delete_space_action(modeladmin, request, queryset):
 
         Comment.objects.filter(recipe__space=space).delete()
         Keyword.objects.filter(space=space).delete()
+        Ingredient.objects.filter(space=space).delete()
         Food.objects.filter(space=space).delete()
         Unit.objects.filter(space=space).delete()
-        Ingredient.objects.filter(space=space).delete()
         Step.objects.filter(space=space).delete()
         NutritionInformation.objects.filter(space=space).delete()
         RecipeBookEntry.objects.filter(book__space=space).delete()
