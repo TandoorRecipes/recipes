@@ -38,6 +38,7 @@ def shopping_helper(qs, request):
     return qs.order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
 
 
+# TODO refactor as class
 def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None, append=False):
     """
     Creates ShoppingListRecipe and associated ShoppingListEntrys from a recipe or a meal plan with a recipe
