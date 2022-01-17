@@ -151,6 +151,7 @@ class TreeModel(MP_Node):
             return super().add_root(**kwargs)
 
     # i'm 99% sure there is a more idiomatic way to do this subclassing MP_NodeQuerySet
+    @staticmethod
     def include_descendants(queryset=None, filter=None):
         """
         :param queryset: Model Queryset to add descendants

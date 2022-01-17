@@ -6,6 +6,8 @@
         :clear-on-select="true"
         :hide-selected="multiple"
         :preserve-search="true"
+        :internal-search="false"
+        :limit="options_limit"
         :placeholder="lookupPlaceholder"
         :label="label"
         track-by="id"
@@ -34,6 +36,7 @@ export default {
             loading: false,
             objects: [],
             selected_objects: [],
+            options_limit: 25,
         }
     },
     props: {
@@ -89,6 +92,7 @@ export default {
                 page: 1,
                 pageSize: 10,
                 query: query,
+                limit: this.options_limit,
             }
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)

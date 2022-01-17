@@ -12,7 +12,8 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models import (Case, Count, Exists, F, IntegerField, OuterRef, ProtectedError, Q,
+                              Subquery, Value, When)
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -38,7 +39,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                CustomIsShare, CustomIsShared, CustomIsUser,
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_search import RecipeFacet, old_search, search_recipes
+from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import list_from_recipe, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
@@ -145,18 +146,18 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
             if fuzzy:
                 self.queryset = (
                     self.queryset
-                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))),
-                                             default=Value(0)))  # put exact matches at the top of the result set
-                        .annotate(trigram=TrigramSimilarity('name', query)).filter(trigram__gt=0.2)
-                        .order_by('-exact', '-trigram')
+                    .annotate(starts=Case(When(name__istartswith=query, then=(Value(.3, output_field=IntegerField()))), default=Value(0)))
+                    .annotate(trigram=TrigramSimilarity('name', query))
+                    .annotate(sort=F('starts')+F('trigram'))
+                    .order_by('-sort')
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 self.queryset = (
                     self.queryset
-                        .annotate(exact=Case(When(name__iexact=query, then=(Value(100))),
-                                             default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(name__icontains=query).order_by('-exact', 'name')
+                        .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
+                                              default=Value(0)))  # put exact matches at the top of the result set
+                        .filter(name__icontains=query).order_by('-starts', 'name')
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -652,8 +653,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
-        return super().get_queryset().prefetch_related('cooklog_set')
+        # self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
+        params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x in list(self.request.GET)}
+        self.queryset = RecipeSearch(self.request, **params).get_queryset(self.queryset).prefetch_related('cooklog_set')
+        return self.queryset
 
     def list(self, request, *args, **kwargs):
         if self.request.GET.get('debug', False):
