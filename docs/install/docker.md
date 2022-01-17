@@ -138,6 +138,8 @@ In both cases, also make sure to mount `/media/` in your swag container to point
 
 Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
 
+For step-by-step instructions to set this up from scratch, see [this example](swag.md).
+
 ### Others
 
 If you use none of the above mentioned reverse proxies or want to use an existing one on your host machine (like a local nginx or Caddy), simply use the [PLAIN](https://docs.tandoor.dev/install/docker/#plain) setup above and change the outbound port to one of your liking.
