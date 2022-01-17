@@ -53,8 +53,14 @@ export default {
     computed: {},
     watch: {
         selected1: function (newVal, oldVal) {
-            console.log("test", newVal)
             this.$emit("change", newVal)
+        },
+        initial_selected1: {
+            handler() {
+                console.log("test")
+                this.selected1 = this.initial_selected1
+            },
+            deep: true,
         },
         options: function () {
             this.callbacks.forEach((callback) => {
