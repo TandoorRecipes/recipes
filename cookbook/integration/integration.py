@@ -42,7 +42,7 @@ class Integration:
         try:
             last_kw = Keyword.objects.filter(name__regex=r'^(Import [0-9]+)', space=request.space).latest('created_at')
             name = f'Import {int(last_kw.name.replace("Import ", "")) + 1}'
-        except ObjectDoesNotExist:
+        except (ObjectDoesNotExist, ValueError):
             name = 'Import 1'
 
         parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
@@ -53,7 +53,7 @@ class Integration:
                 icon=icon,
                 space=request.space
             )
-        except IntegrityError:  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
+        except (IntegrityError, ValueError):  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
             self.keyword = parent.add_child(
                 name=f'{name} {str(uuid.uuid4())[0:8]}',
                 description=description,
@@ -86,11 +86,9 @@ class Integration:
             export_obj.close()
             export_file = export_stream.getvalue()
 
-
         response = HttpResponse(export_file, content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="'+export_filename+'"'
+        response['Content-Disposition'] = 'attachment; filename="' + export_filename + '"'
         return response
-
 
     def import_file_name_filter(self, zip_info_object):
         """
@@ -261,7 +259,6 @@ class Integration:
             - data - string content for file to get created in export zip
         """
         raise NotImplementedError('Method not implemented in integration')
-
 
     def get_files_from_recipes(self, recipes, cookie):
         """
