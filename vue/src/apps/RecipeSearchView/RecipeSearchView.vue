@@ -1,6 +1,6 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
-        <RecipeSwitcher mode="mealplan" />
+        <RecipeSwitcher ref="ref_recipe_switcher"/>
         <div class="row">
             <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
                 <div class="row">
