@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2021-11-04 09:06+0000\n"
-"Last-Translator: FrenchAnon <qdskyhwfeu@email.ucms.edu.pk>\n"
-"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/fr/>\n"
+"PO-Revision-Date: 2022-01-16 07:06+0000\n"
+"Last-Translator: Josselin du PLESSIS <josse@du-plessis.fr>\n"
+"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,66 +33,52 @@ msgid "Ingredients"
 msgstr "Ingrédients"
 
 #: .\cookbook\forms.py:54
-#, fuzzy
-#| msgid "Default"
 msgid "Default unit"
-msgstr "Par défaut"
+msgstr "Unité par défaut"
 
 #: .\cookbook\forms.py:55
-#, fuzzy
-#| msgid "System Information"
 msgid "Use fractions"
-msgstr "Informations système"
+msgstr "Utiliser les fractions"
 
 #: .\cookbook\forms.py:56
 msgid "Use KJ"
-msgstr ""
+msgstr "Utiliser les kJ"
 
 #: .\cookbook\forms.py:57
 msgid "Theme"
-msgstr ""
+msgstr "Thème"
 
 #: .\cookbook\forms.py:58
 msgid "Navbar color"
-msgstr ""
+msgstr "Couleur de la barre de navigation"
 
 #: .\cookbook\forms.py:59
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Barre de navigation permanente"
 
 #: .\cookbook\forms.py:60
-#, fuzzy
-#| msgid "Default"
 msgid "Default page"
-msgstr "Par défaut"
+msgstr "Page par défaut"
 
 #: .\cookbook\forms.py:61
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show recent recipes"
-msgstr "Recettes dans le panier"
+msgstr "Montrer les recettes récentes"
 
 #: .\cookbook\forms.py:62
-#, fuzzy
-#| msgid "Search"
 msgid "Search style"
 msgstr "Rechercher"
 
 #: .\cookbook\forms.py:63
 msgid "Plan sharing"
-msgstr ""
+msgstr "Partage du planificateur"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Ingrédients"
+msgstr "Nombre de décimales pour les ingrédients"
 
 #: .\cookbook\forms.py:65
-#, fuzzy
-#| msgid "Shopping list currently empty"
 msgid "Shopping list auto sync period"
-msgstr "La liste de courses est actuellement vide"
+msgstr "Période de synchro automatique de la liste de courses"
 
 #: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
@@ -124,6 +110,8 @@ msgstr ""
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr ""
+"Afficher les quantités d'énergie nutritionnelle en joules plutôt qu'en "
+"calories"
 
 #: .\cookbook\forms.py:78
 msgid ""
@@ -242,7 +230,7 @@ msgstr "Stockage"
 
 #: .\cookbook\forms.py:260
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: .\cookbook\forms.py:265
 msgid "Search String"
@@ -279,16 +267,12 @@ msgid "Email address already taken!"
 msgstr "Adresse mail déjà utilisée !"
 
 #: .\cookbook\forms.py:367
-#, fuzzy
-#| msgid ""
-#| "An email address is not required but if present the invite link will be "
-#| "send to the user."
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
-"Une adresse mail n'est pas requise mais le lien d'invitation sera envoyé à "
-"l'utilisateur si elle est présente."
+"Une adresse mail n'est pas requise mais si elle présente, le lien "
+"d'invitation sera envoyé à l'utilisateur."
 
 #: .\cookbook\forms.py:382
 msgid "Name already taken."
@@ -303,62 +287,81 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Détermine le degré de flou d'une recherche si elle utilise la correspondance "
+"par similarité de trigrammes (par exemple, des valeurs faibles signifient "
+"que davantage de fautes de frappe sont ignorées)."
 
 #: .\cookbook\forms.py:435
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
+"Sélectionner la méthode de recherche.  Cliquer <a href=\"/docs/search/\""
+">ici</a> pour une description complète des choix."
 
 #: .\cookbook\forms.py:436
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Utilisez la correspondance floue sur les unités, les mots-clés et les "
+"ingrédients lors de l'édition et de l'importation de recettes."
 
 #: .\cookbook\forms.py:438
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Champs à rechercher en ignorant les accents. La sélection de cette option "
+"peut améliorer ou dégrader la qualité de la recherche en fonction de la "
+"langue."
 
 #: .\cookbook\forms.py:440
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Champs à rechercher pour les correspondances partielles.  (par exemple, la "
+"recherche de \"Tarte\" renverra \"tarte\", \"tartelette\" et \"tartes\")"
 
 #: .\cookbook\forms.py:442
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Champs permettant de rechercher les correspondances de début de mot (par "
+"exemple, si vous recherchez \"sa\", vous obtiendrez \"salade\" et \"sandwich"
+"\")."
 
 #: .\cookbook\forms.py:444
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Champs pour la recherche \"floue\" (par exemple, si vous recherchez \"rectte"
+"\", vous trouverez \"recette\".) Remarque : cette option est incompatible "
+"avec les méthodes de recherche \"web\" et \"brute\"."
 
 #: .\cookbook\forms.py:446
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Champs de recherche en texte intégral. Remarque : les méthodes de recherche "
+"\"web\", \"phrase\" et \"raw\" ne fonctionnent qu'avec des champs en texte "
+"intégral."
 
 #: .\cookbook\forms.py:450
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Rechercher"
+msgstr "Méthode de recherche"
 
 #: .\cookbook\forms.py:451
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Recherches floues"
 
 #: .\cookbook\forms.py:452
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorer les accents"
 
 #: .\cookbook\forms.py:453
 msgid "Partial Match"
@@ -369,16 +372,12 @@ msgid "Starts Wtih"
 msgstr "Commence par"
 
 #: .\cookbook\forms.py:455
-#, fuzzy
-#| msgid "Search"
 msgid "Fuzzy Search"
-msgstr "Rechercher"
+msgstr "Recherche floue"
 
 #: .\cookbook\forms.py:456
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Texte"
+msgstr "Plein texte"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -495,19 +494,21 @@ msgstr "Rubrique"
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Reconstruction de l'index de recherche plein texte de Tandoor"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgress databases use full text search, no index to rebuild"
 msgstr ""
+"Seules les bases de données Postgres utilisent la recherche en texte "
+"intégral, sans index à reconstruire"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "La reconstruction de l'index des recettes est terminée."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "La reconstruction de l'index des recettes a échoué."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -560,11 +561,11 @@ msgstr "Grand"
 #: .\cookbook\models.py:212 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr "Nouveau/Nouvelle"
+msgstr "Nouveau"
 
 #: .\cookbook\models.py:396
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " fait partie d'une étape de la recette et ne peut être supprimé"
 
 #: .\cookbook\models.py:441 .\cookbook\templates\url_import.html:42
 msgid "Text"
@@ -587,37 +588,31 @@ msgstr "Recette"
 
 #: .\cookbook\models.py:871 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #: .\cookbook\models.py:872 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Phrase"
 
 #: .\cookbook\models.py:873 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Internet"
 
 #: .\cookbook\models.py:874 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Brut"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Food"
 msgid "Food Alias"
-msgstr "Aliment"
+msgstr "Ingrédient équivalent"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Unités"
+msgstr "Unité"
 
 #: .\cookbook\models.py:912
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Mots-clés"
+msgstr "Alias de mot-clé"
 
 #: .\cookbook\serializer.py:157
 msgid "File uploads are not enabled for this Space."
@@ -744,7 +739,8 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
-"Confirmez que <a href=\"mailto:%(email)s\"></a> est une adresse mail de "
+"Confirmez SVP que\n"
+"                <a href=\"mailto:%(email)s\"></a> est une adresse mail de "
 "l'utilisateur %(user_display)s."
 
 #: .\cookbook\templates\account\email_confirm.html:22
@@ -759,8 +755,9 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"Ce lien de confirmation par mail est expiré ou invalide. Veuillez <a href="
-"\"%(email_url)s\">demander une nouvelle vérification par mail</a>."
+"Ce lien de confirmation reçu par mail est expiré ou invalide. Veuillez\n"
+"                <a href=\"%(email_url)s\">demander une nouvelle vérification "
+"par mail</a>."
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:289
 msgid "Login"
@@ -856,10 +853,8 @@ msgstr ""
 "minutes à suivre."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "Jeton API"
+msgstr "Mauvais jeton"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -869,17 +864,19 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Le lien de changement du mot de passe est invalide, probablement parce qu'il "
+"a déjà été utilisé.\n"
+"                    Merci de demander un <a href=\"%(passwd_reset_url)s\""
+">nouveau changement de mot de passe</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Change Password"
 msgid "change password"
-msgstr "Modifier le mot de passe"
+msgstr "modifier le mot de passe"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Votre mot de passe a été changé."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
@@ -959,16 +956,12 @@ msgid "Supermarket"
 msgstr "Supermarché"
 
 #: .\cookbook\templates\base.html:163
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarket Category"
-msgstr "Supermarché"
+msgstr "Catégorie Supermarché"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:195
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Information"
+msgstr "Automatisations"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:215
 msgid "Files"
@@ -1029,7 +1022,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Traduire Tandoor"
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
@@ -1084,26 +1077,20 @@ msgid "Save"
 msgstr "Sauvegarder"
 
 #: .\cookbook\templates\batch\monitor.html:21
-#, fuzzy
-#| msgid "Manage Email Settings"
 msgid "Manage External Storage"
-msgstr "Gérer les paramètres de mails"
+msgstr "Gérer le stockage externe"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
 msgstr "Lancer la synchro !"
 
 #: .\cookbook\templates\batch\monitor.html:29
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show Recipes"
 msgstr "Recettes dans le panier"
 
 #: .\cookbook\templates\batch\monitor.html:30
-#, fuzzy
-#| msgid "Show Links"
 msgid "Show Log"
-msgstr "Afficher les liens"
+msgstr "Afficher le journal"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
@@ -1152,8 +1139,8 @@ msgstr ""
 "\n"
 "        Le formulaire suivant est utile lorsqu'il y a des doublons dans les "
 "unités ou les ingrédients.\n"
-"Il fusionne deux unités ou ingrédients et met à jour toutes les recettes les "
-"utilisant.\n"
+"        Il fusionne deux unités ou ingrédients et met à jour toutes les "
+"recettes les utilisant.\n"
 "    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
@@ -1176,15 +1163,15 @@ msgstr "Êtes-vous certain de vouloir supprimer %(title)s : <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
-msgstr ""
+msgstr "Protégé"
 
 #: .\cookbook\templates\generic\delete_template.html:41
 msgid "Cascade"
-msgstr ""
+msgstr "Cascade"
 
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
@@ -1269,9 +1256,9 @@ msgstr ""
 "\n"
 "        Les champs <b>Mot de passe et Token</b> sont stockés <b>en texte "
 "brut</b>dans la base de données.\n"
-"C'est nécessaire car ils sont utilisés pour faire des requêtes API, mais "
-"cela accroît le risque que quelqu'un les vole.<br/>\n"
-"Pour limiter les risques, des tokens ou comptes avec un accès limité "
+"        C'est nécessaire car ils sont utilisés pour faire des requêtes API, "
+"mais cela accroît le risque que quelqu'un les vole.<br/>\n"
+"        Pour limiter les risques, des tokens ou comptes avec un accès limité "
 "devraient être utilisés.\n"
 "    "
 
@@ -1327,13 +1314,14 @@ msgstr ""
 "\n"
 "        Markdown est un langage de balisage léger utilisé pour formatter du "
 "texte facilement.\n"
-"Ce site utilise la bibliothèque <a href=\"https://python-markdown.github.io/"
-"\" target=\"_blank\">Python Markdown</a> pour convertir votre texte en un "
-"joli format HTML. Sa documentation complète est consultable <a href="
-"\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank"
-"\">ici</a>.\n"
-"Une documentation incomplète mais probablement suffisante se trouve plus "
-"bas.\n"
+"        Ce site utilise la bibliothèque <a href=\"https://python-markdown."
+"github.io/\" target=\"_blank\">Python Markdown</a> \n"
+"        pour convertir votre texte en un joli format HTML. Sa documentation "
+"complète est consultable\n"
+"         <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">ici</a>.\n"
+"         Une documentation incomplète mais probablement suffisante se trouve "
+"plus bas.\n"
 "    "
 
 #: .\cookbook\templates\markdown_info.html:25
@@ -1621,10 +1609,8 @@ msgstr "Page d'accueil"
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
 #: .\cookbook\templates\settings.html:165
-#, fuzzy
-#| msgid "Search String"
 msgid "Search Settings"
-msgstr "Texte recherché"
+msgstr "Paramètres de recherche"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1637,12 +1623,19 @@ msgid ""
 "only available if you are using Postgres for your database.\n"
 "    "
 msgstr ""
+"\n"
+"        La création d'une expérience de recherche optimale est complexe et "
+"dépend fortement de votre configuration personnelle.  \n"
+"        La modification de l'un des paramètres de recherche peut avoir un "
+"impact significatif sur la vitesse et la qualité des résultats.\n"
+"        Les configurations Méthodes de recherche, Trigrammes et Recherche "
+"texte intégral ne sont disponibles que si vous utilisez Postgres comme base "
+"de données.\n"
+"    "
 
 #: .\cookbook\templates\search_info.html:19
-#, fuzzy
-#| msgid "Search"
 msgid "Search Methods"
-msgstr "Rechercher"
+msgstr "Méthodes de recherche"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1658,6 +1651,18 @@ msgid ""
 "html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
 "            "
 msgstr ""
+" \n"
+"            Les recherches en texte intégral tentent de normaliser les mots "
+"fournis pour qu'ils correspondent aux variantes courantes.  Par exemple : "
+"\"forked\", \"forking\", \"forks\" seront tous normalisés en \"fork\".\n"
+"            Il existe plusieurs méthodes, décrites ci-dessous, qui "
+"permettent de contrôler la façon dont la recherche doit réagir lorsque "
+"plusieurs mots sont recherchés.\n"
+"            Des détails techniques complets sur leur fonctionnement peuvent "
+"être consultés sur le site <a href=https://www.postgresql.org/docs/current/"
+"textsearch-controls.html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>"
+"\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:29
 msgid ""
@@ -1669,6 +1674,14 @@ msgid ""
 "selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Les recherches simples ignorent la ponctuation et les mots "
+"courants tels que \"le\", \"a\", \"et\", et traiteront les mots séparés "
+"comme il se doit.\n"
+"            Si vous recherchez \"pomme ou farine\", vous obtiendrez toutes "
+"les recettes qui contiennent à la fois \"pomme\" et \"farine\" dans les "
+"champs sélectionnés pour la recherche en texte intégral.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:34
 msgid ""
@@ -1680,6 +1693,13 @@ msgid ""
 "been selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Les recherches de phrases ignorent la ponctuation, mais "
+"recherchent tous les mots dans l'ordre exact indiqué.\n"
+"            La recherche de \"pomme ou farine\" ne donnera que les recettes "
+"qui contiennent l'expression exacte \"pomme ou farine\" dans l'un des champs "
+"sélectionnés pour la recherche en texte intégral.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:39
 msgid ""
@@ -1699,6 +1719,24 @@ msgid ""
 "recipe that has the word 'butter' in any field included.\n"
 "            "
 msgstr ""
+" \n"
+"            Les recherches sur le Web simulent la fonctionnalité que l'on "
+"trouve sur de nombreux sites de recherche sur le Web qui prennent en charge "
+"une syntaxe spéciale.\n"
+"            En plaçant des guillemets autour de plusieurs mots, ces derniers "
+"seront convertis en une phrase.\n"
+"            Le terme \"ou\" signifie que l'on recherche le mot (ou "
+"l'expression) qui précède immédiatement \"ou\" OU le mot (ou l'expression) "
+"qui suit immédiatement.\n"
+"            Le signe \"-\" indique que la recherche porte sur des recettes "
+"qui ne comprennent pas le mot (ou la phrase) qui suit immédiatement. \n"
+"            Par exemple, si vous recherchez \"tarte aux pommes\" ou cerise -"
+"beurre, vous obtiendrez toutes les recettes contenant l'expression \"tarte "
+"aux pommes\" ou le mot \"cerise\". \n"
+"            dans tous les champs inclus dans la recherche en texte intégral, "
+"mais exclure toute recette comportant le mot \"beurre\" dans tous les champs "
+"inclus.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:48
 msgid ""
@@ -1707,6 +1745,11 @@ msgid ""
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
+" \n"
+"            La recherche brute est similaire à la recherche sur le Web, mais "
+"elle prend en compte les opérateurs de ponctuation tels que \"|\", \"&\" et "
+"\"()\".\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:59
 msgid ""
@@ -1722,12 +1765,21 @@ msgid ""
 "methods.\n"
 "            "
 msgstr ""
+" \n"
+"            Une autre approche de la recherche qui nécessite également "
+"Postgresql est la recherche floue ou la similarité des trigrammes. Un "
+"trigramme est un groupe de trois caractères consécutifs.\n"
+"            Par exemple, la recherche de \"apple\" créera x trigrammes \"app"
+"\", \"ppl\", \"ple\" et créera un score de la proximité des mots avec les "
+"trigrammes générés.\n"
+"            L'un des avantages de la recherche par trigamme est qu'une "
+"recherche sur \"sandwich\" permet de trouver des mots mal orthographiés tels "
+"que \"sandwhich\", qui ne seraient pas détectés par d'autres méthodes.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:69
-#, fuzzy
-#| msgid "Search Recipe"
 msgid "Search Fields"
-msgstr "Rechercher une recette"
+msgstr "Champs de recherche"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1763,12 +1815,46 @@ msgid ""
 "full text results, it does match the trigram results.\n"
 "            "
 msgstr ""
+" \n"
+"            Unaccent est un cas particulier car il permet de rechercher un "
+"champ \"non accentué\" pour chaque style de recherche qui tente d'ignorer "
+"les valeurs accentuées. \n"
+"            Par exemple, si vous activez l'option \"non accentué\" pour \"Nom"
+"\", toute recherche (commence par, contient, trigramme) tentera d'ignorer "
+"les caractères accentués.\n"
+"            \n"
+"            Pour les autres options, vous pouvez activer la recherche sur un "
+"ou tous les champs et ils seront combinés ensemble avec un 'OR' présumé.\n"
+"            Par exemple, si vous activez l'option \"Nom\" pour l'option "
+"\"Commence par\", \"Nom\" et \"Description\" pour l'option \"Correspondance "
+"partielle\" et \"Ingrédients\" et \"Mots-clés\" pour l'option \"Recherche "
+"complète\".\n"
+"            et que vous recherchez \"pomme\", vous obtiendrez les recettes "
+"qui ont.. :\n"
+"            - un nom de recette qui commence par \"pomme\".\n"
+"            - OU un nom de recette qui contient 'pomme'.\n"
+"            - OU une description de recette qui contient 'pomme'.\n"
+"            - OU une recette qui aura une correspondance de recherche en "
+"texte intégral ('pomme' ou 'pommes') dans les ingrédients\n"
+"            - OU une recette qui aura une correspondance de recherche en "
+"texte intégral dans les mots-clés.\n"
+"\n"
+"            La combinaison d'un trop grand nombre de champs dans un trop "
+"grand nombre de types de recherche peut avoir un impact négatif sur les "
+"performances, créer des résultats en double ou renvoyer des résultats "
+"inattendus.\n"
+"            Par exemple, l'activation de la recherche floue ou des "
+"correspondances partielles interfère avec les méthodes de recherche sur le "
+"Web.  \n"
+"            La recherche de \"apple -pie\" à l'aide d'une recherche floue et "
+"d'une recherche en texte intégral donnera la recette de la tarte aux "
+"pommes.  Bien qu'elle ne soit pas incluse dans les résultats du texte "
+"intégral, elle correspond aux résultats de la recherche par trigramme.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Rechercher"
+msgstr "Index de recherche"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1782,6 +1868,17 @@ msgid ""
 "the management command 'python manage.py rebuildindex'\n"
 "            "
 msgstr ""
+" \n"
+"            La recherche par trigramme et la recherche en texte intégral "
+"reposent toutes deux sur les index de la base de données pour fonctionner "
+"efficacement.  \n"
+"            Vous pouvez reconstruire les index de tous les champs dans la "
+"page d'administration des recettes, en sélectionnant toutes les recettes et "
+"en exécutant la commande \"rebuild index for selected recipes\".\n"
+"            Vous pouvez également reconstruire les index en ligne de "
+"commande en exécutant la commande de gestion \"python manage.py "
+"rebuildindex\".\n"
+"            "
 
 #: .\cookbook\templates\settings.html:28
 msgid "Account"
@@ -1796,10 +1893,8 @@ msgid "API-Settings"
 msgstr "Paramètres d'API"
 
 #: .\cookbook\templates\settings.html:49
-#, fuzzy
-#| msgid "Search String"
 msgid "Search-Settings"
-msgstr "Texte recherché"
+msgstr "Paramètres de recherche"
 
 #: .\cookbook\templates\settings.html:58
 msgid "Name Settings"
@@ -1855,22 +1950,29 @@ msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
 msgstr ""
+"Il existe de nombreuses options pour configurer la recherche en fonction de "
+"vos préférences personnelles."
 
 #: .\cookbook\templates\settings.html:167
 msgid ""
 "Usually you do <b>not need</b> to configure any of them and can just stick "
 "with either the default or one of the following presets."
 msgstr ""
+"En général, vous n'avez <b>pas besoin</b> de configurer l'un d'entre eux et "
+"pouvez simplement vous en tenir à la valeur par défaut ou à l'un des "
+"préréglages suivants."
 
 #: .\cookbook\templates\settings.html:168
 msgid ""
 "If you do want to configure the search you can read about the different "
 "options <a href=\"/docs/search/\">here</a>."
 msgstr ""
+"Si vous souhaitez configurer la recherche, vous pouvez consulter les "
+"différentes options <a href=\"/docs/search/\">ici</a>."
 
 #: .\cookbook\templates\settings.html:173
 msgid "Fuzzy"
-msgstr ""
+msgstr "Flou"
 
 #: .\cookbook\templates\settings.html:174
 msgid ""
@@ -1878,29 +1980,34 @@ msgid ""
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Trouvez ce dont vous avez besoin même si votre recherche ou la recette "
+"contient des fautes de frappe. Il se peut que vous obteniez plus de "
+"résultats que nécessaire pour être sûr de trouver ce que vous cherchez."
 
 #: .\cookbook\templates\settings.html:175
 msgid "This is the default behavior"
-msgstr ""
+msgstr "C'est le comportement par défaut"
 
 #: .\cookbook\templates\settings.html:176
 #: .\cookbook\templates\settings.html:184
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: .\cookbook\templates\settings.html:181
 msgid "Precise"
-msgstr ""
+msgstr "Préciser"
 
 #: .\cookbook\templates\settings.html:182
 msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Permet un contrôle fin des résultats de la recherche mais peut ne pas donner "
+"de résultats si trop de fautes d'orthographe sont commises."
 
 #: .\cookbook\templates\settings.html:183
 msgid "Perfect for large Databases"
-msgstr ""
+msgstr "Parfait pour les grandes bases de données"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -1928,10 +2035,8 @@ msgid "Shopping List"
 msgstr "Liste de courses"
 
 #: .\cookbook\templates\shopping_list.html:34
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Try the new shopping list"
-msgstr "Ouvrir la liste de courses"
+msgstr "Essayer la nouvelle liste de courses"
 
 #: .\cookbook\templates\shopping_list.html:63
 msgid "Search Recipe"
@@ -2008,8 +2113,8 @@ msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
-"Vous pouvez vous connecter à votre compte en utilisant un des comptes tiers "
-"suivants :"
+"Vous pouvez vous connecter à votre compte en utilisant un des \n"
+"               comptes tiers suivants :"
 
 #: .\cookbook\templates\socialaccount\connections.html:52
 msgid ""
@@ -2033,8 +2138,9 @@ msgid ""
 "        %(provider_name)s account to login to\n"
 "        %(site_name)s. As a final step, please complete the following form:"
 msgstr ""
-"Vous êtes sur le point d'utiliser votre compte %(provider_name)s pour vous "
-"connecter à %(site_name)s. Pour finaliser la requête, veuillez compléter le "
+"Vous êtes sur le point d'utiliser\n"
+"           votre compte %(provider_name)s pour vous connecter à\n"
+"           %(site_name)s. Pour finaliser la requête, veuillez compléter le "
 "formulaire suivant :"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
@@ -2190,8 +2296,9 @@ msgid ""
 msgstr ""
 "Publier les médias directement avec gunicorn/python n'est <b>pas recommandé</"
 "b> !\n"
-"Veuillez suivre les étapes décrites <a href=\"https://github.com/vabene1111/"
-"recipes/releases/tag/0.8.1\">ici</a> pour mettre à jour votre installation.\n"
+"                Veuillez suivre les étapes décrites <a href=\"https://github."
+"com/vabene1111/recipes/releases/tag/0.8.1\">ici</a> \n"
+"                pour mettre à jour votre installation.\n"
 "        "
 
 #: .\cookbook\templates\system.html:57 .\cookbook\templates\system.html:73
@@ -2216,10 +2323,12 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Vous n'avez pas de <code>SECRET_KEY</code> configurée dans votre "
-"fichier<code>.env</code>. Django utilise par défaut la clé standard fournie "
-"avec l'application qui est connue publiquement et non sécurisée ! Veuillez "
-"définir <code>SECRET_KEY</code> dans le fichier<code>.env</code>\n"
+"            Vous n'avez pas de <code>SECRET_KEY</code> configuré dans votre "
+"fichier<code>.env</code>. Django utilise par défaut\n"
+"            la clé standard fournie avec l'application qui est connue "
+"publiquement et non sécurisée ! \n"
+"            Veuillez définir <code>SECRET_KEY</code> dans le fichier<code>."
+"env</code>\n"
 "        "
 
 #: .\cookbook\templates\system.html:78
@@ -2238,8 +2347,9 @@ msgid ""
 msgstr ""
 "\n"
 "            Cette application est toujours en mode debug. Ce n'est sûrement "
-"pas nécessaire. Désactivez le mode debug en définissant <code>DEBUG=0</code> "
-"dans le fichier <code>.env</code>.\n"
+"pas nécessaire. Désactivez le mode debug\n"
+"            en définissant <code>DEBUG=0</code> dans le fichier <code>."
+"env</code>.\n"
 "        "
 
 #: .\cookbook\templates\system.html:93
@@ -2260,8 +2370,9 @@ msgid ""
 msgstr ""
 "\n"
 "            Cette application ne tourne pas sur une base de données "
-"Postgres. Ce n'est pas grave mais déconseillé car certaines fonctionnalités "
-"ne fonctionnent qu'avec une base de données Postgres.\n"
+"Postgres. Ce n'est pas grave mais déconseillé\n"
+"            car certaines fonctionnalités ne fonctionnent qu'avec une base "
+"de données Postgres.\n"
 "        "
 
 #: .\cookbook\templates\url_import.html:6
@@ -2279,11 +2390,11 @@ msgstr "Mettez-moi en favori !"
 
 #: .\cookbook\templates\url_import.html:36
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\cookbook\templates\url_import.html:38
 msgid "App"
-msgstr ""
+msgstr "App"
 
 #: .\cookbook\templates\url_import.html:62
 msgid "Enter website URL"
@@ -2440,12 +2551,14 @@ msgid ""
 "data feel free to post an example in the\n"
 "                                    github issues."
 msgstr ""
-" Seuls les sites webs contenant des données ld+json ou microdatas peuvent "
-"actuellement être importés.\n"
-"C'est le cas de la plupart des grands sites web. Si votre site ne peut pas "
-"être importé alors qu'il est censé disposer\n"
+" Seuls les sites webs contenant des données ld+json ou microdatas peuvent\n"
+"                                              actuellement être importés.\n"
+"                                             C'est le cas de la plupart des "
+"grands sites web. Si votre site ne peut pas être importé\n"
+"                                              alors qu'il est censé disposer "
 "de données correctement structurées,\n"
-"n'hésitez pas à publier un exemple dans un ticket sur GitHub."
+"                                             n'hésitez pas à publier un "
+"exemple dans un ticket sur GitHub."
 
 #: .\cookbook\templates\url_import.html:641
 msgid "Google ld+json Info"
@@ -2466,7 +2579,7 @@ msgstr "Le paramètre « update_at » n'est pas correctement formatté"
 #: .\cookbook\views\api.py:152
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
-msgstr ""
+msgstr "Il n'existe pas de {self.basename} avec l'identifiant {pk}"
 
 #: .\cookbook\views\api.py:156
 msgid "Cannot merge with the same object!"
@@ -2475,58 +2588,58 @@ msgstr "Un objet ne peut être fusionné avec lui-même !"
 #: .\cookbook\views\api.py:163
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
-msgstr ""
+msgstr "Il n'existe pas de {self.basename} avec l'id {target}"
 
 #: .\cookbook\views\api.py:168
-#, fuzzy
-#| msgid "Cannot merge with the same object!"
 msgid "Cannot merge with child object!"
-msgstr "Un objet ne peut être fusionné avec lui-même !"
+msgstr "Impossible de fusionner avec l'objet enfant !"
 
 #: .\cookbook\views\api.py:201
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
-msgstr ""
+msgstr "{source.name} a été fusionné avec succès avec {target.name}"
 
 #: .\cookbook\views\api.py:205
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr ""
+"Une erreur s'est produite lors de la tentative de fusion de {source.name} "
+"avec {target.name}"
 
 #: .\cookbook\views\api.py:249
 #, python-brace-format
 msgid "No {self.basename} with id {child} exists"
-msgstr ""
+msgstr "Il n'existe pas de {self.basename} avec l'id {child}"
 
 #: .\cookbook\views\api.py:258
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
-msgstr ""
+msgstr "{child.name} a été déplacé avec succès vers la racine."
 
 #: .\cookbook\views\api.py:261 .\cookbook\views\api.py:279
 msgid "An error occurred attempting to move "
-msgstr ""
+msgstr "Une erreur s'est produite en essayant de déplacer "
 
 #: .\cookbook\views\api.py:264
 msgid "Cannot move an object to itself!"
-msgstr ""
+msgstr "Impossible de déplacer un objet vers lui-même !"
 
 #: .\cookbook\views\api.py:270
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
-msgstr ""
+msgstr "Il n'existe pas de {self.basename} avec l'id {parent}"
 
 #: .\cookbook\views\api.py:276
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
-msgstr ""
+msgstr "{child.name} a été déplacé avec succès vers le parent {parent.name}"
 
 #: .\cookbook\views\api.py:723 .\cookbook\views\data.py:42
 #: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "Cette fonctionnalité n'est pas disponible dans la version d'essai !"
+msgstr ""
+"Cette fonctionnalité n'est pas encore disponible dans la version hébergée de "
+"Tandoor !"
 
 #: .\cookbook\views\api.py:745
 msgid "Sync successful!"
@@ -2655,28 +2768,20 @@ msgid "Shopping Lists"
 msgstr "Listes de course"
 
 #: .\cookbook\views\lists.py:129
-#, fuzzy
-#| msgid "Food"
 msgid "Foods"
-msgstr "Aliment"
+msgstr "Aliments"
 
 #: .\cookbook\views\lists.py:163
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarkets"
-msgstr "Supermarché"
+msgstr "Supermarchés"
 
 #: .\cookbook\views\lists.py:179
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Shopping Categories"
-msgstr "Recettes dans le panier"
+msgstr "Catégories de courses"
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Liste de courses"
+msgstr "Nouvelle liste de courses"
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
@@ -2766,16 +2871,20 @@ msgstr "Cette fonctionnalité n'est pas disponible dans la version d'essai !"
 #: .\cookbook\views\views.py:340
 msgid "You must select at least one field to search!"
 msgstr ""
+"Vous devez sélectionner au moins un champ pour effectuer une recherche !"
 
 #: .\cookbook\views\views.py:345
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
+"Pour utiliser cette méthode de recherche, vous devez sélectionner au moins "
+"un champ de recherche en texte intégral !"
 
 #: .\cookbook\views\views.py:349
 msgid "Fuzzy search is not compatible with this search method!"
 msgstr ""
+"La recherche floue n'est pas compatible avec cette méthode de recherche !"
 
 #: .\cookbook\views\views.py:452
 msgid ""
