@@ -475,7 +475,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
         if obj.step_recipe and type(self.parent.root) == RecipeSerializer:
-            return StepRecipeSerializer(obj.step_recipe).data
+            return StepRecipeSerializer(obj.step_recipe, context={'request': self.context['request']}).data
 
     class Meta:
         model = Step
