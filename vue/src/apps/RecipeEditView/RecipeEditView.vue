@@ -154,7 +154,7 @@
                        @sort="sortSteps()">
                 <div v-for="(step, step_index) in recipe.steps" v-bind:key="step_index">
                     <div class="card mt-2 mb-2">
-                        <div class="card-body" :id="`id_card_step_${step_index}`">
+                        <div class="card-body pr-2 pl-2 pr-md-5 pl-md-5" :id="`id_card_step_${step_index}`">
 
                             <!-- step card header -->
                             <div class="row">
@@ -248,8 +248,6 @@
                             <div class="row pt-2" v-if="step.file_visible">
                                 <div class="col-md-12">
                                     <label :for="'id_step_' + step.id + '_file'">{{ $t("File") }}</label>
-
-
                                     <b-input-group>
                                         <multiselect
                                             ref="file"
@@ -273,8 +271,6 @@
                                             <b-button variant="primary" @click="step_for_file_create = step;show_file_create = true"> + </b-button>
                                         </b-input-group-append>
                                     </b-input-group>
-
-
                                 </div>
                             </div>
 
@@ -312,7 +308,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12" style="margin-top: 8px">
+                                            <div class="col-md-12 pr-0 pl-0 pr-md-2 pl-md-2 mt-2">
                                                 <draggable :list="step.ingredients" group="ingredients"
                                                            :empty-insert-threshold="10" handle=".handle"
                                                            @sort="sortIngredients(step)">
@@ -322,7 +318,7 @@
                                                         <div class="d-flex">
                                                             <div class="flex-grow-0 handle align-self-start">
                                                                 <button type="button"
-                                                                        class="btn btn-lg shadow-none"><i
+                                                                        class="btn btn-lg shadow-none pr-0 pl-1 pr-md-2 pl-md-2"><i
                                                                     class="fas fa-arrows-alt-v"></i></button>
                                                             </div>
 
@@ -415,7 +411,7 @@
                                                             </div>
 
                                                             <div class="flex-grow-0 small-padding">
-                                                                <a class="btn shadow-none btn-lg" href="#"
+                                                                <a class="btn shadow-none btn-lg pr-1 pl-0 pr-md-2 pl-md-2" href="#"
                                                                    role="button" id="dropdownMenuLink2"
                                                                    data-toggle="dropdown" aria-haspopup="true"
                                                                    aria-expanded="false">
@@ -481,7 +477,6 @@
                                 </div>
                             </div>
 
-
                             <div class="row pt-2" v-if="step.instruction_visible">
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
@@ -518,6 +513,9 @@
 
             </draggable>
 
+            <br/>
+            <br/>
+            <br/>
             <br/>
             <br/>
             <br/>
