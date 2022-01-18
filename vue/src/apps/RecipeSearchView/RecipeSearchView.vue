@@ -311,14 +311,6 @@ export default {
             search: {
                 search_input: "",
                 search_internal: false,
-                show_meal_plan: true,
-                meal_plan_days: 0,
-                recently_viewed: 5,
-                sort_by_new: true,
-                page_count: 25,
-            },
-            ui: {
-                search_input: "",
                 search_keywords: [],
                 search_foods: [],
                 search_books: [],
