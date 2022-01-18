@@ -358,8 +358,8 @@ class InviteLinkForm(forms.ModelForm):
 
     def clean(self):
         space = self.cleaned_data['space']
-        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(
-                space=space).filter(valid_until__gte=datetime.today()).count()) >= space.max_users:
+        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() +
+                                     InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=space).count()) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
@@ -535,10 +535,11 @@ class SpacePreferenceForm(forms.ModelForm):
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit',)
+        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count')
 
         help_texts = {
-            'food_inherit': _('Fields on food that should be inherited by default.'), }
+            'food_inherit': _('Fields on food that should be inherited by default.'),
+            'show_facet_count': _('Show recipe counts on search filters'), }
 
         widgets = {
             'food_inherit': MultiSelectWidget

@@ -29,7 +29,11 @@ class Nextcloud(Provider):
         client = Nextcloud.get_client(monitor.storage)
 
         files = client.list(monitor.path)
-        files.pop(0)  # remove first element because its the folder itself
+
+        try:
+            files.pop(0)  # remove first element because its the folder itself
+        except IndexError:
+            pass # folder is emtpy, no recipes will be imported
 
         import_count = 0
         for file in files:

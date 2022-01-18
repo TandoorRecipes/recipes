@@ -77,7 +77,10 @@ class TreeManager(MP_NodeManager):
                     for field in many_to_many:
                         field_model = getattr(obj, field).model
                         for related_obj in many_to_many[field]:
-                            getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
+                            if isinstance(related_obj, User):
+                                getattr(obj, field).add(field_model.objects.get(id=related_obj.id))
+                            else:
+                                getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
                     return obj, True
                 except IntegrityError as e:
                     if 'Key (path)' in e.args[0]:
@@ -148,6 +151,7 @@ class TreeModel(MP_Node):
             return super().add_root(**kwargs)
 
     # i'm 99% sure there is a more idiomatic way to do this subclassing MP_NodeQuerySet
+    @staticmethod
     def include_descendants(queryset=None, filter=None):
         """
         :param queryset: Model Queryset to add descendants
@@ -244,6 +248,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     allow_sharing = models.BooleanField(default=True)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField,  blank=True)
+    show_facet_count = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -619,15 +624,22 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     )
     proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    source = models.CharField(
-        max_length=512, default="", null=True, blank=True
-    )
+    source = models.CharField( max_length=512, default="", null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return f'Nutrition {self.pk}'
+
+
+# class NutritionType(models.Model, PermissionModelMixin):
+#     name = models.CharField(max_length=128)
+#     icon = models.CharField(max_length=16, blank=True, null=True)
+#     description = models.CharField(max_length=512, blank=True, null=True)
+#
+#     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+#     objects = ScopedManager(space='space')
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
