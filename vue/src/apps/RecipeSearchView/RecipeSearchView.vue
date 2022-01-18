@@ -113,6 +113,7 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
+                                                    v-if="ui.tree_select"
                                                     v-model="search.search_keywords"
                                                     :options="facets.Keywords"
                                                     :load-options="loadKeywordChildren"
@@ -152,6 +153,7 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
+                                                    v-if="ui.tree_select"
                                                     v-model="search.search_foods"
                                                     :options="facets.Foods"
                                                     :load-options="loadFoodChildren"
@@ -359,7 +361,7 @@ export default {
                 this.ui = Object.assign({}, this.ui, this.$cookies.get(UI_COOKIE_NAME))
             }
             if (this.ui.remember_search && this.$cookies.isKey(SEARCH_COOKIE_NAME)) {
-                this.search = Object.assign({}, this.search, this.$cookies.get(SEARCH_COOKIE_NAME))
+                this.search = Object.assign({}, this.search, this.$cookies.get(SEARCH_COOKIE_NAME), `${this.ui.remember_hours}h`)
             }
             let urlParams = new URLSearchParams(window.location.search)
 
@@ -430,7 +432,13 @@ export default {
         "ui.recently_viewed": function () {
             this.refreshData(false)
         },
-        "ui.search_input": _debounce(function () {
+        "ui.tree_select": function () {
+            if (this.ui.tree_select && !this.facets?.Keywords && !this.facets?.Foods) {
+                console.log("i changed to true")
+                this.getFacets(this.facets?.hash)
+            }
+        },
+        "search.search_input": _debounce(function () {
             this.search.pagination_page = 1
             this.pagination_count = 0
             this.refreshData(false)
