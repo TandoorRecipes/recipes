@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2022-01-16 07:06+0000\n"
+"PO-Revision-Date: 2022-01-18 13:43+0000\n"
 "Last-Translator: 糖多 <1365143958@qq.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -155,14 +155,14 @@ msgstr "这两个字段都是可选的。如果没有给出,将显示用户名"
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:289
 #: .\cookbook\templates\url_import.html:158
 msgid "Name"
-msgstr "名称"
+msgstr "名字"
 
 #: .\cookbook\forms.py:125 .\cookbook\forms.py:290
 #: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
 #: .\cookbook\templates\url_import.html:192
 #: .\cookbook\templates\url_import.html:578 .\cookbook\views\lists.py:112
 msgid "Keywords"
-msgstr "关键字"
+msgstr "关键词"
 
 #: .\cookbook\forms.py:126
 msgid "Preparation time in minutes"
