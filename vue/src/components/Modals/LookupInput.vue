@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form-group class="mb-3">
+        <b-form-group :class="class_list">
             <template #label v-if="show_label">
                 {{ form.label }}
             </template>
@@ -44,6 +44,7 @@ export default {
                 return undefined
             },
         },
+        class_list: {type: String, default: "mb-3"},
         show_label: { type: Boolean, default: true },
         clear: { type: Number },
     },
@@ -82,7 +83,7 @@ export default {
             } else {
                 arrayValues = [{ id: -1, name: this_value }]
             }
-            if (this.form?.ordered && this.first_run && arrayValues.length > 0) {
+            if (this.form?.ordered && this.first_run) {
                 return this.flattenItems(arrayValues)
             } else {
                 return arrayValues
