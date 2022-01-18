@@ -576,17 +576,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
 
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
-    TEXT = 'TEXT'
-    TIME = 'TIME'
-    FILE = 'FILE'
-    RECIPE = 'RECIPE'
-
     name = models.CharField(max_length=128, default='', blank=True)
-    type = models.CharField(
-        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')), (RECIPE, _('Recipe')),),
-        default=TEXT,
-        max_length=16
-    )
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)
     time = models.IntegerField(default=0, blank=True)
