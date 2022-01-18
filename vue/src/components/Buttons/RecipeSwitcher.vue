@@ -1,45 +1,75 @@
 <template>
     <div v-if="recipes !== {}">
         <div id="switcher" class="align-center">
-            <i class="btn btn-outline-dark fas fa-receipt fa-xl fa-fw shadow-none btn-circle"
+            <i class="btn btn-primary fas fa-receipt fa-xl fa-fw shadow-none btn-circle"
                v-b-toggle.related-recipes/>
         </div>
-        <b-sidebar id="related-recipes" title="Quick actions" backdrop right shadow="sm" style="z-index: 10000">
+        <b-sidebar id="related-recipes" backdrop right bottom no-header shadow="sm" style="z-index: 10000"
+                   @shown="updatePinnedRecipes()">
             <template #default="{ hide }">
 
-                <nav class="mb-3 ml-3">
-                    <b-nav vertical>
-                        <h5><i class="fas fa-calendar fa-fw"></i> Planned</h5>
+                <div class="d-flex flex-column justify-content-end h-100 p-3 align-items-end">
 
-                        <div v-for="r in planned_recipes" :key="`plan${r.id}`">
-                            <b-nav-item variant="link" @click="
-                                    navRecipe(r)
-                                    hide()
-                                ">{{ r.name }}
-                            </b-nav-item>
-                        </div>
-                        <hr/>
-                        <h5><i class="fas fa-thumbtack fa-fw"></i> Pinned</h5>
+                    <h5>Planned <i class="fas fa-calendar fa-fw"></i></h5>
 
-                        <div v-for="r in pinned_recipes" :key="`pin${r.id}`">
-                            <b-nav-item variant="link" @click="
-                                    navRecipe(r)
-                                    hide()
-                                ">{{ r.name }}
-                            </b-nav-item>
-                        </div>
-                        <hr/>
-                        <h5><i class="fas fa-link fa-fw"></i> Related</h5>
+                    <div class="text-right">
+                        <template v-if="planned_recipes.length > 0">
+                            <div v-for="r in planned_recipes" :key="`plan${r.id}`">
+                                <div class="pb-1 pt-1">
+                                    <a @click=" navRecipe(r); hide()" href="javascript:void(0);">{{ r.name }}</a>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <span class="text-muted">You have nothing planned for today!</span>
+                        </template>
+                    </div>
 
-                        <div v-for="r in related_recipes" :key="`related${r.id}`">
-                            <b-nav-item variant="link" @click="
-                                    navRecipe(r)
-                                    hide()
-                                ">{{ r.name }}
-                            </b-nav-item>
+                    <h5>Pinned <i class="fas fa-thumbtack fa-fw"></i></h5>
+
+                    <template v-if="pinned_recipes.length > 0">
+                        <div class="text-right">
+                            <div v-for="r in pinned_recipes" :key="`pin${r.id}`">
+                                <b-row class="pb-1 pt-1">
+                                    <b-col cols="2">
+                                        <a href="javascript:void(0)" @click="unPinRecipe(r)"
+                                           class="text-muted"><i class="fas fa-times"></i></a>
+                                    </b-col>
+                                    <b-col cols="10">
+                                        <a @click="navRecipe(r); hide()" href="javascript:void(0);"
+                                           class="align-self-end">{{ r.name }} </a>
+                                    </b-col>
+
+                                </b-row>
+
+                            </div>
                         </div>
-                    </b-nav>
-                </nav>
+                    </template>
+                    <template v-else>
+                        <span class="text-muted">You have no pinned recipes!</span>
+                    </template>
+
+
+                    <template v-if="related_recipes.length > 0">
+                        <h5>Related <i class="fas fa-link fa-fw"></i></h5>
+                        <div class="text-right">
+                            <div v-for="r in related_recipes" :key="`related${r.id}`">
+                                <div class="pb-1 pt-1">
+                                    <a @click=" navRecipe(r); hide()" href="javascript:void(0);">{{ r.name }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+
+
+            </template>
+            <template #footer="{ hide }">
+                <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
+                    <strong class="mr-auto">Quick actions</strong>
+                    <b-button size="sm" @click="hide">Close</b-button>
+                </div>
             </template>
         </b-sidebar>
     </div>
@@ -60,7 +90,7 @@ export default {
             related_recipes: [],
             planned_recipes: [],
             pinned_recipes: [],
-            recipes: {}
+            recipes: {},
         }
     },
     computed: {
@@ -89,14 +119,22 @@ export default {
                 window.location.href = this.resolveDjangoUrl("view_recipe", recipe.id)
             }
         },
+        updatePinnedRecipes: function () {
+            //TODO clean this up to prevent duplicate API calls
+            this.loadPinnedRecipes()
+            this.loadRecipeData()
+        },
         loadRecipeData: function () {
             let apiClient = new ApiApiFactory()
 
             let recipe_list = [...this.related_recipes, ...this.planned_recipes, ...this.pinned_recipes]
+
             let recipe_ids = []
             recipe_list.forEach((recipe) => {
-                if (!recipe_ids.includes(recipe.id)) {
-                    recipe_ids.push(recipe.id)
+                let id = recipe.id
+
+                if (!recipe_ids.includes(id)) {
+                    recipe_ids.push(id)
                 }
             })
 
@@ -111,12 +149,15 @@ export default {
             let apiClient = new ApiApiFactory()
 
             // get related recipes and save them for later
-            return apiClient.relatedRecipe(this.recipe, {query: {levels: 2}}).then((result) => {
-                this.related_recipes = result.data
-            })
+            if (this.$parent.recipe) {
+                this.related_recipes = [this.$parent.recipe]
+                return apiClient.relatedRecipe(this.$parent.recipe.id, {query: {levels: 2, format: 'json'}}).then((result) => {
+                    this.related_recipes =  this.related_recipes.concat(result.data)
+                })
+            }
         },
         loadPinnedRecipes: function () {
-            let pinned_recipe_ids = localStorage.getItem('pinned_recipes') || []
+            let pinned_recipe_ids = JSON.parse(localStorage.getItem('pinned_recipes')) || []
             this.pinned_recipes = pinned_recipe_ids
         },
         loadMealPlans: function () {
@@ -142,6 +183,13 @@ export default {
                 return Promise.all(promises)
             })
         },
+        unPinRecipe: function (recipe) {
+            let pinnedRecipes = JSON.parse(localStorage.getItem('pinned_recipes')) || []
+            pinnedRecipes = pinnedRecipes.filter((r) => r.id !== recipe.id)
+            console.log('pinned left', pinnedRecipes)
+            this.pinned_recipes = pinnedRecipes
+            localStorage.setItem('pinned_recipes', JSON.stringify(pinnedRecipes))
+        }
     },
 }
 </script>
