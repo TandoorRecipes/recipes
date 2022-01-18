@@ -130,10 +130,10 @@
                                                     v-if="!ui.tree_select"
                                                     @change="genericSelectChanged"
                                                     parent_variable="search_keywords"
-                                                    :initial_selection="search.keywords"
+                                                    :initial_selection="search.search_keywords"
                                                     :model="Models.KEYWORD"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                                    v-bind:placeholder="$t('Keywords')"
+                                                    :placeholder="$t('Keywords')"
                                                     :limit="50"
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
@@ -170,10 +170,10 @@
                                                     v-if="!ui.tree_select"
                                                     @change="genericSelectChanged"
                                                     parent_variable="search_foods"
-                                                    :initial_selection="search.foods"
+                                                    :initial_selection="search.search_foods"
                                                     :model="Models.FOOD"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                                    v-bind:placeholder="$t('Foods')"
+                                                    :placeholder="$t('Foods')"
                                                     :limit="50"
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
@@ -438,8 +438,12 @@ export default {
             this.random_search = random
             let params = {
                 query: this.search.search_input,
-                keywords: this.search.search_keywords,
-                foods: this.search.search_foods,
+                keywords: this.search.search_keywords.map(function (A) {
+                    return A?.["id"] ?? A
+                }),
+                foods: this.search.search_foods.map(function (A) {
+                    return A?.["id"] ?? A
+                }),
                 rating: this.search.search_ratings,
                 books: this.search.search_books.map(function (A) {
                     return A["id"]
