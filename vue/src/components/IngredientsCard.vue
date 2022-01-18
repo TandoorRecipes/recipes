@@ -26,7 +26,7 @@
                     <table class="table table-sm">
                         <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                         <template v-for="s in steps" >
-                            <tr v-bind:key="s.id" v-if="s.show_as_header">
+                            <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== ''">
                                 <td colspan="5" @click="done">
                                     <b>{{ s.name }}</b>
                                 </td>
