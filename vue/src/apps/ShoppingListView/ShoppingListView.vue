@@ -791,6 +791,7 @@ export default {
   watch: {
     selected_supermarket(newVal, oldVal) {
       this.supermarket_categories_only = this.settings.filter_to_supermarket
+        localStorage.setItem('shopping_v2_selected_supermarket', JSON.stringify(this.selected_supermarket))
     },
     "settings.filter_to_supermarket": function (newVal, oldVal) {
       this.supermarket_categories_only = this.settings.filter_to_supermarket
@@ -835,6 +836,7 @@ export default {
     this.$nextTick(function () {
       if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
         this.entry_mode_simple = this.$cookies.get(SETTINGS_COOKIE_NAME)
+        this.selected_supermarket = localStorage.getItem('shopping_v2_selected_supermarket') || undefined
       }
     })
   },
