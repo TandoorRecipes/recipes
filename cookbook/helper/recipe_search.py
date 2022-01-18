@@ -653,7 +653,7 @@ class RecipeFacet():
         if not self._request.space.demo and self._request.space.show_facet_count:
             return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
                                      ).filter(depth=depth, count__gt=0
-                                              ).values('id', 'name', 'count', 'numchild').order_by('name')
+                                              ).values('id', 'name', 'count', 'numchild').order_by('name')[:200]
         else:
             return queryset.filter(depth=depth).values('id', 'name',  'numchild').order_by('name')
 
@@ -664,7 +664,7 @@ class RecipeFacet():
         if not self._request.space.demo and self._request.space.show_facet_count:
             return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
                                      ).filter(depth__lte=depth, count__gt=0
-                                              ).values('id', 'name', 'count', 'numchild').order_by('name')
+                                              ).values('id', 'name', 'count', 'numchild').order_by('name')[:200]
         else:
             return queryset.filter(depth__lte=depth).values('id', 'name', 'numchild').order_by('name')
 
