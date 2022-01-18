@@ -567,6 +567,8 @@ def space(request):
         form = SpacePreferenceForm(request.POST, prefix='space')
         if form.is_valid():
             request.space.food_inherit.set(form.cleaned_data['food_inherit'])
+            request.space.show_facet_count = form.cleaned_data['show_facet_count']
+            request.space.save()
             if form.cleaned_data['reset_food_inherit']:
                 Food.reset_inheritance(space=request.space)
 

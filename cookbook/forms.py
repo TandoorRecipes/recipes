@@ -535,10 +535,11 @@ class SpacePreferenceForm(forms.ModelForm):
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit',)
+        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count')
 
         help_texts = {
-            'food_inherit': _('Fields on food that should be inherited by default.'), }
+            'food_inherit': _('Fields on food that should be inherited by default.'),
+            'show_facet_count': _('Show recipe counts on search filters'), }
 
         widgets = {
             'food_inherit': MultiSelectWidget
