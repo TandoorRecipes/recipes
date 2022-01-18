@@ -113,7 +113,6 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
-                                                    v-if="ui.tree_select"
                                                     v-model="search.search_keywords"
                                                     :options="facets.Keywords"
                                                     :load-options="loadKeywordChildren"
@@ -147,25 +146,12 @@
                                             </b-input-group>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <AdvancedTreeSelect
-                                                :initial_selection1="settings.search_keywords"
-                                                :options="facets.Keywords"
-                                                facet="keyword"
-                                                :placeholder="$t('Keywords')"
-                                                @change="settings.search_keywords = $event"
-                                                @load-children="loadChildren($event)"
-                                            />
-                                        </div>
-                                    </div>
 
                                     <!-- foods filter -->
                                     <div class="row">
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <treeselect
-                                                    v-if="ui.tree_select"
                                                     v-model="search.search_foods"
                                                     :options="facets.Foods"
                                                     :load-options="loadFoodChildren"
@@ -297,7 +283,6 @@ import GenericMultiselect from "@/components/GenericMultiselect"
 import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect" //TODO: delete
 import "@riophae/vue-treeselect/dist/vue-treeselect.css" //TODO: delete
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
-import AdvancedTreeSelect from "@/apps/RecipeSearchView/AdvancedTreeSelect"
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
@@ -374,7 +359,7 @@ export default {
                 this.ui = Object.assign({}, this.ui, this.$cookies.get(UI_COOKIE_NAME))
             }
             if (this.ui.remember_search && this.$cookies.isKey(SEARCH_COOKIE_NAME)) {
-                this.search = Object.assign({}, this.search, this.$cookies.get(SEARCH_COOKIE_NAME), `${this.ui.remember_hours}h`)
+                this.search = Object.assign({}, this.search, this.$cookies.get(SEARCH_COOKIE_NAME))
             }
             let urlParams = new URLSearchParams(window.location.search)
 
@@ -445,12 +430,7 @@ export default {
         "ui.recently_viewed": function () {
             this.refreshData(false)
         },
-        "ui.tree_select": function () {
-            if (this.ui.tree_select && !this.facets?.Keywords && !this.facets?.Foods) {
-                this.getFacets(this.facets?.hash)
-            }
-        },
-        "search.search_input": _debounce(function () {
+        "ui.search_input": _debounce(function () {
             this.search.pagination_page = 1
             this.pagination_count = 0
             this.refreshData(false)
@@ -463,7 +443,26 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: function (random) {
             this.random_search = random
-            let params = this.buildParams()
+            let params = {
+                query: this.search.search_input,
+                keywords: this.search.search_keywords,
+                foods: this.search.search_foods,
+                rating: this.search.search_ratings,
+                books: this.search.search_books.map(function (A) {
+                    return A["id"]
+                }),
+                keywordsOr: this.search.search_keywords_or,
+                foodsOr: this.search.search_foods_or,
+                booksOr: this.search.search_books_or,
+                internal: this.search.search_internal,
+                random: this.random_search,
+                _new: this.ui.sort_by_new,
+                page: this.search.pagination_page,
+                pageSize: this.search.page_size,
+            }
+            if (!this.searchFiltered) {
+                params.options = { query: { last_viewed: this.ui.recently_viewed } }
+            }
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
                     window.scrollTo(0, 0)
@@ -579,12 +578,8 @@ export default {
         buildParams: function () {
             let params = {
                 query: this.search.search_input,
-                keywords: this.search.search_keywords.map(function (A) {
-                    return A?.["id"] ?? A
-                }),
-                foods: this.search.search_foods.map(function (A) {
-                    return A?.["id"] ?? A
-                }),
+                keywords: this.search.search_keywords,
+                foods: this.search.search_foods,
                 rating: this.search.search_ratings,
                 books: this.search.search_books.map(function (A) {
                     return A["id"]
@@ -601,19 +596,19 @@ export default {
             if (!this.searchFiltered()) {
                 params.options = { query: { last_viewed: this.ui.recently_viewed } }
             }
-            return params
         },
         searchFiltered: function (ignore_string = false) {
             let filtered =
                 this.search?.search_keywords?.length === 0 &&
                 this.search?.search_foods?.length === 0 &&
                 this.search?.search_books?.length === 0 &&
+                // this.settings?.pagination_page === 1 &&
                 !this.random_search &&
                 this.search?.search_ratings === undefined
             if (ignore_string) {
-                return !filtered
+                return filtered
             } else {
-                return !filtered && this.search?.search_input !== ""
+                return filtered && this.search?.search_input === ""
             }
         },
     },
