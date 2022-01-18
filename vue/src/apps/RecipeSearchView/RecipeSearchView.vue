@@ -56,10 +56,15 @@
                                             <button id="id_settings_button" class="btn btn-primary btn-block text-uppercase"><i class="fas fa-cog fa-lg m-1"></i></button>
                                         </div>
                                     </div>
+                                    <div v-if="ui.enable_expert" class="row justify-content-end small">
+                                        <div class="col-auto">
+                                            <b-button class="my-0" variant="link" size="sm">{{ $t("expert_mode") }}</b-button>
+                                        </div>
+                                    </div>
 
                                     <b-popover target="id_settings_button" triggers="click" placement="bottom">
                                         <b-tabs content-class="mt-1" small>
-                                            <b-tab :title="$t('Settings')" active>
+                                            <b-tab :title="$t('Settings')" active :title-link-class="['mx-0']">
                                                 <b-form-group v-bind:label="$t('Recently_Viewed')" label-for="popover-input-1" label-cols="6" class="mb-3">
                                                     <b-form-input type="number" v-model="ui.recently_viewed" id="popover-input-1" size="sm"></b-form-input>
                                                 </b-form-group>
@@ -85,7 +90,28 @@
                                                     </div>
                                                 </div>
                                             </b-tab>
-                                            <b-tab title="Expert Settings">
+                                            <b-tab :title="$t('fields')" :title-link-class="['mx-0']">
+                                                <b-form-group v-bind:label="$t('show_keywords')" label-for="popover-show_keywords" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.show_keywords" id="popover-show_keywords" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-bind:label="$t('show_foods')" label-for="popover-show_foods" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.show_foods" id="popover-show_foods" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-bind:label="$t('show_books')" label-for="popover-input-show_books" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.show_books" id="popover-input-show_books" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-bind:label="$t('show_rating')" label-for="popover-show_rating" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.show_rating" id="popover-show_rating" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('show_units')" label-for="popover-show_units" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.show_units" id="popover-show_units" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('show_filters')" label-for="popover-show_filters" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.show_filters" id="popover-show_filters" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                            </b-tab>
+
+                                            <b-tab :title="$t('advanced')" :title-link-class="['mx-0']">
                                                 <b-form-group v-bind:label="$t('remember_search')" label-for="popover-rem-search" label-cols="6" class="mb-3">
                                                     <b-form-checkbox switch v-model="ui.remember_search" id="popover-rem-search" size="sm"></b-form-checkbox>
                                                 </b-form-group>
@@ -94,6 +120,9 @@
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('tree_select')" label-for="popover-input-treeselect" label-cols="6" class="mb-3">
                                                     <b-form-checkbox switch v-model="ui.tree_select" id="popover-input-treeselect" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-bind:label="$t('enable_expert')" label-for="popover-input-expert" label-cols="6" class="mb-3">
+                                                    <b-form-checkbox switch v-model="ui.enable_expert" id="popover-input-expert" size="sm"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-if="debug" v-bind:label="$t('sql_debug')" label-for="popover-input-sqldebug" label-cols="6" class="mb-3">
                                                     <b-form-checkbox switch v-model="ui.sql_debug" id="popover-input-sqldebug" size="sm"></b-form-checkbox>
@@ -290,7 +319,7 @@ Vue.use(VueCookies)
 Vue.use(BootstrapVue)
 
 let SEARCH_COOKIE_NAME = "search_settings"
-let UI_COOKIE_NAME = "_uisearch_settings"
+let UI_COOKIE_NAME = "ui_search_settings"
 
 export default {
     name: "RecipeSearchView",
@@ -316,6 +345,7 @@ export default {
                 search_foods_or: true,
                 search_books_or: true,
                 pagination_page: 1,
+                expert_mode: false,
             },
             ui: {
                 show_meal_plan: true,
@@ -327,6 +357,13 @@ export default {
                 remember_hours: 4,
                 sql_debug: false,
                 tree_select: false,
+                enable_expert: false,
+                show_keywords: true,
+                show_foods: true,
+                show_books: true,
+                show_rating: true,
+                show_units: false,
+                show_filters: false,
             },
             pagination_count: 0,
             random_search: false,
