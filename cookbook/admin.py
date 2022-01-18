@@ -177,8 +177,8 @@ admin.site.register(Keyword, KeywordAdmin)
 
 
 class StepAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'order')
-    search_fields = ('name', 'type')
+    list_display = ('name', 'order',)
+    search_fields = ('name',)
 
 
 admin.site.register(Step, StepAdmin)
