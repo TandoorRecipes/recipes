@@ -242,26 +242,6 @@ export default {
                     let results = result.data?.results ?? result.data
 
                     if (results?.length) {
-                        // let secondaryRequest = undefined;
-                        // if (this['items_' + column]?.length < getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1)) {
-                        //   // the item list is smaller than it should be based on the site the user is own
-                        //   // this happens when an item is deleted (or merged)
-                        //   // to prevent issues insert the last item of the previous search page before loading the new results
-                        //   params.page = params.page - 1
-                        //   secondaryRequest = this.genericAPI(this.this_model, this.Actions.LIST, params).then((result) => {
-                        //     let prev_page_results = result.data?.results ?? result.data
-                        //     if (prev_page_results?.length) {
-                        //       results = [prev_page_results[prev_page_results.length]].concat(results)
-                        //
-                        //       this['items_' + column] = this['items_' + column].concat(results) //TODO duplicate code, find some elegant workaround
-                        //       this[column + '_counts']['current'] = getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1) + results.length
-                        //       this[column + '_counts']['max'] = result.data?.count ?? 0
-                        //     }
-                        //   })
-                        // } else {
-                        //
-                        // }
-
                         this["items_" + column] = this["items_" + column].concat(results)
                         this[column + "_counts"]["current"] = getConfig(this.this_model, this.Actions.LIST).config.pageSize.default * (params.page - 1) + results.length
                         this[column + "_counts"]["max"] = result.data?.count ?? 0
@@ -280,11 +260,32 @@ export default {
             return this.genericAPI(this.this_model, this.Actions.FETCH, { id: id })
         },
         saveThis: function (item) {
-            // look for and destroy any existing cards to prevent duplicates in the GET case of get_or_create
-            // then place all new items at the top of the list - could sort instead
-            this.items_left = [item].concat(this.destroyCard(item?.id, this.items_left))
-            // this creates a deep copy to make sure that columns stay independent
-            this.items_right = [{ ...item }].concat(this.destroyCard(item?.id, this.items_right))
+            if (!item?.id) {
+                // if there is no item id assume it's a new item
+                this.genericAPI(this.this_model, this.Actions.CREATE, item)
+                    .then((result) => {
+                        // look for and destroy any existing cards to prevent duplicates in the GET case of get_or_create
+                        // then place all new items at the top of the list - could sort instead
+                        this.items_left = [result.data].concat(this.destroyCard(result?.data?.id, this.items_left))
+                        // this creates a deep copy to make sure that columns stay independent
+                        this.items_right = [{ ...result.data }].concat(this.destroyCard(result?.data?.id, this.items_right))
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    })
+            } else {
+                this.genericAPI(this.this_model, this.Actions.UPDATE, item)
+                    .then((result) => {
+                        this.refreshThis(item.id)
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    })
+                    .catch((err) => {
+                        console.log(err, err.response)
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    })
+            }
         },
         // this currently assumes shopping is only applicable on FOOD model
         addShopping: function (food) {
