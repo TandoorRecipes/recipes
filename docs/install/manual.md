@@ -134,11 +134,11 @@ server {
     #error_log /var/log/nginx/error.log;
 
     # serve media files
-    location /staticfiles {
+    location /static {
         alias /var/www/recipes/staticfiles;
     }
     
-    location /mediafiles {
+    location /media {
         alias /var/www/recipes/mediafiles;
     }
 
