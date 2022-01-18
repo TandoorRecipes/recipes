@@ -296,5 +296,15 @@
     "food_recipe_help": "Linking a recipe here will include the linked recipe in any other recipe that use this food",
     "Foods": "Foods",
     "review_shopping": "Review shopping entries before saving",
-    "view_recipe": "View Recipe"
+    "view_recipe": "View Recipe",
+    "enable_expert": "Enable Export Mode",
+    "expert_mode": "Expert Mode",
+    "advanced": "Advanced",
+    "fields": "Fields",
+    "show_keywords": "Show Keywords",
+    "show_foods": "Show Foods",
+    "show_books": "Show Books",
+    "show_rating": "Show Rating",
+    "show_units": "Show Units",
+    "show_filters": "Show Filters"
 }
