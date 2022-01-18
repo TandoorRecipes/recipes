@@ -576,17 +576,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
 
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
-    TEXT = 'TEXT'
-    TIME = 'TIME'
-    FILE = 'FILE'
-    RECIPE = 'RECIPE'
-
     name = models.CharField(max_length=128, default='', blank=True)
-    type = models.CharField(
-        choices=((TEXT, _('Text')), (TIME, _('Time')), (FILE, _('File')), (RECIPE, _('Recipe')),),
-        default=TEXT,
-        max_length=16
-    )
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)
     time = models.IntegerField(default=0, blank=True)
@@ -618,15 +608,22 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     )
     proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    source = models.CharField(
-        max_length=512, default="", null=True, blank=True
-    )
+    source = models.CharField( max_length=512, default="", null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return f'Nutrition {self.pk}'
+
+
+# class NutritionType(models.Model, PermissionModelMixin):
+#     name = models.CharField(max_length=128)
+#     icon = models.CharField(max_length=16, blank=True, null=True)
+#     description = models.CharField(max_length=512, blank=True, null=True)
+#
+#     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+#     objects = ScopedManager(space='space')
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
