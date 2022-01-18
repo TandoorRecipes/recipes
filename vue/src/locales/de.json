@@ -244,7 +244,7 @@
     "OnHand": "Aktuell vorrätig",
     "FoodNotOnHand": "Sie haben kein {food} vorrätig.",
     "Undefined": "nicht definiert",
-    "AddFoodToShopping": "{food}  zur Einkaufsliste hinzufügen.",
+    "AddFoodToShopping": "{food} zur Einkaufsliste hinzufügen",
     "RemoveFoodFromShopping": "{food}  von der Einkaufsliste entfernen",
     "Search Settings": "Sucheinstellungen",
     "shopping_auto_sync_desc": "Bei 0 wird Auto-Sync deaktiviert. Beim Betrachten einer Einkaufsliste wird die Liste alle gesetzten Sekunden aktualisiert, um mögliche Änderungen anderer zu zeigen. Nützlich, wenn mehrere Personen einkaufen und mobile Daten nutzen.",
