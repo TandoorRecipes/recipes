@@ -248,28 +248,33 @@
                             <div class="row pt-2" v-if="step.file_visible">
                                 <div class="col-md-12">
                                     <label :for="'id_step_' + step.id + '_file'">{{ $t("File") }}</label>
-                                    <multiselect
-                                        ref="file"
-                                        v-model="step.file"
-                                        :options="files"
-                                        :close-on-select="true"
-                                        :clear-on-select="true"
-                                        :allow-empty="true"
-                                        :preserve-search="true"
-                                        placeholder="Select File"
-                                        select-label="Select"
-                                        :id="'id_step_' + step.id + '_file'"
-                                        label="name"
-                                        track-by="name"
-                                        :multiple="false"
-                                        :loading="files_loading"
-                                        @search-change="searchFiles"
-                                    >
-                                    </multiselect>
 
-                                    <button>
-                                        +
-                                    </button>
+
+                                    <b-input-group>
+                                        <multiselect
+                                            ref="file"
+                                            v-model="step.file"
+                                            :options="files"
+                                            :close-on-select="true"
+                                            :clear-on-select="true"
+                                            :allow-empty="true"
+                                            :preserve-search="true"
+                                            placeholder="Select File"
+                                            select-label="Select"
+                                            :id="'id_step_' + step.id + '_file'"
+                                            label="name"
+                                            track-by="name"
+                                            :multiple="false"
+                                            :loading="files_loading"
+                                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                            @search-change="searchFiles" >
+                                        </multiselect>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" @click="step_for_file_create = step;show_file_create = true"> + </b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+
+
                                 </div>
                             </div>
 
@@ -495,6 +500,7 @@
                         </div>
                     </div>
 
+                    <!-- step add and sort spacer between steps -->
                     <div class="row">
                         <div class="col col-md-12 text-center">
                             <b-button-group>
@@ -556,7 +562,9 @@
                 </draggable>
             </b-modal>
 
-            
+            <!-- form to create files on the fly -->
+            <generic-modal-form :model="Models.USERFILE" :action="Actions.CREATE" :show="show_file_create"
+                                @finish-action="fileCreated"/>
         </div>
     </div>
 </template>
@@ -592,6 +600,7 @@ VueMarkdownEditor.use(vuepressTheme, {
 })
 
 import enUS from "@kangc/v-md-editor/lib/lang/en-US"
+import GenericModalForm from "@/components/Modals/GenericModalForm";
 
 VueMarkdownEditor.lang.use("en-US", enUS)
 
@@ -602,7 +611,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "RecipeEditView",
     mixins: [ResolveUrlMixin, ApiMixin],
-    components: {Multiselect, LoadingSpinner, draggable},
+    components: {Multiselect, LoadingSpinner, draggable, GenericModalForm},
     data() {
         return {
             recipe_id: window.RECIPE_ID,
@@ -620,6 +629,9 @@ export default {
             recipes_loading: false,
             message: "",
             options_limit: 25,
+
+            show_file_create: false,
+            step_for_file_create: undefined,
         }
     },
     computed: {
@@ -946,6 +958,12 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
                 })
+        },
+        fileCreated: function (data) {
+            if (data !== 'cancel') {
+                this.step_for_file_create.file = data.item
+            }
+            this.show_file_create = false
         },
         scrollToStep: function (step_index) {
             document.getElementById("id_step_" + step_index).scrollIntoView({behavior: "smooth"})
