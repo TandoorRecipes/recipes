@@ -11,7 +11,7 @@
           <i class="fas fa-download fa-lg nav-link dropdown-toggle text-muted px-1" id="downloadShoppingLink"
              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
 
-          <div class="dropdown-menu dropdown-menu-center" aria-labelledby="downloadShoppingLink">
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
             <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf"/>
             <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')"
                          icon="fas fa-file-csv"/>
