@@ -7,7 +7,7 @@
         :hide-selected="multiple"
         :preserve-search="true"
         :internal-search="false"
-        :limit="options_limit"
+        :limit="limit"
         :placeholder="lookupPlaceholder"
         :label="label"
         track-by="id"
@@ -36,7 +36,6 @@ export default {
             loading: false,
             objects: [],
             selected_objects: [],
-            options_limit: 25,
         }
     },
     props: {
@@ -90,9 +89,9 @@ export default {
         search: function (query) {
             let options = {
                 page: 1,
-                pageSize: 10,
+                pageSize: this.limit,
                 query: query,
-                limit: this.options_limit,
+                limit: this.limit,
             }
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
