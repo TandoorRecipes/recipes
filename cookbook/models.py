@@ -618,15 +618,22 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     )
     proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    source = models.CharField(
-        max_length=512, default="", null=True, blank=True
-    )
+    source = models.CharField( max_length=512, default="", null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return f'Nutrition {self.pk}'
+
+
+# class NutritionType(models.Model, PermissionModelMixin):
+#     name = models.CharField(max_length=128)
+#     icon = models.CharField(max_length=16, blank=True, null=True)
+#     description = models.CharField(max_length=512, blank=True, null=True)
+#
+#     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+#     objects = ScopedManager(space='space')
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
