@@ -58,7 +58,10 @@
                                     </div>
                                     <div v-if="ui.enable_expert" class="row justify-content-end small">
                                         <div class="col-auto">
-                                            <b-button class="my-0" variant="link" size="sm">{{ $t("expert_mode") }}</b-button>
+                                            <b-button class="my-0" variant="link" size="sm" @click="search.expert_mode = !search.expert_mode">
+                                                <div v-if="!expertMode">{{ $t("expert_mode") }}</div>
+                                                <div v-if="expertMode">{{ $t("simple_mode") }}</div>
+                                            </b-button>
                                         </div>
                                     </div>
 
@@ -299,6 +302,7 @@
                         </span>
                     </div>
                 </div>
+                <div v-if="expertMode">i'm an expert!</div>
 
                 <div class="row">
                     <div class="col col-md-12">
@@ -416,6 +420,9 @@ export default {
                 { id: 1, label: "⭐ " + this.$t("and_up") + ratingCount(this.facets.Ratings?.["1.0"] ?? 0) },
                 { id: 0, label: this.$t("Unrated") + ratingCount(this.facets.Ratings?.["0.0"] ?? 0) },
             ]
+        },
+        expertMode: function () {
+            return this.ui.enable_expert && this.search.expert_mode
         },
     },
     mounted() {
