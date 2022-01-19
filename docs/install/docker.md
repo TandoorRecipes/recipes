@@ -66,9 +66,9 @@ Be aware that having some other web server or container running on your host mac
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
 ```
 
-```yaml
-{ % include "./docker/plain/docker-compose.yml" % }
-```
+~~~yaml
+{% include "./docker/plain/docker-compose.yml" %}
+~~~
 
 ### Reverse Proxy
 
@@ -89,9 +89,9 @@ Please refer to [their excellent documentation](https://doc.traefik.io/traefik/)
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
 ```
 
-```yaml
-{ % include "./docker/traefik-nginx/docker-compose.yml" % }
-```
+~~~yaml
+{% include "./docker/traefik-nginx/docker-compose.yml" %}
+~~~
 
 #### nginx-proxy
 
@@ -112,9 +112,9 @@ LETSENCRYPT_EMAIL=
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
 ```
 
-```yaml
-{ % include "./docker/nginx-proxy/docker-compose.yml" % }
-```
+~~~yaml
+{% include "./docker/nginx-proxy/docker-compose.yml" %}
+~~~
 
 #### Nginx Swag by LinuxServer
 
