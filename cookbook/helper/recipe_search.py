@@ -222,13 +222,16 @@ class RecipeSearch():
     def rating_filter(self, rating=None):
         if rating is None:
             return
-        rating = int(rating)
+        lessthan = '-' in rating
+
         # TODO make ratings a settings user-only vs all-users
         self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=Value(0)))))
         if rating == 0:
             self._queryset = self._queryset.filter(rating=0)
+        elif lessthan:
+            self._queryset = self._queryset.filter(rating__lte=int(rating[1:]))
         else:
-            self._queryset = self._queryset.filter(rating__gte=rating)
+            self._queryset = self._queryset.filter(rating__gte=int(rating))
 
     def internal_filter(self):
         self._queryset = self._queryset.filter(internal=True)
