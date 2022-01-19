@@ -865,7 +865,7 @@ class AutomationSerializer(serializers.ModelSerializer):
 
 
 # CORS, REST and Scopes aren't currently working
-# Scopes are evaluating before REST has authenticated the user assiging a None space
+# Scopes are evaluating before REST has authenticated the user assigning a None space
 # I've made the change below to fix the bookmarklet, other serializers likely need a similar/better fix
 class BookmarkletImportSerializer(serializers.ModelSerializer):
     def create(self, validated_data):

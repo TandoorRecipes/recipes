@@ -57,4 +57,4 @@ apache:
 
 I used two paths `<sub path>` and `<www path>` for simplicity. In my case I have `<sub path> = recipes` and `<www path> = serve/recipes`. One could also change the matching rules of traefik to have everything under one path.
 
-I left out the TLS config in this example for simplicty.
+I left out the TLS config in this example for simplicity.

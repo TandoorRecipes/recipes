@@ -515,7 +515,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     @staticmethod
     def reset_inheritance(space=None):
-        # resets inheritted fields to the space defaults and updates all inheritted fields to root object values
+        # resets inherited fields to the space defaults and updates all inherited fields to root object values
         inherit = space.food_inherit.all()
 
         # remove all inherited fields from food

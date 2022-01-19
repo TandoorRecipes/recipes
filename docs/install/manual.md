@@ -1,6 +1,6 @@
 # Manual installation instructions
 
-These intructions are inspired from a standard django/gunicorn/postgresql instructions ([for example](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04))
+These instructions are inspired from a standard django/gunicorn/postgresql instructions ([for example](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04))
 
 !!! warning
     Be sure to use python 3.9 and pip related to python 3.9. Depending on your distribution calling `python` or `pip` will use python2 instead of python 3.9.
@@ -115,7 +115,7 @@ ExecStart=/var/www/recipes/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --
 WantedBy=multi-user.target
 ```
 
-*Note*: `-error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output` are usefull for debugging and can be removed later
+*Note*: `-error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output` are useful for debugging and can be removed later
 
 *Note2*: Fix the path in the `ExecStart` line to where you gunicorn and recipes are
 

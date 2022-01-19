@@ -72,7 +72,7 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
         return
 
     inherit = inherit.values_list('field', flat=True)
-    # apply changes from parent to instance for each inheritted field
+    # apply changes from parent to instance for each inherited field
     if instance.parent and inherit.count() > 0:
         parent = instance.get_parent()
         if 'ignore_shopping' in inherit:
