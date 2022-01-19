@@ -21,7 +21,7 @@
                  :key="entries[0].id"/>
         </b-col>
         <b-col cols="8" md="9">
-          <b-row class="d-flex h-100" @click.stop="$emit('open-context-menu', $event, entries)">
+          <b-row class="d-flex h-100">
             <b-col cols="6" md="6" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
               <div><strong>{{ Object.entries(formatAmount)[0][1] }}</strong> &ensp;
                 {{ Object.entries(formatAmount)[0][0] }}
@@ -85,10 +85,6 @@
               <div v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
             </b-col>
           </b-row>
-
-
-
-
           <b-row align-h="start">
             <b-col cols="1" class="align-items-center d-flex">
               <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
