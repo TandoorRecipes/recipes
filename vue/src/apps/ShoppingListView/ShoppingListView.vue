@@ -35,7 +35,7 @@
           <b-spinner v-if="loading" type="border" small></b-spinner>
           {{ $t("Shopping_list") }}
         </template>
-        <div class="container p-0 pr-lg-5 pl-lg-5" id="shoppinglist">
+        <div class="container p-0" id="shoppinglist">
           <div class="row">
             <div class="col col-md-12 p-0 p-lg-3">
               <div role="tablist">
@@ -124,12 +124,12 @@
                       <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel"
                            :class="{ show: x == 'false' }">
                         <!-- passing an array of values to the table grouped by Food -->
-                        <transition-group name="slider-fade" mode="out-in">
+                        <transition-group name="slide-fade">
                           <div v-for="(entries, x) in Object.entries(s)" :key="x">
-
-                            <ShoppingLineItem :entries="entries[1]" :groupby="group_by"
-                                              @open-context-menu="openContextMenu" @update-checkbox="updateChecked"/>
-
+                            <transition name="slide-fade" mode="out-in">
+                              <ShoppingLineItem :entries="entries[1]" :groupby="group_by"
+                                                @open-context-menu="openContextMenu" @update-checkbox="updateChecked"/>
+                            </transition>
                           </div>
                         </transition-group>
                       </div>
@@ -143,28 +143,30 @@
       </b-tab>
       <!-- recipe tab -->
       <b-tab :title="$t('Recipes')">
-        <table class="table w-100">
-          <thead>
-          <tr>
-            <th scope="col">{{ $t("Meal_Plan") }}</th>
-            <th scope="col">{{ $t("Recipe") }}</th>
-            <th scope="col">{{ $t("Servings") }}</th>
-            <th scope="col"></th>
-          </tr>
-          </thead>
-          <tr v-for="r in Recipes" :key="r.list_recipe">
-            <td>{{ r.recipe_mealplan.name }}</td>
-            <td>{{ r.recipe_mealplan.recipe_name }}</td>
-            <td class="block-inline">
-              <b-form-input min="1" type="number" :debounce="300" :value="r.recipe_mealplan.servings"
-                            @input="updateServings($event, r.list_recipe)"></b-form-input>
-            </td>
-            <td>
-              <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')"
-                 @click="deleteRecipe($event, r.list_recipe)"/>
-            </td>
-          </tr>
-        </table>
+        <div class="container p-0">
+          <table class="table w-100">
+            <thead>
+            <tr>
+              <th scope="col">{{ $t("Meal_Plan") }}</th>
+              <th scope="col">{{ $t("Recipe") }}</th>
+              <th scope="col">{{ $t("Servings") }}</th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tr v-for="r in Recipes" :key="r.list_recipe">
+              <td>{{ r.recipe_mealplan.name }}</td>
+              <td>{{ r.recipe_mealplan.recipe_name }}</td>
+              <td class="block-inline">
+                <b-form-input min="1" type="number" :debounce="300" :value="r.recipe_mealplan.servings"
+                              @input="updateServings($event, r.list_recipe)"></b-form-input>
+              </td>
+              <td>
+                <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')"
+                   @click="deleteRecipe($event, r.list_recipe)"/>
+              </td>
+            </tr>
+          </table>
+        </div>
       </b-tab>
       <!-- supermarkets tab -->
       <b-tab :title="$t('Supermarkets')">
@@ -173,8 +175,7 @@
           <div class="col col-md-5">
             <b-card>
               <template #header>
-                <h4 class="mb-0">
-                  {{ $t("Supermarkets") }}
+                <h4 class="mb-0">{{ $t("Supermarkets") }}
                   <b-button
                       variant="link"
                       class="p-0 m-0 float-right"
@@ -193,7 +194,6 @@
                   </b-button>
                 </h4>
               </template>
-
               <b-card
                   class="m-1 p-1 no-body"
                   border-variant="success"
@@ -201,14 +201,16 @@
                   header-text-variant="white"
                   align="center"
                   v-if="new_supermarket.entrymode"
-                  :header="$t('SupermarketName')"
-              >
-                <div class="input-group">
-                  <b-form-input type="text" :placeholder="$t('SupermarketName')" v-model="new_supermarket.value"/>
-                  <b-button class="input-group-append" variant="success" @click="addSupermarket"><i
-                      class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }}
-                  </b-button>
-                </div>
+                  :header="new_supermarket.value ? new_supermarket.value : $t('SupermarketName')">
+                <b-input-group>
+                  <b-form-input type="text" class="form-control-append" :placeholder="$t('SupermarketName')"
+                                v-model="new_supermarket.value"/>
+                  <b-input-group-append>
+                    <b-button class="input-group-append" variant="success" @click="addSupermarket"><i
+                        class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }}
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
               </b-card>
 
               <b-card-body class="m-0 p-0">
@@ -236,29 +238,22 @@
               </b-card-body>
             </b-card>
           </div>
-          <!-- supermarket category column -->
           <div class="col col-md-5">
-            <b-card class="no-body">
+            <b-card>
               <template #header>
-                <div class="row">
-                  <div class="col">
-                    {{ $t("Shopping_Categories") }}
-                  </div>
-
-                  <div class="col-auto text-right ml-auto">
-                    <b-button
-                        variant="link"
-                        class="p-0 m-0"
-                        @click="
+                <h4 class="mb-0">{{ $t("Shopping_Categories") }}
+                  <b-button
+                      variant="link"
+                      class="p-0 m-0 float-right"
+                      @click="
                                                 new_category.entrymode = !new_category.entrymode
                                                 new_supermarket.entrymode = false
                                             "
-                    >
-                      <i class="btn fas fa-plus-circle fa-lg px-0"
-                         :class="new_category.entrymode ? 'text-success' : 'text-muted'"/>
-                    </b-button>
-                  </div>
-                </div>
+                  >
+                    <i class="btn fas fa-plus-circle fa-lg px-0"
+                       :class="new_category.entrymode ? 'text-success' : 'text-muted'"/>
+                  </b-button>
+                </h4>
               </template>
               <b-card
                   class="m-1 p-1 no-body"
@@ -267,14 +262,17 @@
                   header-text-variant="white"
                   align="center"
                   v-if="new_category.entrymode"
-                  :header="$t('CategoryName')"
+                  :header="new_category.value ? new_category.value : $t('CategoryName')"
               >
-                <div class="input-group">
-                  <b-form-input type="text" :placeholder="$t('CategoryName')" v-model="new_category.value"/>
-                  <b-button class="input-group-append" variant="success" @click="addCategory"><i
-                      class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }}
-                  </b-button>
-                </div>
+                <b-input-group>
+                  <b-form-input type="text" class="form-control-append" :placeholder="$t('CategoryName')"
+                                v-model="new_category.value"/>
+                  <b-input-group-append>
+                    <b-button class="input-group-append" variant="success" @click="addCategory"><i
+                        class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }}
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
               </b-card>
 
               <b-card-sub-title v-if="new_supermarket.editmode" class="pt-0 pb-3">{{
@@ -791,7 +789,7 @@ export default {
   watch: {
     selected_supermarket(newVal, oldVal) {
       this.supermarket_categories_only = this.settings.filter_to_supermarket
-        localStorage.setItem('shopping_v2_selected_supermarket', JSON.stringify(this.selected_supermarket))
+      localStorage.setItem('shopping_v2_selected_supermarket', JSON.stringify(this.selected_supermarket))
     },
     "settings.filter_to_supermarket": function (newVal, oldVal) {
       this.supermarket_categories_only = this.settings.filter_to_supermarket
@@ -1322,28 +1320,18 @@ export default {
   background: #c8ebfb;
 }
 
-.slider-fade-enter-active, .slider-fade-leave-active {
-    transition: all 0.3s ease;
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.2s ease;
 }
 
-.slider-fade-enter, .slider-fade-leave-to
+.slide-fade-enter, .slide-fade-leave-to
   /* .slider-fade-leave-active below version 2.1.8 */
 {
   transform: translateX(10px);
   opacity: 0;
 }
 
-.slided-fade-enter-active {
-    transition: all 0.3s ease;
-}
-
-.slided-fade-leave-active {
-    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slided-fade-enter,
-.slided-fade-leave-to {
-    transform: translateY(10px);
-    opacity: 0;
+.form-control-append {
+  font-size: 20px;
 }
 </style>
