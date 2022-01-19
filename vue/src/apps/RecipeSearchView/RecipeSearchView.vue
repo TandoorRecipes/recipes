@@ -16,17 +16,17 @@
                                         <b-button variant="light" v-b-tooltip.hover :title="$t('Random Recipes')" @click="openRandom()">
                                             <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
                                         </b-button>
-                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="searchFiltered(true) ? 'primary' : 'danger'">
+                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="!searchFiltered(true) ? 'primary' : 'danger'">
                                             <!-- TODO consider changing this icon to a filter -->
-                                            <i class="fas fa-caret-down" v-if="!ui.advanced_search_visible"></i>
-                                            <i class="fas fa-caret-up" v-if="ui.advanced_search_visible"></i>
+                                            <i class="fas fa-caret-down" v-if="!search.advanced_search_visible"></i>
+                                            <i class="fas fa-caret-up" v-if="search.advanced_search_visible"></i>
                                         </b-button>
                                     </b-input-group-append>
                                 </b-input-group>
                             </div>
                         </div>
 
-                        <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm" v-model="ui.advanced_search_visible">
+                        <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm" v-model="search.advanced_search_visible">
                             <div class="card">
                                 <div class="card-body p-4">
                                     <div class="row">
@@ -250,7 +250,7 @@
                 <div class="row">
                     <div class="col col-md-12">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); grid-gap: 0.8rem">
-                            <template v-if="!searchFiltered">
+                            <template v-if="!searchFiltered()">
                                 <recipe-card v-bind:key="`mp_${m.id}`" v-for="m in meal_plans" :recipe="m.recipe" :meal_plan="m" :footer_text="m.meal_type_name" footer_icon="far fa-calendar-alt"></recipe-card>
                             </template>
                             <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r" :footer_text="isRecentOrNew(r)[0]" :footer_icon="isRecentOrNew(r)[1]"> </recipe-card>
@@ -309,6 +309,7 @@ export default {
             last_viewed_recipes: [],
 
             search: {
+                advanced_search_visible: false,
                 search_input: "",
                 search_internal: false,
                 search_keywords: [],
@@ -321,7 +322,6 @@ export default {
                 pagination_page: 1,
             },
             ui: {
-                advanced_search_visible: false,
                 show_meal_plan: true,
                 meal_plan_days: 0,
                 recently_viewed: 5,
@@ -419,7 +419,6 @@ export default {
         },
         "ui.tree_select": function () {
             if (this.ui.tree_select && !this.facets?.Keywords && !this.facets?.Foods) {
-                console.log("i changed to true")
                 this.getFacets(this.facets?.hash)
             }
         },
@@ -436,30 +435,7 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: function (random) {
             this.random_search = random
-            let params = {
-                query: this.search.search_input,
-                keywords: this.search.search_keywords.map(function (A) {
-                    return A?.["id"] ?? A
-                }),
-                foods: this.search.search_foods.map(function (A) {
-                    return A?.["id"] ?? A
-                }),
-                rating: this.search.search_ratings,
-                books: this.search.search_books.map(function (A) {
-                    return A["id"]
-                }),
-                keywordsOr: this.search.search_keywords_or,
-                foodsOr: this.search.search_foods_or,
-                booksOr: this.search.search_books_or,
-                internal: this.search.search_internal,
-                random: this.random_search,
-                _new: this.ui.sort_by_new,
-                page: this.search.pagination_page,
-                pageSize: this.search.page_size,
-            }
-            if (!this.searchFiltered) {
-                params.options = { query: { last_viewed: this.ui.recently_viewed } }
-            }
+            let params = this.buildParams()
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
                     window.scrollTo(0, 0)
@@ -467,7 +443,7 @@ export default {
 
                     this.facets = result.data.facets
                     this.recipes = this.removeDuplicates(result.data.results, (recipe) => recipe.id)
-                    if (!this.searchFiltered) {
+                    if (!this.searchFiltered()) {
                         // if meal plans are being shown - filter out any meal plan recipes from the recipe list
                         let mealPlans = []
                         this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
@@ -555,11 +531,33 @@ export default {
             })
         },
         showSQL: function () {
-            // TODO refactor this so that it isn't a total copy of refreshData
+            let params = this.buildParams()
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {})
+        },
+        // TODO refactor to combine with load KeywordChildren
+        loadFoodChildren({ action, parentNode, callback }) {
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
+                }
+            }
+        },
+        loadKeywordChildren({ action, parentNode, callback }) {
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
+                }
+            }
+        },
+        buildParams: function () {
             let params = {
                 query: this.search.search_input,
-                keywords: this.search.search_keywords,
-                foods: this.search.search_foods,
+                keywords: this.search.search_keywords.map(function (A) {
+                    return A?.["id"] ?? A
+                }),
+                foods: this.search.search_foods.map(function (A) {
+                    return A?.["id"] ?? A
+                }),
                 rating: this.search.search_ratings,
                 books: this.search.search_books.map(function (A) {
                     return A["id"]
@@ -573,41 +571,22 @@ export default {
                 page: this.search.pagination_page,
                 pageSize: this.ui.page_size,
             }
-            if (!this.searchFiltered) {
-                params.options = { query: { last_viewed: this.ui.recently_viewed, debug: true } }
-            } else {
-                params.options = { query: { debug: true } }
+            if (!this.searchFiltered()) {
+                params.options = { query: { last_viewed: this.ui.recently_viewed } }
             }
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {})
-        },
-        // TODO remove
-        loadFoodChildren({ action, parentNode, callback }) {
-            if (action === LOAD_CHILDREN_OPTIONS) {
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
-                }
-            }
-        },
-        // TODO remove
-        loadKeywordChildren({ action, parentNode, callback }) {
-            if (action === LOAD_CHILDREN_OPTIONS) {
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
-                }
-            }
+            return params
         },
         searchFiltered: function (ignore_string = false) {
             let filtered =
                 this.search?.search_keywords?.length === 0 &&
                 this.search?.search_foods?.length === 0 &&
                 this.search?.search_books?.length === 0 &&
-                // this.settings?.pagination_page === 1 &&
                 !this.random_search &&
                 this.search?.search_ratings === undefined
             if (ignore_string) {
-                return filtered
+                return !filtered
             } else {
-                return filtered && this.search?.search_input === ""
+                return !filtered && this.search?.search_input !== ""
             }
         },
     },

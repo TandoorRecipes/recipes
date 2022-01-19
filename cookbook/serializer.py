@@ -502,7 +502,6 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
     proteins = CustomDecimalField()
     calories = CustomDecimalField()
 
-
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
@@ -534,7 +533,7 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
     # TODO make days of new recipe a setting
     def is_recipe_new(self, obj):
-        if obj.created_at > (timezone.now() - timedelta(days=7)):
+        if getattr(obj, 'new_recipe', None) or obj.created_at > (timezone.now() - timedelta(days=7)):
             return True
         else:
             return False
