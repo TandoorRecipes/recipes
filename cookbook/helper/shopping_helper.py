@@ -126,7 +126,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
         add_ingredients = set(add_ingredients) - set(existing_list.values_list('ingredient__id', flat=True))
     add_ingredients = Ingredient.objects.filter(id__in=add_ingredients, space=space)
 
-    # if servings have changed, update the ShoppingListRecipe and existing Entrys
+    # if servings have changed, update the ShoppingListRecipe and existing Entries
     if servings <= 0:
         servings = 1
 
@@ -138,7 +138,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
             sle.amount = sle.ingredient.amount * Decimal(servings_factor)
             sle.save()
 
-    # add any missing Entrys
+    # add any missing Entries
     for i in [x for x in add_ingredients if x.food]:
 
         ShoppingListEntry.objects.create(

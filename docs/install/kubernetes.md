@@ -2,7 +2,7 @@
 
 # K8s Setup
 
-This is a setup which should be sufficent for production use. Be sure to replace the default secrets!
+This is a setup which should be sufficient for production use. Be sure to replace the default secrets!
 
 # Files
 
@@ -45,7 +45,7 @@ The creation of the persistent volume claims for media and static content. May y
 
 ## 40-sts-postgresql.yaml
 
-The PostgreSQL stateful set, based on a bitnami image. It runs a init container as root to do the preparations. The postgres container itsef runs as a lower privileged user. The recipes app uses the database super user (postgres) as the recipies app is doing some db migrations on startup, which needs super user privileges.
+The PostgreSQL stateful set, based on a bitnami image. It runs a init container as root to do the preparations. The postgres container itself runs as a lower privileged user. The recipes app uses the database super user (postgres) as the recipes app is doing some db migrations on startup, which needs super user privileges.
 
 ## 45-service-db.yaml
 
@@ -53,7 +53,7 @@ Creating the database service.
 
 ## 50-deployment.yaml
 
-The deployment first fires up a init container to do the database migrations and file modifications. This init container runs as root. The init conainer runs part of the [boot.sh](https://github.com/TandoorRecipes/recipes/blob/develop/boot.sh) script from the `vabene1111/recipes` image. 
+The deployment first fires up a init container to do the database migrations and file modifications. This init container runs as root. The init container runs part of the [boot.sh](https://github.com/TandoorRecipes/recipes/blob/develop/boot.sh) script from the `vabene1111/recipes` image. 
 
 The deployment then runs two containers, the recipes-nginx and the recipes container which runs the gunicorn app. The nginx container gets it's nginx.conf via config map to deliver static content `/static` and `/media`. The guincorn container gets it's secret key and the database password from the secret `recipes`. `gunicorn` runs as user `nobody`.
 
