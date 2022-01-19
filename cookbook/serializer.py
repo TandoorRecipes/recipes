@@ -937,7 +937,7 @@ class StepExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Step
-        fields = ('name', 'type', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
+        fields = ('name', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
 
 
 class RecipeExportSerializer(WritableNestedModelSerializer):
