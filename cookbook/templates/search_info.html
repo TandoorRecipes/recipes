@@ -27,7 +27,7 @@
             {% endblocktrans %}</p>
             <h4>{% trans 'Simple' %}</h4>
             <p> {% blocktrans %} 
-            Simple searches ignore punctuation and common words such as 'the', 'a', 'and'. And will treat seperate words as required.
+            Simple searches ignore punctuation and common words such as 'the', 'a', 'and'. And will treat separate words as required.
             Searching for 'apple or flour' will return any recipe that includes both 'apple' and 'flour' anywhere in the fields that have been selected for a full text search.
             {% endblocktrans %}</p>
             <h4>{% trans 'Phrase' %}</h4>
@@ -39,7 +39,7 @@
             <p> {% blocktrans %} 
             Web searches simulate functionality found on many web search sites supporting special syntax.
             Placing quotes around several words will convert those words into a phrase.
-            'or' is recongized as searching for the word (or phrase) immediately before 'or' OR the word (or phrase) directly after.
+            'or' is recognized as searching for the word (or phrase) immediately before 'or' OR the word (or phrase) directly after.
             '-' is recognized as searching for recipes that do not include the word (or phrase) that comes immediately after. 
             For example searching for 'apple pie' or cherry -butter will return any recipe that includes the phrase 'apple pie' or the word 'cherry' 
             in any field included in the full text search but exclude any recipe that has the word 'butter' in any field included.
@@ -59,7 +59,7 @@
             {% blocktrans %} 
             Another approach to searching that also requires Postgresql is fuzzy search or trigram similarity. A trigram is a group of three consecutive characters.
             For example searching for 'apple' will create x trigrams 'app', 'ppl', 'ple' and will create a score of how closely words match the generated trigrams.
-            One benefit of searching trigams is that a search for 'sandwich' will find mispelled words such as 'sandwhich' that would be missed by other methods.
+            One benefit of searching trigams is that a search for 'sandwich' will find misspelled words such as 'sandwhich' that would be missed by other methods.
             {% endblocktrans %} 
         </div>
 
