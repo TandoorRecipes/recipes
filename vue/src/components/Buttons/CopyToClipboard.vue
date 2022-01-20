@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="cursor:pointer">
         <a v-if="!button" class="dropdown-item" @click="clipboard"><i :class="icon"></i> {{ label }}</a>
         <b-button v-if="button" @click="clipboard">{{ label }}</b-button>
     </div>
