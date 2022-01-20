@@ -843,9 +843,15 @@ export default {
     addItem: function () {
       if (this.entry_mode_simple) {
         this.genericPostAPI("api_ingredient_from_string", {text: this.new_item.ingredient}).then((result) => {
+
+            let unit = null
+            if (result.data.unit !== '') {
+                unit = {'name': result.data.unit}
+            }
+
           this.new_item = {
             amount: result.data.amount,
-            unit: {name: result.data.unit},
+            unit: unit,
             food: {name: result.data.food},
           }
           this.addEntry()
