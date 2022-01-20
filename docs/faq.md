@@ -51,7 +51,7 @@ In technical terms it is a multi tenant system.
 You can compare a space to something like google drive or dropbox. 
 There is only one installation of the Dropbox system, but it handles multiple users without them noticing each other.
 For Tandoor that means all people that work together on one recipe collection can be in one space. 
-If you want to host the collection of your friends family or your neighbor you can create a separate space for them (trough the admin interface).
+If you want to host the collection of your friends family or your neighbor you can create a separate space for them (through the admin interface).
 
 Sharing between spaces is currently not possible but is planned for future releases.
 
