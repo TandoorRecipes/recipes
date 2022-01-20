@@ -141,28 +141,28 @@
                                     </b-popover>
 
                                     <!-- keywords filter -->
-                                    <h5 v-if="search.expert_mode && search.keywords_fields > 1">{{ $t("Keywords") }}</h5>
+                                    <h6 class="mb-0" v-if="search.expert_mode && search.keywords_fields > 1">{{ $t("Keywords") }}</h6>
                                     <div class="row" v-if="ui.show_keywords">
                                         <div class="col-12">
-                                            <b-input-group class="mt-2" v-for="(x, i) in keywordFields" :key="i">
+                                            <b-input-group class="mt-2" v-for="(k, a) in keywordFields" :key="a">
                                                 <template #prepend v-if="search.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="search.keywords_fields = search.keywords_fields + 1">
-                                                        <i class="fas fa-plus-circle text-primary" v-if="x == search.keywords_fields && x < 4" />
+                                                        <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4" />
                                                     </b-input-group-text>
                                                     <b-input-group-text
                                                         style="width: 3em"
                                                         @click="
                                                             search.keywords_fields = search.keywords_fields - 1
-                                                            search.search_keywords[i].items = []
+                                                            search.search_keywords[a].items = []
                                                             refreshData(false)
                                                         "
                                                     >
-                                                        <i class="fas fa-minus-circle text-primary" v-if="x == search.keywords_fields && x > 1" />
+                                                        <i class="fas fa-minus-circle text-primary" v-if="k == search.keywords_fields && k > 1" />
                                                     </b-input-group-text>
                                                 </template>
                                                 <treeselect
                                                     v-if="ui.tree_select"
-                                                    v-model="search.search_keywords[i].items"
+                                                    v-model="search.search_keywords[a].items"
                                                     :options="facets.Keywords"
                                                     :load-options="loadKeywordChildren"
                                                     :multiple="true"
@@ -177,31 +177,31 @@
                                                 <generic-multiselect
                                                     v-if="!ui.tree_select"
                                                     @change="genericSelectChanged"
-                                                    :parent_variable="`search_keywords::${i}`"
-                                                    :initial_selection="search.search_keywords[i].items"
+                                                    :parent_variable="`search_keywords::${a}`"
+                                                    :initial_selection="search.search_keywords[a].items"
                                                     :model="Models.KEYWORD"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                     :placeholder="$t('Keywords')"
                                                     :limit="50"
-                                                ></generic-multiselect>
+                                                />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
                                                         <b-form-checkbox
-                                                            v-model="search.search_keywords[i].operator"
+                                                            v-model="search.search_keywords[a].operator"
                                                             name="check-button"
                                                             @change="refreshData(false)"
                                                             class="shadow-none"
                                                             switch
                                                             style="width: 4em"
                                                         >
-                                                            <span class="text-uppercase" v-if="search.search_keywords[i].operator">{{ $t("or") }}</span>
+                                                            <span class="text-uppercase" v-if="search.search_keywords[a].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                                 <b-input-group-append v-if="search.expert_mode">
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_keywords[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
+                                                        <b-form-checkbox v-model="search.search_keywords[a].not" name="check-button" @change="refreshData(false)" class="shadow-none">
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -211,12 +211,28 @@
                                     </div>
 
                                     <!-- foods filter -->
+                                    <h6 class="mt-2 mb-0" v-if="search.expert_mode && search.foods_fields > 1">{{ $t("Foods") }}</h6>
                                     <div class="row" v-if="ui.show_foods">
                                         <div class="col-12">
-                                            <b-input-group class="mt-2">
+                                            <b-input-group class="mt-2" v-for="(x, i) in foodFields" :key="i">
+                                                <template #prepend v-if="search.expert_mode">
+                                                    <b-input-group-text style="width: 3em" @click="search.foods_fields = search.foods_fields + 1">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="x == search.foods_fields && x < 4" />
+                                                    </b-input-group-text>
+                                                    <b-input-group-text
+                                                        style="width: 3em"
+                                                        @click="
+                                                            search.foods_fields = search.foods_fields - 1
+                                                            search.search_foods[i].items = []
+                                                            refreshData(false)
+                                                        "
+                                                    >
+                                                        <i class="fas fa-minus-circle text-primary" v-if="x == search.foods_fields && x > 1" />
+                                                    </b-input-group-text>
+                                                </template>
                                                 <treeselect
                                                     v-if="ui.tree_select"
-                                                    v-model="search.search_foods"
+                                                    v-model="search.search_foods[i].items"
                                                     :options="facets.Foods"
                                                     :load-options="loadFoodChildren"
                                                     :multiple="true"
@@ -231,18 +247,25 @@
                                                 <generic-multiselect
                                                     v-if="!ui.tree_select"
                                                     @change="genericSelectChanged"
-                                                    parent_variable="search_foods"
-                                                    :initial_selection="search.search_foods"
+                                                    :parent_variable="`search_foods::${i}`"
+                                                    :initial_selection="search.search_foods[i].items"
                                                     :model="Models.FOOD"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                     :placeholder="$t('Foods')"
                                                     :limit="50"
-                                                ></generic-multiselect>
+                                                />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_foods_or" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
-                                                            <span class="text-uppercase" v-if="search.search_foods_or">{{ $t("or") }}</span>
+                                                        <b-form-checkbox v-model="search.search_foods[i].operator" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.search_foods[i].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                                <b-input-group-append v-if="search.expert_mode">
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.search_foods[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
+                                                            <span class="text-uppercase">{{ $t("not") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
@@ -409,22 +432,25 @@ export default {
                     { items: [], operator: true, not: false },
                     { items: [], operator: true, not: false },
                 ],
-                search_foods: [],
+                search_foods: [
+                    { items: [], operator: true, not: false },
+                    { items: [], operator: true, not: false },
+                    { items: [], operator: true, not: false },
+                    { items: [], operator: true, not: false },
+                ],
                 search_books: [],
                 search_units: [],
                 search_rating: undefined,
                 search_rating_gte: true,
-                search_keywords_or: true,
-                search_foods_or: true,
                 search_books_or: true,
                 search_units_or: true,
                 pagination_page: 1,
                 expert_mode: false,
                 keywords_fields: 1,
-                food_fields: 1,
-                book_fields: 1,
+                foods_fields: 1,
+                books_fields: 1,
                 rating_fields: 1,
-                unit_fields: 1,
+                units_fields: 1,
             },
             ui: {
                 show_meal_plan: true,
@@ -497,16 +523,16 @@ export default {
             return !this.expertMode ? 1 : this.search.keywords_fields
         },
         foodFields: function () {
-            return !this.expertMode ? 1 : this.search.food_fields
+            return !this.expertMode ? 1 : this.search.foods_fields
         },
         bookFields: function () {
-            return !this.expertMode ? 1 : this.search.book_fields
+            return !this.expertMode ? 1 : this.search.books_fields
         },
         ratingFields: function () {
             return !this.expertMode ? 1 : this.search.rating_fields
         },
         unitFields: function () {
-            return !this.expertMode ? 1 : this.search.unit_fields
+            return !this.expertMode ? 1 : this.search.units_fields
         },
     },
     mounted() {
@@ -544,7 +570,7 @@ export default {
             }
 
             this.facets.Foods = []
-            for (let x of this.search.search_foods) {
+            for (let x of this.search.search_foods.map((x) => x.items).flat()) {
                 this.facets.Foods.push({ id: x, name: "loading..." })
             }
 
@@ -663,7 +689,9 @@ export default {
             this.search.search_keywords = this.search.search_keywords.map((x) => {
                 return { ...x, items: [] }
             })
-            this.search.search_foods = []
+            this.search.search_foods = this.search.search_foods.map((x) => {
+                return { ...x, items: [] }
+            })
             this.search.search_books = []
             this.search.search_units = []
             this.search.search_rating = undefined
@@ -735,15 +763,12 @@ export default {
             this.addFields("keywords")
             let params = {
                 ...this.addFields("keywords"),
+                ...this.addFields("foods"),
                 query: this.search.search_input,
-                foods: this.search.search_foods.map(function (A) {
-                    return A?.["id"] ?? A
-                }),
                 rating: rating,
                 books: this.search.search_books.map(function (A) {
                     return A["id"]
                 }),
-                foodsOr: this.search.search_foods_or,
                 booksOr: this.search.search_books_or,
                 internal: this.search.search_internal,
                 random: this.random_search,
@@ -760,7 +785,7 @@ export default {
         searchFiltered: function (ignore_string = false) {
             let filtered =
                 this.search?.search_keywords[0].items?.length === 0 &&
-                this.search?.search_foods?.length === 0 &&
+                this.search?.search_foods[0].items?.length === 0 &&
                 this.search?.search_books?.length === 0 &&
                 // this.settings?.pagination_page === 1 &&
                 !this.random_search &&
