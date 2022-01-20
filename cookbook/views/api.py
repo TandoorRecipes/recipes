@@ -630,15 +630,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
     # TODO split read and write permission for meal plan guest
     permission_classes = [CustomIsShare | CustomIsGuest]
     pagination_class = RecipePagination
-    # TODO the boolean params below (keywords_or through new) should be updated to boolean types with front end refactored accordingly
+
     query_params = [
         QueryParam(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
-        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter.'), qtype='int'),
+        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), qtype='int'),
+        QueryParam(name='keywords_or', description=_('Keyword IDs, repeat for multiple Return recipes with any of the keywords'), qtype='int'),
+        QueryParam(name='keywords_and', description=_('Keyword IDs, repeat for multiple Return recipes with all of the keywords.'), qtype='int'),
+        QueryParam(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple Exclude recipes with any of the keywords.'), qtype='int'),
+        QueryParam(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple Exclude recipes with all of the keywords.'), qtype='int'),
         QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), qtype='int'),
         QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
         QueryParam(name='rating', description=_('Rating a recipe should have. [0 - 5]'), qtype='int'),
         QueryParam(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
-        QueryParam(name='keywords_or', description=_('If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided keywords.')),
         QueryParam(name='foods_or', description=_('If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided foods.')),
         QueryParam(name='books_or', description=_('If recipe should be in all (AND=''false'') or any (OR=''<b>true</b>'') of the provided books.')),
         QueryParam(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),

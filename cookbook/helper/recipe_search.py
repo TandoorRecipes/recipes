@@ -31,7 +31,13 @@ class RecipeSearch():
             self._search_prefs = SearchPreference()
         self._string = params.get('query').strip() if params.get('query', None) else None
         self._rating = self._params.get('rating', None)
-        self._keywords = self._params.get('keywords', None)
+        self._keywords = {
+            'or': self._params.get('keywords_or', None),
+            'and': self._params.get('keywords_and', None),
+            'or_not': self._params.get('keywords_or_not', None),
+            'and_not': self._params.get('keywords_and_not', None)
+        }
+
         self._foods = self._params.get('foods', None)
         self._books = self._params.get('books', None)
         self._steps = self._params.get('steps', None)
@@ -42,7 +48,6 @@ class RecipeSearch():
         self._sort_order = self._params.get('sort_order', None)
         # TODO add save
 
-        self._keywords_or = str2bool(self._params.get('keywords_or', True))
         self._foods_or = str2bool(self._params.get('foods_or', True))
         self._books_or = str2bool(self._params.get('books_or', True))
 
@@ -88,7 +93,7 @@ class RecipeSearch():
         self._new_recipes()
         # self._last_viewed()
         # self._last_cooked()
-        self.keyword_filters(keywords=self._keywords, operator=self._keywords_or)
+        self.keyword_filters(**self._keywords)
         self.food_filters(foods=self._foods, operator=self._foods_or)
         self.book_filters(books=self._books, operator=self._books_or)
         self.rating_filter(rating=self._rating)
@@ -182,19 +187,31 @@ class RecipeSearch():
                                                   ).values('recipe').annotate(count=Count('pk', distinct=True)).values('count')
         self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), 0))
 
-    def keyword_filters(self, keywords=None, operator=True):
-        if not keywords:
+    def keyword_filters(self, **kwargs):
+        if all([kwargs[x] is None for x in kwargs]):
             return
-        if not isinstance(keywords, list):
-            keywords = [keywords]
-        if operator == True:
-            # TODO creating setting to include descendants of keywords a setting
-            self._queryset = self._queryset.filter(keywords__in=Keyword.include_descendants(Keyword.objects.filter(pk__in=keywords)))
-        else:
-            # when performing an 'and' search returned recipes should include a parent OR any of its descedants
-            # AND other keywords selected so filters are appended using keyword__id__in the list of keywords and descendants
-            for kw in Keyword.objects.filter(pk__in=keywords):
-                self._queryset = self._queryset.filter(keywords__in=list(kw.get_descendants_and_self()))
+        for kw_filter in kwargs:
+            if not kwargs[kw_filter]:
+                continue
+            if not isinstance(kwargs[kw_filter], list):
+                kwargs[kw_filter] = [kwargs[kw_filter]]
+
+            keywords = Keyword.objects.filter(pk__in=kwargs[kw_filter])
+            if 'or' in kw_filter:
+                f = Q(keywords__in=Keyword.include_descendants(keywords))
+                if 'not' in kw_filter:
+                    self._queryset = self._queryset.exclude(f)
+                else:
+                    self._queryset = self._queryset.filter(f)
+            elif 'and' in kw_filter:
+                recipes = Recipe.objects.all()
+                for kw in keywords:
+                    if 'not' in kw_filter:
+                        recipes = recipes.filter(keywords__in=kw.get_descendants_and_self())
+                    else:
+                        self._queryset = self._queryset.filter(keywords__in=kw.get_descendants_and_self())
+                if 'not' in kw_filter:
+                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
 
     def food_filters(self, foods=None, operator=True):
         if not foods:
@@ -229,7 +246,7 @@ class RecipeSearch():
         if rating == 0:
             self._queryset = self._queryset.filter(rating=0)
         elif lessthan:
-            self._queryset = self._queryset.filter(rating__lte=int(rating[1:]))
+            self._queryset = self._queryset.filter(rating__lte=int(rating[1:])).exclude(rating=0)
         else:
             self._queryset = self._queryset.filter(rating__gte=int(rating))
 
