@@ -10462,3 +10462,8 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 .form-control-search {
     font-size: 20px;
 }
+
+.ghost {
+  opacity: 0.5 !important;
+  background: #b98766 !important;
+}
