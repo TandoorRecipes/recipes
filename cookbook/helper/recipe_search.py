@@ -38,7 +38,12 @@ class RecipeSearch():
             'and_not': self._params.get('keywords_and_not', None)
         }
 
-        self._foods = self._params.get('foods', None)
+        self._foods = {
+            'or': self._params.get('foods_or', None),
+            'and': self._params.get('foods_and', None),
+            'or_not': self._params.get('foods_or_not', None),
+            'and_not': self._params.get('foods_and_not', None)
+        }
         self._books = self._params.get('books', None)
         self._steps = self._params.get('steps', None)
         self._units = self._params.get('units', None)
@@ -48,7 +53,6 @@ class RecipeSearch():
         self._sort_order = self._params.get('sort_order', None)
         # TODO add save
 
-        self._foods_or = str2bool(self._params.get('foods_or', True))
         self._books_or = str2bool(self._params.get('books_or', True))
 
         self._internal = str2bool(self._params.get('internal', False))
@@ -94,7 +98,7 @@ class RecipeSearch():
         # self._last_viewed()
         # self._last_cooked()
         self.keyword_filters(**self._keywords)
-        self.food_filters(foods=self._foods, operator=self._foods_or)
+        self.food_filters(**self._foods)
         self.book_filters(books=self._books, operator=self._books_or)
         self.rating_filter(rating=self._rating)
         self.internal_filter()
@@ -213,19 +217,31 @@ class RecipeSearch():
                 if 'not' in kw_filter:
                     self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
 
-    def food_filters(self, foods=None, operator=True):
-        if not foods:
+    def food_filters(self, **kwargs):
+        if all([kwargs[x] is None for x in kwargs]):
             return
-        if not isinstance(foods, list):
-            foods = [foods]
-        if operator == True:
-            # TODO creating setting to include descendants of food a setting
-            self._queryset = self._queryset.filter(steps__ingredients__food__in=Food.include_descendants(Food.objects.filter(pk__in=foods)))
-        else:
-            # when performing an 'and' search returned recipes should include a parent OR any of its descedants
-            # AND other foods selected so filters are appended using steps__ingredients__food__id__in the list of foods and descendants
-            for fd in Food.objects.filter(pk__in=foods):
-                self._queryset = self._queryset.filter(steps__ingredients__food__in=list(fd.get_descendants_and_self()))
+        for fd_filter in kwargs:
+            if not kwargs[fd_filter]:
+                continue
+            if not isinstance(kwargs[fd_filter], list):
+                kwargs[fd_filter] = [kwargs[fd_filter]]
+
+            foods = Food.objects.filter(pk__in=kwargs[fd_filter])
+            if 'or' in fd_filter:
+                f = Q(steps__ingredients__food__in=Food.include_descendants(foods))
+                if 'not' in fd_filter:
+                    self._queryset = self._queryset.exclude(f)
+                else:
+                    self._queryset = self._queryset.filter(f)
+            elif 'and' in fd_filter:
+                recipes = Recipe.objects.all()
+                for food in foods:
+                    if 'not' in fd_filter:
+                        recipes = recipes.filter(steps__ingredients__food__in=food.get_descendants_and_self())
+                    else:
+                        self._queryset = self._queryset.filter(steps__ingredients__food__in=food.get_descendants_and_self())
+                if 'not' in fd_filter:
+                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
 
     def unit_filters(self, units=None, operator=True):
         if operator != True:

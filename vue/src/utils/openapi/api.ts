@@ -5288,10 +5288,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple Exclude recipes with any of the keywords.
          * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple Exclude recipes with all of the keywords.
          * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [foodsOr] Food IDs, repeat for multiple Return recipes with any of the foods
+         * @param {number} [foodsAnd] Food IDs, repeat for multiple Return recipes with all of the foods.
+         * @param {number} [foodsOrNot] Food IDs, repeat for multiple Exclude recipes with any of the foods.
+         * @param {number} [foodsAndNot] Food IDs, repeat for multiple Exclude recipes with all of the foods.
          * @param {number} [units] ID of unit a recipe should have.
          * @param {number} [rating] Rating a recipe should have. [0 - 5]
          * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
          * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
          * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
@@ -5301,7 +5304,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, units?: number, rating?: number, books?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5342,6 +5345,22 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['foods'] = foods;
             }
 
+            if (foodsOr !== undefined) {
+                localVarQueryParameter['foods_or'] = foodsOr;
+            }
+
+            if (foodsAnd !== undefined) {
+                localVarQueryParameter['foods_and'] = foodsAnd;
+            }
+
+            if (foodsOrNot !== undefined) {
+                localVarQueryParameter['foods_or_not'] = foodsOrNot;
+            }
+
+            if (foodsAndNot !== undefined) {
+                localVarQueryParameter['foods_and_not'] = foodsAndNot;
+            }
+
             if (units !== undefined) {
                 localVarQueryParameter['units'] = units;
             }
@@ -5352,10 +5371,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (books !== undefined) {
                 localVarQueryParameter['books'] = books;
-            }
-
-            if (foodsOr !== undefined) {
-                localVarQueryParameter['foods_or'] = foodsOr;
             }
 
             if (booksOr !== undefined) {
@@ -9693,10 +9708,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple Exclude recipes with any of the keywords.
          * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple Exclude recipes with all of the keywords.
          * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [foodsOr] Food IDs, repeat for multiple Return recipes with any of the foods
+         * @param {number} [foodsAnd] Food IDs, repeat for multiple Return recipes with all of the foods.
+         * @param {number} [foodsOrNot] Food IDs, repeat for multiple Exclude recipes with any of the foods.
+         * @param {number} [foodsAndNot] Food IDs, repeat for multiple Exclude recipes with all of the foods.
          * @param {number} [units] ID of unit a recipe should have.
          * @param {number} [rating] Rating a recipe should have. [0 - 5]
          * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
          * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
          * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
@@ -9706,8 +9724,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, units?: number, rating?: number, books?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, units, rating, books, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, internal, random, _new, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11381,10 +11399,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple Exclude recipes with any of the keywords.
          * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple Exclude recipes with all of the keywords.
          * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [foodsOr] Food IDs, repeat for multiple Return recipes with any of the foods
+         * @param {number} [foodsAnd] Food IDs, repeat for multiple Return recipes with all of the foods.
+         * @param {number} [foodsOrNot] Food IDs, repeat for multiple Exclude recipes with any of the foods.
+         * @param {number} [foodsAndNot] Food IDs, repeat for multiple Exclude recipes with all of the foods.
          * @param {number} [units] ID of unit a recipe should have.
          * @param {number} [rating] Rating a recipe should have. [0 - 5]
          * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
          * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
          * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
@@ -11394,8 +11415,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, units?: number, rating?: number, books?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
-            return localVarFp.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, units, rating, books, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
+            return localVarFp.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13093,10 +13114,13 @@ export class ApiApi extends BaseAPI {
      * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple Exclude recipes with any of the keywords.
      * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple Exclude recipes with all of the keywords.
      * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+     * @param {number} [foodsOr] Food IDs, repeat for multiple Return recipes with any of the foods
+     * @param {number} [foodsAnd] Food IDs, repeat for multiple Return recipes with all of the foods.
+     * @param {number} [foodsOrNot] Food IDs, repeat for multiple Exclude recipes with any of the foods.
+     * @param {number} [foodsAndNot] Food IDs, repeat for multiple Exclude recipes with all of the foods.
      * @param {number} [units] ID of unit a recipe should have.
      * @param {number} [rating] Rating a recipe should have. [0 - 5]
      * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-     * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
      * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
      * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
@@ -13107,8 +13131,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, units?: number, rating?: number, books?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, units, rating, books, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
