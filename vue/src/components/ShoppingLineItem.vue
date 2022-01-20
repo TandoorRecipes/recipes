@@ -18,7 +18,7 @@
               aria-haspopup="true"
               aria-expanded="false"
               type="button"
-              :class="settings.left_handed ? 'pl-0' : ''"
+              :class="settings.left_handed ? 'dropdown-spacing' : ''"
               class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret">
             <i class="fas fa-ellipsis-v fa-lg"></i>
           </button>
@@ -31,18 +31,18 @@
       </b-col>
       <b-col cols="8" md="9">
         <b-row class="d-flex h-100">
-          <b-col cols="6" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
+          <b-col cols="5" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
             <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong> {{
               Object.entries(formatAmount)[0][0]
             }}
           </b-col>
-          <b-col cols="6" md="3" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
+          <b-col cols="5" md="3" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
             <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp;
               {{ x[0] }}
             </div>
           </b-col>
 
-          <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
+          <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
             {{ formatFood }}
           </b-col>
           <b-col cols="3" data-html2canvas-ignore="true"
@@ -110,7 +110,7 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                   type="button"
-                  :class="settings.left_handed ? 'pl-0' : ''"
+                  :class="settings.left_handed ? 'dropdown-spacing' : ''"
                   class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret">
                 <i class="fas fa-ellipsis-v fa-lg"></i>
               </button>
@@ -123,10 +123,10 @@
           </b-col>
           <b-col cols="8" md="9">
             <b-row class="d-flex align-items-center h-100">
-              <b-col cols="6" md="3" class="d-flex align-items-center">
+              <b-col cols="5" md="3" class="d-flex align-items-center">
                 <strong class="mr-1">{{ formatOneAmount(e) }}</strong> {{ formatOneUnit(e) }}
               </b-col>
-              <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
+              <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
                 {{ formatOneFood(e) }}
               </b-col>
               <b-col cols="12" class="d-flex d-md-none">
@@ -366,5 +366,12 @@ export default {
 .unit-badge-lg {
   font-size: 1rem !important;
   font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+  .dropdown-spacing {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 </style>

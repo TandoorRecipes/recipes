@@ -371,7 +371,8 @@
               <div class="row">
                 <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
                 <div class="col col-md-6 text-right">
-                  <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoadd_shopping"
+                  <input type="checkbox" class="form-control settings-checkbox"
+                         v-model="settings.mealplan_autoadd_shopping"
                          @change="saveSettings"/>
                 </div>
               </div>
@@ -384,7 +385,8 @@
                 <div class="row">
                   <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
                   <div class="col col-md-6 text-right">
-                    <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoexclude_onhand"
+                    <input type="checkbox" class="form-control settings-checkbox"
+                           v-model="settings.mealplan_autoexclude_onhand"
                            @change="saveSettings"/>
                   </div>
                 </div>
@@ -398,7 +400,8 @@
                 <div class="row">
                   <div class="col col-md-6">{{ $t("mealplan_autoinclude_related") }}</div>
                   <div class="col col-md-6 text-right">
-                    <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoinclude_related"
+                    <input type="checkbox" class="form-control settings-checkbox"
+                           v-model="settings.mealplan_autoinclude_related"
                            @change="saveSettings"/>
                   </div>
                 </div>
@@ -583,16 +586,16 @@
     <ContextMenu ref="menu">
       <template #menu="{ contextData }">
         <ContextMenuItem>
-          <b-row class="d-flex align-items-center mr-0">
-            <b-col cols="6">
-              <a class="dropdown-item p-2" href="#"><i class="fas fa-cubes"></i> {{ $t("MoveCategory") }}</a>
-            </b-col>
-            <b-col cols="6 pl-1">
-              <b-form-select class="form-control form-control-sm" :options="shopping_categories" text-field="name"
-                             value-field="id" v-model="shopcat"
-                             @change="moveEntry($event, contextData);$refs.menu.close()"></b-form-select>
-            </b-col>
-          </b-row>
+
+          <b-input-group>
+            <template #prepend>
+              <span class="dropdown-item p-2 text-decoration-none" style="user-select: none!important;"><i class="fas fa-cubes"></i> {{ $t("MoveCategory") }}</span>
+            </template>
+            <b-form-select class="form-control mt-1 mr-1" :options="shopping_categories" text-field="name"
+                           value-field="id" v-model="shopcat"
+                           @change="moveEntry($event, contextData);$refs.menu.close()"></b-form-select>
+          </b-input-group>
+
         </ContextMenuItem>
         <ContextMenuItem @click="$refs.menu.close();onHand(contextData)">
           <a class="dropdown-item p-2" href="#"><i class="fas fa-clipboard-check"></i> {{ $t("OnHand") }}</a>
