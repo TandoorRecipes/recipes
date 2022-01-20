@@ -44,7 +44,12 @@ class RecipeSearch():
             'or_not': self._params.get('foods_or_not', None),
             'and_not': self._params.get('foods_and_not', None)
         }
-        self._books = self._params.get('books', None)
+        self._books = {
+            'or': self._params.get('books_or', None),
+            'and': self._params.get('books_and', None),
+            'or_not': self._params.get('books_or_not', None),
+            'and_not': self._params.get('books_and_not', None)
+        }
         self._steps = self._params.get('steps', None)
         self._units = self._params.get('units', None)
         # TODO add created by
@@ -99,7 +104,7 @@ class RecipeSearch():
         # self._last_cooked()
         self.keyword_filters(**self._keywords)
         self.food_filters(**self._foods)
-        self.book_filters(books=self._books, operator=self._books_or)
+        self.book_filters(**self._books)
         self.rating_filter(rating=self._rating)
         self.internal_filter()
         self.step_filters(steps=self._steps)
@@ -269,16 +274,30 @@ class RecipeSearch():
     def internal_filter(self):
         self._queryset = self._queryset.filter(internal=True)
 
-    def book_filters(self, books=None, operator=True):
-        if not books:
+    def book_filters(self, **kwargs):
+        if all([kwargs[x] is None for x in kwargs]):
             return
-        if not isinstance(books, list):
-            books = [books]
-        if operator == True:
-            self._queryset = self._queryset.filter(recipebookentry__book__id__in=books)
-        else:
-            for k in books:
-                self._queryset = self._queryset.filter(recipebookentry__book__id=k)
+        for bk_filter in kwargs:
+            if not kwargs[bk_filter]:
+                continue
+            if not isinstance(kwargs[bk_filter], list):
+                kwargs[bk_filter] = [kwargs[bk_filter]]
+
+            if 'or' in bk_filter:
+                f = Q(recipebookentry__book__id__in=kwargs[bk_filter])
+                if 'not' in bk_filter:
+                    self._queryset = self._queryset.exclude(f)
+                else:
+                    self._queryset = self._queryset.filter(f)
+            elif 'and' in bk_filter:
+                recipes = Recipe.objects.all()
+                for book in kwargs[bk_filter]:
+                    if 'not' in bk_filter:
+                        recipes = recipes.filter(recipebookentry__book__id=book)
+                    else:
+                        self._queryset = self._queryset.filter(recipebookentry__book__id=book)
+                if 'not' in bk_filter:
+                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
 
     def step_filters(self, steps=None, operator=True):
         if operator != True:

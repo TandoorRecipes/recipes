@@ -274,13 +274,29 @@
                                     </div>
 
                                     <!-- books filter -->
+                                    <h6 class="mt-2 mb-0" v-if="search.expert_mode && search.books_fields > 1">{{ $t("Books") }}</h6>
                                     <div class="row" v-if="ui.show_books">
                                         <div class="col-12">
-                                            <b-input-group class="mt-2">
+                                            <b-input-group class="mt-2" v-for="(x, i) in bookFields" :key="i">
+                                                <template #prepend v-if="search.expert_mode">
+                                                    <b-input-group-text style="width: 3em" @click="search.books_fields = search.books_fields + 1">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="x == search.books_fields && x < 4" />
+                                                    </b-input-group-text>
+                                                    <b-input-group-text
+                                                        style="width: 3em"
+                                                        @click="
+                                                            search.books_fields = search.books_fields - 1
+                                                            search.search_books[i].items = []
+                                                            refreshData(false)
+                                                        "
+                                                    >
+                                                        <i class="fas fa-minus-circle text-primary" v-if="x == search.books_fields && x > 1" />
+                                                    </b-input-group-text>
+                                                </template>
                                                 <generic-multiselect
                                                     @change="genericSelectChanged"
-                                                    parent_variable="search_books"
-                                                    :initial_selection="search.search_books"
+                                                    :parent_variable="`search_books::${i}`"
+                                                    :initial_selection="search.search_books[i].items"
                                                     :model="Models.RECIPE_BOOK"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                     v-bind:placeholder="$t('Books')"
@@ -288,9 +304,16 @@
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_books_or" name="check-button" @change="refreshData(false)" class="shadow-none" style="width: 4em" switch>
-                                                            <span class="text-uppercase" v-if="search.search_books_or">{{ $t("or") }}</span>
+                                                        <b-form-checkbox v-model="search.search_books[i].operator" name="check-button" @change="refreshData(false)" class="shadow-none" style="width: 4em" switch>
+                                                            <span class="text-uppercase" v-if="search.search_books[i].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                                <b-input-group-append v-if="search.expert_mode">
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.search_books[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
+                                                            <span class="text-uppercase">{{ $t("not") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
@@ -407,7 +430,7 @@ import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
 
-let SEARCH_COOKIE_NAME = "search_settings"
+let SEARCH_COOKIE_NAME = "search_settings1"
 let UI_COOKIE_NAME = "ui_search_settings"
 
 export default {
@@ -438,11 +461,15 @@ export default {
                     { items: [], operator: true, not: false },
                     { items: [], operator: true, not: false },
                 ],
-                search_books: [],
+                search_books: [
+                    { items: [], operator: true, not: false },
+                    { items: [], operator: true, not: false },
+                    { items: [], operator: true, not: false },
+                    { items: [], operator: true, not: false },
+                ],
                 search_units: [],
                 search_rating: undefined,
                 search_rating_gte: true,
-                search_books_or: true,
                 search_units_or: true,
                 pagination_page: 1,
                 expert_mode: false,
@@ -692,10 +719,17 @@ export default {
             this.search.search_foods = this.search.search_foods.map((x) => {
                 return { ...x, items: [] }
             })
-            this.search.search_books = []
+            this.search.search_book = this.search.search_book.map((x) => {
+                return { ...x, items: [] }
+            })
             this.search.search_units = []
             this.search.search_rating = undefined
             this.search.pagination_page = 1
+            this.search.keywords_fields = 1
+            this.search.foods_fields = 1
+            this.search.books_fields = 1
+            this.search.rating_fields = 1
+            this.search.units_fields = 1
             this.refreshData(false)
         },
         pageChange: function (page) {
@@ -764,12 +798,9 @@ export default {
             let params = {
                 ...this.addFields("keywords"),
                 ...this.addFields("foods"),
+                ...this.addFields("books"),
                 query: this.search.search_input,
                 rating: rating,
-                books: this.search.search_books.map(function (A) {
-                    return A["id"]
-                }),
-                booksOr: this.search.search_books_or,
                 internal: this.search.search_internal,
                 random: this.random_search,
                 _new: this.ui.sort_by_new,
@@ -784,10 +815,9 @@ export default {
         },
         searchFiltered: function (ignore_string = false) {
             let filtered =
-                this.search?.search_keywords[0].items?.length === 0 &&
-                this.search?.search_foods[0].items?.length === 0 &&
-                this.search?.search_books?.length === 0 &&
-                // this.settings?.pagination_page === 1 &&
+                this.search?.search_keywords?.[0]?.items?.length === 0 &&
+                this.search?.search_foods?.[0]?.items?.length === 0 &&
+                this.search?.search_books?.[0]?.items?.length === 0 &&
                 !this.random_search &&
                 this.search?.search_rating === undefined
 
