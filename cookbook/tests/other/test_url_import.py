@@ -8,7 +8,7 @@ from django.urls import reverse
 from ._recipes import (
     ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, CHEF_KOCH2, COOKPAD,
     COOKS_COUNTRY, DELISH, FOOD_NETWORK, GIALLOZAFFERANO, JOURNAL_DES_FEMMES,
-    MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO)
+    MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO, COOKIDOO)
 from cookbook.tests.conftest import validate_recipe
 
 IMPORT_SOURCE_URL = 'api_recipe_from_source'
@@ -55,6 +55,8 @@ def test_import_permission(arg, request):
     # example of non-json recipes_scraper
     THE_SPRUCE_EATS,
     TUDOGOSTOSO,
+    # complex example for cookidoo importer
+    COOKIDOO
 ])
 def test_recipe_import(arg, u1_s1):
     url = arg['url']

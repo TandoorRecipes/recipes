@@ -159,7 +159,13 @@ def import_url(request):
                 if not instruction.strip():
                     continue
                 if instruction.startswith('#'):
-                    next_step_name = instruction[1:]
+                    found = next_step_name = instruction[1:]
+                    if next_step_name != "":
+                        new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
+                        steps.append(new_step)
+                        new_step.save()
+                        recipe.steps.add(new_step)
+                    next_step_name = found
                 else:
                     new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
                     next_step_name = ""

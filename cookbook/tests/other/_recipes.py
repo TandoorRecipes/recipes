@@ -2774,3 +2774,89 @@ TUDOGOSTOSO = {
     ],
     "recipeInstructions": "Em uma tigela, misture 1 colher (sopa) de azeite, os tomates, as ervas e as passas. Reserve. Em uma panela média, aqueça o azeite restante em fogo médio e refogue o bacalhau e o pimentão. Junte o arroz e refogue por mais 3 minutos. Acrescente o sachê do tempero Meu Arroz KNORR Extra Alho e refogue rapidamente. Adicione a água. Cozinhe com a panela parcialmente tampada por 10 minutos ou até secar o líquido. Retire do fogo e reserve tampado por 5 minutos. Acrescente, no arroz, a mistura de tomate reservada, mexendo delicadamente. Tampe a panela e reserve por 5 minutos. Sirva em seguida. Informações Adicionais Créditos: Knorr\n\nImported from https://www.tudogostoso.com.br/receita/146568-arroz-com-bacalhau-tomate-e-ervas.html",
 }
+COOKIDOO = {
+    'file': ['cookidoo.html'],
+    'url': 'https://cookidoo.de/test',
+    "name": "Testrezept",
+    "servings": 4,
+    "prepTime": 45,
+    "cookTime": 90,
+    "image": "https://test/image.jpg",
+    "keywords": [
+        {
+            "id": 1645424,
+            "text": "Hauptgerichte"
+        },
+        {
+            "id": 9819046,
+            "text": "vegetarisch"
+        }
+    ],
+    "recipeIngredient": [
+        {
+            "amount": 150,
+            "unit": {
+                "text": "g",
+                "id": 65677
+            },
+            "ingredient": {
+                "text": "Zutat A",
+                "id": 58176
+            },
+            "original": "150 g Zutat A"
+        },
+        {
+            "amount": 150,
+            "unit": {
+                "text": "g",
+                "id": 43708
+            },
+            "ingredient": {
+                "text": "Zutat B",
+                "id": 50637
+            },
+            "original": "100 g Zutat B"
+        }
+    ],
+    "recipeInstructions": """ #Section A
+
+##Step 1
+
+Text of Step A1
+
+##Step 2
+
+Text of Step A2
+
+##Step 3
+
+Text of Step A3
+
+#Section B
+
+##Step 1
+
+Text of Step B1
+
+##Step 2
+
+Text of Step B2 **1 Sek./Stufe 5** zerkleinern.
+
+##Step 3
+
+Text of Step B3 **2 Min./120°C/Stufe 2** dünsten.
+
+##Step 4
+
+Text of Step B4 **3 Min./100°C/Linkslauf/Stufe 1** dünsten.
+
+##Step 5
+
+Text of Step B5 **10 Sek./Linkslauf/Stufe 1** unterrühren.
+
+##Step 6
+
+Text of Step B6 heiß servieren.
+
+Imported from https://cookidoo.de/test""",
+}
