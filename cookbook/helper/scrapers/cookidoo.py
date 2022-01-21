@@ -1,6 +1,7 @@
 
 from recipe_scrapers._abstract import AbstractScraper
 from gettext import gettext as _
+from recipes import settings
 
 
 class Cookidoo(AbstractScraper):
@@ -24,7 +25,10 @@ class Cookidoo(AbstractScraper):
     def instructions(self):
         instructions = self.schema.data.get("recipeInstructions") or ""
 
+        print("cookidoo: parsing instructions")
         if isinstance(instructions, list):
+            if settings.DEBUG:
+                print("cookidoo: parsing instruction")
             instructions_gist = []
             for schema_instruction_item in instructions:
                 instructions_gist += self.extract_instructions_text(schema_instruction_item, "#", 1)
@@ -44,8 +48,13 @@ class Cookidoo(AbstractScraper):
         section_format = "\n\n{}\n\n"
         instructions_gist = []
         if type(schema_item) is str:
+            if settings.DEBUG:
+                print("cookidoo: instruction is string")
             instructions_gist.append(step_format.format(step_number, schema_item))
+            step_number = step_number + 1
         elif schema_item.get("@type") == "HowToStep":
+            if settings.DEBUG:
+                print("cookidoo: instruction is HowToStep")
             if schema_item.get("name", False):
                 # some sites have duplicated name and text properties (1:1)
                 # others have name same as text but truncated to X chars.
@@ -56,7 +65,9 @@ class Cookidoo(AbstractScraper):
                     instructions_gist.append(step_format.format(step_number, schema_item.get("name")))
             instructions_gist.append(step_format.format(step_number, schema_item.get("text")))
         elif schema_item.get("@type") == "HowToSection":
-            section_name = schema_item.get("name") or schema_item.get("Name") or gettext("Instructions")
+            if settings.DEBUG:
+                print("cookidoo: instruction is HowToSection")
+            section_name = schema_item.get("name") or schema_item.get("Name") or _("Instructions")
             instructions_gist.append(section_format.format(section_name))
             step_number = 1
             for item in schema_item.get("itemListElement"):

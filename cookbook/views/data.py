@@ -152,21 +152,31 @@ def import_url(request):
 
         steps = []
         if settings.ENABLE_IMPORT_STEPS:
+            if settings.DEBUG:
+                print("data.py importing separate steps")
             # split steps by header 1 markdown annotations
             instructions = re.split('(#[^\n]+)', data['recipeInstructions'])
             next_step_name = ""
             for instruction in instructions:
                 if not instruction.strip():
+                    if settings.DEBUG:
+                        print("data.py ignoring empty step")
                     continue
                 if instruction.startswith('#'):
                     found = next_step_name = instruction[1:]
                     if next_step_name != "":
+                        if settings.DEBUG:
+                            print("data.py two step names, importing as section " + found)
                         new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
                         steps.append(new_step)
                         new_step.save()
                         recipe.steps.add(new_step)
                     next_step_name = found
+                    if settings.DEBUG:
+                        print("data.py found step name " + next_step_name)
                 else:
+                    if settings.DEBUG:
+                        print("data.py found instructions, importing step name " + next_step_name)
                     new_step = Step.objects.create(name=next_step_name.strip(), instruction=instruction.strip(), space=request.space)
                     next_step_name = ""
                     steps.append(new_step)
@@ -179,7 +189,6 @@ def import_url(request):
             steps.append(new_step)
             new_step.save()
             recipe.steps.add(new_step)
-
 
         for kw in data['keywords']:
             if not kw['text'].strip():
