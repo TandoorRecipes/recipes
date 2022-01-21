@@ -715,7 +715,8 @@ export default {
       new_supermarket: {entrymode: false, value: undefined, editmode: undefined},
       new_category: {entrymode: false, value: undefined},
       autosync_id: undefined,
-      auto_sync_running: false,
+      auto_sync_running: false, // track to not start a new sync before old one was finished
+      auto_sync_blocked: false, // blocking auto sync while request to check item is still running
       show_delay: false,
       drag: false,
       show_modal: false,
@@ -863,7 +864,7 @@ export default {
         window.addEventListener("offline", this.updateOnlineStatus)
       }
       this.autosync_id = setInterval(() => {
-        if (this.online && !this.auto_sync_running) {
+        if (this.online && !this.auto_sync_running && !this.auto_sync_blocked) {
           this.auto_sync_running = true
           this.getShoppingList(true)
         }
@@ -1071,7 +1072,9 @@ export default {
               }
               this.loading = false
             } else {
-              this.mergeShoppingList(results.data)
+                if (!this.auto_sync_blocked) {
+                    this.mergeShoppingList(results.data)
+                }
             }
           })
           .catch((err) => {
@@ -1195,6 +1198,7 @@ export default {
     },
     updateChecked: function (update) {
       // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
+      this.auto_sync_blocked = true
       let promises = []
       update.entries.forEach((x) => {
         const id = x?.id ?? x
@@ -1209,7 +1213,10 @@ export default {
         Vue.set(item, "completed_at", completed_at)
       })
 
-      Promise.all(promises).catch((err) => {
+      Promise.all(promises).then(() => {
+          this.auto_sync_blocked = false
+      }).catch((err) => {
+          this.auto_sync_blocked = false
         console.log(err, err.response)
         StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
       })
