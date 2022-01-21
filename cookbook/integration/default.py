@@ -2,7 +2,6 @@ import json
 from io import BytesIO, StringIO
 from re import match
 from zipfile import ZipFile
-from django.utils.text import get_valid_filename
 
 from rest_framework.renderers import JSONRenderer
 
@@ -57,8 +56,7 @@ class Default(Integration):
                     pass
 
                 recipe_zip_obj.close()
-
-                export_zip_obj.writestr(get_valid_filename(r.name) + '.zip', recipe_zip_stream.getvalue())
+                export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
         export_zip_obj.close()
 
         return [[ 'export.zip', export_zip_stream.getvalue() ]]

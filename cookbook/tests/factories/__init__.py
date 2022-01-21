@@ -269,10 +269,8 @@ class StepFactory(factory.django.DjangoModelFactory):
             return
         if kwargs.get('has_recipe', False):
             self.step_recipe = RecipeFactory(space=self.space)
-            self.type = Step.RECIPE
         elif extracted:
             self.step_recipe = extracted
-            self.type = Step.RECIPE
 
     @factory.post_generation
     def ingredients(self, create, extracted, **kwargs):

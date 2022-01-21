@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if settings.DATABASES['default']['ENGINE'] not in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-            self.stdout.write(self.style.WARNING(_('Only Postgress databases use full text search, no index to rebuild')))
+            self.stdout.write(self.style.WARNING(_('Only Postgresql databases use full text search, no index to rebuild')))
 
         try:
             language = DICTIONARY.get(translation.get_language(), 'simple')

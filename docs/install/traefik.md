@@ -1,6 +1,6 @@
 !!! danger
-    Please refer to [the offical documentation](https://doc.traefik.io/traefik/).
-    This example just shows something similar to my setup in case you dont understand the offical documentation.
+    Please refer to [the official documentation](https://doc.traefik.io/traefik/).
+    This example just shows something similar to my setup in case you dont understand the official documentation.
 
 You need to create a network called `traefik` using `docker network create traefik`.
 ## docker-compose.yml

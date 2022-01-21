@@ -46,7 +46,7 @@ registerRoute(
 
 registerRoute(
     ({request}) => (request.destination === 'script' || request.destination === 'style'),
-    new StaleWhileRevalidate({
+    new NetworkFirst({
         cacheName: 'assets'
     })
 )

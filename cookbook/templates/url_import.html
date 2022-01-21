@@ -499,6 +499,8 @@
                                                                      :clear-on-select="true"
                                                                      :allow-empty="true"
                                                                      :preserve-search="true"
+                                                                     :internal-search="false"
+                                                                     :limit="options_limit"
                                                                      placeholder="{% trans 'Select one' %}"
                                                                      tag-placeholder="{% trans 'Select' %}"
                                                                      label="text"
@@ -537,6 +539,8 @@
                                                          :clear-on-select="true"
                                                          :allow-empty="false"
                                                          :preserve-search="true"
+                                                         :internal-search="false"
+                                                         :limit="options_limit"
                                                          label="text"
                                                          track-by="id"
                                                          :multiple="false"
@@ -596,6 +600,8 @@
                             :clear-on-select="true"
                             :hide-selected="true"
                             :preserve-search="true"
+                            :internal-search="false"
+                            :limit="options_limit"
                             placeholder="{% trans 'Select one' %}"
                             tag-placeholder="{% trans 'Add Keyword' %}"
                             :taggable="true"
@@ -664,7 +670,8 @@
 
     </div>
 
-    <script src="{% url 'javascript-catalog' %}"></script>
+    <script src="{% url 'javascript-catalog' %}">
+    </script>
     <script type="application/javascript">
         let csrftoken = Cookies.get('csrftoken');
         Vue.http.headers.common['X-CSRFToken'] = csrftoken;
@@ -704,7 +711,8 @@
                 import_duplicates: false,
                 recipe_files: [],
                 images: [],
-                mode: 'url'
+                mode: 'url',
+                options_limit:25
             },
             directives: {
                 tabindex: {
@@ -714,9 +722,9 @@
                 }
             },
             mounted: function () {
-                this.searchKeywords('')
-                this.searchUnits('')
-                this.searchIngredients('')
+                // this.searchKeywords('')
+                // this.searchUnits('')
+                // this.searchIngredients('')
                 let uri = window.location.search.substring(1);
                 let params = new URLSearchParams(uri);
                 q = params.get("id")
@@ -896,25 +904,44 @@
                     }).catch((err) => {
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
-                    })
+                     })
+                    // let apiFactory = new ApiApiFactory()
+
+                    // this.keywords_loading = true
+                    // apiFactory
+                    //     .listKeywords(query, undefined, undefined, 1, this.options_limit)
+                    //     .then((response) => {
+                    //         this.keywords = response.data.results
+                    //         this.keywords_loading = false
+                    //     })
+                    //     .catch((err) => {
+                    //         console.log(err)
+                    //         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    //     })
                 },
                 searchUnits: function (query) {
+                    let apiFactory = new ApiApiFactory()
+
                     this.units_loading = true
-                    this.$http.get("{% url 'dal_unit' %}" + '?q=' + query).then((response) => {
-                        this.units = response.data.results;
-                        if (this.recipe_data !== undefined) {
-                            for (let x of Array.from(this.recipe_data.recipeIngredient)) {
-                                if (x.unit !== null && x.unit.text !== '') {
-                                    this.units = this.units.filter(item => item.text !== x.unit.text)
-                                    this.units.push(x.unit)
+                    apiFactory
+                        .listUnits(query, 1, this.options_limit)
+                        .then((response) => {
+                            this.units = response.data.results
+
+                            if (this.recipe !== undefined) {
+                                for (let s of this.recipe.steps) {
+                                    for (let i of s.ingredients) {
+                                        if (i.unit !== null && i.unit.id === undefined) {
+                                            this.units.push(i.unit)
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        this.units_loading = false
-                    }).catch((err) => {
-                        console.log(err)
-                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
-                    })
+                            this.units_loading = false
+                        })
+                        .catch((err) => {
+                            StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                        })
                 },
                 searchIngredients: function (query) {
                     this.ingredients_loading = true
@@ -934,6 +961,29 @@
                         console.log(err)
                         this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
                     })
+                    // let apiFactory = new ApiApiFactory()
+
+                    // this.foods_loading = true
+                    // apiFactory
+                    //     .listFoods(query, undefined, undefined, 1, this.options_limit)
+                    //     .then((response) => {
+                    //         this.foods = response.data.results
+
+                    //         if (this.recipe !== undefined) {
+                    //             for (let s of this.recipe.steps) {
+                    //                 for (let i of s.ingredients) {
+                    //                     if (i.food !== null && i.food.id === undefined) {
+                    //                         this.foods.push(i.food)
+                    //                     }
+                    //                 }
+                    //             }
+                    //         }
+
+                    //         this.foods_loading = false
+                    //     })
+                    //     .catch((err) => {
+                    //         StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    //     })
                 },
                 deleteNode: function (node, item, e) {
                     e.stopPropagation()

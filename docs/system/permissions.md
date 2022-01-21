@@ -21,13 +21,13 @@ The following table roughly defines the capabilities of each role
 !!! warning
     Users without groups cannot do anything. Make sure to assign them a group!
 
-You can either create new users trough the admin interface or by sending them invite links.
+You can either create new users through the admin interface or by sending them invite links.
 
 Invite links can be generated on the System page. If you specify a username during the creation of the link 
 the person using it won't be able to change that name.
 
 ## Managing Permissions
-Management of permissions can currently only be achieved trough the django admin interface.
+Management of permissions can currently only be achieved through the django admin interface.
 
 !!! warning
     Please do not rename the groups as this breaks the permission system.
