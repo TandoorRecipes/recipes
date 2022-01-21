@@ -1100,3 +1100,34 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+
+class CustomFilter(models.Model, PermissionModelMixin):
+    RECIPE = 'RECIPE'
+    FOOD = 'FOOD'
+    KEYWORD = 'KEYWORD'
+
+    MODELS = (
+        (RECIPE, _('Recipe')),
+        (FOOD, _('Food')),
+        (KEYWORD, _('Keyword')),
+    )
+
+    name = models.CharField(max_length=128, null=False, blank=False)
+    type = models.CharField(max_length=128, choices=(MODELS), default=MODELS[0])
+    # could use JSONField, but requires installing extension on SQLite,  don't need to search the objects, so seems unecessary
+    search = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shared = models.ManyToManyField(User, blank=True, related_name='f_shared_with')
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='cf_unique_name_per_space')
+        ]

@@ -14,7 +14,7 @@ from rest_framework.fields import empty
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
+from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
                              NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
                              RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
@@ -976,3 +976,16 @@ class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'amount', 'unit', 'delete', ]
+
+
+class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+    shared = UserNameSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    class Meta:
+        model = CustomFilter
+        fields = ('id', 'name',  'search', 'shared', 'created_by')
+        read_only_fields = ('created_by',)

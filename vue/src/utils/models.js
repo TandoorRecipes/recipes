@@ -470,6 +470,33 @@ export class Models {
         },
     }
 
+    static CUSTOM_FILTER = {
+        name: i18n.t("Custom Filter"),
+        apiName: "CustomFilter",
+
+        create: {
+            params: [["name", "search", "shared"]],
+            form: {
+                name: {
+                    form_field: true,
+                    type: "text",
+                    field: "name",
+                    label: i18n.t("Name"),
+                    placeholder: "",
+                },
+
+                shared: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "shared",
+                    list: "USER",
+                    list_label: "username",
+                    label: i18n.t("shared_with"),
+                    multiple: true,
+                },
+            },
+        },
+    }
     static USER_NAME = {
         name: "User",
         apiName: "User",

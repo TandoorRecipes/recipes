@@ -422,7 +422,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import moment from "moment"
 import _debounce from "lodash/debounce"
 
-import { ApiMixin, ResolveUrlMixin } from "@/utils/utils"
+import { ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin } from "@/utils/utils"
 import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
@@ -438,7 +438,7 @@ let UI_COOKIE_NAME = "ui_search_settings"
 
 export default {
     name: "RecipeSearchView",
-    mixins: [ResolveUrlMixin, ApiMixin],
+    mixins: [ResolveUrlMixin, ApiMixin, ToastMixin],
     components: { GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher },
     data() {
         return {
@@ -503,6 +503,7 @@ export default {
             pagination_count: 0,
             random_search: false,
             debug: false,
+            custom_filters: [],
         }
     },
     computed: {
@@ -857,7 +858,19 @@ export default {
         },
         saveSearch: function () {
             let filtername = window.prompt(this.$t("save_filter"), this.$t("filter_name"))
-            console.log("you saved: ", filtername, this.buildParams(false))
+            let params = {
+                name: filtername,
+                search: JSON.stringify(this.buildParams(false)),
+            }
+            this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
+                .then((result) => {
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    console.log("you saved: ", filtername, this.buildParams(false), result)
+                })
+                .catch((err) => {
+                    console.log(err, Object.keys(err))
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                })
         },
     },
 }

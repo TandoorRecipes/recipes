@@ -9,15 +9,17 @@ from cookbook.helper import dal
 from recipes.settings import DEBUG
 from recipes.version import VERSION_NUMBER
 
-from .models import (Automation, Comment, Food, InviteLink, Keyword, MealPlan, Recipe, RecipeBook,
-                     RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage, Supermarket,
-                     SupermarketCategory, Sync, SyncLog, Unit, UserFile, get_model_name)
+from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
+                     RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
+                     Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
+                     get_model_name)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 
 router = routers.DefaultRouter()
 router.register(r'automation', api.AutomationViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 router.register(r'cook-log', api.CookLogViewSet)
+router.register(r'custom-filter', api.CustomFilterViewSet)
 router.register(r'food', api.FoodViewSet)
 router.register(r'food-inherit-field', api.FoodInheritFieldViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
@@ -178,7 +180,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')
