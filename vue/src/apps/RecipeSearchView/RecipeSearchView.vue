@@ -334,9 +334,6 @@
                                                     @input="refreshData(false)"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                 />
-                                                <!-- <b-input-group-append>
-                                                    <b-input-group-text style="width: 85px"> </b-input-group-text>
-                                                </b-input-group-append> -->
                                                 <b-input-group-append>
                                                     <b-input-group-text>
                                                         <b-form-checkbox v-model="search.search_rating_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
@@ -372,6 +369,13 @@
                                             </b-input-group>
                                         </div>
                                     </div>
+                                    <div v-if="ui.enable_expert && searchFiltered(false)" class="row justify-content-end small">
+                                        <div class="col-auto">
+                                            <b-button class="my-0" variant="link" size="sm" @click="saveSearch">
+                                                <div>{{ $t("save_filter") }}</div>
+                                            </b-button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </b-collapse>
@@ -386,7 +390,6 @@
                         </span>
                     </div>
                 </div>
-                <div v-if="expertMode">i'm an expert!</div>
 
                 <div class="row">
                     <div class="col col-md-12">
@@ -719,7 +722,7 @@ export default {
             this.search.search_foods = this.search.search_foods.map((x) => {
                 return { ...x, items: [] }
             })
-            this.search.search_book = this.search.search_book.map((x) => {
+            this.search.search_books = this.search.search_books.map((x) => {
                 return { ...x, items: [] }
             })
             this.search.search_units = []
@@ -807,24 +810,24 @@ export default {
                 page: this.search.pagination_page,
                 pageSize: this.ui.page_size,
             }
-            if (!this.searchFiltered()) {
+            if (this.searchFiltered()) {
                 params.options = { query: { last_viewed: this.ui.recently_viewed } }
             }
-            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
             let filtered =
-                this.search?.search_keywords?.[0]?.items?.length === 0 &&
-                this.search?.search_foods?.[0]?.items?.length === 0 &&
-                this.search?.search_books?.[0]?.items?.length === 0 &&
-                !this.random_search &&
-                this.search?.search_rating === undefined
+                this.search?.search_keywords?.[0]?.items?.length !== 0 ||
+                this.search?.search_foods?.[0]?.items?.length !== 0 ||
+                this.search?.search_books?.[0]?.items?.length !== 0 ||
+                this.search?.search_units?.length !== 0 ||
+                this.random_search ||
+                this.search?.search_rating !== undefined
 
             if (ignore_string) {
-                return !filtered
+                return filtered
             } else {
-                return !filtered && this.search?.search_input !== ""
+                return filtered || this.search?.search_input != ""
             }
         },
         addFields(field) {
@@ -851,6 +854,10 @@ export default {
                     .flat()
                     .map((x) => x?.id ?? x),
             }
+        },
+        saveSearch: function () {
+            let filtername = window.prompt(this.$t("save_filter"), this.$t("filter_name"))
+            console.log("you saved: ", filtername, this.buildParams(false))
         },
     },
 }
