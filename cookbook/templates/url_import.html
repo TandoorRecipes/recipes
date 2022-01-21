@@ -908,28 +908,22 @@
                     //     })
                 },
                 searchUnits: function (query) {
-                    let apiFactory = new ApiApiFactory()
-
                     this.units_loading = true
-                    apiFactory
-                        .listUnits(query, 1, this.options_limit)
-                        .then((response) => {
-                            this.units = response.data.results
-
-                            if (this.recipe !== undefined) {
-                                for (let s of this.recipe.steps) {
-                                    for (let i of s.ingredients) {
-                                        if (i.unit !== null && i.unit.id === undefined) {
-                                            this.units.push(i.unit)
-                                        }
-                                    }
+                    this.$http.get("{% url 'dal_unit' %}" + '?q=' + query).then((response) => {
+                        this.units = response.data.results;
+                        if (this.recipe_data !== undefined) {
+                            for (let x of Array.from(this.recipe_data.recipeIngredient)) {
+                                if (x.unit !== null && x.unit.text !== '') {
+                                    this.units = this.units.filter(item => item.text !== x.unit.text)
+                                    this.units.push(x.unit)
                                 }
                             }
-                            this.units_loading = false
-                        })
-                        .catch((err) => {
-                            StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
-                        })
+                        }
+                        this.units_loading = false
+                    }).catch((err) => {
+                        console.log(err)
+                        this.makeToast(gettext('Error'), gettext('There was an error loading a resource!') + err.bodyText, 'danger')
+                    })
                 },
                 searchIngredients: function (query) {
                     this.ingredients_loading = true
