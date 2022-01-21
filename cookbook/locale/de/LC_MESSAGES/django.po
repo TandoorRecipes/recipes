@@ -529,6 +529,23 @@ msgstr ""
 msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
+#: .\cookbook\helper\scrapers\cookidoo.py:21
+msgid "Linkslauf"
+msgstr "Linkslauf"
+
+#: .\cookbook\helper\scrapers\cookidoo.py:22
+msgid "Kochlöffel"
+msgstr "Kochlöffel"
+
+#: .\cookbook\helper\scrapers\cookidoo.py:43
+msgid "Step {}"
+msgstr "Schritt {}"
+
+#: .\cookbook\helper\scrapers\cookidoo.py:59 .\templates\url_import.html:367
+#: .\templates\url_import.html:643
+msgid "Instructions"
+msgstr "Anleitung"
+
 #: .\cookbook\helper\shopping_helper.py:54
 #, fuzzy
 #| msgid "You must provide at least a recipe or a title."
@@ -2674,9 +2691,17 @@ msgstr "Notiz"
 msgid "Add Keyword"
 msgstr "Schlagwort hinzufügen"
 
-#: .\cookbook\templates\url_import.html:610
+#: .\cookbook\templates\url_import.html:675
 msgid "All Keywords"
 msgstr "Alle Schlagwörter"
+
+#: .\cookbook\templates\url_import.html:581
+msgid "Import Steps"
+msgstr "Schritte Importieren"
+
+#: .\cookbook\templates\url_import.html:585
+msgid "Import markup headings as separate steps."
+msgstr "Markup Überschriften als Schritte importieren"
 
 #: .\cookbook\templates\url_import.html:613
 msgid "Import all keywords, not only the ones already existing."

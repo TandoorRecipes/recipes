@@ -580,14 +580,14 @@
                     <div class="small text-muted">{% trans 'The markdown # for a header marks a new step.' %}</div>
                     <textarea id="id_instructions" class="form-control" v-model="recipe_data.recipeInstructions"
                               rows="8"></textarea>
+                </div>
 
-                    <div class="form-group">
-                        {% trans 'Import Steps' %}<br/>
-                        <input id="id_import_steps" type="checkbox"
-                               checked="checked"
-                               v-model="import_as_steps"> <label
-                            for="id_import_steps">{% trans 'Import markup headings as separate steps.' %}</label>
-                    </div>
+                <div class="form-group">
+                    {% trans 'Import Steps' %}<br/>
+                    <input id="id_import_steps" type="checkbox"
+                           checked="checked"
+                           v-model="import_as_steps"> <label
+                        for="id_import_steps">{% trans 'Import markup headings as separate steps.' %}</label>
                 </div>
 
                 <div class="form-group">
