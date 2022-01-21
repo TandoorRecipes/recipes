@@ -2,7 +2,7 @@
     <div>
         <b-modal :id="`shopping_${this.modal_id}`" hide-footer @show="loadRecipe">
             <template v-slot:modal-title
-                ><h4>{{ $t("Add_Servings_to_Shopping", { servings: servings }) }}</h4></template
+                ><h4>{{ $t("Add_Servings_to_Shopping", { servings: recipe_servings }) }}</h4></template
             >
             <loading-spinner v-if="loading"></loading-spinner>
             <div class="accordion" role="tablist" v-if="!loading">
@@ -15,7 +15,7 @@
                             :steps="steps"
                             :recipe="recipe.id"
                             :ingredient_factor="ingredient_factor"
-                            :servings="servings"
+                            :servings="recipe_servings"
                             :show_shopping="true"
                             :add_shopping_mode="true"
                             :header="false"
@@ -33,7 +33,7 @@
                                     :steps="r.steps"
                                     :recipe="r.recipe.id"
                                     :ingredient_factor="ingredient_factor"
-                                    :servings="servings"
+                                    :servings="recipe_servings"
                                     :show_shopping="true"
                                     :add_shopping_mode="true"
                                     :header="false"
@@ -45,12 +45,19 @@
                     <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                 </b-card>
             </div>
-            <div class="row mt-3 mb-3">
-                <div class="col-12 text-right">
-                    <b-button class="mx-2" variant="secondary" @click="$bvModal.hide(`shopping_${modal_id}`)">{{ $t("Cancel") }} </b-button>
-                    <b-button class="mx-2" variant="success" @click="saveShopping">{{ $t("Save") }} </b-button>
-                </div>
-            </div>
+
+            <b-input-group class="my-3">
+                <b-input-group-prepend is-text>
+                    {{ $t("Servings") }}
+                </b-input-group-prepend>
+
+                <b-form-spinbutton min="1" v-model="recipe_servings" inline style="height: 3em"></b-form-spinbutton>
+
+                <b-input-group-append>
+                    <b-button variant="secondary" @click="$bvModal.hide(`shopping_${modal_id}`)">{{ $t("Cancel") }} </b-button>
+                    <b-button variant="success" @click="saveShopping">{{ $t("Save") }} </b-button>
+                </b-input-group-append>
+            </b-input-group>
         </b-modal>
     </div>
 </template>
@@ -71,25 +78,37 @@ export default {
     mixins: [],
     props: {
         recipe: { required: true, type: Object },
-        servings: { type: Number },
+        servings: { type: Number, default: undefined },
         modal_id: { required: true, type: Number },
     },
     data() {
         return {
             loading: true,
             steps: [],
-            recipe_servings: 0,
+            recipe_servings: undefined,
             add_shopping: [],
             related_recipes: [],
         }
     },
-    mounted() {},
+    mounted() {
+        this.recipe_servings = this.servings
+    },
     computed: {
         ingredient_factor: function () {
-            return this.servings / this.recipe.servings || this.recipe_servings
+            return this.recipe_servings / this.recipe.servings
         },
     },
-    watch: {},
+    watch: {
+        recipe: {
+            handler() {
+                this.loadRecipe()
+            },
+            deep: true,
+        },
+        servings: function (newVal) {
+            this.recipe_servings = parseInt(newVal)
+        },
+    },
     methods: {
         loadRecipe: function () {
             this.add_shopping = []
@@ -109,7 +128,9 @@ export default {
                             .filter((x) => !x?.food?.food_onhand)
                             .map((x) => x.id),
                     ]
-                    this.recipe_servings = result.data?.servings
+                    if (!this.recipe_servings) {
+                        this.recipe_servings = result.data?.servings
+                    }
                     this.loading = false
                 })
                 .then(() => {
@@ -159,19 +180,27 @@ export default {
             let shopping_recipe = {
                 id: this.recipe.id,
                 ingredients: this.add_shopping,
-                servings: this.servings,
+                servings: this.recipe_servings,
             }
             let apiClient = new ApiApiFactory()
             apiClient
                 .shoppingRecipe(this.recipe.id, shopping_recipe)
                 .then((result) => {
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    this.$emit("finish")
                 })
                 .catch((err) => {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
+
             this.$bvModal.hide(`shopping_${this.modal_id}`)
         },
     },
 }
 </script>
+<style>
+.b-form-spinbutton.form-control {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+}
+</style>
