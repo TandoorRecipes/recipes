@@ -5,13 +5,6 @@ from recipes import settings
 
 
 class Cookidoo(AbstractScraper):
-    @classmethod
-    def host(cls, site='cookidoo'):
-        return {
-            'cookidoo': f"{site}.de",
-            'cookidoo.at': f"{site}.at",
-            'cookidoo.ch': f"{site}.ch",
-        }.get(site)
 
     def normalize_instruction(self, instruction):
         if instruction is None:
