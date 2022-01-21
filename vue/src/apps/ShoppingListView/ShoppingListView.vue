@@ -785,6 +785,9 @@ export default {
 
             var groups = { false: {}, true: {} } // force unchecked to always be first
             if (this.selected_supermarket) {
+                // TODO: make nulls_first a user setting
+                groups.false[this.$t("Undefined")] = {}
+                groups.true[this.$t("Undefined")] = {}
                 let super_cats = this.supermarkets
                     .filter((x) => x.id === this.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
@@ -795,9 +798,6 @@ export default {
                     groups["true"][cat] = {}
                 })
             } else {
-                // TODO: make nulls_first a user setting
-                groups.false[this.$t("Undefined")] = {}
-                groups.true[this.$t("Undefined")] = {}
                 this.shopping_categories.forEach((cat) => {
                     groups.false[cat.name] = {}
                     groups.true[cat.name] = {}
@@ -1132,6 +1132,15 @@ export default {
                 })
             )
             this.auto_sync_running = false
+            let new_entries = data.map((x) => x.id).filter((y) => !this.items.map((z) => z.id).includes(y))
+            if (new_entries.length > 0) {
+                let api = new ApiApiFactory()
+                new_entries.forEach((new_id) => {
+                    api.retrieveShoppingListEntry(new_id).then((result) => {
+                        this.items.push(result.data)
+                    })
+                })
+            }
         },
         moveEntry: function (e, item) {
             if (!e) {
