@@ -139,8 +139,6 @@ ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
 
 ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
 
-ENABLE_IMPORT_STEPS = bool(int(os.getenv('ENABLE_IMPORT_STEPS', False)))
-
 DEBUG = bool(int(os.getenv('DEBUG', False)))
 
 MIDDLEWARE = [

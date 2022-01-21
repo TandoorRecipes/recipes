@@ -151,7 +151,7 @@ def import_url(request):
         )
 
         steps = []
-        if settings.ENABLE_IMPORT_STEPS:
+        if data['import_as_steps']:
             if settings.DEBUG:
                 print("data.py importing separate steps")
             # split steps by header 1 markdown annotations

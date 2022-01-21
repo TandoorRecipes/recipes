@@ -23,8 +23,10 @@ class Cookidoo(AbstractScraper):
             if settings.DEBUG:
                 print("cookidoo: parsing instruction")
             instructions_gist = []
+            step_number = 1
             for schema_instruction_item in instructions:
-                instructions_gist += self.extract_instructions_text(schema_instruction_item, "#", 1)
+                instructions_gist += self.extract_instructions_text(schema_instruction_item, "#", step_number)
+                step_number = step_number + 1
 
             # add "header 1" markdown to marks the beginning of a new step
             return "".join(self.normalize_instruction(instruction)
