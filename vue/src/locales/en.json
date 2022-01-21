@@ -309,5 +309,7 @@
     "show_rating": "Show Rating",
     "show_units": "Show Units",
     "show_filters": "Show Filters",
-    "not": "not"
+    "not": "not",
+    "save_filter": "Save Filter",
+    "filter_name": "Filter Name"
 }
