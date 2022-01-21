@@ -42,18 +42,19 @@ from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
-                             ImportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
-                             RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
-                             ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
-                             UserPreference, ViewLog)
+from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, Food,
+                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
+                             Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
+                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UserFile, UserPreference, ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
-                                 CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
+                                 CookLogSerializer, CustomFilterSerializer,
+                                 FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookEntrySerializer,
@@ -900,7 +901,19 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = CustomFilter.objects
+    serializer_class = CustomFilterSerializer
+    permission_classes = [CustomIsOwner]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
+            space=self.request.space).distinct()
+        return super().get_queryset()
+
 # -------------- non django rest api views --------------------
+
+
 def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:
         return Dropbox
