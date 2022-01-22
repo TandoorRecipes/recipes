@@ -112,6 +112,9 @@
                                                 <b-form-group v-if="ui.enable_expert" v-bind:label="$t('show_filters')" label-for="popover-show_filters" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_filters" id="popover-show_filters" size="sm"></b-form-checkbox>
                                                 </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('show_sortby')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_sortby" id="popover-show_sortby" size="sm"></b-form-checkbox>
+                                                </b-form-group>
                                             </b-tab>
 
                                             <b-tab :title="$t('advanced')" :title-link-class="['mx-0']">
@@ -140,6 +143,37 @@
                                         </div>
                                     </b-popover>
 
+                                    <!-- custom filters filter -->
+                                    <div class="row" v-if="ui.show_filters || ui.show_sortby">
+                                        <div class="col-12">
+                                            <b-input-group class="mt-2">
+                                                <generic-multiselect
+                                                    v-if="ui.show_filters"
+                                                    @change="genericSelectChanged"
+                                                    parent_variable="search_filter"
+                                                    :initial_selection="search.search_filter"
+                                                    :model="Models.CUSTOM_FILTER"
+                                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                                    :placeholder="$t('Custom Filter')"
+                                                    :multiple="false"
+                                                    :limit="50"
+                                                />
+                                                <multiselect
+                                                    v-if="ui.show_sortby"
+                                                    v-model="search.sort_order"
+                                                    :options="sortOptions"
+                                                    :multiple="true"
+                                                    :hide-selected="true"
+                                                    :internal-search="false"
+                                                    @input="refreshData(false)"
+                                                    label="text"
+                                                    track-by="id"
+                                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                                    :placeholder="$t('sort_by')"
+                                                />
+                                            </b-input-group>
+                                        </div>
+                                    </div>
                                     <!-- keywords filter -->
                                     <h6 class="mb-0" v-if="search.expert_mode && search.keywords_fields > 1">{{ $t("Keywords") }}</h6>
                                     <div class="row" v-if="ui.show_keywords">
@@ -429,17 +463,18 @@ import GenericMultiselect from "@/components/GenericMultiselect"
 import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
+import Multiselect from "vue-multiselect"
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
 
-let SEARCH_COOKIE_NAME = "search_settings1"
+let SEARCH_COOKIE_NAME = "search_settings2"
 let UI_COOKIE_NAME = "ui_search_settings"
 
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin, ToastMixin],
-    components: { GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher },
+    components: { GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher, Multiselect },
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
@@ -474,6 +509,8 @@ export default {
                 search_rating: undefined,
                 search_rating_gte: true,
                 search_units_or: true,
+                search_filter: undefined,
+                sort_order: [],
                 pagination_page: 1,
                 expert_mode: false,
                 keywords_fields: 1,
@@ -499,11 +536,11 @@ export default {
                 show_rating: true,
                 show_units: false,
                 show_filters: false,
+                show_sortby: false,
             },
             pagination_count: 0,
             random_search: false,
             debug: false,
-            custom_filters: [],
         }
     },
     computed: {
@@ -565,6 +602,35 @@ export default {
         unitFields: function () {
             return !this.expertMode ? 1 : this.search.units_fields
         },
+        sortOptions: function () {
+            let sort_order = []
+            let x = 1
+            const field = [
+                [this.$t("search_rank"), "score"],
+                [this.$t("Name"), "name"],
+                [this.$t("date_cooked"), "lastcooked"],
+                [this.$t("Rating"), "rating"],
+                [this.$t("times_cooked"), "favorite"],
+                [this.$t("date_created"), "created_at"],
+                [this.$t("date_viewed"), "lastviewed"],
+            ]
+            field.forEach((f) => {
+                sort_order.push(
+                    {
+                        id: x,
+                        text: `${f[0]} ↑`,
+                        value: f[1],
+                    },
+                    {
+                        id: x + 1,
+                        text: `${f[0]} ↓`,
+                        value: `-${f[1]}`,
+                    }
+                )
+                x = x + 2
+            })
+            return sort_order
+        },
     },
     mounted() {
         this.$nextTick(function () {
@@ -572,7 +638,7 @@ export default {
                 this.ui = Object.assign({}, this.ui, this.$cookies.get(UI_COOKIE_NAME))
             }
             if (this.ui.remember_search && this.$cookies.isKey(SEARCH_COOKIE_NAME)) {
-                this.search = Object.assign({}, this.search, this.$cookies.get(SEARCH_COOKIE_NAME), `${this.ui.remember_hours}h`)
+                this.search = Object.assign({}, this.search, this.$cookies.get(SEARCH_COOKIE_NAME))
             }
             let urlParams = new URLSearchParams(window.location.search)
 
@@ -644,8 +710,8 @@ export default {
             this.refreshData(false)
         },
         "ui.tree_select": function () {
-            if (this.ui.tree_select && (!this.facets?.Keywords || !this.facets?.Foods)) {
-                this.getFacets(this.facets?.hash)
+            if (this.ui.tree_select && (this.facets?.Keywords.length == 0 || this.facets?.Foods.length == 0) && this.facets?.cache_key) {
+                this.getFacets(this.facets?.cache_key)
             }
         },
         "search.search_input": _debounce(function () {
@@ -654,6 +720,10 @@ export default {
             this.refreshData(false)
         }, 300),
         "ui.page_size": _debounce(function () {
+            this.refreshData(false)
+        }, 300),
+        "search.search_filter": _debounce(function () {
+            // TODO clear existing filters
             this.refreshData(false)
         }, 300),
     },
@@ -728,6 +798,8 @@ export default {
             })
             this.search.search_units = []
             this.search.search_rating = undefined
+            this.search.search_filter = undefined
+            this.search.sort_order = undefined
             this.search.pagination_page = 1
             this.search.keywords_fields = 1
             this.search.foods_fields = 1
@@ -792,6 +864,9 @@ export default {
             }
         },
         buildParams: function (random) {
+            if (this.search.search_filter) {
+                return JSON.parse(this.search.search_filter.search)
+            }
             this.random_search = random
             let rating = this.search.search_rating
             if (rating !== undefined && !this.search.search_rating_gte) {
@@ -811,9 +886,13 @@ export default {
                 page: this.search.pagination_page,
                 pageSize: this.ui.page_size,
             }
+
+            let query = { sort_order: this.search.sort_order.map((x) => x.value) }
             if (this.searchFiltered()) {
-                params.options = { query: { last_viewed: this.ui.recently_viewed } }
+                query.last_viewed = this.ui.recently_viewed
             }
+            params.options = { query: query }
+            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
@@ -865,7 +944,6 @@ export default {
             this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
                 .then((result) => {
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                    console.log("you saved: ", filtername, this.buildParams(false), result)
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))

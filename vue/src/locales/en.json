@@ -315,5 +315,14 @@
     "left_handed": "Left-handed mode",
     "left_handed_help": "Will optimize the UI for use with your left hand.",
     "Custom Filter": "Custom Filter",
-    "shared_with": "Shared With"
+    "shared_with": "Shared With",
+    "sort_by": "Sort By",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "date_viewed": "Last Viewed",
+    "date_cooked": "Last Cooked",
+    "times_cooked": "Times Cooked",
+    "date_created": "Date Created",
+    "show_sortby": "Show Sort By",
+    "search_rank": "Search Rank"
 }
