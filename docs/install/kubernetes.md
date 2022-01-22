@@ -94,5 +94,5 @@ These manifests are tested against Release 1.0.1. Newer versions may not work wi
 To apply the manifest with kubectl, use the following command:
 
 ~~~
-kubectl apply -f ./docs/k8s/
+kubectl apply -f ./docs/install/k8s/
 ~~~
