@@ -97,6 +97,7 @@ export default {
         }
     },
     mounted() {
+        console.log("shopping modal")
         this.recipe_servings = this.servings
     },
     computed: {

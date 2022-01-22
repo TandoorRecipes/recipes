@@ -56,10 +56,7 @@ class RecipeSearch():
         # TODO add created before/after
         # TODO image exists
         self._sort_order = self._params.get('sort_order', None)
-        # TODO add save
-
         self._books_or = str2bool(self._params.get('books_or', True))
-
         self._internal = str2bool(self._params.get('internal', False))
         self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
@@ -88,7 +85,7 @@ class RecipeSearch():
             self.search_rank = (
                 SearchRank('name_search_vector', self.search_query, cover_density=True)
                 + SearchRank('desc_search_vector', self.search_query, cover_density=True)
-                + SearchRank('steps__search_vector', self.search_query, cover_density=True)
+                # + SearchRank('steps__search_vector', self.search_query, cover_density=True)  # Is a large performance drag
             )
         self.orderby = []
         self._default_sort = ['-favorite']  # TODO add user setting
@@ -97,11 +94,11 @@ class RecipeSearch():
 
     def get_queryset(self, queryset):
         self._queryset = queryset
-        self.recently_viewed_recipes(self._last_viewed)
+        self._build_sort_order()
+        self._recently_viewed(num_recent=self._last_viewed)
+        self._last_cooked()
         self._favorite_recipes()
         self._new_recipes()
-        # self._last_viewed()
-        # self._last_cooked()
         self.keyword_filters(**self._keywords)
         self.food_filters(**self._foods)
         self.book_filters(**self._books)
@@ -111,35 +108,48 @@ class RecipeSearch():
         self.unit_filters(units=self._units)
         self.string_filters(string=self._string)
         # self._queryset = self._queryset.distinct()  # TODO 2x check. maybe add filter of recipe__in after orderby
-        self._apply_order_by()
-        return self._queryset.filter(space=self._request.space)
+        return self._queryset.filter(space=self._request.space).order_by(*self.orderby)
 
-    def _apply_order_by(self):
+    def _sort_includes(self, *args):
+        for x in args:
+            if x in self.orderby:
+                return True
+            elif '-' + x in self.orderby:
+                return True
+        return False
+
+    def _build_sort_order(self):
         if self._random:
             self._queryset = self._queryset.order_by("?")
         else:
-            if self._sort_order:
-                self._queryset.order_by(*self._sort_order)
-                return
-
-            order = []  # TODO add user preferences here: name, date cooked, rating, times cooked, date created, date viewed, random
-            if '-recent' in self.orderby and self._last_viewed:
+            order = []
+            # TODO add userpreference for default sort order and replace '-favorite'
+            default_order = ['-favorite']
+            # recent and new_recipe are always first; they float a few recipes to the top
+            if self._last_viewed:
                 order += ['-recent']
-            if '-new_recipe' in self.orderby and self._new:
+            if self._new:
                 order += ['-new_recipe']
 
-            if '-rank' in self.orderby and '-simularity' in self.orderby:
-                self._queryset = self._queryset.annotate(score=Sum(F('rank')+F('simularity')))
-                order += ['-score']
-            elif '-rank' in self.orderby:
-                self._queryset = self._queryset.annotate(score=F('rank'))
-                order += ['-score']
-            elif '-simularity' in self.orderby:
-                self._queryset = self._queryset.annotate(score=F('simularity'))
-                order += ['-score']
-            for x in list(set(self.orderby)-set([*order, '-rank', '-simularity'])):
-                order += [x]
-            self._queryset = self._queryset.order_by(*order)
+            # if a sort order is provided by user - use that order
+            if self._sort_order:
+
+                if not isinstance(self._sort_order, list):
+                    order += [self._sort_order]
+                else:
+                    order += self._sort_order
+                if not self._postgres or not self._string:
+                    if 'score' in order:
+                        order.remove('score')
+                    if '-score' in order:
+                        order.remove('-score')
+            # if no sort order provided prioritize text search, followed by the default search
+            elif self._postgres and self._string:
+                order += ['-score', *default_order]
+            # otherwise sort by the remaining order_by attributes or favorite by default
+            else:
+                order += default_order
+            self.orderby = order
 
     def string_filters(self, string=None):
         if not string:
@@ -157,18 +167,28 @@ class RecipeSearch():
                     query_filter |= f
                 else:
                     query_filter = f
-            self._queryset = self._queryset.filter(query_filter).distinct()
-            # TODO add annotation for simularity
+            self._queryset = self._queryset.filter(query_filter)
             if self._fulltext_include:
-                self._queryset = self._queryset.annotate(rank=self.search_rank)
-                self.orderby += ['-rank']
+                if self._fuzzy_match is None:
+                    self._queryset = self._queryset.annotate(score=self.search_rank)
+                else:
+                    self._queryset = self._queryset.annotate(rank=self.search_rank)
 
-            if self._fuzzy_match is not None:  # this annotation is full text, not trigram
+            if self._fuzzy_match is not None:
                 simularity = self._fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
-                self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
-                self.orderby += ['-simularity']
+                if not self._fulltext_include:
+                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
+                else:
+                    self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
+            if self._sort_includes('score') and self._fulltext_include and self._fuzzy_match is not None:
+                self._queryset = self._queryset.annotate(score=Sum(F('rank')+F('simularity')))
         else:
             self._queryset = self._queryset.filter(name__icontains=self._string)
+
+    def _last_cooked(self):
+        if self._sort_includes('lastcooked'):
+            self._queryset = self._queryset.annotate(lastcooked=Coalesce(
+                Max(Case(When(created_by=self._request.user, space=self._request.space, then='cooklog__pk'))), Value(0)))
 
     def _new_recipes(self, new_days=7):
         # TODO make new days a user-setting
@@ -178,23 +198,23 @@ class RecipeSearch():
             self._queryset.annotate(new_recipe=Case(
                 When(created_at__gte=(timezone.now() - timedelta(days=new_days)), then=('pk')), default=Value(0), ))
         )
-        self.orderby += ['-new_recipe']
 
-    def recently_viewed_recipes(self, last_viewed=None):
-        if not last_viewed:
+    def _recently_viewed(self, num_recent=None):
+        if not num_recent:
+            if self._sort_includes('lastviewed'):
+                self._queryset = self._queryset.annotate(lastviewed=Coalesce(
+                    Max(Case(When(created_by=self._request.user, space=self._request.space, then='viewlog__pk'))), Value(0)))
             return
 
         last_viewed_recipes = ViewLog.objects.filter(created_by=self._request.user, space=self._request.space).values(
-            'recipe').annotate(recent=Max('created_at')).order_by('-recent')
-        last_viewed_recipes = last_viewed_recipes[:last_viewed]
-        self.orderby += ['-recent']
+            'recipe').annotate(recent=Max('created_at')).order_by('-recent')[:num_recent]
         self._queryset = self._queryset.annotate(recent=Coalesce(Max(Case(When(pk__in=last_viewed_recipes.values('recipe'), then='viewlog__pk'))), Value(0)))
 
     def _favorite_recipes(self):
-        self.orderby += ['-favorite']  # default sort?
-        favorite_recipes = CookLog.objects.filter(created_by=self._request.user, space=self._request.space, recipe=OuterRef('pk')
-                                                  ).values('recipe').annotate(count=Count('pk', distinct=True)).values('count')
-        self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), 0))
+        if self._sort_includes('favorite'):
+            favorite_recipes = CookLog.objects.filter(created_by=self._request.user, space=self._request.space, recipe=OuterRef('pk')
+                                                      ).values('recipe').annotate(count=Count('pk', distinct=True)).values('count')
+            self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), 0))
 
     def keyword_filters(self, **kwargs):
         if all([kwargs[x] is None for x in kwargs]):
@@ -258,12 +278,13 @@ class RecipeSearch():
         self._queryset = self._queryset.filter(steps__ingredients__unit__in=units)
 
     def rating_filter(self, rating=None):
+        if rating or self._sort_includes('rating'):
+            # TODO make ratings a settings user-only vs all-users
+            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=Value(0)))))
         if rating is None:
             return
         lessthan = '-' in rating
 
-        # TODO make ratings a settings user-only vs all-users
-        self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=Value(0)))))
         if rating == 0:
             self._queryset = self._queryset.filter(rating=0)
         elif lessthan:

@@ -100,7 +100,7 @@ export default {
         return {
             servings_value: 0,
             recipe_share_link: undefined,
-            modal_id: this.recipe.id + Math.round(Math.random() * 100000),
+            modal_id: undefined,
             options: {
                 entryEditing: {
                     date: null,
@@ -200,6 +200,7 @@ export default {
             navigator.share(shareData)
         },
         addToShopping() {
+            this.modal_id = this.recipe.id + Math.round(Math.random() * 100000)
             this.$bvModal.show(`shopping_${this.modal_id}`)
         },
     },
