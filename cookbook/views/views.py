@@ -411,7 +411,7 @@ def user_settings(request):
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
 
-    # these fields require postgress - just disable them if postgress isn't available
+    # these fields require postgresql - just disable them if postgresql isn't available
     if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                        'django.db.backends.postgresql']:
         search_form.fields['search'].disabled = True

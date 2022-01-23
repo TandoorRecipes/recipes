@@ -337,8 +337,9 @@ class UserPreference(models.Model, PermissionModelMixin):
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
-    shopping_add_onhand = models.BooleanField(default=True)
+    shopping_add_onhand = models.BooleanField(default=False)
     filter_to_supermarket = models.BooleanField(default=False)
+    left_handed = models.BooleanField(default=False)
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
     csv_delim = models.CharField(max_length=2, default=",")
@@ -515,7 +516,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     @staticmethod
     def reset_inheritance(space=None):
-        # resets inheritted fields to the space defaults and updates all inheritted fields to root object values
+        # resets inherited fields to the space defaults and updates all inherited fields to root object values
         inherit = space.food_inherit.all()
 
         # remove all inherited fields from food

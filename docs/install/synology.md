@@ -78,7 +78,7 @@ Easiest way is to do it via Reverse Proxy
 	- insert name
 	- Source:
 		- Protocol: HTTPS
-		- Hostname: URL if you acces from outside, otherwise ip in network
+		- Hostname: URL if you access from outside, otherwise ip in network
 		- Port: The port you want to access, has to be a different one that the one in the docker-compose file
 		- HSTS can be enabled
 	- Destination:
@@ -88,14 +88,14 @@ Easiest way is to do it via Reverse Proxy
 	- Click on Custom Header and press Create -> Websocket
 	- Save
 - Control Panel -> Security -> Firewall -> Edit Rules -> Create
-	- Ports: Select form a list of build-in applications -> Select -> You find your Reverse Proxy, enable it
+	- Ports: Select form a list of built-in applications -> Select -> You find your Reverse Proxy, enable it
 	- Source IP: Depends, All allows access from outside, i use specific to only connect in my network
 	- Action: Allow
 - Save and make sure it's above the deny rules
 
 [Deprecated, Note: ssl Path changed for DSM 7]
 6.1 Additional SSL Setup 
-- create foler `ssl` inside `nginx` folder
+- create folder `ssl` inside `nginx` folder
 	- download your ssl certificate from `security` tab in dsm `control panel`
 	- or create a task in `task manager` because Synology will update the certificate every few months
 		- set task to repeat every day

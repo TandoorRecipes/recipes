@@ -7,8 +7,7 @@
                 </div>
                 <div class="col col-md-6 text-right" v-if="header">
                     <h4>
-                        <i v-if="show_shopping && ShoppingRecipes.length > 0" class="fas fa-trash text-danger px-2"
-                           @click="saveShopping(true)"></i>
+                        <i v-if="show_shopping && ShoppingRecipes.length > 0" class="fas fa-trash text-danger px-2" @click="saveShopping(true)"></i>
                         <i v-if="show_shopping" class="fas fa-save text-success px-2" @click="saveShopping()"></i>
                         <i class="fas fa-shopping-cart px-2" @click="getShopping()"></i>
                     </h4>
@@ -16,17 +15,16 @@
             </div>
             <div class="row text-right" v-if="ShoppingRecipes.length > 1">
                 <div class="col col-md-6 offset-md-6 text-right">
-                    <b-form-select v-model="selected_shoppingrecipe" :options="ShoppingRecipes"
-                                   size="sm"></b-form-select>
+                    <b-form-select v-model="selected_shoppingrecipe" :options="ShoppingRecipes" size="sm"></b-form-select>
                 </div>
             </div>
-            <br v-if="header"/>
+            <br v-if="header" />
             <div class="row no-gutter">
                 <div class="col-md-12">
                     <table class="table table-sm">
                         <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-                        <template v-for="s in steps" >
-                            <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== ''">
+                        <template v-for="s in steps">
+                            <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && !add_shopping_mode">
                                 <td colspan="5">
                                     <b>{{ s.name }}</b>
                                 </td>
@@ -56,18 +54,18 @@
 
 <script>
 import Vue from "vue"
-import {BootstrapVue} from "bootstrap-vue"
+import { BootstrapVue } from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import IngredientComponent from "@/components/IngredientComponent"
-import {ApiMixin, StandardToasts} from "@/utils/utils"
+import { ApiMixin, StandardToasts } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientCard",
     mixins: [ApiMixin],
-    components: {IngredientComponent},
+    components: { IngredientComponent },
     props: {
         steps: {
             type: Array,
@@ -75,12 +73,12 @@ export default {
                 return []
             },
         },
-        recipe: {type: Number},
-        ingredient_factor: {type: Number, default: 1},
-        servings: {type: Number, default: 1},
-        detailed: {type: Boolean, default: true},
-        header: {type: Boolean, default: false},
-        add_shopping_mode: {type: Boolean, default: false},
+        recipe: { type: Number },
+        ingredient_factor: { type: Number, default: 1 },
+        servings: { type: Number, default: 1 },
+        detailed: { type: Boolean, default: true },
+        header: { type: Boolean, default: false },
+        add_shopping_mode: { type: Boolean, default: false },
     },
     data() {
         return {
@@ -99,7 +97,7 @@ export default {
                         value: x?.list_recipe,
                         text: x?.recipe_mealplan?.name,
                         recipe: x?.recipe_mealplan?.recipe ?? 0,
-                        servings: x?.recipe_mealplan?.servings
+                        servings: x?.recipe_mealplan?.servings,
                     }
                 })
                 .filter((x) => x?.recipe == this.recipe)
