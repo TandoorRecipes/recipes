@@ -151,7 +151,7 @@
                                                     v-if="ui.show_filters"
                                                     @change="genericSelectChanged"
                                                     parent_variable="search_filter"
-                                                    :initial_selection="search.search_filter"
+                                                    :initial_single_selection="search.search_filter"
                                                     :model="Models.CUSTOM_FILTER"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                     :placeholder="$t('Custom Filter')"
@@ -553,7 +553,7 @@ export default {
                 }
             } else {
                 ratingCount = (x) => {
-                    return ` (${x})`
+                    return ` (${x}) `
                 }
             }
 
@@ -576,11 +576,11 @@ export default {
             }
 
             return [
-                { id: 5, label: "⭐⭐⭐⭐⭐" + label(5) + ratingCount(this.facets.Ratings?.["5.0"] ?? 0) },
-                { id: 4, label: "⭐⭐⭐⭐ " + label() + ratingCount(this.facets.Ratings?.["4.0"] ?? 0) },
-                { id: 3, label: "⭐⭐⭐ " + label() + ratingCount(this.facets.Ratings?.["3.0"] ?? 0) },
-                { id: 2, label: "⭐⭐ " + label() + ratingCount(this.facets.Ratings?.["2.0"] ?? 0) },
-                { id: 1, label: "⭐ " + label(1) + ratingCount(this.facets.Ratings?.["1.0"] ?? 0) },
+                { id: 5, label: "⭐⭐⭐⭐⭐" + ratingCount(this.facets.Ratings?.["5.0"] ?? 0) + label(5) },
+                { id: 4, label: "⭐⭐⭐⭐ " + ratingCount(this.facets.Ratings?.["4.0"] ?? 0) + label() },
+                { id: 3, label: "⭐⭐⭐ " + ratingCount(this.facets.Ratings?.["3.0"] ?? 0) + label() },
+                { id: 2, label: "⭐⭐ " + ratingCount(this.facets.Ratings?.["2.0"] ?? 0) + label() },
+                { id: 1, label: "⭐ " + ratingCount(this.facets.Ratings?.["1.0"] ?? 0) + label(1) },
                 { id: 0, label: this.$t("Unrated") + ratingCount(this.facets.Ratings?.["0.0"] ?? 0) },
             ]
         },
@@ -664,14 +664,17 @@ export default {
                             }
                         })
                 }
+            } else {
+                this.facets.Keywords = []
             }
 
+            // TODO: figure out how to find nested items and load keyword/food children for that branch
+            // probably a backend change in facets to pre-load children of nested items
             this.facets.Foods = []
             for (let x of this.search.search_foods.map((x) => x.items).flat()) {
                 this.facets.Foods.push({ id: x, name: "loading..." })
             }
 
-            this.facets.Keywords = []
             for (let x of this.search.search_keywords.map((x) => x.items).flat()) {
                 this.facets.Keywords.push({ id: x, name: "loading..." })
             }
@@ -720,10 +723,6 @@ export default {
             this.refreshData(false)
         }, 300),
         "ui.page_size": _debounce(function () {
-            this.refreshData(false)
-        }, 300),
-        "search.search_filter": _debounce(function () {
-            // TODO clear existing filters
             this.refreshData(false)
         }, 300),
     },
@@ -781,12 +780,14 @@ export default {
             } else {
                 this.search[obj.var] = obj.val
             }
-
-            this.refreshData(false)
+            // if selecting a filter, reset all current selections
+            if (obj.var === "search_filter") {
+                this.resetSearch(this.search.search_filter)
+            } else {
+                this.refreshData(false)
+            }
         },
-        resetSearch: function () {
-            this.search.search_input = ""
-            this.search.search_internal = false
+        resetSearch: function (filter = undefined) {
             this.search.search_keywords = this.search.search_keywords.map((x) => {
                 return { ...x, items: [] }
             })
@@ -796,16 +797,44 @@ export default {
             this.search.search_books = this.search.search_books.map((x) => {
                 return { ...x, items: [] }
             })
-            this.search.search_units = []
-            this.search.search_rating = undefined
-            this.search.search_filter = undefined
-            this.search.sort_order = undefined
+            this.search.search_input = filter?.query ?? ""
+            this.search.search_internal = filter?.internal ?? false
+            this.search.search_units = filter?.units ?? []
+            this.search.search_rating = filter?.rating ?? undefined
+            this.search.sort_order = filter?.options?.query?.sort_order ?? []
             this.search.pagination_page = 1
-            this.search.keywords_fields = 1
-            this.search.foods_fields = 1
-            this.search.books_fields = 1
-            this.search.rating_fields = 1
-            this.search.units_fields = 1
+
+            let fieldnum = {
+                keywords: 1,
+                foods: 1,
+                books: 1,
+            }
+
+            if (filter) {
+                filter = JSON.parse(filter.search)
+                let fields = ["keywords", "foods", "books"]
+                let operators = ["_or", "_and", "_or_not", "_and_not"]
+                fields.forEach((field) => {
+                    let x = 0
+                    operators.forEach((operator) => {
+                        if (filter[`${field}${operator}`].length > 0) {
+                            this.search[`search_${field}`][x].items = filter[`${field}${operator}`]
+                            this.search[`search_${field}`][x].operator = operator.includes("or")
+                            this.search[`search_${field}`][x].not = operator.includes("not")
+                            x = x + 1
+                        }
+                    })
+                    fieldnum[field] = fieldnum[field] + x
+                })
+            } else {
+                this.search.search_filter = undefined
+            }
+
+            this.search.keywords_fields = fieldnum["keywords"]
+            this.search.foods_fields = fieldnum["foods"]
+            this.search.books_fields = fieldnum["books"]
+            // this.search.rating_fields = 1
+            // this.search.units_fields = 1
             this.refreshData(false)
         },
         pageChange: function (page) {
@@ -863,21 +892,29 @@ export default {
                 }
             }
         },
+        applyFilter() {
+            return
+        },
         buildParams: function (random) {
-            if (this.search.search_filter) {
-                return JSON.parse(this.search.search_filter.search)
-            }
+            let params = { options: { query: {} } }
+            // if (this.search.search_filter) {
+            //     params = {
+            //         ...params,
+            //         ...JSON.parse(this.search.search_filter.search),
+            //     }
+            // }
             this.random_search = random
             let rating = this.search.search_rating
             if (rating !== undefined && !this.search.search_rating_gte) {
                 rating = rating * -1
             }
-            // TODO check expertmode
-            this.addFields("keywords")
-            let params = {
+            // when a filter is selected - added search params will be added to the filter
+            params = {
+                ...params,
                 ...this.addFields("keywords"),
                 ...this.addFields("foods"),
                 ...this.addFields("books"),
+                units: this.search.search_units,
                 query: this.search.search_input,
                 rating: rating,
                 internal: this.search.search_internal,
@@ -887,12 +924,10 @@ export default {
                 pageSize: this.ui.page_size,
             }
 
-            let query = { sort_order: this.search.sort_order.map((x) => x.value) }
-            if (this.searchFiltered()) {
-                query.last_viewed = this.ui.recently_viewed
+            params.options.query.sort_order = this.search.sort_order.map((x) => x.value)
+            if (!this.searchFiltered()) {
+                params.options.query.last_viewed = this.ui.recently_viewed
             }
-            params.options = { query: query }
-            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
@@ -902,6 +937,8 @@ export default {
                 this.search?.search_books?.[0]?.items?.length !== 0 ||
                 this.search?.search_units?.length !== 0 ||
                 this.random_search ||
+                this.search?.search_filter ||
+                this.search.sort_order ||
                 this.search?.search_rating !== undefined
 
             if (ignore_string) {
@@ -941,8 +978,13 @@ export default {
                 name: filtername,
                 search: JSON.stringify(this.buildParams(false)),
             }
+            let delete_keys = ["page", "pageSize"]
+            delete_keys.forEach((key) => {
+                delete params.search[key]
+            })
             this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
                 .then((result) => {
+                    this.search.search_filter = result.data
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
                 })
                 .catch((err) => {
