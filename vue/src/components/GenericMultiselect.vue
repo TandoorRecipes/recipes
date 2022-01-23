@@ -116,7 +116,7 @@ export default {
         },
         addNew(e) {
             this.$emit("new", e)
-            // could refactor as Promise - seems unecessary
+            // could refactor as Promise - seems unnecessary
             setTimeout(() => {
                 this.search("")
             }, 750)

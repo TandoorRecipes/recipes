@@ -77,7 +77,7 @@ export default {
     },
     mounted() {
         this.id = Math.random()
-        this.$root.$on("change", this.storeValue) // boostrap modal placed at document so have to listen at root of component
+        this.$root.$on("change", this.storeValue) // bootstrap modal placed at document so have to listen at root of component
     },
     computed: {
         buttonLabel() {

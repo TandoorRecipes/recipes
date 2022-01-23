@@ -1,139 +1,150 @@
 <template>
   <div id="shopping_line_item">
-    <b-container fluid class="pr-0 pl-1 pl-md-3">
-      <!-- summary rows -->
-      <b-row align-h="start">
-        <b-col cols="1" class="align-items-center d-flex">
-          <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
+    <b-row align-h="start">
+      <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
+             v-if="settings.left_handed">
+        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked"
+               @change="updateChecked"
+               :key="entries[0].id"/>
+        <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
+          <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
+          </div>
+        </b-button>
+      </b-col>
+      <b-col cols="1" class="align-items-center d-flex">
+        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
+             @click.stop="$emit('open-context-menu', $event, entries)">
+          <button
+              aria-haspopup="true"
+              aria-expanded="false"
+              type="button"
+              :class="settings.left_handed ? 'dropdown-spacing' : ''"
+              class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret">
+            <i class="fas fa-ellipsis-v fa-lg"></i>
+          </button>
+        </div>
+      </b-col>
+      <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
+        <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked"
+               @change="updateChecked"
+               :key="entries[0].id"/>
+      </b-col>
+      <b-col cols="8" md="9">
+        <b-row class="d-flex h-100">
+          <b-col cols="5" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
+            <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong> {{
+              Object.entries(formatAmount)[0][0]
+            }}
+          </b-col>
+          <b-col cols="5" md="3" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
+            <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp;
+              {{ x[0] }}
+            </div>
+          </b-col>
+
+          <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
+            {{ formatFood }}
+          </b-col>
+          <b-col cols="3" data-html2canvas-ignore="true"
+                 class="align-items-center d-none d-md-flex justify-content-end">
+            <b-button size="sm" @click="showDetails = !showDetails" class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none"
+                      variant="link">
+              <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
+                                          :class="showDetails ? 'rotated' : ''"></i> <span
+                  class="d-none d-md-inline-block">{{ $t('Details') }}</span>
+              </div>
+            </b-button>
+          </b-col>
+        </b-row>
+      </b-col>
+      <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none"
+             v-if="!settings.left_handed">
+        <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
+          <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
+          </div>
+        </b-button>
+        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked"
+               @change="updateChecked"
+               :key="entries[0].id"/>
+      </b-col>
+    </b-row>
+    <b-row align-h="center" class="d-none d-md-flex">
+      <b-col cols="12">
+        <div class="small text-muted text-truncate">{{ formatHint }}</div>
+      </b-col>
+    </b-row>
+    <!-- detail rows -->
+    <div class="card no-body mb-1 pt-2 align-content-center shadow-sm" v-if="showDetails">
+      <div v-for="(e, x) in entries" :key="e.id">
+        <b-row class="small justify-content-around">
+          <b-col cols="auto" md="4" class="overflow-hidden text-nowrap">
             <button
                 aria-haspopup="true"
                 aria-expanded="false"
                 type="button"
-                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                @click.stop="$emit('open-context-menu', $event, entries)">
-              <i class="fas fa-ellipsis-v fa-lg"></i>
+                class="btn btn-link btn-sm m-0 p-0 pl-2"
+                style="text-overflow: ellipsis"
+                @click.stop="openRecipeCard($event, e)"
+                @mouseover="openRecipeCard($event, e)">
+              {{ formatOneRecipe(e) }}
             </button>
-          </div>
-        </b-col>
-        <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
-          <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked"
-                 @change="updateChecked"
-                 :key="entries[0].id"/>
-        </b-col>
-        <b-col cols="8" md="9">
-          <b-row class="d-flex h-100" @click.stop="$emit('open-context-menu', $event, entries)">
-            <b-col cols="6" md="6" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
-              <div><strong>{{ Object.entries(formatAmount)[0][1] }}</strong> &ensp;
-                {{ Object.entries(formatAmount)[0][0] }}
-              </div>
-            </b-col>
-            <b-col cols="6" md="6" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
-              <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">{{ x[1] }} &ensp;
-                {{ x[0] }}
-              </div>
-            </b-col>
-
-            <b-col cols="6" md="3" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
-              {{ formatFood }}
-            </b-col>
-            <b-col cols="3" data-html2canvas-ignore="true" class="align-items-center d-none d-md-flex">
-              <b-button size="sm" @click="showDetails = !showDetails" class="p-0 mr-0 mr-md-2 p-md-2" variant="link">
-                <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
-                                            :class="showDetails ? 'rotated' : ''"></i> <span
-                    class="d-none d-md-inline-block">{{ $t('Details') }}</span>
-                </div>
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none">
-          <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
-            <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
-            </div>
-          </b-button>
-          <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked"
-                 @change="updateChecked"
-                 :key="entries[0].id"/>
-        </b-col>
-      </b-row>
-      <b-row align-h="center" class="d-none d-md-flex">
-        <b-col cols="12">
-          <div class="small text-muted text-truncate">{{ formatHint }}</div>
-        </b-col>
-      </b-row>
-    </b-container>
-    <!-- detail rows -->
-    <div class="card no-body mb-1 pt-2 align-content-center ml-2" v-if="showDetails">
-      <b-container fluid>
-        <div v-for="(e, x) in entries" :key="e.id">
-          <b-row class="small justify-content-around">
-            <b-col cols="auto" md="4" class="overflow-hidden text-nowrap">
+          </b-col>
+          <b-col cols="auto" md="4" class="text-muted">{{ formatOneMealPlan(e) }}</b-col>
+          <b-col cols="auto" md="4" class="text-muted text-right overflow-hidden text-nowrap pr-4">
+            {{ formatOneCreatedBy(e) }}
+            <div v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
+          </b-col>
+        </b-row>
+        <b-row align-h="start">
+          <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
+                 v-if="settings.left_handed">
+            <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
+                   :checked="formatChecked"
+                   @change="updateChecked"
+                   :key="entries[0].id"/>
+          </b-col>
+          <b-col cols="1" class="align-items-center d-flex">
+            <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
+                 @click.stop="$emit('open-context-menu', $event, e)">
               <button
                   aria-haspopup="true"
                   aria-expanded="false"
                   type="button"
-                  class="btn btn-link btn-sm m-0 p-0"
-                  style="text-overflow: ellipsis"
-                  @click.stop="openRecipeCard($event, e)"
-                  @mouseover="openRecipeCard($event, e)">
-                {{ formatOneRecipe(e) }}
+                  :class="settings.left_handed ? 'dropdown-spacing' : ''"
+                  class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret">
+                <i class="fas fa-ellipsis-v fa-lg"></i>
               </button>
-            </b-col>
-            <b-col cols="auto" md="4" class="text-muted">{{ formatOneMealPlan(e) }}</b-col>
-            <b-col cols="auto" md="4" class="text-muted text-right overflow-hidden text-nowrap">
-              {{ formatOneCreatedBy(e) }}
-              <div v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
-            </b-col>
-          </b-row>
-
-
-
-
-          <b-row align-h="start">
-            <b-col cols="1" class="align-items-center d-flex">
-              <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true">
-                <button
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    type="button"
-                    class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
-                    @click.stop="$emit('open-context-menu', $event, e)">
-                  <i class="fas fa-ellipsis-v fa-lg"></i>
-                </button>
-              </div>
-            </b-col>
-            <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
-              <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked"
-                     @change="updateChecked"
-                     :key="entries[0].id"/>
-            </b-col>
-            <b-col cols="8" md="9">
-              <b-row class="d-flex justify-content-around">
-                <b-col cols="6" md="6" class="d-flex align-items-center">
-                  <div>{{ formatOneAmount(e) }} &ensp;
-                    {{ formatOneUnit(e) }}
-                  </div>
-                </b-col>
-
-                <b-col cols="6" md="3" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
-                  {{ formatOneFood(e) }}
-                </b-col>
-                <b-col cols="12" class="d-flex d-md-none">
-                  <div class="small text-muted text-truncate" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
-                </b-col>
-              </b-row>
-            </b-col>
-            <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none">
-              <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                     :checked="formatChecked"
-                     @change="updateChecked"
-                     :key="entries[0].id"/>
-            </b-col>
-          </b-row>
-          <hr class="w-75" v-if="x !== entries.length -1"/>
-          <div class="pb-4" v-if="x === entries.length -1"></div>
-        </div>
-      </b-container>
+            </div>
+          </b-col>
+          <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
+            <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked"
+                   @change="updateChecked"
+                   :key="entries[0].id"/>
+          </b-col>
+          <b-col cols="8" md="9">
+            <b-row class="d-flex align-items-center h-100">
+              <b-col cols="5" md="3" class="d-flex align-items-center">
+                <strong class="mr-1">{{ formatOneAmount(e) }}</strong> {{ formatOneUnit(e) }}
+              </b-col>
+              <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
+                {{ formatOneFood(e) }}
+              </b-col>
+              <b-col cols="12" class="d-flex d-md-none">
+                <div class="small text-muted text-truncate" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
+              </b-col>
+            </b-row>
+          </b-col>
+          <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none"
+                 v-if="!settings.left_handed">
+            <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
+                   :checked="formatChecked"
+                   @change="updateChecked"
+                   :key="entries[0].id"/>
+          </b-col>
+        </b-row>
+        <hr class="w-75" v-if="x !== entries.length -1"/>
+        <div class="pb-4" v-if="x === entries.length -1"></div>
+      </div>
     </div>
     <hr class="m-1" v-if="!showDetails"/>
     <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width: 300">
@@ -177,6 +188,7 @@ export default {
     entries: {
       type: Array,
     },
+    settings: Object,
     groupby: {type: String},
   },
   data() {
@@ -354,5 +366,12 @@ export default {
 .unit-badge-lg {
   font-size: 1rem !important;
   font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+  .dropdown-spacing {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 </style>
