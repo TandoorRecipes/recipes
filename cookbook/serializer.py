@@ -183,7 +183,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_kj', 'search_style', 'show_recent', 'plan_share',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix',
-            'filter_to_supermarket', 'shopping_add_onhand'
+            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed'
         )
 
 
@@ -865,7 +865,7 @@ class AutomationSerializer(serializers.ModelSerializer):
 
 
 # CORS, REST and Scopes aren't currently working
-# Scopes are evaluating before REST has authenticated the user assiging a None space
+# Scopes are evaluating before REST has authenticated the user assigning a None space
 # I've made the change below to fix the bookmarklet, other serializers likely need a similar/better fix
 class BookmarkletImportSerializer(serializers.ModelSerializer):
     def create(self, validated_data):

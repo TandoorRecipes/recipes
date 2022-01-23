@@ -287,5 +287,7 @@
     "sql_debug": "SQL Debug",
     "remember_search": "Remember Search",
     "remember_hours": "Hours to Remember",
-    "tree_select": "Use Tree Selection"
+    "tree_select": "Use Tree Selection",
+    "left_handed": "Left-handed mode",
+    "left_handed_help": "Will optimize the UI for use with your left hand."
 }

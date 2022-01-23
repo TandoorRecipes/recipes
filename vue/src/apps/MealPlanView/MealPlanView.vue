@@ -79,21 +79,20 @@
                     <div class="col-12 col-md-9 col-lg-6">
                         <h5>{{ $t("Meal_Types") }}</h5>
                         <div>
-                            <draggable :list="meal_types" group="meal_types" :empty-insert-threshold="10"
-                                       handle=".handle" @sort="sortMealTypes()">
-                                <b-card no-body class="mt-1" v-for="(meal_type, index) in meal_types" v-hover
+                            <draggable :list="meal_types" group="meal_types" :empty-insert-threshold="10" @sort="sortMealTypes()" ghost-class="ghost">
+                                <b-card no-body class="mt-1 list-group-item p-2" style="cursor:move" v-for="(meal_type, index) in meal_types" v-hover
                                         :key="meal_type.id">
-                                    <b-card-header class="p-4">
+                                    <b-card-header class="p-2 border-0">
                                         <div class="row">
-                                            <div class="col-2 handle">
+                                            <div class="col-2">
                                                 <button type="button" class="btn btn-lg shadow-none"><i
                                                     class="fas fa-arrows-alt-v"></i></button>
                                             </div>
                                             <div class="col-10">
-                                                <h5>
+                                                <h5 class="mt-1 mb-1">
                                                     {{ meal_type.icon }} {{
                                                         meal_type.name
-                                                    }}<span class="float-right text-primary"
+                                                    }}<span class="float-right text-primary" style="cursor:pointer"
                                                 ><i class="fa"
                                                     v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
                                                     @click="editOrSaveMealType(index)" aria-hidden="true"></i
@@ -877,5 +876,10 @@ having to override as much.
 
 .theme-default .cv-day.draghover {
     box-shadow: inset 0 0 0.2em 0.2em yellow;
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 </style>

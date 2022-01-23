@@ -27,10 +27,10 @@ class RecetteTek(Integration):
 
     def get_recipe_from_file(self, file):
 
-        # Create initial recipe with just a title and a decription
+        # Create initial recipe with just a title and a description
         recipe = Recipe.objects.create(name=file['title'], created_by=self.request.user, internal=True, space=self.request.space, )
 
-        # set the description as an empty string for later use for the source URL, incase there is no description text.
+        # set the description as an empty string for later use for the source URL, in case there is no description text.
         recipe.description = ''
 
         try:

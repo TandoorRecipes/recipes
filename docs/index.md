@@ -9,7 +9,7 @@
 <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
 
 <p align="center">
-<a href="https://github.com/vabene1111/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/vabene1111/recipes/workflows/Continous%20Integration/badge.svg?branch=master" ></a>
+<a href="https://github.com/vabene1111/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/vabene1111/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>
 <a href="https://github.com/vabene1111/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/vabene1111/recipes" ></a>
 <a href="https://github.com/vabene1111/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/vabene1111/recipes" ></a>
 <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/badge/icon/discord?icon=discord&label" ></a>
@@ -85,7 +85,7 @@ there are some greater overall goals for the future (in no particular order)
 
 - Improve the UI! The Design is inconsistent and many pages work but don't look great. This needs to change.
 - I strongly believe in Open Data and Systems. Thus adding importers and exporters for all relevant other recipe management systems is something i really want to do.
-- Move all Javascript Libraries to a packet manger and clean up some of the mess I made in the early days
+- Move all Javascript Libraries to a packet manager and clean up some of the mess I made in the early days
 - Improve Test coverage and also the individual tests themselves
 - Improve the documentation for all features and aspects of this project and add some application integrated help
 
