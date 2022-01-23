@@ -85,6 +85,7 @@ class RecipeSearch():
         self._queryset = queryset
         self.recently_viewed_recipes(self._last_viewed)
         self._favorite_recipes()
+        self._new_recipes()
         # self._last_viewed()
         # self._last_cooked()
         self.keyword_filters(keywords=self._keywords, operator=self._keywords_or)
@@ -110,6 +111,8 @@ class RecipeSearch():
             order = []  # TODO add user preferences here: name, date cooked, rating, times cooked, date created, date viewed, random
             if '-recent' in self.orderby and self._last_viewed:
                 order += ['-recent']
+            if '-new_recipe' in self.orderby and self._new:
+                order += ['-new_recipe']
 
             if '-rank' in self.orderby and '-simularity' in self.orderby:
                 self._queryset = self._queryset.annotate(score=Sum(F('rank')+F('simularity')))
@@ -152,6 +155,16 @@ class RecipeSearch():
                 self.orderby += ['-simularity']
         else:
             self._queryset = self._queryset.filter(name__icontains=self._string)
+
+    def _new_recipes(self, new_days=7):
+        # TODO make new days a user-setting
+        if not self._new:
+            return
+        self._queryset = (
+            self._queryset.annotate(new_recipe=Case(
+                When(created_at__gte=(timezone.now() - timedelta(days=new_days)), then=('pk')), default=Value(0), ))
+        )
+        self.orderby += ['-new_recipe']
 
     def recently_viewed_recipes(self, last_viewed=None):
         if not last_viewed:

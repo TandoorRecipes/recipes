@@ -407,7 +407,7 @@ TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
 # all of this may or may not work with nginx or other web servers
-# TODO make this user configureable - enable or disable bookmarklets
+# TODO make this user configurable - enable or disable bookmarklets
 # TODO since token auth is enabled - this all should be https by default
 CORS_ORIGIN_ALLOW_ALL = True
 

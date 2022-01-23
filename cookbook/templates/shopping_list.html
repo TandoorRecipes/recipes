@@ -263,7 +263,7 @@
         {% if request.user.userpreference.shopping_auto_sync > 0 %}
         <div class="row" v-if="!onLine">
             <div class="col col-md-12">
-                <div class="alert alert-warning" role="alert">{% trans 'You are offline, shopping list might not syncronize.' %}</div>
+                <div class="alert alert-warning" role="alert">{% trans 'You are offline, shopping list might not synchronize.' %}</div>
             </div>
         </div>
         {% endif %}
@@ -634,7 +634,7 @@
                         console.log('updating recipe', this.shopping_list.recipes[i])
                         recipe_promises.push(this.$http.post("{% url 'api:shoppinglistrecipe-list' %}", this.shopping_list.recipes[i], {}).then((response) => {
                             let old_id = this.shopping_list.recipes[i].id
-                            console.log("list recipe create respose ", response.body)
+                            console.log("list recipe create response ", response.body)
                             this.$set(this.shopping_list.recipes, i, response.body)
                             for (let e of this.shopping_list.entries.filter(item => item.list_recipe === old_id)) {
                                 console.log("found recipe updating ID")

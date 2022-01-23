@@ -59,7 +59,7 @@ export default {
         addShopping() {
             if (this.shopping) {
                 return
-            } // if item already in shopping list, excution handled after confirmation
+            } // if item already in shopping list, execution handled after confirmation
             let params = {
                 id: this.item.id,
                 amount: 1,

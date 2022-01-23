@@ -1088,7 +1088,7 @@ def recipe_from_source(request):
             return JsonResponse(
                 {
                     'error': True,
-                    'msg': _('No useable data could be found.')
+                    'msg': _('No usable data could be found.')
                 },
                 status=400
             )

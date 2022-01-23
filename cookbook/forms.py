@@ -442,7 +442,7 @@ class SearchPreferenceForm(forms.ModelForm):
 
         help_texts = {
             'search': _(
-                'Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
+                'Select type method of search.  Click <a href="/docs/search/">here</a> for full description of choices.'),
             'lookup': _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'),
             'unaccent': _(
                 'Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
@@ -461,7 +461,7 @@ class SearchPreferenceForm(forms.ModelForm):
             'lookup': _('Fuzzy Lookups'),
             'unaccent': _('Ignore Accent'),
             'icontains': _("Partial Match"),
-            'istartswith': _("Starts Wtih"),
+            'istartswith': _("Starts With"),
             'trigram': _("Fuzzy Search"),
             'fulltext': _("Full Text")
         }

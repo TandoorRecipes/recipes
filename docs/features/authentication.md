@@ -25,8 +25,8 @@ SOCIAL_PROVIDERS=allauth.socialaccount.providers.github,allauth.socialaccount.pr
     The exact formatting is important so make sure to follow the steps explained here!
 
 Depending on your authentication provider you **might need** to configure it. 
-This needs to be done trough the settings system. To make the system flexible (allow multiple providers) and to 
-not require another file to be mounted into the container the configuration ins done trough a single
+This needs to be done through the settings system. To make the system flexible (allow multiple providers) and to 
+not require another file to be mounted into the container the configuration ins done through a single
 environment variable. The downside of this approach is that the configuration needs to be put into a single line
 as environment files loaded by docker compose don't support multiple lines for a single variable.
 
