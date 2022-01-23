@@ -416,8 +416,22 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col col-md-12 text-right" style="margin-top: 2vh">
+                <div class="row align-content-center">
+                    <div class="col col-md-6" style="margin-top: 2vh">
+                        <b-dropdown split :text="$t('sort_by')" variant="link" class="m-0 p-0">
+                            <div v-for="o in sortOptions" :key="o.id">
+                                <b-dropdown-item
+                                    v-on:click="
+                                        search.sort_order = [o]
+                                        refreshData(false)
+                                    "
+                                >
+                                    {{ o.text }}
+                                </b-dropdown-item>
+                            </div>
+                        </b-dropdown>
+                    </div>
+                    <div class="col col-md-6 text-right" style="margin-top: 2vh">
                         <span class="text-muted">
                             {{ $t("Page") }} {{ search.pagination_page }}/{{ Math.ceil(pagination_count / ui.page_size) }}
                             <a href="#" @click="resetSearch"><i class="fas fa-times-circle"></i> {{ $t("Reset") }}</a>
@@ -482,6 +496,7 @@ export default {
             facets: {},
             meal_plans: [],
             last_viewed_recipes: [],
+            sortMenu: false,
 
             search: {
                 advanced_search_visible: false,
@@ -896,21 +911,14 @@ export default {
             return
         },
         buildParams: function (random) {
-            let params = { options: { query: {} } }
-            // if (this.search.search_filter) {
-            //     params = {
-            //         ...params,
-            //         ...JSON.parse(this.search.search_filter.search),
-            //     }
-            // }
             this.random_search = random
             let rating = this.search.search_rating
             if (rating !== undefined && !this.search.search_rating_gte) {
                 rating = rating * -1
             }
             // when a filter is selected - added search params will be added to the filter
-            params = {
-                ...params,
+            let params = {
+                options: { query: {} },
                 ...this.addFields("keywords"),
                 ...this.addFields("foods"),
                 ...this.addFields("books"),
@@ -928,6 +936,7 @@ export default {
             if (!this.searchFiltered()) {
                 params.options.query.last_viewed = this.ui.recently_viewed
             }
+            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
@@ -938,7 +947,7 @@ export default {
                 this.search?.search_units?.length !== 0 ||
                 this.random_search ||
                 this.search?.search_filter ||
-                this.search.sort_order ||
+                this.search.sort_order.length !== 0 ||
                 this.search?.search_rating !== undefined
 
             if (ignore_string) {
