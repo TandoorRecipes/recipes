@@ -1,6 +1,6 @@
 !!! success "Recommended Installation"
-    Setting up this application using Docker is recommended. This does not mean that other options are bad, just that
-    support is much easier for this setup.
+Setting up this application using Docker is recommended. This does not mean that other options are bad, just that
+support is much easier for this setup.
 
 It is possible to install this application using many Docker configurations.
 
@@ -34,17 +34,17 @@ file in the GitHub repository to verify if additional environment variables are 
 
 ### Versions
 
-There are different versions (tags) released on docker hub. 
+There are different versions (tags) released on docker hub.
 
-- **latest** Default image. The one you should use if you don't know that you need anything else.
-- **beta** Partially stable version that gets updated every now and then. Expect to have some problems.
-- **develop** If you want the most bleeding edge version with potentially many breaking changes feel free to use this version (I don't recommend it!). 
-- **X.Y.Z** each released version has its own image. If you need to revert to an old version or want to make sure you stay on one specific use these tags.
+-   **latest** Default image. The one you should use if you don't know that you need anything else.
+-   **beta** Partially stable version that gets updated every now and then. Expect to have some problems.
+-   **develop** If you want the most bleeding edge version with potentially many breaking changes feel free to use this version (I don't recommend it!).
+-   **X.Y.Z** each released version has its own image. If you need to revert to an old version or want to make sure you stay on one specific use these tags.
 
 !!! danger "No Downgrading"
-    There is currently no way to migrate back to an older version as there is no mechanism to downgrade the database. 
-    You could probably do it but I cannot help you with that. Choose wisely if you want to use the unstable images.
-    That said **beta** should usually be working if you like frequent updates and new stuff.
+There is currently no way to migrate back to an older version as there is no mechanism to downgrade the database.
+You could probably do it but I cannot help you with that. Choose wisely if you want to use the unstable images.
+That said **beta** should usually be working if you like frequent updates and new stuff.
 
 ## Docker Compose
 
@@ -60,34 +60,38 @@ The main, and also recommended, installation option is to install this applicati
 ### Plain
 
 This configuration exposes the application through an nginx web server on port 80 of your machine.
+Be aware that having some other web server or container running on your host machine on port 80 will block this from working.
 
 ```shell
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
 ```
 
-~~~yaml
-{% include "./docker/plain/docker-compose.yml" %}
-~~~
+```yaml
+{ % include "./docker/plain/docker-compose.yml" % }
+```
 
 ### Reverse Proxy
 
 Most deployments will likely use a reverse proxy.
 
+If your reverse proxy is not listed here, please refer to [Others](https://docs.tandoor.dev/install/docker/#others).
+
 #### Traefik
+
 If you use traefik, this configuration is the one for you.
 
 !!! info
-    Traefik can be a little confusing to setup.
-    Please refer to [their excellent documentation](https://doc.traefik.io/traefik/). If that does not help,
-    [this little example](traefik.md) might be for you.
+Traefik can be a little confusing to setup.
+Please refer to [their excellent documentation](https://doc.traefik.io/traefik/). If that does not help,
+[this little example](traefik.md) might be for you.
 
 ```shell
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
 ```
 
-~~~yaml
-{% include "./docker/traefik-nginx/docker-compose.yml" %}
-~~~
+```yaml
+{ % include "./docker/traefik-nginx/docker-compose.yml" % }
+```
 
 #### nginx-proxy
 
@@ -97,6 +101,7 @@ in combination with [jrcs's letsencrypt companion](https://hub.docker.com/r/jrcs
 Please refer to the appropriate documentation on how to setup the reverse proxy and networks.
 
 Remember to add the appropriate environment variables to `.env` file:
+
 ```
 VIRTUAL_HOST=
 LETSENCRYPT_HOST=
@@ -107,35 +112,44 @@ LETSENCRYPT_EMAIL=
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
 ```
 
-~~~yaml
-{% include "./docker/nginx-proxy/docker-compose.yml" %}
-~~~
+```yaml
+{ % include "./docker/nginx-proxy/docker-compose.yml" % }
+```
 
 #### Nginx Swag by LinuxServer
+
 [This container](https://github.com/linuxserver/docker-swag) is an all in one solution created by LinuxServer.io.
 
 It contains templates for popular apps, including Tandoor Recipes, so you don't have to manually configure nginx and discard the template provided in Tandoor repo. Tandoor config is called `recipes.subdomain.conf.sample` which you can adapt for your instance.
 
 If you're running Swag on the default port, you'll just need to change the container name to yours.
 
-If your running Swag on a custom port, some headers must be changed: 
+If your running Swag on a custom port, some headers must be changed:
 
-- Create a copy of `proxy.conf`
-- Replace `proxy_set_header X-Forwarded-Host $host;` and `proxy_set_header Host $host;` to 
-   - `proxy_set_header X-Forwarded-Host $http_host;` and `proxy_set_header Host $http_host;`
-- Update `recipes.subdomain.conf` to use the new file
-- Restart the linuxserver/swag container and Recipes will work correctly
+-   Create a copy of `proxy.conf`
+-   Replace `proxy_set_header X-Forwarded-Host $host;` and `proxy_set_header Host $host;` to
+    -   `proxy_set_header X-Forwarded-Host $http_host;` and `proxy_set_header Host $http_host;`
+-   Update `recipes.subdomain.conf` to use the new file
+-   Restart the linuxserver/swag container and Recipes will work correctly
 
 More information [here](https://github.com/TandoorRecipes/recipes/issues/959#issuecomment-962648627).
-
 
 In both cases, also make sure to mount `/media/` in your swag container to point to your Tandoor Recipes Media directory.
 
 Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
 
+For step-by-step instructions to set this up from scratch, see [this example](swag.md).
+
+### Others
+
+If you use none of the above mentioned reverse proxies or want to use an existing one on your host machine (like a local nginx or Caddy), simply use the [PLAIN](https://docs.tandoor.dev/install/docker/#plain) setup above and change the outbound port to one of your liking.
+
+An example port config (inside the respective docker-compose.yml) would be: `8123:80` instead of the `80:80` or if you want to be sure, that Tandoor is **just** accessible via your proxy and don't wanna bother with your firewall, then `127.0.0.1:8123:80` is a viable option too.
+
 ## Additional Information
 
 ### Nginx vs Gunicorn
+
 All examples use an additional `nginx` container to serve mediafiles and act as the forward facing webserver.
 This is **technically not required** but **very much recommended**.
 
@@ -144,14 +158,14 @@ the WSGi server that handles the Python execution, explicitly state that it is n
 You will also likely not see any decrease in performance or a lot of space used as nginx is a very light container.
 
 !!! info
-    Even if you run behind a reverse proxy as described above, using an additional nginx container is the recommended option.
+Even if you run behind a reverse proxy as described above, using an additional nginx container is the recommended option.
 
 If you run a small private deployment and don't care about performance, security and whatever else feel free to run
 without a ngix container.
 
 !!! warning
-    When running without nginx make sure to enable `GUNICORN_MEDIA` in the `.env`. Without it, media files will be uploaded
-    but not shown on the page.
+When running without nginx make sure to enable `GUNICORN_MEDIA` in the `.env`. Without it, media files will be uploaded
+but not shown on the page.
 
 For additional information please refer to the [0.9.0 Release](https://github.com/vabene1111/recipes/releases?after=0.9.0)
 and [Issue 201](https://github.com/vabene1111/recipes/issues/201) where these topics have been discussed.

@@ -18,7 +18,7 @@ After that, you can go to the "Apps" tab in unRAID and search for Recipes and lo
 ![image](https://user-images.githubusercontent.com/724777/111038251-faa0cb00-83f5-11eb-9807-37815de8d795.png)
 
 The default settings should by fine for most users, just be sure to enter a secret key that is randomly generated.
-Then chooose apply.
+Then choose apply.
 
 ![image](https://user-images.githubusercontent.com/724777/97094856-f3377b80-1626-11eb-98d5-e4b871a420f0.png)
 

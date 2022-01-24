@@ -1,22 +1,21 @@
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import SearchVector
+from django.utils import translation
+from django_scopes import scopes_disabled
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User, Group
-from django_scopes import scopes_disabled
-from django.utils import translation
-
-from .models import (Comment, CookLog, Food, Ingredient, InviteLink, Keyword,
-                     MealPlan, MealType, NutritionInformation, Recipe,
-                     RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
-                     ShoppingList, ShoppingListEntry, ShoppingListRecipe,
-                     Space, Step, Storage, Sync, SyncLog, Unit, UserPreference,
-                     ViewLog, Supermarket, SupermarketCategory, SupermarketCategoryRelation,
-                     ImportLog, TelegramBot, BookmarkletImport, UserFile, SearchPreference)
 
 from cookbook.managers import DICTIONARY
+
+from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField, ImportLog,
+                     Ingredient, InviteLink, Keyword, MealPlan, MealType, NutritionInformation,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
+                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
+                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -30,11 +29,52 @@ admin.site.register(User, CustomUserAdmin)
 admin.site.unregister(Group)
 
 
+@admin.action(description='Delete all data from a space')
+def delete_space_action(modeladmin, request, queryset):
+    for space in queryset:
+        CookLog.objects.filter(space=space).delete()
+        ViewLog.objects.filter(space=space).delete()
+        ImportLog.objects.filter(space=space).delete()
+        BookmarkletImport.objects.filter(space=space).delete()
+
+        Comment.objects.filter(recipe__space=space).delete()
+        Keyword.objects.filter(space=space).delete()
+        Ingredient.objects.filter(space=space).delete()
+        Food.objects.filter(space=space).delete()
+        Unit.objects.filter(space=space).delete()
+        Step.objects.filter(space=space).delete()
+        NutritionInformation.objects.filter(space=space).delete()
+        RecipeBookEntry.objects.filter(book__space=space).delete()
+        RecipeBook.objects.filter(space=space).delete()
+        MealType.objects.filter(space=space).delete()
+        MealPlan.objects.filter(space=space).delete()
+        ShareLink.objects.filter(space=space).delete()
+        Recipe.objects.filter(space=space).delete()
+
+        RecipeImport.objects.filter(space=space).delete()
+        SyncLog.objects.filter(sync__space=space).delete()
+        Sync.objects.filter(space=space).delete()
+        Storage.objects.filter(space=space).delete()
+
+        ShoppingListEntry.objects.filter(shoppinglist__space=space).delete()
+        ShoppingListRecipe.objects.filter(shoppinglist__space=space).delete()
+        ShoppingList.objects.filter(space=space).delete()
+
+        SupermarketCategoryRelation.objects.filter(supermarket__space=space).delete()
+        SupermarketCategory.objects.filter(space=space).delete()
+        Supermarket.objects.filter(space=space).delete()
+
+        InviteLink.objects.filter(space=space).delete()
+        UserFile.objects.filter(space=space).delete()
+        Automation.objects.filter(space=space).delete()
+
+
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     search_fields = ('name', 'created_by__username')
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'
+    actions = [delete_space_action]
 
 
 admin.site.register(Space, SpaceAdmin)
@@ -129,6 +169,7 @@ def sort_tree(modeladmin, request, queryset):
 class KeywordAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    search_fields = ('name',)
     actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
@@ -136,8 +177,8 @@ admin.site.register(Keyword, KeywordAdmin)
 
 
 class StepAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'order')
-    search_fields = ('name', 'type')
+    list_display = ('name', 'order',)
+    search_fields = ('name',)
 
 
 admin.site.register(Step, StepAdmin)
@@ -173,9 +214,13 @@ admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Unit)
 
 
+# admin.site.register(FoodInheritField)
+
+
 class FoodAdmin(TreeAdmin):
     form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
+    search_fields = ('name',)
     actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
 
@@ -280,7 +325,7 @@ admin.site.register(ShoppingListRecipe, ShoppingListRecipeAdmin)
 
 
 class ShoppingListEntryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'food', 'unit', 'list_recipe', 'checked')
+    list_display = ('id', 'food', 'unit', 'list_recipe', 'created_by', 'created_at', 'checked')
 
 
 admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)

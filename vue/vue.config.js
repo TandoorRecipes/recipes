@@ -37,8 +37,8 @@ const pages = {
         entry: "./src/apps/MealPlanView/main.js",
         chunks: ["chunk-vendors"],
     },
-    checklist_view: {
-        entry: "./src/apps/ChecklistView/main.js",
+    shopping_list_view: {
+        entry: "./src/apps/ShoppingListView/main.js",
         chunks: ["chunk-vendors"],
     },
 }
@@ -89,7 +89,6 @@ module.exports = {
                     },
                 },
             },
-            // TODO make this conditional on .env DEBUG = FALSE
             config.optimization.minimize(true)
         )
 
