@@ -455,15 +455,13 @@ export class Models {
                 "internal",
                 "random",
                 "_new",
+                "timescooked",
+                "lastcooked",
+                "makenow",
                 "page",
                 "pageSize",
                 "options",
             ],
-            // 'config': {
-            //     'foods': {'type': 'string'},
-            //     'keywords': {'type': 'string'},
-            //     'books': {'type': 'string'},
-            // }
         },
         shopping: {
             params: ["id", ["id", "list_recipe", "ingredients", "servings"]],

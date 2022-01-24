@@ -115,6 +115,15 @@
                                                 <b-form-group v-if="ui.enable_expert" v-bind:label="$t('show_sortby')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_sortby" id="popover-show_sortby" size="sm"></b-form-checkbox>
                                                 </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('times_cooked')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_timescooked" id="popover-show_cooked" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('make_now')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_makenow" id="popover-show_makenow" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('last_cooked')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_lastcooked" id="popover-show_lastcooked" size="sm"></b-form-checkbox>
+                                                </b-form-group>
                                             </b-tab>
 
                                             <b-tab :title="$t('advanced')" :title-link-class="['mx-0']">
@@ -356,8 +365,8 @@
                                     </div>
 
                                     <!-- ratings filter -->
-                                    <div class="row" v-if="ui.show_rating">
-                                        <div class="col-12">
+                                    <div class="row g-0" v-if="ui.show_rating">
+                                        <div class="col-12" v-if="ui.show_rating">
                                             <b-input-group class="mt-2">
                                                 <treeselect
                                                     v-model="search.search_rating"
@@ -403,6 +412,53 @@
                                             </b-input-group>
                                         </div>
                                     </div>
+
+                                    <!-- special switches -->
+                                    <div class="row g-0" v-if="ui.show_timescooked || ui.show_makenow || ui.show_lastcooked">
+                                        <div class="col-12">
+                                            <b-input-group class="mt-2">
+                                                <!-- times cooked -->
+                                                <b-input-group-prepend is-text v-if="ui.show_timescooked">
+                                                    {{ $t("times_cooked") }}
+                                                </b-input-group-prepend>
+                                                <b-form-input id="timescooked" type="number" min="0" v-model="search.timescooked" v-if="ui.show_timescooked"></b-form-input>
+                                                <b-input-group-append v-if="ui.show_timescooked">
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.timescooked_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.timescooked_gte">&gt;=</span>
+                                                            <span class="text-uppercase" v-else>&lt;=</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                                <!-- date cooked -->
+                                                <b-input-group-append v-if="ui.show_lastcooked">
+                                                    <b-form-datepicker
+                                                        v-model="search.lastcooked"
+                                                        :max="yesterday"
+                                                        no-highlight-today
+                                                        reset-button
+                                                        :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                                                        :locale="locale"
+                                                        :placeholder="$t('last_cooked')"
+                                                        @input="refreshData(false)"
+                                                    />
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.lastcooked_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.lastcooked_gte">&gt;=</span>
+                                                            <span class="text-uppercase" v-else>&lt;=</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                                <!-- make now -->
+                                                <b-input-group-append v-if="ui.show_makenow">
+                                                    <b-input-group-text>
+                                                        {{ $t("make_now") }}
+                                                        <b-form-checkbox v-model="search.makenow" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em" />
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                            </b-input-group>
+                                        </div>
+                                    </div>
                                     <div v-if="ui.enable_expert && searchFiltered(false)" class="row justify-content-end small">
                                         <div class="col-auto">
                                             <b-button class="my-0" variant="link" size="sm" @click="saveSearch">
@@ -418,7 +474,7 @@
 
                 <div class="row align-content-center">
                     <div class="col col-md-6" style="margin-top: 2vh">
-                        <b-dropdown split :text="$t('sort_by')" variant="link" class="m-0 p-0">
+                        <b-dropdown id="sortby" split :text="$t('sort_by')" variant="link" class="m-0 p-0">
                             <div v-for="o in sortOptions" :key="o.id">
                                 <b-dropdown-item
                                     v-on:click="
@@ -525,6 +581,11 @@ export default {
                 search_rating_gte: true,
                 search_units_or: true,
                 search_filter: undefined,
+                timescooked: undefined,
+                timescooked_gte: true,
+                makenow: false,
+                lastcooked: undefined,
+                lastcooked_gte: true,
                 sort_order: [],
                 pagination_page: 1,
                 expert_mode: false,
@@ -552,6 +613,9 @@ export default {
                 show_units: false,
                 show_filters: false,
                 show_sortby: false,
+                show_timescooked: false,
+                show_makenow: false,
+                show_lastcooked: false,
             },
             pagination_count: 0,
             random_search: false,
@@ -559,6 +623,13 @@ export default {
         }
     },
     computed: {
+        locale: function () {
+            return window.CUSTOM_LOCALE
+        },
+        yesterday: function () {
+            const now = new Date()
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+        },
         ratingOptions: function () {
             let ratingCount = undefined
             let label = undefined
@@ -718,6 +789,14 @@ export default {
             },
             deep: true,
         },
+        "search.search_input": _debounce(function () {
+            this.search.pagination_page = 1
+            this.pagination_count = 0
+            this.refreshData(false)
+        }, 300),
+        "search.timescooked": function () {
+            this.refreshData(false)
+        },
         "ui.show_meal_plan": function () {
             this.loadMealPlan()
         },
@@ -732,18 +811,13 @@ export default {
                 this.getFacets(this.facets?.cache_key)
             }
         },
-        "search.search_input": _debounce(function () {
-            this.search.pagination_page = 1
-            this.pagination_count = 0
-            this.refreshData(false)
-        }, 300),
         "ui.page_size": _debounce(function () {
             this.refreshData(false)
         }, 300),
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
-        refreshData: function (random) {
+        refreshData: _debounce(function (random) {
             let params = this.buildParams(random)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
@@ -764,7 +838,7 @@ export default {
                         this.getFacets(this.facets?.cache_key)
                     })
                 })
-        },
+        }, 300),
         openRandom: function () {
             this.refreshData(true)
         },
@@ -818,6 +892,9 @@ export default {
             this.search.search_rating = filter?.rating ?? undefined
             this.search.sort_order = filter?.options?.query?.sort_order ?? []
             this.search.pagination_page = 1
+            this.search.timescooked = undefined
+            this.search.makenow = false
+            this.search.lastcooked = undefined
 
             let fieldnum = {
                 keywords: 1,
@@ -916,6 +993,16 @@ export default {
             if (rating !== undefined && !this.search.search_rating_gte) {
                 rating = rating * -1
             }
+            let lastcooked = this.search.lastcooked || undefined
+            if (lastcooked !== undefined && !this.search.lastcooked_gte) {
+                lastcooked = "-" + lastcooked
+            }
+            let timescooked = parseInt(this.search.timescooked)
+            if (isNaN(timescooked)) {
+                timescooked = undefined
+            } else if (!this.search.timescooked_gte) {
+                timescooked = timescooked * -1
+            }
             // when a filter is selected - added search params will be added to the filter
             let params = {
                 options: { query: {} },
@@ -928,15 +1015,19 @@ export default {
                 internal: this.search.search_internal,
                 random: this.random_search,
                 _new: this.ui.sort_by_new,
+                timescooked: timescooked,
+                makenow: this.search.makenow || undefined,
+                lastcooked: lastcooked,
                 page: this.search.pagination_page,
                 pageSize: this.ui.page_size,
             }
 
-            params.options.query.sort_order = this.search.sort_order.map((x) => x.value)
+            params.options.query = {
+                sort_order: this.search.sort_order.map((x) => x.value),
+            }
             if (!this.searchFiltered()) {
                 params.options.query.last_viewed = this.ui.recently_viewed
             }
-            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
@@ -948,7 +1039,12 @@ export default {
                 this.random_search ||
                 this.search?.search_filter ||
                 this.search.sort_order.length !== 0 ||
-                this.search?.search_rating !== undefined
+                this.search?.search_rating !== undefined ||
+                (this.search.timescooked !== undefined && this.search.timescooked !== "") ||
+                this.search.makenow !== false ||
+                (this.search.lastcooked !== undefined && this.search.lastcooked !== "")
+
+            console.log()
 
             if (ignore_string) {
                 return filtered
@@ -1008,9 +1104,12 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
-.vue-treeselect__control {
+.vue-treeselect__control,
+#timescooked,
+#makenow {
     border-radius: 0px !important;
     height: 44px;
+    line-height: 22px;
 }
 .multiselect__tags {
     border-radius: 0px !important;

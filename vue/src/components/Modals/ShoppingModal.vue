@@ -97,7 +97,6 @@ export default {
         }
     },
     mounted() {
-        console.log("shopping modal")
         this.recipe_servings = this.servings
     },
     computed: {
@@ -106,18 +105,19 @@ export default {
         },
     },
     watch: {
-        recipe: {
-            handler() {
-                this.loadRecipe()
-            },
-            deep: true,
-        },
+        // recipe: {
+        //     handler() {
+        //         this.loadRecipe()
+        //     },
+        //     deep: true,
+        // },
         servings: function (newVal) {
             this.recipe_servings = parseInt(newVal)
         },
     },
     methods: {
         loadRecipe: function () {
+            console.log("loading recipe")
             this.add_shopping = []
             this.related_recipes = []
             let apiClient = new ApiApiFactory()

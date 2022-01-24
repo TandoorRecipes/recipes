@@ -645,7 +645,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         QueryParam(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), qtype='int'),
         QueryParam(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), qtype='int'),
         QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
-        QueryParam(name='rating', description=_('Rating a recipe should have. [0 - 5]'), qtype='int'),
+        QueryParam(name='rating', description=_('Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), qtype='int'),
         QueryParam(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
         QueryParam(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), qtype='int'),
         QueryParam(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), qtype='int'),
@@ -654,6 +654,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         QueryParam(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
         QueryParam(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
         QueryParam(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
+        QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='int'),
+        QueryParam(name='lastcooked', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), qtype='int'),
     ]
     schema = QueryParamAutoSchema()
 
