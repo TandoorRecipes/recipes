@@ -324,5 +324,6 @@
     "times_cooked": "Times Cooked",
     "date_created": "Date Created",
     "show_sortby": "Show Sort By",
-    "search_rank": "Search Rank"
+    "search_rank": "Search Rank",
+    "make_now": "Make Now"
 }
