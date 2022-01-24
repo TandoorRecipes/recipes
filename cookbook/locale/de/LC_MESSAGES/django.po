@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-01-20 22:47+0000\n"
-"Last-Translator: Sebastian Weber <tandoor@web3r.de>\n"
+"PO-Revision-Date: 2022-01-26 14:06+0000\n"
+"Last-Translator: Rene <inter.nett@freenet.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -104,22 +104,16 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
-"Unterstützung für Brüche in Zutaten aktivieren. Dadurch werden Dezimalzahlen "
-"mit Brüchen ersetzt, z.B. 0.5 mit ½."
+"Unterstützung für Brüche in Zutaten aktivieren (dadurch werden Dezimalzahlen "
+"automatisch mit Brüchen ersetzt)"
 
 #: .\cookbook\forms.py:78
 msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr "Nährwerte in Joule statt Kalorien anzeigen"
 
 #: .\cookbook\forms.py:79
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
-msgstr ""
-"Nutzer, mit denen neue Pläne und Einkaufslisten standardmäßig geteilt werden "
-"sollen."
+msgstr "Nutzer, mit denen neue Essenspläne standardmäßig geteilt werden sollen."
 
 #: .\cookbook\forms.py:80
 msgid "Users with whom to share shopping lists."
@@ -157,11 +151,11 @@ msgstr "Navigationsleiste wird oben angeheftet."
 
 #: .\cookbook\forms.py:90 .\cookbook\forms.py:496
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr ""
+msgstr "Fügt die Zutaten des Speiseplans automatisch zur Einkaufsliste hinzu."
 
 #: .\cookbook\forms.py:91
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Zutaten, die vorrätig sind, ausschließen."
 
 #: .\cookbook\forms.py:108
 msgid ""
@@ -319,8 +313,7 @@ msgid ""
 "degrade search quality depending on language"
 msgstr ""
 "Felder bei welchen Akzente ignoriert werden. Das aktivieren dieser Option "
-"kann die Suchqualität abhängig von der Sprache verbessern oder "
-"verschlechtern."
+"kann die Suchqualität je nach Sprache verbessern oder verschlechtern"
 
 #: .\cookbook\forms.py:450
 msgid ""
@@ -388,22 +381,31 @@ msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"Die Benutzer sehen alle Artikel, die Sie auf Ihre Einkaufsliste setzen.  Die "
+"Benutzer müssen Sie hinzufügen, damit Sie Artikel auf der Liste der Benutzer "
+"sehen können."
 
 #: .\cookbook\forms.py:497
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Wenn Sie einen Essensplan zur Einkaufsliste hinzufügen (manuell oder "
+"automatisch), fügen Sie alle zugehörigen Rezepte hinzu."
 
 #: .\cookbook\forms.py:498
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Wenn Sie einen Essensplan zur Einkaufsliste hinzufügen (manuell oder "
+"automatisch), schließen Sie Zutaten aus, die Sie gerade zur Hand haben."
 
 #: .\cookbook\forms.py:499
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Voreingestellte Anzahl von Stunden für die Verzögerung eines "
+"Einkaufslisteneintrags."
 
 #: .\cookbook\forms.py:500
 msgid "Filter shopping list to only include supermarket categories."
@@ -488,10 +490,8 @@ msgid "Fields on food that should be inherited by default."
 msgstr "Zutat, die ersetzt werden soll."
 
 #: .\cookbook\forms.py:542
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Zuletzt angeschaute Rezepte bei der Suche anzeigen."
+msgstr "Rezeptanzahl im Suchfiltern anzeigen"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -530,10 +530,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:54
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a recipe or mealplan"
-msgstr "Mindestens ein Rezept oder ein Titel müssen angegeben werden."
+msgstr "Mindestens ein Rezept oder ein Essensplan müssen angegeben werden"
 
 #: .\cookbook\helper\shopping_helper.py:58
 msgid "You must supply a created_by"
@@ -1332,11 +1330,11 @@ msgstr "Abbrechen"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr "Anschauen"
+msgstr "Ansicht"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr "Original löschen"
+msgstr "Originaldatei löschen"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
