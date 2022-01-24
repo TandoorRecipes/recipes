@@ -16,6 +16,7 @@ import Vue from "vue"
 import { Actions, Models } from "./models"
 
 export const ToastMixin = {
+    name: "ToastMixin",
     methods: {
         makeToast: function (title, message, variant = null) {
             return makeToast(title, message, variant)
@@ -147,12 +148,17 @@ export function resolveDjangoUrl(url, params = null) {
 /*
  * other utilities
  * */
-
-export function getUserPreference(pref) {
-    if (window.USER_PREF === undefined) {
+export function getUserPreference(pref = undefined) {
+    let user_preference
+    if (document.getElementById("user_preference")) {
+        user_preference = JSON.parse(document.getElementById("user_preference").textContent)
+    } else {
         return undefined
     }
-    return window.USER_PREF[pref]
+    if (pref) {
+        return user_preference[pref]
+    }
+    return user_preference
 }
 
 export function calculateAmount(amount, factor) {
@@ -228,7 +234,14 @@ export const ApiMixin = {
             return apiClient[func](...parameters)
         },
         genericGetAPI: function (url, options) {
-            return axios.get(this.resolveDjangoUrl(url), { params: options, emulateJSON: true })
+            return axios.get(resolveDjangoUrl(url), { params: options, emulateJSON: true })
+        },
+        genericPostAPI: function (url, form) {
+            let data = new FormData()
+            Object.keys(form).forEach((field) => {
+                data.append(field, form[field])
+            })
+            return axios.post(resolveDjangoUrl(url), data)
         },
     },
 }
@@ -358,6 +371,10 @@ export function getForm(model, action, item1, item2) {
     if (f === "partialUpdate" && Object.keys(config).length == 0) {
         config = { ...Actions.CREATE?.form, ...model.model_type?.["create"]?.form, ...model?.["create"]?.form }
         config["title"] = { ...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title }
+        // form functions should not be inherited
+        if (config?.["form_function"]?.includes("Create")) {
+            delete config["form_function"]
+        }
     }
     let form = { fields: [] }
     let value = ""
@@ -491,37 +508,60 @@ const specialCases = {
                 // delete, update or change all of the category/relations
                 let id = result.id
                 let existing_categories = result.category_to_supermarket
-                let updated_categories = options.category_to_supermarket
+                let updated_categories = options.category_to_supermarket.map((x) => {
+                    return {
+                        ...x,
+                        category: {
+                            id: x?.category?.id ?? x.id,
+                            name: x?.category?.name ?? x.name,
+                        },
+                        id: x?.category_to_supermarket__id,
+                        order: x?.order ?? x?.category_to_supermarket__order,
+                    }
+                })
 
                 let promises = []
                 // if the 'category.name' key does not exist on the updated_categories, the categories were not updated
-                if (updated_categories?.[0]?.category?.name) {
-                    // list of category relationship ids that are not part of the updated supermarket
-                    let removed_categories = existing_categories.filter((x) => !updated_categories.map((x) => x.category.id).includes(x.category.id))
-                    let added_categories = updated_categories.filter((x) => !existing_categories.map((x) => x.category.id).includes(x.category.id))
-                    let changed_categories = updated_categories.filter((x) => existing_categories.map((x) => x.category.id).includes(x.category.id))
 
-                    removed_categories.forEach((x) => {
-                        promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, { id: x.id }))
-                    })
-                    let item = { supermarket: id }
-                    added_categories.forEach((x) => {
-                        item.order = x.order
-                        item.category = { id: x.category.id, name: x.category.name }
-                        promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item))
-                    })
-                    changed_categories.forEach((x) => {
-                        item.id = x?.id ?? existing_categories.find((y) => y.category.id === x.category.id).id
-                        item.order = x.order
-                        item.category = { id: x.category.id, name: x.category.name }
-                        promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item))
-                    })
-                }
+                // list of category relationship ids that are not part of the updated supermarket
+                let removed_categories = existing_categories.filter((x) => !updated_categories.map((x) => x.category.id).includes(x.category.id))
+                let added_categories = updated_categories.filter((x) => !existing_categories.map((x) => x.category.id).includes(x.category.id))
+                let changed_categories = updated_categories.filter((x) => existing_categories.map((x) => x.category.id).includes(x.category.id))
+                let order = Math.max(...existing_categories.map((x) => x?.order ?? 0), ...updated_categories.map((x) => x?.order ?? 0), 0) + 1
+
+                removed_categories.forEach((x) => {
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, { id: x.id }))
+                })
+                let item = { supermarket: id }
+                added_categories.forEach((x) => {
+                    item.order = x?.order ?? order
+                    if (!x?.order) {
+                        order = order + 1
+                    }
+                    item.category = { id: x.category.id, name: x.category.name }
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item))
+                })
+                changed_categories.forEach((x) => {
+                    item.id = x?.id ?? existing_categories.find((y) => y.category.id === x.category.id).id
+                    item.order = x?.order ?? order
+                    if (!x?.order) {
+                        order = order + 1
+                    }
+                    item.category = { id: x.category.id, name: x.category.name }
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item))
+                })
 
                 return Promise.all(promises).then(() => {
                     // finally get and return the Supermarket which everything downstream is expecting
                     return GenericAPI(Models.SUPERMARKET, Actions.FETCH, { id: id })
                 })
             })
+    },
+}
+
+export const formFunctions = {
+    FoodCreateDefault: function (form) {
+        form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
+        return form
     },
 }

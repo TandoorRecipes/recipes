@@ -20,24 +20,25 @@ if your favorite one is missing.
 
 Overview of the capabilities of the different integrations.
 
-| Integration | Import | Export | Images |
-| ----------- | ------ | ------ | ------ |
-| Default     | ✔️      | ✔️      | ✔️      |
-| Nextcloud   | ✔️      | ⌚      | ✔️      |
-| Mealie      | ✔️      | ⌚      | ✔️      |
-| Chowdown    | ✔️      | ⌚      | ✔️      |
-| Safron      | ✔️      | ⌚      | ❌      |
-| Paprika     | ✔️      | ⌚      | ✔️      |
-| ChefTap     | ✔️      | ❌      |  ❌     |
-| Pepperplate     | ✔️      | ⌚      | ❌      |
-| RecipeSage     | ✔️      | ✔️      | ✔️      |
-| Domestica     | ✔️      | ⌚      | ✔️      |
-| MealMaster     | ✔️      | ❌      |  ❌        |
-| RezKonv     | ✔️      | ❌      |  ❌        |
-| OpenEats     | ✔️      | ❌      |  ⌚        |
-| Plantoeat     | ✔️      | ❌      |  ✔        |
-| CookBookApp     | ✔️      | ⌚      |  ✔️        |
-| CopyMeThat     | ✔️      | ❌      |  ✔️        |
+| Integration        | Import | Export | Images |
+|--------------------| ------ | ------ | ------ |
+| Default            | ✔️      | ✔️      | ✔️      |
+| Nextcloud          | ✔️      | ⌚      | ✔️      |
+| Mealie             | ✔️      | ⌚      | ✔️      |
+| Chowdown           | ✔️      | ⌚      | ✔️      |
+| Safron             | ✔️      | ✔      | ❌      |
+| Paprika            | ✔️      | ⌚      | ✔️      |
+| ChefTap            | ✔️      | ❌      |  ❌     |
+| Pepperplate        | ✔️      | ⌚      | ❌      |
+| RecipeSage         | ✔️      | ✔️      | ✔️      |
+| Domestica          | ✔️      | ⌚      | ✔️      |
+| MealMaster         | ✔️      | ❌      |  ❌        |
+| RezKonv            | ✔️      | ❌      |  ❌        |
+| OpenEats           | ✔️      | ❌      |  ⌚        |
+| Plantoeat          | ✔️      | ❌      |  ✔        |
+| CookBookApp        | ✔️      | ⌚      |  ✔️        |
+| CopyMeThat         | ✔️      | ❌      |  ✔️        |
+| PDF (experimental) | ⌚️      | ✔     |  ✔️        |
 
 ✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -223,3 +224,13 @@ CookBookApp can export .zip files containing .html files. Upload the entire ZIP 
 ## CopyMeThat
 
 CopyMeThat can export .zip files containing an `.html` file as well as a folder containing all the images. Upload the entire ZIP to Tandoor to import all included recipes.
+
+## PDF
+
+The PDF Exporter is an experimental feature that uses the puppeteer browser renderer to render each recipe and export it to PDF. 
+For that to work it downloads a chromium binary of about 140 MB to your server and then renders the PDF files using that. 
+
+Since that is something some server administrators might not want there the PDF exporter is disabled by default and can be enabled with `ENABLE_PDF_EXPORT=1` in `.env`.
+
+See [this issue](https://github.com/TandoorRecipes/recipes/pull/1211) for more discussion on this and 
+[this issue](https://github.com/TandoorRecipes/recipes/issues/781) for the future plans to support server side rendering.

@@ -35,7 +35,7 @@ The basic configuration is the same for all providers.
 ### Local
 
 !!! info
-    There is currently no way to upload files trough the webinterface. This is a feature that might be added later.
+    There is currently no way to upload files through the webinterface. This is a feature that might be added later.
 
 The local provider does not need any configuration.
 For the monitor you will need to define a valid path on your host system. 

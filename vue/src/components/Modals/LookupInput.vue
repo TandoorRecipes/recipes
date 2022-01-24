@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form-group class="mb-3">
+        <b-form-group :class="class_list">
             <template #label v-if="show_label">
                 {{ form.label }}
             </template>
@@ -13,6 +13,7 @@
                 :sticky_options="sticky_options"
                 :allow_create="form.allow_create"
                 :create_placeholder="createPlaceholder"
+                :clear="clear"
                 style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                 :placeholder="modelName"
                 @new="addNew"
@@ -43,7 +44,9 @@ export default {
                 return undefined
             },
         },
+        class_list: { type: String, default: "mb-3" },
         show_label: { type: Boolean, default: true },
+        clear: { type: Number },
     },
     data() {
         return {
@@ -68,6 +71,9 @@ export default {
             return this.form?.multiple || this.form?.ordered || false
         },
         initialSelection() {
+            if (!this.new_value) {
+                return
+            }
             let this_value = this.new_value
             let arrayValues = undefined
             // multiselect is expect to get an array of objects - make sure it gets one
@@ -80,7 +86,6 @@ export default {
             } else {
                 arrayValues = [{ id: -1, name: this_value }]
             }
-
             if (this.form?.ordered && this.first_run) {
                 return this.flattenItems(arrayValues)
             } else {

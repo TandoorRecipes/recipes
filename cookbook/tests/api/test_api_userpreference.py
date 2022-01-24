@@ -1,11 +1,11 @@
-from cookbook.models import UserPreference
-
 import json
 
 import pytest
 from django.contrib import auth
 from django.urls import reverse
-from django_scopes import scopes_disabled
+from django_scopes import scope, scopes_disabled
+
+from cookbook.models import Food, UserPreference
 
 LIST_URL = 'api:userpreference-list'
 DETAIL_URL = 'api:userpreference-detail'
@@ -109,3 +109,32 @@ def test_preference_delete(u1_s1, u2_s1):
         )
     )
     assert r.status_code == 204
+
+
+def test_default_inherit_fields(u1_s1, u1_s2, space_1, space_2):
+    food_inherit_fields = Food.inheritable_fields
+    assert len([x.field for x in food_inherit_fields]) > 0
+
+    # by default space food will not inherit any fields, so all of them will be ignored
+    assert space_1.food_inherit.all().count() == 0
+    r = u1_s1.get(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+    )
+    assert len([x['field'] for x in json.loads(r.content)['food_inherit_default']]) == 0
+
+    # inherit all possible fields
+    with scope(space=space_1):
+        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))
+
+    assert space_1.food_inherit.all().count() == Food.inheritable_fields.count() > 0
+    # now by default, food is inheriting all of the possible fields
+    r = u1_s1.get(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+    )
+    assert len([x['field'] for x in json.loads(r.content)['food_inherit_default']]) == space_1.food_inherit.all().count()
+
+    # other spaces and users in those spaces not effected
+    r = u1_s2.get(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s2).id}),
+    )
+    assert space_2.food_inherit.all().count() == 0 == len([x['field'] for x in json.loads(r.content)['food_inherit_default']])
