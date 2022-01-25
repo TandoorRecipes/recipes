@@ -161,7 +161,7 @@ class FoodInheritFieldSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = FoodInheritField
-        fields = ('id', 'name', 'field', )
+        fields = ('id', 'name', 'field',)
         read_only_fields = ['id']
 
 
@@ -180,7 +180,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = UserPreference
         fields = (
-            'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_kj', 'search_style', 'show_recent', 'plan_share',
+            'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj', 'search_style', 'show_recent', 'plan_share',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed'
@@ -429,7 +429,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe',  'inherit_fields', 'full_name'
+            'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name'
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -683,11 +683,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
-        ) + f' ({value:.2g})'
+                       obj.name
+                       or getattr(obj.mealplan, 'title', None)
+                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                       or obj.recipe.name
+               ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         if 'servings' in validated_data:
@@ -726,9 +726,9 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     def run_validation(self, data):
         if self.root.instance.__class__.__name__ == 'ShoppingListEntry':
             if (
-                data.get('checked', False)
-                and self.root.instance
-                and not self.root.instance.checked
+                    data.get('checked', False)
+                    and self.root.instance
+                    and not self.root.instance.checked
             ):
                 # if checked flips from false to true set completed datetime
                 data['completed_at'] = timezone.now()
@@ -764,7 +764,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'id', 'list_recipe', 'food', 'unit', 'ingredient', 'ingredient_note', 'amount', 'order', 'checked', 'recipe_mealplan',
             'created_by', 'created_at', 'completed_at', 'delay_until'
         )
-        read_only_fields = ('id',  'created_by', 'created_at',)
+        read_only_fields = ('id', 'created_by', 'created_at',)
 
 
 # TODO deprecate
