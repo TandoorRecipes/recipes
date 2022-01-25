@@ -291,5 +291,6 @@
     "sql_debug": "SQL Debug",
     "remember_search": "Suchbegriff merken",
     "remember_hours": "Stunden zu erinnern",
-    "tree_select": "Baum-Auswahl verwenden"
+    "tree_select": "Baum-Auswahl verwenden",
+    "CountMore": "...+{count} weitere"
 }
