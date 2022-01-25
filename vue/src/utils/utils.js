@@ -148,15 +148,20 @@ export function resolveDjangoUrl(url, params = null) {
 /*
  * other utilities
  * */
-export function getUserPreference(pref) {
-    if (window.USER_PREF === undefined) {
+export function getUserPreference(pref = undefined) {
+    let user_preference
+    if (document.getElementById("user_preference")) {
+        user_preference = JSON.parse(document.getElementById("user_preference").textContent)
+    } else {
         return undefined
     }
-    return window.USER_PREF[pref]
+    if (pref) {
+        return user_preference[pref]
+    }
+    return user_preference
 }
 
 export function calculateAmount(amount, factor) {
-    console.log('converting, getting pref' , getUserPreference("use_fractions"))
     if (getUserPreference("use_fractions")) {
         let return_string = ""
         let fraction = frac(amount * factor, 10, true)
