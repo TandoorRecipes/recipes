@@ -33,4 +33,9 @@ class Migration(migrations.Migration):
             model_name='customfilter',
             constraint=models.UniqueConstraint(fields=('space', 'name'), name='cf_unique_name_per_space'),
         ),
+        migrations.AddField(
+            model_name='recipebook',
+            name='filter',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cookbook.customfilter'),
+        ),
     ]
