@@ -140,5 +140,10 @@ class Migration(migrations.Migration):
             old_name='ignore_shopping',
             new_name='food_onhand',
         ),
+        migrations.AddField(
+            model_name='space',
+            name='show_facet_count',
+            field=models.BooleanField(default=False),
+        ),
         migrations.RunPython(copy_values_to_sle),
     ]
