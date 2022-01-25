@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
 "PO-Revision-Date: 2022-01-26 14:06+0000\n"
-"Last-Translator: Rene <inter.nett@freenet.de>\n"
+"Last-Translator: Leni <tandoor@po.lenis.biz>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -421,17 +421,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:503
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "Separator für CSV-Export."
 
 #: .\cookbook\forms.py:504
 msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
 
 #: .\cookbook\forms.py:508
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "Share Shopping List"
-msgstr "Neue Einkaufsliste"
+msgstr "Einkaufsliste teilen"
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
@@ -457,7 +455,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
-msgstr "Supermarkt auswählen"
+msgstr "Supermarkt filtern"
 
 #: .\cookbook\forms.py:515
 msgid "Recent Days"
