@@ -4,10 +4,10 @@
         <div class="row float-top pl-0 pr-0">
             <div class="col-auto no-gutter ml-auto">
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
-                    <i class="btn fas fa-plus-circle fa-lg px-0" @click="entrymode = !entrymode" :class="entrymode ? 'text-success' : 'text-muted'" />
+                    <i class="btn fas fa-plus-circle fa-lg px-0" @click="entrymode = !entrymode" :class="entrymode ? 'text-success' : 'text-primary'" />
                 </b-button>
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
-                    <i class="fas fa-download fa-lg nav-link dropdown-toggle text-muted px-1" id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1" id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
                         <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
@@ -17,7 +17,7 @@
                     </div>
                 </b-button>
                 <b-button variant="link" id="id_filters_button" class="px-1 pt-0 pb-1">
-                    <i class="btn fas fa-filter text-decoration-none fa-lg px-1" :class="filterApplied ? 'text-danger' : 'text-muted'" />
+                    <i class="btn fas fa-filter text-decoration-none fa-lg px-1" :class="filterApplied ? 'text-danger' : 'text-primary'" />
                 </b-button>
             </div>
         </div>
@@ -29,7 +29,7 @@
                     <b-spinner v-if="loading" type="border" small></b-spinner>
                     {{ $t("Shopping_list") }}
                 </template>
-                <div class="container p-0 pr-lg-5 pl-lg-5" id="shoppinglist">
+                <div class="container p-0" id="shoppinglist">
                     <div class="row">
                         <div class="col col-md-12 p-0 p-lg-3">
                             <div role="tablist">
@@ -92,8 +92,8 @@
                                 <!-- shopping list table -->
                                 <div v-if="items && items.length > 0">
                                     <div v-for="(done, x) in Sections" :key="x">
-                                        <div v-if="x == 'true'">
-                                            <h4 class="pl-2 pl-md-0">{{ $t("Completed") }}</h4>
+                                        <div v-if="x == 'true'" class="bg-header w-100 text-center d-flex justify-content-center align-items-center">
+                                            <span class="h4 d-flex mt-1 mb-1">{{ $t("Completed") }}</span>
                                         </div>
 
                                         <div v-for="(s, i) in done" :key="i">
@@ -197,25 +197,15 @@
                                 <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')" @click="deleteRecipe($event, r.list_recipe)" />
                             </td>
                         </tr>
-                    </thead>
-                    <tr v-for="r in Recipes" :key="r.list_recipe">
-                        <td>{{ r.recipe_mealplan.name }}</td>
-                        <td>{{ r.recipe_mealplan.recipe_name }}</td>
-                        <td class="block-inline">
-                            <b-form-input min="1" type="number" :debounce="300" :value="r.recipe_mealplan.servings" @input="updateServings($event, r.list_recipe)"></b-form-input>
-                        </td>
-                        <td>
-                            <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')" @click="deleteRecipe($event, r.list_recipe)" />
-                        </td>
-                    </tr>
-                </table>
+                    </table>
+                </div>
             </b-tab>
             <!-- supermarkets tab -->
             <b-tab :title="$t('Supermarkets')">
                 <div class="row justify-content-center">
                     <!-- supermarkets column -->
                     <div class="col col-md-5">
-                        <b-card>
+                        <b-card no-body>
                             <template #header>
                                 <h4 class="mb-0">
                                     {{ $t("Supermarkets") }}
@@ -232,79 +222,76 @@
                                             })
                                         "
                                     >
-                                        <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_supermarket.entrymode ? 'text-success' : 'text-muted'" />
+                                        <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_supermarket.entrymode ? 'text-success' : 'text-primary'" />
                                     </b-button>
                                 </h4>
                             </template>
-
                             <b-card
-                                class="m-1 p-1 no-body"
+                                class="pt-5 pl-5 pr-5"
                                 border-variant="success"
                                 header-bg-variant="success"
                                 header-text-variant="white"
                                 align="center"
                                 v-if="new_supermarket.entrymode"
-                                :header="$t('SupermarketName')"
+                                :header="new_supermarket.value ? new_supermarket.value : $t('SupermarketName')"
                             >
-                                <div class="input-group">
-                                    <b-form-input type="text" :placeholder="$t('SupermarketName')" v-model="new_supermarket.value" />
-                                    <b-button class="input-group-append" variant="success" @click="addSupermarket"><i class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }} </b-button>
-                                </div>
+                                <b-input-group>
+                                    <b-form-input type="text" class="form-control-append" :placeholder="$t('SupermarketName')" v-model="new_supermarket.value" />
+                                    <b-input-group-append>
+                                        <b-button class="input-group-append" variant="success" @click="addSupermarket"><i class="pr-2 pt-1 fas fa-save"></i> {{ $t("Create") }} </b-button>
+                                    </b-input-group-append>
+                                </b-input-group>
                             </b-card>
 
                             <b-card-body class="m-0 p-0">
-                                <b-card class="no-body mb-2" v-for="s in supermarkets" v-bind:key="s.id">
-                                    <b-card-title>
+                                <b-card class="mt-1 p-0" v-for="s in supermarkets" v-bind:key="s.id">
+                                    <b-card-header class="p-2 border-0 pt-3">
                                         <div class="row">
-                                            <div class="col">{{ s.name }}</div>
-                                            <div class="col-auto text-right ml-auto">
-                                                <b-button
-                                                    variant="link"
-                                                    class="p-0 m-0"
-                                                    @click="
-                                                        s.editmode = !s.editmode
-                                                        new_category.entrymode = false
-                                                        new_supermarket.entrymode = false
-                                                        editSupermarket(s)
-                                                    "
-                                                >
-                                                    <i class="btn fas fa-edit fa-lg px-0" :class="s.editmode ? 'text-success' : 'text-muted'" />
-                                                </b-button>
-                                                <b-button variant="link" class="p-0 m-0" @click="deleteSupermarket(s)">
-                                                    <i class="btn fas fa-trash fa-lg px-2 text-muted" />
-                                                </b-button>
+                                            <div class="col-12">
+                                                <h5 class="mt-1 mb-1">
+                                                    {{ s.name }}
+                                                    <b-button
+                                                        variant="link"
+                                                        class="p-0 m-0 float-right"
+                                                        @click="
+                                                            s.editmode = !s.editmode
+                                                            new_category.entrymode = false
+                                                            new_supermarket.entrymode = false
+                                                            editSupermarket(s)
+                                                        "
+                                                    >
+                                                        <i class="btn fas fa-edit fa-lg px-0" :class="s.editmode ? 'text-success' : 'text-primary'" />
+                                                    </b-button>
+                                                    <b-button variant="link" class="p-0 m-0 float-right" @click="deleteSupermarket(s)">
+                                                        <i class="btn fas fa-trash fa-lg px-2 text-danger" />
+                                                    </b-button>
+                                                </h5>
                                             </div>
                                         </div>
-                                    </b-card-title>
-                                    <b-card-body class="py-0">
+                                    </b-card-header>
+                                    <b-card-body class="m-0 p-0">
                                         <generic-pill :item_list="s.category_to_supermarket" label="category::name" color="info"></generic-pill>
                                     </b-card-body>
                                 </b-card>
                             </b-card-body>
                         </b-card>
                     </div>
-                    <!-- supermarket category column -->
                     <div class="col col-md-5">
-                        <b-card class="no-body">
+                        <b-card>
                             <template #header>
-                                <div class="row">
-                                    <div class="col">
-                                        {{ $t("Shopping_Categories") }}
-                                    </div>
-
-                                    <div class="col-auto text-right ml-auto">
-                                        <b-button
-                                            variant="link"
-                                            class="p-0 m-0"
-                                            @click="
-                                                new_category.entrymode = !new_category.entrymode
-                                                new_supermarket.entrymode = false
-                                            "
-                                        >
-                                            <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_category.entrymode ? 'text-success' : 'text-muted'" />
-                                        </b-button>
-                                    </div>
-                                </div>
+                                <h4 class="mb-0">
+                                    {{ $t("Shopping_Categories") }}
+                                    <b-button
+                                        variant="link"
+                                        class="p-0 m-0 float-right"
+                                        @click="
+                                            new_category.entrymode = !new_category.entrymode
+                                            new_supermarket.entrymode = false
+                                        "
+                                    >
+                                        <i class="btn fas fa-plus-circle fa-lg px-0" :class="new_category.entrymode ? 'text-success' : 'text-primary'" />
+                                    </b-button>
+                                </h4>
                             </template>
                             <b-card
                                 class="m-1 p-1 no-body"
@@ -313,12 +300,14 @@
                                 header-text-variant="white"
                                 align="center"
                                 v-if="new_category.entrymode"
-                                :header="$t('CategoryName')"
+                                :header="new_category.value ? new_category.value : $t('CategoryName')"
                             >
-                                <div class="input-group">
-                                    <b-form-input type="text" :placeholder="$t('CategoryName')" v-model="new_category.value" />
-                                    <b-button class="input-group-append" variant="success" @click="addCategory"><i class="pr-2 pt-1 fas fa-save"></i> {{ $t("Save") }} </b-button>
-                                </div>
+                                <b-input-group>
+                                    <b-form-input type="text" class="form-control-append" :placeholder="$t('CategoryName')" v-model="new_category.value" />
+                                    <b-input-group-append>
+                                        <b-button class="input-group-append" variant="success" @click="addCategory"><i class="pr-2 pt-1 fas fa-save"></i> {{ $t("Create") }} </b-button>
+                                    </b-input-group-append>
+                                </b-input-group>
                             </b-card>
 
                             <b-card-sub-title v-if="new_supermarket.editmode" class="pt-0 pb-3">{{ $t("CategoryInstruction") }} </b-card-sub-title>
@@ -335,16 +324,29 @@
                             >
                                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
                                     <b-card
-                                        class="m-0 p-0 font-weight-bold no-body list-group-item"
+                                        no-body
+                                        v-hover
+                                        class="mt-1 list-group-item p-2"
                                         :style="new_supermarket.editmode ? 'cursor:move' : ''"
                                         v-for="c in supermarketCategory"
                                         v-bind:key="c.id"
                                         :border-variant="new_supermarket.editmode ? 'success' : ''"
                                     >
-                                        {{ categoryName(c) }}
-                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteCategory(c)">
-                                            <i class="btn fas fa-trash fa-lg px-2 text-muted" />
-                                        </b-button>
+                                        <b-card-header class="p-2 border-0">
+                                            <div class="row">
+                                                <div class="col-2" v-if="new_supermarket.editmode">
+                                                    <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v"></i></button>
+                                                </div>
+                                                <div :class="new_supermarket.editmode ? 'col-10' : 'col-12'">
+                                                    <h5 class="mt-1 mb-1">
+                                                        {{ categoryName(c) }}
+                                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteCategory(c)">
+                                                            <i class="btn fas fa-trash fa-lg px-2 text-danger" />
+                                                        </b-button>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </b-card-header>
                                     </b-card>
                                 </transition-group>
                             </draggable>
@@ -354,18 +356,29 @@
                                 class="list-group"
                                 :list="notSupermarketCategory"
                                 group="category"
-                                v-if="new_supermarket.editmode"
                                 @start="drag = true"
                                 @end="drag = false"
                                 ghost-class="ghost"
+                                v-if="new_supermarket.editmode"
                                 v-bind="{ animation: 200 }"
                             >
                                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-                                    <b-card class="m-0 p-0 font-weight-bold no-body list-group-item" style="cursor: move" v-for="c in notSupermarketCategory" v-bind:key="c.id" :border-variant="'danger'">
-                                        {{ categoryName(c) }}
-                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteCategory(c)">
-                                            <i class="btn fas fa-trash fa-lg px-2 text-muted" />
-                                        </b-button>
+                                    <b-card no-body v-hover class="mt-1 list-group-item p-2" style="cursor: move" v-for="c in notSupermarketCategory" v-bind:key="c.id" :border-variant="'danger'">
+                                        <b-card-header class="p-2 border-0">
+                                            <div class="row">
+                                                <div class="col-2" v-if="new_supermarket.editmode">
+                                                    <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v"></i></button>
+                                                </div>
+                                                <div :class="new_supermarket.editmode ? 'col-10' : 'col-12'">
+                                                    <h5 class="mt-1 mb-1">
+                                                        {{ categoryName(c) }}
+                                                        <b-button variant="link" class="p-0 m-0 float-right" @click="deleteCategory(c)">
+                                                            <i class="btn fas fa-trash fa-lg px-2 text-primary" />
+                                                        </b-button>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </b-card-header>
                                     </b-card>
                                 </transition-group>
                             </draggable>
@@ -381,7 +394,7 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input type="checkbox" class="form-control-sm" v-model="settings.mealplan_autoadd_shopping" @change="saveSettings" />
+                                    <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoadd_shopping" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
@@ -393,7 +406,7 @@
                                 <div class="row">
                                     <div class="col col-md-6">{{ $t("mealplan_autoexclude_onhand") }}</div>
                                     <div class="col col-md-6 text-right">
-                                        <input type="checkbox" class="form-control-sm" v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings" />
+                                        <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings" />
                                     </div>
                                 </div>
                                 <div class="row sm mb-3">
@@ -406,7 +419,7 @@
                                 <div class="row">
                                     <div class="col col-md-6">{{ $t("mealplan_autoinclude_related") }}</div>
                                     <div class="col col-md-6 text-right">
-                                        <input type="checkbox" class="form-control-sm" v-model="settings.mealplan_autoinclude_related" @change="saveSettings" />
+                                        <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoinclude_related" @change="saveSettings" />
                                     </div>
                                 </div>
                                 <div class="row sm mb-3">
@@ -444,7 +457,7 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("shopping_auto_sync") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input type="number" class="form-control-sm" v-model="settings.shopping_auto_sync" @change="saveSettings" />
+                                    <input type="number" class="form-control" v-model="settings.shopping_auto_sync" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
@@ -457,7 +470,7 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("shopping_add_onhand") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input type="checkbox" class="form-control-sm" v-model="settings.shopping_add_onhand" @change="saveSettings" />
+                                    <input type="checkbox" class="form-control settings-checkbox" v-model="settings.shopping_add_onhand" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
@@ -470,10 +483,9 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("shopping_recent_days") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input type="number" class="form-control-sm" v-model="settings.shopping_recent_days" @change="saveSettings" />
+                                    <input type="number" class="form-control" v-model="settings.shopping_recent_days" @change="saveSettings" />
                                 </div>
                             </div>
-
                             <div class="row sm mb-3">
                                 <div class="col">
                                     <em class="small text-muted">
@@ -484,7 +496,7 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("filter_to_supermarket") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input type="checkbox" class="form-control-sm" v-model="settings.filter_to_supermarket" @change="saveSettings" />
+                                    <input type="checkbox" class="form-control settings-checkbox" v-model="settings.filter_to_supermarket" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
@@ -497,7 +509,7 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("default_delay") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input type="number" class="form-control-sm" min="1" v-model="settings.default_delay" @change="saveSettings" />
+                                    <input type="number" class="form-control" min="1" v-model="settings.default_delay" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
@@ -510,7 +522,7 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("csv_delim_label") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input class="form-control-sm" v-model="settings.csv_delim" @change="saveSettings" />
+                                    <input class="form-control" v-model="settings.csv_delim" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
@@ -523,13 +535,26 @@
                             <div class="row">
                                 <div class="col col-md-6">{{ $t("csv_prefix_label") }}</div>
                                 <div class="col col-md-6 text-right">
-                                    <input class="form-control-sm" v-model="settings.csv_prefix" @change="saveSettings" />
+                                    <input class="form-control" v-model="settings.csv_prefix" @change="saveSettings" />
                                 </div>
                             </div>
                             <div class="row sm mb-3">
                                 <div class="col">
                                     <em class="small text-muted">
                                         {{ $t("csv_prefix_help") }}
+                                    </em>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-6">{{ $t("left_handed") }}</div>
+                                <div class="col col-md-6">
+                                    <input type="checkbox" class="form-control settings-checkbox" v-model="settings.left_handed" @change="saveSettings" />
+                                </div>
+                            </div>
+                            <div class="row sm mb-3">
+                                <div class="col">
+                                    <em class="small text-muted">
+                                        {{ $t("left_handed_help") }}
                                     </em>
                                 </div>
                             </div>
@@ -587,26 +612,23 @@
         <ContextMenu ref="menu">
             <template #menu="{ contextData }">
                 <ContextMenuItem>
-                    <b-row class="d-flex align-items-center mr-0">
-                        <b-col cols="6">
-                            <a class="dropdown-item p-2" href="#"><i class="fas fa-cubes"></i> {{ $t("MoveCategory") }}</a>
-                        </b-col>
-                        <b-col cols="6 pl-1">
-                            <b-form-select
-                                class="form-control form-control-sm"
-                                :options="shopping_categories"
-                                text-field="name"
-                                value-field="id"
-                                v-model="shopcat"
-                                @change="
-                                    moveEntry($event, contextData)
-                                    $refs.menu.close()
-                                "
-                            ></b-form-select>
-                        </b-col>
-                    </b-row>
+                    <b-input-group>
+                        <template #prepend>
+                            <span class="dropdown-item p-2 text-decoration-none" style="user-select: none !important"><i class="fas fa-cubes"></i> {{ $t("MoveCategory") }}</span>
+                        </template>
+                        <b-form-select
+                            class="form-control mt-1 mr-1"
+                            :options="shopping_categories"
+                            text-field="name"
+                            value-field="id"
+                            v-model="shopcat"
+                            @change="
+                                moveEntry($event, contextData)
+                                $refs.menu.close()
+                            "
+                        ></b-form-select>
+                    </b-input-group>
                 </ContextMenuItem>
-
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
@@ -684,6 +706,7 @@ export default {
         DownloadPDF,
         DownloadCSV,
         CopyToClipboard,
+        ShoppingModal,
     },
 
     data() {
@@ -713,11 +736,13 @@ export default {
                 csv_delim: ",",
                 csv_prefix: undefined,
                 shopping_add_onhand: true,
+                left_handed: false,
             },
             new_supermarket: { entrymode: false, value: undefined, editmode: undefined },
             new_category: { entrymode: false, value: undefined },
             autosync_id: undefined,
-            auto_sync_running: false,
+            auto_sync_running: false, // track to not start a new sync before old one was finished
+            auto_sync_blocked: false, // blocking auto sync while request to check item is still running
             show_delay: false,
             drag: false,
             show_modal: false,
@@ -726,6 +751,10 @@ export default {
             entrymode: false,
             new_item: { amount: 1, unit: undefined, food: undefined, ingredient: undefined },
             online: true,
+            new_recipe: {
+                id: undefined,
+            },
+            add_recipe_servings: 1,
         }
     },
     computed: {
@@ -763,6 +792,9 @@ export default {
 
             var groups = { false: {}, true: {} } // force unchecked to always be first
             if (this.selected_supermarket) {
+                // TODO: make nulls_first a user setting
+                groups.false[this.$t("Undefined")] = {}
+                groups.true[this.$t("Undefined")] = {}
                 let super_cats = this.supermarkets
                     .filter((x) => x.id === this.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
@@ -773,9 +805,6 @@ export default {
                     groups["true"][cat] = {}
                 })
             } else {
-                // TODO: make nulls_first a user setting
-                groups.false[this.$t("Undefined")] = {}
-                groups.true[this.$t("Undefined")] = {}
                 this.shopping_categories.forEach((cat) => {
                     groups.false[cat.name] = {}
                     groups.true[cat.name] = {}
@@ -824,7 +853,8 @@ export default {
             return (this.itemsDelayed && !this.show_delay) || !this.show_undefined_categories || (this.supermarket_categories_only && this.selected_supermarket)
         },
         Recipes() {
-            return [...new Map(this.items.filter((x) => x.list_recipe).map((item) => [item["list_recipe"], item])).values()]
+            // hiding recipes associated with shopping list items that are complete
+            return [...new Map(this.items.filter((x) => x.list_recipe && !x.checked).map((item) => [item["list_recipe"], item])).values()]
         },
         supermarketCategory() {
             return this.new_supermarket.editmode ? this.new_supermarket.value.category_to_supermarket : this.shopping_categories
@@ -849,6 +879,12 @@ export default {
         selected_supermarket(newVal, oldVal) {
             this.supermarket_categories_only = this.settings.filter_to_supermarket
             localStorage.setItem("shopping_v2_selected_supermarket", JSON.stringify(this.selected_supermarket))
+        },
+        new_recipe: {
+            handler() {
+                this.add_recipe_servings = this.new_recipe.servings
+            },
+            deep: true,
         },
         "settings.filter_to_supermarket": function (newVal, oldVal) {
             this.supermarket_categories_only = this.settings.filter_to_supermarket
@@ -902,14 +938,21 @@ export default {
         // this.genericAPI inherited from ApiMixin
         addItem: function () {
             if (this.entry_mode_simple) {
-                this.genericPostAPI("api_ingredient_from_string", { text: this.new_item.ingredient }).then((result) => {
-                    this.new_item = {
-                        amount: result.data.amount,
-                        unit: { name: result.data.unit },
-                        food: { name: result.data.food },
-                    }
-                    this.addEntry()
-                })
+                if (this.new_item.ingredient !== "" && this.new_item.ingredient !== undefined) {
+                    this.genericPostAPI("api_ingredient_from_string", { text: this.new_item.ingredient }).then((result) => {
+                        let unit = null
+                        if (result.data.unit !== "") {
+                            unit = { name: result.data.unit }
+                        }
+
+                        this.new_item = {
+                            amount: result.data.amount,
+                            unit: unit,
+                            food: { name: result.data.food },
+                        }
+                        this.addEntry()
+                    })
+                }
             } else {
                 this.addEntry()
             }
@@ -1066,7 +1109,9 @@ export default {
                         }
                         this.loading = false
                     } else {
-                        this.mergeShoppingList(results.data)
+                        if (!this.auto_sync_blocked) {
+                            this.mergeShoppingList(results.data)
+                        }
                     }
                 })
                 .catch((err) => {
@@ -1095,6 +1140,15 @@ export default {
                 })
             )
             this.auto_sync_running = false
+            let new_entries = data.map((x) => x.id).filter((y) => !this.items.map((z) => z.id).includes(y))
+            if (new_entries.length > 0) {
+                let api = new ApiApiFactory()
+                new_entries.forEach((new_id) => {
+                    api.retrieveShoppingListEntry(new_id).then((result) => {
+                        this.items.push(result.data)
+                    })
+                })
+            }
         },
         moveEntry: function (e, item) {
             if (!e) {
@@ -1189,6 +1243,7 @@ export default {
         },
         updateChecked: function (update) {
             // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
+            this.auto_sync_blocked = true
             let promises = []
             update.entries.forEach((x) => {
                 const id = x?.id ?? x
@@ -1203,15 +1258,20 @@ export default {
                 Vue.set(item, "completed_at", completed_at)
             })
 
-            Promise.all(promises).catch((err) => {
-                console.log(err, err.response)
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-            })
+            Promise.all(promises)
+                .then(() => {
+                    this.auto_sync_blocked = false
+                })
+                .catch((err) => {
+                    this.auto_sync_blocked = false
+                    console.log(err, err.response)
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                })
         },
         updateFood: function (food, field) {
             let api = new ApiApiFactory()
             if (field) {
-                // assume if field is changing it should no longer be inheritted
+                // assume if field is changing it should no longer be inherited
                 food.inherit_fields = food.inherit_fields.filter((x) => x.field !== field)
             }
 
@@ -1409,12 +1469,12 @@ export default {
     background: #c8ebfb;
 }
 
-.slider-fade-enter-active,
-.slider-fade-leave-active {
-    transition: all 0.3s ease;
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: all 0.2s ease;
 }
 
-.slider-fade-enter, .slider-fade-leave-to
+.slide-fade-enter, .slide-fade-leave-to
   /* .slider-fade-leave-active below version 2.1.8 */ {
     transform: translateX(10px);
     opacity: 0;
