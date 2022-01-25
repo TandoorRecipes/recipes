@@ -6,11 +6,7 @@
                     <div class="row justify-content-center">
                         <div class="col-12 col-lg-10 mt-3 mb-3">
                             <b-input-group>
-                                <b-input
-                                    class="form-control form-control-lg form-control-borderless form-control-search"
-                                    v-model="search"
-                                    v-bind:placeholder="$t('Search')"
-                                ></b-input>
+                                <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="search" v-bind:placeholder="$t('Search')"></b-input>
                                 <b-input-group-append>
                                     <b-button variant="primary" v-b-tooltip.hover :title="$t('Create')" @click="createNew">
                                         <i class="fas fa-plus"></i>
@@ -48,13 +44,7 @@
 
             <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
             <transition name="slide-fade">
-                <cookbook-slider
-                    :recipes="recipes"
-                    :book="book"
-                    :key="`slider_${book.id}`"
-                    v-if="current_book === book.id && !loading"
-                    v-on:refresh="refreshData"
-                ></cookbook-slider>
+                <cookbook-slider :recipes="recipes" :book="book" :key="`slider_${book.id}`" v-if="current_book === book.id && !loading" v-on:refresh="refreshData"></cookbook-slider>
             </transition>
         </div>
     </div>

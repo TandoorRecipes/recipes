@@ -1,3 +1,4 @@
+import json
 from collections import Counter
 from datetime import timedelta
 
@@ -12,7 +13,7 @@ from cookbook.filters import RecipeFilter
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
-from cookbook.models import CookLog, Food, Keyword, Recipe, SearchPreference, ViewLog
+from cookbook.models import CookLog, CustomFilter, Food, Keyword, Recipe, SearchPreference, ViewLog
 from recipes import settings
 
 
@@ -24,7 +25,14 @@ class RecipeSearch():
     def __init__(self, request,  **params):
         self._request = request
         self._queryset = None
-        self._params = {**params}
+        if filter := params.get('filter', None):
+            try:
+                self._params = {**json.loads(CustomFilter.objects.get(id=filter).search)}
+            except CustomFilter.DoesNotExist:
+                self._params = {**(params or {})}
+        else:
+            self._params = {**(params or {})}
+        self._query = self._params.get('query', {}) or {}
         if self._request.user.is_authenticated:
             self._search_prefs = request.user.searchpreference
         else:
@@ -53,12 +61,11 @@ class RecipeSearch():
         self._units = self._params.get('units', None)
         # TODO add created by
         # TODO image exists
-        self._sort_order = self._params.get('sort_order', None)
-        self._books_or = str2bool(self._params.get('books_or', True))
+        self._sort_order = self._params.get('sort_order', None) or self._query.get('sort_order', 0)
         self._internal = str2bool(self._params.get('internal', False))
         self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
-        self._last_viewed = int(self._params.get('last_viewed', 0))
+        self._last_viewed = int(self._params.get('last_viewed', 0) or self._query.get('last_viewed', 0))
         self._timescooked = self._params.get('timescooked', None)
         self._lastcooked = self._params.get('lastcooked', None)
         self._makenow = self._params.get('makenow', None)

@@ -604,8 +604,22 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+    shared = UserNameSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    class Meta:
+        model = CustomFilter
+        fields = ('id', 'name',  'search', 'shared', 'created_by')
+        read_only_fields = ('created_by',)
+
+
 class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserNameSerializer(many=True)
+    filter = CustomFilterSerializer(required=False)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -613,8 +627,8 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
 
     class Meta:
         model = RecipeBook
-        fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by')
-        read_only_fields = ('created_by',)
+        fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by', 'filter')
+        read_only_fields = ('created_by', )
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
@@ -976,16 +990,3 @@ class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'amount', 'unit', 'delete', ]
-
-
-class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-    shared = UserNameSerializer(many=True, required=False)
-
-    def create(self, validated_data):
-        validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
-
-    class Meta:
-        model = CustomFilter
-        fields = ('id', 'name',  'search', 'shared', 'created_by')
-        read_only_fields = ('created_by',)

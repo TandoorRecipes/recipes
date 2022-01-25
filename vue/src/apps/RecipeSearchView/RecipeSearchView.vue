@@ -903,6 +903,7 @@ export default {
             }
 
             if (filter) {
+                // this can be simplified by calling recipe API {query: {filter: filter_id}} but you lose loading all of the params into the UI
                 filter = JSON.parse(filter.search)
                 let fields = ["keywords", "foods", "books"]
                 let operators = ["_or", "_and", "_or_not", "_and_not"]
