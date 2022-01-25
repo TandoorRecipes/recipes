@@ -15,5 +15,5 @@ class Migration(migrations.Migration):
         #     name='show_facet_count',
         #     field=models.BooleanField(default=False),
         # ),
-        # removed due to quick fix in 0156 migration to maintain correct order
+        # removed due to quick fix in 0159 migration to maintain correct order
     ]
