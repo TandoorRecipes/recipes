@@ -33,7 +33,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     images = None
 
     image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.ReadOnlyField(source='count_recipes_test')
+    numrecipe = serializers.ReadOnlyField(source='recipe_count')
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -57,9 +57,6 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     def get_image(self, obj):
         if obj.recipe_image:
             return MEDIA_URL + obj.recipe_image
-
-    def count_recipes(self, obj):
-        return Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).count()
 
 
 class CustomDecimalField(serializers.Field):
@@ -683,11 +680,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         if 'servings' in validated_data:
