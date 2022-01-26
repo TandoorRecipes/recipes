@@ -156,7 +156,7 @@ export function getUserPreference(pref = undefined) {
         return undefined
     }
     if (pref) {
-        return user_preference[pref]
+        return user_preference?.[pref]
     }
     return user_preference
 }
@@ -389,6 +389,8 @@ export function getForm(model, action, item1, item2) {
         }
         if (value?.form_field) {
             value["value"] = item1?.[value?.field] ?? undefined
+            value["help"] = item1?.[value?.help_text_field] ?? value?.help_text ?? undefined
+            value["subtitle"] = item1?.[value?.subtitle_field] ?? value?.subtitle ?? undefined
             form.fields.push({
                 ...value,
                 ...{

@@ -34,6 +34,7 @@
             </td>
             <td v-else-if="show_shopping" class="text-right text-nowrap">
                 <b-button
+                    v-if="!ingredient.food.ignore_shopping"
                     class="btn text-decoration-none fas fa-shopping-cart px-2 user-select-none"
                     variant="link"
                     v-b-popover.hover.click.blur.html.top="{ title: ShoppingPopover, variant: 'outline-dark' }"
@@ -43,10 +44,10 @@
                         'text-warning': shopping_status === null,
                     }"
                 />
-                <span class="px-2">
+                <span v-if="!ingredient.food.ignore_shopping" class="px-2">
                     <input type="checkbox" class="align-middle" v-model="shop" @change="changeShopping" />
                 </span>
-                <on-hand-badge :item="ingredient.food" />
+                <on-hand-badge v-if="!ingredient.food.ignore_shopping" :item="ingredient.food" />
             </td>
         </template>
     </tr>
@@ -100,10 +101,10 @@ export default {
                     filtered_list = filtered_list.filter((x) => x.list_recipe == this.recipe_list)
                 }
                 // how many ShoppingListRecipes are there for this recipe?
-                let count_shopping_recipes = [...new Set(filtered_list.map((x) => x.list_recipe))].length
+                let count_shopping_recipes = [...new Set(filtered_list.filter((x) => x.list_recipe))].length
                 let count_shopping_ingredient = filtered_list.filter((x) => x.ingredient == this.ingredient.id).length
 
-                if (count_shopping_recipes >= 1) {
+                if (count_shopping_recipes >= 1 && this.recipe_list) {
                     // This recipe is in the shopping list
                     this.shop = false // don't check any boxes until user selects a shopping list to edit
                     if (count_shopping_ingredient >= 1) {
@@ -117,7 +118,7 @@ export default {
                 } else {
                     // there are not recipes in the shopping list
                     // set default value
-                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe
+                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe && !this.ingredient?.food?.ignore_shopping
                     this.$emit("add-to-shopping", { item: this.ingredient, add: this.shop })
                     // mark checked if the food is in the shopping list for this ingredient/recipe
                     if (count_shopping_ingredient >= 1) {
@@ -135,7 +136,7 @@ export default {
                 if (this.add_shopping_mode) {
                     // if we are in add shopping mode (e.g. recipe_shopping_modal) start with all checks marked
                     // except if on_hand (could be if recipe too?)
-                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe
+                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe && !this.ingredient?.food?.ignore_shopping
                 }
             },
         },
