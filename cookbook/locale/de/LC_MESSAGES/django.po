@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-01-26 14:06+0000\n"
-"Last-Translator: Leni <tandoor@po.lenis.biz>\n"
+"PO-Revision-Date: 2022-01-28 00:06+0000\n"
+"Last-Translator: Alex Hanselmann <alex.hanselmann@gmx.ch>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -425,7 +425,7 @@ msgstr "Separator für CSV-Export."
 
 #: .\cookbook\forms.py:504
 msgid "Prefix to add when copying list to the clipboard."
-msgstr ""
+msgstr "Zusatz wird der in die Zwischenablage kopierten Liste vorangestellt."
 
 #: .\cookbook\forms.py:508
 msgid "Share Shopping List"
@@ -433,11 +433,11 @@ msgstr "Einkaufsliste teilen"
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
-msgstr ""
+msgstr "Automatischer Abgleich"
 
 #: .\cookbook\forms.py:510
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "automatisch dem Menüplan hinzufügen"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
@@ -445,7 +445,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:512
 msgid "Include Related"
-msgstr ""
+msgstr "dazugehörend"
 
 #: .\cookbook\forms.py:513
 msgid "Default Delay Hours"
@@ -459,11 +459,11 @@ msgstr "Supermarkt filtern"
 
 #: .\cookbook\forms.py:515
 msgid "Recent Days"
-msgstr ""
+msgstr "Vergangene Tage"
 
 #: .\cookbook\forms.py:516
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "CSV Trennzeichen"
 
 #: .\cookbook\forms.py:517 .\cookbook\templates\shopping_list.html:322
 msgid "List Prefix"
@@ -525,7 +525,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_search.py:473
 msgid "One of queryset or hash_key must be provided"
-msgstr ""
+msgstr "Es muss die Abfrage oder der Hash_Key angeben werden"
 
 #: .\cookbook\helper\shopping_helper.py:54
 msgid "You must supply a recipe or mealplan"
@@ -533,7 +533,7 @@ msgstr "Mindestens ein Rezept oder ein Essensplan müssen angegeben werden"
 
 #: .\cookbook\helper\shopping_helper.py:58
 msgid "You must supply a created_by"
-msgstr ""
+msgstr "Die Angabe der Verfassers ist notwendig"
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
@@ -726,7 +726,7 @@ msgstr "Stichwort Alias"
 
 #: .\cookbook\serializer.py:175
 msgid "A user is required"
-msgstr ""
+msgstr "Ein Benutzername ist notwendig"
 
 #: .\cookbook\serializer.py:195
 msgid "File uploads are not enabled for this Space."
