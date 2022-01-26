@@ -692,7 +692,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
-        if 'servings' in validated_data:
+        # TODO remove once old shopping list
+        if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
             list_from_recipe(
                 list_recipe=instance,
                 servings=validated_data['servings'],

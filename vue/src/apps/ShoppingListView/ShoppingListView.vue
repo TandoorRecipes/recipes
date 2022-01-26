@@ -1096,6 +1096,7 @@ export default {
                     if (!autosync) {
                         if (results.data?.length) {
                             this.items = results.data
+                            console.log(this.items)
                         } else {
                             console.log("no data returned")
                         }
