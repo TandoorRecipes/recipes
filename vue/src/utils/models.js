@@ -76,15 +76,17 @@ export class Models {
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields"]],
+            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields", "ignore_shopping"]],
 
             form: {
+                show_help: true,
                 name: {
                     form_field: true,
                     type: "text",
                     field: "name",
                     label: i18n.t("Name"),
                     placeholder: "",
+                    subtitle_field: "full_name",
                 },
                 description: {
                     form_field: true,
@@ -99,12 +101,21 @@ export class Models {
                     field: "recipe",
                     list: "RECIPE",
                     label: i18n.t("Recipe"),
+                    help_text: i18n.t("food_recipe_help"),
                 },
-                shopping: {
+                onhand: {
                     form_field: true,
                     type: "checkbox",
                     field: "food_onhand",
                     label: i18n.t("OnHand"),
+                    help_text: i18n.t("OnHand_help"),
+                },
+                ignore_shopping: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "ignore_shopping",
+                    label: i18n.t("Ignore_Shopping"),
+                    help_text: i18n.t("ignore_shopping_help"),
                 },
                 shopping_category: {
                     form_field: true,
@@ -113,6 +124,7 @@ export class Models {
                     list: "SHOPPING_CATEGORY",
                     label: i18n.t("Shopping_Category"),
                     allow_create: true,
+                    help_text: i18n.t("shopping_category_help"),
                 },
                 inherit_fields: {
                     form_field: true,
@@ -121,12 +133,7 @@ export class Models {
                     field: "inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
                     label: i18n.t("InheritFields"),
-                    condition: { field: "parent", value: true, condition: "exists" },
-                },
-                full_name: {
-                    form_field: true,
-                    type: "smalltext",
-                    field: "full_name",
+                    condition: { field: "food_children_exist", value: true, condition: "preference_equals" },
                 },
                 form_function: "FoodCreateDefault",
             },

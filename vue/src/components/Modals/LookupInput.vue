@@ -19,6 +19,7 @@
                 @new="addNew"
             >
             </generic-multiselect>
+            <em v-if="help" class="small text-muted">{{ help }}</em>
         </b-form-group>
     </div>
 </template>
@@ -47,6 +48,7 @@ export default {
         class_list: { type: String, default: "mb-3" },
         show_label: { type: Boolean, default: true },
         clear: { type: Number },
+        help: { type: String, default: undefined },
     },
     data() {
         return {

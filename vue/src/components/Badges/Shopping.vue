@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <span v-if="!item.ignore_shopping">
         <b-button class="btn text-decoration-none px-1 border-0" variant="link" :id="`shopping${item.id}`" @click="addShopping()">
             <i
                 class="fas"
