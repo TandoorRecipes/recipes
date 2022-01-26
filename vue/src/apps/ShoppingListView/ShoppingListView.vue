@@ -432,7 +432,7 @@
                                 <div class="col col-md-6 text-right">
                                     <generic-multiselect
                                         size="sm"
-                                        @change="settings.shopping_share = $event.valsaveSettings()"
+                                        @change="settings.shopping_share = $event.val;saveSettings()"
                                         :model="Models.USER"
                                         :initial_selection="settings.shopping_share"
                                         label="username"
