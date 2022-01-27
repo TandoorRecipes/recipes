@@ -16,7 +16,7 @@
                                         <b-button variant="light" v-b-tooltip.hover :title="$t('Random Recipes')" @click="openRandom()">
                                             <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
                                         </b-button>
-                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="!searchFiltered(true) ? 'primary' : 'danger'">
+                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'">
                                             <!-- TODO consider changing this icon to a filter -->
                                             <i class="fas fa-caret-down" v-if="!search.advanced_search_visible"></i>
                                             <i class="fas fa-caret-up" v-if="search.advanced_search_visible"></i>
@@ -525,13 +525,13 @@ import VueCookies from "vue-cookies"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import moment from "moment"
 import _debounce from "lodash/debounce"
+import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
+import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 
 import { ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin } from "@/utils/utils"
 import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
-import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import Multiselect from "vue-multiselect"
 
@@ -732,23 +732,8 @@ export default {
                 this.search.search_keywords[0].items = []
                 this.facets.Keywords = []
                 for (let x of urlParams.getAll("keyword")) {
-                    let initial_keyword = { id: Number.parseInt(x), name: "loading..." }
-                    this.search.search_keywords.push(initial_keyword)
-
-                    this.genericAPI(this.Models.KEYWORD, this.Actions.FETCH, { id: initial_keyword.id })
-                        .then((response) => {
-                            let kw_index = this.search.search_keywords.findIndex((k) => k.id === initial_keyword.id)
-                            this.$set(this.search.search_keywords, kw_index, response.data)
-                            this.$set(this.facets.Keywords, kw_index, response.data)
-                        })
-                        .catch((err) => {
-                            if (err.response.status === 404) {
-                                let kw_index = this.search.search_keywords.findIndex((k) => k.id === initial_keyword.id)
-                                this.search.search_keywords.splice(kw_index, 1)
-                                this.facets.Keywords.splice(kw_index, 1)
-                                this.refreshData(false)
-                            }
-                        })
+                    this.search.search_keywords[0].items.push(Number.parseInt(x))
+                    this.facets.Keywords.push({ id: x, name: "loading..." })
                 }
             } else {
                 this.facets.Keywords = []
@@ -766,7 +751,7 @@ export default {
             }
 
             this.facets.Books = []
-            for (let x of this.search.search_books) {
+            for (let x of this.search.search_books.map((x) => x.items).flat()) {
                 this.facets.Books.push({ id: x, name: "loading..." })
             }
 
