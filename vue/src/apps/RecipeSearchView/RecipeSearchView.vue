@@ -521,10 +521,11 @@
 import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
 import VueCookies from "vue-cookies"
-
 import "bootstrap-vue/dist/bootstrap-vue.css"
+
 import moment from "moment"
 import _debounce from "lodash/debounce"
+import Multiselect from "vue-multiselect"
 import { Treeselect, LOAD_CHILDREN_OPTIONS } from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 
@@ -533,7 +534,6 @@ import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprec
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
-import Multiselect from "vue-multiselect"
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
