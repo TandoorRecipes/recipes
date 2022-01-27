@@ -79,7 +79,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     elif ingredients:
         ingredients = Ingredient.objects.filter(pk__in=ingredients, space=space)
     else:
-        ingredients = Ingredient.objects.filter(step__recipe=r, space=space)
+        ingredients = Ingredient.objects.filter(step__recipe=r,  food__ignore_shopping=False, space=space)
 
         if exclude_onhand := created_by.userpreference.mealplan_autoexclude_onhand:
             ingredients = ingredients.exclude(food__onhand_users__id__in=[x.id for x in shared_users])
@@ -101,9 +101,9 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
                 if ingredients.filter(food__recipe=x).exists():
                     for ing in ingredients.filter(food__recipe=x):
                         if exclude_onhand:
-                            x_ing = Ingredient.objects.filter(step__recipe=x,  space=space).exclude(food__onhand_users__id__in=[x.id for x in shared_users])
+                            x_ing = Ingredient.objects.filter(step__recipe=x,  food__ignore_shopping=False, space=space).exclude(food__onhand_users__id__in=[x.id for x in shared_users])
                         else:
-                            x_ing = Ingredient.objects.filter(step__recipe=x, space=space)
+                            x_ing = Ingredient.objects.filter(step__recipe=x,  food__ignore_shopping=False, space=space).exclude(food__ignore_shopping=True)
                         for i in [x for x in x_ing]:
                             ShoppingListEntry.objects.create(
                                 list_recipe=list_recipe,

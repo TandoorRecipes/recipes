@@ -18,7 +18,7 @@
                             <h3>
                                 <!-- <span><b-button variant="link" size="sm" class="text-dark shadow-none"><i class="fas fa-chevron-down"></i></b-button></span> -->
                                 <model-menu />
-                                <span>{{ this.this_model.name }}</span>
+                                <span>{{ $t(this.this_model.name) }}</span>
                                 <span v-if="apiName !== 'Step'">
                                     <b-button variant="link" @click="startAction({ action: 'new' })">
                                         <i class="fas fa-plus-circle fa-2x"></i>

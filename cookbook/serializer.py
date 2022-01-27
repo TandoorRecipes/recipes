@@ -33,7 +33,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     images = None
 
     image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.ReadOnlyField(source='count_recipes_test')
+    numrecipe = serializers.ReadOnlyField(source='recipe_count')
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -57,9 +57,6 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     def get_image(self, obj):
         if obj.recipe_image:
             return MEDIA_URL + obj.recipe_image
-
-    def count_recipes(self, obj):
-        return Recipe.objects.filter(**{self.recipe_filter: obj}, space=obj.space).count()
 
 
 class CustomDecimalField(serializers.Field):
@@ -169,6 +166,11 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', many=True, allow_null=True, required=False, read_only=True)
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
     shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
+    food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
+
+    def get_food_children_exist(self, obj):
+        space = getattr(self.context.get('request', None), 'space', None)
+        return Food.objects.filter(depth__gt=0, space=space).exists()
 
     def create(self, validated_data):
         if not validated_data.get('user', None):
@@ -183,7 +185,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj', 'search_style', 'show_recent', 'plan_share',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days', 'csv_delim', 'csv_prefix',
-            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed'
+            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'food_children_exist'
         )
 
 
@@ -429,7 +431,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name'
+            'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping'
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -683,14 +685,15 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
-        if 'servings' in validated_data:
+        # TODO remove once old shopping list
+        if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
             list_from_recipe(
                 list_recipe=instance,
                 servings=validated_data['servings'],

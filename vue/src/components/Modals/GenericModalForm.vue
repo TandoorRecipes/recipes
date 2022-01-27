@@ -2,22 +2,26 @@
     <div>
         <b-modal :id="'modal_' + id" @hidden="cancelAction">
             <template v-slot:modal-title>
-                <h4>{{ form.title }}</h4>
+                <h4 class="d-inline">{{ form.title }}</h4>
+                <help-badge v-if="form.show_help" @show="show_help = true" @hide="show_help = false" :component="`GenericModal${form.title}`" />
             </template>
             <div v-for="(f, i) in form.fields" v-bind:key="i">
                 <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
-                <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" />
-                <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" />
-                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" />
+                <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" :help="showHelp && f.help" />
+                <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" />
+                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
                 <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
                 <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
             </div>
-
             <template v-slot:modal-footer>
-                <b-button class="float-right mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
-                <b-button class="float-right mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
+                <div class="row w-100 justify-content-end">
+                    <div class="col-auto">
+                        <b-button class="mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
+                        <b-button class="mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
+                    </div>
+                </div>
             </template>
         </b-modal>
     </div>
@@ -31,7 +35,7 @@ import { getForm, formFunctions } from "@/utils/utils"
 Vue.use(BootstrapVue)
 
 import { ApiApiFactory } from "@/utils/openapi/api"
-import { ApiMixin, StandardToasts, ToastMixin } from "@/utils/utils"
+import { ApiMixin, StandardToasts, ToastMixin, getUserPreference } from "@/utils/utils"
 import CheckboxInput from "@/components/Modals/CheckboxInput"
 import LookupInput from "@/components/Modals/LookupInput"
 import TextInput from "@/components/Modals/TextInput"
@@ -39,10 +43,11 @@ import EmojiInput from "@/components/Modals/EmojiInput"
 import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
 import SmallText from "@/components/Modals/SmallText"
+import HelpBadge from "@/components/Badges/Help"
 
 export default {
     name: "GenericModalForm",
-    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText },
+    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge },
     mixins: [ApiMixin, ToastMixin],
     props: {
         model: { required: true, type: Object },
@@ -73,6 +78,7 @@ export default {
             form: {},
             dirty: false,
             special_handling: false,
+            show_help: true,
         }
     },
     mounted() {
@@ -83,11 +89,19 @@ export default {
         buttonLabel() {
             return this.buttons[this.action].label
         },
+        showHelp() {
+            if (this.show_help) {
+                return true
+            } else {
+                return undefined
+            }
+        },
     },
     watch: {
         show: function () {
             if (this.show) {
                 this.form = getForm(this.model, this.action, this.item1, this.item2)
+
                 if (this.form?.form_function) {
                     this.form = formFunctions[this.form.form_function](this.form)
                 }
@@ -256,15 +270,33 @@ export default {
             let type_match = field?.type == field_type
             let checks = true
             if (type_match && field?.condition) {
-                if (field.condition?.condition === "exists") {
-                    if ((this.item1[field.condition.field] != undefined) === field.condition.value) {
-                        checks = true
-                    } else {
-                        checks = false
-                    }
+                const value = this.item1[field?.condition?.field]
+                const preference = getUserPreference(field?.condition?.field)
+                console.log("condition", field?.condition?.condition)
+                switch (field?.condition?.condition) {
+                    case "field_exists":
+                        if ((value != undefined) === field.condition.value) {
+                            checks = true
+                        } else {
+                            checks = false
+                        }
+                        break
+                    case "preference__array_exists":
+                        if (preference?.length > 0 === field.condition.value) {
+                            checks = true
+                        } else {
+                            checks = false
+                        }
+                        break
+                    case "preference_equals":
+                        if (preference === field.condition.value) {
+                            checks = true
+                        } else {
+                            checks = false
+                        }
+                        break
                 }
             }
-
             return type_match && checks
         },
     },
