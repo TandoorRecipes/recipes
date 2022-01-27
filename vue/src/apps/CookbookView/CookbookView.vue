@@ -145,7 +145,7 @@ export default {
             return this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((results) => {
                 let recipes = results.data.results.map((x) => {
                     return {
-                        id: x.id,
+                        id: (Math.random() * 1999) ^ 1999,
                         book: book.id,
                         book_content: book,
                         recipe: x.id,
