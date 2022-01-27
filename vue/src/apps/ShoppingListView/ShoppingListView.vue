@@ -401,14 +401,14 @@
                             </div>
                             <div v-if="settings.mealplan_autoadd_shopping">
                                 <div class="row">
-                                    <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
+                                    <div class="col col-md-6">{{ $t("mealplan_autoexclude_onhand") }}</div>
                                     <div class="col col-md-6 text-right">
                                         <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings" />
                                     </div>
                                 </div>
                                 <div class="row sm mb-3">
                                     <div class="col">
-                                        <em class="small text-muted">{{ $t("mealplan_autoadd_shopping_desc") }}</em>
+                                        <em class="small text-muted">{{ $t("mealplan_autoexclude_onhand_desc") }}</em>
                                     </div>
                                 </div>
                             </div>
@@ -432,7 +432,7 @@
                                 <div class="col col-md-6 text-right">
                                     <generic-multiselect
                                         size="sm"
-                                        @change="settings.shopping_share = $event.valsaveSettings()"
+                                        @change="settings.shopping_share = $event.val;saveSettings()"
                                         :model="Models.USER"
                                         :initial_selection="settings.shopping_share"
                                         label="username"
@@ -1096,6 +1096,7 @@ export default {
                     if (!autosync) {
                         if (results.data?.length) {
                             this.items = results.data
+                            console.log(this.items)
                         } else {
                             console.log("no data returned")
                         }

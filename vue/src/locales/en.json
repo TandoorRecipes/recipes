@@ -289,5 +289,10 @@
     "remember_hours": "Hours to Remember",
     "tree_select": "Use Tree Selection",
     "left_handed": "Left-handed mode",
-    "left_handed_help": "Will optimize the UI for use with your left hand."
+    "left_handed_help": "Will optimize the UI for use with your left hand.",
+    "OnHand_help": "Food is in inventory and will not be automatically added to a shopping list.",
+    "ignore_shopping_help": "Never add food to the shopping list (e.g. water)",
+    "shopping_category_help": "Supermarkets can be ordered and filtered by Shopping Category according to the layout of the aisles.",
+    "food_recipe_help": "Linking a recipe here will include the linked recipe in any other recipe that use this food",
+    "Foods":"Foods"
 }

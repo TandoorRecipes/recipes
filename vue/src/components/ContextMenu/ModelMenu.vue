@@ -5,21 +5,21 @@
             <template #button-content>
                 <i class="fas fa-chevron-down"></i>
             </template>
-            <b-dropdown-item :href="resolveDjangoUrl('list_food')"> <i class="fas fa-leaf fa-fw"></i> {{ Models["FOOD"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_food')"> <i class="fas fa-leaf fa-fw"></i> {{ $t(Models["FOOD"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_keyword')"> <i class="fas fa-tags fa-fw"></i> {{ Models["KEYWORD"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_keyword')"> <i class="fas fa-tags fa-fw"></i> {{ $t(Models["KEYWORD"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_unit')"> <i class="fas fa-balance-scale fa-fw"></i> {{ Models["UNIT"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_unit')"> <i class="fas fa-balance-scale fa-fw"></i> {{ $t(Models["UNIT"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_supermarket')"> <i class="fas fa-store-alt fa-fw"></i> {{ Models["SUPERMARKET"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_supermarket')"> <i class="fas fa-store-alt fa-fw"></i> {{ $t(Models["SUPERMARKET"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_supermarket_category')"> <i class="fas fa-cubes fa-fw"></i> {{ Models["SHOPPING_CATEGORY"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_supermarket_category')"> <i class="fas fa-cubes fa-fw"></i> {{ $t(Models["SHOPPING_CATEGORY"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_automation')"> <i class="fas fa-robot fa-fw"></i> {{ Models["AUTOMATION"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_automation')"> <i class="fas fa-robot fa-fw"></i> {{ $t(Models["AUTOMATION"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_user_file')"> <i class="fas fa-file fa-fw"></i> {{ Models["USERFILE"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_user_file')"> <i class="fas fa-file fa-fw"></i> {{ $t(Models["USERFILE"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_step')"> <i class="fas fa-puzzle-piece fa-fw"></i>{{ Models["STEP"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_step')"> <i class="fas fa-puzzle-piece fa-fw"></i>{{ $t(Models["STEP"].name) }} </b-dropdown-item>
         </b-dropdown>
     </span>
 </template>
