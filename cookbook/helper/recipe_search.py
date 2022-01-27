@@ -25,10 +25,11 @@ class RecipeSearch():
     def __init__(self, request,  **params):
         self._request = request
         self._queryset = None
-        if filter := params.get('filter', None):
-            try:
-                self._params = {**json.loads(CustomFilter.objects.get(id=filter).search)}
-            except CustomFilter.DoesNotExist:
+        if f := params.get('filter', None):
+            filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) | Q(shared=self._request.user)).first()
+            if filter:
+                self._params = {**json.loads(filter.search)}
+            else:
                 self._params = {**(params or {})}
         else:
             self._params = {**(params or {})}
@@ -116,9 +117,7 @@ class RecipeSearch():
         self.unit_filters(units=self._units)
         self.string_filters(string=self._string)
         self._makenow_filter()
-
-        # self._queryset = self._queryset.distinct()  # TODO 2x check. maybe add filter of recipe__in after orderby
-        return self._queryset.filter(space=self._request.space).order_by(*self.orderby)
+        return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
 
     def _sort_includes(self, *args):
         for x in args:

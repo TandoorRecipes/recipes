@@ -318,7 +318,7 @@
     "asc": "Ascending",
     "desc": "Descending",
     "date_viewed": "Last Viewed",
-    "date_cooked": "Last Cooked",
+    "last_cooked": "Last Cooked",
     "times_cooked": "Times Cooked",
     "date_created": "Date Created",
     "show_sortby": "Show Sort By",

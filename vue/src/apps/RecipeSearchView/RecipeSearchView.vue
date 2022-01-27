@@ -817,6 +817,7 @@ export default {
                         this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
                         this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
                     }
+                    console.log(result.data)
                 })
                 .then(() => {
                     this.$nextTick(function () {
@@ -1065,14 +1066,15 @@ export default {
         },
         saveSearch: function () {
             let filtername = window.prompt(this.$t("save_filter"), this.$t("filter_name"))
+            let search = this.buildParams(false)
+            ;["page", "pageSize"].forEach((key) => {
+                delete search[key]
+            })
             let params = {
                 name: filtername,
-                search: JSON.stringify(this.buildParams(false)),
+                search: JSON.stringify(search),
             }
-            let delete_keys = ["page", "pageSize"]
-            delete_keys.forEach((key) => {
-                delete params.search[key]
-            })
+
             this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
                 .then((result) => {
                     this.search.search_filter = result.data

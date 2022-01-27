@@ -3134,21 +3134,18 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     shopping_add_onhand?: boolean;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> created CustomFilter model and api
     /**
      * 
      * @type {boolean}
      * @memberof UserPreference
      */
     left_handed?: boolean;
-<<<<<<< HEAD
-=======
->>>>>>> complex keyword filters
-=======
->>>>>>> created CustomFilter model and api
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    food_children_exist?: string;
 }
 
 /**

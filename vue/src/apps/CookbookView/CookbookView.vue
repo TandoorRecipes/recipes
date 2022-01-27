@@ -58,13 +58,13 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import { ApiApiFactory } from "@/utils/openapi/api"
 import CookbookSlider from "@/components/CookbookSlider"
 import LoadingSpinner from "@/components/LoadingSpinner"
-import { StandardToasts } from "@/utils/utils"
+import { StandardToasts, ApiMixin } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "CookbookView",
-    mixins: [],
+    mixins: [ApiMixin],
     components: { LoadingSpinner, CookbookSlider },
     data() {
         return {
@@ -105,8 +105,24 @@ export default {
             let apiClient = new ApiApiFactory()
 
             this.current_book = book
+            const book_contents = this.cookbooks.filter((b) => {
+                return b.id == book
+            })[0]
+
             apiClient.listRecipeBookEntrys({ query: { book: book } }).then((result) => {
                 this.recipes = result.data
+                if (book_contents.filter) {
+                    var promises = []
+                    var page = 1
+                    this.appendRecipeFilter(page, book_contents).then((count) => {
+                        while (count.total > 0) {
+                            page++
+                            promises.push(this.appendRecipeFilter(page, book_contents))
+                            count.total = count.total - count.page
+                        }
+                        Promise.all(promises).then()
+                    })
+                }
                 this.loading = false
             })
         },
@@ -123,6 +139,22 @@ export default {
                 .catch((error) => {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
+        },
+        appendRecipeFilter: function (page, book) {
+            let params = { page: page, options: { query: { filter: book.filter.id } } }
+            return this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((results) => {
+                let recipes = results.data.results.map((x) => {
+                    return {
+                        id: x.id,
+                        book: book.id,
+                        book_content: book,
+                        recipe: x.id,
+                        recipe_content: x,
+                    }
+                })
+                this.recipes.push(...recipes)
+                return { total: results.data.count - results.data.results.length, page: results.data.results.length }
+            })
         },
     },
     directives: {
