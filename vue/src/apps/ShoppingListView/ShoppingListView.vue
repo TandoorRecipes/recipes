@@ -922,8 +922,8 @@ export default {
         this.$nextTick(function () {
             if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
                 this.entry_mode_simple = this.$cookies.get(SETTINGS_COOKIE_NAME)
-                this.selected_supermarket = localStorage.getItem("shopping_v2_selected_supermarket") || undefined
             }
+            this.selected_supermarket = localStorage.getItem("shopping_v2_selected_supermarket") || undefined
         })
     },
     methods: {
