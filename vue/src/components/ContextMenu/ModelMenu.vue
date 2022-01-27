@@ -19,9 +19,9 @@
 
             <b-dropdown-item :href="resolveDjangoUrl('list_user_file')"> <i class="fas fa-file fa-fw"></i> {{ $t(Models["USERFILE"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_step')"> <i class="fas fa-puzzle-piece fa-fw"></i>{{ Models["STEP"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_step')"> <i class="fas fa-puzzle-piece fa-fw"></i>{{ $t(Models["STEP"].name) }} </b-dropdown-item>
 
-            <b-dropdown-item :href="resolveDjangoUrl('list_custom_filter')"> <i class="fas fa-filter fa-fw"></i>{{ Models["CUSTOM_FILTER"].name }} </b-dropdown-item>
+            <b-dropdown-item :href="resolveDjangoUrl('list_custom_filter')"> <i class="fas fa-filter fa-fw"></i>{{ $t(Models["CUSTOM_FILTER"].name) }} </b-dropdown-item>
         </b-dropdown>
     </span>
 </template>
