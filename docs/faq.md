@@ -18,6 +18,17 @@ Open Tandoor, open the menu behind the three vertical dots at the top right, sel
 #### Microsoft Edge
 Open Tandoor, open the menu behind the three horizontal dots at the top right, select `Apps > Install Tandoor Recipes`
 
+## Why is Tandoor not working correctly?
+If you just set up your Tandoor instance and you're having issues like...
+
+- Links not working
+- CSRF errors
+- CORS errors
+- No recipes are loading
+
+... then make sure, that you have set [all required headers](install/docker.md#required-headers) in your reverse proxy correctly.
+If that doesn't fix it, you can also refer to the appropriate sub section in the [reverse proxy documentation](install/docker.md#reverse-proxy) and verify your general webserver configuration.
+
 ## Why am I getting CSRF Errors?
 If you are getting CSRF Errors this is most likely due to a reverse proxy not passing the correct headers.
 
