@@ -106,6 +106,7 @@ export default {
             deep: true,
         },
         servings: function (newVal) {
+            console.log(newVal)
             this.recipe_servings = parseInt(newVal)
         },
     },
