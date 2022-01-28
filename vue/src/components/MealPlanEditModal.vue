@@ -81,7 +81,8 @@
                                 </b-input-group>
                             </div>
                             <div class="col-lg-6 d-none d-lg-block d-xl-block">
-                                <recipe-card :recipe="entryEditing.recipe" v-if="entryEditing.recipe != null" :detailed="false"></recipe-card>
+                                <recipe-card v-if="entryEditing.recipe && !entryEditing.addshopping" :recipe="entryEditing.recipe" :detailed="false"></recipe-card>
+                                <ingredients-card v-if="entryEditing.recipe && entryEditing.addshopping" :recipe="entryEditing.recipe" :detailed="false"></ingredients-card>
                             </div>
                         </div>
                         <div class="row mt-3 mb-3">
@@ -104,7 +105,6 @@ import GenericMultiselect from "@/components/GenericMultiselect"
 import { ApiMixin, getUserPreference } from "@/utils/utils"
 
 const { ApiApiFactory } = require("@/utils/openapi/api")
-
 const { StandardToasts } = require("@/utils/utils")
 
 Vue.use(BootstrapVue)
@@ -130,6 +130,7 @@ export default {
     components: {
         GenericMultiselect,
         RecipeCard: () => import("@/components/RecipeCard.vue"),
+        IngredientsCard: () => import("@/components/IngredientsCard.vue"),
     },
     data() {
         return {

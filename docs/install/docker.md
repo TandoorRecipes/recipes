@@ -60,6 +60,7 @@ The main, and also recommended, installation option is to install this applicati
 ### Plain
 
 This configuration exposes the application through an nginx web server on port 80 of your machine.
+Be aware that having some other web server or container running on your host machine on port 80 will block this from working.
 
 ```shell
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
@@ -72,6 +73,8 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/d
 ### Reverse Proxy
 
 Most deployments will likely use a reverse proxy.
+
+If your reverse proxy is not listed here, please refer to [Others](https://docs.tandoor.dev/install/docker/#others).
 
 #### Traefik
 
@@ -135,27 +138,13 @@ In both cases, also make sure to mount `/media/` in your swag container to point
 
 Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
 
-#### Nginx Swag by LinuxServer
+For step-by-step instructions to set this up from scratch, see [this example](swag.md).
 
-[This container](https://github.com/linuxserver/docker-swag) is an all in one solution created by LinuxServer.io
+### Others
 
-It also contains templates for popular apps, including Tandoor Recipes, so you don't have to manually configure nginx and discard the template provided in Tandoor repo. Tandoor config is called `recipes.subdomain.conf.sample` which you can adapt for your instance
+If you use none of the above mentioned reverse proxies or want to use an existing one on your host machine (like a local nginx or Caddy), simply use the [PLAIN](https://docs.tandoor.dev/install/docker/#plain) setup above and change the outbound port to one of your liking.
 
-If you're running Swag on the default port, you'll just need to change the container name to yours.
-
-If your running Swag on a custom port, some headers must be changed. To do this,
-
--   Create a copy of `proxy.conf`
--   Replace `proxy_set_header X-Forwarded-Host $host;` and `proxy_set_header Host $host;` to
-    -   `proxy_set_header X-Forwarded-Host $http_host;` and `proxy_set_header Host $http_host;`
--   Update `recipes.subdomain.conf` to use the new file
--   Restart the linuxserver/swag container and Recipes will work
-
-More information [here](https://github.com/TandoorRecipes/recipes/issues/959#issuecomment-962648627).
-
-In both cases, also make sure to mount `/media/` in your swag container to point to your Tandoor Recipes Media directory.
-
-Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
+An example port config (inside the respective docker-compose.yml) would be: `8123:80` instead of the `80:80` or if you want to be sure, that Tandoor is **just** accessible via your proxy and don't wanna bother with your firewall, then `127.0.0.1:8123:80` is a viable option too.
 
 ## Additional Information
 

@@ -26,10 +26,20 @@
                 </a>
 
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" onclick="window.print()"><i class="fas fa-print fa-fw"></i> {{ $t("Print") }}</button>
+                    <button class="dropdown-item" onclick="window.print()">
+                        <i class="fas fa-print fa-fw"></i>
+                        {{ $t("Print") }}
+                    </button>
                 </a>
 
                 <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t("Export") }}</a>
+
+                <a href="javascript:void(0);">
+                    <button class="dropdown-item" @click="pinRecipe()">
+                        <i class="fas fa-thumbtack fa-fw"></i>
+                        {{ $t("Pin") }}
+                    </button>
+                </a>
 
                 <a href="javascript:void(0);">
                     <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i class="fas fa-share-alt fa-fw"></i> {{ $t("Share") }}</button>
@@ -38,7 +48,8 @@
         </div>
 
         <cook-log :recipe="recipe" :modal_id="modal_id"></cook-log>
-        <add-recipe-to-book :recipe="recipe" :modal_id="modal_id"></add-recipe-to-book>
+        <add-recipe-to-book :recipe="recipe" :modal_id="modal_id" :entryEditing_inital_servings="servings_value"></add-recipe-to-book>
+        <shopping-modal :recipe="recipe" :servings="servings_value" :modal_id="modal_id" />
 
         <b-modal :id="`modal-share-link_${modal_id}`" v-bind:title="$t('Share')" hide-footer>
             <div class="row">
@@ -46,7 +57,7 @@
                     <label v-if="recipe_share_link !== undefined">{{ $t("Public share link") }}</label>
                     <input ref="share_link_ref" class="form-control" v-model="recipe_share_link" />
                     <b-button class="mt-2 mb-3 d-none d-md-inline" variant="secondary" @click="$bvModal.hide(`modal-share-link_${modal_id}`)">{{ $t("Close") }} </b-button>
-                    <b-button class="mt-2 mb-3 ml-md-2" variant="primary" @click="copyShareLink()">{{ $t("Copy") }}</b-button>
+                    <b-button class="mt-2 mb-3 ml-md-2" variant="primary" @click="copyShareLink()">{{ $t("Copy") }} </b-button>
                     <b-button class="mt-2 mb-3 ml-2 float-right" variant="success" @click="shareIntend()">{{ $t("Share") }} <i class="fa fa-share-alt"></i></b-button>
                 </div>
             </div>
@@ -55,14 +66,13 @@
         <meal-plan-edit-modal
             :entry="entryEditing"
             :entryEditing_initial_recipe="[recipe]"
-            :entryEditing_inital_servings="recipe.servings"
+            :entryEditing_inital_servings="servings_value"
             :entry-editing_initial_meal_type="[]"
             @save-entry="saveMealPlan"
             :modal_id="`modal-meal-plan_${modal_id}`"
             :allow_delete="false"
             :modal_title="$t('Create_Meal_Plan_Entry')"
         ></meal-plan-edit-modal>
-        <shopping-modal :recipe="recipe" :servings="servings_value" :modal_id="modal_id" />
     </div>
 </template>
 
@@ -120,7 +130,21 @@ export default {
     mounted() {
         this.servings_value = this.servings === -1 ? this.recipe.servings : this.servings
     },
+    watch: {
+        recipe: {
+            handler() {},
+            deep: true,
+        },
+        servings: function (newVal) {
+            this.servings_value = parseInt(newVal)
+        },
+    },
     methods: {
+        pinRecipe: function () {
+            let pinnedRecipes = JSON.parse(localStorage.getItem("pinned_recipes")) || []
+            pinnedRecipes.push({ id: this.recipe.id, name: this.recipe.name })
+            localStorage.setItem("pinned_recipes", JSON.stringify(pinnedRecipes))
+        },
         saveMealPlan: function (entry) {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
 

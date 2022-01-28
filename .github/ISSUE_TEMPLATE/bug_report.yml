@@ -1,0 +1,64 @@
+name: Bug Report
+description: "Create a report to help us improve"
+#title: ""
+#labels: ["Bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: version
+    attributes:
+      label: Tandoor Version
+      description: "What version of Tandoor are you using? (can be found on the system page since v0.8.4)"
+    validations:
+      required: true
+  - type: dropdown
+    id: setup
+    attributes:
+      label: Setup
+      description: "How is your Tandoor instance set up?"
+      options:
+        - Docker / Docker-Compose
+        - Unraid
+        - Synology
+        - Kubernetes
+        - Manual Setup
+        - Others (please state below)
+    validations:
+      required: true
+  - type: dropdown
+    id: reverse-proxy
+    attributes:
+      label: "Reverse Proxy"
+      description: "What reverse proxy do you use with Tandoor?"
+      options:
+        - No reverse proxy
+        - jwilder's nginx proxy
+        - Nginx Proxy Manager (NPM)
+        - SWAG
+        - Caddy
+        - Traefik
+        - Apache2
+        - Others (please state below)
+    validations:
+      required: true
+  - type: input
+    id: other
+    attributes:
+      label: Other
+      description: "In case you chose 'Others' above, please provide more info here."
+  - type: textarea
+    id: bug-descr
+    attributes:
+      label: Bug description
+      description: "Please accurately describe the bug you encountered."
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Please copy and paste any relevant logs. This will be automatically formatted into code, so no need for backticks.
+      render: shell

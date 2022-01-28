@@ -24,6 +24,11 @@
                     <table class="table table-sm">
                         <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                         <template v-for="s in steps">
+                            <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && !add_shopping_mode">
+                                <td colspan="5">
+                                    <b>{{ s.name }}</b>
+                                </td>
+                            </tr>
                             <template v-for="i in s.ingredients">
                                 <ingredient-component
                                     :ingredient="i"
@@ -54,6 +59,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import IngredientComponent from "@/components/IngredientComponent"
 import { ApiMixin, StandardToasts } from "@/utils/utils"
+
 Vue.use(BootstrapVue)
 
 export default {
@@ -87,7 +93,12 @@ export default {
             // returns open shopping lists associated with this recipe
             let recipe_in_list = this.shopping_list
                 .map((x) => {
-                    return { value: x?.list_recipe, text: x?.recipe_mealplan?.name, recipe: x?.recipe_mealplan?.recipe ?? 0, servings: x?.recipe_mealplan?.servings }
+                    return {
+                        value: x?.list_recipe,
+                        text: x?.recipe_mealplan?.name,
+                        recipe: x?.recipe_mealplan?.recipe ?? 0,
+                        servings: x?.recipe_mealplan?.servings,
+                    }
                 })
                 .filter((x) => x?.recipe == this.recipe)
             return [...new Map(recipe_in_list.map((x) => [x["value"], x])).values()] //  filter to unique lists

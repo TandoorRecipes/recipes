@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <span v-if="!item.ignore_shopping">
         <b-button class="btn text-decoration-none px-1 border-0" variant="link" :id="`shopping${item.id}`" @click="addShopping()">
             <i
                 class="fas"
@@ -59,7 +59,7 @@ export default {
         addShopping() {
             if (this.shopping) {
                 return
-            } // if item already in shopping list, excution handled after confirmation
+            } // if item already in shopping list, execution handled after confirmation
             let params = {
                 id: this.item.id,
                 amount: 1,

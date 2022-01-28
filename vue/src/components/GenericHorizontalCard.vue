@@ -8,12 +8,12 @@
             :class="{ 'border border-primary': over, shake: isError }"
             :style="{ 'cursor:grab': useDrag }"
             :draggable="useDrag"
-            @[useDrag&&`dragover`].prevent
-            @[useDrag&&`dragenter`].prevent
-            @[useDrag&&`dragstart`]="handleDragStart($event)"
-            @[useDrag&&`dragenter`]="handleDragEnter($event)"
-            @[useDrag&&`dragleave`]="handleDragLeave($event)"
-            @[useDrag&&`drop`]="handleDragDrop($event)"
+            @[useDrag&&`dragover`||``].prevent
+            @[useDrag&&`dragenter`||``].prevent
+            @[useDrag&&`dragstart`||``]="handleDragStart($event)"
+            @[useDrag&&`dragenter`||``]="handleDragEnter($event)"
+            @[useDrag&&`dragleave`||``]="handleDragLeave($event)"
+            @[useDrag&&`drop`||``]="handleDragDrop($event)"
         >
             <b-row no-gutters>
                 <b-col no-gutters class="col-sm-3">
@@ -27,6 +27,7 @@
                             <div class="m-0 text-truncate small text-muted" v-if="getFullname">{{ getFullname }}</div>
 
                             <generic-pill v-for="x in itemTags" :key="x.field" :item_list="itemList(x)" :label="x.label" :color="x.color" />
+
                             <generic-ordered-pill
                                 v-for="x in itemOrderedTags"
                                 :key="x.field"
@@ -37,6 +38,7 @@
                                 :item="item"
                                 @finish-action="finishAction"
                             />
+
                             <div class="mt-auto mb-1" align="right">
                                 <span v-if="item[child_count]" class="mx-2 btn btn-link btn-sm" style="z-index: 800" v-on:click="$emit('item-action', { action: 'get-children', source: item })">
                                     <div v-if="!item.show_children">{{ item[child_count] }} {{ itemName }}</div>
@@ -238,7 +240,6 @@ export default {
                 })
                 popper.update()
                 this.over = false
-                this.$emit({ action: "drop", target: this.item, source: this.source })
             } else {
                 this.isError = true
             }

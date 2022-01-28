@@ -34,7 +34,7 @@ def has_group_permission(user, groups):
     """
     Tests if a given user is member of a certain group (or any higher group)
     Superusers always bypass permission checks.
-    Unauthenticated users cant be member of any group thus always return false.
+    Unauthenticated users can't be member of any group thus always return false.
     :param user: django auth user object
     :param groups: list or tuple of groups the user should be checked for
     :return: True if user is in allowed groups, false otherwise
@@ -206,7 +206,7 @@ class CustomIsShared(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # temporary hack to make old shopping list work with new shopping list
-        if obj.__class__.__name__ == 'ShoppingList':
+        if obj.__class__.__name__ in ['ShoppingList', 'ShoppingListEntry']:
             return is_object_shared(request.user, obj) or obj.created_by in list(request.user.get_shopping_share())
         return is_object_shared(request.user, obj)
 
