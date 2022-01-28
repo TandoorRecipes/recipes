@@ -10,7 +10,6 @@
     <b-form-input
       style="text-align: right; border-width: 0px; border: none; padding: 0px; padding-left: 0.5vw; padding-right: 8px; width: 50px"
       variant="outline-primary"
-      :id="id"
       :size="size"
       :value="value"
       type="number"      
