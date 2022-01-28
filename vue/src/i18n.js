@@ -19,5 +19,6 @@ function loadLocaleMessages () {
 export default new VueI18n({
   locale: process.env.VUE_APP_I18N_LOCALE || 'en',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+  silentTranslationWarn: true, //TODO fallback war seems to not work, try in next version https://kazupon.github.io/vue-i18n/api/#constructor-options
   messages: loadLocaleMessages()
 })

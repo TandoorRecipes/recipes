@@ -38,6 +38,7 @@ def shopping_helper(qs, request):
     return qs.order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
 
 
+# TODO refactor as class
 def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None, append=False):
     """
     Creates ShoppingListRecipe and associated ShoppingListEntrys from a recipe or a meal plan with a recipe
@@ -78,7 +79,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
     elif ingredients:
         ingredients = Ingredient.objects.filter(pk__in=ingredients, space=space)
     else:
-        ingredients = Ingredient.objects.filter(step__recipe=r, space=space)
+        ingredients = Ingredient.objects.filter(step__recipe=r,  food__ignore_shopping=False, space=space)
 
         if exclude_onhand := created_by.userpreference.mealplan_autoexclude_onhand:
             ingredients = ingredients.exclude(food__onhand_users__id__in=[x.id for x in shared_users])
@@ -100,9 +101,9 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
                 if ingredients.filter(food__recipe=x).exists():
                     for ing in ingredients.filter(food__recipe=x):
                         if exclude_onhand:
-                            x_ing = Ingredient.objects.filter(step__recipe=x,  space=space).exclude(food__onhand_users__id__in=[x.id for x in shared_users])
+                            x_ing = Ingredient.objects.filter(step__recipe=x,  food__ignore_shopping=False, space=space).exclude(food__onhand_users__id__in=[x.id for x in shared_users])
                         else:
-                            x_ing = Ingredient.objects.filter(step__recipe=x, space=space)
+                            x_ing = Ingredient.objects.filter(step__recipe=x,  food__ignore_shopping=False, space=space).exclude(food__ignore_shopping=True)
                         for i in [x for x in x_ing]:
                             ShoppingListEntry.objects.create(
                                 list_recipe=list_recipe,
@@ -125,7 +126,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
         add_ingredients = set(add_ingredients) - set(existing_list.values_list('ingredient__id', flat=True))
     add_ingredients = Ingredient.objects.filter(id__in=add_ingredients, space=space)
 
-    # if servings have changed, update the ShoppingListRecipe and existing Entrys
+    # if servings have changed, update the ShoppingListRecipe and existing Entries
     if servings <= 0:
         servings = 1
 
@@ -137,7 +138,7 @@ def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None
             sle.amount = sle.ingredient.amount * Decimal(servings_factor)
             sle.save()
 
-    # add any missing Entrys
+    # add any missing Entries
     for i in [x for x in add_ingredients if x.food]:
 
         ShoppingListEntry.objects.create(

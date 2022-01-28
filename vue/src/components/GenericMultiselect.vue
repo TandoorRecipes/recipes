@@ -6,6 +6,8 @@
         :clear-on-select="true"
         :hide-selected="multiple"
         :preserve-search="true"
+        :internal-search="false"
+        :limit="limit"
         :placeholder="lookupPlaceholder"
         :label="label"
         track-by="id"
@@ -87,8 +89,9 @@ export default {
         search: function (query) {
             let options = {
                 page: 1,
-                pageSize: 10,
+                pageSize: this.limit,
                 query: query,
+                limit: this.limit,
             }
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
@@ -113,7 +116,7 @@ export default {
         },
         addNew(e) {
             this.$emit("new", e)
-            // could refactor as Promise - seems unecessary
+            // could refactor as Promise - seems unnecessary
             setTimeout(() => {
                 this.search("")
             }, 750)

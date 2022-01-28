@@ -72,7 +72,7 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
         return
 
     inherit = inherit.values_list('field', flat=True)
-    # apply changes from parent to instance for each inheritted field
+    # apply changes from parent to instance for each inherited field
     if instance.parent and inherit.count() > 0:
         parent = instance.get_parent()
         if 'ignore_shopping' in inherit:
@@ -121,11 +121,3 @@ def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs
             'servings': instance.servings
         }
         list_recipe = list_from_recipe(**kwargs)
-
-
-# user = self.context['request'].user
-#       if user.userpreference.shopping_add_onhand:
-#            if checked := validated_data.get('checked', None):
-#                 instance.food.onhand_users.add(*user.userpreference.shopping_share.all(), user)
-#             elif checked == False:
-#                 instance.food.onhand_users.remove(*user.userpreference.shopping_share.all(), user)

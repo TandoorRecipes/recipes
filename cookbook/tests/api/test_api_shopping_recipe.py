@@ -200,7 +200,7 @@ def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
         food = Food.objects.get(id=ingredients[2].food.id)
         food.onhand_users.add(user)
         food.save()
-        food = recipe.steps.filter(type=Step.RECIPE).first().step_recipe.steps.first().ingredients.first().food
+        food = recipe.steps.exclude(step_recipe=None).first().step_recipe.steps.first().ingredients.first().food
         food = Food.objects.get(id=food.id)
         food.onhand_users.add(user)
         food.save()

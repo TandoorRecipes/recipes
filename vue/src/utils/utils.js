@@ -156,7 +156,7 @@ export function getUserPreference(pref = undefined) {
         return undefined
     }
     if (pref) {
-        return user_preference[pref]
+        return user_preference?.[pref]
     }
     return user_preference
 }
@@ -389,6 +389,8 @@ export function getForm(model, action, item1, item2) {
         }
         if (value?.form_field) {
             value["value"] = item1?.[value?.field] ?? undefined
+            value["help"] = item1?.[value?.help_text_field] ?? value?.help_text ?? undefined
+            value["subtitle"] = item1?.[value?.subtitle_field] ?? value?.subtitle ?? undefined
             form.fields.push({
                 ...value,
                 ...{
@@ -508,32 +510,48 @@ const specialCases = {
                 // delete, update or change all of the category/relations
                 let id = result.id
                 let existing_categories = result.category_to_supermarket
-                let updated_categories = options.category_to_supermarket
+                let updated_categories = options.category_to_supermarket.map((x) => {
+                    return {
+                        ...x,
+                        category: {
+                            id: x?.category?.id ?? x.id,
+                            name: x?.category?.name ?? x.name,
+                        },
+                        id: x?.category_to_supermarket__id,
+                        order: x?.order ?? x?.category_to_supermarket__order,
+                    }
+                })
 
                 let promises = []
                 // if the 'category.name' key does not exist on the updated_categories, the categories were not updated
-                if (updated_categories?.[0]?.category?.name) {
-                    // list of category relationship ids that are not part of the updated supermarket
-                    let removed_categories = existing_categories.filter((x) => !updated_categories.map((x) => x.category.id).includes(x.category.id))
-                    let added_categories = updated_categories.filter((x) => !existing_categories.map((x) => x.category.id).includes(x.category.id))
-                    let changed_categories = updated_categories.filter((x) => existing_categories.map((x) => x.category.id).includes(x.category.id))
 
-                    removed_categories.forEach((x) => {
-                        promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, { id: x.id }))
-                    })
-                    let item = { supermarket: id }
-                    added_categories.forEach((x) => {
-                        item.order = x.order
-                        item.category = { id: x.category.id, name: x.category.name }
-                        promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item))
-                    })
-                    changed_categories.forEach((x) => {
-                        item.id = x?.id ?? existing_categories.find((y) => y.category.id === x.category.id).id
-                        item.order = x.order
-                        item.category = { id: x.category.id, name: x.category.name }
-                        promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item))
-                    })
-                }
+                // list of category relationship ids that are not part of the updated supermarket
+                let removed_categories = existing_categories.filter((x) => !updated_categories.map((x) => x.category.id).includes(x.category.id))
+                let added_categories = updated_categories.filter((x) => !existing_categories.map((x) => x.category.id).includes(x.category.id))
+                let changed_categories = updated_categories.filter((x) => existing_categories.map((x) => x.category.id).includes(x.category.id))
+                let order = Math.max(...existing_categories.map((x) => x?.order ?? 0), ...updated_categories.map((x) => x?.order ?? 0), 0) + 1
+
+                removed_categories.forEach((x) => {
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, { id: x.id }))
+                })
+                let item = { supermarket: id }
+                added_categories.forEach((x) => {
+                    item.order = x?.order ?? order
+                    if (!x?.order) {
+                        order = order + 1
+                    }
+                    item.category = { id: x.category.id, name: x.category.name }
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item))
+                })
+                changed_categories.forEach((x) => {
+                    item.id = x?.id ?? existing_categories.find((y) => y.category.id === x.category.id).id
+                    item.order = x?.order ?? order
+                    if (!x?.order) {
+                        order = order + 1
+                    }
+                    item.category = { id: x.category.id, name: x.category.name }
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item))
+                })
 
                 return Promise.all(promises).then(() => {
                     // finally get and return the Supermarket which everything downstream is expecting
