@@ -25,7 +25,7 @@
                                 <b-form-group>
                                     <generic-multiselect
                                         @change="selectRecipe"
-                                        :initial_selection="entryEditing_initial_recipe"
+                                        :initial_single_selection="entryEditing.recipe"
                                         :label="'name'"
                                         :model="Models.RECIPE"
                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
@@ -45,7 +45,7 @@
                                         v-bind:placeholder="$t('Meal_Type')"
                                         :limit="10"
                                         :multiple="false"
-                                        :initial_selection="entryEditing_initial_meal_type"
+                                        :initial_single_selection="entryEditing.meal_type"
                                         :allow_create="true"
                                         :create_placeholder="$t('Create_New_Meal_Type')"
                                         @new="createMealType"
@@ -81,8 +81,7 @@
                                 </b-input-group>
                             </div>
                             <div class="col-lg-6 d-none d-lg-block d-xl-block">
-                                <recipe-card v-if="entryEditing.recipe && !entryEditing.addshopping" :recipe="entryEditing.recipe" :detailed="false"></recipe-card>
-                                <ingredients-card v-if="entryEditing.recipe && entryEditing.addshopping" :recipe="entryEditing.recipe" :detailed="false"></ingredients-card>
+                                <recipe-card v-if="entryEditing.recipe" :recipe="entryEditing.recipe" :detailed="false"></recipe-card>
                             </div>
                         </div>
                         <div class="row mt-3 mb-3">
@@ -113,8 +112,6 @@ export default {
     name: "MealPlanEditModal",
     props: {
         entry: Object,
-        entryEditing_initial_recipe: Array,
-        entryEditing_initial_meal_type: Array,
         entryEditing_inital_servings: Number,
         modal_title: String,
         modal_id: {
@@ -130,7 +127,6 @@ export default {
     components: {
         GenericMultiselect,
         RecipeCard: () => import("@/components/RecipeCard.vue"),
-        IngredientsCard: () => import("@/components/IngredientsCard.vue"),
     },
     data() {
         return {
@@ -144,11 +140,19 @@ export default {
         entry: {
             handler() {
                 this.entryEditing = Object.assign({}, this.entry)
+                console.log("entryEditing", this.entryEditing)
                 if (this.entryEditing_inital_servings) {
                     this.entryEditing.servings = this.entryEditing_inital_servings
                 }
             },
             deep: true,
+        },
+        entryEditing: {
+            handler(newVal) {},
+            deep: true,
+        },
+        entryEditing_inital_servings: function (newVal) {
+            this.entryEditing.servings = newVal
         },
     },
     mounted: function () {},

@@ -13,7 +13,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.fields import empty
 
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.shopping_helper import list_from_recipe
+from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
                              NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
@@ -660,7 +660,8 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         validated_data['created_by'] = self.context['request'].user
         mealplan = super().create(validated_data)
         if self.context['request'].data.get('addshopping', False):
-            list_from_recipe(mealplan=mealplan, servings=validated_data['servings'], created_by=validated_data['created_by'], space=validated_data['space'])
+            SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
+            SLR.create(mealplan=mealplan, servings=validated_data['servings'])
         return mealplan
 
     class Meta:
@@ -694,12 +695,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
         if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
-            list_from_recipe(
-                list_recipe=instance,
-                servings=validated_data['servings'],
-                created_by=self.context['request'].user,
-                space=self.context['request'].space
-            )
+            SLR = RecipeShoppingEditor(user=self.context['request'].user, space=self.context['request'].space)
+            SLR.edit_servings(servings=validated_data['servings'], id=instance.id)
         return super().update(instance, validated_data)
 
     class Meta:

@@ -146,7 +146,7 @@ export default {
         saveShopping: function (del_shopping = false) {
             let servings = this.servings
             if (del_shopping) {
-                servings = 0
+                servings = -1
             }
             let params = {
                 id: this.recipe,

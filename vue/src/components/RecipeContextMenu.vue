@@ -64,8 +64,8 @@
         </b-modal>
 
         <meal-plan-edit-modal
+            v-if="entryEditing"
             :entry="entryEditing"
-            :entryEditing_initial_recipe="[recipe]"
             :entryEditing_inital_servings="servings_value"
             :entry-editing_initial_meal_type="[]"
             @save-entry="saveMealPlan"
