@@ -156,6 +156,32 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1):
     # confirm shared user sees their list and the list that's shared with them
     assert len(json.loads(r.content)) == count
 
+    # test shared user can mark complete
+    x = shared_client.patch(
+        reverse(DETAIL_URL, args={sle[0].id}),
+        {'checked': True},
+        content_type='application/json'
+    )
+    r = json.loads(shared_client.get(reverse(LIST_URL)).content)
+    assert len(r) == count
+    # count unchecked entries
+    if not x.status_code == 404:
+        count = count-1
+    assert [x['checked'] for x in r].count(False) == count
+    # test shared user can delete
+    x = shared_client.delete(
+        reverse(
+            DETAIL_URL,
+            args={sle[1].id}
+        )
+    )
+    r = json.loads(shared_client.get(reverse(LIST_URL)).content)
+    assert len(r) == count
+    # count unchecked entries
+    if not x.status_code == 404:
+        count = count-1
+    assert [x['checked'] for x in r].count(False) == count
+
 
 def test_completed(sle, u1_s1):
     # check 1 entry
