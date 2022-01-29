@@ -644,7 +644,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     schema = QueryParamAutoSchema()
 
     def get_queryset(self):
-
         if self.detail:
             self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
@@ -718,7 +717,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ingredients = request.data.get('ingredients', None)
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
-        SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj)
+        mealplan = request.data.get('mealplan', None)
+        SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj, mealplan=mealplan)
 
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
         http_status = status.HTTP_204_NO_CONTENT

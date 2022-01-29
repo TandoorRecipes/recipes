@@ -35,7 +35,7 @@ export default {
             // this.Models and this.Actions inherited from ApiMixin
             loading: false,
             objects: [],
-            selected_objects: [],
+            selected_objects: undefined,
         }
     },
     props: {
@@ -80,7 +80,7 @@ export default {
             this.selected_objects = newVal
         },
         clear: function (newVal, oldVal) {
-            if (this.multiple) {
+            if (this.multiple || !this.initial_single_selection) {
                 this.selected_objects = []
             } else {
                 this.selected_objects = undefined
@@ -100,10 +100,10 @@ export default {
             return this.placeholder || this.model.name || this.$t("Search")
         },
         nothingSelected() {
-            if (this.multiple) {
+            if (this.multiple || !this.initial_single_selection) {
                 return this.selected_objects.length === 0 && this.initial_selection.length === 0
             } else {
-                return !this.selected_objects && !this.initial_selection
+                return !this.selected_objects && !this.initial_single_selection
             }
         },
     },

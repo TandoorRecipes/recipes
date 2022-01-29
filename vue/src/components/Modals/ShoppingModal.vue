@@ -80,6 +80,7 @@ export default {
         recipe: { required: true, type: Object },
         servings: { type: Number, default: undefined },
         modal_id: { required: true, type: Number },
+        mealplan: { type: Number, default: undefined },
     },
     data() {
         return {
@@ -181,6 +182,7 @@ export default {
                 id: this.recipe.id,
                 ingredients: this.add_shopping,
                 servings: this.recipe_servings,
+                mealplan: this.mealplan,
             }
             let apiClient = new ApiApiFactory()
             apiClient
