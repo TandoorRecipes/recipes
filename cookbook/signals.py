@@ -6,8 +6,9 @@ from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import translation
+from django_scopes import scope
 
-from cookbook.helper.shopping_helper import list_from_recipe
+from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
                              ShoppingListEntry, Step)
@@ -104,20 +105,31 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
 
 @receiver(post_save, sender=MealPlan)
 def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs):
+    if not instance:
+        return
     user = instance.get_owner()
-    if not user.userpreference.mealplan_autoadd_shopping:
+    with scope(space=instance.space):
+        slr_exists = instance.shoppinglistrecipe_set.exists()
+
+    if not created and slr_exists:
+        for x in instance.shoppinglistrecipe_set.all():
+            # assuming that permissions checks for the MealPlan have happened upstream
+            if instance.servings != x.servings:
+                SLR = RecipeShoppingEditor(id=x.id, user=user, space=instance.space)
+                SLR.edit_servings(servings=instance.servings)
+                # list_recipe = list_from_recipe(list_recipe=x, servings=instance.servings, space=instance.space)
+    elif not user.userpreference.mealplan_autoadd_shopping or not instance.recipe:
         return
 
-    if not created and instance.shoppinglistrecipe_set.exists():
-        for x in instance.shoppinglistrecipe_set.all():
-            if instance.servings != x.servings:
-                list_recipe = list_from_recipe(list_recipe=x, servings=instance.servings, space=instance.space)
-    elif created:
+    if created:
         # if creating a mealplan - perform shopping list activities
-        kwargs = {
-            'mealplan': instance,
-            'space': instance.space,
-            'created_by': user,
-            'servings': instance.servings
-        }
-        list_recipe = list_from_recipe(**kwargs)
+        # kwargs = {
+        #     'mealplan': instance,
+        #     'space': instance.space,
+        #     'created_by': user,
+        #     'servings': instance.servings
+        # }
+        SLR = RecipeShoppingEditor(user=user, space=instance.space)
+        SLR.create(mealplan=instance, servings=instance.servings)
+
+        # list_recipe = list_from_recipe(**kwargs)
