@@ -45,6 +45,10 @@ The other common issue is that the recommended nginx container is removed from t
 If removed, the nginx webserver needs to be replaced by something else that servers the /mediafiles/ directory or 
 `GUNICORN_MEDIA` needs to be enabled to allow media serving by the application container itself.
 
+## Why is Tandoor not working on my Raspberry Pi?
+
+Please refer to [here](install/docker.md#setup-issues-on-raspberry-pi).
+
 ## How can I create users?
 To create a new user click on your name (top right corner) and select system. There click on invite links and create a new invite link.
 
