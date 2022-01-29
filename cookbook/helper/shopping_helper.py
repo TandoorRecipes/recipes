@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from cookbook.helper.HelperFunctions import Round, str2bool
-from cookbook.models import (Ingredient, ShoppingListEntry, ShoppingListRecipe,
+from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
                              SupermarketCategoryRelation)
 from recipes import settings
 
@@ -45,6 +45,8 @@ class RecipeShoppingEditor():
         self._kwargs = {**kwargs}
 
         self.mealplan = self._kwargs.get('mealplan', None)
+        if type(self.mealplan) in [int, float]:
+            self.mealplan = MealPlan.objects.filter(id=self.mealplan, space=self.space)
         self.id = self._kwargs.get('id', None)
 
         self._shopping_list_recipe = self.get_shopping_list_recipe(self.id, self.created_by, self.space)
@@ -55,6 +57,8 @@ class RecipeShoppingEditor():
             self.created_by = getattr(self._shopping_list_recipe.entries.first(), 'created_by', self.created_by)
 
         self.recipe = getattr(self._shopping_list_recipe, 'recipe', None) or self._kwargs.get('recipe', None) or getattr(self.mealplan, 'recipe', None)
+        if type(self.recipe) in [int, float]:
+            self.recipe = Recipe.objects.filter(id=self.recipe, space=self.space)
 
         try:
             self.servings = float(self._kwargs.get('servings', None))

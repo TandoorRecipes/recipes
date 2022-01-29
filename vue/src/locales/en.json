@@ -294,5 +294,6 @@
     "ignore_shopping_help": "Never add food to the shopping list (e.g. water)",
     "shopping_category_help": "Supermarkets can be ordered and filtered by Shopping Category according to the layout of the aisles.",
     "food_recipe_help": "Linking a recipe here will include the linked recipe in any other recipe that use this food",
-    "Foods":"Foods"
+    "Foods": "Foods",
+    "review_shopping": "Review shopping entries before saving"
 }
