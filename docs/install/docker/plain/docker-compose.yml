@@ -7,6 +7,11 @@ services:
       - ./postgresql:/var/lib/postgresql/data
     env_file:
       - ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U $$POSTGRES_USER -d $$POSTGRES_DB --list || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
 
   web_recipes:
     image: vabene1111/recipes
@@ -18,7 +23,8 @@ services:
       - nginx_config:/opt/recipes/nginx/conf.d
       - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
-      - db_recipes
+      db_recipes:
+        condition: service_healthy
 
   nginx_recipes:
     image: nginx:mainline-alpine
