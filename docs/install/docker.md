@@ -341,12 +341,7 @@ If you're having issues with installing Tandoor on your Raspberry Pi or similar 
 follow these instructions:
 
 - Stop all Tandoor containers (`docker-compose down`)
-- Retry by starting everything again (`docker-compose up -d`) (yes, seriously; if the database starts too slow, the start of the web container will fail)
-
-If this doesn't work (and you waited at least 30-60 seconds after you started the containers), try this:
-
-- Stop all Tandoor containers (`docker-compose down`)
 - Delete local database folder (usually 'postgresql' in the same folder as your 'docker-compose.yml' file)
 - Start Tandoor containers again (`docker-compose up -d`)
-- Wait for at least 30-60 seconds and then check if everything is working now
+- Wait for at least 30-60 seconds and then check if everything is working now (migrations can take quite some time!)
 - If not, check logs of the web_recipes container with `docker logs <container_name>` and make sure that all migrations are indeed already done
