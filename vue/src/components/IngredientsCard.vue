@@ -142,20 +142,12 @@ export default {
                     this.shopping_list = result.data
 
                     if (this.add_shopping_mode) {
-                        console.log("add shopping mode", this.recipe_list, this.steps)
                         if (this.recipe_list) {
                             this.$emit(
                                 "starting-cart",
                                 this.shopping_list.filter((x) => x.list_recipe === this.recipe_list).map((x) => x.ingredient)
                             )
                         } else {
-                            console.log(
-                                this.steps
-                                    .map((x) => x.ingredients)
-                                    .flat()
-                                    .filter((x) => x?.food?.food_onhand == false && x?.food?.ignore_shopping == false)
-                                    .map((x) => x.id)
-                            )
                             this.$emit(
                                 "starting-cart",
                                 this.steps

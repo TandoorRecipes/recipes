@@ -123,7 +123,7 @@
                                             <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
                                                 <!-- passing an array of values to the table grouped by Food -->
                                                 <transition-group name="slide-fade">
-                                                    <div v-for="(entries, x) in Object.entries(s)" :key="x">
+                                                    <div class="mx-4" v-for="(entries, x) in Object.entries(s)" :key="x">
                                                         <transition name="slide-fade" mode="out-in">
                                                             <ShoppingLineItem
                                                                 :entries="entries[1]"
@@ -563,6 +563,26 @@
                 </div>
             </b-tab>
         </b-tabs>
+
+        <transition name="slided-fade">
+            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
+                <div class="col-6">
+                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode"
+                        ><i class="fas fa-cart-plus"></i>
+                        {{ $t("New Entry") }}
+                    </a>
+                </div>
+                <div class="col-6">
+                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
+                        <template #button-content> <i class="fas fa-download"></i> {{ $t("Export") }} </template>
+                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
+                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
+                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')" icon="fas fa-clipboard-list" />
+                        <CopyToClipboard :items="csvData" :settings="settings" format="table" :label="$t('copy_markdown_table')" icon="fab fa-markdown" />
+                    </b-dropdown>
+                </div>
+            </div>
+        </transition>
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
@@ -643,25 +663,6 @@
                 </ContextMenuItem>
             </template>
         </ContextMenu>
-        <transition name="slided-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
-                <div class="col-6">
-                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode"
-                        ><i class="fas fa-cart-plus"></i>
-                        {{ $t("New Entry") }}
-                    </a>
-                </div>
-                <div class="col-6">
-                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
-                        <template #button-content> <i class="fas fa-download"></i> {{ $t("Export") }} </template>
-                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
-                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
-                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')" icon="fas fa-clipboard-list" />
-                        <CopyToClipboard :items="csvData" :settings="settings" format="table" :label="$t('copy_markdown_table')" icon="fab fa-markdown" />
-                    </b-dropdown>
-                </div>
-            </div>
-        </transition>
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe" />
     </div>
 </template>
@@ -914,6 +915,7 @@ export default {
         },
     },
     mounted() {
+        console.log(screen.height)
         this.getShoppingList()
         this.getSupermarkets()
         this.getShoppingCategories()
@@ -1102,7 +1104,6 @@ export default {
                     if (!autosync) {
                         if (results.data?.length) {
                             this.items = results.data
-                            console.log(this.items)
                         } else {
                             console.log("no data returned")
                         }
@@ -1483,7 +1484,7 @@ export default {
     font-size: 20px;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     #shoppinglist {
         display: flex;
         flex-direction: column;
@@ -1491,6 +1492,17 @@ export default {
         overflow-y: scroll;
         overflow-x: hidden;
         height: 65vh;
+        padding-right: 8px !important;
+    }
+}
+@media screen and (min-height: 700px) and (max-width: 768px) {
+    #shoppinglist {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 72vh;
         padding-right: 8px !important;
     }
 }
