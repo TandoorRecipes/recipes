@@ -1491,7 +1491,7 @@ export default {
         flex-grow: 1;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 65vh;
+        height: 6vh;
         padding-right: 8px !important;
     }
 }
