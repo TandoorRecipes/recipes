@@ -9,9 +9,9 @@ services:
       - ./.env
     healthcheck:
       test: ["CMD-SHELL", "psql -U $$POSTGRES_USER -d $$POSTGRES_DB --list || exit 1"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
+      interval: 4s
+      timeout: 1s
+      retries: 12
 
   web_recipes:
     image: vabene1111/recipes
