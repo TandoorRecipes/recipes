@@ -96,6 +96,7 @@ AUTH_LDAP_USER_SEARCH_FILTER_STR=(uid=%(user)s)
 AUTH_LDAP_USER_ATTR_MAP={'first_name': 'givenName', 'last_name': 'sn', 'email': 'mail'}
 AUTH_LDAP_ALWAYS_UPDATE_USER=1
 AUTH_LDAP_CACHE_TIMEOUT=3600
+AUTH_LDAP_TLS_CACERTFILE=/etc/ssl/certs/own-ca.pem
 ```
 
 ## Reverse Proxy Authentication
