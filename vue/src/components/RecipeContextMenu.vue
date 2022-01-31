@@ -201,7 +201,6 @@ export default {
             navigator.share(shareData)
         },
         addToShopping() {
-            console.log("opening shopping modal")
             this.$bvModal.show(`shopping_${this.modal_id}`)
         },
     },

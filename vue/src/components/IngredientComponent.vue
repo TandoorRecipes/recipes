@@ -7,7 +7,7 @@
         </template>
 
         <template v-else>
-            <td class="d-print-non" v-if="detailed && !add_shopping_mode" @click="done">
+            <td class="d-print-non" v-if="detailed && !show_shopping" @click="done">
                 <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
                 <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
             </td>
@@ -39,9 +39,9 @@
                     variant="link"
                     v-b-popover.hover.click.blur.html.top="{ title: ShoppingPopover, variant: 'outline-dark' }"
                     :class="{
-                        'text-success': shopping_status === true,
-                        'text-muted': shopping_status === false,
-                        'text-warning': shopping_status === null,
+                        'text-success': ingredient.shopping_status === true,
+                        'text-muted': ingredient.shopping_status === false,
+                        'text-warning': ingredient.shopping_status === null,
                     }"
                 />
                 <span v-if="!ingredient.food.ignore_shopping" class="px-2">
@@ -64,111 +64,49 @@ export default {
         ingredient: Object,
         ingredient_factor: { type: Number, default: 1 },
         detailed: { type: Boolean, default: true },
-        recipe_list: { type: Number }, // ShoppingListRecipe ID, to filter ShoppingStatus
         show_shopping: { type: Boolean, default: false },
-        add_shopping_mode: { type: Boolean, default: false },
-        shopping_list: {
-            type: Array,
-            default() {
-                return []
-            },
-        }, // list of unchecked ingredients in shopping list
     },
     mixins: [ResolveUrlMixin, ApiMixin],
     data() {
         return {
             checked: false,
-            shopping_status: null, // in any shopping list: boolean + null=in shopping list, but not for this recipe
-            shopping_items: [],
             shop: false, // in shopping list for this recipe: boolean
             dirty: undefined,
         }
     },
     watch: {
-        ShoppingListAndFilter: {
-            immediate: true,
-            handler(newVal, oldVal) {
-                // this whole sections is overly complicated
-                // trying to infer status of shopping for THIS recipe and THIS ingredient
-                // without know which recipe it is.
-                // If refactored:
-                // ## Needs to handle same recipe (multiple mealplans) being in shopping list multiple times
-                // ## Needs to handle same recipe being added as ShoppingListRecipe AND ingredients added from recipe as one-off
-
-                let filtered_list = this.shopping_list
-                // if a recipe list is provided, filter the shopping list
-                if (this.recipe_list) {
-                    filtered_list = filtered_list.filter((x) => x.list_recipe == this.recipe_list)
-                }
-                // how many ShoppingListRecipes are there for this recipe?
-                let count_shopping_recipes = [...new Set(filtered_list.filter((x) => x.list_recipe))].length
-                let count_shopping_ingredient = filtered_list.filter((x) => x.ingredient == this.ingredient.id).length
-
-                if (count_shopping_recipes >= 1 && this.recipe_list) {
-                    // This recipe is in the shopping list
-                    this.shop = false // don't check any boxes until user selects a shopping list to edit
-                    if (count_shopping_ingredient >= 1) {
-                        this.shopping_status = true // ingredient is in the shopping list - probably (but not definitely, this ingredient)
-                    } else if (this.ingredient?.food?.shopping) {
-                        this.shopping_status = null // food is in the shopping list, just not for this ingredient/recipe
-                    } else {
-                        // food is not in any shopping list
-                        this.shopping_status = false
-                    }
-                } else {
-                    // there are not recipes in the shopping list
-                    // set default value
-                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe && !this.ingredient?.food?.ignore_shopping
-                    this.$emit("add-to-shopping", { item: this.ingredient, add: this.shop })
-                    // mark checked if the food is in the shopping list for this ingredient/recipe
-                    if (count_shopping_ingredient >= 1) {
-                        // ingredient is in this shopping list (not entirely sure how this could happen?)
-                        this.shopping_status = true
-                    } else if (count_shopping_ingredient == 0 && this.ingredient?.food?.shopping) {
-                        // food is in the shopping list, just not for this ingredient/recipe
-                        this.shopping_status = null
-                    } else {
-                        // the food is not in any shopping list
-                        this.shopping_status = false
-                    }
-                }
-
-                if (this.add_shopping_mode) {
-                    // if we are in add shopping mode (e.g. recipe_shopping_modal) start with all checks marked
-                    // except if on_hand (could be if recipe too?)
-                    this.shop = !this.ingredient?.food?.food_onhand && !this.ingredient?.food?.recipe && !this.ingredient?.food?.ignore_shopping
-                }
-            },
+        ingredient: {
+            handler() {},
+            deep: true,
+        },
+        "ingredient.shop": function (newVal) {
+            this.shop = newVal
         },
     },
-    mounted() {},
+    mounted() {
+        this.shop = this.ingredient?.shop
+    },
     computed: {
-        ShoppingListAndFilter() {
-            // hack to watch the shopping list and the recipe list at the same time
-            return this.shopping_list.map((x) => x.id).join(this.recipe_list)
-        },
         ShoppingPopover() {
-            if (this.shopping_status == false) {
+            if (this.ingredient?.shopping_status == false) {
                 return this.$t("NotInShopping", { food: this.ingredient.food.name })
             } else {
-                let list = this.shopping_list.filter((x) => x.food.id == this.ingredient.food.id)
-                let category = this.$t("Category") + ": " + this.ingredient?.food?.supermarket_category?.name ?? this.$t("Undefined")
+                let category = this.$t("Category") + ": " + this.ingredient?.category ?? this.$t("Undefined")
                 let popover = []
-
-                list.forEach((x) => {
+                ;(this.ingredient?.shopping_list ?? []).forEach((x) => {
                     popover.push(
                         [
                             "<tr style='border-bottom: 1px solid #ccc'>",
                             "<td style='padding: 3px;'><em>",
-                            x?.recipe_mealplan?.name ?? "",
+                            x?.mealplan ?? "",
                             "</em></td>",
                             "<td style='padding: 3px;'>",
                             x?.amount ?? "",
                             "</td>",
                             "<td style='padding: 3px;'>",
-                            x?.unit?.name ?? "" + "</td>",
+                            x?.unit ?? "" + "</td>",
                             "<td style='padding: 3px;'>",
-                            x?.food?.name ?? "",
+                            x?.food ?? "",
                             "</td></tr>",
                         ].join("")
                     )

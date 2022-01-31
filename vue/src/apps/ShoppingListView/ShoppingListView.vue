@@ -191,6 +191,9 @@
                                 <b-form-input min="1" type="number" :debounce="300" :value="r.recipe_mealplan.servings" @input="updateServings($event, r.list_recipe)"></b-form-input>
                             </td>
                             <td>
+                                <i class="btn text-primary far fa-eye fa-lg px-2 border-0" variant="link" :title="$t('view_recipe')" @click="editRecipeList($event, r)" />
+                            </td>
+                            <td>
                                 <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')" @click="deleteRecipe($event, r.list_recipe)" />
                             </td>
                         </tr>
@@ -432,7 +435,10 @@
                                 <div class="col col-md-6 text-right">
                                     <generic-multiselect
                                         size="sm"
-                                        @change="settings.shopping_share = $event.val;saveSettings()"
+                                        @change="
+                                            settings.shopping_share = $event.val
+                                            saveSettings()
+                                        "
                                         :model="Models.USER"
                                         :initial_selection="settings.shopping_share"
                                         label="username"
@@ -656,7 +662,7 @@
                 </div>
             </div>
         </transition>
-        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" />
+        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe" />
     </div>
 </template>
 
@@ -1399,10 +1405,22 @@ export default {
             window.removeEventListener("offline", this.updateOnlineStatus)
         },
         addRecipeToShopping() {
+            console.log(this.new_recipe)
             this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
         finishShopping() {
+            this.add_recipe_servings = 1
+            this.new_recipe = { id: undefined }
+            this.edit_recipe_list = undefined
             this.getShoppingList()
+        },
+        editRecipeList(e, r) {
+            this.new_recipe = { id: r.recipe_mealplan.recipe, name: r.recipe_mealplan.recipe_name, servings: r.recipe_mealplan.servings, list_recipe: r.list_recipe }
+            this.$nextTick(function () {
+                this.$bvModal.show(`shopping_${this.new_recipe.id}`)
+            })
+
+            // this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
     },
     directives: {
