@@ -337,11 +337,14 @@ ProxyPassReverse / http://localhost:8080/ # replace port
 
 ### **Setup issues on Raspberry Pi**
 
+!!!info
+    Always wait at least 2-3 minutes after the very first start, since migrations will take some time!
+
 If you're having issues with installing Tandoor on your Raspberry Pi or similar device,
 follow these instructions:
 
 - Stop all Tandoor containers (`docker-compose down`)
 - Delete local database folder (usually 'postgresql' in the same folder as your 'docker-compose.yml' file)
 - Start Tandoor containers again (`docker-compose up -d`)
-- Wait for at least 30-60 seconds and then check if everything is working now (migrations can take quite some time!)
+- Wait for at least 2-3 minutes and then check if everything is working now (migrations can take quite some time!)
 - If not, check logs of the web_recipes container with `docker logs <container_name>` and make sure that all migrations are indeed already done
