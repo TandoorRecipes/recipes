@@ -153,11 +153,15 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
+                filter = Q(name__icontains=query)
+                if any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                    filter |= Q(name__unaccent__icontains=query)
+
                 self.queryset = (
                     self.queryset
                         .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
                                               default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(name__icontains=query).order_by('-starts', 'name')
+                        .filter(filter).order_by('-starts', 'name')
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
