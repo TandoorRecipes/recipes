@@ -117,7 +117,6 @@ export default {
                 limit: this.limit,
             }
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
-                console.log(result)
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
                 if (this.nothingSelected && this.objects.length > 0) {
                     this.objects.forEach((item) => {

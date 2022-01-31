@@ -154,7 +154,6 @@ export default {
                 .createMealPlan(entry)
                 .then((result) => {
                     this.$bvModal.hide(`modal-meal-plan_${this.modal_id}`)
-                    console.log(entry)
                     if (reviewshopping) {
                         this.mealplan = result.data.id
                         this.servings_value = result.data.servings
