@@ -161,7 +161,7 @@
                                                     :flat="true"
                                                     :auto-load-root-options="false"
                                                     searchNested
-                                                    :placeholder="$t('Ingredients')"
+                                                    :placeholder="$t('Foods')"
                                                     :normalizer="normalizer"
                                                     @input="refreshData(false)"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
