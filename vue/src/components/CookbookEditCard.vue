@@ -113,7 +113,6 @@ export default {
             apiClient
                 .updateRecipeBook(this.book_copy.id, this.book_copy)
                 .then((result) => {
-                    console.log(result)
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
                 })
                 .catch((error) => {
