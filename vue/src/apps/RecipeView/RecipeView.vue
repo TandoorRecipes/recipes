@@ -208,6 +208,7 @@ export default {
             servings_cache: {},
             start_time: "",
             share_uid: window.SHARE_UID,
+            wake_lock: null,
         }
     },
     watch: {
@@ -218,8 +219,37 @@ export default {
     mounted() {
         this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
+        this.requestWakeLock()
+    },
+    beforeUnmount() {
+        this.destroyWakeLock()
     },
     methods: {
+        requestWakeLock: async function() {
+            if ('wakeLock' in navigator) {
+                try {
+                    this.wake_lock = await navigator.wakeLock.request('screen')
+                    document.addEventListener('visibilitychange', this.visibilityChange)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        },
+        destroyWakeLock: function() {
+            if (this.wake_lock != null) {
+                this.wake_lock.release()
+                    .then(() => {
+                        this.wake_lock = null
+                    });
+            }
+
+            document.removeEventListener('visibilitychange', this.visibilityChange)
+        },
+        visibilityChange: async function() {
+            if (this.wake_lock != null && document.visibilityState === 'visible') {
+                await this.requestWakeLock()
+            }
+        },
         loadRecipe: function (recipe_id) {
             apiLoadRecipe(recipe_id).then((recipe) => {
                 if (window.USER_SERVINGS !== 0) {
