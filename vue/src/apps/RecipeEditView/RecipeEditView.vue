@@ -430,7 +430,7 @@
                                                                             v-if="!ingredient.is_header"
                                                                             @click="ingredient.is_header = true">
                                                                         <i class="fas fa-heading fa-fw"></i>
-                                                                        {{ $t("Make_header") }}
+                                                                        {{ $t("Make_Header") }}
                                                                     </button>
 
                                                                     <button type="button" class="dropdown-item"
