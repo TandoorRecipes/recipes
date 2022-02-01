@@ -41,19 +41,19 @@ class RecipeSearch():
         self._string = params.get('string').strip() if params.get('string', None) else None
         self._rating = self._params.get('rating', None)
         self._keywords = {
-            'or': self._params.get('keywords_or', None),
+            'or': self._params.get('keywords_or', None) or self._params.get('keywords', None),
             'and': self._params.get('keywords_and', None),
             'or_not': self._params.get('keywords_or_not', None),
             'and_not': self._params.get('keywords_and_not', None)
         }
         self._foods = {
-            'or': self._params.get('foods_or', None),
+            'or': self._params.get('foods_or', None) or self._params.get('foods', None),
             'and': self._params.get('foods_and', None),
             'or_not': self._params.get('foods_or_not', None),
             'and_not': self._params.get('foods_and_not', None)
         }
         self._books = {
-            'or': self._params.get('books_or', None),
+            'or': self._params.get('books_or', None) or self._params.get('books', None),
             'and': self._params.get('books_and', None),
             'or_not': self._params.get('books_or_not', None),
             'and_not': self._params.get('books_and_not', None)
