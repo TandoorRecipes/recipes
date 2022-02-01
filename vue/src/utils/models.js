@@ -441,7 +441,7 @@ export class Models {
         apiName: "Recipe",
         list: {
             params: [
-                "string",
+                "query",
                 "keywords",
                 "keywords_or",
                 "keywords_and",
