@@ -37,7 +37,7 @@ pytest-django==4.5.2
 django-treebeard==4.5.1
 django-cors-headers==3.10.1
 django-storages==1.12.3
-boto3==1.20.27
+boto3==1.20.46
 django-prometheus==2.2.0
 django-hCaptcha==0.1.0
 python-ldap==3.4.0
