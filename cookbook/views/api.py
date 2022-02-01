@@ -632,7 +632,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = RecipePagination
 
     query_params = [
-        QueryParam(name='string', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
+        QueryParam(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
         QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), qtype='int'),
         QueryParam(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), qtype='int'),
         QueryParam(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), qtype='int'),
@@ -668,10 +668,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        if filter := (self.request.GET.get('query', {}) or {}).get('filter', None):
-            params = {'filter': filter}
-        else:
-            params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x in list(self.request.GET)}
+        params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x in list(self.request.GET)}
         search = RecipeSearch(self.request, **params)
         self.queryset = search.get_queryset(self.queryset).prefetch_related('cooklog_set')
         return self.queryset

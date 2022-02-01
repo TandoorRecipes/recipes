@@ -33,12 +33,11 @@ class RecipeSearch():
                 self._params = {**(params or {})}
         else:
             self._params = {**(params or {})}
-        self._query = self._params.get('query', {}) or {}
         if self._request.user.is_authenticated:
             self._search_prefs = request.user.searchpreference
         else:
             self._search_prefs = SearchPreference()
-        self._string = params.get('string').strip() if params.get('string', None) else None
+        self._string = params.get('query').strip() if params.get('query', None) else None
         self._rating = self._params.get('rating', None)
         self._keywords = {
             'or': self._params.get('keywords_or', None) or self._params.get('keywords', None),
@@ -62,14 +61,15 @@ class RecipeSearch():
         self._units = self._params.get('units', None)
         # TODO add created by
         # TODO image exists
-        self._sort_order = self._params.get('sort_order', None) or self._query.get('sort_order', 0)
+        self._sort_order = self._params.get('sort_order', None)
         self._internal = str2bool(self._params.get('internal', False))
         self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
-        self._last_viewed = int(self._params.get('last_viewed', 0) or self._query.get('last_viewed', 0))
+        self._last_viewed = int(self._params.get('last_viewed', 0))
+        self._include_children = str2bool(self._params.get('include_children', None))
         self._timescooked = self._params.get('timescooked', None)
         self._lastcooked = self._params.get('lastcooked', None)
-        self._makenow = self._params.get('makenow', None)
+        self._makenow = str2bool(self._params.get('makenow', None))
 
         self._search_type = self._search_prefs.search or 'plain'
         if self._string:
@@ -254,18 +254,25 @@ class RecipeSearch():
 
             keywords = Keyword.objects.filter(pk__in=kwargs[kw_filter])
             if 'or' in kw_filter:
-                f = Q(keywords__in=Keyword.include_descendants(keywords))
-                if 'not' in kw_filter:
-                    self._queryset = self._queryset.exclude(f)
+                if self._include_children:
+                    f_or = Q(keywords__in=Keyword.include_descendants(keywords))
                 else:
-                    self._queryset = self._queryset.filter(f)
+                    f_or = Q(keywords__in=keywords)
+                if 'not' in kw_filter:
+                    self._queryset = self._queryset.exclude(f_or)
+                else:
+                    self._queryset = self._queryset.filter(f_or)
             elif 'and' in kw_filter:
                 recipes = Recipe.objects.all()
                 for kw in keywords:
-                    if 'not' in kw_filter:
-                        recipes = recipes.filter(keywords__in=kw.get_descendants_and_self())
+                    if self._include_children:
+                        f_and = Q(keywords__in=kw.get_descendants_and_self())
                     else:
-                        self._queryset = self._queryset.filter(keywords__in=kw.get_descendants_and_self())
+                        f_and = Q(keywords=kw)
+                    if 'not' in kw_filter:
+                        recipes = recipes.filter(f_and)
+                    else:
+                        self._queryset = self._queryset.filter(f_and)
                 if 'not' in kw_filter:
                     self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
 
@@ -280,18 +287,26 @@ class RecipeSearch():
 
             foods = Food.objects.filter(pk__in=kwargs[fd_filter])
             if 'or' in fd_filter:
-                f = Q(steps__ingredients__food__in=Food.include_descendants(foods))
-                if 'not' in fd_filter:
-                    self._queryset = self._queryset.exclude(f)
+                if self._include_children:
+                    f_or = Q(steps__ingredients__food__in=Food.include_descendants(foods))
                 else:
-                    self._queryset = self._queryset.filter(f)
+                    f_or = Q(steps__ingredients__food__in=foods)
+
+                if 'not' in fd_filter:
+                    self._queryset = self._queryset.exclude(f_or)
+                else:
+                    self._queryset = self._queryset.filter(f_or)
             elif 'and' in fd_filter:
                 recipes = Recipe.objects.all()
                 for food in foods:
-                    if 'not' in fd_filter:
-                        recipes = recipes.filter(steps__ingredients__food__in=food.get_descendants_and_self())
+                    if self._include_children:
+                        f_and = Q(steps__ingredients__food__in=food.get_descendants_and_self())
                     else:
-                        self._queryset = self._queryset.filter(steps__ingredients__food__in=food.get_descendants_and_self())
+                        f_and = Q(steps__ingredients__food=food)
+                    if 'not' in fd_filter:
+                        recipes = recipes.filter(f_and)
+                    else:
+                        self._queryset = self._queryset.filter(f_and)
                 if 'not' in fd_filter:
                     self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
 

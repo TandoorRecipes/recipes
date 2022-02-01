@@ -474,7 +474,7 @@
 
                 <div class="row align-content-center">
                     <div class="col col-md-6" style="margin-top: 2vh">
-                        <b-dropdown id="sortby" split :text="$t('sort_by')" variant="link" class="m-0 p-0">
+                        <b-dropdown id="sortby" :text="$t('sort_by')" variant="link" toggle-class="text-decoration-none " class="m-0 p-0">
                             <div v-for="o in sortOptions" :key="o.id">
                                 <b-dropdown-item
                                     v-on:click="
@@ -490,7 +490,7 @@
                     <div class="col col-md-6 text-right" style="margin-top: 2vh">
                         <span class="text-muted">
                             {{ $t("Page") }} {{ search.pagination_page }}/{{ Math.ceil(pagination_count / ui.page_size) }}
-                            <a href="#" @click="resetSearch"><i class="fas fa-times-circle"></i> {{ $t("Reset") }}</a>
+                            <a href="#" @click="resetSearch()"><i class="fas fa-times-circle"></i> {{ $t("Reset") }}</a>
                         </span>
                     </div>
                 </div>
@@ -616,6 +616,7 @@ export default {
                 show_timescooked: false,
                 show_makenow: false,
                 show_lastcooked: false,
+                include_children: true,
             },
             pagination_count: 0,
             random_search: false,
@@ -799,6 +800,19 @@ export default {
         "ui.page_size": _debounce(function () {
             this.refreshData(false)
         }, 300),
+        expertMode: function (newVal, oldVal) {
+            if (!newVal) {
+                this.search.search_keywords = this.search.search_keywords.map((x) => {
+                    return { ...x, not: false }
+                })
+                this.search.search_foods = this.search.search_foods.map((x) => {
+                    return { ...x, not: false }
+                })
+                this.search.search_books = this.search.search_books.map((x) => {
+                    return { ...x, not: false }
+                })
+            }
+        },
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
@@ -817,7 +831,6 @@ export default {
                         this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
                         this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
                     }
-                    console.log(result.data)
                 })
                 .then(() => {
                     this.$nextTick(function () {
@@ -997,7 +1010,7 @@ export default {
                 ...this.addFields("foods"),
                 ...this.addFields("books"),
                 units: this.search.search_units,
-                string: this.search.search_input,
+                query: this.search.search_input,
                 rating: rating,
                 internal: this.search.search_internal,
                 random: this.random_search,
@@ -1011,6 +1024,7 @@ export default {
 
             params.options.query = {
                 sort_order: this.search.sort_order.map((x) => x.value),
+                include_children: this.ui.include_children,
             }
             if (!this.searchFiltered()) {
                 params.options.query.last_viewed = this.ui.recently_viewed
@@ -1068,10 +1082,12 @@ export default {
             ;["page", "pageSize"].forEach((key) => {
                 delete search[key]
             })
+            search = { ...search, ...search.options.query }
             let params = {
                 name: filtername,
                 search: JSON.stringify(search),
             }
+            console.log("saved search", search)
 
             this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
                 .then((result) => {
