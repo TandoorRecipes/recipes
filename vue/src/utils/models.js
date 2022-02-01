@@ -59,7 +59,7 @@ export class Models {
 
     // MODELS - inherits and takes precedence over MODEL_TYPES and ACTIONS
     static FOOD = {
-        name: "Food", // *OPTIONAL* : parameters will be built model -> model_type -> default
+        name: i18n.t("Food"), // *OPTIONAL* : parameters will be built model -> model_type -> default
         apiName: "Food", // *REQUIRED* : the name that is used in api.ts for this model
         model_type: this.TREE, // *OPTIONAL* : model specific params for api, if not present will attempt modeltype_create then default_create
         paginated: true,
@@ -148,7 +148,7 @@ export class Models {
     }
 
     static KEYWORD = {
-        name: "Keyword", // *OPTIONAL: parameters will be built model -> model_type -> default
+        name: i18n.t("Keyword"), // *OPTIONAL: parameters will be built model -> model_type -> default
         apiName: "Keyword",
         model_type: this.TREE,
         paginated: true,
@@ -191,7 +191,7 @@ export class Models {
     }
 
     static UNIT = {
-        name: "Unit",
+        name: i18n.t("Unit"),
         apiName: "Unit",
         paginated: true,
         create: {
@@ -217,7 +217,7 @@ export class Models {
     }
 
     static SHOPPING_LIST = {
-        name: "Shopping_list",
+        name: i18n.t("Shopping_list"),
         apiName: "ShoppingListEntry",
         list: {
             params: ["id", "checked", "supermarket", "options"],
@@ -246,7 +246,7 @@ export class Models {
     }
 
     static RECIPE_BOOK = {
-        name: "Recipe_Book",
+        name: i18n.t("Recipe_Book"),
         apiName: "RecipeBook",
         create: {
             params: [["name", "description", "icon", "filter"]],
@@ -283,7 +283,7 @@ export class Models {
     }
 
     static SHOPPING_CATEGORY = {
-        name: "Shopping_Category",
+        name: i18n.t("Shopping_Category"),
         apiName: "SupermarketCategory",
         create: {
             params: [["name", "description"]],
@@ -307,7 +307,7 @@ export class Models {
     }
 
     static SHOPPING_CATEGORY_RELATION = {
-        name: "Shopping_Category_Relation",
+        name: i18n.t("Shopping_Category_Relation"),
         apiName: "SupermarketCategoryRelation",
         create: {
             params: [["category", "supermarket", "order"]],
@@ -331,7 +331,7 @@ export class Models {
     }
 
     static SUPERMARKET = {
-        name: "Supermarket",
+        name: i18n.t("Supermarket"),
         apiName: "Supermarket",
         ordered_tags: [{ field: "category_to_supermarket", label: "category::name", color: "info" }],
         create: {
@@ -374,7 +374,7 @@ export class Models {
     }
 
     static AUTOMATION = {
-        name: "Automation",
+        name: i18n.t("Automation"),
         apiName: "Automation",
         paginated: true,
         list: {
@@ -437,11 +437,11 @@ export class Models {
     }
 
     static RECIPE = {
-        name: "Recipe",
+        name: i18n.t("Recipe"),
         apiName: "Recipe",
         list: {
             params: [
-                "query",
+                "string",
                 "keywords",
                 "keywords_or",
                 "keywords_and",
@@ -503,7 +503,7 @@ export class Models {
         },
     }
     static USER_NAME = {
-        name: "User",
+        name: i18n.t("User"),
         apiName: "User",
         list: {
             params: ["filter_list"],
@@ -511,7 +511,7 @@ export class Models {
     }
 
     static MEAL_TYPE = {
-        name: "Meal_Type",
+        name: i18n.t("Meal_Type"),
         apiName: "MealType",
         list: {
             params: ["filter_list"],
@@ -519,7 +519,7 @@ export class Models {
     }
 
     static MEAL_PLAN = {
-        name: "Meal_Plan",
+        name: i18n.t("Meal_Plan"),
         apiName: "MealPlan",
         list: {
             params: ["options"],
@@ -527,7 +527,7 @@ export class Models {
     }
 
     static USERFILE = {
-        name: "File",
+        name: i18n.t("File"),
         apiName: "UserFile",
         paginated: false,
         list: {
@@ -556,13 +556,13 @@ export class Models {
         },
     }
     static USER = {
-        name: "User",
+        name: i18n.t("User"),
         apiName: "User",
         paginated: false,
     }
 
     static STEP = {
-        name: "Step",
+        name: i18n.t("Step"),
         apiName: "Step",
         list: {
             params: ["recipe", "query", "page", "pageSize", "options"],

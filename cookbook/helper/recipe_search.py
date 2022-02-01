@@ -38,7 +38,7 @@ class RecipeSearch():
             self._search_prefs = request.user.searchpreference
         else:
             self._search_prefs = SearchPreference()
-        self._string = params.get('query').strip() if params.get('query', None) else None
+        self._string = params.get('string').strip() if params.get('string', None) else None
         self._rating = self._params.get('rating', None)
         self._keywords = {
             'or': self._params.get('keywords_or', None),

@@ -131,8 +131,9 @@ export default {
             let flat_items = []
             let item = undefined
             let label = this.form.list_label.split("::")
+            this.list_label = label[1]
             itemlist.forEach((x) => {
-                item = {}
+                item = { ...x }
                 for (const [k, v] of Object.entries(x)) {
                     if (k == label[0]) {
                         item["id"] = v.id
@@ -144,6 +145,7 @@ export default {
                 flat_items.push(item)
             })
             this.first_run = false
+
             return flat_items
         },
         unflattenItem: function (itemList) {
