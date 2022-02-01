@@ -164,7 +164,7 @@ def test_shopping_recipe_edit(request, recipe, sle_count, use_mealplan, u1_s1, u
         assert len(r) == sle_count
         assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count
 
-        # test removing 2 items from shopping list
+        # test removing 3 items from shopping list
         u2_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}),
                   {'list_recipe': list_recipe, 'ingredients': keep_ing},
                   content_type='application/json'
