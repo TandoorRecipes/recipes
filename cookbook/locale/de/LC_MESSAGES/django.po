@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-01-30 15:06+0000\n"
-"Last-Translator: dudel <duudel@gmail.com>\n"
+"PO-Revision-Date: 2022-02-02 15:31+0000\n"
+"Last-Translator: Sven <tr@sutikal.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
@@ -444,7 +444,7 @@ msgstr "automatisch dem Menüplan hinzufügen"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Ausgenommen Vorrätiges"
 
 #: .\cookbook\forms.py:512
 msgid "Include Related"
