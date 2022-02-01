@@ -1087,7 +1087,6 @@ export default {
                 name: filtername,
                 search: JSON.stringify(search),
             }
-            console.log("saved search", search)
 
             this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
                 .then((result) => {
