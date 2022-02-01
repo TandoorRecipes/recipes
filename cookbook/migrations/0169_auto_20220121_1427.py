@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('cookbook', '0167_userpreference_left_handed'),
+        ('cookbook', '0168_add_unit_searchfields'),
     ]
 
     operations = [

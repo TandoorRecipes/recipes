@@ -997,7 +997,7 @@ export default {
                 ...this.addFields("foods"),
                 ...this.addFields("books"),
                 units: this.search.search_units,
-                query: this.search.search_input,
+                string: this.search.search_input,
                 rating: rating,
                 internal: this.search.search_internal,
                 random: this.random_search,
