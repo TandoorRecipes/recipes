@@ -68,6 +68,9 @@ export default {
         this.label = this.form?.label ?? ""
         this.sticky_options = this.form?.sticky_options ?? []
         this.list_label = this.form?.list_label ?? undefined
+        if (this.list_label?.includes("::")) {
+            this.list_label = this.list_label.split("::")[1]
+        }
     },
     computed: {
         modelName() {
@@ -131,7 +134,6 @@ export default {
             let flat_items = []
             let item = undefined
             let label = this.form.list_label.split("::")
-            this.list_label = label[1]
             itemlist.forEach((x) => {
                 item = { ...x }
                 for (const [k, v] of Object.entries(x)) {
