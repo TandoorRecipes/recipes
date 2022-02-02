@@ -326,5 +326,6 @@
     "make_now": "Make Now",
     "recipe_filter": "Recipe Filter",
     "book_filter_help": "Include recipes from recipe filter instead of assigning each recipe",
-    "filter": "Filter"
+    "reset_children": "Reset Child Inheritance",
+    "reset_children_help": "Overwrite all children with values from inherited fields."
 }

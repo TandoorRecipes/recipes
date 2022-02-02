@@ -271,29 +271,27 @@ export default {
             if (type_match && field?.condition) {
                 const value = this.item1[field?.condition?.field]
                 const preference = getUserPreference(field?.condition?.field)
-                console.log("condition", field?.condition?.condition)
+                checks = false
                 switch (field?.condition?.condition) {
                     case "field_exists":
                         if ((value != undefined) === field.condition.value) {
                             checks = true
-                        } else {
-                            checks = false
                         }
                         break
                     case "preference__array_exists":
                         if (preference?.length > 0 === field.condition.value) {
                             checks = true
-                        } else {
-                            checks = false
                         }
                         break
                     case "preference_equals":
                         if (preference === field.condition.value) {
                             checks = true
-                        } else {
-                            checks = false
                         }
                         break
+                    case "gt":
+                        if (value > field.condition.value) {
+                            checks = true
+                        }
                 }
             }
             return type_match && checks

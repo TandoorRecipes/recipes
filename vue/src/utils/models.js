@@ -76,7 +76,7 @@ export class Models {
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields", "ignore_shopping"]],
+            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields", "ignore_shopping", "reset_inherit"]],
 
             form: {
                 show_help: true,
@@ -134,6 +134,14 @@ export class Models {
                     list: "FOOD_INHERIT_FIELDS",
                     label: i18n.t("InheritFields"),
                     condition: { field: "food_children_exist", value: true, condition: "preference_equals" },
+                },
+                reset_inherit: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "reset_inherit",
+                    label: i18n.t("reset_children"),
+                    help_text: i18n.t("reset_children_help"),
+                    condition: { field: "numchild", value: 0, condition: "gt" },
                 },
                 form_function: "FoodCreateDefault",
             },

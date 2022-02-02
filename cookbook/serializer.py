@@ -419,13 +419,19 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             validated_data['name'] = name.strip()
         # assuming if on hand for user also onhand for shopping_share users
         onhand = validated_data.get('food_onhand', None)
+        reset_inherit = self.initial_data.get('reset_inherit', False)
         if not onhand is None:
             shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
             if onhand:
                 validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
             else:
                 validated_data['onhand_users'] = list(set(self.instance.onhand_users.all()) - set(shared_users))
-        return super(FoodSerializer, self).update(instance, validated_data)
+
+        # update before resetting inheritance
+        saved_instance = super(FoodSerializer, self).update(instance, validated_data)
+        if reset_inherit and (r := self.context.get('request', None)):
+            Food.reset_inheritance(food=saved_instance, space=r.space)
+        return saved_instance
 
     class Meta:
         model = Food

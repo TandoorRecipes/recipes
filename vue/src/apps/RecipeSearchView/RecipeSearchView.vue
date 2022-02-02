@@ -1029,6 +1029,7 @@ export default {
             if (!this.searchFiltered()) {
                 params.options.query.last_viewed = this.ui.recently_viewed
             }
+            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
