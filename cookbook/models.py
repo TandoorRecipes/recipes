@@ -515,31 +515,37 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             return super().delete()
 
     @staticmethod
-    def reset_inheritance(space=None):
+    def reset_inheritance(space=None, food=None):
         # resets inherited fields to the space defaults and updates all inherited fields to root object values
-        inherit = space.food_inherit.all()
+        if food:
+            inherit = list(food.inherit_fields.all().values('id', 'field'))
+            filter = Q(id=food.id, space=space)
+            tree_filter = Q(path__startswith=food.path, space=space)
+        else:
+            inherit = list(space.food_inherit.all().values('id', 'field'))
+            filter = tree_filter = Q(space=space)
 
         # remove all inherited fields from food
-        Through = Food.objects.filter(space=space).first().inherit_fields.through
+        Through = Food.objects.filter(tree_filter).first().inherit_fields.through
         Through.objects.all().delete()
         # food is going to inherit attributes
-        if space.food_inherit.all().count() > 0:
+        if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
             for i in inherit:
                 Through.objects.bulk_create([
-                    Through(food_id=x, foodinheritfield_id=i.id)
-                    for x in Food.objects.filter(space=space).values_list('id', flat=True)
+                    Through(food_id=x, foodinheritfield_id=i['id'])
+                    for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
                 ])
 
-            inherit = inherit.values_list('field', flat=True)
+            inherit = [x['field'] for x in inherit]
             if 'ignore_shopping' in inherit:
                 # get food at root that have children that need updated
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=True)).update(ignore_shopping=True)
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=False)).update(ignore_shopping=False)
+                Food.include_descendants(queryset=Food.objects.filter(Q(depth=1, numchild__gt=0, ignore_shopping=True) & filter)).update(ignore_shopping=True)
+                Food.include_descendants(queryset=Food.objects.filter(Q(depth=1, numchild__gt=0, ignore_shopping=False) & filter)).update(ignore_shopping=False)
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
                 # find top node that has category set
-                category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
+                category_roots = Food.exclude_descendants(queryset=Food.objects.filter(Q(supermarket_category__isnull=False, numchild__gt=0) & filter))
                 for root in category_roots:
                     root.get_descendants().update(supermarket_category=root.supermarket_category)
 
