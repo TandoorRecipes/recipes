@@ -54,20 +54,14 @@
                     <div class="col-12 col-md-3 calender-options">
                         <h5>{{ $t("Planner_Settings") }}</h5>
                         <b-form>
-                            <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')"
-                                          label-for="UomInput">
-                                <b-form-select id="UomInput" v-model="settings.displayPeriodUom"
-                                               :options="options.displayPeriodUom"></b-form-select>
+                            <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')" label-for="UomInput">
+                                <b-form-select id="UomInput" v-model="settings.displayPeriodUom" :options="options.displayPeriodUom"></b-form-select>
                             </b-form-group>
-                            <b-form-group id="PeriodInput" :label="$t('Periods')"
-                                          :description="$t('Plan_Show_How_Many_Periods')" label-for="PeriodInput">
-                                <b-form-select id="PeriodInput" v-model="settings.displayPeriodCount"
-                                               :options="options.displayPeriodCount"></b-form-select>
+                            <b-form-group id="PeriodInput" :label="$t('Periods')" :description="$t('Plan_Show_How_Many_Periods')" label-for="PeriodInput">
+                                <b-form-select id="PeriodInput" v-model="settings.displayPeriodCount" :options="options.displayPeriodCount"></b-form-select>
                             </b-form-group>
-                            <b-form-group id="DaysInput" :label="$t('Starting_Day')" :description="$t('Starting_Day')"
-                                          label-for="DaysInput">
-                                <b-form-select id="DaysInput" v-model="settings.startingDayOfWeek"
-                                               :options="dayNames"></b-form-select>
+                            <b-form-group id="DaysInput" :label="$t('Starting_Day')" :description="$t('Starting_Day')" label-for="DaysInput">
+                                <b-form-select id="DaysInput" v-model="settings.startingDayOfWeek" :options="dayNames"></b-form-select>
                             </b-form-group>
                             <b-form-group id="WeekNumInput" :label="$t('Week_Numbers')">
                                 <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
@@ -80,23 +74,18 @@
                         <h5>{{ $t("Meal_Types") }}</h5>
                         <div>
                             <draggable :list="meal_types" group="meal_types" :empty-insert-threshold="10" @sort="sortMealTypes()" ghost-class="ghost">
-                                <b-card no-body class="mt-1 list-group-item p-2" style="cursor:move" v-for="(meal_type, index) in meal_types" v-hover
-                                        :key="meal_type.id">
+                                <b-card no-body class="mt-1 list-group-item p-2" style="cursor: move" v-for="(meal_type, index) in meal_types" v-hover :key="meal_type.id">
                                     <b-card-header class="p-2 border-0">
                                         <div class="row">
                                             <div class="col-2">
-                                                <button type="button" class="btn btn-lg shadow-none"><i
-                                                    class="fas fa-arrows-alt-v"></i></button>
+                                                <button type="button" class="btn btn-lg shadow-none"><i class="fas fa-arrows-alt-v"></i></button>
                                             </div>
                                             <div class="col-10">
                                                 <h5 class="mt-1 mb-1">
-                                                    {{ meal_type.icon }} {{
-                                                        meal_type.name
-                                                    }}<span class="float-right text-primary" style="cursor:pointer"
-                                                ><i class="fa"
-                                                    v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
-                                                    @click="editOrSaveMealType(index)" aria-hidden="true"></i
-                                                ></span>
+                                                    {{ meal_type.icon }} {{ meal_type.name
+                                                    }}<span class="float-right text-primary" style="cursor: pointer"
+                                                        ><i class="fa" v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }" @click="editOrSaveMealType(index)" aria-hidden="true"></i
+                                                    ></span>
                                                 </h5>
                                             </div>
                                         </div>
@@ -104,26 +93,19 @@
                                     <b-card-body class="p-4" v-if="meal_type.editing">
                                         <div class="form-group">
                                             <label>{{ $t("Name") }}</label>
-                                            <input class="form-control" placeholder="Name" v-model="meal_type.name"/>
+                                            <input class="form-control" placeholder="Name" v-model="meal_type.name" />
                                         </div>
                                         <div class="form-group">
-                                            <emoji-input :field="'icon'" :label="$t('Icon')"
-                                                         :value="meal_type.icon"></emoji-input>
+                                            <emoji-input :field="'icon'" :label="$t('Icon')" :value="meal_type.icon"></emoji-input>
                                         </div>
                                         <div class="form-group">
                                             <label>{{ $t("Color") }}</label>
-                                            <input class="form-control" type="color" name="Name"
-                                                   :value="meal_type.color"
-                                                   @change="meal_type.color = $event.target.value"/>
+                                            <input class="form-control" type="color" name="Name" :value="meal_type.color" @change="meal_type.color = $event.target.value" />
                                         </div>
-                                        <b-form-checkbox id="checkbox-1" v-model="meal_type.default"
-                                                         name="default_checkbox" class="mb-2">
+                                        <b-form-checkbox id="checkbox-1" v-model="meal_type.default" name="default_checkbox" class="mb-2">
                                             {{ $t("Default") }}
                                         </b-form-checkbox>
-                                        <button class="btn btn-danger" @click="deleteMealType(index)">{{
-                                                $t("Delete")
-                                            }}
-                                        </button>
+                                        <button class="btn btn-danger" @click="deleteMealType(index)">{{ $t("Delete") }}</button>
                                         <button class="btn btn-primary float-right" @click="editOrSaveMealType(index)">
                                             {{ $t("Save") }}
                                         </button>
@@ -147,15 +129,16 @@
                         openEntryEdit(contextData.originalItem.entry)
                     "
                 >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{
-                            $t("Edit")
-                        }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
-                    v-if="contextData.originalItem.entry.recipe != null"
-                    @click="$refs.menu.close();openRecipe(contextData.originalItem.entry.recipe)">
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i>
-                        {{ $t("Recipe") }}</a>
+                    v-if="contextData && contextData.originalItem && contextData.originalItem.entry.recipe != null"
+                    @click="
+                        $refs.menu.close()
+                        openRecipe(contextData.originalItem.entry.recipe)
+                    "
+                >
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i> {{ $t("Recipe") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -163,8 +146,7 @@
                         moveEntryLeft(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i>
-                        {{ $t("Move") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -172,8 +154,7 @@
                         moveEntryRight(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i>
-                        {{ $t("Move") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -189,8 +170,7 @@
                         addToShopping(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i>
-                        {{ $t("Add_to_Shopping") }}</a>
+                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i> {{ $t("Add_to_Shopping") }}</a>
                 </ContextMenuItem>
                 <ContextMenuItem
                     @click="
@@ -198,15 +178,12 @@
                         deleteEntry(contextData)
                     "
                 >
-                    <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i>
-                        {{ $t("Delete") }}</a>
+                    <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
                 </ContextMenuItem>
             </template>
         </ContextMenu>
         <meal-plan-edit-modal
             :entry="entryEditing"
-            :entryEditing_initial_recipe="entryEditing_initial_recipe"
-            :entry-editing_initial_meal_type="entryEditing_initial_meal_type"
             :modal_title="modal_title"
             :edit_modal_show="edit_modal_show"
             @save-entry="editEntry"
@@ -230,10 +207,11 @@
                         <div class="col-12 mt-1" v-if="shopping_list.length > 0">
                             <b-button-group>
                                 <b-button variant="success" @click="saveShoppingList"
-                                ><i class="fas fa-external-link-alt"></i>
+                                    ><i class="fas fa-external-link-alt"></i>
                                     {{ $t("Open") }}
                                 </b-button>
-                                <b-button variant="danger" @click="shopping_list = []"><i class="fa fa-trash"></i>
+                                <b-button variant="danger" @click="shopping_list = []"
+                                    ><i class="fa fa-trash"></i>
                                     {{ $t("Clear") }}
                                 </b-button>
                             </b-button-group>
@@ -243,46 +221,37 @@
             </div>
         </template>
         <transition name="slide-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)"
-                 v-if="current_tab === 0">
+            <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
                 <div class="col-md-3 col-6">
-                    <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
-                        class="fas fa-calendar-plus"></i> {{ $t("Create") }}
-                    </button>
+                    <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i class="fas fa-calendar-plus"></i> {{ $t("Create") }}</button>
                 </div>
                 <div class="col-md-3 col-6">
-                    <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i
-                        class="fas fa-shopping-cart"></i> {{ $t("Shopping_list") }}
-                    </button>
+                    <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i class="fas fa-shopping-cart"></i> {{ $t("Shopping_list") }}</button>
                 </div>
                 <div class="col-md-3 col-6">
                     <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"
-                    ><i class="fas fa-download"></i>
+                        ><i class="fas fa-download"></i>
                         {{ $t("Export_To_ICal") }}
                     </a>
                 </div>
                 <div class="col-md-3 col-6">
-                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top
-                            :title="$t('Coming_Soon')">
+                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top :title="$t('Coming_Soon')">
                         {{ $t("Auto_Planner") }}
                     </button>
                 </div>
                 <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
                     <b-button-toolbar key-nav aria-label="Toolbar with button groups">
                         <b-button-group class="mx-1">
-                            <b-button v-html="'<<'"
-                                      @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+                            <b-button v-html="'<<'" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
                             <b-button v-html="'<'" @click="setStartingDay(-1)"></b-button>
                         </b-button-group>
                         <b-button-group class="mx-1">
-                            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
-                                class="fas fa-home"></i></b-button>
+                            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i></b-button>
                             <b-form-datepicker button-only button-variant="secondary"></b-form-datepicker>
                         </b-button-group>
                         <b-button-group class="mx-1">
                             <b-button v-html="'>'" @click="setStartingDay(1)"></b-button>
-                            <b-button v-html="'>>'"
-                                      @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+                            <b-button v-html="'>>'" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
                         </b-button-group>
                     </b-button-toolbar>
                 </div>
@@ -293,7 +262,7 @@
 
 <script>
 import Vue from "vue"
-import {BootstrapVue} from "bootstrap-vue"
+import { BootstrapVue } from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
@@ -307,11 +276,11 @@ import moment from "moment"
 import draggable from "vuedraggable"
 import VueCookies from "vue-cookies"
 
-import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
-import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
-import {ApiApiFactory} from "@/utils/openapi/api"
+import { ApiMixin, StandardToasts, ResolveUrlMixin } from "@/utils/utils"
+import { CalendarView, CalendarMathMixin } from "vue-simple-calendar/src/components/bundle"
+import { ApiApiFactory } from "@/utils/openapi/api"
 
-const {makeToast} = require("@/utils/utils")
+const { makeToast } = require("@/utils/utils")
 
 Vue.prototype.moment = moment
 Vue.use(BootstrapVue)
@@ -349,12 +318,12 @@ export default {
             current_context_menu_item: null,
             options: {
                 displayPeriodUom: [
-                    {text: this.$t("Week"), value: "week"},
+                    { text: this.$t("Week"), value: "week" },
                     {
                         text: this.$t("Month"),
                         value: "month",
                     },
-                    {text: this.$t("Year"), value: "year"},
+                    { text: this.$t("Year"), value: "year" },
                 ],
                 displayPeriodCount: [1, 2, 3],
                 entryEditing: {
@@ -385,20 +354,6 @@ export default {
                 return this.$t("Edit_Meal_Plan_Entry")
             }
         },
-        entryEditing_initial_recipe: function () {
-            if (this.entryEditing.recipe != null) {
-                return [this.entryEditing.recipe]
-            } else {
-                return []
-            }
-        },
-        entryEditing_initial_meal_type: function () {
-            if (this.entryEditing.meal_type != null) {
-                return [this.entryEditing.meal_type]
-            } else {
-                return []
-            }
-        },
         plan_items: function () {
             let items = []
             this.plan_entries.forEach((entry) => {
@@ -412,7 +367,7 @@ export default {
         dayNames: function () {
             let options = []
             this.getFormattedWeekdayNames(this.userLocale, "long", 0).forEach((day, index) => {
-                options.push({text: day, value: index})
+                options.push({ text: day, value: index })
             })
             return options
         },
@@ -455,7 +410,7 @@ export default {
     },
     methods: {
         openRecipe: function (recipe) {
-            window.open(this.resolveDjangoUrl('view_recipe', recipe.id))
+            window.open(this.resolveDjangoUrl("view_recipe", recipe.id))
         },
         addToShopping(entry) {
             if (entry.originalItem.entry.recipe !== null) {
@@ -491,7 +446,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient
-                .createMealType({name: this.$t("Meal_Type")})
+                .createMealType({ name: this.$t("Meal_Type") })
                 .then((e) => {
                     this.periodChangedCallback(this.current_period)
                 })
@@ -879,7 +834,7 @@ having to override as much.
 }
 
 .ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
+    opacity: 0.5;
+    background: #c8ebfb;
 }
 </style>

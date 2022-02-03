@@ -834,7 +834,7 @@
                 this.$http.get('{% url 'api:recipe-detail' 123456 %}'.replace('123456', recipe.id)).then((response) => {
                     for (let s of response.data.steps) {
                         for (let i of s.ingredients) {
-                            if (!i.is_header && i.food !== null && i.food.food_onhand === false) {
+                            if (!i.is_header && i.food !== null && !i.food.ignore_food) {
                                 this.shopping_list.entries.push({
                                     'list_recipe': slr.id,
                                     'food': i.food,

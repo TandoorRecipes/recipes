@@ -205,9 +205,9 @@ class CustomIsShared(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        # temporary hack to make old shopping list work with new shopping list
-        if obj.__class__.__name__ == 'ShoppingList':
-            return is_object_shared(request.user, obj) or obj.created_by in list(request.user.get_shopping_share())
+        # # temporary hack to make old shopping list work with new shopping list
+        # if obj.__class__.__name__ in ['ShoppingList', 'ShoppingListEntry']:
+        #     return is_object_shared(request.user, obj) or obj.created_by in list(request.user.get_shopping_share())
         return is_object_shared(request.user, obj)
 
 

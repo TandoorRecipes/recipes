@@ -134,7 +134,7 @@ export default {
   flex-flow: row nowrap;
   min-height: 1.5em;
   line-height: 1;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 .period-span-1 {
