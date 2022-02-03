@@ -9,24 +9,9 @@
           <!-- TODO get option dynamicaly -->
           <select class="form-control" v-model="recipe_app">
             <option value="DEFAULT">Default</option>
-            <option value="PAPRIKA">Paprika</option>
-            <option value="NEXTCLOUD">Nextcloud Cookbook</option>
-            <option value="MEALIE">Mealie</option>
-            <option value="CHOWDOWN">Chowdown</option>
             <option value="SAFFRON">Saffron</option>
-            <option value="CHEFTAP">ChefTap</option>
-            <option value="PEPPERPLATE">Pepperplate</option>
-            <option value="RECETTETEK">RecetteTek</option>
             <option value="RECIPESAGE">Recipe Sage</option>
-            <option value="DOMESTICA">Domestica</option>
-            <option value="MEALMASTER">MealMaster</option>
-            <option value="REZKONV">RezKonv</option>
-            <option value="OPENEATS">Openeats</option>
-            <option value="RECIPEKEEPER">Recipe Keeper</option>
-            <option value="PLANTOEAT">Plantoeat</option>
-            <option value="COOKBOOKAPP">CookBookApp</option>
-            <option value="COPYMETHAT">CopyMeThat</option>
-            <option value="PDF">PDF</option>
+            <option value="PDF">PDF (experimental)</option>
           </select>
 
           <br/>
@@ -52,8 +37,6 @@
               :loading="recipes_loading"
               @search-change="searchRecipes">
           </multiselect>
-
-
 
           <br/>
           <button @click="exportRecipe()" class="btn btn-primary shadow-none"><i class="fas fa-file-export"></i> {{ $t('Export') }}
@@ -164,14 +147,17 @@ export default {
 
       axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
       axios.post(resolveDjangoUrl('view_export',), formData).then((response) => {
-          
-          window.location.href = resolveDjangoUrl('view_export_response', response.data['export_id'])
+          if (response.data['error'] !== undefined){
+              makeToast(this.$t("Error"), response.data['error'],"warning")
+          }else{
+              window.location.href = resolveDjangoUrl('view_export_response', response.data['export_id'])
+          }
 
       }).catch((err) => {
           this.error = err.data
           this.loading = false
           console.log(err)
-          makeToast(this.$t("Error"), this.$t("There was an error loading a resource!"), "danger")
+          makeToast(this.$t("Error"), this.$t("There was an error loading a resource!"), "warning")
       })
     },
 

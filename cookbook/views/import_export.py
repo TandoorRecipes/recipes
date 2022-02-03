@@ -5,7 +5,7 @@ from django.core.cache import cache
 
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
@@ -125,7 +125,10 @@ def export_recipe(request):
                     recipes = Recipe.objects.filter(space=request.space, internal=True).all()
 
                 integration = get_integration(request, form.cleaned_data['type'])
-                
+
+                if form.cleaned_data['type'] == ImportExportBase.PDF and not settings.ENABLE_PDF_EXPORT:
+                    return JsonResponse({'error': _('The PDF Exporter is not enabled on this instance as it is still in an experimental state.')})
+
                 el = ExportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
 
                 t = threading.Thread(target=integration.do_export, args=[recipes, el])
@@ -141,7 +144,6 @@ def export_recipe(request):
                     },
                     status=400
                 )
-
     else:
         pk = ''
         recipe = request.GET.get('r')
@@ -156,6 +158,7 @@ def export_recipe(request):
 def import_response(request, pk):
     return render(request, 'import_response.html', {'pk': pk})
 
+
 @group_required('user')
 def export_response(request, pk):
     return render(request, 'export_response.html', {'pk': pk})
@@ -163,16 +166,15 @@ def export_response(request, pk):
 
 @group_required('user')
 def export_file(request, pk):
-    
-    cacheData = cache.get('export_file_'+str(pk))
+    el = get_object_or_404(ExportLog, pk=pk, space=request.space)
+
+    cacheData = cache.get(f'export_file_{el.pk}')
 
     if cacheData is None:
-        el = ExportLog.objects.get(pk=pk)
-        el.possibly_not_expired = False;
+        el.possibly_not_expired = False
         el.save()
         return render(request, 'export_response.html', {'pk': pk})
 
     response = HttpResponse(cacheData['file'], content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename="'+cacheData['filename']+'"'
+    response['Content-Disposition'] = 'attachment; filename="' + cacheData['filename'] + '"'
     return response
-
