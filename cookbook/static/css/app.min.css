@@ -1140,3 +1140,10 @@
         min-width: 28rem;
     }
 }
+
+@media print{
+    #switcher{
+        display: none;
+    }
+
+}
