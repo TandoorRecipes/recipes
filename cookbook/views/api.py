@@ -655,7 +655,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         QueryParam(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
         QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='int'),
         QueryParam(name='lastcooked', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
-        QueryParam(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), qtype='int'),
+        QueryParam(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']')),
     ]
     schema = QueryParamAutoSchema()
 

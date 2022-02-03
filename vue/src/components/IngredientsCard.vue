@@ -56,7 +56,6 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import IngredientComponent from "@/components/IngredientComponent"
 import { ApiMixin, StandardToasts } from "@/utils/utils"
-import ShoppingListViewVue from "../apps/ShoppingListView/ShoppingListView.vue"
 
 Vue.use(BootstrapVue)
 

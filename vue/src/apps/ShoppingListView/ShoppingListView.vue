@@ -915,7 +915,6 @@ export default {
         },
     },
     mounted() {
-        console.log(screen.height)
         this.getShoppingList()
         this.getSupermarkets()
         this.getShoppingCategories()
@@ -1406,7 +1405,6 @@ export default {
             window.removeEventListener("offline", this.updateOnlineStatus)
         },
         addRecipeToShopping() {
-            console.log(this.new_recipe)
             this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
         finishShopping() {
