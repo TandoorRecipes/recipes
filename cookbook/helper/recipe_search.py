@@ -115,8 +115,9 @@ class RecipeSearch():
         self.internal_filter()
         self.step_filters(steps=self._steps)
         self.unit_filters(units=self._units)
-        self.string_filters(string=self._string)
         self._makenow_filter()
+        self.string_filters(string=self._string)  # TODO this is overriding other filters!
+
         return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
 
     def _sort_includes(self, *args):
@@ -176,7 +177,7 @@ class RecipeSearch():
                     query_filter |= f
                 else:
                     query_filter = f
-            self._queryset = self._queryset.filter(query_filter)
+            self._queryset = self._queryset.filter(query_filter).distinct()
             if self._fulltext_include:
                 if self._fuzzy_match is None:
                     self._queryset = self._queryset.annotate(score=self.search_rank)
@@ -427,10 +428,9 @@ class RecipeSearch():
             | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
         )
         self._queryset = self._queryset.annotate(
-            count_food=Count('steps__ingredients__food'),
-            count_onhand=Count('pk', filter=Q(onhand_filter)),
-            count_ignore=Count('pk', filter=Q(steps__ingredients__food__ignore_shopping=True))
-        ).annotate(missingfood=F('count_food')-F('count_onhand')-F('count_ignore')).filter(missingfood=0)
+            count_food=Count('steps__ingredients__food', filter=Q(steps__ingredients__food__ignore_shopping=False, steps__ingredients__food__isnull=False), distinct=True),
+            count_onhand=Count('pk', filter=onhand_filter)
+        ).annotate(missingfood=F('count_food')-F('count_onhand')).filter(missingfood__lte=0)
 
     @staticmethod
     def __children_substitute_filter(shopping_users=None):
