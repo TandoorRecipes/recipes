@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2021-11-16 06:06+0000\n"
-"Last-Translator: Luka <storek00@gmail.com>\n"
+"PO-Revision-Date: 2022-02-02 15:31+0000\n"
+"Last-Translator: Mario Dvorsek <mario.dvorsek@gmail.com>\n"
 "Language-Team: Slovenian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sl/>\n"
 "Language: sl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
 "%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -33,47 +33,47 @@ msgstr "Privzeta enota"
 
 #: .\cookbook\forms.py:55
 msgid "Use fractions"
-msgstr ""
+msgstr "Uporabi ulomke/frakcije"
 
 #: .\cookbook\forms.py:56
 msgid "Use KJ"
-msgstr ""
+msgstr "Uporabi KJ"
 
 #: .\cookbook\forms.py:57
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:58
 msgid "Navbar color"
-msgstr ""
+msgstr "Barva navigacijske vrstice"
 
 #: .\cookbook\forms.py:59
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Lepljiva navigacijska vrstica"
 
 #: .\cookbook\forms.py:60
 msgid "Default page"
-msgstr ""
+msgstr "Privzeta stran"
 
 #: .\cookbook\forms.py:61
 msgid "Show recent recipes"
-msgstr ""
+msgstr "Prikaži nedavne recepte"
 
 #: .\cookbook\forms.py:62
 msgid "Search style"
-msgstr ""
+msgstr "Vrsta iskalnika"
 
 #: .\cookbook\forms.py:63
 msgid "Plan sharing"
-msgstr ""
+msgstr "Deli planer"
 
 #: .\cookbook\forms.py:64
 msgid "Ingredient decimal places"
-msgstr ""
+msgstr "Decimalno mesto pri sestavini"
 
 #: .\cookbook\forms.py:65
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Čas avtomatske sinhronizacije pri nakupovalnem listku"
 
 #: .\cookbook\forms.py:66 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:47
@@ -85,38 +85,44 @@ msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"Barva zgornje vrstice za krmarjenje. Ne delujejo vse barve z vsemi temami!"
 
 #: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
 msgstr ""
+"Privzeta enota, ki se uporablja pri vstavljanju nove sestavine v recept."
 
 #: .\cookbook\forms.py:74
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Omogoča podporo ulomkom/frakcijam v količinah sestavin (npr. samodejno "
+"pretvori decimalke v ulomke)"
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Prikazuj hranilne energijske količine v joules namesto v kalorijah"
 
 #: .\cookbook\forms.py:78
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
 msgstr ""
+"Uporabniki, s katerimi je privzeto deljen novo ustvarjen načrt ali "
+"nakupovalni listek."
 
 #: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Prikaži nedavno videne recepte na iskalniku."
 
 #: .\cookbook\forms.py:81
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "Število decimalk, ki so zaokrožene pri sestavinah."
 
 #: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "V primeru, da želite ustvariti in videti komentarje pod recepti."
 
 #: .\cookbook\forms.py:84
 msgid ""
@@ -125,21 +131,28 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"Nastavitev na 0 bo onemogočila avtomatsko sinhronizacijo. V pogledu "
+"nakupovalnega listka, se seznam osvežuje vsake toliko sekund, če nekdo drug "
+"naredi spremembo. To je najbolj uporabno, če nakupovalni listek delimo z "
+"večimi osebami. Paziti je potrebno, saj porabi nekaj podatkov v mobilnem "
+"omrežju."
 
 #: .\cookbook\forms.py:87
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "Nastavi navigacijsko vrstico na vrh strani."
 
 #: .\cookbook\forms.py:103
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Obe polji sta opcijski. V primeru, da ju pustimo prazni bo prikazano "
+"uporabniško ime"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:289
 #: .\cookbook\templates\url_import.html:158
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #: .\cookbook\forms.py:125 .\cookbook\forms.py:290
 #: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
@@ -150,47 +163,51 @@ msgstr "Ključne besede"
 
 #: .\cookbook\forms.py:126
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Priprava v minutah"
 
 #: .\cookbook\forms.py:127
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Čas čakanja v minutah"
 
 #: .\cookbook\forms.py:128 .\cookbook\forms.py:259 .\cookbook\forms.py:291
 msgid "Path"
-msgstr ""
+msgstr "Pot"
 
 #: .\cookbook\forms.py:129
 msgid "Storage UID"
-msgstr ""
+msgstr "UID shrambe"
 
 #: .\cookbook\forms.py:157
 msgid "Default"
-msgstr ""
+msgstr "Privzeto"
 
 #: .\cookbook\forms.py:168 .\cookbook\templates\url_import.html:94
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"V primeru, da želite preprečiti dvojnike receptov z enakim imenom kot so "
+"obstoječi. Če želite uvoziti vse, potrdite to polje."
 
 #: .\cookbook\forms.py:190
 msgid "Add your comment: "
-msgstr ""
+msgstr "Dodaj komentar: "
 
 #: .\cookbook\forms.py:205
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "Pusti prazno za dropbox in vnesi geslo za nextcloud."
 
 #: .\cookbook\forms.py:212
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "Pusti prazno za nextcloud in vnesi API žeton za dropbox."
 
 #: .\cookbook\forms.py:221
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Pusti prazno za dropbox in vnesi URL za nextcloud (<code>/remote.php/webdav/"
+"</code> je dodano avtomatsko)"
 
 #: .\cookbook\forms.py:258 .\cookbook\views\edit.py:166
 msgid "Storage"
@@ -198,33 +215,35 @@ msgstr "Shramba"
 
 #: .\cookbook\forms.py:260
 msgid "Active"
-msgstr ""
+msgstr "Aktivno"
 
 #: .\cookbook\forms.py:265
 msgid "Search String"
-msgstr ""
+msgstr "Iskalni niz"
 
 #: .\cookbook\forms.py:292
 msgid "File ID"
-msgstr ""
+msgstr "ID datoteke"
 
 #: .\cookbook\forms.py:313
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "Vpisati moraš vsaj recept ali naslov."
 
 #: .\cookbook\forms.py:326
 msgid "You can list default users to share recipes with in the settings."
-msgstr ""
+msgstr "Seznam uporabnikov za deljenje receptov lahko vidiš v nastavitvah."
 
 #: .\cookbook\forms.py:327
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
 msgstr ""
+"Lahko uporabiš \"markdown\", da urediš to polje. Preveri <a href=\"/docs/"
+"markdown/\">tukaj</a>"
 
 #: .\cookbook\forms.py:353
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Maksimalno število uporabnikov za ta prostor je doseženo."
 
 #: .\cookbook\forms.py:359
 msgid "Email address already taken!"
@@ -235,56 +254,71 @@ msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"E-poštni naslov ni potreben, vendar če je vnešeno, bo povabilo poslano do "
+"uporabnika."
 
 #: .\cookbook\forms.py:382
 msgid "Name already taken."
-msgstr ""
+msgstr "Ime je že zasedeno."
 
 #: .\cookbook\forms.py:393
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Sprejmi pogoje uporabe"
 
 #: .\cookbook\forms.py:425
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Določa, kakšno je iskanje, če uporablja trigram podobnost ujemanje (npr. "
+"nizke vrednosti pomenijo več, tipkanje se prezre)."
 
 #: .\cookbook\forms.py:435
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full desciption of choices."
 msgstr ""
+"Izberi metodo iskanja. Klikni  <a href=\"/docs/search/\">tukaj</a>  za "
+"prikaz vseh izbir."
 
 #: .\cookbook\forms.py:436
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Pri urejanju in uvozu receptov uporabite mehka ujemanja na enotah, ključnih "
+"besedah in sestavinah."
 
 #: .\cookbook\forms.py:438
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Polja za iskanje prezrtih naglasov. Če izberete to možnost, lahko izboljšate "
+"ali poslabšate kakovost iskanja, odvisno od jezika"
 
 #: .\cookbook\forms.py:440
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Polja za iskanje delnih ujemajev. (npr. iskanje \"Pie\" vrne \"pie\" in "
+"\"piece\" in \"soapie\")"
 
 #: .\cookbook\forms.py:442
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Polja za iskanje začetka ujemanja besed. (npr. iskanje \"sa\" vrne \"salad\" "
+"in \"sandwich\")"
 
 #: .\cookbook\forms.py:444
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Polja za \"mehko\" iskanje. (npr. iskanje \"recpie\" bo našlo \"recipe\".)"
 
 #: .\cookbook\forms.py:446
 msgid ""

@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-01-28 00:06+0000\n"
-"Last-Translator: Alex Hanselmann <alex.hanselmann@gmx.ch>\n"
+"PO-Revision-Date: 2022-02-02 15:31+0000\n"
+"Last-Translator: Sven <tr@sutikal.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
@@ -410,6 +410,7 @@ msgstr ""
 #: .\cookbook\forms.py:500
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Nur für den Supermarkt konfigurierte Kategorien in Einkaufsliste anzeigen."
 
 #: .\cookbook\forms.py:501
 msgid "Days of recent shopping list entries to display."
@@ -418,6 +419,8 @@ msgstr ""
 #: .\cookbook\forms.py:502
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
+"Lebensmittel als vorrätig markieren, wenn es in der Einkaufliste abgehakt "
+"wurde."
 
 #: .\cookbook\forms.py:503
 msgid "Delimiter to use for CSV exports."
@@ -441,7 +444,7 @@ msgstr "automatisch dem Menüplan hinzufügen"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Ausgenommen Vorrätiges"
 
 #: .\cookbook\forms.py:512
 msgid "Include Related"
@@ -449,7 +452,7 @@ msgstr "dazugehörend"
 
 #: .\cookbook\forms.py:513
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Standardmäßige Verzögerung in Stunden"
 
 #: .\cookbook\forms.py:514
 #, fuzzy
@@ -471,7 +474,7 @@ msgstr "Listenpräfix"
 
 #: .\cookbook\forms.py:518
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Automatisch als vorrätig markieren"
 
 #: .\cookbook\forms.py:528
 msgid "Reset Food Inheritance"
@@ -482,10 +485,8 @@ msgid "Reset all food to inherit the fields configured."
 msgstr ""
 
 #: .\cookbook\forms.py:541
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Zutat, die ersetzt werden soll."
+msgstr "Zutaten, die standardmäßig übernommen werden sollen."
 
 #: .\cookbook\forms.py:542
 msgid "Show recipe counts on search filters"
@@ -738,7 +739,7 @@ msgstr "Du hast Dein Datei-Uploadlimit erreicht."
 
 #: .\cookbook\serializer.py:962
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Bestehende Einkaufliste, die aktualisiert werden soll"
 
 #: .\cookbook\serializer.py:964
 msgid ""
@@ -754,10 +755,11 @@ msgstr ""
 #: .\cookbook\serializer.py:973
 msgid "Amount of food to add to the shopping list"
 msgstr ""
+"Menge des Lebensmittels, welches der Einkaufsliste hinzugefügt werden soll"
 
 #: .\cookbook\serializer.py:974
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID der Einheit, die für die Einkaufsliste verwendet werden soll"
 
 #: .\cookbook\serializer.py:975
 msgid "When set to true will delete all food from active shopping lists."
@@ -2041,10 +2043,8 @@ msgid "Search-Settings"
 msgstr "Sucheinstellungen"
 
 #: .\cookbook\templates\settings.html:56
-#, fuzzy
-#| msgid "Search-Settings"
 msgid "Shopping-Settings"
-msgstr "Sucheinstellungen"
+msgstr "Einstellungen Einkaufsliste"
 
 #: .\cookbook\templates\settings.html:65
 msgid "Name Settings"
@@ -2157,10 +2157,8 @@ msgid "Perfect for large Databases"
 msgstr "Ideal für große Datenbanken"
 
 #: .\cookbook\templates\settings.html:207
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Shopping Settings"
-msgstr "Einkaufsliste"
+msgstr "Einstellungen Einkaufsliste"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -2770,12 +2768,12 @@ msgstr ""
 #: .\cookbook\views\api.py:470
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} wurde von der Einkaufsliste entfernt."
 
 #: .\cookbook\views\api.py:475 .\cookbook\views\api.py:726
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "{obj.name} wurde der Einkaufsliste hinzugefügt."
 
 #: .\cookbook\views\api.py:587
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2801,11 +2799,11 @@ msgstr ""
 
 #: .\cookbook\views\api.py:634
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID der Einheit, die ein Rezept haben sollte."
 
 #: .\cookbook\views\api.py:635
 msgid "Rating a recipe should have. [0 - 5]"
-msgstr ""
+msgstr "Bewertung, die ein Rezept haben sollte. [ 0 - 5]"
 
 #: .\cookbook\views\api.py:636
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
@@ -2893,7 +2891,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1082
 msgid "Connection Refused."
-msgstr ""
+msgstr "Verbindung fehlgeschlagen."
 
 #: .\cookbook\views\api.py:1091
 msgid "No useable data could be found."
@@ -2980,6 +2978,8 @@ msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"Der PDF-Exporter ist in dieser Instanz nicht aktiviert, da er sich noch in "
+"einem experimentellen Zustand befindet."
 
 #: .\cookbook\views\import_export.py:132
 msgid "Exporting is not implemented for this provider"

@@ -93,6 +93,7 @@
                         :servings="servings"
                         :header="true"
                         @checked-state-changed="updateIngredientCheckedState"
+                        @change-servings="servings = $event"
                     />
                 </div>
 
@@ -271,8 +272,7 @@ export default {
 </script>
 
 <style>
-  #app > div > div{
+#app > div > div {
     break-inside: avoid;
-  }
-
+}
 </style>
