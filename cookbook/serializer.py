@@ -4,7 +4,8 @@ from decimal import Decimal
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db.models import Avg, QuerySet, Sum
+from django.db.models import Avg, Q, QuerySet, Sum, Value
+from django.db.models.functions import Substr
 from django.urls import reverse
 from django.utils import timezone
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
@@ -375,6 +376,13 @@ class RecipeSimpleSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'name', 'url']
 
 
+class FoodSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Food
+        fields = ('id', 'name')
+        read_only_fields = ['id', 'name']
+
+
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
@@ -382,9 +390,24 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     shopping = serializers.ReadOnlyField(source='shopping_status')
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     food_onhand = CustomOnHandField(required=False, allow_null=True)
+    substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
+    substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
 
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
+
+    def get_substitute_onhand(self, obj):
+        shared_users = None
+        if request := self.context.get('request', None):
+            shared_users = getattr(request, '_shared_users', None)
+        if shared_users is None:
+            shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+        filter = Q(id__in=obj.substitute.all())
+        if obj.substitute_siblings:
+            filter |= Q(path__startswith=obj.path[:Food.steplen*(obj.depth-1)], depth=obj.depth)
+        if obj.substitute_children:
+            filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
+        return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
 
     # def get_shopping_status(self, obj):
     #     return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
@@ -437,7 +460,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping'
+            'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand'
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 

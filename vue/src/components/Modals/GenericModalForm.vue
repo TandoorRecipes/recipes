@@ -16,8 +16,11 @@
                 <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
             </div>
             <template v-slot:modal-footer>
-                <div class="row w-100 justify-content-end">
-                    <div class="col-auto">
+                <div class="row w-100">
+                    <div class="col-6 align-self-end">
+                        <b-form-checkbox v-if="advancedForm" sm switch v-model="show_advanced">{{ $t("Advanced") }}</b-form-checkbox>
+                    </div>
+                    <div class="col-auto justify-content-end">
                         <b-button class="mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
                         <b-button class="mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
                     </div>
@@ -78,7 +81,8 @@ export default {
             form: {},
             dirty: false,
             special_handling: false,
-            show_help: true,
+            show_help: false,
+            show_advanced: false,
         }
     },
     mounted() {
@@ -86,6 +90,13 @@ export default {
         this.$root.$on("change", this.storeValue) // bootstrap modal placed at document so have to listen at root of component
     },
     computed: {
+        advancedForm() {
+            return this.form.fields
+                .map((x) => {
+                    return x?.advanced ?? false
+                })
+                .includes(true)
+        },
         buttonLabel() {
             return this.buttons[this.action].label
         },
@@ -268,6 +279,11 @@ export default {
         visibleCondition(field, field_type) {
             let type_match = field?.type == field_type
             let checks = true
+            let show_advanced = true
+            if (field?.advanced) {
+                show_advanced = this.show_advanced
+            }
+
             if (type_match && field?.condition) {
                 const value = this.item1[field?.condition?.field]
                 const preference = getUserPreference(field?.condition?.field)
@@ -294,7 +310,7 @@ export default {
                         }
                 }
             }
-            return type_match && checks
+            return type_match && checks && show_advanced
         },
     },
 }

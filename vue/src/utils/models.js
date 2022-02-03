@@ -76,7 +76,22 @@ export class Models {
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "recipe", "food_onhand", "supermarket_category", "inherit", "inherit_fields", "ignore_shopping", "reset_inherit"]],
+            params: [
+                [
+                    "name",
+                    "description",
+                    "recipe",
+                    "food_onhand",
+                    "supermarket_category",
+                    "inherit",
+                    "inherit_fields",
+                    "ignore_shopping",
+                    "substitute",
+                    "substitute_siblings",
+                    "substitute_children",
+                    "reset_inherit",
+                ],
+            ],
 
             form: {
                 show_help: true,
@@ -126,8 +141,38 @@ export class Models {
                     allow_create: true,
                     help_text: i18n.t("shopping_category_help"),
                 },
+                substitute: {
+                    form_field: true,
+                    advanced: true,
+                    type: "lookup",
+                    multiple: true,
+                    field: "substitute",
+                    list: "FOOD",
+                    label: i18n.t("Substitutes"),
+                    allow_create: false,
+                    help_text: i18n.t("substitute_help"),
+                },
+                substitute_siblings: {
+                    form_field: true,
+                    advanced: true,
+                    type: "checkbox",
+                    field: "substitute_siblings",
+                    label: i18n.t("substitute_siblings"),
+                    help_text: i18n.t("substitute_siblings_help"),
+                    condition: { field: "parent", value: true, condition: "field_exists" },
+                },
+                substitute_children: {
+                    form_field: true,
+                    advanced: true,
+                    type: "checkbox",
+                    field: "substitute_children",
+                    label: i18n.t("substitute_children"),
+                    help_text: i18n.t("substitute_children_help"),
+                    condition: { field: "numchild", value: 0, condition: "gt" },
+                },
                 inherit_fields: {
                     form_field: true,
+                    advanced: true,
                     type: "lookup",
                     multiple: true,
                     field: "inherit_fields",
@@ -137,6 +182,7 @@ export class Models {
                 },
                 reset_inherit: {
                     form_field: true,
+                    advanced: true,
                     type: "checkbox",
                     field: "reset_inherit",
                     label: i18n.t("reset_children"),

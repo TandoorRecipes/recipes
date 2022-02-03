@@ -417,7 +417,6 @@ export default {
             // TODO: make this generic
             let params = { pageSize: 50, random: true }
             params[this.this_recipe_param] = item.id
-            console.log("RECIPE PARAM", this.this_recipe_param, params, item.id)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
                     parent = this.findCard(item.id, this["items_" + col])

@@ -488,6 +488,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
+    # TODO when savings a food as substitute children - assume children and descednats are also substitutes for siblings
     # exclude fields not implemented yet
     inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
 
@@ -501,6 +502,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
     inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True)
+    substitute = models.ManyToManyField("self", blank=True)
+    substitute_siblings = models.BooleanField(default=False)
+    substitute_children = models.BooleanField(default=False)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -560,9 +564,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
-    # a pre-delete signal on Food checks if the Ingredient is part of a Step, if it is raises a ProtectedError instead of cascading the delete
+    # delete method on Food and Unit checks if they are part of a Recipe, if it is raises a ProtectedError instead of cascading the delete
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
