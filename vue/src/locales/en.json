@@ -59,8 +59,8 @@
     "Move_Down": "Move down",
     "Step_Name": "Step Name",
     "Step_Type": "Step Type",
-    "Make_header": "Make_Header",
-    "Make_Ingredient": "Make_Ingredient",
+    "Make_Header": "Make Header",
+    "Make_Ingredient": "Make Ingredient",
     "Enable_Amount": "Enable Amount",
     "Disable_Amount": "Disable Amount",
     "Add_Step": "Add Step",
@@ -294,5 +294,7 @@
     "ignore_shopping_help": "Never add food to the shopping list (e.g. water)",
     "shopping_category_help": "Supermarkets can be ordered and filtered by Shopping Category according to the layout of the aisles.",
     "food_recipe_help": "Linking a recipe here will include the linked recipe in any other recipe that use this food",
-    "Foods":"Foods"
+    "Foods": "Foods",
+    "review_shopping": "Review shopping entries before saving",
+    "view_recipe": "View Recipe"
 }

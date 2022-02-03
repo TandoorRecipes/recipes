@@ -186,6 +186,8 @@ if LDAP_AUTH:
     }
     AUTH_LDAP_ALWAYS_UPDATE_USER = bool(int(os.getenv('AUTH_LDAP_ALWAYS_UPDATE_USER', True)))
     AUTH_LDAP_CACHE_TIMEOUT = int(os.getenv('AUTH_LDAP_CACHE_TIMEOUT', 3600))
+    if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
+        AUTH_LDAP_GLOBAL_OPTIONS = { ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE') }
 
 AUTHENTICATION_BACKENDS += [
     'django.contrib.auth.backends.ModelBackend',

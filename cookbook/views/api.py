@@ -41,7 +41,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.recipe_url_import import get_from_scraper
-from cookbook.helper.shopping_helper import list_from_recipe, shopping_helper
+from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
                              ImportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
                              RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
@@ -153,11 +153,15 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                 )
             else:
                 # TODO have this check unaccent search settings or other search preferences?
+                filter = Q(name__icontains=query)
+                if any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                    filter |= Q(name__unaccent__icontains=query)
+
                 self.queryset = (
                     self.queryset
                         .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
                                               default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(name__icontains=query).order_by('-starts', 'name')
+                        .filter(filter).order_by('-starts', 'name')
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -644,7 +648,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     schema = QueryParamAutoSchema()
 
     def get_queryset(self):
-
         if self.detail:
             self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
@@ -717,16 +720,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
         obj = self.get_object()
         ingredients = request.data.get('ingredients', None)
         servings = request.data.get('servings', None)
-        list_recipe = ShoppingListRecipe.objects.filter(id=request.data.get('list_recipe', None)).first()
-        if servings is None:
-            servings = getattr(list_recipe, 'servings', obj.servings)
-        # created_by needs to be sticky to original creator as it is 'their' shopping list
-        # changing shopping list created_by can shift some items to new owner which may not share in the other direction
-        created_by = getattr(ShoppingListEntry.objects.filter(list_recipe=list_recipe).first(), 'created_by', request.user)
-        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-        list_from_recipe(list_recipe=list_recipe, recipe=obj, ingredients=ingredients, servings=servings, space=request.space, created_by=created_by)
+        list_recipe = request.data.get('list_recipe', None)
+        mealplan = request.data.get('mealplan', None)
+        SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj, mealplan=mealplan)
 
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
+        http_status = status.HTTP_204_NO_CONTENT
+        if servings and servings <= 0:
+            result = SLR.delete()
+        elif list_recipe:
+            result = SLR.edit(servings=servings, ingredients=ingredients)
+        else:
+            result = SLR.create(servings=servings, ingredients=ingredients)
+
+        if not result:
+            content = {'msg': ('An error occurred')}
+            http_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            content = {'msg': _(f'{obj.name} was added to the shopping list.')}
+            http_status = status.HTTP_204_NO_CONTENT
+
+        return Response(content, status=http_status)
 
     @decorators.action(
         detail=True,
