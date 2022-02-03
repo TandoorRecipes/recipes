@@ -260,7 +260,7 @@ def shopping_list(request, pk=None):  # TODO deprecate
     recipes = []
     for r in html_list:
         r = r.replace('[', '').replace(']', '')
-        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):  # vulnerable to DoS
+        if len(r) < 10000 and re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
             rid, multiplier = r.split(',')
             if recipe := Recipe.objects.filter(pk=int(rid), space=request.space).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
