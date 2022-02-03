@@ -211,10 +211,10 @@ export interface Food {
     recipe?: FoodRecipe | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof Food
      */
-    food_onhand?: boolean;
+    food_onhand?: string | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -245,6 +245,12 @@ export interface Food {
      * @memberof Food
      */
     full_name?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    ignore_shopping?: boolean;
 }
 /**
  * 
@@ -607,10 +613,10 @@ export interface IngredientFood {
     recipe?: FoodRecipe | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof IngredientFood
      */
-    food_onhand?: boolean;
+    food_onhand?: string | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -641,6 +647,12 @@ export interface IngredientFood {
      * @memberof IngredientFood
      */
     full_name?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    ignore_shopping?: boolean;
 }
 /**
  * 
@@ -1182,7 +1194,7 @@ export interface MealPlanRecipe {
      * @type {any}
      * @memberof MealPlanRecipe
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<MealPlanRecipeKeywords>}
@@ -1255,6 +1267,12 @@ export interface MealPlanRecipe {
      * @memberof MealPlanRecipe
      */
     _new?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    recent?: string;
 }
 /**
  * 
@@ -1372,7 +1390,7 @@ export interface Recipe {
      * @type {any}
      * @memberof Recipe
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<RecipeKeywords>}
@@ -1715,25 +1733,25 @@ export interface RecipeNutrition {
      * @type {string}
      * @memberof RecipeNutrition
      */
-    carbohydrates?: string;
+    carbohydrates: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeNutrition
      */
-    fats?: string;
+    fats: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeNutrition
      */
-    proteins?: string;
+    proteins: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeNutrition
      */
-    calories?: string;
+    calories: string;
     /**
      * 
      * @type {string}
@@ -1770,7 +1788,7 @@ export interface RecipeOverview {
      * @type {any}
      * @memberof RecipeOverview
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<MealPlanRecipeKeywords>}
@@ -1843,6 +1861,12 @@ export interface RecipeOverview {
      * @memberof RecipeOverview
      */
     _new?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeOverview
+     */
+    recent?: string;
 }
 /**
  * 
@@ -1923,12 +1947,6 @@ export interface RecipeSteps {
      * @type {string}
      * @memberof RecipeSteps
      */
-    type?: RecipeStepsTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeSteps
-     */
     instruction?: string;
     /**
      * 
@@ -1991,18 +2009,6 @@ export interface RecipeSteps {
      */
     numrecipe?: string;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum RecipeStepsTypeEnum {
-    Text = 'TEXT',
-    Time = 'TIME',
-    File = 'FILE',
-    Recipe = 'RECIPE'
-}
-
 /**
  * 
  * @export
@@ -2528,12 +2534,6 @@ export interface Step {
      * @type {string}
      * @memberof Step
      */
-    type?: StepTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof Step
-     */
     instruction?: string;
     /**
      * 
@@ -2596,18 +2596,6 @@ export interface Step {
      */
     numrecipe?: string;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum StepTypeEnum {
-    Text = 'TEXT',
-    Time = 'TIME',
-    File = 'FILE',
-    Recipe = 'RECIPE'
-}
-
 /**
  * 
  * @export
@@ -2957,6 +2945,12 @@ export interface UserPreference {
      * @type {boolean}
      * @memberof UserPreference
      */
+    use_fractions?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
     use_kj?: boolean;
     /**
      * 
@@ -3026,10 +3020,10 @@ export interface UserPreference {
     mealplan_autoexclude_onhand?: boolean;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<MealPlanShared>}
      * @memberof UserPreference
      */
-    shopping_share?: Array<number>;
+    shopping_share?: Array<MealPlanShared> | null;
     /**
      * 
      * @type {number}
@@ -3054,6 +3048,18 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     filter_to_supermarket?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    shopping_add_onhand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    left_handed?: boolean;
 }
 
 /**

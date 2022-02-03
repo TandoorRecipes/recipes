@@ -123,7 +123,7 @@
                                             <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
                                                 <!-- passing an array of values to the table grouped by Food -->
                                                 <transition-group name="slide-fade">
-                                                    <div v-for="(entries, x) in Object.entries(s)" :key="x">
+                                                    <div class="mx-4" v-for="(entries, x) in Object.entries(s)" :key="x">
                                                         <transition name="slide-fade" mode="out-in">
                                                             <ShoppingLineItem
                                                                 :entries="entries[1]"
@@ -189,6 +189,9 @@
                             <td>{{ r.recipe_mealplan.recipe_name }}</td>
                             <td class="block-inline">
                                 <b-form-input min="1" type="number" :debounce="300" :value="r.recipe_mealplan.servings" @input="updateServings($event, r.list_recipe)"></b-form-input>
+                            </td>
+                            <td>
+                                <i class="btn text-primary far fa-eye fa-lg px-2 border-0" variant="link" :title="$t('view_recipe')" @click="editRecipeList($event, r)" />
                             </td>
                             <td>
                                 <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')" @click="deleteRecipe($event, r.list_recipe)" />
@@ -401,14 +404,14 @@
                             </div>
                             <div v-if="settings.mealplan_autoadd_shopping">
                                 <div class="row">
-                                    <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
+                                    <div class="col col-md-6">{{ $t("mealplan_autoexclude_onhand") }}</div>
                                     <div class="col col-md-6 text-right">
                                         <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings" />
                                     </div>
                                 </div>
                                 <div class="row sm mb-3">
                                     <div class="col">
-                                        <em class="small text-muted">{{ $t("mealplan_autoadd_shopping_desc") }}</em>
+                                        <em class="small text-muted">{{ $t("mealplan_autoexclude_onhand_desc") }}</em>
                                     </div>
                                 </div>
                             </div>
@@ -432,7 +435,10 @@
                                 <div class="col col-md-6 text-right">
                                     <generic-multiselect
                                         size="sm"
-                                        @change="settings.shopping_share = $event.valsaveSettings()"
+                                        @change="
+                                            settings.shopping_share = $event.val
+                                            saveSettings()
+                                        "
                                         :model="Models.USER"
                                         :initial_selection="settings.shopping_share"
                                         label="username"
@@ -557,6 +563,26 @@
                 </div>
             </b-tab>
         </b-tabs>
+
+        <transition name="slided-fade">
+            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
+                <div class="col-6">
+                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode"
+                        ><i class="fas fa-cart-plus"></i>
+                        {{ $t("New Entry") }}
+                    </a>
+                </div>
+                <div class="col-6">
+                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
+                        <template #button-content> <i class="fas fa-download"></i> {{ $t("Export") }} </template>
+                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
+                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
+                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')" icon="fas fa-clipboard-list" />
+                        <CopyToClipboard :items="csvData" :settings="settings" format="table" :label="$t('copy_markdown_table')" icon="fab fa-markdown" />
+                    </b-dropdown>
+                </div>
+            </div>
+        </transition>
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
@@ -637,26 +663,7 @@
                 </ContextMenuItem>
             </template>
         </ContextMenu>
-        <transition name="slided-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
-                <div class="col-6">
-                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode"
-                        ><i class="fas fa-cart-plus"></i>
-                        {{ $t("New Entry") }}
-                    </a>
-                </div>
-                <div class="col-6">
-                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
-                        <template #button-content> <i class="fas fa-download"></i> {{ $t("Export") }} </template>
-                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
-                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
-                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')" icon="fas fa-clipboard-list" />
-                        <CopyToClipboard :items="csvData" :settings="settings" format="table" :label="$t('copy_markdown_table')" icon="fab fa-markdown" />
-                    </b-dropdown>
-                </div>
-            </div>
-        </transition>
-        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" />
+        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe" />
     </div>
 </template>
 
@@ -908,6 +915,7 @@ export default {
         },
     },
     mounted() {
+        console.log(screen.height)
         this.getShoppingList()
         this.getSupermarkets()
         this.getShoppingCategories()
@@ -922,8 +930,8 @@ export default {
         this.$nextTick(function () {
             if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
                 this.entry_mode_simple = this.$cookies.get(SETTINGS_COOKIE_NAME)
-                this.selected_supermarket = localStorage.getItem("shopping_v2_selected_supermarket") || undefined
             }
+            this.selected_supermarket = localStorage.getItem("shopping_v2_selected_supermarket") || undefined
         })
     },
     methods: {
@@ -1398,10 +1406,22 @@ export default {
             window.removeEventListener("offline", this.updateOnlineStatus)
         },
         addRecipeToShopping() {
+            console.log(this.new_recipe)
             this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
         finishShopping() {
+            this.add_recipe_servings = 1
+            this.new_recipe = { id: undefined }
+            this.edit_recipe_list = undefined
             this.getShoppingList()
+        },
+        editRecipeList(e, r) {
+            this.new_recipe = { id: r.recipe_mealplan.recipe, name: r.recipe_mealplan.recipe_name, servings: r.recipe_mealplan.servings, list_recipe: r.list_recipe }
+            this.$nextTick(function () {
+                this.$bvModal.show(`shopping_${this.new_recipe.id}`)
+            })
+
+            // this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
     },
     directives: {
@@ -1464,14 +1484,25 @@ export default {
     font-size: 20px;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     #shoppinglist {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 65vh;
+        height: 6vh;
+        padding-right: 8px !important;
+    }
+}
+@media screen and (min-height: 700px) and (max-width: 768px) {
+    #shoppinglist {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 72vh;
         padding-right: 8px !important;
     }
 }

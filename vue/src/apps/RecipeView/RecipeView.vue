@@ -65,15 +65,7 @@
                             <i class="fas fa-pizza-slice fa-2x text-primary"></i>
                         </div>
                         <div class="my-auto" style="padding-right: 4px">
-                            <input
-                                style="text-align: right; border-width: 0px; border: none; padding: 0px; padding-left: 0.5vw; padding-right: 8px; max-width: 80px"
-                                value="1"
-                                maxlength="3"
-                                min="0"
-                                type="number"
-                                class="form-control form-control-lg"
-                                v-model.number="servings"
-                            />
+                            <CustomInputSpinButton v-model.number="servings" />
                         </div>
                         <div class="my-auto">
                             <span class="text-primary">
@@ -101,6 +93,7 @@
                         :servings="servings"
                         :header="true"
                         @checked-state-changed="updateIngredientCheckedState"
+                        @change-servings="servings = $event"
                     />
                 </div>
 
@@ -174,6 +167,7 @@ import StepComponent from "@/components/StepComponent"
 import KeywordsComponent from "@/components/KeywordsComponent"
 import NutritionComponent from "@/components/NutritionComponent"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
+import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 
 Vue.prototype.moment = moment
 
@@ -195,6 +189,7 @@ export default {
         LoadingSpinner,
         AddRecipeToBook,
         RecipeSwitcher,
+        CustomInputSpinButton,
     },
     computed: {
         ingredient_factor: function () {
@@ -277,8 +272,7 @@ export default {
 </script>
 
 <style>
-  #app > div > div{
+#app > div > div {
     break-inside: avoid;
-  }
-
+}
 </style>

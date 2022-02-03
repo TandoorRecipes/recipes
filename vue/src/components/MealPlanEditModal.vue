@@ -25,7 +25,7 @@
                                 <b-form-group>
                                     <generic-multiselect
                                         @change="selectRecipe"
-                                        :initial_selection="entryEditing_initial_recipe"
+                                        :initial_single_selection="entryEditing.recipe"
                                         :label="'name'"
                                         :model="Models.RECIPE"
                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
@@ -45,7 +45,7 @@
                                         v-bind:placeholder="$t('Meal_Type')"
                                         :limit="10"
                                         :multiple="false"
-                                        :initial_selection="entryEditing_initial_meal_type"
+                                        :initial_single_selection="entryEditing.meal_type"
                                         :allow_create="true"
                                         :create_placeholder="$t('Create_New_Meal_Type')"
                                         @new="createMealType"
@@ -76,12 +76,16 @@
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
                                 </b-form-group>
                                 <b-input-group v-if="!autoMealPlan">
-                                    <b-form-checkbox id="AddToShopping" v-model="entryEditing.addshopping" />
+                                    <b-form-checkbox id="AddToShopping" v-model="mealplan_settings.addshopping" />
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("AddToShopping") }}</small>
+                                </b-input-group>
+                                <b-input-group v-if="mealplan_settings.addshopping">
+                                    <b-form-checkbox id="reviewShopping" v-model="mealplan_settings.reviewshopping" />
+                                    <small tabindex="-1" class="form-text text-muted">{{ $t("review_shopping") }}</small>
                                 </b-input-group>
                             </div>
                             <div class="col-lg-6 d-none d-lg-block d-xl-block">
-                                <recipe-card :recipe="entryEditing.recipe" v-if="entryEditing.recipe != null" :detailed="false"></recipe-card>
+                                <recipe-card v-if="entryEditing.recipe" :recipe="entryEditing.recipe" :detailed="false"></recipe-card>
                             </div>
                         </div>
                         <div class="row mt-3 mb-3">
@@ -99,22 +103,22 @@
 
 <script>
 import Vue from "vue"
+import VueCookies from "vue-cookies"
 import { BootstrapVue } from "bootstrap-vue"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import { ApiMixin, getUserPreference } from "@/utils/utils"
 
 const { ApiApiFactory } = require("@/utils/openapi/api")
-
 const { StandardToasts } = require("@/utils/utils")
 
 Vue.use(BootstrapVue)
+Vue.use(VueCookies)
+let MEALPLAN_COOKIE_NAME = "mealplan_settings"
 
 export default {
     name: "MealPlanEditModal",
     props: {
         entry: Object,
-        entryEditing_initial_recipe: Array,
-        entryEditing_initial_meal_type: Array,
         entryEditing_inital_servings: Number,
         modal_title: String,
         modal_id: {
@@ -137,17 +141,35 @@ export default {
             missing_recipe: false,
             missing_meal_type: false,
             default_plan_share: [],
+            mealplan_settings: {
+                addshopping: false,
+                reviewshopping: false,
+            },
         }
     },
     watch: {
         entry: {
             handler() {
                 this.entryEditing = Object.assign({}, this.entry)
+
                 if (this.entryEditing_inital_servings) {
                     this.entryEditing.servings = this.entryEditing_inital_servings
                 }
             },
             deep: true,
+        },
+        entryEditing: {
+            handler(newVal) {},
+            deep: true,
+        },
+        mealplan_settings: {
+            handler(newVal) {
+                this.$cookies.set(MEALPLAN_COOKIE_NAME, this.mealplan_settings)
+            },
+            deep: true,
+        },
+        entryEditing_inital_servings: function (newVal) {
+            this.entryEditing.servings = newVal
         },
     },
     mounted: function () {},
@@ -158,6 +180,9 @@ export default {
     },
     methods: {
         showModal() {
+            if (this.$cookies.isKey(MEALPLAN_COOKIE_NAME)) {
+                this.mealplan_settings = Object.assign({}, this.mealplan_settings, this.$cookies.get(MEALPLAN_COOKIE_NAME))
+            }
             let apiClient = new ApiApiFactory()
 
             apiClient.listUserPreferences().then((result) => {
@@ -180,8 +205,10 @@ export default {
                 cancel = true
             }
             if (!cancel) {
+                console.log("saving", { ...this.mealplan_settings, ...this.entryEditing })
                 this.$bvModal.hide(`edit-modal`)
-                this.$emit("save-entry", this.entryEditing)
+                this.$emit("save-entry", { ...this.mealplan_settings, ...this.entryEditing })
+                console.log("after emit", { ...this.mealplan_settings, ...this.entryEditing }.addshopping)
             }
         },
         deleteEntry() {
