@@ -791,7 +791,7 @@ export default {
             let empty_step = {
                 instruction: "",
                 ingredients: [],
-                show_as_header: true,
+                show_as_header: false,
                 time_visible: false,
                 ingredients_visible: true,
                 instruction_visible: true,
