@@ -736,8 +736,8 @@ export default {
             }
 
             this.recipe.servings = Math.floor(this.recipe.servings) // temporary fix until a proper framework for frontend input validation is established
-            if (this.recipe.servings === "" || isNaN(this.recipe.servings)) {
-                this.recipe.servings = 0
+            if (this.recipe.servings === "" || isNaN(this.recipe.servings) || this.recipe.servings===0 ) {
+                this.recipe.servings = 1
             }
 
             apiFactory
