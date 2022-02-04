@@ -217,13 +217,13 @@
     </div>
 
     <script type="application/javascript">
-        $(function () {
+        $(function() {
             $('#id_search-trigram_threshold').get(0).type = 'range';
-        })
+        });
 
-        function applyPreset (preset){
-            $('#id_search-preset').val(preset)
-            $('#search_form_button').click()
+        function applyPreset(preset) {
+            $('#id_search-preset').val(preset);
+            $('#search_form_button').click();
         }
 
         function copyToken() {
@@ -239,29 +239,29 @@
         }
 
         // Change hash for page-reload
-        $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        $('.nav-tabs a').on('shown.bs.tab', function(e) {
             window.location.hash = e.target.hash;
         })
+        
+        {% comment %}
         // listen for events
-        {% comment %} $(document).ready(function(){
+        $(document).ready(function() {
             hideShow()
             // call hideShow when the user clicks on the mealplan_autoadd checkbox
-            $("#id_shopping-mealplan_autoadd_shopping").click(function(event){
-                hideShow()
+            $("#id_shopping-mealplan_autoadd_shopping").click(function(event) {
+                hideShow();
             });
         })
 
-        function hideShow(){
-            if(document.getElementById('id_shopping-mealplan_autoadd_shopping').checked == true)
-                {
-                    $('#div_id_shopping-mealplan_autoexclude_onhand').show();
-                    $('#div_id_shopping-mealplan_autoinclude_related').show();
-                }
-            else
-                {
+        function hideShow() {
+            if(document.getElementById('id_shopping-mealplan_autoadd_shopping').checked == true) {
+                $('#div_id_shopping-mealplan_autoexclude_onhand').show();
+                $('#div_id_shopping-mealplan_autoinclude_related').show();
+            }
+            else {
                 $('#div_id_shopping-mealplan_autoexclude_onhand').hide();
                 $('#div_id_shopping-mealplan_autoinclude_related').hide();
-                } 
+            } 
         }
         {% endcomment %}
     </script>
