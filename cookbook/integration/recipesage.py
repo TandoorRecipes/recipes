@@ -88,12 +88,16 @@ class RecipeSage(Integration):
 
         return data
 
-    def get_files_from_recipes(self, recipes, cookie):
+    def get_files_from_recipes(self, recipes, el, cookie):
         json_list = []
         for r in recipes:
             json_list.append(self.get_file_from_recipe(r))
 
-        return [['export.json', json.dumps(json_list)]]
+            el.exported_recipes += 1
+            el.msg += self.get_recipe_processed_msg(r)
+            el.save()
+
+        return [[self.get_export_file_name('json'), json.dumps(json_list)]]
 
     def split_recipe_file(self, file):
         return json.loads(file.read().decode("utf-8"))
