@@ -116,7 +116,7 @@ class RecipeSearch():
         self.step_filters(steps=self._steps)
         self.unit_filters(units=self._units)
         self._makenow_filter()
-        self.string_filters(string=self._string)  # TODO this is overriding other filters!
+        self.string_filters(string=self._string)
 
         return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
 
@@ -177,17 +177,17 @@ class RecipeSearch():
                     query_filter |= f
                 else:
                     query_filter = f
-            self._queryset = self._queryset.filter(query_filter).distinct()
+            self._queryset = self._queryset.filter(query_filter).distinct()  # this creates duplicate records which can screw up other aggregates, see makenow for workaround
             if self._fulltext_include:
                 if self._fuzzy_match is None:
-                    self._queryset = self._queryset.annotate(score=self.search_rank)
+                    self._queryset = self._queryset.annotate(score=Coalesce(Max(self.search_rank), 0.0))
                 else:
-                    self._queryset = self._queryset.annotate(rank=self.search_rank)
+                    self._queryset = self._queryset.annotate(rank=Coalesce(Max(self.search_rank), 0.0))
 
             if self._fuzzy_match is not None:
                 simularity = self._fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
                 if not self._fulltext_include:
-                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
+                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(Max(simularity)), 0.0))
                 else:
                     self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
             if self._sort_includes('score') and self._fulltext_include and self._fuzzy_match is not None:
@@ -427,10 +427,11 @@ class RecipeSearch():
             | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
             | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
         )
-        self._queryset = self._queryset.annotate(
+        makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food', filter=Q(steps__ingredients__food__ignore_shopping=False, steps__ingredients__food__isnull=False), distinct=True),
             count_onhand=Count('pk', filter=onhand_filter)
         ).annotate(missingfood=F('count_food')-F('count_onhand')).filter(missingfood__lte=0)
+        self._queryset = self._queryset.filter(id__in=makenow_recipes.values('id'))
 
     @staticmethod
     def __children_substitute_filter(shopping_users=None):
