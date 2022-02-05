@@ -296,5 +296,7 @@
     "OnHand_help": "Lebensmittel ist \"Vorrätig\" und wird nicht automatisch zur Einkaufsliste hinzugefügt.",
     "shopping_category_help": "Supermärkte können nach Einkaufskategorien geordnet und gefiltert werden, je nachdem, wie die Gänge angeordnet sind.",
     "Foods": "Lebensmittel",
-    "food_recipe_help": "Wird ein Rezept hier verknüpft, wird diese Verknüpfung in allen anderen Rezepten übernommen, die dieses Lebensmittel beinhaltet"
+    "food_recipe_help": "Wird ein Rezept hier verknüpft, wird diese Verknüpfung in allen anderen Rezepten übernommen, die dieses Lebensmittel beinhaltet",
+    "review_shopping": "Überprüfe die Einkaufsliste vor dem Speichern",
+    "view_recipe": "Rezept anschauen"
 }
