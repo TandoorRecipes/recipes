@@ -292,7 +292,7 @@
     "remember_hours": "Stunden zu erinnern",
     "tree_select": "Baum-Auswahl verwenden",
     "CountMore": "...+{count} weitere",
-    "ignore_shopping_help": "Lebensmittel nie zur Einkaufsliste hinzufügen (z.B. Wasser).",
+    "ignore_shopping_help": "Füge Zutat nie zur Einkaufsliste hinzu (z.B. Wasser)",
     "OnHand_help": "Lebensmittel ist \"Vorrätig\" und wird nicht automatisch zur Einkaufsliste hinzugefügt.",
     "shopping_category_help": "Supermärkte können nach Einkaufskategorien geordnet und gefiltert werden, je nachdem, wie die Gänge angeordnet sind.",
     "Foods": "Lebensmittel",
