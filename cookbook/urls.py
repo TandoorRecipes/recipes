@@ -21,6 +21,7 @@ router.register(r'cook-log', api.CookLogViewSet)
 router.register(r'food', api.FoodViewSet)
 router.register(r'food-inherit-field', api.FoodInheritFieldViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
+router.register(r'export-log', api.ExportLogViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'keyword', api.KeywordViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
@@ -74,6 +75,8 @@ urlpatterns = [
     path('import/', import_export.import_recipe, name='view_import'),
     path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
     path('export/', import_export.export_recipe, name='view_export'),
+    path('export-response/<int:pk>/', import_export.export_response, name='view_export_response'),
+    path('export-file/<int:pk>/', import_export.export_file, name='view_export_file'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
     path('view/recipe/<int:pk>/<slug:share>', views.recipe_view, name='view_recipe'),

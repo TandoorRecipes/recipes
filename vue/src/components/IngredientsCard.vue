@@ -132,6 +132,7 @@ export default {
                 let ingredient_list = this.steps
                     .map((x) => x.ingredients)
                     .flat()
+                    .filter((x) => (x.food !== null && x.food !== undefined))
                     .map((x) => x.food.id)
 
                 let params = {
@@ -231,7 +232,7 @@ export default {
                 ...i,
                 shop: checked,
                 shopping_status: shopping_status, // possible values: true, false, null
-                category: i.food.supermarket_category?.name,
+                category: i.food?.supermarket_category?.name,
                 shopping_list: shopping.map((x) => {
                     return {
                         mealplan: x?.recipe_mealplan?.name,
