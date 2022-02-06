@@ -2,7 +2,10 @@
 source venv/bin/activate
 
 echo "Updating database"
-python manage.py migrate
+while python manage.py migrate ; status=$? ; [ $status -eq 1 ]; do
+        echo "Migration failed due to database not being ready yet, retrying in 5 seconds..."
+        sleep 5
+done
 python manage.py collectstatic_js_reverse
 python manage.py collectstatic --noinput
 echo "Done"
