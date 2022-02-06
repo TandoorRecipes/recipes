@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
 "PO-Revision-Date: 2022-02-06 21:31+0000\n"
-"Last-Translator: Christian <tandoor@czepter.de>\n"
+"Last-Translator: David Laukamp <dlkmp@live.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -484,6 +484,7 @@ msgstr "Lebensmittelvererbung zurücksetzen"
 #: .\cookbook\forms.py:529
 msgid "Reset all food to inherit the fields configured."
 msgstr ""
+"Alle Lebensmittel zurücksetzen, um die konfigurierten Felder zu übernehmen."
 
 #: .\cookbook\forms.py:541
 msgid "Fields on food that should be inherited by default."
