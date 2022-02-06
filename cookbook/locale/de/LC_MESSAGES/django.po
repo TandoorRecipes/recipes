@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-02-02 15:31+0000\n"
-"Last-Translator: Sven <tr@sutikal.de>\n"
+"PO-Revision-Date: 2022-02-06 21:31+0000\n"
+"Last-Translator: Christian <tandoor@czepter.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -415,6 +415,7 @@ msgstr ""
 #: .\cookbook\forms.py:501
 msgid "Days of recent shopping list entries to display."
 msgstr ""
+"Tage der letzten Einträge in der Einkaufsliste, die angezeigt werden sollen."
 
 #: .\cookbook\forms.py:502
 msgid "Mark food 'On Hand' when checked off shopping list."
@@ -478,7 +479,7 @@ msgstr "Automatisch als vorrätig markieren"
 
 #: .\cookbook\forms.py:528
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Lebensmittelvererbung zurücksetzen"
 
 #: .\cookbook\forms.py:529
 msgid "Reset all food to inherit the fields configured."
