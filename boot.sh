@@ -3,7 +3,7 @@ source venv/bin/activate
 
 echo "Updating database"
 while python manage.py migrate ; status=$? ; [ $status -eq 1 ]; do
-        echo "Migration failed! Database may not be ready yet, retrying in 5 seconds..."
+        echo "Migration failed (error #${status})! Database may not be ready yet, retrying in 5 seconds..."
         sleep 5
 done
 python manage.py collectstatic_js_reverse
