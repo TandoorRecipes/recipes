@@ -485,6 +485,10 @@ def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     ({'has_category': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
     ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping',  True, 'false'),
     ({'ignore_shopping': True, 'inherit': False}, 'ignore_shopping', False, 'false'),
+    ({'substitute_children': True, 'inherit': True}, 'substitute_children',  True, 'false'),
+    ({'substitute_children': True, 'inherit': False}, 'substitute_children', False, 'false'),
+    ({'substitute_siblings': True, 'inherit': True}, 'substitute_siblings',  True, 'false'),
+    ({'substitute_siblings': True, 'inherit': False}, 'substitute_siblings', False, 'false'),
 ], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
 def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     with scope(space=obj_tree_1.space):
@@ -507,28 +511,42 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     assert (getattr(obj_tree_1, field) == new_val) == inherit
     assert (getattr(child, field) == new_val) == inherit
 
+# TODO add test_inherit with child_inherit
+
 
 @pytest.mark.parametrize("obj_tree_1", [
-    ({'has_category': True, 'inherit': False, 'ignore_shopping': True}),
+    ({'has_category': True, 'inherit': False, 'ignore_shopping': True, 'substitute_children': True, 'substitute_siblings': True}),
 ], indirect=['obj_tree_1'])
-def test_reset_inherit(obj_tree_1, space_1):
+@pytest.mark.parametrize("global_reset", [True, False])
+@pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
+def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
     with scope(space=space_1):
-        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
         parent = obj_tree_1.get_parent()
         child = obj_tree_1.get_descendants()[0]
-        obj_tree_1.ignore_shopping = False
-        assert parent.ignore_shopping == child.ignore_shopping
-        assert parent.ignore_shopping != obj_tree_1.ignore_shopping
-        assert parent.supermarket_category != child.supermarket_category
-        assert parent.supermarket_category != obj_tree_1.supermarket_category
 
-        parent.reset_inheritance(space=space_1)
+        if field == 'supermarket_category':
+            assert parent.supermarket_category != child.supermarket_category
+            assert parent.supermarket_category != obj_tree_1.supermarket_category
+        else:
+            setattr(obj_tree_1, field, False)
+            obj_tree_1.save()
+            assert getattr(parent, field) == getattr(child, field)
+            assert getattr(parent, field) != getattr(obj_tree_1, field)
+
+        if global_reset:
+            space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
+            parent.reset_inheritance(space=space_1)
+        else:
+            obj_tree_1.child_inherit_fields.set(Food.inheritable_fields.values_list('id', flat=True))
+            obj_tree_1.save()
+            parent.reset_inheritance(space=space_1, food=obj_tree_1)
         # djangotree bypasses ORM and need to be retrieved again
         obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
-        parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
-        assert parent.ignore_shopping == obj_tree_1.ignore_shopping == child.ignore_shopping
-        assert parent.supermarket_category == obj_tree_1.supermarket_category == child.supermarket_category
+        parent = Food.objects.get(id=parent.id)
+        child = Food.objects.get(id=child.id)
+
+        assert (getattr(parent, field) == getattr(obj_tree_1, field)) == global_reset
+        assert getattr(obj_tree_1, field) == getattr(child, field)
 
 
 def test_onhand(obj_1, u1_s1, u2_s1):
