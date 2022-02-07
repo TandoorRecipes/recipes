@@ -62,7 +62,7 @@ class RecipeSearch():
         # TODO add created by
         # TODO image exists
         self._sort_order = self._params.get('sort_order', None)
-        self._internal = str2bool(self._params.get('internal', False))
+        self._internal = str2bool(self._params.get('internal', None))
         self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
         self._last_viewed = int(self._params.get('last_viewed', 0))
@@ -112,7 +112,7 @@ class RecipeSearch():
         self.food_filters(**self._foods)
         self.book_filters(**self._books)
         self.rating_filter(rating=self._rating)
-        self.internal_filter()
+        self.internal_filter(internal=self._internal)
         self.step_filters(steps=self._steps)
         self.unit_filters(units=self._units)
         self._makenow_filter()
@@ -335,8 +335,10 @@ class RecipeSearch():
         else:
             self._queryset = self._queryset.filter(rating__gte=int(rating))
 
-    def internal_filter(self):
-        self._queryset = self._queryset.filter(internal=True)
+    def internal_filter(self, internal=None):
+        if not internal:
+            return
+        self._queryset = self._queryset.filter(internal=internal)
 
     def book_filters(self, **kwargs):
         if all([kwargs[x] is None for x in kwargs]):

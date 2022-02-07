@@ -18,9 +18,8 @@ if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_ps
                                                'django.db.backends.postgresql']:
     SQLITE = False
 
+
 # wraps a signal with the ability to set 'skip_signal' to avoid creating recursive signals
-
-
 def skip_signal(signal_func):
     @wraps(signal_func)
     def _decorator(sender, instance, **kwargs):
@@ -76,8 +75,9 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
     # apply changes from parent to instance for each inherited field
     if instance.parent and inherit.count() > 0:
         parent = instance.get_parent()
-        if 'ignore_shopping' in inherit:
-            instance.ignore_shopping = parent.ignore_shopping
+        for field in ['ignore_shopping', 'substitute_children', 'substitute_siblings']:
+            if field in inherit:
+                setattr(instance, field, getattr(parent, field, None))
         # if supermarket_category is not set, do not cascade - if this becomes non-intuitive can change
         if 'supermarket_category' in inherit and parent.supermarket_category:
             instance.supermarket_category = parent.supermarket_category
@@ -87,19 +87,17 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
         finally:
             del instance.skip_signal
 
-    # TODO figure out how to generalize this
     # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
-    _save = []
-    for child in instance.get_children().filter(inherit_fields__field='ignore_shopping'):
-        child.ignore_shopping = instance.ignore_shopping
-        _save.append(child)
-    # don't cascade empty supermarket category
-    if instance.supermarket_category:
-        # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
-        for child in instance.get_children().filter(inherit_fields__field='supermarket_category'):
-            child.supermarket_category = instance.supermarket_category
-            _save.append(child)
-    for child in set(_save):
+    for child in instance.get_children().filter(inherit_fields__in=Food.inheritable_fields):
+        # set inherited field values
+        for field in (inherit_fields := ['ignore_shopping', 'substitute_children', 'substitute_siblings']):
+            if field in instance.inherit_fields.values_list('field', flat=True):
+                setattr(child, field, getattr(instance, field, None))
+
+        # don't cascade empty supermarket category
+        if instance.supermarket_category and 'supermarket_category' in inherit_fields:
+            setattr(child, 'supermarket_category', getattr(instance, 'supermarket_category', None))
+
         child.save()
 
 
@@ -117,19 +115,9 @@ def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs
             if instance.servings != x.servings:
                 SLR = RecipeShoppingEditor(id=x.id, user=user, space=instance.space)
                 SLR.edit_servings(servings=instance.servings)
-                # list_recipe = list_from_recipe(list_recipe=x, servings=instance.servings, space=instance.space)
     elif not user.userpreference.mealplan_autoadd_shopping or not instance.recipe:
         return
 
     if created:
-        # if creating a mealplan - perform shopping list activities
-        # kwargs = {
-        #     'mealplan': instance,
-        #     'space': instance.space,
-        #     'created_by': user,
-        #     'servings': instance.servings
-        # }
         SLR = RecipeShoppingEditor(user=user, space=instance.space)
         SLR.create(mealplan=instance, servings=instance.servings)
-
-        # list_recipe = list_from_recipe(**kwargs)
