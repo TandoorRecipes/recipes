@@ -1,0 +1,62 @@
+version: "2.4"
+services:
+  db_recipes:
+    restart: always
+    image: postgres:11-alpine
+    volumes:
+      - ${POSTGRES_DATA_DIR:-./postgresql}:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U $$POSTGRES_USER -d $$POSTGRES_DB --list || exit 1"]
+      interval: 4s
+      timeout: 1s
+      retries: 12
+    networks:
+      tandoor:
+        ipv6_address: ${IPV6_PREFIX:?NO_IPV6_PREFIX}::2
+  web_recipes:
+    image: vabene1111/recipes
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - staticfiles:/opt/recipes/staticfiles
+      - nginx_config:/opt/recipes/nginx/conf.d
+      - ${MEDIA_FILES_DIR:-./mediafiles}:/opt/recipes/mediafiles
+    depends_on:
+      db_recipes:
+        condition: service_healthy
+    networks:
+      tandoor:
+        ipv6_address: ${IPV6_PREFIX:?NO_IPV6_PREFIX}::3
+
+  nginx_recipes:
+    image: nginx:mainline-alpine
+    restart: always
+    ports:
+      - 80:80
+    env_file:
+      - ./.env
+    depends_on:
+      - web_recipes
+    volumes:
+      - nginx_config:/etc/nginx/conf.d:ro
+      - staticfiles:/static
+      - ${MEDIA_FILES_DIR:-./mediafiles}:/media
+    networks:
+      tandoor:
+        ipv6_address: ${IPV6_PREFIX:?NO_IPV6_PREFIX}::4
+volumes:
+  nginx_config:
+  staticfiles:
+
+networks:
+  tandoor:
+    enable_ipv6: true
+    name: ${NETWORK_NAME:-tandoor}
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${IPV6_PREFIX:?NO_IPV6_PREFIX}::/${IPV6_PREFIX_LENGTH:?NO_IPV6_PREFIX_LENGTH}
