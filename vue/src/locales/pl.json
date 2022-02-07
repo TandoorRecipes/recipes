@@ -284,5 +284,18 @@
     "related_recipes": "Powiązane przepisy",
     "today_recipes": "Dzisiejsze przepisy",
     "Search Settings": "Ustawienia wyszukiwania",
-    "Pin": "Pin"
+    "Pin": "Pin",
+    "left_handed_help": "Zoptymalizuje interfejs użytkownika do użytku lewą ręką.",
+    "food_recipe_help": "Powiązanie tutaj przepisu będzie skutkowało połączenie przepisu z każdym innym przepisem, który używa tego jedzenia",
+    "Foods": "Żywność",
+    "view_recipe": "Zobacz przepis",
+    "left_handed": "Tryb dla leworęcznych",
+    "OnHand_help": "Żywność jest w spiżarni i nie zostanie automatycznie dodana do listy zakupów.",
+    "ignore_shopping_help": "Nigdy nie dodawaj żywności do listy zakupów (np. wody)",
+    "shopping_category_help": "Z supermarketów można zamawiać i filtrować według kategorii zakupów zgodnie z układem alejek.",
+    "review_shopping": "Przejrzyj wpisy zakupów przed zapisaniem",
+    "sql_debug": "Debugowanie SQL",
+    "remember_search": "Zapamiętaj wyszukiwanie",
+    "remember_hours": "Godziny do zapamiętania",
+    "tree_select": "Użyj drzewa wyboru"
 }

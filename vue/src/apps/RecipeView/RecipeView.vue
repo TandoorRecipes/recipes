@@ -100,7 +100,7 @@
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
                     <div class="row">
                         <div class="col-12">
-                            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh" :alt="$t('Recipe_Image')" v-if="recipe.image !== null" />
+                            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh" :alt="$t('Recipe_Image')" v-if="recipe.image !== null" @load="onImgLoad" />
                         </div>
                     </div>
 
@@ -208,6 +208,7 @@ export default {
             servings_cache: {},
             start_time: "",
             share_uid: window.SHARE_UID,
+            wake_lock: null,
         }
     },
     watch: {
@@ -218,8 +219,37 @@ export default {
     mounted() {
         this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
+        this.requestWakeLock()
+    },
+    beforeUnmount() {
+        this.destroyWakeLock()
     },
     methods: {
+        requestWakeLock: async function() {
+            if ('wakeLock' in navigator) {
+                try {
+                    this.wake_lock = await navigator.wakeLock.request('screen')
+                    document.addEventListener('visibilitychange', this.visibilityChange)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        },
+        destroyWakeLock: function() {
+            if (this.wake_lock != null) {
+                this.wake_lock.release()
+                    .then(() => {
+                        this.wake_lock = null
+                    });
+            }
+
+            document.removeEventListener('visibilitychange', this.visibilityChange)
+        },
+        visibilityChange: async function() {
+            if (this.wake_lock != null && document.visibilityState === 'visible') {
+                await this.requestWakeLock()
+            }
+        },
         loadRecipe: function (recipe_id) {
             apiLoadRecipe(recipe_id).then((recipe) => {
                 if (window.USER_SERVINGS !== 0) {
@@ -240,6 +270,9 @@ export default {
                 if (total_time > 0) {
                     this.start_time = moment().format("yyyy-MM-DDTHH:mm")
                 }
+
+                
+                if(recipe.image === null) this.printReady()
 
                 this.recipe = this.rootrecipe = recipe
                 this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
@@ -266,6 +299,14 @@ export default {
                 this.recipe = e
                 this.servings = this.servings_cache?.[e.id] ?? e.servings
             }
+        },
+        printReady: function(){
+            const template = document.createElement("template");
+            template.id = "printReady";
+            document.body.appendChild(template);
+        },
+        onImgLoad: function(){
+            this.printReady()
         },
     },
 }

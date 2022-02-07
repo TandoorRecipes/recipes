@@ -48,11 +48,13 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
                              UserFile, UserPreference, ViewLog)
+from cookbook.models import (ExportLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
+                                 ExportLogSerializer,
                                  CookLogSerializer, CustomFilterSerializer,
                                  FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, ImportLogSerializer,
@@ -660,11 +662,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     schema = QueryParamAutoSchema()
 
     def get_queryset(self):
+        share = self.request.query_params.get('share', None)
+
         if self.detail:
-            self.queryset = self.queryset.filter(space=self.request.space)
+            if not share:
+                self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
 
-        share = self.request.query_params.get('share', None)
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
@@ -870,6 +874,17 @@ class ImportLogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
+
+
+class ExportLogViewSet(viewsets.ModelViewSet):
+    queryset = ExportLog.objects
+    serializer_class = ExportLogSerializer
+    permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
 
 
 class BookmarkletImportViewSet(viewsets.ModelViewSet):

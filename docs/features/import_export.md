@@ -21,26 +21,26 @@ if your favorite one is missing.
 Overview of the capabilities of the different integrations.
 
 | Integration        | Import | Export | Images |
-|--------------------| ------ | ------ | ------ |
-| Default            | ✔️      | ✔️      | ✔️      |
-| Nextcloud          | ✔️      | ⌚      | ✔️      |
-| Mealie             | ✔️      | ⌚      | ✔️      |
-| Chowdown           | ✔️      | ⌚      | ✔️      |
-| Safron             | ✔️      | ✔      | ❌      |
-| Paprika            | ✔️      | ⌚      | ✔️      |
-| ChefTap            | ✔️      | ❌      |  ❌     |
-| Pepperplate        | ✔️      | ⌚      | ❌      |
-| RecipeSage         | ✔️      | ✔️      | ✔️      |
-| Domestica          | ✔️      | ⌚      | ✔️      |
-| MealMaster         | ✔️      | ❌      |  ❌        |
-| RezKonv            | ✔️      | ❌      |  ❌        |
-| OpenEats           | ✔️      | ❌      |  ⌚        |
-| Plantoeat          | ✔️      | ❌      |  ✔        |
-| CookBookApp        | ✔️      | ⌚      |  ✔️        |
-| CopyMeThat         | ✔️      | ❌      |  ✔️        |
-| PDF (experimental) | ⌚️      | ✔     |  ✔️        |
+|--------------------| ------ | -- | ------ |
+| Default            | ✔️      | ✔️  | ✔️      |
+| Nextcloud          | ✔️      | ⌚  | ✔️      |
+| Mealie             | ✔️      | ⌚  | ✔️      |
+| Chowdown           | ✔️      | ⌚  | ✔️      |
+| Safron             | ✔️      | ✔️  | ❌      |
+| Paprika            | ✔️      | ⌚  | ✔️      |
+| ChefTap            | ✔️      | ❌  |  ❌     |
+| Pepperplate        | ✔️      | ⌚  | ❌      |
+| RecipeSage         | ✔️      | ✔️  | ✔️      |
+| Domestica          | ✔️      | ⌚  | ✔️      |
+| MealMaster         | ✔️      | ❌  |  ❌     |
+| RezKonv            | ✔️      | ❌  |  ❌     |
+| OpenEats           | ✔️      | ❌  |  ⌚     |
+| Plantoeat          | ✔️      | ❌  |  ✔     |
+| CookBookApp        | ✔️      | ⌚  |  ✔️     |
+| CopyMeThat         | ✔️      | ❌  |  ✔️     |
+| PDF (experimental) | ⌚️      | ✔️  |  ✔️     |
 
-✔ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
+✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
 ## Default
 The default integration is the built in (and preferred) way to import and export recipes.
