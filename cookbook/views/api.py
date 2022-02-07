@@ -648,11 +648,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     schema = QueryParamAutoSchema()
 
     def get_queryset(self):
+        share = self.request.query_params.get('share', None)
+
         if self.detail:
-            self.queryset = self.queryset.filter(space=self.request.space)
+            if not share:
+                self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
 
-        share = self.request.query_params.get('share', None)
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 

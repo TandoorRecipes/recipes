@@ -4,7 +4,7 @@ import pytest
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Recipe
+from cookbook.models import Recipe, ShareLink
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
 
 LIST_URL = 'api:recipe-list'
@@ -36,6 +36,21 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
 
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
+
+
+def test_share_permission(recipe_1_s1, u1_s1, u1_s2, a_u):
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
+    assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 404
+
+    with scopes_disabled():
+        r = u1_s1.get(reverse('new_share_link', kwargs={'pk': recipe_1_s1.pk}))
+        assert r.status_code == 302
+        r = u1_s2.get(reverse('new_share_link', kwargs={'pk': recipe_1_s1.pk}))
+        assert r.status_code == 404
+        share = ShareLink.objects.filter(recipe=recipe_1_s1).first()
+        assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+        assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+        assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 404  # TODO fix in https://github.com/TandoorRecipes/recipes/issues/1238
 
 
 @pytest.mark.parametrize("arg", [
