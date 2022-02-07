@@ -4,14 +4,15 @@
 {% load i18n %}
 {% load l10n %}
 
-
-{% block title %}{% trans 'Export Recipes' %}{% endblock %}
-
+{% block title %}{% trans 'Export' %}{% endblock %}
 
 {% block content %}
+
     <div id="app">
-        <export-view></export-view>
+        <export-response-view></export-response-view>
     </div>
+
+
 {% endblock %}
 
 
@@ -24,10 +25,8 @@
 
     <script type="application/javascript">
         window.EXPORT_ID = {{pk}};
-        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}';
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
     </script>
 
-    {% render_bundle 'export_view' %}
+    {% render_bundle 'export_response_view' %}
 {% endblock %}
-
-

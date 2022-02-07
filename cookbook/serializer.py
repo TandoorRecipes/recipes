@@ -1,17 +1,14 @@
-import random
 from datetime import timedelta
-from decimal import Decimal
+
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
-from django.db.models import Avg, Q, QuerySet, Sum, Value
-from django.db.models.functions import Substr
+from django.db.models import Avg, Q, QuerySet, Sum
 from django.urls import reverse
 from django.utils import timezone
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.fields import empty
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
@@ -21,7 +18,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
-                             UserPreference, ViewLog)
+                             UserPreference, ViewLog, ExportLog)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import MEDIA_URL
 
@@ -92,7 +89,10 @@ class CustomOnHandField(serializers.Field):
         if request := self.context.get('request', None):
             shared_users = getattr(request, '_shared_users', None)
         if shared_users is None:
-            shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+            try:
+                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+            except AttributeError:  # Anonymous users (using share links) don't have shared users
+                shared_users = []
         return obj.onhand_users.filter(id__in=shared_users).exists()
 
     def to_internal_value(self, data):
@@ -405,7 +405,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
         filter = Q(id__in=obj.substitute.all())
         if obj.substitute_siblings:
-            filter |= Q(path__startswith=obj.path[:Food.steplen*(obj.depth-1)], depth=obj.depth)
+            filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
         if obj.substitute_children:
             filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
         return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
@@ -644,7 +644,7 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
     class Meta:
         model = CustomFilter
-        fields = ('id', 'name',  'search', 'shared', 'created_by')
+        fields = ('id', 'name', 'search', 'shared', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -659,7 +659,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
     class Meta:
         model = RecipeBook
         fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by', 'filter')
-        read_only_fields = ('created_by', )
+        read_only_fields = ('created_by',)
 
 
 class RecipeBookEntrySerializer(serializers.ModelSerializer):
@@ -731,11 +731,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
-        ) + f' ({value:.2g})'
+                       obj.name
+                       or getattr(obj.mealplan, 'title', None)
+                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                       or obj.recipe.name
+               ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -892,6 +892,19 @@ class ImportLogSerializer(serializers.ModelSerializer):
         model = ImportLog
         fields = (
             'id', 'type', 'msg', 'running', 'keyword', 'total_recipes', 'imported_recipes', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
+
+
+class ExportLogSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = ExportLog
+        fields = ('id', 'type', 'msg', 'running', 'total_recipes', 'exported_recipes', 'cache_duration', 'possibly_not_expired', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
 
 

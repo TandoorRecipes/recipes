@@ -446,6 +446,9 @@ def history(request):
 
 @group_required('admin')
 def system(request):
+    if not request.user.is_superuser:
+        return HttpResponseRedirect(reverse('index'))
+    
     postgres = False if (
             settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
             or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501

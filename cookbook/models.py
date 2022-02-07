@@ -1028,6 +1028,25 @@ class ImportLog(models.Model, PermissionModelMixin):
     def __str__(self):
         return f"{self.created_at}:{self.type}"
 
+class ExportLog(models.Model, PermissionModelMixin):
+    type = models.CharField(max_length=32)
+    running = models.BooleanField(default=True)
+    msg = models.TextField(default="")
+
+    total_recipes = models.IntegerField(default=0)
+    exported_recipes = models.IntegerField(default=0)
+    cache_duration = models.IntegerField(default=0)
+    possibly_not_expired = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.created_at}:{self.type}"
+
 
 class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models.Model, PermissionModelMixin):
     html = models.TextField()
