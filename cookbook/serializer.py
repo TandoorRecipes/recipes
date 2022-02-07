@@ -91,7 +91,10 @@ class CustomOnHandField(serializers.Field):
         if request := self.context.get('request', None):
             shared_users = getattr(request, '_shared_users', None)
         if shared_users is None:
-            shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+            try:
+                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+            except AttributeError:  # Anonymous users (using share links) don't have shared users
+                shared_users = []
         return obj.onhand_users.filter(id__in=shared_users).exists()
 
     def to_internal_value(self, data):
@@ -686,11 +689,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
-        ) + f' ({value:.2g})'
+                       obj.name
+                       or getattr(obj.mealplan, 'title', None)
+                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                       or obj.recipe.name
+               ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -861,7 +864,6 @@ class ExportLogSerializer(serializers.ModelSerializer):
         model = ExportLog
         fields = ('id', 'type', 'msg', 'running', 'total_recipes', 'exported_recipes', 'cache_duration', 'possibly_not_expired', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
-
 
 
 class AutomationSerializer(serializers.ModelSerializer):

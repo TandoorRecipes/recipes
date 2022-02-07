@@ -14,16 +14,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-01-16 07:06+0000\n"
-"Last-Translator: Josselin du PLESSIS <josse@du-plessis.fr>\n"
-"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/fr/>\n"
+"PO-Revision-Date: 2022-02-06 21:31+0000\n"
+"Last-Translator: Marion Kämpfer <marion@murphyslantech.de>\n"
+"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
@@ -123,10 +123,8 @@ msgstr ""
 "nouvellement créés seront partagés par défaut."
 
 #: .\cookbook\forms.py:80
-#, fuzzy
-#| msgid "Try the new shopping list"
 msgid "Users with whom to share shopping lists."
-msgstr "Essayer la nouvelle liste de courses"
+msgstr "Utilisateurs avec lesquels partager des listes de courses."
 
 #: .\cookbook\forms.py:82
 msgid "Show recently viewed recipes on search page."
@@ -419,6 +417,8 @@ msgstr ""
 #: .\cookbook\forms.py:500
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Filtrer la liste de courses pour n’inclure que des catégories de "
+"supermarchés."
 
 #: .\cookbook\forms.py:501
 msgid "Days of recent shopping list entries to display."
@@ -430,17 +430,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:503
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "Caractère de séparation à utiliser pour les exportations CSV."
 
 #: .\cookbook\forms.py:504
 msgid "Prefix to add when copying list to the clipboard."
-msgstr ""
+msgstr "Préfixe à utiliser pour copier la liste dans le presse-papiers."
 
 #: .\cookbook\forms.py:508
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "Share Shopping List"
-msgstr "Nouvelle liste de courses"
+msgstr "Partager la liste de courses"
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
@@ -448,7 +446,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:510
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Ajouter le menu de la semaine automatiquement"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
@@ -474,7 +472,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:516
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "Caractère de séparation CSV"
 
 #: .\cookbook\forms.py:517 .\cookbook\templates\shopping_list.html:322
 msgid "List Prefix"
@@ -742,7 +740,7 @@ msgstr "Alias de mot-clé"
 
 #: .\cookbook\serializer.py:175
 msgid "A user is required"
-msgstr ""
+msgstr "Un utilisateur est requis"
 
 #: .\cookbook\serializer.py:195
 msgid "File uploads are not enabled for this Space."
@@ -754,7 +752,7 @@ msgstr "Vous avez atteint votre limite de téléversement de fichiers."
 
 #: .\cookbook\serializer.py:962
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Liste de courses existante à mettre à jour"
 
 #: .\cookbook\serializer.py:964
 msgid ""
