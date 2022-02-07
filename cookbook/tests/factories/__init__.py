@@ -111,6 +111,15 @@ class FoodFactory(factory.django.DjangoModelFactory):
     )
     space = factory.SubFactory(SpaceFactory)
 
+    @factory.post_generation
+    def users_onhand(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for user in extracted:
+                self.onhand_users.add(user)
+
     class Params:
         has_category = False
         has_recipe = False
