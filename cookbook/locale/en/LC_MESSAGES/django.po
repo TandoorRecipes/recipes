@@ -431,7 +431,7 @@ msgstr ""
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
-"In order to prevent spam, the requested email was not send. Please wait a "
+"In order to prevent spam, the requested email was not sent. Please wait a "
 "few minutes and try again."
 msgstr ""
 
@@ -926,7 +926,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
-msgid "Your password is now changed."
+msgid "Your password has been changed."
 msgstr ""
 
 #: .\cookbook\templates\account\password_set.html:6
@@ -1183,7 +1183,7 @@ msgstr ""
 msgid ""
 "\n"
 "        The following form can be used if, accidentally, two (or more) units "
-"or ingredients where created that should be\n"
+"or ingredients were created that should be\n"
 "        the same.\n"
 "        It merges two units or ingredients and updates all recipes using "
 "them.\n"
@@ -1355,7 +1355,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
 "\n"
-"        Markdown is lightweight markup language that can be used to format "
+"        Markdown is a lightweight markup language that can be used to format "
 "plain text easily.\n"
 "        This site uses the <a href=\"https://python-markdown.github.io/\" "
 "target=\"_blank\">Python Markdown</a> library to\n"
@@ -1407,7 +1407,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
-"Lists can ordered or unorderd. It is <b>important to leave a blank line "
+"Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
 
@@ -1445,7 +1445,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
-"Links can be formatted with Markdown. This application also allows to paste "
+"Links can be formatted with Markdown. This application also allows you to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
 
@@ -1514,7 +1514,7 @@ msgid "No Permissions"
 msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:17
-msgid "You do not have any groups and therefor cannot use this application."
+msgid "You do not have any groups and therefore cannot use this application."
 msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:18
@@ -1561,7 +1561,7 @@ msgstr ""
 #: .\cookbook\templates\no_space_info.html:35
 msgid ""
 "To join an existing space either enter your invite token or click on the "
-"invite link the space owner send you."
+"invite link the space owner sent to you."
 msgstr ""
 
 #: .\cookbook\templates\no_space_info.html:48
@@ -2741,17 +2741,17 @@ msgid "Tandoor Recipes Invite"
 msgstr ""
 
 #: .\cookbook\views\new.py:227
-msgid "Invite link successfully send to user."
+msgid "Invite link successfully sent to the user."
 msgstr ""
 
 #: .\cookbook\views\new.py:230
 msgid ""
-"You have send to many emails, please share the link manually or wait a few "
+"You have sent too many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
 
 #: .\cookbook\views\new.py:232
-msgid "Email to user could not be send, please share link manually."
+msgid "Email to the user could not be sent, please share the link manually."
 msgstr ""
 
 #: .\cookbook\views\views.py:126
