@@ -221,7 +221,7 @@ export default {
         this.$i18n.locale = window.CUSTOM_LOCALE
         this.requestWakeLock()
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.destroyWakeLock()
     },
     methods: {
