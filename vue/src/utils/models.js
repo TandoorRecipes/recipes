@@ -90,6 +90,7 @@ export class Models {
                     "substitute_siblings",
                     "substitute_children",
                     "reset_inherit",
+                    "child_inherit_fields",
                 ],
             ],
 
@@ -179,6 +180,18 @@ export class Models {
                     list: "FOOD_INHERIT_FIELDS",
                     label: i18n.t("InheritFields"),
                     condition: { field: "food_children_exist", value: true, condition: "preference_equals" },
+                    help_text: i18n.t("InheritFields_help"),
+                },
+                child_inherit_fields: {
+                    form_field: true,
+                    advanced: true,
+                    type: "lookup",
+                    multiple: true,
+                    field: "child_inherit_fields",
+                    list: "FOOD_INHERIT_FIELDS",
+                    label: i18n.t("ChildInheritFields"),
+                    condition: { field: "numchild", value: 0, condition: "gt" },
+                    help_text: i18n.t("ChildInheritFields_help"),
                 },
                 reset_inherit: {
                     form_field: true,

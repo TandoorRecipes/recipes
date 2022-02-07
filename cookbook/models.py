@@ -97,13 +97,6 @@ class TreeModel(MP_Node):
         else:
             return f"{self.name}"
 
-    # MP_Tree move uses raw SQL to execute move, override behavior to force a save triggering post_save signal
-    def move(self, *args, **kwargs):
-        super().move(*args, **kwargs)
-        # treebeard bypasses ORM, need to retrieve the object again to avoid writing previous state back to disk
-        obj = self.__class__.objects.get(id=self.id)
-        obj.save()
-
     @property
     def parent(self):
         parent = self.get_parent()
@@ -488,9 +481,9 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
-    # TODO when savings a food as substitute children - assume children and descednats are also substitutes for siblings
     # exclude fields not implemented yet
-    inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
+    inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', ])
+    # TODO add inherit children_inherit, parent_inherit, Do Not Inherit
 
     # WARNING: Food inheritance relies on post_save signals, avoid using UPDATE to update Food objects unless you intend to bypass those signals
     if SORT_TREE_BY_NAME:
@@ -505,6 +498,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     substitute = models.ManyToManyField("self", blank=True)
     substitute_siblings = models.BooleanField(default=False)
     substitute_children = models.BooleanField(default=False)
+    child_inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True, related_name='child_inherit')
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -518,16 +512,27 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         else:
             return super().delete()
 
+    # MP_Tree move uses raw SQL to execute move, override behavior to force a save triggering post_save signal
+
+    def move(self, *args, **kwargs):
+        super().move(*args, **kwargs)
+        # treebeard bypasses ORM, need to explicity save to trigger post save signals retrieve the object again to avoid writing previous state back to disk
+        obj = self.__class__.objects.get(id=self.id)
+        if parent := obj.get_parent():
+            # child should inherit what the parent defines it should inherit
+            obj.inherit_fields.set(list(parent.child_inherit_fields.all() or parent.inherit_fields.all()))
+        obj.save()
+
     @staticmethod
     def reset_inheritance(space=None, food=None):
         # resets inherited fields to the space defaults and updates all inherited fields to root object values
         if food:
-            inherit = list(food.inherit_fields.all().values('id', 'field'))
-            filter = Q(id=food.id, space=space)
-            tree_filter = Q(path__startswith=food.path, space=space)
+            # if child inherit fields is preset children should be set to that, otherwise inherit this foods inherited fields
+            inherit = list((food.child_inherit_fields.all() or food.inherit_fields.all()).values('id', 'field'))
+            tree_filter = Q(path__startswith=food.path, space=space, depth=food.depth+1)
         else:
             inherit = list(space.food_inherit.all().values('id', 'field'))
-            filter = tree_filter = Q(space=space)
+            tree_filter = Q(space=space)
 
         # remove all inherited fields from food
         Through = Food.objects.filter(tree_filter).first().inherit_fields.through
@@ -542,16 +547,26 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
                 ])
 
             inherit = [x['field'] for x in inherit]
-            if 'ignore_shopping' in inherit:
-                # get food at root that have children that need updated
-                Food.include_descendants(queryset=Food.objects.filter(Q(depth=1, numchild__gt=0, ignore_shopping=True) & filter)).update(ignore_shopping=True)
-                Food.include_descendants(queryset=Food.objects.filter(Q(depth=1, numchild__gt=0, ignore_shopping=False) & filter)).update(ignore_shopping=False)
+            for field in ['ignore_shopping', 'substitute_children', 'substitute_siblings']:
+                if field in inherit:
+                    if food and getattr(food, field, None):
+                        food.get_descendants().update(**{f"{field}": True})
+                    elif food and not getattr(food, field, True):
+                        food.get_descendants().update(**{f"{field}": False})
+                    else:
+                        # get food at root that have children that need updated
+                        Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": True}, space=space)).update(**{f"{field}": True})
+                        Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": False}, space=space)).update(**{f"{field}": False})
+
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
-                # find top node that has category set
-                category_roots = Food.exclude_descendants(queryset=Food.objects.filter(Q(supermarket_category__isnull=False, numchild__gt=0) & filter))
-                for root in category_roots:
-                    root.get_descendants().update(supermarket_category=root.supermarket_category)
+                if food and food.supermarket_category:
+                    food.get_descendants().update(supermarket_category=food.supermarket_category)
+                elif food is None:
+                    # find top node that has category set
+                    category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
+                    for root in category_roots:
+                        root.get_descendants().update(supermarket_category=root.supermarket_category)
 
     class Meta:
         constraints = [

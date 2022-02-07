@@ -328,11 +328,14 @@
     "view_recipe": "View Recipe",
     "filter": "Filter",
     "reset_children": "Reset Child Inheritance",
-    "reset_children_help": "Overwrite all children with values from inherited fields.",
+    "reset_children_help": "Overwrite all children with values from inherited fields.  Inheritted fields of children will be set to Inherit Fields unless Children Inherit Fields is set.",
     "substitute_help": "Substitutes are considered when searching for recipes that can be made with onhand ingredients.",
     "substitute_siblings_help": "All food that share a parent of this food are considered substitutes.",
     "substitute_children_help": "All food that are children of this food are considered substitutes.",
     "substitute_siblings": "Substitute Siblings",
     "substitute_children": "Substitute Children",
-    "SubstituteOnHand": "You have a substitute on hand."
+    "SubstituteOnHand": "You have a substitute on hand.",
+    "ChildInheritFields": "Children Inherit Fields",
+    "ChildInheritFields_help": "Children will inherit these fields by default.",
+    "InheritFields_help": "The values of these fields will be inheritted from parent (Exception: blank shopping categories are not inheritted)"
 }
