@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2021-11-14 14:06+0000\n"
-"Last-Translator: Job Putters <me@ixbitz.com>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"PO-Revision-Date: 2022-02-09 01:31+0000\n"
+"Last-Translator: Jesse <jesse.kamps@pm.me>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
@@ -110,20 +110,14 @@ msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr "Geef energiewaardes weer in joules in plaats van calorieën"
 
 #: .\cookbook\forms.py:79
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Gebruikers waarmee een nieuw maaltijdplan/boodschappenlijst standaard "
-"gedeeld moeten worden."
+"Gebruikers waarmee een nieuwe maaltijdplannen standaard gedeeld moeten "
+"worden."
 
 #: .\cookbook\forms.py:80
-#, fuzzy
-#| msgid "Try the new shopping list"
 msgid "Users with whom to share shopping lists."
-msgstr "Probeer de nieuwe boodschappenlijst"
+msgstr "Gebruikers waarmee boodschappenlijsten gedeeld moeten worden."
 
 #: .\cookbook\forms.py:82
 msgid "Show recently viewed recipes on search page."
@@ -156,11 +150,11 @@ msgstr "Zet de navbar vast aan de bovenkant van de pagina."
 
 #: .\cookbook\forms.py:90 .\cookbook\forms.py:496
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr ""
+msgstr "Zet maaltijdplan ingrediënten automatisch op boodschappenlijst."
 
 #: .\cookbook\forms.py:91
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Sluit ingrediënten die op voorraad zijn uit."
 
 #: .\cookbook\forms.py:108
 msgid ""
@@ -386,82 +380,87 @@ msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"Gebruikers zien alle items die je op je boodschappenlijst zet.  Ze moeten "
+"jou toevoegen om items op hun lijst te zien."
 
 #: .\cookbook\forms.py:497
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Als een maaltijdplan aan de boodschappenlijst toegevoegd wordt (handmatig of "
+"automatisch), neem dan alle recepten op."
 
 #: .\cookbook\forms.py:498
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Als een maaltijdplan aan de boodschappenlijst toegevoegd wordt (handmatig of "
+"automatisch), sluit ingrediënten die op voorraad zijn dan uit."
 
 #: .\cookbook\forms.py:499
 msgid "Default number of hours to delay a shopping list entry."
-msgstr ""
+msgstr "Standaard aantal uren om een boodschappenlijst item te vertragen."
 
 #: .\cookbook\forms.py:500
 msgid "Filter shopping list to only include supermarket categories."
-msgstr ""
+msgstr "Filter boodschappenlijst om alleen supermarktcategorieën te bevatten."
 
 #: .\cookbook\forms.py:501
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Dagen van recente boodschappenlijst items weer te geven."
 
 #: .\cookbook\forms.py:502
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
+"Markeer eten 'Op voorraad' wanneer het van het boodschappenlijstje is "
+"afgevinkt."
 
 #: .\cookbook\forms.py:503
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "Scheidingsteken te gebruiken voor CSV exports."
 
 #: .\cookbook\forms.py:504
 msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
+"Toe te voegen Voorvoegsel bij het kopiëren van een lijst naar het klembord."
 
 #: .\cookbook\forms.py:508
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "Share Shopping List"
-msgstr "Nieuwe boodschappenlijst"
+msgstr "Deel boodschappenlijst"
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
-msgstr ""
+msgstr "Autosync"
 
 #: .\cookbook\forms.py:510
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Voeg maaltijdplan automatisch toe"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Sluit op voorraad uit"
 
 #: .\cookbook\forms.py:512
 msgid "Include Related"
-msgstr ""
+msgstr "Neem gerelateerde op"
 
 #: .\cookbook\forms.py:513
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Standaard vertraging in uren"
 
 #: .\cookbook\forms.py:514
-#, fuzzy
-#| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
-msgstr "Selecteer supermarkt"
+msgstr "Filter op supermarkt"
 
 #: .\cookbook\forms.py:515
 msgid "Recent Days"
-msgstr ""
+msgstr "Afgelopen dagen"
 
 #: .\cookbook\forms.py:516
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "CSV scheidingsteken"
 
 #: .\cookbook\forms.py:517 .\cookbook\templates\shopping_list.html:322
 msgid "List Prefix"
@@ -469,27 +468,23 @@ msgstr "Lijst voorvoegsel"
 
 #: .\cookbook\forms.py:518
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Auto op voorraad"
 
 #: .\cookbook\forms.py:528
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Herstel Ingrediënt overname"
 
 #: .\cookbook\forms.py:529
 msgid "Reset all food to inherit the fields configured."
-msgstr ""
+msgstr "Herstel alle ingrediënten om de geconfigureerde velden over te nemen."
 
 #: .\cookbook\forms.py:541
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Te vervangen Ingrediënt."
+msgstr "Velden van ingrediënten die standaard overgenomen moeten worden."
 
 #: .\cookbook\forms.py:542
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Geef recent bekeken recepten op de zoekpagina weer."
+msgstr "Toon recepten teller bij zoekfilters"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -525,17 +520,15 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_search.py:473
 msgid "One of queryset or hash_key must be provided"
-msgstr ""
+msgstr "Er moet een queryset of hash_key opgegeven worden"
 
 #: .\cookbook\helper\shopping_helper.py:54
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a recipe or mealplan"
-msgstr "Je moet minimaal één recept of titel te specificeren."
+msgstr "Je moet een recept of maaltijdplan aanleveren"
 
 #: .\cookbook\helper\shopping_helper.py:58
 msgid "You must supply a created_by"
-msgstr ""
+msgstr "Je moet een created_by aanleveren"
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
@@ -727,7 +720,7 @@ msgstr "Etiket alias"
 
 #: .\cookbook\serializer.py:175
 msgid "A user is required"
-msgstr ""
+msgstr "Een gebruiker is verplicht"
 
 #: .\cookbook\serializer.py:195
 msgid "File uploads are not enabled for this Space."
@@ -739,13 +732,15 @@ msgstr "U heeft de uploadlimiet bereikt."
 
 #: .\cookbook\serializer.py:962
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Bestaande boodschappenlijst is bijgewerkt"
 
 #: .\cookbook\serializer.py:964
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Lijst van ingrediënten ID's van het toe te voegen recept, als deze niet "
+"opgegeven worden worden alle ingrediënten toegevoegd."
 
 #: .\cookbook\serializer.py:965
 msgid ""
