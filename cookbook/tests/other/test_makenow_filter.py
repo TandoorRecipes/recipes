@@ -59,7 +59,7 @@ def test_makenow_ignoreshopping(recipes, makenow_recipe, user1, space_1):
     with scope(space=space_1):
         food = Food.objects.filter(ingredient__step__recipe=makenow_recipe.id).first()
         food.onhand_users.clear()
-        assert search.get_queryset(Recipe.objects.all()) == 0
+        assert search.get_queryset(Recipe.objects.all()).count() == 0
         food.ignore_shopping = True
         food.save()
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, onhand_users__isnull=False).count() == 9
