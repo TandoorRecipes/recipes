@@ -402,7 +402,10 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         if request := self.context.get('request', None):
             shared_users = getattr(request, '_shared_users', None)
         if shared_users is None:
-            shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+            try:
+                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+            except AttributeError:
+                shared_users = []
         filter = Q(id__in=obj.substitute.all())
         if obj.substitute_siblings:
             filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
