@@ -517,7 +517,7 @@ import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
 
-let SEARCH_COOKIE_NAME = "search_settings2"
+let SEARCH_COOKIE_NAME = "search_settings3"
 let UI_COOKIE_NAME = "ui_search_settings"
 
 export default {
@@ -528,7 +528,7 @@ export default {
         return {
             // this.Models and this.Actions inherited from ApiMixin
             recipes: [],
-            facets: {},
+            facets: { Books: [], Foods: [], Keywords: [] },
             meal_plans: [],
             last_viewed_recipes: [],
             sortMenu: false,
@@ -590,7 +590,7 @@ export default {
                 show_books: true,
                 show_rating: true,
                 show_units: false,
-                show_filters: false,
+                show_filters: true,
                 show_sortby: false,
                 show_timescooked: false,
                 show_makenow: false,
@@ -722,13 +722,11 @@ export default {
                     this.search.search_keywords[0].items.push(Number.parseInt(x))
                     this.facets.Keywords.push({ id: x, name: "loading..." })
                 }
-            } else {
-                this.facets.Keywords = []
             }
 
             // TODO: figure out how to find nested items and load keyword/food children for that branch
             // probably a backend change in facets to pre-load children of nested items
-            this.facets.Foods = []
+
             for (let x of this.search.search_foods.map((x) => x.items).flat()) {
                 this.facets.Foods.push({ id: x, name: "loading..." })
             }
@@ -737,7 +735,6 @@ export default {
                 this.facets.Keywords.push({ id: x, name: "loading..." })
             }
 
-            this.facets.Books = []
             for (let x of this.search.search_books.map((x) => x.items).flat()) {
                 this.facets.Books.push({ id: x, name: "loading..." })
             }
