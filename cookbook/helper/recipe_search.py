@@ -617,7 +617,7 @@ class RecipeFacet():
             nodes = food.get_ancestors()
         except Food.DoesNotExist:
             return self.get_facets()
-        foods = self._food_queryset(Food.objects.filter(path__startswith=food.path, depth=food.depth+1), food)
+        foods = self._food_queryset(food.get_children(), food)
         deep_search = self.Foods
         for node in nodes:
             index = next((i for i, x in enumerate(deep_search) if x["id"] == node.id), None)
@@ -633,7 +633,7 @@ class RecipeFacet():
             nodes = keyword.get_ancestors()
         except Keyword.DoesNotExist:
             return self.get_facets()
-        keywords = self._keyword_queryset(Keyword.objects.filter(path__startswith=keyword.path, depth=keyword.depth+1), keyword)
+        keywords = self._keyword_queryset(keyword.get_children(), keyword)
         deep_search = self.Keywords
         for node in nodes:
             index = next((i for i, x in enumerate(deep_search) if x["id"] == node.id), None)
@@ -645,7 +645,7 @@ class RecipeFacet():
 
     def _recipe_count_queryset(self, field, depth=1, steplen=4):
         return Recipe.objects.filter(**{f'{field}__path__startswith': OuterRef('path')}, id__in=self._recipe_list, space=self._request.space
-                                     ).values(child=Substr(f'{field}__path',  1, steplen*depth)
+                                     ).values(child=Substr(f'{field}__path',  1, steplen)
                                               ).annotate(count=Count('pk', distinct=True)).values('count')
 
     def _keyword_queryset(self, queryset, keyword=None):
