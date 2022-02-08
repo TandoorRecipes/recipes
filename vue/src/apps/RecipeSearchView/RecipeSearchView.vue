@@ -189,17 +189,10 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(k, a) in keywordFields" :key="a">
                                                 <template #prepend v-if="search.expert_mode">
-                                                    <b-input-group-text style="width: 3em" @click="search.keywords_fields = search.keywords_fields + 1">
+                                                    <b-input-group-text style="width: 3em" @click="addField('keywords', k)">
                                                         <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4" />
                                                     </b-input-group-text>
-                                                    <b-input-group-text
-                                                        style="width: 3em"
-                                                        @click="
-                                                            search.keywords_fields = search.keywords_fields - 1
-                                                            search.search_keywords[a].items = []
-                                                            refreshData(false)
-                                                        "
-                                                    >
+                                                    <b-input-group-text style="width: 3em" @click="removeField('keywords', k)">
                                                         <i class="fas fa-minus-circle text-primary" v-if="k == search.keywords_fields && k > 1" />
                                                     </b-input-group-text>
                                                 </template>
@@ -257,20 +250,13 @@
                                     <h6 class="mt-2 mb-0" v-if="search.expert_mode && search.foods_fields > 1">{{ $t("Foods") }}</h6>
                                     <div class="row" v-if="ui.show_foods">
                                         <div class="col-12">
-                                            <b-input-group class="mt-2" v-for="(x, i) in foodFields" :key="i">
+                                            <b-input-group class="mt-2" v-for="(f, i) in foodFields" :key="i">
                                                 <template #prepend v-if="search.expert_mode">
-                                                    <b-input-group-text style="width: 3em" @click="search.foods_fields = search.foods_fields + 1">
-                                                        <i class="fas fa-plus-circle text-primary" v-if="x == search.foods_fields && x < 4" />
+                                                    <b-input-group-text style="width: 3em" @click="addField('foods', f)">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="f == search.foods_fields && f < 4" />
                                                     </b-input-group-text>
-                                                    <b-input-group-text
-                                                        style="width: 3em"
-                                                        @click="
-                                                            search.foods_fields = search.foods_fields - 1
-                                                            search.search_foods[i].items = []
-                                                            refreshData(false)
-                                                        "
-                                                    >
-                                                        <i class="fas fa-minus-circle text-primary" v-if="x == search.foods_fields && x > 1" />
+                                                    <b-input-group-text style="width: 3em" @click="removeField('foods', f)">
+                                                        <i class="fas fa-minus-circle text-primary" v-if="f == search.foods_fields && f > 1" />
                                                     </b-input-group-text>
                                                 </template>
                                                 <treeselect
@@ -320,20 +306,13 @@
                                     <h6 class="mt-2 mb-0" v-if="search.expert_mode && search.books_fields > 1">{{ $t("Books") }}</h6>
                                     <div class="row" v-if="ui.show_books">
                                         <div class="col-12">
-                                            <b-input-group class="mt-2" v-for="(x, i) in bookFields" :key="i">
+                                            <b-input-group class="mt-2" v-for="(b, i) in bookFields" :key="i">
                                                 <template #prepend v-if="search.expert_mode">
-                                                    <b-input-group-text style="width: 3em" @click="search.books_fields = search.books_fields + 1">
-                                                        <i class="fas fa-plus-circle text-primary" v-if="x == search.books_fields && x < 4" />
+                                                    <b-input-group-text style="width: 3em" @click="addField('books', b)">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="b == search.books_fields && b < 4" />
                                                     </b-input-group-text>
-                                                    <b-input-group-text
-                                                        style="width: 3em"
-                                                        @click="
-                                                            search.books_fields = search.books_fields - 1
-                                                            search.search_books[i].items = []
-                                                            refreshData(false)
-                                                        "
-                                                    >
-                                                        <i class="fas fa-minus-circle text-primary" v-if="x == search.books_fields && x > 1" />
+                                                    <b-input-group-text style="width: 3em" @click="removeField('books', b)">
+                                                        <i class="fas fa-minus-circle text-primary" v-if="b == search.books_fields && b > 1" />
                                                     </b-input-group-text>
                                                 </template>
                                                 <generic-multiselect
@@ -1104,6 +1083,19 @@ export default {
                     console.log(err, Object.keys(err))
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
+        },
+        addField: function (field, count) {
+            if (count == this.search[`${field}_fields`] && count < 4) {
+                this.search[`${field}_fields`] = this.search[`${field}_fields`] + 1
+                this.refreshData(false)
+            }
+        },
+        removeField: function (field, count) {
+            if (count == this.search[`${field}_fields`] && count > 1) {
+                this.search[`${field}_fields`] = this.search[`${field}_fields`] - 1
+                this.search[`search_${field}`][count - 1].items = []
+                this.refreshData(false)
+            }
         },
     },
 }
