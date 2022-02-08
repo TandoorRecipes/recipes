@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from decimal import Decimal
 from gettext import gettext as _
 
 from django.contrib.auth.models import User
@@ -12,13 +12,13 @@ from rest_framework.exceptions import NotFound, ValidationError
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter, Food,
-                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
-                             NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
-                             ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
-                             UserPreference, ViewLog, ExportLog)
+from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
+                             ExportLog, Food, FoodInheritField, ImportLog, Ingredient, Keyword,
+                             MealPlan, MealType, NutritionInformation, Recipe, RecipeBook,
+                             RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
+                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UserFile, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import MEDIA_URL
 
@@ -731,11 +731,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
