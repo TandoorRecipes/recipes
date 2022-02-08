@@ -1,7 +1,7 @@
 FROM python:3.9-alpine3.12
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs gettext zlib libjpeg libwebp libxml2-dev libxslt-dev py-cryptography
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev py-cryptography
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
@@ -15,7 +15,7 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev postgresql zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip install wheel==0.36.2 && \
