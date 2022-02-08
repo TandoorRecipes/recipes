@@ -293,8 +293,8 @@ msgstr ""
 
 #: .\cookbook\forms.py:445
 msgid ""
-"Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
-"full desciption of choices."
+"Select type method of search. Click <a href=\"/docs/search/\">here</a> for "
+"full description  of choices."
 msgstr ""
 "Suchmethode auswählen. Klicke <a href=\"/docs/search/\">hier</a> für eine "
 "Auflistung der Optionen."
@@ -336,8 +336,8 @@ msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
-"Felder welche \"ungenau\" durchsucht werden sollen. (z.B. eine Suche nach "
-"\"Kuhcen\" wird \"Kuchen\" liefern.)  Tipp: Diese Option konfligiert mit den "
+"Felder welche in \"alternativen Schreibweisen\"  durchsucht werden sollen. (z.B. eine Suche nach "
+"\"Kuhcen\" wird \"Kuchen\" liefern.)  Tipp: Diese Option  steht im Konflikt mit den "
 "\"web\" und \"raw\" Suchtypen."
 
 #: .\cookbook\forms.py:456
