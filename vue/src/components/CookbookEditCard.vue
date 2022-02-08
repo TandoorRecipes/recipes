@@ -100,6 +100,7 @@ export default {
                 this.editing = false
                 this.saveData()
                 this.$emit("editing", false)
+                this.$emit("reload")
             }
         },
         updateEmoji: function (item, value) {
@@ -109,6 +110,7 @@ export default {
         },
         saveData: function () {
             let apiClient = new ApiApiFactory()
+            console.log(this.book_copy)
 
             apiClient
                 .updateRecipeBook(this.book_copy.id, this.book_copy)

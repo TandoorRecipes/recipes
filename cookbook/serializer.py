@@ -650,7 +650,7 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
 class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserNameSerializer(many=True)
-    filter = CustomFilterSerializer(required=False)
+    filter = CustomFilterSerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user

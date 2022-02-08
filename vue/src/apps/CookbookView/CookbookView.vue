@@ -44,7 +44,14 @@
 
             <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
             <transition name="slide-fade">
-                <cookbook-slider :recipes="recipes" :book="book" :key="`slider_${book.id}`" v-if="current_book === book.id && !loading" v-on:refresh="refreshData"></cookbook-slider>
+                <cookbook-slider
+                    :recipes="recipes"
+                    :book="book"
+                    :key="`slider_${book.id}`"
+                    v-if="current_book === book.id && !loading"
+                    v-on:refresh="refreshData"
+                    @reload="openBook(current_book, true)"
+                ></cookbook-slider>
             </transition>
         </div>
     </div>
@@ -95,8 +102,8 @@ export default {
                 this.cookbooks = result.data
             })
         },
-        openBook: function (book) {
-            if (book === this.current_book) {
+        openBook: function (book, keepopen = false) {
+            if (book === this.current_book && !keepopen) {
                 this.current_book = undefined
                 this.recipes = []
                 return
@@ -111,18 +118,7 @@ export default {
 
             apiClient.listRecipeBookEntrys({ query: { book: book } }).then((result) => {
                 this.recipes = result.data
-                if (book_contents.filter) {
-                    var promises = []
-                    var page = 1
-                    this.appendRecipeFilter(page, book_contents).then((count) => {
-                        while (count.total > 0) {
-                            page++
-                            promises.push(this.appendRecipeFilter(page, book_contents))
-                            count.total = count.total - count.page
-                        }
-                        Promise.all(promises).then()
-                    })
-                }
+                if (book_contents.filter) this.appendRecipeFilter(1, book_contents)
                 this.loading = false
             })
         },
@@ -142,7 +138,7 @@ export default {
         },
         appendRecipeFilter: function (page, book) {
             let params = { page: page, options: { query: { filter: book.filter.id } } }
-            return this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((results) => {
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((results) => {
                 let recipes = results.data.results.map((x) => {
                     return {
                         id: (Math.random() * 1999) ^ 1999,
@@ -152,8 +148,11 @@ export default {
                         recipe_content: x,
                     }
                 })
+
                 this.recipes.push(...recipes)
-                return { total: results.data.count - results.data.results.length, page: results.data.results.length }
+                if (results.data.next) {
+                    this.appendRecipeFilter(page + 1, book)
+                }
             })
         },
     },
