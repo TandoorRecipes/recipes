@@ -66,8 +66,12 @@ class RecipeShoppingEditor():
             self.servings = getattr(self._shopping_list_recipe, 'servings', None) or getattr(self.mealplan, 'servings', None) or getattr(self.recipe, 'servings', None)
 
     @property
+    def _recipe_servings(self):
+        return getattr(self.recipe, 'servings', None) or getattr(getattr(self.mealplan, 'recipe', None), 'servings', None) or getattr(getattr(self._shopping_list_recipe, 'recipe', None), 'servings', None)
+
+    @property
     def _servings_factor(self):
-        return self.servings / self.recipe.servings
+        return Decimal(self.servings)/Decimal(self._recipe_servings)
 
     @property
     def _shared_users(self):
