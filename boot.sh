@@ -6,7 +6,7 @@ echo "Waiting for database to be ready..."
 attempt=0
 max_attempts=20
 while pg_isready --host=${POSTGRES_HOST} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
-    sleep 5 # no echo needed, response comes from pg_isready already
+    sleep 5
 done
 
 if [ $attempt -gt $max_attempts ]; then
