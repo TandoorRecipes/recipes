@@ -14,8 +14,8 @@ from rest_framework.fields import empty
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Food,
-                             FoodInheritField, ImportLog, ExportLog, Ingredient, Keyword, MealPlan, MealType,
+from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, ExportLog, Food,
+                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
                              NutritionInformation, Recipe, RecipeBook, RecipeBookEntry,
                              RecipeImport, ShareLink, ShoppingList, ShoppingListEntry,
                              ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
@@ -677,7 +677,6 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         read_only_fields = ('created_by',)
 
 
-# TODO deprecate
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
@@ -689,11 +688,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list

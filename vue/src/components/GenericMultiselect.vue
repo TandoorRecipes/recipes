@@ -110,6 +110,7 @@ export default {
     methods: {
         // this.genericAPI inherited from ApiMixin
         search: function (query) {
+            console.log("did the thing")
             let options = {
                 page: 1,
                 pageSize: this.limit,
