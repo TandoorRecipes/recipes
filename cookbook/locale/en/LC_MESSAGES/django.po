@@ -186,16 +186,16 @@ msgid "Add your comment: "
 msgstr ""
 
 #: .\cookbook\forms.py:212
-msgid "Leave empty for dropbox and enter app password for nextcloud."
+msgid "Leave empty for Dropbox and enter app password for Nextcloud."
 msgstr ""
 
 #: .\cookbook\forms.py:219
-msgid "Leave empty for nextcloud and enter api token for dropbox."
+msgid "Leave empty for Nextcloud and enter api token for Dropbox."
 msgstr ""
 
 #: .\cookbook\forms.py:228
 msgid ""
-"Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
+"Leave empty for Dropbox and enter only base url for Nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgid "You must provide at least a recipe or a title."
 msgstr ""
 
 #: .\cookbook\forms.py:336
-msgid "You can list default users to share recipes with in the settings."
+msgid "You can list default users to share recipes within the settings."
 msgstr ""
 
 #: .\cookbook\forms.py:337
@@ -260,7 +260,7 @@ msgstr ""
 #: .\cookbook\forms.py:445
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
-"full desciption of choices."
+"full description of choices."
 msgstr ""
 
 #: .\cookbook\forms.py:446
@@ -316,7 +316,7 @@ msgid "Partial Match"
 msgstr ""
 
 #: .\cookbook\forms.py:464
-msgid "Starts Wtih"
+msgid "Starts With"
 msgstr ""
 
 #: .\cookbook\forms.py:465
@@ -538,7 +538,7 @@ msgid "Rebuilds full text search index on Recipe"
 msgstr ""
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-msgid "Only Postgress databases use full text search, no index to rebuild"
+msgid "Only Postgres databases use full text search, no index to rebuild"
 msgstr ""
 
 #: .\cookbook\management\commands\rebuildindex.py:29
@@ -945,7 +945,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
-msgid "I accept the follwoing"
+msgid "I accept the following"
 msgstr ""
 
 #: .\cookbook\templates\account\signup.html:45
@@ -1383,7 +1383,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-msgid "or by leaving a blank line inbetween."
+msgid "or by leaving a blank line in between."
 msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:59
@@ -1669,7 +1669,7 @@ msgstr ""
 msgid ""
 " \n"
 "            Simple searches ignore punctuation and common words such as "
-"'the', 'a', 'and'. And will treat seperate words as required.\n"
+"'the', 'a', 'and'. And will treat separate words as required.\n"
 "            Searching for 'apple or flour' will return any recipe that "
 "includes both 'apple' and 'flour' anywhere in the fields that have been "
 "selected for a full text search.\n"
@@ -1694,7 +1694,7 @@ msgid ""
 "sites supporting special syntax.\n"
 "            Placing quotes around several words will convert those words "
 "into a phrase.\n"
-"            'or' is recongized as searching for the word (or phrase) "
+"            'or' is recognized as searching for the word (or phrase) "
 "immediately before 'or' OR the word (or phrase) directly after.\n"
 "            '-' is recognized as searching for recipes that do not include "
 "the word (or phrase) that comes immediately after. \n"
@@ -1709,7 +1709,7 @@ msgstr ""
 #: .\cookbook\templates\search_info.html:48
 msgid ""
 " \n"
-"            Raw search is similar to Web except will take puncuation "
+"            Raw search is similar to Web except will take punctuation "
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
@@ -1724,7 +1724,7 @@ msgid ""
 "'ppl', 'ple' and will create a score of how closely words match the "
 "generated trigrams.\n"
 "            One benefit of searching trigams is that a search for 'sandwich' "
-"will find mispelled words such as 'sandwhich' that would be missed by other "
+"will find misspelled words such as 'sandwhich' that would be missed by other "
 "methods.\n"
 "            "
 msgstr ""
@@ -1983,7 +1983,7 @@ msgid "Finished"
 msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:267
-msgid "You are offline, shopping list might not syncronize."
+msgid "You are offline, shopping list might not synchronize."
 msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:318
@@ -1997,7 +1997,7 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\connections.html:18
 msgid ""
-"You can sign in to your account using any of the following third party\n"
+"You can sign into your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
 
@@ -2794,7 +2794,7 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\views.py:477
-msgid "Passwords dont match!"
+msgid "Passwords don't match!"
 msgstr ""
 
 #: .\cookbook\views\views.py:493
