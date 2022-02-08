@@ -719,7 +719,6 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         read_only_fields = ('created_by',)
 
 
-# TODO deprecate
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')

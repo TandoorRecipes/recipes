@@ -15,7 +15,7 @@ from django.core.files import File
 from django.db.models import (Case, Count, Exists, F, IntegerField, OuterRef, ProtectedError, Q,
                               Subquery, Value, When)
 from django.db.models.fields.related import ForeignObjectRel
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -42,20 +42,18 @@ from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, Food,
+from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
                              Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
                              UserFile, UserPreference, ViewLog)
-from cookbook.models import (ExportLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
-                                 ExportLogSerializer,
-                                 CookLogSerializer, CustomFilterSerializer,
+                                 CookLogSerializer, CustomFilterSerializer, ExportLogSerializer,
                                  FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
@@ -141,7 +139,7 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
     schema = FilterSchema()
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         query = self.request.query_params.get('query', None)
         fuzzy = self.request.user.searchpreference.lookup
 
@@ -164,7 +162,7 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                     self.queryset
                         .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
                                               default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(filter).order_by('-starts', 'name')
+                        .filter(filter).order_by('-starts', Lower('name').asc())
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -178,9 +176,9 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
 
         limit = self.request.query_params.get('limit', None)
         random = self.request.query_params.get('random', False)
+        if random:
+            self.queryset = self.queryset.order_by("?")
         if limit is not None:
-            if random:
-                self.queryset = self.queryset.order_by("?")
             self.queryset = self.queryset[:int(limit)]
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class)
 
@@ -279,7 +277,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
                     self.queryset = self.model.objects.none()
         else:
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request, serializer=self.serializer_class, tree=True)
-        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class, tree=True)
 
@@ -407,7 +405,7 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         return super().get_queryset()
 
 
@@ -884,7 +882,6 @@ class ExportLogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
-
 
 
 class BookmarkletImportViewSet(viewsets.ModelViewSet):

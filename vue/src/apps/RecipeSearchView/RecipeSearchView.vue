@@ -474,7 +474,7 @@
 
                 <div class="row align-content-center">
                     <div class="col col-md-6" style="margin-top: 2vh">
-                        <b-dropdown id="sortby" :text="$t('sort_by')" variant="link" toggle-class="text-decoration-none " class="m-0 p-0">
+                        <b-dropdown id="sortby" :text="sortByLabel" variant="link" toggle-class="text-decoration-none " class="m-0 p-0">
                             <div v-for="o in sortOptions" :key="o.id">
                                 <b-dropdown-item
                                     v-on:click="
@@ -626,6 +626,13 @@ export default {
     computed: {
         locale: function () {
             return window.CUSTOM_LOCALE
+        },
+        sortByLabel: function () {
+            if (this.search.sort_order.length == 1) {
+                return this.search.sort_order[0].text
+            } else {
+                return this.$t("sort_by")
+            }
         },
         yesterday: function () {
             const now = new Date()
@@ -1014,7 +1021,6 @@ export default {
                 rating: rating,
                 internal: this.search.search_internal,
                 random: this.random_search,
-                _new: this.ui.sort_by_new,
                 timescooked: timescooked,
                 makenow: this.search.makenow || undefined,
                 lastcooked: lastcooked,
@@ -1028,6 +1034,7 @@ export default {
             }
             if (!this.searchFiltered()) {
                 params.options.query.last_viewed = this.ui.recently_viewed
+                params._new = this.ui.sort_by_new
             }
             return params
         },
@@ -1039,7 +1046,7 @@ export default {
                 this.search?.search_units?.length !== 0 ||
                 this.random_search ||
                 this.search?.search_filter ||
-                this.search.sort_order.length !== 0 ||
+                this.search.sort_order.length > 1 ||
                 this.search?.search_rating !== undefined ||
                 (this.search.timescooked !== undefined && this.search.timescooked !== "") ||
                 this.search.makenow !== false ||
@@ -1048,7 +1055,7 @@ export default {
             if (ignore_string) {
                 return filtered
             } else {
-                return filtered || this.search?.search_input != ""
+                return filtered || this.search?.search_input != "" || this.search.sort_order.length <= 1
             }
         },
         addFields(field) {
