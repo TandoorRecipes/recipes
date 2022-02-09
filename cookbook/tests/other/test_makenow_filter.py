@@ -1,10 +1,8 @@
-import json
 
 import pytest
 from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope
-from pytest_factoryboy import LazyFixture, register
 
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.models import Food, Recipe

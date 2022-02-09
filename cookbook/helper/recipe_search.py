@@ -29,6 +29,7 @@ class RecipeSearch():
             filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) | Q(shared=self._request.user)).first()
             if filter:
                 self._params = {**json.loads(filter.search)}
+                self._original_params = {**(params or {})}
             else:
                 self._params = {**(params or {})}
         else:
@@ -69,7 +70,14 @@ class RecipeSearch():
         self._include_children = str2bool(self._params.get('include_children', None))
         self._timescooked = self._params.get('timescooked', None)
         self._lastcooked = self._params.get('lastcooked', None)
-        self._makenow = str2bool(self._params.get('makenow', None))
+        # this supports hidden feature to find recipes missing X ingredients
+        try:
+            self._makenow = int(makenow := self._params.get('makenow', None))
+        except (ValueError, TypeError):
+            if str2bool(makenow):
+                self._makenow = 0
+            else:
+                self._makenow = None
 
         self._search_type = self._search_prefs.search or 'plain'
         if self._string:
@@ -115,7 +123,7 @@ class RecipeSearch():
         self.internal_filter(internal=self._internal)
         self.step_filters(steps=self._steps)
         self.unit_filters(units=self._units)
-        self._makenow_filter()
+        self._makenow_filter(missing=self._makenow)
         self.string_filters(string=self._string)
 
         return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
@@ -420,8 +428,8 @@ class RecipeSearch():
             ).annotate(simularity=Max('trigram')).values('id', 'simularity').filter(simularity__gt=self._search_prefs.trigram_threshold)
             self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
 
-    def _makenow_filter(self):
-        if not self._makenow:
+    def _makenow_filter(self, missing=None):
+        if missing is None:
             return
         shopping_users = [*self._request.user.get_shopping_share(), self._request.user]
 
@@ -434,7 +442,7 @@ class RecipeSearch():
         makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food', filter=Q(steps__ingredients__food__ignore_shopping=False, steps__ingredients__food__isnull=False), distinct=True),
             count_onhand=Count('pk', filter=onhand_filter)
-        ).annotate(missingfood=F('count_food')-F('count_onhand')).filter(missingfood__lte=0)
+        ).annotate(missingfood=F('count_food')-F('count_onhand')).filter(missingfood=missing)
         self._queryset = self._queryset.filter(id__in=makenow_recipes.values('id'))
 
     @staticmethod
