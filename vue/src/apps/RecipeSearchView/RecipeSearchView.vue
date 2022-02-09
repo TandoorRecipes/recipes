@@ -1012,6 +1012,10 @@ export default {
                 params.options.query.last_viewed = this.ui.recently_viewed
                 params._new = this.ui.sort_by_new
             }
+            if (this.search.search_filter) {
+                params.options.query.filter = this.search.search_filter.id
+            }
+            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {
