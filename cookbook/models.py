@@ -520,7 +520,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         obj = self.__class__.objects.get(id=self.id)
         if parent := obj.get_parent():
             # child should inherit what the parent defines it should inherit
-            obj.inherit_fields.set(list(parent.child_inherit_fields.all() or parent.inherit_fields.all()))
+            fields = list(parent.child_inherit_fields.all() or parent.inherit_fields.all())
+            if len(fields) > 0:
+                obj.inherit_fields.set(fields)
         obj.save()
 
     @staticmethod
@@ -1027,6 +1029,7 @@ class ImportLog(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f"{self.created_at}:{self.type}"
+
 
 class ExportLog(models.Model, PermissionModelMixin):
     type = models.CharField(max_length=32)

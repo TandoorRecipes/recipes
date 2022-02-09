@@ -45,19 +45,10 @@ def recipe(request, space_1, u1_s1):
         params = request.param  # request.param is a magic variable
     except AttributeError:
         params = {}
-    # step_recipe = params.get('steps__count', 1)
-    # steps__recipe_count = params.get('steps__recipe_count', 0)
-    # steps__food_recipe_count = params.get('steps__food_recipe_count', {})
     params['created_by'] = params.get('created_by', auth.get_user(u1_s1))
     params['space'] = space_1
     return RecipeFactory(**params)
 
-    # return RecipeFactory.create(
-    #     steps__recipe_count=steps__recipe_count,
-    #     steps__food_recipe_count=steps__food_recipe_count,
-    #     created_by=created_by,
-    #     space=space_1,
-    # )
 
 
 @pytest.mark.parametrize("arg", [

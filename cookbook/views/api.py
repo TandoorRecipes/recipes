@@ -141,17 +141,15 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         query = self.request.query_params.get('query', None)
-        fuzzy = self.request.user.searchpreference.lookup
+        fuzzy = self.request.user.searchpreference.lookup or any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.trigram.values_list('field', flat=True)])
 
         if query is not None and query not in ["''", '']:
             if fuzzy:
-                self.queryset = (
-                    self.queryset
-                    .annotate(starts=Case(When(name__istartswith=query, then=(Value(.3, output_field=IntegerField()))), default=Value(0)))
-                    .annotate(trigram=TrigramSimilarity('name', query))
-                    .annotate(sort=F('starts')+F('trigram'))
-                    .order_by('-sort')
-                )
+                if any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                    self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
+                else:
+                    self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name', query))
+                self.queryset = self.queryset.order_by('-trigram')
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 filter = Q(name__icontains=query)

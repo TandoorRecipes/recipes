@@ -130,36 +130,30 @@ class FoodFactory(factory.django.DjangoModelFactory):
 
 
 @register
-class RecipeBookEntryFactory(factory.django.DjangoModelFactory):
-    """RecipeBookEntry factory."""
-    book = None
-    recipe = None
-
-    class Meta:
-        model = 'cookbook.RecipeBookEntry'
-
-
-@register
 class RecipeBookFactory(factory.django.DjangoModelFactory):
     """RecipeBook factory."""
-    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=2, variable_nb_words=False))
-    # icon = models.CharField(max_length=16, blank=True, null=True)
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3, variable_nb_words=False))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
+    icon = None
+    # shared = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
     created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    filter = None
     space = factory.SubFactory(SpaceFactory)
-    recipe = None  # used to add to RecipeBookEntry
-    recipe_book_entry = factory.RelatedFactory(
-        RecipeBookEntryFactory,
-        factory_related_name='book',
-        recipe=factory.LazyAttribute(lambda x:  x.recipe),
-    )
-
-    class Params:
-        recipe = None
 
     class Meta:
         model = 'cookbook.RecipeBook'
         django_get_or_create = ('name', 'space',)
+
+
+@register
+class RecipeBookEntryFactory(factory.django.DjangoModelFactory):
+    """RecipeBookEntry factory."""
+    book = factory.SubFactory(RecipeBookFactory, space=factory.SelfAttribute('..recipe.space'))
+    recipe = None
+
+    class Meta:
+        model = 'cookbook.RecipeBookEntry'
+        django_get_or_create = ('book', 'recipe',)
 
 
 @register
