@@ -25,14 +25,14 @@ SOCIAL_PROVIDERS=allauth.socialaccount.providers.github,allauth.socialaccount.pr
     The exact formatting is important so make sure to follow the steps explained here!
 
 Depending on your authentication provider you **might need** to configure it. 
-This needs to be done trough the settings system. To make the system flexible (allow multiple providers) and to 
-not require another file to be mounted into the container the configuration ins done trough a single
+This needs to be done through the settings system. To make the system flexible (allow multiple providers) and to 
+not require another file to be mounted into the container the configuration ins done through a single
 environment variable. The downside of this approach is that the configuration needs to be put into a single line
 as environment files loaded by docker compose don't support multiple lines for a single variable.
 
 Take the example configuration from the allauth docs, fill in your settings and then inline the whole object 
 (you can use a service like [www.freeformatter.com](https://www.freeformatter.com/json-formatter.html) for formatting).
-Assign it to the `SOCIALACCOUNT_PROVIDERS` variable.
+Assign it to the additional `SOCIALACCOUNT_PROVIDERS` variable.
 
 ```ini
 SOCIALACCOUNT_PROVIDERS={"nextcloud":{"SERVER":"https://nextcloud.example.org"}}
@@ -56,9 +56,48 @@ Use the superuser account to grant permissions to the newly created users.
     I do not have a ton of experience with using various single signon providers and also cannot test all of them.
     If you have any Feedback or issues let me know.
 
+### Third-party authentication example
+Keycloak is a popular IAM solution and integration is straight forward thanks to Django Allauth. This example can also be used as reference for other third-party authentication solutions, as documented by Allauth.
+
+At Keycloak, create a new client and assign a `Client-ID`, this client comes with a `Secret-Key`. Both values are required later on. Make sure to define the correct Redirection-URL for the service, for example `https://tandoor.example.com/*`. Depending on your Keycloak setup, you need to assign roles and groups to grant access to the service.
+
+To enable Keycloak as a sign in option, set those variables to define the social provider and specify its configuration:
+```ini
+SOCIAL_PROVIDERS=allauth.socialaccount.providers.keycloak
+SOCIALACCOUNT_PROVIDERS='{ "keycloak": { "KEYCLOAK_URL": "https://auth.example.com/", "KEYCLOAK_REALM": "master" } }'
+```
+
+1. Restart the service, login as superuser and open the `Admin` page.
+2. Make sure that the correct `Domain Name` is defined at `Sites`.
+3. Select `Social Application` and chose `Keycloak` from the provider list.
+4. Provide an arbitrary name for your authentication provider, and enter the `Client-ID` and `Secret Key` values obtained from Keycloak earlier.
+5. Make sure to add your `Site` to the list of available sites and save the new `Social Application`.
+
+You are now able to sign in using Keycloak.
+
 ### Linking accounts
 To link an account to an already existing normal user go to the settings page of the user and link it. 
 Here you can also unlink your account if you no longer want to use a social login method.
+
+## LDAP
+
+LDAP authentication can be enabled in the `.env` file by setting `LDAP_AUTH=1`.
+If set, users listed in the LDAP instance will be able to sign in without signing up.
+These variables must be set to configure the connection to the LDAP instance:
+```
+AUTH_LDAP_SERVER_URI=ldap://ldap.example.org:389
+AUTH_LDAP_BIND_DN=uid=admin,ou=users,dc=example,dc=org
+AUTH_LDAP_BIND_PASSWORD=adminpassword
+AUTH_LDAP_USER_SEARCH_BASE_DN=ou=users,dc=example,dc=org
+```
+Additional optional variables:
+```
+AUTH_LDAP_USER_SEARCH_FILTER_STR=(uid=%(user)s)
+AUTH_LDAP_USER_ATTR_MAP={'first_name': 'givenName', 'last_name': 'sn', 'email': 'mail'}
+AUTH_LDAP_ALWAYS_UPDATE_USER=1
+AUTH_LDAP_CACHE_TIMEOUT=3600
+AUTH_LDAP_TLS_CACERTFILE=/etc/ssl/certs/own-ca.pem
+```
 
 ## Reverse Proxy Authentication
 

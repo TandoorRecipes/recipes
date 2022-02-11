@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load l10n %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+{% load i18n %}
+{% comment %} {% load l10n %} {% endcomment %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content_fluid %}
+
+    <div id="app">
+        <model-list-view></model-list-view>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    {{ config | json_script:"model_config" }}
+
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
+
+    <script type="application/javascript">
+        window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
+
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+
+        {% if current_file_size_mb %}
+            window.CURRENT_FILE_SIZE_MB = {{ current_file_size_mb|unlocalize }}
+            window.MAX_FILE_SIZE_MB = {{ max_file_size_mb|unlocalize }}
+        {% endif %}
+    </script>
+
+    {% render_bundle 'model_list_view' %}
+{% endblock %}

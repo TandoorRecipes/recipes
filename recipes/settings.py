@@ -16,8 +16,9 @@ import re
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+
+load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get vars from .env files
@@ -43,6 +44,7 @@ REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
 FRACTION_PREF_DEFAULT = bool(int(os.getenv('FRACTION_PREF_DEFAULT', False)))
+KJ_PREF_DEFAULT = bool(int(os.getenv('KJ_PREF_DEFAULT', False)))
 STICKY_NAV_PREF_DEFAULT = bool(int(os.getenv('STICKY_NAV_PREF_DEFAULT', True)))
 
 # minimum interval that users can set for automatic sync of shopping lists
@@ -54,6 +56,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_REDIRECT_URL = "index"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
@@ -73,7 +76,6 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
-
 HOSTED = bool(int(os.getenv('HOSTED', False)))
 
 MESSAGE_TAGS = {
@@ -98,7 +100,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'crispy_forms',
-    'emoji_picker',
     'rest_framework',
     'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
@@ -136,6 +137,9 @@ ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 
 ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
 
+ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
+EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -150,11 +154,50 @@ MIDDLEWARE = [
     'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
 
+SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
+DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
+
+if bool(int(os.getenv('SQL_DEBUG', False))):
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
+
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
 
 # Auth related settings
-AUTHENTICATION_BACKENDS = [
+AUTHENTICATION_BACKENDS = []
+
+# LDAP
+LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
+if LDAP_AUTH:
+    import ldap
+    from django_auth_ldap.config import LDAPSearch
+    AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
+    AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
+    AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
+    AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
+    AUTH_LDAP_USER_SEARCH = LDAPSearch(
+        os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'),
+        ldap.SCOPE_SUBTREE,
+        os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
+    )
+    AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
+        'first_name': 'givenName',
+        'last_name': 'sn',
+        'email': 'mail',
+    }
+    AUTH_LDAP_ALWAYS_UPDATE_USER = bool(int(os.getenv('AUTH_LDAP_ALWAYS_UPDATE_USER', True)))
+    AUTH_LDAP_CACHE_TIMEOUT = int(os.getenv('AUTH_LDAP_CACHE_TIMEOUT', 3600))
+    if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
+        AUTH_LDAP_GLOBAL_OPTIONS = {ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE')}
+    if DEBUG:
+        LOGGING = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "handlers": {"console": {"class": "logging.StreamHandler"}},
+            "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+        }
+
+AUTHENTICATION_BACKENDS += [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
@@ -225,7 +268,7 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 # Load settings from env files
 if os.getenv('DATABASE_URL'):
     match = re.match(
-        r'(?P<schema>\w+):\/\/(?P<user>[\w\d_-]+)(:(?P<password>[^@]+))?@(?P<host>[^:/]+)(:(?P<port>\d+))?(\/(?P<database>[\w\d_-]+))?',
+        r'(?P<schema>\w+):\/\/(?P<user>[\w\d_-]+)(:(?P<password>[^@]+))?@(?P<host>[^:/]+)(:(?P<port>\d+))?(\/(?P<database>[\w\d\/\._-]+))?',
         os.getenv('DATABASE_URL')
     )
     settings = match.groupdict()
@@ -259,7 +302,7 @@ else:
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
             'NAME': os.getenv('POSTGRES_DB') if os.getenv('POSTGRES_DB') else 'db.sqlite3',
-            'CONN_MAX_AGE': 600,
+            'CONN_MAX_AGE': 60,
         }
     }
 
@@ -330,16 +373,18 @@ LANGUAGES = [
     ('de', _('German')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
+    ('pl', _('Polish')),
+    ('ru', _('Russian')),
     ('es', _('Spanish')),
 ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+SCRIPT_NAME = os.getenv('SCRIPT_NAME', '')
 # path for django_js_reverse to generate the javascript file containing all urls. Only done because the default command (collectstatic_js_reverse) fails to update the manifest
 JS_REVERSE_OUTPUT_PATH = os.path.join(BASE_DIR, "cookbook/static/django_js_reverse")
-
-JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', os.getenv('SCRIPT_NAME', ''))
+JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', SCRIPT_NAME)
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -372,7 +417,7 @@ TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
 # all of this may or may not work with nginx or other web servers
-# TODO make this user configureable - enable or disable bookmarklets
+# TODO make this user configurable - enable or disable bookmarklets
 # TODO since token auth is enabled - this all should be https by default
 CORS_ORIGIN_ALLOW_ALL = True
 

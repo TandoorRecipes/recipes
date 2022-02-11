@@ -1,7 +1,8 @@
 from django.contrib import messages
+from django.db import models
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
@@ -9,7 +10,7 @@ from django.views.generic import DeleteView
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                OwnerRequiredMixin,
                                                group_required)
-from cookbook.models import (Comment, InviteLink, Keyword, MealPlan, Recipe,
+from cookbook.models import (Comment, InviteLink, MealPlan, Recipe,
                              RecipeBook, RecipeBookEntry, RecipeImport,
                              Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
@@ -23,9 +24,37 @@ class RecipeDelete(GroupRequiredMixin, DeleteView):
     model = Recipe
     success_url = reverse_lazy('index')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # TODO make this more generic so that all delete functions benefit from this
+        if self.get_context_data()['protected_objects']:
+            return render(request, template_name=self.template_name, context=self.get_context_data())
+
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
     def get_context_data(self, **kwargs):
         context = super(RecipeDelete, self).get_context_data(**kwargs)
         context['title'] = _("Recipe")
+
+        # TODO make this more generic so that all delete functions benefit from this
+        self.object = self.get_object()
+        context['protected_objects'] = []
+        context['cascading_objects'] = []
+        context['set_null_objects'] = []
+        for x in self.object._meta.get_fields():
+            try:
+                related = x.related_model.objects.filter(**{x.field.name: self.object})
+                if related.exists() and x.on_delete == models.PROTECT:
+                    context['protected_objects'].append(related)
+                if related.exists() and x.on_delete == models.CASCADE:
+                    context['cascading_objects'].append(related)
+                if related.exists() and x.on_delete == models.SET_NULL:
+                    context['set_null_objects'].append(related)
+            except AttributeError:
+                pass
+
         return context
 
 
@@ -73,16 +102,16 @@ class SyncDelete(GroupRequiredMixin, DeleteView):
         return context
 
 
-class KeywordDelete(GroupRequiredMixin, DeleteView):
-    groups_required = ['user']
-    template_name = "generic/delete_template.html"
-    model = Keyword
-    success_url = reverse_lazy('list_keyword')
+# class KeywordDelete(GroupRequiredMixin, DeleteView):
+#     groups_required = ['user']
+#     template_name = "generic/delete_template.html"
+#     model = Keyword
+#     success_url = reverse_lazy('list_keyword')
 
-    def get_context_data(self, **kwargs):
-        context = super(KeywordDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Keyword")
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super(KeywordDelete, self).get_context_data(**kwargs)
+#         context['title'] = _("Keyword")
+#         return context
 
 
 class StorageDelete(GroupRequiredMixin, DeleteView):

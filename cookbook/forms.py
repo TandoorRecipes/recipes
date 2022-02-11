@@ -1,18 +1,16 @@
+from datetime import datetime
+
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import widgets
+from django.forms import NumberInput, widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
-from emoji_picker.widgets import EmojiPickerTextInput
-from treebeard.forms import MoveNodeForm
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, Food, InviteLink, Keyword, MealPlan, Recipe,
-                     RecipeBook, RecipeBookEntry, Storage, Sync, Unit, User,
-                     UserPreference, SupermarketCategory, MealType, Space,
-                     SearchPreference)
+from .models import (Comment, Food, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+                     RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference)
 
 
 class SelectWidget(widgets.Select):
@@ -38,14 +36,37 @@ class DateWidget(forms.DateInput):
 class UserPreferenceForm(forms.ModelForm):
     prefix = 'preference'
 
+    def __init__(self, *args, **kwargs):
+        if x := kwargs.get('instance', None):
+            space = x.space
+        else:
+            space = kwargs.pop('space')
+        super().__init__(*args, **kwargs)
+        self.fields['plan_share'].queryset = User.objects.filter(userpreference__space=space).all()
+
     class Meta:
         model = UserPreference
         fields = (
-            'default_unit', 'use_fractions', 'theme', 'nav_color',
+            'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'show_recent', 'search_style',
-            'plan_share', 'ingredient_decimals', 'shopping_auto_sync',
-            'comments'
+            'plan_share', 'ingredient_decimals', 'comments',
         )
+
+        labels = {
+            'default_unit': _('Default unit'),
+            'use_fractions': _('Use fractions'),
+            'use_kj': _('Use KJ'),
+            'theme': _('Theme'),
+            'nav_color': _('Navbar color'),
+            'sticky_navbar': _('Sticky navbar'),
+            'default_page': _('Default page'),
+            'show_recent': _('Show recent recipes'),
+            'search_style': _('Search style'),
+            'plan_share': _('Plan sharing'),
+            'ingredient_decimals': _('Ingredient decimal places'),
+            'shopping_auto_sync': _('Shopping list auto sync period'),
+            'comments': _('Comments')
+        }
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
@@ -54,8 +75,9 @@ class UserPreferenceForm(forms.ModelForm):
             'use_fractions': _(
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
             # noqa: E501
-            'plan_share': _(
-                'Users with whom newly created meal plan/shopping list entries should be shared by default.'),
+            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  # noqa: E501
+            'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
+            'shopping_share': _('Users with whom to share shopping lists.'),
             # noqa: E501
             'show_recent': _('Show recently viewed recipes on search page.'),  # noqa: E501
             'ingredient_decimals': _('Number of decimals to round ingredients.'),  # noqa: E501
@@ -64,11 +86,14 @@ class UserPreferenceForm(forms.ModelForm):
                 'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  # noqa: E501
                 'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
             ),
-            'sticky_navbar': _('Makes the navbar stick to the top of the page.')  # noqa: E501
+            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),  # noqa: E501
+            'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
+            'mealplan_autoexclude_onhand': _('Exclude ingredients that are on hand.'),
         }
 
         widgets = {
-            'plan_share': MultiSelectWidget
+            'plan_share': MultiSelectWidget,
+            'shopping_share': MultiSelectWidget,
         }
 
 
@@ -120,7 +145,7 @@ class ImportExportBase(forms.Form):
     NEXTCLOUD = 'NEXTCLOUD'
     MEALIE = 'MEALIE'
     CHOWDOWN = 'CHOWDOWN'
-    SAFRON = 'SAFRON'
+    SAFFRON = 'SAFFRON'
     CHEFTAP = 'CHEFTAP'
     PEPPERPLATE = 'PEPPERPLATE'
     RECIPEKEEPER = 'RECIPEKEEPER'
@@ -130,13 +155,17 @@ class ImportExportBase(forms.Form):
     MEALMASTER = 'MEALMASTER'
     REZKONV = 'REZKONV'
     OPENEATS = 'OPENEATS'
+    PLANTOEAT = 'PLANTOEAT'
+    COOKBOOKAPP = 'COOKBOOKAPP'
+    COPYMETHAT = 'COPYMETHAT'
+    PDF = 'PDF'
 
     type = forms.ChoiceField(choices=(
         (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
-        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFRON, 'Safron'), (CHEFTAP, 'ChefTap'),
+        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'),
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
         (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
-
+        (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'),
     ))
 
 
@@ -148,59 +177,13 @@ class ImportForm(ImportExportBase):
 
 
 class ExportForm(ImportExportBase):
-    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none())
+    recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none(), required=False)
     all = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
         self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
-
-
-class UnitMergeForm(forms.Form):
-    prefix = 'unit'
-
-    new_unit = SafeModelChoiceField(
-        queryset=Unit.objects.none(),
-        widget=SelectWidget,
-        label=_('New Unit'),
-        help_text=_('New unit that other gets replaced by.'),
-    )
-    old_unit = SafeModelChoiceField(
-        queryset=Unit.objects.none(),
-        widget=SelectWidget,
-        label=_('Old Unit'),
-        help_text=_('Unit that should be replaced.'),
-    )
-
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['new_unit'].queryset = Unit.objects.filter(space=space).all()
-        self.fields['old_unit'].queryset = Unit.objects.filter(space=space).all()
-
-
-class FoodMergeForm(forms.Form):
-    prefix = 'food'
-
-    new_food = SafeModelChoiceField(
-        queryset=Food.objects.none(),
-        widget=SelectWidget,
-        label=_('New Food'),
-        help_text=_('New food that other gets replaced by.'),
-    )
-    old_food = SafeModelChoiceField(
-        queryset=Food.objects.none(),
-        widget=SelectWidget,
-        label=_('Old Food'),
-        help_text=_('Food that should be replaced.'),
-    )
-
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['new_food'].queryset = Food.objects.filter(space=space).all()
-        self.fields['old_food'].queryset = Food.objects.filter(space=space).all()
 
 
 class CommentForm(forms.ModelForm):
@@ -215,33 +198,6 @@ class CommentForm(forms.ModelForm):
         }
         widgets = {
             'text': forms.Textarea(attrs={'rows': 2, 'cols': 15}),
-        }
-
-
-class KeywordForm(MoveNodeForm):
-    class Meta:
-        model = Keyword
-        fields = ('name', 'icon', 'description')
-        exclude = ('sib_order', 'parent', 'path', 'depth', 'numchild')
-        widgets = {'icon': EmojiPickerTextInput}
-
-
-class FoodForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
-        self.fields['supermarket_category'].queryset = SupermarketCategory.objects.filter(space=space).all()
-
-    class Meta:
-        model = Food
-        fields = ('name', 'description', 'ignore_shopping', 'recipe', 'supermarket_category')
-        widgets = {'recipe': SelectWidget}
-
-        field_classes = {
-            'recipe': SafeModelChoiceField,
-            'supermarket_category': SafeModelChoiceField,
         }
 
 
@@ -273,6 +229,7 @@ class StorageForm(forms.ModelForm):
         }
 
 
+# TODO: Deprecate
 class RecipeBookEntryForm(forms.ModelForm):
     prefix = 'bookmark'
 
@@ -305,7 +262,14 @@ class SyncForm(forms.ModelForm):
             'storage': SafeModelChoiceField,
         }
 
+        labels = {
+            'storage': _('Storage'),
+            'path': _('Path'),
+            'active': _('Active')
+        }
 
+
+# TODO deprecate
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     keywords = forms.ModelMultipleChoiceField(
@@ -342,21 +306,7 @@ class ImportRecipeForm(forms.ModelForm):
         }
 
 
-class RecipeBookForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
-
-    class Meta:
-        model = RecipeBook
-        fields = ('name', 'icon', 'description', 'shared')
-        widgets = {'icon': EmojiPickerTextInput, 'shared': MultiSelectWidget}
-        field_classes = {
-            'shared': SafeModelMultipleChoiceField,
-        }
-
-
+# TODO deprecate
 class MealPlanForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
@@ -408,7 +358,8 @@ class InviteLinkForm(forms.ModelForm):
 
     def clean(self):
         space = self.cleaned_data['space']
-        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(space=space).count()) >= space.max_users:
+        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() +
+                                     InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=space).count()) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
@@ -423,7 +374,7 @@ class InviteLinkForm(forms.ModelForm):
         model = InviteLink
         fields = ('email', 'group', 'valid_until', 'space')
         help_texts = {
-            'email': _('An email address is not required but if present the invite link will be send to the user.'),
+            'email': _('An email address is not required but if present the invite link will be sent to the user.'),
         }
         field_classes = {
             'space': SafeModelChoiceField,
@@ -478,19 +429,31 @@ class UserCreateForm(forms.Form):
 
 class SearchPreferenceForm(forms.ModelForm):
     prefix = 'search'
+    trigram_threshold = forms.DecimalField(min_value=0.01, max_value=1, decimal_places=2,
+                                           widget=NumberInput(attrs={'class': "form-control-range", 'type': 'range'}),
+                                           help_text=_(
+                                               'Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
+    preset = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = SearchPreference
-        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext')
+        fields = (
+            'search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
 
         help_texts = {
-            'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full desciption of choices.'),
+            'search': _(
+                'Select type method of search.  Click <a href="/docs/search/">here</a> for full description of choices.'),
             'lookup': _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'),
-            'unaccent': _('Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
-            'icontains': _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
-            'istartswith': _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
-            'trigram': _("Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
-            'fulltext': _("Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields.")
+            'unaccent': _(
+                'Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
+            'icontains': _(
+                "Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
+            'istartswith': _(
+                "Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
+            'trigram': _(
+                "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
+            'fulltext': _(
+                "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields."),
         }
 
         labels = {
@@ -498,7 +461,7 @@ class SearchPreferenceForm(forms.ModelForm):
             'lookup': _('Fuzzy Lookups'),
             'unaccent': _('Ignore Accent'),
             'icontains': _("Partial Match"),
-            'istartswith': _("Starts Wtih"),
+            'istartswith': _("Starts With"),
             'trigram': _("Fuzzy Search"),
             'fulltext': _("Full Text")
         }
@@ -510,4 +473,74 @@ class SearchPreferenceForm(forms.ModelForm):
             'istartswith': MultiSelectWidget,
             'trigram': MultiSelectWidget,
             'fulltext': MultiSelectWidget,
+        }
+
+
+class ShoppingPreferenceForm(forms.ModelForm):
+    prefix = 'shopping'
+
+    class Meta:
+        model = UserPreference
+
+        fields = (
+            'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
+            'mealplan_autoinclude_related', 'shopping_add_onhand', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
+        )
+
+        help_texts = {
+            'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
+            'shopping_auto_sync': _(
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  # noqa: E501
+                'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
+            ),
+            'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
+            'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
+            'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
+            'default_delay': _('Default number of hours to delay a shopping list entry.'),
+            'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
+            'shopping_recent_days': _('Days of recent shopping list entries to display.'),
+            'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
+            'csv_delim': _('Delimiter to use for CSV exports.'),
+            'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
+
+        }
+        labels = {
+            'shopping_share': _('Share Shopping List'),
+            'shopping_auto_sync': _('Autosync'),
+            'mealplan_autoadd_shopping': _('Auto Add Meal Plan'),
+            'mealplan_autoexclude_onhand': _('Exclude On Hand'),
+            'mealplan_autoinclude_related': _('Include Related'),
+            'default_delay': _('Default Delay Hours'),
+            'filter_to_supermarket': _('Filter to Supermarket'),
+            'shopping_recent_days': _('Recent Days'),
+            'csv_delim': _('CSV Delimiter'),
+            "csv_prefix_label": _("List Prefix"),
+            'shopping_add_onhand': _("Auto On Hand"),
+        }
+
+        widgets = {
+            'shopping_share': MultiSelectWidget
+        }
+
+
+class SpacePreferenceForm(forms.ModelForm):
+    prefix = 'space'
+    reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
+                                            help_text=_("Reset all food to inherit the fields configured."))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)  # populates the post
+        self.fields['food_inherit'].queryset = Food.inheritable_fields
+
+    class Meta:
+        model = Space
+
+        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count')
+
+        help_texts = {
+            'food_inherit': _('Fields on food that should be inherited by default.'),
+            'show_facet_count': _('Show recipe counts on search filters'), }
+
+        widgets = {
+            'food_inherit': MultiSelectWidget
         }

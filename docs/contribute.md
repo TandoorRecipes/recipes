@@ -23,7 +23,7 @@ This application is developed using the Django framework for Python. They have e
 
 1. Clone this repository wherever you like and install the Python language for your OS (at least version 3.8)
 2. Open it in your favorite editor/IDE (e.g. PyCharm)
-    1. If you want, create a virutal environment for all your packages.
+    1. If you want, create a virtual environment for all your packages.
 3. Install all required packages: `pip install -r requirements.txt`
 4. Run the migrations: `python manage.py migrate`
 5. Start the development server: `python manage.py runserver`
@@ -49,15 +49,6 @@ Navigate to `vue/src/utils/openapi`.
 
 Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/` (replace your dev server url if required)
 
-### Pre-Commit
-Some checks and scripts can be automatically run using [pre-commit](https://pre-commit.com/).
-
-The scripts are configured in the `pre-commit-config.yaml`. To setup the hooks on your development environment install 
-pre commit using `pip install pre-commit` and run `pre-commit install` to setup the hooks.
-
-To manually test all hooks (and ignore if files have changed) use `pre-commit run --all-files`
-
-
 ## Contribute Documentation
 The documentation is build from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
 folder of the GitHub repository. 
@@ -67,6 +58,8 @@ folder of the GitHub repository.
     This will likely change in the future to prevent issues with documentation being released before the features.
 
 In order to contribute to the documentation you can fork the repository and edit the markdown files in the browser.
+
+Now install mkdocs and dependencies: `pip install mkdocs-material mkdocs-include-markdown-plugin`.
 
 If you want to test the documentation locally run `mkdocs serve` from the project root.
 

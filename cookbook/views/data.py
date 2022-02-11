@@ -5,6 +5,7 @@ from io import BytesIO
 
 import requests
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.db.transaction import atomic
 from django.http import HttpResponse, HttpResponseRedirect
@@ -18,11 +19,13 @@ from requests.exceptions import MissingSchema
 
 from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.image_processing import handle_image
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required, has_group_permission
 from cookbook.helper.recipe_url_import import parse_cooktime
-from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe,
-                             RecipeImport, Step, Sync, Unit, UserPreference)
+from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe, RecipeImport, Step, Sync,
+                             Unit, UserPreference)
 from cookbook.tables import SyncTable
+from recipes import settings
 
 
 @group_required('user')
@@ -34,6 +37,10 @@ def sync(request):
     if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
         messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
         return HttpResponseRedirect(reverse('index'))
+
+    if request.space.demo or settings.HOSTED:
+        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+        return redirect('index')
 
     if request.method == "POST":
         if not has_group_permission(request.user, ['admin']):
@@ -104,8 +111,8 @@ def batch_edit(request):
                 'Batch edit done. %(count)d recipe was updated.',
                 'Batch edit done. %(count)d Recipes where updated.',
                 count) % {
-                      'count': count,
-                  }
+                'count': count,
+            }
             messages.add_message(request, messages.SUCCESS, msg)
 
             return redirect('data_batch_edit')
@@ -148,23 +155,27 @@ def import_url(request):
 
         recipe.steps.add(step)
 
-        all_keywords = Keyword.get_tree()
         for kw in data['keywords']:
-            k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
-            recipe.keywords.add(k)
+            if data['all_keywords']: # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
+                k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
+                recipe.keywords.add(k)
+            else:
+                try:
+                    k = Keyword.objects.get(name=kw['text'], space=request.space)
+                    recipe.keywords.add(k)
+                except ObjectDoesNotExist:
+                    pass
 
+        ingredient_parser = IngredientParser(request, True)
         for ing in data['recipeIngredient']:
-            ingredient = Ingredient(space=request.space,)
+            ingredient = Ingredient(space=request.space, )
 
-            if ing['ingredient']['text'] != '':
-                ingredient.food, f_created = Food.objects.get_or_create(
-                    name=ing['ingredient']['text'].strip(), space=request.space
-                )
+            if food_text := ing['ingredient']['text'].strip():
+                ingredient.food = ingredient_parser.get_food(food_text)
 
-            if ing['unit'] and ing['unit']['text'] != '':
-                ingredient.unit, u_created = Unit.objects.get_or_create(
-                    name=ing['unit']['text'].strip(), space=request.space
-                )
+            if ing['unit']:
+                if unit_text := ing['unit']['text'].strip():
+                    ingredient.unit = ingredient_parser.get_unit(unit_text)
 
             # TODO properly handle no_amount recipes
             if isinstance(ing['amount'], str):
@@ -180,13 +191,12 @@ def import_url(request):
 
             ingredient.save()
             step.ingredients.add(ingredient)
-            print(ingredient)
 
         if 'image' in data and data['image'] != '' and data['image'] is not None:
             try:
                 response = requests.get(data['image'])
 
-                img, filetype = handle_image(request, BytesIO(response.content))
+                img, filetype = handle_image(request, File(BytesIO(response.content), name='image'))
                 recipe.image = File(
                     img, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}'
                 )

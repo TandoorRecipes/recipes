@@ -1,16 +1,17 @@
 import json
 import re
+from json import JSONDecodeError
+from urllib.parse import unquote
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from recipe_scrapers._utils import get_host_name, normalize_string
+
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.scrapers.scrapers import text_scraper
-from json import JSONDecodeError
-from recipe_scrapers._utils import get_host_name, normalize_string
-from urllib.parse import unquote
 
 
-def get_recipe_from_source(text, url, space):
+def get_recipe_from_source(text, url, request):
     def build_node(k, v):
         if isinstance(v, dict):
             node = {
@@ -58,7 +59,7 @@ def get_recipe_from_source(text, url, space):
         return kid_list
 
     recipe_json = {
-                'name': '',
+        'name': '',
                 'url': '',
                 'description': '',
                 'image': '',
@@ -103,7 +104,7 @@ def get_recipe_from_source(text, url, space):
                 parse_list.append(el)
         scrape = text_scraper(text, url=url)
 
-    recipe_json = helper.get_from_scraper(scrape, space)
+    recipe_json = helper.get_from_scraper(scrape, request)
 
     for el in parse_list:
         temp_tree = []
@@ -188,6 +189,6 @@ def remove_graph(el):
                 for x in el['@graph']:
                     if '@type' in x and x['@type'] == 'Recipe':
                         el = x
-        except TypeError:
+        except (TypeError, JSONDecodeError):
             pass
     return el

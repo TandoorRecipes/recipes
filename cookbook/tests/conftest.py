@@ -5,14 +5,22 @@ import uuid
 
 import pytest
 from django.contrib import auth
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group, User
 from django_scopes import scopes_disabled
+from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Space, Recipe, Step, Ingredient, Food, Unit
+from cookbook.models import Food, Ingredient, Recipe, Space, Step, Unit
+from cookbook.tests.factories import FoodFactory, SpaceFactory, UserFactory
 
+register(SpaceFactory, 'space_1')
+register(SpaceFactory, 'space_2')
+# register(FoodFactory, space=LazyFixture('space_2'))
+# TODO refactor clients to be factories
 
 # hack from https://github.com/raphaelm/django-scopes to disable scopes for all fixtures
 # does not work on yield fixtures as only one yield can be used per fixture (i think)
+
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_fixture_setup(fixturedef, request):
     if inspect.isgeneratorfunction(fixturedef.func):
@@ -27,23 +35,23 @@ def enable_db_access_for_all_tests(db):
     pass
 
 
-@pytest.fixture()
-def space_1():
-    with scopes_disabled():
-        return Space.objects.get_or_create(name='space_1')[0]
+# @pytest.fixture()
+# def space_1():
+#     with scopes_disabled():
+#         return Space.objects.get_or_create(name='space_1')[0]
 
 
-@pytest.fixture()
-def space_2():
-    with scopes_disabled():
-        return Space.objects.get_or_create(name='space_2')[0]
+# @pytest.fixture()
+# def space_2():
+#     with scopes_disabled():
+#         return Space.objects.get_or_create(name='space_2')[0]
 
 
 # ---------------------- OBJECT FIXTURES ---------------------
 
 def get_random_recipe(space_1, u1_s1):
     r = Recipe.objects.create(
-        name=uuid.uuid4(),
+        name=str(uuid.uuid4()),
         waiting_time=20,
         working_time=20,
         servings=4,
@@ -52,8 +60,8 @@ def get_random_recipe(space_1, u1_s1):
         internal=True,
     )
 
-    s1 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), space=space_1, )
-    s2 = Step.objects.create(name=uuid.uuid4(), instruction=uuid.uuid4(), space=space_1, )
+    s1 = Step.objects.create(name=str(uuid.uuid4()), instruction=str(uuid.uuid4()), space=space_1, )
+    s2 = Step.objects.create(name=str(uuid.uuid4()), instruction=str(uuid.uuid4()), space=space_1, )
 
     r.steps.add(s1)
     r.steps.add(s2)
@@ -62,9 +70,9 @@ def get_random_recipe(space_1, u1_s1):
         s1.ingredients.add(
             Ingredient.objects.create(
                 amount=1,
-                food=Food.objects.create(name=uuid.uuid4(), space=space_1, ),
-                unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
-                note=uuid.uuid4(),
+                food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
+                unit=Unit.objects.create(name=str(uuid.uuid4()), space=space_1, ),
+                note=str(uuid.uuid4()),
                 space=space_1,
             )
         )
@@ -72,9 +80,9 @@ def get_random_recipe(space_1, u1_s1):
         s2.ingredients.add(
             Ingredient.objects.create(
                 amount=1,
-                food=Food.objects.create(name=uuid.uuid4(), space=space_1, ),
-                unit=Unit.objects.create(name=uuid.uuid4(), space=space_1, ),
-                note=uuid.uuid4(),
+                food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
+                unit=Unit.objects.create(name=str(uuid.uuid4()), space=space_1, ),
+                note=str(uuid.uuid4()),
                 space=space_1,
             )
         )
@@ -176,25 +184,17 @@ def create_user(client, space, **kwargs):
     c = copy.deepcopy(client)
     with scopes_disabled():
         group = kwargs.pop('group', None)
-        username = kwargs.pop('username', uuid.uuid4())
+        user = UserFactory(space=space, groups=group)
 
-        user = User.objects.create(username=username, **kwargs)
-        if group:
-            user.groups.add(Group.objects.get(name=group))
-
-        user.userpreference.space = space
-        user.userpreference.save()
         c.force_login(user)
         return c
 
 
-# anonymous user
 @pytest.fixture()
 def a_u(client):
     return copy.deepcopy(client)
 
 
-# users without any group
 @pytest.fixture()
 def ng1_s1(client, space_1):
     return create_user(client, space_1)

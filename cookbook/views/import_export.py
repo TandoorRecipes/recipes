@@ -1,16 +1,19 @@
 import re
 import threading
 from io import BytesIO
+from django.core.cache import cache
 
 from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportForm, ImportExportBase
 from cookbook.helper.permission_helper import group_required
-from cookbook.integration.Pepperplate import Pepperplate
+from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.copymethat import CopyMeThat
+from cookbook.integration.pepperplate import Pepperplate
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.default import Default
@@ -20,12 +23,15 @@ from cookbook.integration.mealmaster import MealMaster
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
+from cookbook.integration.plantoeat import Plantoeat
 from cookbook.integration.recipekeeper import RecipeKeeper
 from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.rezkonv import RezKonv
-from cookbook.integration.safron import Safron
-from cookbook.models import Recipe, ImportLog, UserPreference
+from cookbook.integration.saffron import Saffron
+from cookbook.integration.pdfexport import PDFexport
+from cookbook.models import Recipe, ImportLog, ExportLog, UserPreference
+from recipes import settings
 
 
 def get_integration(request, export_type):
@@ -39,8 +45,8 @@ def get_integration(request, export_type):
         return Mealie(request, export_type)
     if export_type == ImportExportBase.CHOWDOWN:
         return Chowdown(request, export_type)
-    if export_type == ImportExportBase.SAFRON:
-        return Safron(request, export_type)
+    if export_type == ImportExportBase.SAFFRON:
+        return Saffron(request, export_type)
     if export_type == ImportExportBase.CHEFTAP:
         return ChefTap(request, export_type)
     if export_type == ImportExportBase.PEPPERPLATE:
@@ -59,6 +65,14 @@ def get_integration(request, export_type):
         return MealMaster(request, export_type)
     if export_type == ImportExportBase.OPENEATS:
         return OpenEats(request, export_type)
+    if export_type == ImportExportBase.PLANTOEAT:
+        return Plantoeat(request, export_type)
+    if export_type == ImportExportBase.COOKBOOKAPP:
+        return CookBookApp(request, export_type)
+    if export_type == ImportExportBase.COPYMETHAT:
+        return CopyMeThat(request, export_type)
+    if export_type == ImportExportBase.PDF:
+        return PDFexport(request, export_type)
 
 
 @group_required('user')
@@ -73,7 +87,7 @@ def import_recipe(request):
 
     if request.method == "POST":
         form = ImportForm(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_valid() and request.FILES != {}:
             try:
                 integration = get_integration(request, form.cleaned_data['type'])
 
@@ -109,22 +123,58 @@ def export_recipe(request):
                 recipes = form.cleaned_data['recipes']
                 if form.cleaned_data['all']:
                     recipes = Recipe.objects.filter(space=request.space, internal=True).all()
-                integration = get_integration(request, form.cleaned_data['type'])
-                return integration.do_export(recipes)
-            except NotImplementedError:
-                messages.add_message(request, messages.ERROR, _('Exporting is not implemented for this provider'))
 
+                integration = get_integration(request, form.cleaned_data['type'])
+
+                if form.cleaned_data['type'] == ImportExportBase.PDF and not settings.ENABLE_PDF_EXPORT:
+                    return JsonResponse({'error': _('The PDF Exporter is not enabled on this instance as it is still in an experimental state.')})
+
+                el = ExportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
+
+                t = threading.Thread(target=integration.do_export, args=[recipes, el])
+                t.setDaemon(True)
+                t.start()
+
+                return JsonResponse({'export_id': el.pk})
+            except NotImplementedError:
+                return JsonResponse(
+                    {
+                        'error': True,
+                        'msg': _('Importing is not implemented for this provider')
+                    },
+                    status=400
+                )
     else:
-        form = ExportForm(space=request.space)
+        pk = ''
         recipe = request.GET.get('r')
         if recipe:
             if re.match(r'^([0-9])+$', recipe):
-                if recipe := Recipe.objects.filter(pk=int(recipe), space=request.space).first():
-                    form = ExportForm(initial={'recipes': recipe}, space=request.space)
+                pk = Recipe.objects.filter(pk=int(recipe), space=request.space).first().pk
 
-    return render(request, 'export.html', {'form': form})
+    return render(request, 'export.html', {'pk': pk})
 
 
 @group_required('user')
 def import_response(request, pk):
     return render(request, 'import_response.html', {'pk': pk})
+
+
+@group_required('user')
+def export_response(request, pk):
+    return render(request, 'export_response.html', {'pk': pk})
+
+
+@group_required('user')
+def export_file(request, pk):
+    el = get_object_or_404(ExportLog, pk=pk, space=request.space)
+
+    cacheData = cache.get(f'export_file_{el.pk}')
+
+    if cacheData is None:
+        el.possibly_not_expired = False
+        el.save()
+        return render(request, 'export_response.html', {'pk': pk})
+
+    response = HttpResponse(cacheData['file'], content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename="' + cacheData['filename'] + '"'
+    return response
