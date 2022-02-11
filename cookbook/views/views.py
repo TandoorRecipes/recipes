@@ -60,7 +60,7 @@ def search(request):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
         f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
                          space=request.space)
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -448,7 +448,7 @@ def history(request):
 def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
-    
+
     postgres = False if (
             settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
             or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
