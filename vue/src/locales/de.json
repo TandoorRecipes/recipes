@@ -99,7 +99,7 @@
     "Unit_Alias": "Einheit Alias",
     "Keyword_Alias": "Schlagwort Alias",
     "Delete_Food": "Lebensmittel löschen",
-    "No_ID": "ID nicht gefunden und kann nicht gelöscht werden.",
+    "No_ID": "ID nicht gefunden. Objekt kann nicht gelöscht werden",
     "create_rule": "und erstelle Automatisierung",
     "Table_of_Contents": "Inhaltsverzeichnis",
     "merge_title": "{type} zusammenführen",
