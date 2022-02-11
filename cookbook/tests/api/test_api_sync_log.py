@@ -3,9 +3,8 @@ import json
 import pytest
 from django.contrib import auth
 from django.urls import reverse
-from django_scopes import scopes_disabled
 
-from cookbook.models import RecipeBook, Storage, Sync, SyncLog
+from cookbook.models import Storage, Sync, SyncLog
 
 LIST_URL = 'api:synclog-list'
 DETAIL_URL = 'api:synclog-detail'
@@ -37,14 +36,14 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(obj_1, obj_2, a1_s1, a1_s2, space_2):
-    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 2
-    assert len(json.loads(a1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert json.loads(a1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(a1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
     obj_1.sync.space = space_2
     obj_1.sync.save()
 
-    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 1
-    assert len(json.loads(a1_s2.get(reverse(LIST_URL)).content)) == 1
+    assert json.loads(a1_s1.get(reverse(LIST_URL)).content)['count'] == 1
+    assert json.loads(a1_s2.get(reverse(LIST_URL)).content)['count'] == 1
 
 
 @pytest.mark.parametrize("arg", [
@@ -82,7 +81,6 @@ def test_add(arg, request, a1_s2, obj_1):
         {'msg': 'test'},
         content_type='application/json'
     )
-    response = json.loads(r.content)
     assert r.status_code == arg[1]
 
 

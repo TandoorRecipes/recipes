@@ -17,7 +17,7 @@ from recipe scaling.
 Currently the only available variable in the Templating context is `ingredients`.
 
 `ingredients` is an array that contains all ingredients of the current recipe step. You can access an ingredient by using
-`{{ ingredient[<index in list>] }}` where the index refers to the position in the list of ingredients starting with zero.
+`{{ ingredients[<index in list>] }}` where the index refers to the position in the list of ingredients starting with zero.
 You can also use the interaction menu of the ingredient to copy its reference.
 
 !!! warning
@@ -28,10 +28,10 @@ You can also use the interaction menu of the ingredient to copy its reference.
 
 You can also access only the amount, unit, note or food inside your instruction text using
 ```
-{{ instructions[0].amount }}
-{{ instructions[0].unit }}
-{{ instructions[0].food }}
-{{ instructions[0].note }}
+{{ ingredients[0].amount }}
+{{ ingredients[0].unit }}
+{{ ingredients[0].food }}
+{{ ingredients[0].note }}
 ```
 
 ## Technical Reasoning

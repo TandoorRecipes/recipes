@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 from zipfile import ZipFile
 
-from cookbook.helper.ingredient_parser import parse, get_food, get_unit
+from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, iso_duration_to_minutes
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe, Step, Ingredient, Keyword
@@ -41,12 +41,13 @@ class RecipeKeeper(Integration):
 
         step = Step.objects.create(instruction='', space=self.request.space,)
 
+        ingredient_parser = IngredientParser(self.request, True)
         for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
             if ingredient.text == "":
                 continue
-            amount, unit, ingredient, note = parse(ingredient.text.strip())
-            f = get_food(ingredient, self.request.space)
-            u = get_unit(unit, self.request.space)
+            amount, unit, ingredient, note = ingredient_parser.parse(ingredient.text.strip())
+            f = ingredient_parser.get_food(ingredient)
+            u = ingredient_parser.get_unit(unit)
             step.ingredients.add(Ingredient.objects.create(
                 food=f, unit=u, amount=amount, note=note, space=self.request.space,
             ))

@@ -1,16 +1,18 @@
 import random
 import re
+from html import unescape
+
+from django.utils.dateparse import parse_duration
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
-
-from cookbook.helper.ingredient_parser import parse as parse_single_ingredient
-from cookbook.models import Keyword
-from django.utils.dateparse import parse_duration
-from html import unescape
 from recipe_scrapers._utils import get_minutes
 
+from cookbook.helper import recipe_url_import as helper
+from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.models import Keyword
 
-def get_from_scraper(scrape, space):
+
+def get_from_scraper(scrape, request):
     # converting the scrape_me object to the existing json format based on ld+json
     recipe_json = {}
     try:
@@ -91,15 +93,17 @@ def get_from_scraper(scrape, space):
     except Exception:
         pass
     try:
-        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), space)
+        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
         recipe_json['keywords'] = keywords
 
+    ingredient_parser = IngredientParser(request, True)
+
+    ingredients = []
     try:
-        ingredients = []
         for x in scrape.ingredients():
             try:
-                amount, unit, ingredient, note = parse_single_ingredient(x)
+                amount, unit, ingredient, note = ingredient_parser.parse(x)
                 ingredients.append(
                     {
                         'amount': amount,
@@ -245,7 +249,10 @@ def parse_instructions(instructions):
                     instruction_text += str(i)
         instructions = instruction_text
 
-    return normalize_string(instructions)
+    normalized_string = normalize_string(instructions)
+    normalized_string = normalized_string.replace('\n', '  \n')
+    normalized_string = normalized_string.replace('  \n  \n', '\n\n')
+    return normalized_string
 
 
 def parse_image(image):

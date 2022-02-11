@@ -13,7 +13,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db.models import Avg, Q, Sum
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -22,17 +22,15 @@ from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.filters import RecipeFilter
-from cookbook.forms import (CommentForm, Recipe, User,
-                            UserCreateForm, UserNameForm, UserPreference,
-                            UserPreferenceForm, SpaceJoinForm, SpaceCreateForm,
-                            SearchPreferenceForm)
-from cookbook.helper.ingredient_parser import parse
-from cookbook.helper.permission_helper import group_required, share_link_valid, has_group_permission
-from cookbook.models import (Comment, CookLog, InviteLink, MealPlan,
-                             RecipeBook, RecipeBookEntry, ViewLog, ShoppingList, Space, Keyword, RecipeImport, Unit,
-                             Food, UserFile, ShareLink)
-from cookbook.tables import (CookLogTable, RecipeTable, RecipeTableSmall,
-                             ViewLogTable, InviteLinkTable)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
+                            SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
+                            UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
+from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
+from cookbook.models import (Comment, CookLog, Food, FoodInheritField, InviteLink, Keyword,
+                             MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
+                             ShoppingList, Space, Unit, UserFile, ViewLog)
+from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
+                             ViewLogTable)
 from cookbook.views.data import Object
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
@@ -56,15 +54,13 @@ def index(request):
         return HttpResponseRedirect(reverse('view_search'))
 
 
-# faceting
-# unaccent / likely will perform full table scan
-# create tests
+# TODO need to deprecate
 def search(request):
     if has_group_permission(request.user, ('guest',)):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
         f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
                          space=request.space)
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -215,20 +211,7 @@ def recipe_view(request, pk, share=None):
 
 @group_required('user')
 def books(request):
-    book_list = []
-
-    recipe_books = RecipeBook.objects.filter(Q(created_by=request.user) | Q(shared=request.user),
-                                             space=request.space).distinct().all()
-
-    for b in recipe_books:
-        book_list.append(
-            {
-                'book': b,
-                'recipes': RecipeBookEntry.objects.filter(book=b).all()
-            }
-        )
-
-    return render(request, 'books.html', {'book_list': book_list})
+    return render(request, 'books.html', {})
 
 
 @group_required('user')
@@ -239,17 +222,6 @@ def meal_plan(request):
 @group_required('user')
 def supermarket(request):
     return render(request, 'supermarket.html', {})
-
-
-@group_required('user')
-def files(request):
-    try:
-        current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-                                   'file_size_kb__sum'] / 1000
-    except TypeError:
-        current_file_size_mb = 0
-    return render(request, 'files.html',
-                  {'current_file_size_mb': current_file_size_mb, 'max_file_size_mb': request.space.max_file_storage_mb})
 
 
 @group_required('user')
@@ -282,13 +254,13 @@ def latest_shopping_list(request):
 
 
 @group_required('user')
-def shopping_list(request, pk=None):
+def shopping_list(request, pk=None):  # TODO deprecate
     html_list = request.GET.getlist('r')
 
     recipes = []
     for r in html_list:
         r = r.replace('[', '').replace(']', '')
-        if re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
+        if len(r) < 10000 and re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
             rid, multiplier = r.split(',')
             if recipe := Recipe.objects.filter(pk=int(rid), space=request.space).first():
                 recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
@@ -314,7 +286,7 @@ def user_settings(request):
     if request.method == "POST":
         if 'preference_form' in request.POST:
             active_tab = 'preferences'
-            form = UserPreferenceForm(request.POST, prefix='preference')
+            form = UserPreferenceForm(request.POST, prefix='preference', space=request.space)
             if form.is_valid():
                 if not up:
                     up = UserPreference(user=request.user)
@@ -329,11 +301,8 @@ def user_settings(request):
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']  # noqa: E501
                 up.comments = form.cleaned_data['comments']
                 up.use_fractions = form.cleaned_data['use_fractions']
+                up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
-
-                up.shopping_auto_sync = form.cleaned_data['shopping_auto_sync']
-                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
-                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
 
                 up.save()
 
@@ -360,15 +329,18 @@ def user_settings(request):
                     len(search_form.cleaned_data['icontains'])
                     + len(search_form.cleaned_data['istartswith'])
                     + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext']))
-                # TODO add 'recommended' option
+                    + len(search_form.cleaned_data['fulltext'])
+                )
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
                     search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
-                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
+                        search_form.cleaned_data['fulltext']) == 0:
+                    search_form.add_error('search',
+                                          _('To use this search method you must select at least one full text search field!'))
                     search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
+                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
+                        search_form.cleaned_data['trigram']) > 0:
                     search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
                     search_error = True
                 else:
@@ -379,14 +351,58 @@ def user_settings(request):
                     sp.istartswith.set(search_form.cleaned_data['istartswith'])
                     sp.trigram.set(search_form.cleaned_data['trigram'])
                     sp.fulltext.set(search_form.cleaned_data['fulltext'])
+                    sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
+
+                    if search_form.cleaned_data['preset'] == 'fuzzy':
+                        sp.search = SearchPreference.SIMPLE
+                        sp.lookup = True
+                        sp.unaccent.set([SearchFields.objects.get(name='Name')])
+                        sp.icontains.set([SearchFields.objects.get(name='Name')])
+                        sp.istartswith.clear()
+                        sp.trigram.set([SearchFields.objects.get(name='Name')])
+                        sp.fulltext.clear()
+                        sp.trigram_threshold = 0.1
+
+                    if search_form.cleaned_data['preset'] == 'precise':
+                        sp.search = SearchPreference.WEB
+                        sp.lookup = True
+                        sp.unaccent.set(SearchFields.objects.all())
+                        sp.icontains.clear()
+                        sp.istartswith.set([SearchFields.objects.get(name='Name')])
+                        sp.trigram.clear()
+                        sp.fulltext.set(SearchFields.objects.all())
+                        sp.trigram_threshold = 0.1
 
                     sp.save()
+        elif 'shopping_form' in request.POST:
+            shopping_form = ShoppingPreferenceForm(request.POST, prefix='shopping')
+            if shopping_form.is_valid():
+                if not up:
+                    up = UserPreference(user=request.user)
+
+                up.shopping_share.set(shopping_form.cleaned_data['shopping_share'])
+                up.mealplan_autoadd_shopping = shopping_form.cleaned_data['mealplan_autoadd_shopping']
+                up.mealplan_autoexclude_onhand = shopping_form.cleaned_data['mealplan_autoexclude_onhand']
+                up.mealplan_autoinclude_related = shopping_form.cleaned_data['mealplan_autoinclude_related']
+                up.shopping_auto_sync = shopping_form.cleaned_data['shopping_auto_sync']
+                up.filter_to_supermarket = shopping_form.cleaned_data['filter_to_supermarket']
+                up.default_delay = shopping_form.cleaned_data['default_delay']
+                up.shopping_recent_days = shopping_form.cleaned_data['shopping_recent_days']
+                up.shopping_add_onhand = shopping_form.cleaned_data['shopping_add_onhand']
+                up.csv_delim = shopping_form.cleaned_data['csv_delim']
+                up.csv_prefix = shopping_form.cleaned_data['csv_prefix']
+                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
+                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
+                up.save()
     if up:
         preference_form = UserPreferenceForm(instance=up)
+        shopping_form = ShoppingPreferenceForm(instance=up)
     else:
-        preference_form = UserPreferenceForm()
+        preference_form = UserPreferenceForm(space=request.space)
+        shopping_form = ShoppingPreferenceForm(space=request.space)
 
-    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
+    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
+        sp.fulltext.all())
     if sp and not search_error and fields_searched > 0:
         search_form = SearchPreferenceForm(instance=sp)
     elif not search_error:
@@ -395,8 +411,9 @@ def user_settings(request):
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
 
-    # these fields require postgress - just disable them if postgress isn't available
-    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    # these fields require postgresql - just disable them if postgresql isn't available
+    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                                       'django.db.backends.postgresql']:
         search_form.fields['search'].disabled = True
         search_form.fields['lookup'].disabled = True
         search_form.fields['trigram'].disabled = True
@@ -407,6 +424,7 @@ def user_settings(request):
         'user_name_form': user_name_form,
         'api_token': api_token,
         'search_form': search_form,
+        'shopping_form': shopping_form,
         'active_tab': active_tab
     })
 
@@ -428,9 +446,12 @@ def history(request):
 
 @group_required('admin')
 def system(request):
+    if not request.user.is_superuser:
+        return HttpResponseRedirect(reverse('index'))
+
     postgres = False if (
-        settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
-        or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
+            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
+            or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
     ) else True
 
     secret_key = False if os.getenv('SECRET_KEY') else True
@@ -542,7 +563,24 @@ def space(request):
         InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(invite_links)
 
-    return render(request, 'space.html', {'space_users': space_users, 'counts': counts, 'invite_links': invite_links})
+    space_form = SpacePreferenceForm(instance=request.space)
+
+    space_form.base_fields['food_inherit'].queryset = Food.inheritable_fields
+    if request.method == "POST" and 'space_form' in request.POST:
+        form = SpacePreferenceForm(request.POST, prefix='space')
+        if form.is_valid():
+            request.space.food_inherit.set(form.cleaned_data['food_inherit'])
+            request.space.show_facet_count = form.cleaned_data['show_facet_count']
+            request.space.save()
+            if form.cleaned_data['reset_food_inherit']:
+                Food.reset_inheritance(space=request.space)
+
+    return render(request, 'space.html', {
+        'space_users': space_users,
+        'counts': counts,
+        'invite_links': invite_links,
+        'space_form': space_form
+    })
 
 
 # TODO super hacky and quick solution, safe but needs rework
@@ -606,7 +644,12 @@ def offline(request):
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
-    return JsonResponse(parse('Pane (raffermo o secco) 80 g'), safe=False)
+
+    with scopes_disabled():
+        result = ShoppingList.objects.filter(
+            Q(created_by=request.user) | Q(shared=request.user)).filter(
+            space=request.space).values().distinct()
+    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
 
 
 def test2(request):

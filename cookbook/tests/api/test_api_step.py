@@ -1,11 +1,11 @@
 import json
 
 import pytest
-from django.db.models import Subquery, OuterRef
+from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Step, Ingredient
+from cookbook.models import Ingredient, Step
 
 LIST_URL = 'api:step-list'
 DETAIL_URL = 'api:step-detail'
@@ -23,8 +23,8 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 2
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
     with scopes_disabled():
         recipe_1_s1.space = space_2
@@ -32,8 +32,8 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
         Step.objects.update(space=Subquery(Step.objects.filter(pk=OuterRef('pk')).values('recipe__space')[:1]))
         Ingredient.objects.update(space=Subquery(Ingredient.objects.filter(pk=OuterRef('pk')).values('step__recipe__space')[:1]))
 
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 0
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 2
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 0
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
 
 
 @pytest.mark.parametrize("arg", [

@@ -1,20 +1,27 @@
+import time
 import datetime
 import json
 import traceback
 import uuid
 from io import BytesIO, StringIO
-from zipfile import ZipFile, BadZipFile
+from zipfile import BadZipFile, ZipFile
+from django.core.cache import cache
+import datetime
 
+from bs4 import Tag
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django_scopes import scope
 
 from cookbook.forms import ImportExportBase
-from cookbook.helper.image_processing import get_filetype
+from cookbook.helper.image_processing import get_filetype, handle_image
 from cookbook.models import Keyword, Recipe
-from recipes.settings import DATABASES, DEBUG
+from recipes.settings import DEBUG
+from recipes.settings import EXPORT_FILE_CACHE_DURATION
 
 
 class Integration:
@@ -31,71 +38,70 @@ class Integration:
         """
         self.request = request
         self.export_type = export_type
+        self.ignored_recipes = []
 
         description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
         icon = '📥'
-        count = Keyword.objects.filter(name__icontains='Import', space=request.space).count()
-        name = f'Import {count + 1}'
 
-        if DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
-            parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
+        try:
+            last_kw = Keyword.objects.filter(name__regex=r'^(Import [0-9]+)', space=request.space).latest('created_at')
+            name = f'Import {int(last_kw.name.replace("Import ", "")) + 1}'
+        except (ObjectDoesNotExist, ValueError):
+            name = 'Import 1'
+
+        parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
+        try:
             self.keyword = parent.add_child(
                 name=name,
                 description=description,
                 icon=icon,
                 space=request.space
             )
-        else:
-            self.keyword, created = Keyword.objects.get_or_create(
-                name=name,
+        except (IntegrityError, ValueError):  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
+            self.keyword = parent.add_child(
+                name=f'{name} {str(uuid.uuid4())[0:8]}',
                 description=description,
                 icon=icon,
                 space=request.space
             )
 
-    def do_export(self, recipes):
-        """
-        Perform the export based on a list of recipes
-        :param recipes: list of recipe objects
-        :return: HttpResponse with a ZIP file that is directly downloaded
-        """
 
-        # TODO this is temporary, find a better solution for different export formats when doing other exporters
-        if self.export_type != ImportExportBase.RECIPESAGE:
-            export_zip_stream = BytesIO()
-            export_zip_obj = ZipFile(export_zip_stream, 'w')
 
-            for r in recipes:
-                if r.internal and r.space == self.request.space:
-                    recipe_zip_stream = BytesIO()
-                    recipe_zip_obj = ZipFile(recipe_zip_stream, 'w')
+    def do_export(self, recipes, el):
 
-                    recipe_stream = StringIO()
-                    filename, data = self.get_file_from_recipe(r)
-                    recipe_stream.write(data)
-                    recipe_zip_obj.writestr(filename, recipe_stream.getvalue())
-                    recipe_stream.close()
-                    try:
-                        recipe_zip_obj.writestr(f'image{get_filetype(r.image.file.name)}', r.image.file.read())
-                    except ValueError:
-                        pass
+        with scope(space=self.request.space):
+            el.total_recipes = len(recipes) 
+            el.cache_duration = EXPORT_FILE_CACHE_DURATION
+            el.save()
 
-                    recipe_zip_obj.close()
-                    export_zip_obj.writestr(str(r.pk) + '.zip', recipe_zip_stream.getvalue())
+            files = self.get_files_from_recipes(recipes, el, self.request.COOKIES)
 
-            export_zip_obj.close()
+            if len(files) == 1:
+                filename, file = files[0]
+                export_filename = filename
+                export_file = file
 
-            response = HttpResponse(export_zip_stream.getvalue(), content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="export.zip"'
-            return response
-        else:
-            json_list = []
-            for r in recipes:
-                json_list.append(self.get_file_from_recipe(r))
+            else:
+                #zip the files if there is more then one file
+                export_filename = self.get_export_file_name()
+                export_stream = BytesIO()
+                export_obj = ZipFile(export_stream, 'w')
 
-            response = HttpResponse(json.dumps(json_list), content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="recipes.json"'
-            return response
+                for filename, file in files:
+                    export_obj.writestr(filename, file)
+
+                export_obj.close()
+                export_file = export_stream.getvalue()
+
+
+            cache.set('export_file_'+str(el.pk), {'filename': export_filename, 'file': export_file}, EXPORT_FILE_CACHE_DURATION)
+            el.running = False
+            el.save()
+
+        response = HttpResponse(export_file, content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename="' + export_filename + '"'
+        return response
+
 
     def import_file_name_filter(self, zip_info_object):
         """
@@ -116,8 +122,6 @@ class Integration:
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
         with scope(space=self.request.space):
-            self.keyword.name = _('Import') + ' ' + str(il.pk)
-            self.keyword.save()
 
             try:
                 self.files = files
@@ -135,7 +139,7 @@ class Integration:
                             for d in data_list:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                il.msg += self.get_recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -148,25 +152,34 @@ class Integration:
                                 file_list.append(z)
                         il.total_recipes += len(file_list)
 
+                        import cookbook
+                        if isinstance(self, cookbook.integration.copymethat.CopyMeThat):
+                            file_list = self.split_recipe_file(BytesIO(import_zip.read('recipes.html')))
+                            il.total_recipes += len(file_list)
+
                         for z in file_list:
                             try:
-                                recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                if isinstance(z, Tag):
+                                    recipe = self.get_recipe_from_file(z)
+                                else:
+                                    recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
                                 recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                il.msg += self.get_recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
                             except Exception as e:
+                                traceback.print_exc()
                                 self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
-                    elif '.json' in f['name'] or '.txt' in f['name']:
+                    elif '.json' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         il.total_recipes += len(data_list)
                         for d in data_list:
                             try:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
-                                il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                il.msg += self.get_recipe_processed_msg(recipe)
                                 self.handle_duplicates(recipe, import_duplicates)
                                 il.imported_recipes += 1
                                 il.save()
@@ -183,7 +196,7 @@ class Integration:
                                     try:
                                         recipe = self.get_recipe_from_file(d)
                                         recipe.keywords.add(self.keyword)
-                                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                                        il.msg += self.get_recipe_processed_msg(recipe)
                                         self.handle_duplicates(recipe, import_duplicates)
                                         il.imported_recipes += 1
                                         il.save()
@@ -193,7 +206,7 @@ class Integration:
                     else:
                         recipe = self.get_recipe_from_file(f['file'])
                         recipe.keywords.add(self.keyword)
-                        il.msg += f'{recipe.pk} - {recipe.name} \n'
+                        il.msg += self.get_recipe_processed_msg(recipe)
                         self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
                 il.msg += 'ERROR ' + _(
@@ -223,15 +236,14 @@ class Integration:
             self.ignored_recipes.append(recipe.name)
             recipe.delete()
 
-    @staticmethod
-    def import_recipe_image(recipe, image_file, filetype='.jpeg'):
+    def import_recipe_image(self, recipe, image_file, filetype='.jpeg'):
         """
         Adds an image to a recipe naming it correctly
         :param recipe: Recipe object
         :param image_file: ByteIO stream containing the image
         :param filetype: type of file to write bytes to, default to .jpeg if unknown
         """
-        recipe.image = File(image_file, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
+        recipe.image = File(handle_image(self.request, File(image_file, name='image'), filetype=filetype)[0], name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
         recipe.save()
 
     def get_recipe_from_file(self, file):
@@ -261,7 +273,18 @@ class Integration:
         """
         raise NotImplementedError('Method not implemented in integration')
 
-    def handle_exception(self, exception, log=None, message=''):
+    def get_files_from_recipes(self, recipes, el, cookie):
+        """
+        Takes a list of recipe object and converts it to a array containing each file.
+        Each file is represented as an array [filename, data] where data is a string of the content of the file.
+        :param recipe: Recipe object that should be converted
+        :returns:
+            [[filename, data], ...]
+        """
+        raise NotImplementedError('Method not implemented in integration')
+
+    @staticmethod
+    def handle_exception(exception, log=None, message=''):
         if log:
             if message:
                 log.msg += message
@@ -269,3 +292,10 @@ class Integration:
                 log.msg += exception.msg
         if DEBUG:
             traceback.print_exc()
+
+
+    def get_export_file_name(self, format='zip'):
+        return "export_{}.{}".format(datetime.datetime.now().strftime("%Y-%m-%d"), format)
+
+    def get_recipe_processed_msg(self, recipe):
+        return f'{recipe.pk} - {recipe.name} \n'

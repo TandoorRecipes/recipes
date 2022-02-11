@@ -12,13 +12,14 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import (ImportRecipeForm, InviteLinkForm, KeywordForm,
-                            MealPlanForm, RecipeBookForm, Storage, StorageForm)
+from cookbook.forms import (ImportRecipeForm, InviteLinkForm,
+                            MealPlanForm, Storage, StorageForm)
 from cookbook.helper.permission_helper import (GroupRequiredMixin,
                                                group_required)
-from cookbook.models import (InviteLink, Keyword, MealPlan, MealType, Recipe,
+from cookbook.models import (InviteLink, MealPlan, MealType, Recipe,
                              RecipeBook, RecipeImport, ShareLink, Step, UserPreference)
 from cookbook.views.edit import SpaceFormMixing
+from recipes import settings
 
 
 class RecipeCreate(GroupRequiredMixin, CreateView):
@@ -60,22 +61,22 @@ def share_link(request, pk):
     return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': pk, 'share': link.uuid}))
 
 
-class KeywordCreate(GroupRequiredMixin, CreateView):
-    groups_required = ['user']
-    template_name = "generic/new_template.html"
-    model = Keyword
-    form_class = KeywordForm
-    success_url = reverse_lazy('list_keyword')
+# class KeywordCreate(GroupRequiredMixin, CreateView):
+#     groups_required = ['user']
+#     template_name = "generic/new_template.html"
+#     model = Keyword
+#     form_class = KeywordForm
+#     success_url = reverse_lazy('list_keyword')
 
-    def form_valid(self, form):
-        form.cleaned_data['space'] = self.request.space
-        form.save()
-        return HttpResponseRedirect(reverse('list_keyword'))
+#     def form_valid(self, form):
+#         form.cleaned_data['space'] = self.request.space
+#         form.save()
+#         return HttpResponseRedirect(reverse('list_keyword'))
 
-    def get_context_data(self, **kwargs):
-        context = super(KeywordCreate, self).get_context_data(**kwargs)
-        context['title'] = _("Keyword")
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super(KeywordCreate, self).get_context_data(**kwargs)
+#         context['title'] = _("Keyword")
+#         return context
 
 
 class StorageCreate(GroupRequiredMixin, CreateView):
@@ -90,6 +91,9 @@ class StorageCreate(GroupRequiredMixin, CreateView):
         obj.created_by = self.request.user
         obj.space = self.request.space
         obj.save()
+        if self.request.space.demo or settings.HOSTED:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+            return redirect('index')
         return HttpResponseRedirect(reverse('edit_storage', kwargs={'pk': obj.pk}))
 
     def get_context_data(self, **kwargs):
@@ -134,26 +138,6 @@ def create_new_external_recipe(request, import_id):
         )
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
-
-
-class RecipeBookCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
-    groups_required = ['user']
-    template_name = "generic/new_template.html"
-    model = RecipeBook
-    form_class = RecipeBookForm
-    success_url = reverse_lazy('view_books')
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.created_by = self.request.user
-        obj.space = self.request.space
-        obj.save()
-        return HttpResponseRedirect(reverse('view_books'))
-
-    def get_context_data(self, **kwargs):
-        context = super(RecipeBookCreate, self).get_context_data(**kwargs)
-        context['title'] = _("Recipe Book")
-        return context
 
 
 class MealPlanCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
@@ -217,7 +201,10 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.created_by = self.request.user
-        obj.space = self.request.space
+
+        # verify given space is actually owned by the user creating the link
+        if obj.space.created_by != self.request.user:
+            obj.space = self.request.space
         obj.save()
         if obj.email:
             try:
