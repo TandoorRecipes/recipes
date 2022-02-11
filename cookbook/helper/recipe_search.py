@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.contrib.postgres.search import SearchQuery, SearchRank, TrigramSimilarity
 from django.core.cache import caches
 from django.db.models import Avg, Case, Count, F, Func, Max, OuterRef, Q, Subquery, Sum, Value, When
-from django.db.models.functions import Coalesce, Substr
+from django.db.models.functions import Coalesce, Lower, Substr
 from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 
@@ -666,9 +666,9 @@ class RecipeFacet():
         if not self._request.space.demo and self._request.space.show_facet_count:
             return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('keywords', depth, steplen)), 0)
                                      ).filter(depth=depth, count__gt=0
-                                              ).values('id', 'name', 'count', 'numchild').order_by('name')[:200]
+                                              ).values('id', 'name', 'count', 'numchild').order_by(Lower('name').asc())[:200]
         else:
-            return queryset.filter(depth=depth).values('id', 'name',  'numchild').order_by('name')
+            return queryset.filter(depth=depth).values('id', 'name',  'numchild').order_by(Lower('name').asc())
 
     def _food_queryset(self, queryset, food=None):
         depth = getattr(food, 'depth', 0) + 1
@@ -677,9 +677,9 @@ class RecipeFacet():
         if not self._request.space.demo and self._request.space.show_facet_count:
             return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
                                      ).filter(depth__lte=depth, count__gt=0
-                                              ).values('id', 'name', 'count', 'numchild').order_by('name')[:200]
+                                              ).values('id', 'name', 'count', 'numchild').order_by(Lower('name').asc())[:200]
         else:
-            return queryset.filter(depth__lte=depth).values('id', 'name', 'numchild').order_by('name')
+            return queryset.filter(depth__lte=depth).values('id', 'name', 'numchild').order_by(Lower('name').asc())
 
 
 # # TODO:  This might be faster https://github.com/django-treebeard/django-treebeard/issues/115
@@ -909,7 +909,7 @@ def old_search(request):
         params = dict(request.GET)
         params['internal'] = None
         f = RecipeFilter(params,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by('name'),
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
                          space=request.space)
         return f.qs
 
