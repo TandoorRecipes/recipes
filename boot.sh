@@ -1,6 +1,9 @@
 #!/bin/sh
 source venv/bin/activate
 
+
+TANDOOR_PORT="${TANDOOR_PORT:-8080}"
+
 echo "Waiting for database to be ready..."
 
 attempt=0
@@ -21,6 +24,7 @@ echo "Database is ready"
 
 echo "Migrating database"
 
+
 python manage.py migrate
 
 echo "Generating static files"
@@ -32,4 +36,4 @@ echo "Done"
 
 chmod -R 755 /opt/recipes/mediafiles
 
-exec gunicorn -b :8080 --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
+exec gunicorn -b :$TANDOOR_PORT --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
