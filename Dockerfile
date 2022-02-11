@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.12
+FROM python:3.10-alpine3.15
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev py-cryptography
@@ -16,6 +16,7 @@ WORKDIR /opt/recipes
 COPY requirements.txt ./
 
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev && \
+    echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip install wheel==0.36.2 && \
