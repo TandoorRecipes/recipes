@@ -1,27 +1,31 @@
 #!/bin/sh
 source venv/bin/activate
 
-echo "Migrating database"
+
+TANDOOR_PORT="${TANDOOR_PORT:-8080}"
+
+echo "Waiting for database to be ready..."
 
 attempt=0
 max_attempts=20
-while python manage.py migrate; \
-      status=$?; \
-      attempt=$((attempt+1)); \
-      [ $status -eq 1 ] \
-   && [ $attempt -le $max_attempts ]; do
-    echo -e "\n!!! Migration failed (error ${status}, attempt ${attempt}/${max_attempts})."
-    echo "!!! Database may not be ready yet or system is misconfigured."
-    echo -e "!!! Retrying in 5 seconds...\n"
+while pg_isready --host=${POSTGRES_HOST} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
     sleep 5
 done
 
 if [ $attempt -gt $max_attempts ]; then
-    echo -e "\n!!! Migration failed. Maximum attempts exceeded."
-    echo "!!! Please check logs above - misconfiguration is very likely."
-    echo "!!! Shutting down container."
+    echo -e "\nDatabase not reachable. Maximum attempts exceeded."
+    echo "Please check logs above - misconfiguration is very likely."
+    echo "Make sure the DB container is up and POSTGRES_HOST is set properly."
+    echo "Shutting down container."
     exit 1 # exit with error to make the container stop
 fi
+
+echo "Database is ready"
+
+echo "Migrating database"
+
+
+python manage.py migrate
 
 echo "Generating static files"
 
@@ -32,4 +36,4 @@ echo "Done"
 
 chmod -R 755 /opt/recipes/mediafiles
 
-exec gunicorn -b :8080 --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
+exec gunicorn -b :$TANDOOR_PORT --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
