@@ -232,7 +232,7 @@
     "AddToShopping": "Zur Einkaufsliste hinzufügen",
     "FoodOnHand": "Sie haben {food} vorrätig.",
     "DeleteShoppingConfirm": "Möchten Sie wirklich alle {food} von der Einkaufsliste entfernen?",
-    "err_moving_resource": "Beim Verschieben einer Resource ist ein Fehler aufgetreten!",
+    "err_moving_resource": "Beim Verschieben einer Ressource ist ein Fehler aufgetreten!",
     "err_merging_resource": "Beim Zusammenführen einer Ressource trat ein Fehler auf!",
     "success_moving_resource": "Ressource wurde erfolgreich verschoben!",
     "success_merging_resource": "Zusammenführung einer Ressource war erfolgreich!",

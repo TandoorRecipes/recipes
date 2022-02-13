@@ -24,12 +24,6 @@ spec:
       name: recipes-postgresql
       namespace: default
     spec:
-      restartPolicy: Always
-      securityContext:
-        fsGroup: 999
-      serviceAccount: recipes
-      serviceAccountName: recipes
-      terminationGracePeriodSeconds: 30
       containers:
       - name: recipes-db
         env:
@@ -125,8 +119,6 @@ spec:
       serviceAccount: recipes
       serviceAccountName: recipes
       terminationGracePeriodSeconds: 30
-  updateStrategy:
-    type: RollingUpdate
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
