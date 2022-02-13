@@ -828,7 +828,7 @@ export default {
                 [this.$t("times_cooked"), "favorite", "*-x", "x-*"],
                 [this.$t("date_created"), "created_at", "↑", "↓"],
                 [this.$t("date_viewed"), "lastviewed", "↑", "↓"],
-            ]
+git p            ]
             field.forEach((f) => {
                 sort_order.push(
                     {
