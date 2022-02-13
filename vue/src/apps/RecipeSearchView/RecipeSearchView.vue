@@ -122,7 +122,7 @@
                                                     <b-form-checkbox switch v-model="ui.show_makenow" id="popover-show_makenow" size="sm"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-if="ui.enable_expert" v-bind:label="$t('last_cooked')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_lastcooked" id="popover-show_lastcooked" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_cookedon" id="popover-show_cookedon" size="sm"></b-form-checkbox>
                                                 </b-form-group>
                                             </b-tab>
 
@@ -393,7 +393,7 @@
                                     </div>
 
                                     <!-- special switches -->
-                                    <div class="row g-0" v-if="ui.show_timescooked || ui.show_makenow || ui.show_lastcooked">
+                                    <div class="row g-0" v-if="ui.show_timescooked || ui.show_makenow || ui.show_cookedon">
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <!-- times cooked -->
@@ -410,9 +410,9 @@
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                                 <!-- date cooked -->
-                                                <b-input-group-append v-if="ui.show_lastcooked">
+                                                <b-input-group-append v-if="ui.show_cookedon">
                                                     <b-form-datepicker
-                                                        v-model="search.lastcooked"
+                                                        v-model="search.cookedon"
                                                         :max="yesterday"
                                                         no-highlight-today
                                                         reset-button
@@ -422,8 +422,8 @@
                                                         @input="refreshData(false)"
                                                     />
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.lastcooked_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
-                                                            <span class="text-uppercase" v-if="search.lastcooked_gte">&gt;=</span>
+                                                        <b-form-checkbox v-model="search.cookedon_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.cookedon_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -563,8 +563,12 @@ export default {
                 timescooked: undefined,
                 timescooked_gte: true,
                 makenow: false,
-                lastcooked: undefined,
-                lastcooked_gte: true,
+                cookedon: undefined,
+                cookedon_gte: true,
+                createdon: undefined,
+                createdon_gte: true,
+                viewedon: undefined,
+                viewedon_gte: true,
                 sort_order: [],
                 pagination_page: 1,
                 expert_mode: false,
@@ -594,7 +598,7 @@ export default {
                 show_sortby: false,
                 show_timescooked: false,
                 show_makenow: false,
-                show_lastcooked: false,
+                show_cookedon: false,
                 include_children: true,
             },
             pagination_count: 0,
@@ -681,7 +685,7 @@ export default {
             const field = [
                 [this.$t("search_rank"), "score"],
                 [this.$t("Name"), "name"],
-                [this.$t("last_cooked"), "lastcooked"],
+                [this.$t("last_cooked"), "cookedon"],
                 [this.$t("Rating"), "rating"],
                 [this.$t("times_cooked"), "favorite"],
                 [this.$t("date_created"), "created_at"],
@@ -876,7 +880,7 @@ export default {
             this.search.pagination_page = 1
             this.search.timescooked = undefined
             this.search.makenow = false
-            this.search.lastcooked = undefined
+            this.search.cookedon = undefined
 
             let fieldnum = {
                 keywords: 1,
@@ -976,9 +980,17 @@ export default {
             if (rating !== undefined && !this.search.search_rating_gte) {
                 rating = rating * -1
             }
-            let lastcooked = this.search.lastcooked || undefined
-            if (lastcooked !== undefined && !this.search.lastcooked_gte) {
-                lastcooked = "-" + lastcooked
+            let cookedon = this.search.cookedon || undefined
+            if (cookedon !== undefined && !this.search.cookedon_gte) {
+                cookedon = "-" + cookedon
+            }
+            let createdon = this.search.createdon || undefined
+            if (createdon !== undefined && !this.search.createdon_gte) {
+                createdon = "-" + createdon
+            }
+            let viewedon = this.search.viewedon || undefined
+            if (viewedon !== undefined && !this.search.viewedon_gte) {
+                viewedon = "-" + viewedon
             }
             let timescooked = parseInt(this.search.timescooked)
             if (isNaN(timescooked)) {
@@ -999,7 +1011,9 @@ export default {
                 random: this.random_search,
                 timescooked: timescooked,
                 makenow: this.search.makenow || undefined,
-                lastcooked: lastcooked,
+                cookedon: cookedon,
+                createdon: createdon,
+                viewedon: viewedon,
                 page: this.search.pagination_page,
                 pageSize: this.ui.page_size,
             }
@@ -1009,7 +1023,7 @@ export default {
                 include_children: this.ui.include_children,
             }
             if (!this.searchFiltered()) {
-                params.options.query.last_viewed = this.ui.recently_viewed
+                params.options.query.num_recent = this.ui.recently_viewed //TODO refactor as num_recent
                 params._new = this.ui.sort_by_new
             }
             if (this.search.search_filter) {
@@ -1030,12 +1044,12 @@ export default {
                 this.search?.search_rating !== undefined ||
                 (this.search.timescooked !== undefined && this.search.timescooked !== "") ||
                 this.search.makenow !== false ||
-                (this.search.lastcooked !== undefined && this.search.lastcooked !== "")
+                (this.search.cookedon !== undefined && this.search.cookedon !== "")
 
             if (ignore_string) {
                 return filtered
             } else {
-                return filtered || this.search?.search_input != "" || this.search.sort_order.length <= 1
+                return filtered || this.search?.search_input != "" || this.search.sort_order.length >= 1
             }
         },
         addFields(field) {
