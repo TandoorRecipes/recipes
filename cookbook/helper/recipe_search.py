@@ -1,8 +1,8 @@
 import json
 from collections import Counter
-from datetime import timedelta
+from datetime import date, timedelta
 
-from django.contrib.postgres.search import SearchQuery, SearchRank, TrigramSimilarity
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.core.cache import caches
 from django.db.models import Avg, Case, Count, F, Func, Max, OuterRef, Q, Subquery, Sum, Value, When
 from django.db.models.functions import Coalesce, Lower, Substr
@@ -13,7 +13,8 @@ from cookbook.filters import RecipeFilter
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
-from cookbook.models import CookLog, CustomFilter, Food, Keyword, Recipe, SearchPreference, ViewLog
+from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields,
+                             SearchPreference, ViewLog)
 from recipes import settings
 
 
@@ -66,10 +67,12 @@ class RecipeSearch():
         self._internal = str2bool(self._params.get('internal', None))
         self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
-        self._last_viewed = int(self._params.get('last_viewed', 0))
+        self._num_recent = int(self._params.get('num_recent', 0))
         self._include_children = str2bool(self._params.get('include_children', None))
         self._timescooked = self._params.get('timescooked', None)
-        self._lastcooked = self._params.get('lastcooked', None)
+        self._cookedon = self._params.get('cookedon', None)
+        self._createdon = self._params.get('createdon', None)
+        self._viewedon = self._params.get('viewedon', None)
         # this supports hidden feature to find recipes missing X ingredients
         try:
             self._makenow = int(makenow := self._params.get('makenow', None))
@@ -81,16 +84,16 @@ class RecipeSearch():
 
         self._search_type = self._search_prefs.search or 'plain'
         if self._string:
-            unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
-            self._icontains_include = [x + '__unaccent' if x in unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
-            self._istartswith_include = [x + '__unaccent' if x in unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
+            self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
+            self._icontains_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
+            self._istartswith_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
             self._trigram_include = None
             self._fulltext_include = None
         self._trigram = False
         if self._postgres and self._string:
             self._language = DICTIONARY.get(translation.get_language(), 'simple')
-            self._trigram_include = [x + '__unaccent' if x in unaccent_include else x for x in self._search_prefs.trigram.values_list('field', flat=True)]
-            self._fulltext_include = self._search_prefs.fulltext.values_list('field', flat=True)
+            self._trigram_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.trigram.values_list('field', flat=True)]
+            self._fulltext_include = self._search_prefs.fulltext.values_list('field', flat=True) or None
 
             if self._search_type not in ['websearch', 'raw'] and self._trigram_include:
                 self._trigram = True
@@ -99,11 +102,7 @@ class RecipeSearch():
                 search_type=self._search_type,
                 config=self._language,
             )
-            self.search_rank = (
-                SearchRank('name_search_vector', self.search_query, cover_density=True)
-                + SearchRank('desc_search_vector', self.search_query, cover_density=True)
-                # + SearchRank('steps__search_vector', self.search_query, cover_density=True)  # Is a large performance drag
-            )
+            self.search_rank = None
         self.orderby = []
         self._default_sort = ['-favorite']  # TODO add user setting
         self._filters = None
@@ -112,8 +111,10 @@ class RecipeSearch():
     def get_queryset(self, queryset):
         self._queryset = queryset
         self._build_sort_order()
-        self._recently_viewed(num_recent=self._last_viewed)
-        self._last_cooked(lastcooked=self._lastcooked)
+        self._recently_viewed(num_recent=self._num_recent)
+        self._cooked_on_filter(cooked_date=self._cookedon)
+        self._created_on_filter(created_date=self._createdon)
+        self._viewed_on_filter(viewed_date=self._viewedon)
         self._favorite_recipes(timescooked=self._timescooked)
         self._new_recipes()
         self.keyword_filters(**self._keywords)
@@ -144,7 +145,7 @@ class RecipeSearch():
             # TODO add userpreference for default sort order and replace '-favorite'
             default_order = ['-favorite']
             # recent and new_recipe are always first; they float a few recipes to the top
-            if self._last_viewed:
+            if self._num_recent:
                 order += ['-recent']
             if self._new:
                 order += ['-new_recipe']
@@ -162,7 +163,7 @@ class RecipeSearch():
                     if '-score' in order:
                         order.remove('-score')
             # if no sort order provided prioritize text search, followed by the default search
-            elif self._postgres and self._string:
+            elif self._postgres and self._string and (self._trigram or self._fulltext_include):
                 order += ['-score', *default_order]
             # otherwise sort by the remaining order_by attributes or favorite by default
             else:
@@ -180,13 +181,11 @@ class RecipeSearch():
             self.build_fulltext_filters(self._string)
             self.build_trigram(self._string)
 
+        query_filter = Q()
         if self._filters:
-            query_filter = None
             for f in self._filters:
-                if query_filter:
-                    query_filter |= f
-                else:
-                    query_filter = f
+                query_filter |= f
+
             self._queryset = self._queryset.filter(query_filter).distinct()  # this creates duplicate records which can screw up other aggregates, see makenow for workaround
             if self._fulltext_include:
                 if self._fuzzy_match is None:
@@ -197,27 +196,56 @@ class RecipeSearch():
             if self._fuzzy_match is not None:
                 simularity = self._fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
                 if not self._fulltext_include:
-                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(Max(simularity)), 0.0))
+                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
                 else:
                     self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
             if self._sort_includes('score') and self._fulltext_include and self._fuzzy_match is not None:
                 self._queryset = self._queryset.annotate(score=Sum(F('rank')+F('simularity')))
         else:
-            self._queryset = self._queryset.filter(name__icontains=self._string)
+            query_filter = Q()
+            for f in [x + '__unaccent__iexact' if x in self._unaccent_include else x + '__iexact' for x in SearchFields.objects.all().values_list('field', flat=True)]:
+                query_filter |= Q(**{"%s" % f: self._string})
+            self._queryset = self._queryset.filter(query_filter).distinct()
 
-    def _last_cooked(self, lastcooked=None):
-        if self._sort_includes('lastcooked') or lastcooked:
+    def _cooked_on_filter(self, cooked_date=None):
+        if self._sort_includes('lastcooked') or cooked_date:
             longTimeAgo = timezone.now() - timedelta(days=100000)
             self._queryset = self._queryset.annotate(lastcooked=Coalesce(
-                Max(Case(When(created_by=self._request.user, space=self._request.space, then='cooklog__created_at'))), Value(longTimeAgo)))
-        if lastcooked is None:
+                Max(Case(When(cooklog__created_by=self._request.user, cooklog__space=self._request.space, then='cooklog__created_at'))), Value(longTimeAgo)))
+        if cooked_date is None:
             return
-        lessthan = '-' in lastcooked[:1]
+        lessthan = '-' in cooked_date[:1]
+        cooked_date = date(*[int(x) for x in cooked_date.split('-') if x != ''])
 
         if lessthan:
-            self._queryset = self._queryset.filter(lastcooked__lte=lastcooked[1:]).exclude(lastcooked=longTimeAgo)
+            self._queryset = self._queryset.filter(lastcooked__date__lte=cooked_date).exclude(lastcooked=longTimeAgo)
         else:
-            self._queryset = self._queryset.filter(lastcooked__gte=lastcooked).exclude(lastcooked=longTimeAgo)
+            self._queryset = self._queryset.filter(lastcooked__date__gte=cooked_date).exclude(lastcooked=longTimeAgo)
+
+    def _created_on_filter(self, created_date=None):
+        if created_date is None:
+            return
+        lessthan = '-' in created_date[:1]
+        created_date = date(*[int(x) for x in created_date.split('-') if x != ''])
+        if lessthan:
+            self._queryset = self._queryset.filter(created_at__date__lte=created_date)
+        else:
+            self._queryset = self._queryset.filter(created_at__date__gte=created_date)
+
+    def _viewed_on_filter(self, viewed_date=None):
+        if self._sort_includes('lastviewed') or viewed_date:
+            longTimeAgo = timezone.now() - timedelta(days=100000)
+            self._queryset = self._queryset.annotate(lastviewed=Coalesce(
+                Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__created_at'))), Value(longTimeAgo)))
+        if viewed_date is None:
+            return
+        lessthan = '-' in viewed_date[:1]
+        viewed_date = date(*[int(x) for x in viewed_date.split('-') if x != ''])
+
+        if lessthan:
+            self._queryset = self._queryset.filter(lastviewed__date__lte=viewed_date).exclude(lastviewed=longTimeAgo)
+        else:
+            self._queryset = self._queryset.filter(lastviewed__date__gte=viewed_date).exclude(lastviewed=longTimeAgo)
 
     def _new_recipes(self, new_days=7):
         # TODO make new days a user-setting
@@ -232,12 +260,12 @@ class RecipeSearch():
         if not num_recent:
             if self._sort_includes('lastviewed'):
                 self._queryset = self._queryset.annotate(lastviewed=Coalesce(
-                    Max(Case(When(created_by=self._request.user, space=self._request.space, then='viewlog__pk'))), Value(0)))
+                    Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__pk'))), Value(0)))
             return
 
-        last_viewed_recipes = ViewLog.objects.filter(created_by=self._request.user, space=self._request.space).values(
+        num_recent_recipes = ViewLog.objects.filter(created_by=self._request.user, space=self._request.space).values(
             'recipe').annotate(recent=Max('created_at')).order_by('-recent')[:num_recent]
-        self._queryset = self._queryset.annotate(recent=Coalesce(Max(Case(When(pk__in=last_viewed_recipes.values('recipe'), then='viewlog__pk'))), Value(0)))
+        self._queryset = self._queryset.annotate(recent=Coalesce(Max(Case(When(pk__in=num_recent_recipes.values('recipe'), then='viewlog__pk'))), Value(0)))
 
     def _favorite_recipes(self, timescooked=None):
         if self._sort_includes('favorite') or timescooked:
@@ -388,18 +416,32 @@ class RecipeSearch():
         if not string:
             return
         if self._fulltext_include:
-            if not self._filters:
-                self._filters = []
+            vectors = []
+            rank = []
             if 'name' in self._fulltext_include:
-                self._filters += [Q(name_search_vector=self.search_query)]
+                vectors.append('name_search_vector')
+                rank.append(SearchRank('name_search_vector', self.search_query, cover_density=True))
             if 'description' in self._fulltext_include:
-                self._filters += [Q(desc_search_vector=self.search_query)]
+                vectors.append('desc_search_vector')
+                rank.append(SearchRank('desc_search_vector', self.search_query, cover_density=True))
             if 'steps__instruction' in self._fulltext_include:
-                self._filters += [Q(steps__search_vector=self.search_query)]
+                vectors.append('steps__search_vector')
+                rank.append(SearchRank('steps__search_vector', self.search_query, cover_density=True))
             if 'keywords__name' in self._fulltext_include:
-                self._filters += [Q(keywords__in=Keyword.objects.filter(name__search=self.search_query))]
+                # explicitly settings unaccent on keywords and foods so that they behave the same as search_vector fields
+                vectors.append('keywords__name__unaccent')
+                rank.append(SearchRank('keywords__name__unaccent', self.search_query, cover_density=True))
             if 'steps__ingredients__food__name' in self._fulltext_include:
-                self._filters += [Q(steps__ingredients__food__in=Food.objects.filter(name__search=self.search_query))]
+                vectors.append('steps__ingredients__food__name__unaccent')
+                rank.append(SearchRank('steps__ingredients__food__name', self.search_query, cover_density=True))
+
+            for r in rank:
+                if self.search_rank is None:
+                    self.search_rank = r
+                else:
+                    self.search_rank += r
+            # modifying queryset will annotation creates duplicate results
+            self._filters.append(Q(id__in=Recipe.objects.annotate(vector=SearchVector(*vectors)).filter(Q(vector=self.search_query))))
 
     def build_text_filters(self, string=None):
         if not string:
@@ -653,7 +695,7 @@ class RecipeFacet():
 
     def _recipe_count_queryset(self, field, depth=1, steplen=4):
         return Recipe.objects.filter(**{f'{field}__path__startswith': OuterRef('path')}, id__in=self._recipe_list, space=self._request.space
-                                     ).values(child=Substr(f'{field}__path',  1, steplen)
+                                     ).values(child=Substr(f'{field}__path',  1, steplen*depth)
                                               ).annotate(count=Count('pk', distinct=True)).values('count')
 
     def _keyword_queryset(self, queryset, keyword=None):

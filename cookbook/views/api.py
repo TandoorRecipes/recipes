@@ -652,7 +652,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         QueryParam(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
         QueryParam(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
         QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='int'),
-        QueryParam(name='lastcooked', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='viewedon', description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
         QueryParam(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']')),
     ]
     schema = QueryParamAutoSchema()

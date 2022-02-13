@@ -37,6 +37,7 @@ def update_recipe_search_vector(sender, instance=None, created=False, **kwargs):
     if SQLITE:
         return
     language = DICTIONARY.get(translation.get_language(), 'simple')
+    # these indexed fields are space wide, reading user preferences would lead to inconsistent behavior
     instance.name_search_vector = SearchVector('name__unaccent', weight='A', config=language)
     instance.desc_search_vector = SearchVector('description__unaccent', weight='C', config=language)
     try:
