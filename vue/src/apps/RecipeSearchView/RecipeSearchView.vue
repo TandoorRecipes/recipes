@@ -58,7 +58,7 @@
                                     </div>
                                     <div v-if="ui.enable_expert" class="row justify-content-end small">
                                         <div class="col-auto">
-                                            <b-button class="my-0" variant="link" size="sm" @click="search.expert_mode = !search.expert_mode">
+                                            <b-button class="my-0" variant="link" size="sm" @click="ui.expert_mode = !ui.expert_mode">
                                                 <div v-if="!expertMode">{{ $t("expert_mode") }}</div>
                                                 <div v-if="expertMode">{{ $t("simple_mode") }}</div>
                                             </b-button>
@@ -124,6 +124,12 @@
                                                 <b-form-group v-if="ui.enable_expert" v-bind:label="$t('last_cooked')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_cookedon" id="popover-show_cookedon" size="sm"></b-form-checkbox>
                                                 </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('last_viewed')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_viewedon" id="popover-show_viewedon" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('created_on')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_createdon" id="popover-show_createdon" size="sm"></b-form-checkbox>
+                                                </b-form-group>
                                             </b-tab>
 
                                             <b-tab :title="$t('advanced')" :title-link-class="['mx-0']">
@@ -184,11 +190,11 @@
                                         </div>
                                     </div>
                                     <!-- keywords filter -->
-                                    <h6 class="mb-0" v-if="search.expert_mode && search.keywords_fields > 1">{{ $t("Keywords") }}</h6>
+                                    <h6 class="mb-0" v-if="ui.expert_mode && search.keywords_fields > 1">{{ $t("Keywords") }}</h6>
                                     <div class="row" v-if="ui.show_keywords">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(k, a) in keywordFields" :key="a">
-                                                <template #prepend v-if="search.expert_mode">
+                                                <template #prepend v-if="ui.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="addField('keywords', k)">
                                                         <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4" />
                                                     </b-input-group-text>
@@ -235,7 +241,7 @@
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
-                                                <b-input-group-append v-if="search.expert_mode">
+                                                <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
                                                         <b-form-checkbox v-model="search.search_keywords[a].not" name="check-button" @change="refreshData(false)" class="shadow-none">
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
@@ -247,11 +253,11 @@
                                     </div>
 
                                     <!-- foods filter -->
-                                    <h6 class="mt-2 mb-0" v-if="search.expert_mode && search.foods_fields > 1">{{ $t("Foods") }}</h6>
+                                    <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.foods_fields > 1">{{ $t("Foods") }}</h6>
                                     <div class="row" v-if="ui.show_foods">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(f, i) in foodFields" :key="i">
-                                                <template #prepend v-if="search.expert_mode">
+                                                <template #prepend v-if="ui.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="addField('foods', f)">
                                                         <i class="fas fa-plus-circle text-primary" v-if="f == search.foods_fields && f < 4" />
                                                     </b-input-group-text>
@@ -291,7 +297,7 @@
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
-                                                <b-input-group-append v-if="search.expert_mode">
+                                                <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
                                                         <b-form-checkbox v-model="search.search_foods[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
@@ -303,11 +309,11 @@
                                     </div>
 
                                     <!-- books filter -->
-                                    <h6 class="mt-2 mb-0" v-if="search.expert_mode && search.books_fields > 1">{{ $t("Books") }}</h6>
+                                    <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.books_fields > 1">{{ $t("Books") }}</h6>
                                     <div class="row" v-if="ui.show_books">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(b, i) in bookFields" :key="i">
-                                                <template #prepend v-if="search.expert_mode">
+                                                <template #prepend v-if="ui.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="addField('books', b)">
                                                         <i class="fas fa-plus-circle text-primary" v-if="b == search.books_fields && b < 4" />
                                                     </b-input-group-text>
@@ -332,7 +338,7 @@
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
-                                                <b-input-group-append v-if="search.expert_mode">
+                                                <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
                                                         <b-form-checkbox v-model="search.search_books[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
@@ -413,7 +419,7 @@
                                                 <b-input-group-append v-if="ui.show_cookedon">
                                                     <b-form-datepicker
                                                         v-model="search.cookedon"
-                                                        :max="yesterday"
+                                                        :max="today"
                                                         no-highlight-today
                                                         reset-button
                                                         :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
@@ -429,6 +435,43 @@
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                                 <!-- make now -->
+
+                                                <b-input-group-append v-if="ui.show_createdon">
+                                                    <b-form-datepicker
+                                                        v-model="search.createdon"
+                                                        :max="today"
+                                                        no-highlight-today
+                                                        reset-button
+                                                        :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                                                        :locale="locale"
+                                                        :placeholder="$t('date_created')"
+                                                        @input="refreshData(false)"
+                                                    />
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.createdon_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.createdon_gte">&gt;=</span>
+                                                            <span class="text-uppercase" v-else>&lt;=</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                                <b-input-group-append v-if="ui.show_viewedon">
+                                                    <b-form-datepicker
+                                                        v-model="search.viewedon"
+                                                        :max="today"
+                                                        no-highlight-today
+                                                        reset-button
+                                                        :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                                                        :locale="locale"
+                                                        :placeholder="$t('last_viewed')"
+                                                        @input="refreshData(false)"
+                                                    />
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.viewedon_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.viewedon_gte">&gt;=</span>
+                                                            <span class="text-uppercase" v-else>&lt;=</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
                                                 <b-input-group-append v-if="ui.show_makenow">
                                                     <b-input-group-text>
                                                         {{ $t("make_now") }}
@@ -571,7 +614,7 @@ export default {
                 viewedon_gte: true,
                 sort_order: [],
                 pagination_page: 1,
-                expert_mode: false,
+
                 keywords_fields: 1,
                 foods_fields: 1,
                 books_fields: 1,
@@ -584,6 +627,7 @@ export default {
                 recently_viewed: 5,
                 sort_by_new: true,
                 page_size: 25,
+                expert_mode: false,
                 remember_search: true,
                 remember_hours: 4,
                 sql_debug: false,
@@ -599,6 +643,8 @@ export default {
                 show_timescooked: false,
                 show_makenow: false,
                 show_cookedon: false,
+                show_viewedon: false,
+                show_createdon: false,
                 include_children: true,
             },
             pagination_count: 0,
@@ -620,6 +666,10 @@ export default {
         yesterday: function () {
             const now = new Date()
             return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+        },
+        today: function () {
+            const now = new Date()
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate())
         },
         ratingOptions: function () {
             let ratingCount = undefined
@@ -662,7 +712,7 @@ export default {
             ]
         },
         expertMode: function () {
-            return this.ui.enable_expert && this.search.expert_mode
+            return this.ui.enable_expert && this.ui.expert_mode
         },
         keywordFields: function () {
             return !this.expertMode ? 1 : this.search.keywords_fields
@@ -1029,7 +1079,6 @@ export default {
             if (this.search.search_filter) {
                 params.options.query.filter = this.search.search_filter.id
             }
-            console.log(params)
             return params
         },
         searchFiltered: function (ignore_string = false) {

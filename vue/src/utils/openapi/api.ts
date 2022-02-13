@@ -1737,7 +1737,7 @@ export interface RecipeBook {
      * @type {RecipeBookFilter}
      * @memberof RecipeBook
      */
-    filter?: RecipeBookFilter;
+    filter?: RecipeBookFilter | null;
 }
 /**
  * 
@@ -5763,14 +5763,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
-         * @param {string} [lastcooked] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
          * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, lastcooked?: string, makenow?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5871,8 +5873,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['timescooked'] = timescooked;
             }
 
-            if (lastcooked !== undefined) {
-                localVarQueryParameter['lastcooked'] = lastcooked;
+            if (cookedon !== undefined) {
+                localVarQueryParameter['cookedon'] = cookedon;
+            }
+
+            if (createdon !== undefined) {
+                localVarQueryParameter['createdon'] = createdon;
+            }
+
+            if (viewedon !== undefined) {
+                localVarQueryParameter['viewedon'] = viewedon;
             }
 
             if (makenow !== undefined) {
@@ -10487,15 +10497,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
-         * @param {string} [lastcooked] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
          * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, lastcooked?: string, makenow?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, lastcooked, makenow, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, viewedon, makenow, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12302,15 +12314,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
-         * @param {string} [lastcooked] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
          * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, lastcooked?: string, makenow?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
-            return localVarFp.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, lastcooked, makenow, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
+            return localVarFp.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, viewedon, makenow, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14147,7 +14161,9 @@ export class ApiApi extends BaseAPI {
      * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
-     * @param {string} [lastcooked] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
      * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -14155,8 +14171,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, lastcooked?: string, makenow?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, lastcooked, makenow, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, viewedon, makenow, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

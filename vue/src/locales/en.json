@@ -337,5 +337,7 @@
     "SubstituteOnHand": "You have a substitute on hand.",
     "ChildInheritFields": "Children Inherit Fields",
     "ChildInheritFields_help": "Children will inherit these fields by default.",
-    "InheritFields_help": "The values of these fields will be inheritted from parent (Exception: blank shopping categories are not inheritted)"
+    "InheritFields_help": "The values of these fields will be inheritted from parent (Exception: blank shopping categories are not inheritted)",
+    "last_viewed": "Last Viewed",
+    "created_on": "Created On"
 }
