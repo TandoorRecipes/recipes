@@ -6,7 +6,7 @@ NGINX_CONF_FILE=/opt/recipes/nginx/conf.d/Recipes.conf
 
 echo "Checking configuration..."
 
-if [ ! -f "$NGINX_CONF_FILE" ] && [ $GUNICORN_MEDIA -ne 1 ]; then
+if [ ! -f "$NGINX_CONF_FILE" ] && [ $GUNICORN_MEDIA -eq 0 ]; then
     echo -e "\n[WARNING]\nNginx configuration file could not be found at the default location!"
     echo -e "Path: ${NGINX_CONF_FILE}\n"
 fi
