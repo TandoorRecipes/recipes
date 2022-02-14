@@ -1043,6 +1043,9 @@ export default {
             this.search.timescooked = undefined
             this.search.makenow = false
             this.search.cookedon = undefined
+            this.search.viewedon = undefined
+            this.search.createdon = undefined
+            this.search.updatedon = undefined
 
             let fieldnum = {
                 keywords: 1,
