@@ -1,8 +1,15 @@
 #!/bin/sh
 source venv/bin/activate
 
-
 TANDOOR_PORT="${TANDOOR_PORT:-8080}"
+NGINX_CONF_FILE=/opt/recipes/nginx/conf.d/Recipes.conf
+
+echo "Checking configuration..."
+
+if [ ! -f "$NGINX_CONF_FILE" ]; then
+    echo -e "\n[WARNING]\nNginx configuration file could not be found at the default location!"
+    echo -e "Path: ${NGINX_CONF_FILE}\n"
+fi
 
 echo "Waiting for database to be ready..."
 
