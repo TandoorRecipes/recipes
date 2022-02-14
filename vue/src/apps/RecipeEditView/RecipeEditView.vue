@@ -210,6 +210,18 @@
                                     <b-button pill variant="primary" size="sm" class="ml-1" @click="step.file_visible = true" v-if="!step.file_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("File") }}
                                     </b-button>
+                                    <b-button
+                                        pill
+                                        variant="primary"
+                                        size="sm"
+                                        class="ml-1"
+                                        @click="
+                                            paste_step = step.id
+                                            $bvModal.show('id_modal_paste_ingredients')
+                                        "
+                                    >
+                                        <i class="fas fa-plus-circle"></i> {{ $t("paste_ingredients") }}
+                                    </b-button>
                                 </div>
                             </div>
 
@@ -516,6 +528,17 @@
                 </draggable>
             </b-modal>
 
+            <!-- modal for pasting list of ingredients -->
+            <b-modal
+                id="id_modal_paste_ingredients"
+                v-bind:title="$t('ingredient_list')"
+                @ok="appendIngredients"
+                @cancel="paste_ingredients = paste_step = undefined"
+                @close="paste_ingredients = paste_step = undefined"
+            >
+                <b-form-textarea id="paste_ingredients" v-model="paste_ingredients" :placeholder="$t('paste_ingredients_placeholder')" rows="10"></b-form-textarea>
+            </b-modal>
+
             <!-- form to create files on the fly -->
             <generic-modal-form :model="Models.USERFILE" :action="Actions.CREATE" :show="show_file_create" @finish-action="fileCreated" />
         </div>
@@ -574,7 +597,8 @@ export default {
             recipes_loading: false,
             message: "",
             options_limit: 25,
-
+            paste_ingredients: undefined,
+            paste_step: undefined,
             show_file_create: false,
             step_for_file_create: undefined,
         }
@@ -941,6 +965,24 @@ export default {
         },
         energy: function () {
             return energyHeading()
+        },
+        appendIngredients: function () {
+            let ing_list = this.paste_ingredients.split(/\r?\n/)
+            let step = this.recipe.steps.findIndex((x) => x.id == this.paste_step)
+            this.recipe.steps[step].ingredients_visible = true
+            ing_list.forEach((ing) => {
+                this.genericPostAPI("api_ingredient_from_string", { text: ing }).then((result) => {
+                    let unit = null
+                    if (result.data.unit !== "") {
+                        unit = { name: result.data.unit }
+                    }
+                    this.recipe.steps[step].ingredients.push({
+                        amount: result.data.amount,
+                        unit: unit,
+                        food: { name: result.data.food },
+                    })
+                })
+            })
         },
     },
 }
