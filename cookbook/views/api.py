@@ -654,6 +654,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='int'),
         QueryParam(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
         QueryParam(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='updatedon', description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
         QueryParam(name='viewedon', description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
         QueryParam(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']')),
     ]

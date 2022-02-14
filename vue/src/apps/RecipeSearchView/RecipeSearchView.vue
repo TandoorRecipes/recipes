@@ -107,20 +107,23 @@
                                                 <b-form-group v-bind:label="$t('show_sortby')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_sortby" id="popover-show_sortby" size="sm"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('times_cooked')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                <b-form-group v-bind:label="$t('times_cooked')" label-for="popover-show_timescooked" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_timescooked" id="popover-show_cooked" size="sm"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('make_now')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                <b-form-group v-bind:label="$t('make_now')" label-for="popover-show_makenow" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_makenow" id="popover-show_makenow" size="sm"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('last_cooked')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                <b-form-group v-bind:label="$t('last_cooked')" label-for="popover-show_cookedon" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_cookedon" id="popover-show_cookedon" size="sm"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('last_viewed')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                <b-form-group v-bind:label="$t('last_viewed')" label-for="popover-show_viewedon" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_viewedon" id="popover-show_viewedon" size="sm"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-if="ui.enable_expert" v-bind:label="$t('created_on')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                <b-form-group v-bind:label="$t('created_on')" label-for="popover-show_createdon" label-cols="8" class="mb-1">
                                                     <b-form-checkbox switch v-model="ui.show_createdon" id="popover-show_createdon" size="sm"></b-form-checkbox>
+                                                </b-form-group>
+                                                <b-form-group v-bind:label="$t('updatedon')" label-for="popover-show_updatedon" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_updatedon" id="popover-show_updatedon" size="sm"></b-form-checkbox>
                                                 </b-form-group>
                                             </b-tab>
 
@@ -461,6 +464,24 @@
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
+                                                <b-input-group-append v-if="ui.show_updatedon">
+                                                    <b-form-datepicker
+                                                        v-model="search.updatedon"
+                                                        :max="today"
+                                                        no-highlight-today
+                                                        reset-button
+                                                        :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                                                        :locale="locale"
+                                                        :placeholder="$t('updatedon')"
+                                                        @input="refreshData(false)"
+                                                    />
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.updatedon_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                            <span class="text-uppercase" v-if="search.updatedon_gte">&gt;=</span>
+                                                            <span class="text-uppercase" v-else>&lt;=</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
                                                 <b-input-group-append v-if="ui.show_makenow">
                                                     <b-input-group-text>
                                                         {{ $t("make_now") }}
@@ -481,7 +502,7 @@
                                                 </div>
                                                 <div v-else><i class="far fa-eye-slash"></i> {{ $t("explain") }}</div>
                                             </b-button>
-                                            <b-button class="my-0" variant="link" size="sm" @click="search.expert_mode = !search.expert_mode">
+                                            <b-button class="my-0" variant="link" size="sm" @click="ui.expert_mode = !ui.expert_mode">
                                                 <div v-if="!expertMode">
                                                     <i class="fas fa-circle"></i>
                                                     {{ $t("expert_mode") }}
@@ -698,6 +719,8 @@ export default {
                 cookedon_gte: true,
                 createdon: undefined,
                 createdon_gte: true,
+                updatedon: undefined,
+                updatedon_gte: true,
                 viewedon: undefined,
                 viewedon_gte: true,
                 sort_order: [],
@@ -733,6 +756,7 @@ export default {
                 show_cookedon: false,
                 show_viewedon: false,
                 show_createdon: false,
+                show_updatedon: false,
                 include_children: true,
             },
             pagination_count: 0,
@@ -1130,6 +1154,10 @@ export default {
             if (viewedon !== undefined && !this.search.viewedon_gte) {
                 viewedon = "-" + viewedon
             }
+            let updatedon = this.search.updatedon || undefined
+            if (updatedon !== undefined && !this.search.updatedon_gte) {
+                updatedon = "-" + updatedon
+            }
             let timescooked = parseInt(this.search.timescooked)
             if (isNaN(timescooked)) {
                 timescooked = undefined
@@ -1151,6 +1179,7 @@ export default {
                 makenow: this.search.makenow || undefined,
                 cookedon: cookedon,
                 createdon: createdon,
+                updatedon: updatedon,
                 viewedon: viewedon,
                 page: this.search.pagination_page,
                 pageSize: this.ui.page_size,
@@ -1181,7 +1210,10 @@ export default {
                 this.search?.search_rating !== undefined ||
                 (this.search.timescooked !== undefined && this.search.timescooked !== "") ||
                 this.search.makenow !== false ||
-                (this.search.cookedon !== undefined && this.search.cookedon !== "")
+                (this.search.cookedon !== undefined && this.search.cookedon !== "") ||
+                (this.search.viewedon !== undefined && this.search.viewedon !== "") ||
+                (this.search.createdon !== undefined && this.search.createdon !== "") ||
+                (this.search.updatedon !== undefined && this.search.updatedon !== "")
 
             if (ignore_string) {
                 return filtered

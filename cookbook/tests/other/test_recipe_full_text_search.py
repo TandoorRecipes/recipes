@@ -87,9 +87,15 @@ def found_recipe(request, space_1, accent, unaccent, u1_s1, u2_s1):
     days_3 = timezone.now() - timedelta(days=3)
     days_15 = timezone.now() - timedelta(days=15)
     days_30 = timezone.now() - timedelta(days=30)
-    recipe1 = RecipeFactory.create(space=space_1)
-    recipe2 = RecipeFactory.create(space=space_1)
-    recipe3 = RecipeFactory.create(space=space_1)
+    if request.param.get('createdon', None):
+        recipe1 = RecipeFactory.create(space=space_1, created_at=days_3)
+        recipe2 = RecipeFactory.create(space=space_1, created_at=days_30)
+        recipe3 = RecipeFactory.create(space=space_1, created_at=days_15)
+
+    else:
+        recipe1 = RecipeFactory.create(space=space_1)
+        recipe2 = RecipeFactory.create(space=space_1)
+        recipe3 = RecipeFactory.create(space=space_1)
     obj1 = None
     obj2 = None
 
@@ -137,13 +143,7 @@ def found_recipe(request, space_1, accent, unaccent, u1_s1, u2_s1):
         i2.instruction = accent
         i1.save()
         i2.save()
-    if request.param.get('createdon', None):
-        recipe1.created_at = days_3
-        recipe2.created_at = days_30
-        recipe3.created_at = days_15
-        recipe1.save()
-        recipe2.save()
-        recipe3.save()
+
     if request.param.get('viewedon', None):
         ViewLogFactory.create(recipe=recipe1, created_by=user1, created_at=days_3, space=space_1)
         ViewLogFactory.create(recipe=recipe2, created_by=user1, created_at=days_30, space=space_1)
@@ -291,8 +291,14 @@ def test_search_string(found_recipe, recipes,  user1,  space_1):
     ({'viewedon': True}, 'viewedon', (1, 1)),
     ({'cookedon': True}, 'cookedon', (1, 1)),
     ({'createdon': True}, 'createdon', (2, 12)),  # created dates are not filtered by user
+    ({'createdon': True}, 'updatedon', (2, 12)),  # updated dates are not filtered by user
 ], indirect=['found_recipe'])
 def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, space_1):
+    # force updated_at to equal created_at datetime
+    with scope(space=space_1):
+        for recipe in Recipe.objects.all():
+            Recipe.objects.filter(id=recipe.id).update(updated_at=recipe.created_at)
+
     date = (timezone.now() - timedelta(days=15)).strftime("%Y-%m-%d")
     param1 = f"?{param_type}={date}"
     param2 = f"?{param_type}=-{date}"

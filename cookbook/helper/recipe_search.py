@@ -72,6 +72,7 @@ class RecipeSearch():
         self._timescooked = self._params.get('timescooked', None)
         self._cookedon = self._params.get('cookedon', None)
         self._createdon = self._params.get('createdon', None)
+        self._updatedon = self._params.get('updatedon', None)
         self._viewedon = self._params.get('viewedon', None)
         # this supports hidden feature to find recipes missing X ingredients
         try:
@@ -114,6 +115,7 @@ class RecipeSearch():
         self._recently_viewed(num_recent=self._num_recent)
         self._cooked_on_filter(cooked_date=self._cookedon)
         self._created_on_filter(created_date=self._createdon)
+        self._updated_on_filter(updated_date=self._updatedon)
         self._viewed_on_filter(viewed_date=self._viewedon)
         self._favorite_recipes(timescooked=self._timescooked)
         self._new_recipes()
@@ -231,6 +233,16 @@ class RecipeSearch():
             self._queryset = self._queryset.filter(created_at__date__lte=created_date)
         else:
             self._queryset = self._queryset.filter(created_at__date__gte=created_date)
+
+    def _updated_on_filter(self, updated_date=None):
+        if updated_date is None:
+            return
+        lessthan = '-' in updated_date[:1]
+        updated_date = date(*[int(x) for x in updated_date.split('-') if x != ''])
+        if lessthan:
+            self._queryset = self._queryset.filter(updated_at__date__lte=updated_date)
+        else:
+            self._queryset = self._queryset.filter(updated_at__date__gte=updated_date)
 
     def _viewed_on_filter(self, viewed_date=None):
         if self._sort_includes('lastviewed') or viewed_date:
