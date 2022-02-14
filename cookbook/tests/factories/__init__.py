@@ -1,4 +1,5 @@
 
+from datetime import date
 from decimal import Decimal
 
 import factory
@@ -9,7 +10,7 @@ from django_scopes import scopes_disabled
 from faker import Factory as FakerFactory
 from pytest_factoryboy import register
 
-from cookbook.models import Step
+from cookbook.models import Recipe, Step
 
 # this code will run immediately prior to creating the model object useful when you want a reverse relationship
 # log = factory.RelatedFactory(
@@ -358,12 +359,13 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     waiting_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
     internal = False
     created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
-    created_at = factory.LazyAttribute(lambda x: faker.date_this_decade())
+    created_at = factory.LazyAttribute(lambda x: faker.date_between_dates(date_start=date(2000, 1, 1), date_end=date(2020, 12, 31)))
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
     def _create(cls, target_class, *args, **kwargs):  # override create to prevent auto_add_now from changing the created_at date
         created_at = kwargs.pop('created_at', None)
+        # updated_at = kwargs.pop('updated_at', None)
         obj = super(RecipeFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
             obj.created_at = created_at

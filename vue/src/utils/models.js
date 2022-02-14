@@ -532,6 +532,7 @@ export class Models {
                 "timescooked",
                 "cookedon",
                 "createdon",
+                "updatedon",
                 "viewedon",
                 "makenow",
                 "page",
