@@ -128,7 +128,6 @@ class RecipeSearch():
         self.unit_filters(units=self._units)
         self._makenow_filter(missing=self._makenow)
         self.string_filters(string=self._string)
-
         return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
 
     def _sort_includes(self, *args):
