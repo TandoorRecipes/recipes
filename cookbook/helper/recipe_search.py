@@ -284,12 +284,17 @@ class RecipeSearch():
 
     def _favorite_recipes(self, timescooked=None):
         if self._sort_includes('favorite') or timescooked:
+            lessthan = '-' in (timescooked or []) or not self._sort_includes('-favorite')
+            if lessthan:
+                default = 1000
+            else:
+                default = 0
             favorite_recipes = CookLog.objects.filter(created_by=self._request.user, space=self._request.space, recipe=OuterRef('pk')
                                                       ).values('recipe').annotate(count=Count('pk', distinct=True)).values('count')
-            self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), 0))
+            self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), default))
         if timescooked is None:
             return
-        lessthan = '-' in timescooked
+
         if timescooked == '0':
             self._queryset = self._queryset.filter(favorite=0)
         elif lessthan:
@@ -377,9 +382,9 @@ class RecipeSearch():
         if rating or self._sort_includes('rating'):
             lessthan = self._sort_includes('-rating') or '-' in (rating or [])
             if lessthan:
-                default = Value(0)
+                default = 100
             else:
-                default = Value(100)
+                default = 0
             # TODO make ratings a settings user-only vs all-users
             self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
         if rating is None:
