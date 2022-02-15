@@ -847,7 +847,7 @@ export default {
             const field = [
                 [this.$t("search_rank"), "score", "1-9", "9-1"],
                 [this.$t("Name"), "name", "A-z", "Z-a"],
-                [this.$t("last_cooked"), "cookedon", "↑", "↓"],
+                [this.$t("last_cooked"), "lastcooked", "↑", "↓"],
                 [this.$t("Rating"), "rating", "1-5", "5-1"],
                 [this.$t("times_cooked"), "favorite", "*-x", "x-*"],
                 [this.$t("date_created"), "created_at", "↑", "↓"],
