@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry
+from cookbook.models import ShoppingList, ShoppingListEntry, TelegramBot
 
 
 @group_required('user')

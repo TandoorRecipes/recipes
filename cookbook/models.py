@@ -481,6 +481,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
+    # TODO when savings a food as substitute children - assume children and descednants are also substitutes for siblings
     # exclude fields not implemented yet
     inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', ])
     # TODO add inherit children_inherit, parent_inherit, Do Not Inherit
