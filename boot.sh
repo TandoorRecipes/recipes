@@ -4,11 +4,26 @@ source venv/bin/activate
 TANDOOR_PORT="${TANDOOR_PORT:-8080}"
 NGINX_CONF_FILE=/opt/recipes/nginx/conf.d/Recipes.conf
 
+display_warning() {
+    echo "[WARNING]"
+    echo -e "$1"
+}
+
 echo "Checking configuration..."
 
+# Nginx config file must exist if gunicorn is not active
 if [ ! -f "$NGINX_CONF_FILE" ] && [ $GUNICORN_MEDIA -eq 0 ]; then
-    echo -e "\n[WARNING]\nNginx configuration file could not be found at the default location!"
-    echo -e "Path: ${NGINX_CONF_FILE}\n"
+    display_warning "Nginx configuration file could not be found at the default location!\nPath: ${NGINX_CONF_FILE}"
+fi
+
+# SECRET_KEY must be set in .env file
+if [ -z "${SECRET_KEY}" ]; then
+    display_warning "The environment variable 'SECRET_KEY' is not set but REQUIRED for running Tandoor!"
+fi
+
+# POSTGRES_PASSWORD must be set in .env file
+if [ -z "${POSTGRES_PASSWORD}" ]; then
+    display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
 fi
 
 echo "Waiting for database to be ready..."
