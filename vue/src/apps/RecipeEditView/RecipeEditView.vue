@@ -969,23 +969,24 @@ export default {
         appendIngredients: function () {
             let ing_list = this.paste_ingredients.split(/\r?\n/)
             let step = this.recipe.steps.findIndex((x) => x.id == this.paste_step)
-            let order = 0
+            let order = Math.max(...this.recipe.steps[step].ingredients.map((x) => x.order)) + 1
             this.recipe.steps[step].ingredients_visible = true
             ing_list.forEach((ing) => {
-                this.genericPostAPI("api_ingredient_from_string", { text: ing }).then((result) => {
-                    let unit = null
-                    if (result.data.unit !== "") {
-                        unit = { name: result.data.unit }
-                    }
-                    this.recipe.steps[step].ingredients.push({
-                        amount: result.data.amount,
-                        unit: unit,
-                        food: { name: result.data.food },
-                        note: result.data.note,
-                        order: order,
+                if (ing.trim() !== "") {
+                    this.genericPostAPI("api_ingredient_from_string", { text: ing }).then((result) => {
+                        let unit = null
+                        if (result.data.unit !== "") {
+                            unit = { name: result.data.unit }
+                        }
+                        this.recipe.steps[step].ingredients.splice(order, 0, {
+                            amount: result.data.amount,
+                            unit: unit,
+                            food: { name: result.data.food },
+                            note: result.data.note,
+                        })
                     })
-                })
-                order++
+                    order++
+                }
             })
         },
     },
