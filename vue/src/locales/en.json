@@ -296,5 +296,7 @@
     "food_recipe_help": "Linking a recipe here will include the linked recipe in any other recipe that use this food",
     "Foods": "Foods",
     "review_shopping": "Review shopping entries before saving",
-    "view_recipe": "View Recipe"
+    "view_recipe": "View Recipe",
+    "copy_to_new": "Copy To New Recipe",
+    "recipe_name": "Recipe Name"
 }
