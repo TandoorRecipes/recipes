@@ -980,6 +980,7 @@ export default {
                         amount: result.data.amount,
                         unit: unit,
                         food: { name: result.data.food },
+                        note: result.data.note,
                     })
                 })
             })
