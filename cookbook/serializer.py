@@ -300,9 +300,9 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     def create(self, validated_data):
         # since multi select tags dont have id's
         # duplicate names might be routed to create
-        validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
-        obj, created = Keyword.objects.get_or_create(**validated_data)
+        name = validated_data.pop('name').strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = Keyword.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     class Meta:
@@ -317,9 +317,9 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     recipe_filter = 'steps__ingredients__unit'
 
     def create(self, validated_data):
-        validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
-        obj, created = Unit.objects.get_or_create(**validated_data)
+        name = validated_data.pop('name').strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = Unit.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -335,9 +335,9 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     def create(self, validated_data):
-        validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
-        obj, created = SupermarketCategory.objects.get_or_create(**validated_data)
+        name = validated_data.pop('name').strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = SupermarketCategory.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -417,8 +417,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     #     return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
 
     def create(self, validated_data):
-        validated_data['name'] = validated_data['name'].strip()
-        validated_data['space'] = self.context['request'].space
+        name = validated_data.pop('name').strip()
+        space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
             validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
@@ -438,7 +438,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             else:
                 validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
 
-        obj, created = Food.objects.get_or_create(**validated_data)
+        obj, created = Food.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
