@@ -969,7 +969,7 @@ export default {
         appendIngredients: function () {
             let ing_list = this.paste_ingredients.split(/\r?\n/)
             let step = this.recipe.steps.findIndex((x) => x.id == this.paste_step)
-            let order = Math.max(...this.recipe.steps[step].ingredients.map((x) => x.order)) + 1
+            let order = Math.max(...(this.recipe.steps[step].ingredients.map((x) => x.order), 0)) + 1
             this.recipe.steps[step].ingredients_visible = true
             ing_list.forEach((ing) => {
                 if (ing.trim() !== "") {
