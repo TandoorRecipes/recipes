@@ -969,6 +969,7 @@ export default {
         appendIngredients: function () {
             let ing_list = this.paste_ingredients.split(/\r?\n/)
             let step = this.recipe.steps.findIndex((x) => x.id == this.paste_step)
+            let order = 0
             this.recipe.steps[step].ingredients_visible = true
             ing_list.forEach((ing) => {
                 this.genericPostAPI("api_ingredient_from_string", { text: ing }).then((result) => {
@@ -981,8 +982,10 @@ export default {
                         unit: unit,
                         food: { name: result.data.food },
                         note: result.data.note,
+                        order: order,
                     })
                 })
+                order++
             })
         },
     },
