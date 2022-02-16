@@ -212,7 +212,6 @@ export default {
                 apiClient
                     .createRecipe({ ...results.data, ...{ id: undefined, name: recipename } })
                     .then((newrecipe) => {
-                        console.log(newrecipe.data, this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
                         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
                         window.open(this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
                     })
