@@ -31,6 +31,9 @@
                         {{ $t("Print") }}
                     </button>
                 </a>
+                <a href="javascript:void(0);">
+                    <button class="dropdown-item" @click="copyToNew"><i class="fas fa-copy fa-fw"></i> {{ $t("copy_to_new") }}</button>
+                </a>
 
                 <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t("Export") }}</a>
 
@@ -201,6 +204,21 @@ export default {
         },
         addToShopping() {
             this.$bvModal.show(`shopping_${this.modal_id}`)
+        },
+        copyToNew: function () {
+            let recipename = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
+            let apiClient = new ApiApiFactory()
+            apiClient.retrieveRecipe(this.recipe.id).then((results) => {
+                apiClient
+                    .createRecipe({ ...results.data, ...{ id: undefined, name: recipename } })
+                    .then((newrecipe) => {
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        window.open(this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
+                    })
+                    .catch((error) => {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    })
+            })
         },
     },
 }
