@@ -333,6 +333,7 @@
     "ingredient_list": "Ingredient List",
     "explain": "Explain",
     "filter": "Filter",
+    "warning_duplicate_filter": "Warning: Due to technical limitations having multiple filters of the same combination (and/or/not) might yield unexpected results.",
     "reset_children": "Reset Child Inheritance",
     "reset_children_help": "Overwrite all children with values from inherited fields.  Inheritted fields of children will be set to Inherit Fields unless Children Inherit Fields is set.",
     "substitute_help": "Substitutes are considered when searching for recipes that can be made with onhand ingredients.",
