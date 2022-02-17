@@ -207,8 +207,7 @@ export default {
             if (!cancel) {
                 console.log("saving", { ...this.mealplan_settings, ...this.entryEditing })
                 this.$bvModal.hide(`edit-modal`)
-                this.$emit("save-entry", { ...this.mealplan_settings, ...this.entryEditing })
-                console.log("after emit", { ...this.mealplan_settings, ...this.entryEditing }.addshopping)
+                this.$emit("save-entry", { ...this.mealplan_settings, ...this.entryEditing, ...{ addshopping: this.entryEditing.addshopping && !this.autoMealPlan } })
             }
         },
         deleteEntry() {
