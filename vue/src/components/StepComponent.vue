@@ -54,7 +54,7 @@
                         <div class="col col-md-12">
                             <template>
                                 <div
-                                    v-if="step.file.file.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg') || recipe.file_path.includes('.gif')">
+                                    v-if="step.file.file.includes('.png') || step.file.file.includes('.jpg') || step.file.file.includes('.jpeg') || step.file.file.includes('.gif')">
                                     <b-img :src="step.file.file" fluid-grow></b-img>
                                 </div>
                                 <div v-else>
