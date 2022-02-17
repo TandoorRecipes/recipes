@@ -63,7 +63,7 @@ class TreeManager(MP_NodeManager):
     def get_or_create(self, *args, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
         try:
-            return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
+            return self.get(name__iexact=kwargs['name'], space=kwargs['space']), False
         except self.model.DoesNotExist:
             with scopes_disabled():
                 try:

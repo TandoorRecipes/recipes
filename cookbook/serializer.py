@@ -302,7 +302,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         # duplicate names might be routed to create
         name = validated_data.pop('name').strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = Keyword.objects.get_or_create(name__iexact=name, space=space, defaults=validated_data)
+        obj, created = Keyword.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     class Meta:
@@ -438,7 +438,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             else:
                 validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
 
-        obj, created = Food.objects.get_or_create(name__iexact=name, space=space, defaults=validated_data)
+        obj, created = Food.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
