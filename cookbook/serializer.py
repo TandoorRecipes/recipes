@@ -319,7 +319,7 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = Unit.objects.get_or_create(name__iexact=name, space=space, defaults=validated_data)
+        obj, created = Unit.objects.get_or_create(name=name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):

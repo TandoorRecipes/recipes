@@ -207,10 +207,24 @@ export default {
         },
         copyToNew: function () {
             let recipename = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
+
             let apiClient = new ApiApiFactory()
             apiClient.retrieveRecipe(this.recipe.id).then((results) => {
+                let recipe = { ...results.data, ...{ id: undefined, name: recipename } }
+                recipe.steps = recipe.steps.map((step) => {
+                    return {
+                        ...step,
+                        ...{
+                            id: undefined,
+                            ingredients: step.ingredients.map((ingredient) => {
+                                return { ...ingredient, ...{ id: undefined } }
+                            }),
+                        },
+                    }
+                })
+                console.log(recipe)
                 apiClient
-                    .createRecipe({ ...results.data, ...{ id: undefined, name: recipename } })
+                    .createRecipe(recipe)
                     .then((newrecipe) => {
                         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
                         window.open(this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
