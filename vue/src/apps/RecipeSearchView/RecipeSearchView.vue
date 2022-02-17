@@ -280,7 +280,7 @@
                                     <!-- keywords filter -->
                                     <h6 class="mb-0" v-if="ui.expert_mode && search.keywords_fields > 1">
                                         {{ $t("Keywords") }}</h6>
-                                    <span
+                                    <span class="text-sm-left text-warning"
                                         v-if="ui.expert_mode && search.keywords_fields > 1 && hasDuplicateFilter(search.search_keywords, search.keywords_fields)">{{
                                             $t('warning_duplicate_filter')
                                         }}</span>
@@ -358,7 +358,7 @@
                                     <!-- foods filter -->
                                     <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.foods_fields > 1">
                                         {{ $t("Foods") }}</h6>
-                                    <span
+                                    <span class="text-sm-left text-warning"
                                         v-if="ui.expert_mode && search.foods_fields > 1 && hasDuplicateFilter(search.search_foods, search.foods_fields)">{{
                                             $t('warning_duplicate_filter')
                                         }}</span>
@@ -432,7 +432,7 @@
                                     <!-- books filter -->
                                     <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.books_fields > 1">
                                         {{ $t("Books") }}</h6>
-                                    <span
+                                    <span class="text-sm-left text-warning"
                                         v-if="ui.expert_mode && search.books_fields > 1 && hasDuplicateFilter(search.search_books, search.books_fields)">{{
                                             $t('warning_duplicate_filter')
                                         }}</span>
