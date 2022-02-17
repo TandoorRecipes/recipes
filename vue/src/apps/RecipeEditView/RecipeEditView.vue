@@ -656,8 +656,8 @@ export default {
         },
         warnPageLeave: function (event) {
             if (this.recipe_changed) {
-                event.returnValue = ""
-                return ""
+                event.returnValue = "this_string_cant_be_empty_because_of_firefox"
+                return "this_string_cant_be_empty_because_of_firefox"
             }
         },
         loadRecipe: function () {
@@ -672,8 +672,8 @@ export default {
                     // set default visibility style for each component of the step
                     this.recipe.steps.forEach((s) => {
                         this.$set(s, "time_visible", s.time !== 0)
-                        this.$set(s, "ingredients_visible", s.ingredients.length > 0)
-                        this.$set(s, "instruction_visible", s.instruction !== "")
+                        this.$set(s, "ingredients_visible", s.ingredients.length > 0 || this.recipe.steps.length === 1)
+                        this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
                     })
