@@ -192,7 +192,6 @@
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(k, a) in keywordFields" :key="a">
                                                 <template #prepend v-if="ui.expert_mode">
-                                                    {{ k }} {{ search.keywords_fields }} {{ keywordFields }} {{ this.ui.enable_expert }}
                                                     <b-input-group-text style="width: 3em" @click="addField('keywords', k)">
                                                         <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4" />
                                                     </b-input-group-text>
@@ -519,11 +518,11 @@
                                                 <div v-else><i class="far fa-eye-slash"></i> {{ $t("explain") }}</div>
                                             </b-button>
                                             <b-button class="my-0" variant="link" size="sm" @click="ui.expert_mode = !ui.expert_mode">
-                                                <div v-if="!ui.enable_expert">
+                                                <div v-if="!ui.expert_mode">
                                                     <i class="fas fa-circle"></i>
                                                     {{ $t("expert_mode") }}
                                                 </div>
-                                                <div v-if="ui.enable_expert">
+                                                <div v-if="ui.expert_mode">
                                                     <i class="far fa-circle"></i>
                                                     {{ $t("simple_mode") }}
                                                 </div>
@@ -839,19 +838,19 @@ export default {
             ]
         },
         keywordFields: function () {
-            return !this.ui.enable_expert ? 1 : this.search.keywords_fields
+            return !this.ui.expert_mode ? 1 : this.search.keywords_fields
         },
         foodFields: function () {
-            return !this.ui.enable_expert ? 1 : this.search.foods_fields
+            return !this.ui.expert_mode ? 1 : this.search.foods_fields
         },
         bookFields: function () {
-            return !this.ui.enable_expert ? 1 : this.search.books_fields
+            return !this.ui.expert_mode ? 1 : this.search.books_fields
         },
         ratingFields: function () {
-            return !this.ui.enable_expert ? 1 : this.search.rating_fields
+            return !this.ui.expert_mode ? 1 : this.search.rating_fields
         },
         unitFields: function () {
-            return !this.ui.enable_expert ? 1 : this.search.units_fields
+            return !this.ui.expert_mode ? 1 : this.search.units_fields
         },
         sortOptions: function () {
             let sort_order = []
@@ -960,7 +959,7 @@ export default {
         "ui.page_size": _debounce(function () {
             this.refreshData(false)
         }, 300),
-        "ui.enable_expert": function (newVal, oldVal) {
+        "ui.expert_mode": function (newVal, oldVal) {
             if (!newVal) {
                 this.search.search_keywords = this.search.search_keywords.map((x) => {
                     return { ...x, not: false }
