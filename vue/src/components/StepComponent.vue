@@ -32,15 +32,16 @@
 
             <div class="row">
                 <!-- ingredients table -->
-                <div class="col col-md-4" v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
-                    <table class="table table-sm" >
+                <div class="col col-md-4"
+                     v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
+                    <table class="table table-sm">
                         <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
                     </table>
                 </div>
 
                 <div class="col"
-                     :class="{ 'col-md-8': recipe.steps.length > 1, 'col-md-12': recipe.steps.length <= 1 }">
+                     :class="{ 'col-md-8 col-12': recipe.steps.length > 1, 'col-md-12 col-12': recipe.steps.length <= 1 }">
                     <!-- step text -->
                     <div class="row">
                         <div class="col col-md-12">
