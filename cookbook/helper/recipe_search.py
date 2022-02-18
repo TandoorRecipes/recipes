@@ -513,36 +513,38 @@ class RecipeSearch():
             count_onhand=Count('steps__ingredients__food__pk', filter=onhand_filter, distinct=True),
             count_ignore_shopping=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__ignore_shopping=True,
                                                                                  steps__ingredients__food__recipe__isnull=True), distinct=True),
+            has_child_sub=Case(When(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users), then=Value(1)), default=Value(0)),
+            has_sibling_sub=Case(When(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users), then=Value(1)), default=Value(0))
         ).annotate(missingfood=F('count_food')-F('count_onhand')-F('count_ignore_shopping')).filter(missingfood=missing)
         self._queryset = self._queryset.distinct().filter(id__in=makenow_recipes.values('id'))
 
-    @staticmethod
+    @ staticmethod
     def __children_substitute_filter(shopping_users=None):
         children_onhand_subquery = Food.objects.filter(
             path__startswith=Substr(OuterRef('path'), 1, Food.steplen*OuterRef('depth')),
             depth__gt=OuterRef('depth'),
             onhand_users__in=shopping_users
-        ).annotate(child_onhand=Count((Substr(OuterRef('path'), 1, Food.steplen*OuterRef('depth'))), distinct=True)).values('child_onhand')
+        ).annotate(child_onhand=Coalesce(Func('pk', function='Count'), 0)).values('child_onhand')
         return Food.objects.exclude(  # list of foods that are onhand and children of: foods that are not onhand and are set to use children as substitutes
             Q(onhand_users__in=shopping_users)
             | Q(ignore_shopping=True, recipe__isnull=True)
             | Q(substitute__onhand_users__in=shopping_users)
         ).exclude(depth=1, numchild=0).filter(substitute_children=True
-                                              ).annotate(child_onhand=Coalesce(Subquery(children_onhand_subquery), 0))
+                                              ).annotate(child_onhand=Coalesce(Subquery(children_onhand_subquery), 0)).exclude(child_onhand=0)
 
-    @staticmethod
+    @ staticmethod
     def __sibling_substitute_filter(shopping_users=None):
         sibling_onhand_subquery = Food.objects.filter(
             path__startswith=Substr(OuterRef('path'), 1, Food.steplen*(OuterRef('depth')-1)),
             depth=OuterRef('depth'),
             onhand_users__in=shopping_users
-        ).annotate(sibling_onhand=Count(Substr(OuterRef('path'), 1, Food.steplen*(OuterRef('depth')-1)), distinct=True)).values('sibling_onhand')
+        ).annotate(sibling_onhand=Coalesce(Func('pk', function='Count'), 0)).values('sibling_onhand')
         return Food.objects.exclude(  # list of foods that are onhand and siblings of: foods that are not onhand and are set to use siblings as substitutes
             Q(onhand_users__in=shopping_users)
             | Q(ignore_shopping=True, recipe__isnull=True)
             | Q(substitute__onhand_users__in=shopping_users)
         ).exclude(depth=1, numchild=0).filter(substitute_siblings=True
-                                              ).annotate(sibling_onhand=Coalesce(Subquery(sibling_onhand_subquery), 0))
+                                              ).annotate(sibling_onhand=Coalesce(Subquery(sibling_onhand_subquery), 0)).exclude(sibling_onhand=0)
 
 
 class RecipeFacet():
