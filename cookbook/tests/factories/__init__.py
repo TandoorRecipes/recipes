@@ -1,4 +1,5 @@
 
+from datetime import date
 from decimal import Decimal
 
 import factory
@@ -9,7 +10,7 @@ from django_scopes import scopes_disabled
 from faker import Factory as FakerFactory
 from pytest_factoryboy import register
 
-from cookbook.models import Step
+from cookbook.models import Recipe, Step
 
 # this code will run immediately prior to creating the model object useful when you want a reverse relationship
 # log = factory.RelatedFactory(
@@ -111,6 +112,15 @@ class FoodFactory(factory.django.DjangoModelFactory):
     )
     space = factory.SubFactory(SpaceFactory)
 
+    @factory.post_generation
+    def users_onhand(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for user in extracted:
+                self.onhand_users.add(user)
+
     class Params:
         has_category = False
         has_recipe = False
@@ -118,6 +128,33 @@ class FoodFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'cookbook.Food'
         django_get_or_create = ('name', 'space',)
+
+
+@register
+class RecipeBookFactory(factory.django.DjangoModelFactory):
+    """RecipeBook factory."""
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3, variable_nb_words=False))
+    description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
+    icon = None
+    # shared = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    filter = None
+    space = factory.SubFactory(SpaceFactory)
+
+    class Meta:
+        model = 'cookbook.RecipeBook'
+        django_get_or_create = ('name', 'space',)
+
+
+@register
+class RecipeBookEntryFactory(factory.django.DjangoModelFactory):
+    """RecipeBookEntry factory."""
+    book = factory.SubFactory(RecipeBookFactory, space=factory.SelfAttribute('..recipe.space'))
+    recipe = None
+
+    class Meta:
+        model = 'cookbook.RecipeBookEntry'
+        django_get_or_create = ('book', 'recipe',)
 
 
 @register
@@ -241,6 +278,15 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
     delay_until = None
     space = factory.SubFactory(SpaceFactory)
 
+    @classmethod
+    def _create(cls, target_class, *args, **kwargs):  # override create to prevent auto_add_now from changing the created_at date
+        created_at = kwargs.pop('created_at', None)
+        obj = super(ShoppingListEntryFactory, cls)._create(target_class, *args, **kwargs)
+        if created_at is not None:
+            obj.created_at = created_at
+            obj.save()
+            return obj
+
     class Params:
         has_mealplan = False
 
@@ -288,8 +334,6 @@ class StepFactory(factory.django.DjangoModelFactory):
                     has_recipe = False
                 self.ingredients.add(IngredientFactory(space=self.space, food__has_recipe=has_recipe))
         num_header = kwargs.get('header', 0)
-        #######################################################
-        #######################################################
         if num_header > 0:
             for i in range(num_header):
                 self.ingredients.add(IngredientFactory(food=None, unit=None, amount=0, is_header=True, space=self.space))
@@ -315,8 +359,18 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     waiting_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
     internal = False
     created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
-    created_at = factory.LazyAttribute(lambda x: faker.date_this_decade())
+    created_at = factory.LazyAttribute(lambda x: faker.date_between_dates(date_start=date(2000, 1, 1), date_end=date(2020, 12, 31)))
     space = factory.SubFactory(SpaceFactory)
+
+    @classmethod
+    def _create(cls, target_class, *args, **kwargs):  # override create to prevent auto_add_now from changing the created_at date
+        created_at = kwargs.pop('created_at', None)
+        # updated_at = kwargs.pop('updated_at', None)
+        obj = super(RecipeFactory, cls)._create(target_class, *args, **kwargs)
+        if created_at is not None:
+            obj.created_at = created_at
+            obj.save()
+            return obj
 
     @factory.post_generation
     def keywords(self, create, extracted, **kwargs):
@@ -368,3 +422,47 @@ class RecipeFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Recipe'
+
+
+@register
+class CookLogFactory(factory.django.DjangoModelFactory):
+    """CookLog factory."""
+    recipe = factory.SubFactory(RecipeFactory, space=factory.SelfAttribute('..space'))
+    created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    created_at = factory.LazyAttribute(lambda x: faker.date_this_decade())
+    rating = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=5))
+    servings = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=32))
+    space = factory.SubFactory(SpaceFactory)
+
+    @classmethod
+    def _create(cls, target_class, *args, **kwargs):  # override create to prevent auto_add_now from changing the created_at date
+        created_at = kwargs.pop('created_at', None)
+        obj = super(CookLogFactory, cls)._create(target_class, *args, **kwargs)
+        if created_at is not None:
+            obj.created_at = created_at
+            obj.save()
+            return obj
+
+    class Meta:
+        model = 'cookbook.CookLog'
+
+
+@register
+class ViewLogFactory(factory.django.DjangoModelFactory):
+    """ViewLog factory."""
+    recipe = factory.SubFactory(RecipeFactory, space=factory.SelfAttribute('..space'))
+    created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    created_at = factory.LazyAttribute(lambda x: faker.past_datetime(start_date='-365d'))
+    space = factory.SubFactory(SpaceFactory)
+
+    @classmethod
+    def _create(cls, target_class, *args, **kwargs):  # override create to prevent auto_add_now from changing the created_at date
+        created_at = kwargs.pop('created_at', None)
+        obj = super(ViewLogFactory, cls)._create(target_class, *args, **kwargs)
+        if created_at is not None:
+            obj.created_at = created_at
+            obj.save()
+            return obj
+
+    class Meta:
+        model = 'cookbook.ViewLog'

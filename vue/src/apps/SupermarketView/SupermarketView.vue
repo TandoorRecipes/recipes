@@ -100,7 +100,7 @@ export default {
         this.loadInitial()
     },
     methods: {
-        loadInitial: function() {
+        loadInitial: function () {
             let apiClient = new ApiApiFactory()
             apiClient.listSupermarkets().then((results) => {
                 this.supermarkets = results.data
@@ -110,7 +110,7 @@ export default {
                 this.selectable_categories = this.categories
             })
         },
-        selectedCategoriesChanged: function(data) {
+        selectedCategoriesChanged: function (data) {
             let apiClient = new ApiApiFactory()
 
             if ("removed" in data) {
@@ -133,23 +133,22 @@ export default {
             if ("moved" in data || "added" in data) {
                 this.supermarket_categories.forEach((element, index) => {
                     let relation = this.selected_supermarket.category_to_supermarket.filter((el) => el.category.id === element.id)[0]
-                    console.log(relation)
                     apiClient.partialUpdateSupermarketCategoryRelation(relation.id, { order: index })
                 })
             }
         },
-        selectedSupermarketChanged: function(supermarket, id) {
+        selectedSupermarketChanged: function (supermarket, id) {
             this.supermarket_categories = []
             this.selectable_categories = this.categories
 
             for (let i of supermarket.category_to_supermarket) {
                 this.supermarket_categories.push(i.category)
-                this.selectable_categories = this.selectable_categories.filter(function(el) {
+                this.selectable_categories = this.selectable_categories.filter(function (el) {
                     return el.id !== i.category.id
                 })
             }
         },
-        supermarketModalOk: function() {
+        supermarketModalOk: function () {
             let apiClient = new ApiApiFactory()
             if (this.selected_supermarket.new) {
                 apiClient.createSupermarket({ name: this.selected_supermarket.name }).then((results) => {
@@ -160,7 +159,7 @@ export default {
                 apiClient.partialUpdateSupermarket(this.selected_supermarket.id, { name: this.selected_supermarket.name })
             }
         },
-        categoryModalOk: function() {
+        categoryModalOk: function () {
             let apiClient = new ApiApiFactory()
             if (this.selected_category.new) {
                 apiClient.createSupermarketCategory({ name: this.selected_category.name }).then((results) => {

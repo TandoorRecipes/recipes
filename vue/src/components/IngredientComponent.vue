@@ -33,6 +33,7 @@
                 </div>
             </td>
             <td v-else-if="show_shopping" class="text-right text-nowrap">
+                <shopping-badge v-if="ingredient.food.ignore_shopping" :item="shoppingBadgeFood" />
                 <b-button
                     v-if="!ingredient.food.ignore_shopping"
                     class="btn text-decoration-none fas fa-shopping-cart px-2 user-select-none"
@@ -56,10 +57,11 @@
 <script>
 import { calculateAmount, ResolveUrlMixin, ApiMixin } from "@/utils/utils"
 import OnHandBadge from "@/components/Badges/OnHand"
+import ShoppingBadge from "@/components/Badges/Shopping"
 
 export default {
     name: "IngredientComponent",
-    components: { OnHandBadge },
+    components: { OnHandBadge, ShoppingBadge },
     props: {
         ingredient: Object,
         ingredient_factor: { type: Number, default: 1 },
@@ -87,6 +89,11 @@ export default {
         this.shop = this.ingredient?.shop
     },
     computed: {
+        shoppingBadgeFood() {
+            // shopping badge is hidden when ignore_shopping=true.
+            // force true in this context to allow adding to shopping list from recipe view
+            return { ...this.ingredient.food, ignore_shopping: false }
+        },
         ShoppingPopover() {
             if (this.ingredient?.shopping_status == false) {
                 return this.$t("NotInShopping", { food: this.ingredient.food.name })
