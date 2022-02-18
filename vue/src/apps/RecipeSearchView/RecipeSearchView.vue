@@ -1029,7 +1029,7 @@ export default {
             }
             // if selecting a filter, reset all current selections
             if (obj.var === "search_filter") {
-                this.resetSearch(this.search.search_filter)
+                this.resetSearch(true)
             } else {
                 this.refreshData(false)
             }
@@ -1057,36 +1057,14 @@ export default {
             this.search.createdon = undefined
             this.search.updatedon = undefined
 
-            let fieldnum = {
-                keywords: 1,
-                foods: 1,
-                books: 1,
-            }
+            this.search.keywords_fields = 1
+            this.search.foods_fields = 1
+            this.search.books_fields = 1
 
-            if (filter) {
-                // this can be simplified by calling recipe API {query: {filter: filter_id}} but you lose loading all of the params into the UI
-                filter = JSON.parse(filter.search)
-                let fields = ["keywords", "foods", "books"]
-                let operators = ["_or", "_and", "_or_not", "_and_not"]
-                fields.forEach((field) => {
-                    let x = 0
-                    operators.forEach((operator) => {
-                        if (filter[`${field}${operator}`].length > 0) {
-                            this.search[`search_${field}`][x].items = filter[`${field}${operator}`]
-                            this.search[`search_${field}`][x].operator = operator.includes("or")
-                            this.search[`search_${field}`][x].not = operator.includes("not")
-                            x = x + 1
-                        }
-                    })
-                    fieldnum[field] = fieldnum[field] + x
-                })
-            } else {
+            if (!filter) {
                 this.search.search_filter = undefined
             }
 
-            this.search.keywords_fields = fieldnum["keywords"]
-            this.search.foods_fields = fieldnum["foods"]
-            this.search.books_fields = fieldnum["books"]
             // this.search.rating_fields = 1
             // this.search.units_fields = 1
             this.refreshData(false)
@@ -1150,6 +1128,11 @@ export default {
             return
         },
         buildParams: function (random) {
+            let params = { options: { query: {} }, page: this.search.pagination_page, pageSize: this.ui.page_size }
+            if (this.search.search_filter) {
+                params.options.query.filter = this.search.search_filter.id
+                return params
+            }
             this.random_search = random
             let rating = this.search.search_rating
             if (rating !== undefined && !this.search.search_rating_gte) {
@@ -1178,8 +1161,8 @@ export default {
                 timescooked = timescooked * -1
             }
             // when a filter is selected - added search params will be added to the filter
-            let params = {
-                options: { query: {} },
+            params = {
+                ...params,
                 ...this.addFields("keywords"),
                 ...this.addFields("foods"),
                 ...this.addFields("books"),
@@ -1194,8 +1177,6 @@ export default {
                 createdon: createdon,
                 updatedon: updatedon,
                 viewedon: viewedon,
-                page: this.search.pagination_page,
-                pageSize: this.ui.page_size,
             }
 
             params.options.query = {
@@ -1205,9 +1186,6 @@ export default {
             if (!this.searchFiltered()) {
                 params.options.query.num_recent = this.ui.recently_viewed //TODO refactor as num_recent
                 params._new = this.ui.sort_by_new
-            }
-            if (this.search.search_filter) {
-                params.options.query.filter = this.search.search_filter.id
             }
             return params
         },
