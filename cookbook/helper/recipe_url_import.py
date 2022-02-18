@@ -378,7 +378,7 @@ def get_minutes(time_text):
         re.IGNORECASE,
     )
     try:
-        return int(element)
+        return int(time_text)
     except Exception:
         pass
 
@@ -388,6 +388,10 @@ def get_minutes(time_text):
         time_text = time_text.split("-", 2)[
             1
         ]  # sometimes formats are like this: '12-15 minutes'
+    if " to " in time_text:
+        time_text = time_text.split("to", 2)[
+            1
+        ]  # sometimes formats are like this: '12 to 15 minutes'
 
     empty = ''
     for x in time_text:
@@ -401,7 +405,7 @@ def get_minutes(time_text):
 
     minutes = int(matched.groupdict().get("minutes") or 0)
 
-    if "/" in (hours := matched.groupdict().get("hours")):
+    if "/" in (hours := matched.groupdict().get("hours") or ''):
         number = hours.split(" ")
         if len(number) == 2:
             minutes += 60*int(number[0])
