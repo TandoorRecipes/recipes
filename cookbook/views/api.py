@@ -492,7 +492,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
@@ -511,7 +511,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     """
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         queryset = self.queryset.filter(
