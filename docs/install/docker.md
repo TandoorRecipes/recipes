@@ -371,7 +371,6 @@ location /media/ {
 
 }
 
-
 location /static/ {
     include /config/nginx/proxy.conf;
     alias /staticfiles/;
