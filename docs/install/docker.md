@@ -354,7 +354,7 @@ follow these instructions:
 If hosting under a sub-path you might want to change the default nginx config (which gets mounted through the named volume from the application container into the nginx container)
 with the following config. 
 
-```
+```nginx
 location /my_app { # change to subfolder name
     include /config/nginx/proxy.conf; 
     proxy_pass https://mywebapp.com/; # change to your host name:port
@@ -370,7 +370,6 @@ location /media/ {
     client_max_body_size 16M;
 
 }
-
 
 location /static/ {
     include /config/nginx/proxy.conf;

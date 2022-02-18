@@ -108,6 +108,7 @@ class ExtendedRecipeMixin():
     '''
     ExtendedRecipe annotates a queryset with recipe_image and recipe_count values
     '''
+
     @classmethod
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
         extended = str2bool(request.query_params.get('extended', None))
@@ -182,8 +183,8 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
 
 
 class MergeMixin(ViewSetMixin):
-    @ decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
-    @ decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
+    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def merge(self, request, pk, target):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
 
@@ -279,8 +280,8 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class, tree=True)
 
-    @ decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
-    @ decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
+    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def move(self, request, pk, parent):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
         if self.model.node_order_by:
@@ -460,7 +461,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
         return self.queryset.annotate(shopping_status=Exists(shopping_status)).prefetch_related('onhand_users', 'inherit_fields').select_related('recipe', 'supermarket_category')
 
-    @ decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
+    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
         if self.request.space.demo:
@@ -538,7 +539,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         queryset = self.queryset.filter(
