@@ -14,7 +14,7 @@ from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
 from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields,
-                             SearchPreference, ViewLog)
+                             SearchPreference, ViewLog, RecipeBook)
 from recipes import settings
 
 
@@ -27,9 +27,12 @@ class RecipeSearch():
         self._request = request
         self._queryset = None
         if f := params.get('filter', None):
-            filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) | Q(shared=self._request.user)).first()
-            if filter:
-                self._params = {**json.loads(filter.search)}
+            custom_filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) | Q(shared=self._request.user)).first()
+            if not custom_filter:
+                if book := RecipeBook.objects.filter(space=self._request.space, filter=f).filter(Q(created_by=self._request.user) | Q(shared=self._request.user)).first():
+                    custom_filter = book.filter
+            if custom_filter:
+                self._params = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
             else:
                 self._params = {**(params or {})}
