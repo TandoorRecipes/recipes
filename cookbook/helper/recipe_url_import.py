@@ -1,15 +1,17 @@
 import random
 import re
 from html import unescape
+from unicodedata import decomposition
 
 from django.utils.dateparse import parse_duration
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
-from recipe_scrapers._utils import get_minutes
 
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Keyword
+
+# from recipe_scrapers._utils import get_minutes  ## temporary until/unless upstream incorporates get_minutes() PR
 
 
 def get_from_scraper(scrape, request):
@@ -364,6 +366,51 @@ def normalize_string(string):
     unescaped_string = re.sub(r'\n\s*\n', '\n\n', unescaped_string)
     unescaped_string = unescaped_string.replace("\xa0", " ").replace("\t", " ").strip()
     return unescaped_string
+
+# TODO deprecate when merged into recipe_scapers
+
+
+def get_minutes(time_text):
+    if time_text is None:
+        return 0
+    TIME_REGEX = re.compile(
+        r"(\D*(?P<hours>\d*.?(\s\d)?\/?\d+)\s*(hours|hrs|hr|h|óra))?(\D*(?P<minutes>\d+)\s*(minutes|mins|min|m|perc))?",
+        re.IGNORECASE,
+    )
+    try:
+        return int(element)
+    except Exception:
+        pass
+
+    if time_text.startswith("P") and "T" in time_text:
+        time_text = time_text.split("T", 2)[1]
+    if "-" in time_text:
+        time_text = time_text.split("-", 2)[
+            1
+        ]  # sometimes formats are like this: '12-15 minutes'
+
+    empty = ''
+    for x in time_text:
+        if 'fraction' in decomposition(x):
+            f = decomposition(x[-1:]).split()
+            empty += f" {f[1].replace('003', '')}/{f[3].replace('003', '')}"
+        else:
+            empty += x
+    time_text = empty
+    matched = TIME_REGEX.search(time_text)
+
+    minutes = int(matched.groupdict().get("minutes") or 0)
+
+    if "/" in (hours := matched.groupdict().get("hours")):
+        number = hours.split(" ")
+        if len(number) == 2:
+            minutes += 60*int(number[0])
+        fraction = number[-1:][0].split("/")
+        minutes += 60 * float(int(fraction[0])/int(fraction[1]))
+    else:
+        minutes += 60 * float(hours)
+
+    return int(minutes)
 
 
 def iso_duration_to_minutes(string):
