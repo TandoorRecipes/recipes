@@ -362,17 +362,18 @@ def user_settings(request):
                         sp.istartswith.clear()
                         sp.trigram.set([SearchFields.objects.get(name='Name')])
                         sp.fulltext.clear()
-                        sp.trigram_threshold = 0.1
+                        sp.trigram_threshold = 0.2
 
                     if search_form.cleaned_data['preset'] == 'precise':
                         sp.search = SearchPreference.WEB
                         sp.lookup = True
                         sp.unaccent.set(SearchFields.objects.all())
-                        sp.icontains.clear()
+                        # full text on food is very slow, add search_vector field and index it (including Admin functions and postsave signal to rebuild index)
+                        sp.icontains.set([SearchFields.objects.get(name__in=['Name', 'Ingredients'])])
                         sp.istartswith.set([SearchFields.objects.get(name='Name')])
                         sp.trigram.clear()
-                        sp.fulltext.set(SearchFields.objects.all())
-                        sp.trigram_threshold = 0.1
+                        sp.fulltext.set(SearchFields.objects.filter(name__in=['Ingredients']))
+                        sp.trigram_threshold = 0.2
 
                     sp.save()
         elif 'shopping_form' in request.POST:

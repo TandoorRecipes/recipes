@@ -7,12 +7,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
-from cookbook.helper.permission_helper import (GroupRequiredMixin,
-                                               OwnerRequiredMixin,
-                                               group_required)
-from cookbook.models import (Comment, InviteLink, MealPlan, Recipe,
-                             RecipeBook, RecipeBookEntry, RecipeImport,
-                             Storage, Sync)
+from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
+from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
+                             RecipeImport, Storage, Sync)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud

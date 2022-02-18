@@ -6,11 +6,7 @@
                     <div class="row justify-content-center">
                         <div class="col-12 col-lg-10 mt-3 mb-3">
                             <b-input-group>
-                                <b-input
-                                    class="form-control form-control-lg form-control-borderless form-control-search"
-                                    v-model="search"
-                                    v-bind:placeholder="$t('Search')"
-                                ></b-input>
+                                <b-input class="form-control form-control-lg form-control-borderless form-control-search" v-model="search" v-bind:placeholder="$t('Search')"></b-input>
                                 <b-input-group-append>
                                     <b-button variant="primary" v-b-tooltip.hover :title="$t('Create')" @click="createNew">
                                         <i class="fas fa-plus"></i>
@@ -54,6 +50,7 @@
                     :key="`slider_${book.id}`"
                     v-if="current_book === book.id && !loading"
                     v-on:refresh="refreshData"
+                    @reload="openBook(current_book, true)"
                 ></cookbook-slider>
             </transition>
         </div>
@@ -68,13 +65,13 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import { ApiApiFactory } from "@/utils/openapi/api"
 import CookbookSlider from "@/components/CookbookSlider"
 import LoadingSpinner from "@/components/LoadingSpinner"
-import { StandardToasts } from "@/utils/utils"
+import { StandardToasts, ApiMixin } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "CookbookView",
-    mixins: [],
+    mixins: [ApiMixin],
     components: { LoadingSpinner, CookbookSlider },
     data() {
         return {
@@ -105,8 +102,8 @@ export default {
                 this.cookbooks = result.data
             })
         },
-        openBook: function (book) {
-            if (book === this.current_book) {
+        openBook: function (book, keepopen = false) {
+            if (book === this.current_book && !keepopen) {
                 this.current_book = undefined
                 this.recipes = []
                 return
@@ -115,8 +112,13 @@ export default {
             let apiClient = new ApiApiFactory()
 
             this.current_book = book
+            const book_contents = this.cookbooks.filter((b) => {
+                return b.id == book
+            })[0]
+
             apiClient.listRecipeBookEntrys({ query: { book: book } }).then((result) => {
                 this.recipes = result.data
+                if (book_contents.filter) this.appendRecipeFilter(1, book_contents)
                 this.loading = false
             })
         },
@@ -133,6 +135,25 @@ export default {
                 .catch((error) => {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
                 })
+        },
+        appendRecipeFilter: function (page, book) {
+            let params = { page: page, options: { query: { filter: book.filter.id } } }
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((results) => {
+                let recipes = results.data.results.map((x) => {
+                    return {
+                        id: (Math.random() * 1999) ^ 1999,
+                        book: book.id,
+                        book_content: book,
+                        recipe: x.id,
+                        recipe_content: x,
+                    }
+                })
+
+                this.recipes.push(...recipes)
+                if (results.data.next) {
+                    this.appendRecipeFilter(page + 1, book)
+                }
+            })
         },
     },
     directives: {

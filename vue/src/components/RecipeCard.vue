@@ -71,7 +71,7 @@ Vue.prototype.moment = moment
 export default {
     name: "RecipeCard",
     mixins: [ResolveUrlMixin],
-    components: { LastCooked, RecipeRating, KeywordsComponent, RecipeContextMenu, IngredientsCard },
+    components: { LastCooked, RecipeRating, KeywordsComponent, "recipe-context-menu": RecipeContextMenu, IngredientsCard },
     props: {
         recipe: Object,
         meal_plan: Object,
