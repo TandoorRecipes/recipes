@@ -647,11 +647,7 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    with scopes_disabled():
-        result = ShoppingList.objects.filter(
-            Q(created_by=request.user) | Q(shared=request.user)).filter(
-            space=request.space).values().distinct()
-    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
+    return render(request, 'test.html', {})
 
 
 def test2(request):
