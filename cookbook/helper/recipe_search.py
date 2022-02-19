@@ -27,10 +27,10 @@ class RecipeSearch():
         self._request = request
         self._queryset = None
         if f := params.get('filter', None):
-            filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) |
+            custom_filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) |
                                                                                          Q(shared=self._request.user) | Q(recipebook__shared=self._request.user)).first()
-            if filter:
-                self._params = {**json.loads(filter.search)}
+            if custom_filter:
+                self._params = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
             else:
                 self._params = {**(params or {})}
