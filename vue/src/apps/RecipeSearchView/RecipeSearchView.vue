@@ -845,7 +845,7 @@
                     </div>
                     <div class="col-md-2 d-none d-md-block"></div>
                 </div>
-                <div v-else>
+                <div v-if="recipes.length < 1 && !recipes_loading">
                     <div class="row mt-5">
                         <div class="col col-md-12 text-center">
                             <h4 class="text-muted"><i class="far fa-eye"></i> {{ $t('search_no_recipes') }}</h4>
@@ -918,6 +918,7 @@ export default {
         return {
             // this.Models and this.Actions inherited from ApiMixin
             recipes: [],
+            recipes_loading: true,
             facets: {Books: [], Foods: [], Keywords: []},
             meal_plans: [],
             last_viewed_recipes: [],
@@ -1200,6 +1201,7 @@ export default {
     methods: {
         // this.genericAPI inherited from ApiMixin
         refreshData: _debounce(function (random) {
+            this.recipes_loading = true
             let params = this.buildParams(random)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
@@ -1214,6 +1216,7 @@ export default {
                         this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
                         this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
                     }
+                    this.recipes_loading = false
                 })
                 .then(() => {
                     this.$nextTick(function () {
