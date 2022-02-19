@@ -926,6 +926,7 @@ class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
             space=self.request.space).distinct()
         return super().get_queryset()
 
+
 # -------------- non django rest api views --------------------
 
 
@@ -1063,45 +1064,45 @@ def get_plan_ical(request, from_date, to_date):
 
 @group_required('user')
 def recipe_from_source(request):
-    url = request.POST.get('url', None)
-    data = request.POST.get('data', None)
-    mode = request.POST.get('mode', None)
-    auto = request.POST.get('auto', 'true')
+    """
+    function to retrieve a recipe from a given url or source string
+    :param request: standard request with additional post parameters
+            - url: url to use for importing recipe
+            - data: if no url is given recipe is imported from provided source data
+            - auto: true to return just the recipe as json, false to return source json, html and images as well
+    :return:
+    """
+    request_payload = json.loads(request.body.decode('utf-8'))
+    url = request_payload.get('url', None)
+    data = request_payload.get('data', None)
+    auto = True if request_payload.get('auto', 'true') == 'true' else False
 
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
-    }
+    # headers to use for request to external sites
+    external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
 
-    if (not url and not data) or (mode == 'url' and not url) or (mode == 'source' and not data):
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('Nothing to do.')
-            },
-            status=400
-        )
+    if not url and not data:
+        return JsonResponse({
+            'error': True,
+            'msg': _('Nothing to do.')
+        }, status=400)
 
-    if mode == 'url' and auto == 'true':
+    # in auto mode scrape url directly with recipe scrapers library
+    if url and auto:
         try:
             scrape = scrape_me(url)
         except (WebsiteNotImplementedError, AttributeError):
             try:
                 scrape = scrape_me(url, wild_mode=True)
             except NoSchemaFoundInWildMode:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
-                    },
-                    status=400)
-        except ConnectionError:
-            return JsonResponse(
-                {
+                return JsonResponse({
                     'error': True,
-                    'msg': _('The requested page could not be found.')
-                },
-                status=400
-            )
+                    'msg': _('The requested site provided malformed data and cannot be read.')
+                }, status=400)
+        except ConnectionError:
+            return JsonResponse({
+                'error': True,
+                'msg': _('The requested page could not be found.')
+            }, status=400)
 
         try:
             instructions = scrape.instructions()
@@ -1111,38 +1112,30 @@ def recipe_from_source(request):
             ingredients = scrape.ingredients()
         except Exception:
             ingredients = []
+
         if len(ingredients) + len(instructions) == 0:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _(
-                        'The requested site does not provide any recognized data format to import the recipe from.')
-                    # noqa: E501
-                },
-                status=400)
+            return JsonResponse({
+                'error': True,
+                'msg': _('The requested site does not provide any recognized data format to import the recipe from.')
+            }, status=400)
         else:
             return JsonResponse({"recipe_json": get_from_scraper(scrape, request)})
-    elif (mode == 'source') or (mode == 'url' and auto == 'false'):
+    elif data or (url and not auto):
+        # in manual mode request complete page to return it later
         if not data or data == 'undefined':
             try:
-                data = requests.get(url, headers=HEADERS).content
+                data = requests.get(url, headers=external_request_headers).content
             except requests.exceptions.ConnectionError:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('Connection Refused.')
-                    },
-                    status=400
-                )
+                return JsonResponse({
+                    'error': True,
+                    'msg': _('Connection Refused.')
+                }, status=400)
         recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request)
         if len(recipe_tree) == 0 and len(recipe_json) == 0:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _('No usable data could be found.')
-                },
-                status=400
-            )
+            return JsonResponse({
+                'error': True,
+                'msg': _('No usable data could be found.')
+            }, status=400)
         else:
             return JsonResponse({
                 'recipe_tree': recipe_tree,
@@ -1152,13 +1145,10 @@ def recipe_from_source(request):
             })
 
     else:
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('I couldn\'t find anything to do.')
-            },
-            status=400
-        )
+        return JsonResponse({
+            'error': True,
+            'msg': _('I couldn\'t find anything to do.')
+        }, status=400)
 
 
 @group_required('admin')

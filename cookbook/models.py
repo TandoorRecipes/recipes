@@ -591,6 +591,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
 
+    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
+
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
@@ -673,9 +675,9 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
-    nutrition = models.ForeignKey(
-        NutritionInformation, blank=True, null=True, on_delete=models.CASCADE
-    )
+    nutrition = models.ForeignKey( NutritionInformation, blank=True, null=True, on_delete=models.CASCADE )
+
+    source_url = models.CharField(max_length=1024, default=None, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
