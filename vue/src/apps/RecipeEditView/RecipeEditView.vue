@@ -308,6 +308,8 @@
                                                 <draggable :list="step.ingredients" group="ingredients" :empty-insert-threshold="10" handle=".handle" @sort="sortIngredients(step)">
                                                     <div v-for="(ingredient, index) in step.ingredients" :key="ingredient.id">
                                                         <hr class="d-md-none" />
+                                                        <!-- TODO improve rendering/add switch to toggle on/off -->
+                                                        <div class="small text-muted" v-if="ingredient.original_text">{{ingredient.original_text}}</div>
                                                         <div class="d-flex">
                                                             <div class="flex-grow-0 handle align-self-start">
                                                                 <button type="button" class="btn btn-lg shadow-none pr-0 pl-1 pr-md-2 pl-md-2"><i class="fas fa-arrows-alt-v"></i></button>

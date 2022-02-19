@@ -483,7 +483,7 @@ class IngredientSerializer(WritableNestedModelSerializer):
         model = Ingredient
         fields = (
             'id', 'food', 'unit', 'amount', 'note', 'order',
-            'is_header', 'no_amount'
+            'is_header', 'no_amount', 'original_text'
         )
 
 

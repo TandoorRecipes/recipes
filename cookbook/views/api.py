@@ -1138,10 +1138,10 @@ def recipe_from_source(request):
             }, status=400)
         else:
             return JsonResponse({
-                'recipe_tree': recipe_tree,
                 'recipe_json': recipe_json,
+                'recipe_tree': recipe_tree,
                 'recipe_html': recipe_html,
-                'images': images,
+                'recipe_images': images,
             })
 
     else:

@@ -746,6 +746,12 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     no_amount?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Ingredient
+     */
+    original_text?: string | null;
 }
 /**
  * 
@@ -1905,6 +1911,12 @@ export interface RecipeIngredients {
      * @memberof RecipeIngredients
      */
     no_amount?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    original_text?: string | null;
 }
 /**
  * 
