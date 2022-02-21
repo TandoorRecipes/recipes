@@ -34,13 +34,41 @@
                             <div class="row">
                                 <div class="col col-md-12" v-if="recipe_json !== undefined">
                                     Images
+
+                                    <div class="row">
+                                        <div class="col col-md-12 text-center">
+                                            <b-img rounded fluid :src="recipe_json.image"
+                                                   style="max-height: 30vh"></b-img>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col col-md-12 text-center">
+                                            <small class="text-muted">Click the image you want to import for this
+                                                recipe</small> <!-- TODO localize -->
+                                        </div>
+                                        <div class="col col-md-12 text-center">
+                                            <b-img v-for="i in recipe_images" rounded thumbnail fluid :src="i"
+                                                   style="max-height: 10vh" v-bind:key="i"
+                                                   @click="recipe_json.image = i"></b-img>
+                                        </div>
+                                    </div>
+
+
                                     Keywords
                                     <ul>
-                                       <li v-for="k in recipe_json.keywords" v-bind:key="k">{{k}}</li>
+                                        <li v-for="k in recipe_json.keywords" v-bind:key="k.name">{{ k.label }}</li>
+                                    </ul>
+                                    unused
+                                    <ul>
+                                        <li v-for="k in recipe_json.unused_keywords" v-bind:key="k.name">{{
+                                                k.label
+                                            }}
+                                        </li>
                                     </ul>
                                     Steps
                                     <ul>
-                                       <li v-for="s in recipe_json.steps" v-bind:key="s">{{s}}</li>
+                                        <li v-for="s in recipe_json.steps" v-bind:key="s">{{ s }}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -119,8 +147,14 @@ export default {
         importRecipe: function () {
             let apiFactory = new ApiApiFactory()
             apiFactory.createRecipe(this.recipe_json).then(response => {
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                window.location = resolveDjangoUrl('edit_recipe', response.data.id)
+                let recipe = response.data
+                apiFactory.imageRecipe(response.data.id, undefined, this.recipe_json.image).then(response => {
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    window.location = resolveDjangoUrl('edit_recipe', recipe.id)
+                }).catch(e => {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    window.location = resolveDjangoUrl('edit_recipe', recipe.id)
+                })
             }).catch(err => {
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
             })
@@ -154,6 +188,10 @@ export default {
                 'mode': this.mode
             },).then((response) => {
                 this.recipe_json = response.data['recipe_json'];
+
+                this.$set(this.recipe_json, 'unused_keywords', this.recipe_json.keywords.filter(k => k.id === undefined))
+                this.$set(this.recipe_json, 'keywords', this.recipe_json.keywords.filter(k => k.id !== undefined))
+
                 this.recipe_tree = response.data['recipe_tree'];
                 this.recipe_html = response.data['recipe_html'];
                 this.recipe_images = response.data['recipe_images']; //todo change on backend as well after old view is deprecated
