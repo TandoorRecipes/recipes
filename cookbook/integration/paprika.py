@@ -2,12 +2,12 @@ import base64
 import gzip
 import json
 import re
+from gettext import gettext as _
 from io import BytesIO
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
-from gettext import gettext as _
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class Paprika(Integration):
@@ -70,11 +70,11 @@ class Paprika(Integration):
             try:
                 for ingredient in recipe_json['ingredients'].split('\n'):
                     if len(ingredient.strip()) > 0:
-                        amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-                        f = ingredient_parser.get_food(ingredient)
+                        amount, unit, food, note = ingredient_parser.parse(ingredient)
+                        f = ingredient_parser.get_food(food)
                         u = ingredient_parser.get_unit(unit)
                         step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                            food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                         ))
             except AttributeError:
                 pass

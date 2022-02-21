@@ -156,7 +156,7 @@ def import_url(request):
         recipe.steps.add(step)
 
         for kw in data['keywords']:
-            if data['all_keywords']: # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
+            if data['all_keywords']:  # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
                 k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
                 recipe.keywords.add(k)
             else:
@@ -168,7 +168,8 @@ def import_url(request):
 
         ingredient_parser = IngredientParser(request, True)
         for ing in data['recipeIngredient']:
-            ingredient = Ingredient(space=request.space, )
+            original = ing.pop('original', None) or ing.pop('original_text', None)
+            ingredient = Ingredient(original_text=original, space=request.space, )
 
             if food_text := ing['ingredient']['text'].strip():
                 ingredient.food = ingredient_parser.get_food(food_text)

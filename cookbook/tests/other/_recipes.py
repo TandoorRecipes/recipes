@@ -33,7 +33,7 @@ ALLRECIPES = {
                 "id": 58176
             },
             "note": "",
-            "original": "1 tablespoon olive oil or vegetable oil"
+            "original_text": "1 tablespoon olive oil or vegetable oil"
         },
         {
             "amount": 4,
@@ -46,7 +46,7 @@ ALLRECIPES = {
                 "id": 50637
             },
             "note": "boneless chicken breast halves",
-            "original": "4 skinless, boneless chicken breast halves"
+            "original_text": "4 skinless, boneless chicken breast halves"
         },
         {
             "amount": 0.25,
@@ -59,7 +59,7 @@ ALLRECIPES = {
                 "id": 97501
             },
             "note": "",
-            "original": "¼ cup chopped green onion"
+            "original_text": "¼ cup chopped green onion"
         },
         {
             "amount": 1,
@@ -72,7 +72,7 @@ ALLRECIPES = {
                 "id": 73542
             },
             "note": "",
-            "original": "1 cup sliced fresh mushrooms"
+            "original_text": "1 cup sliced fresh mushrooms"
         },
         {
             "amount": 0.3333333333333333,
@@ -85,7 +85,7 @@ ALLRECIPES = {
                 "id": 39127
             },
             "note": "",
-            "original": "⅓ cup Marsala wine"
+            "original_text": "⅓ cup Marsala wine"
         },
         {
             "amount": 0,
@@ -98,7 +98,7 @@ ALLRECIPES = {
                 "id": 56919
             },
             "note": "",
-            "original": "salt and pepper to taste"
+            "original_text": "salt and pepper to taste"
         },
         {
             "amount": 0.3333333333333333,
@@ -110,7 +110,7 @@ ALLRECIPES = {
                 "text": "heavy cream"
             },
             "note": "",
-            "original": "⅓ cup heavy cream"
+            "original_text": "⅓ cup heavy cream"
         },
         {
             "amount": 0.125,
@@ -121,7 +121,7 @@ ALLRECIPES = {
                 "text": "milk"
             },
             "note": "",
-            "original": "⅛ cup milk"
+            "original_text": "⅛ cup milk"
         }
     ],
     "recipeInstructions": "Heat oil in a large skilled over medium heat. Add chicken and saute for 15 to 20 minutes, or until cooked through and juices run clear.\nAdd green onion and mushrooms and saute until soft, then add Marsala wine and bring to a boil.\nBoil for 2 to 4 minutes, seasoning with salt and pepper to taste. Stir in cream and milk and simmer until heated through, about 5 minutes.\n\nImported from https://www.allrecipes.com/recipe/24010/easy-chicken-marsala/",
@@ -151,7 +151,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "unsalted butter"
             },
             "note": "",
-            "original": "4 tablespoons unsalted butter"
+            "original_text": "4 tablespoons unsalted butter"
         },
         {
             "amount": 1.0,
@@ -162,7 +162,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "boneless"
             },
             "note": "skinless chicken breast, trimmed of fat and cut crosswise into 1/4-inch slices",
-            "original": "1 pound boneless, skinless chicken breast, trimmed of fat and cut crosswise into 1/4-inch slices"
+            "original_text": "1 pound boneless, skinless chicken breast, trimmed of fat and cut crosswise into 1/4-inch slices"
         },
         {
             "amount": 1.0,
@@ -173,7 +173,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "onion, chopped fine"
             },
             "note": "about 2/3 cup",
-            "original": "1  small onion, chopped fine (about 2/3 cup)"
+            "original_text": "1  small onion, chopped fine (about 2/3 cup)"
         },
         {
             "amount": 0,
@@ -184,7 +184,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "Table salt"
             },
             "note": "",
-            "original": "  Table salt"
+            "original_text": "  Table salt"
         },
         {
             "amount": 6.0,
@@ -195,7 +195,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "cloves garlic, minced or pressed through garlic press"
             },
             "note": "about 2 tablespoons",
-            "original": "6 medium cloves garlic, minced or pressed through garlic press (about 2 tablespoons)"
+            "original_text": "6 medium cloves garlic, minced or pressed through garlic press (about 2 tablespoons)"
         },
         {
             "amount": 0.25,
@@ -206,7 +206,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "red pepper flakes"
             },
             "note": "",
-            "original": "1/4 teaspoon red pepper flakes"
+            "original_text": "1/4 teaspoon red pepper flakes"
         },
         {
             "amount": 2.0,
@@ -217,7 +217,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "chopped fresh thyme leaves"
             },
             "note": "",
-            "original": "2 teaspoons chopped fresh thyme leaves"
+            "original_text": "2 teaspoons chopped fresh thyme leaves"
         },
         {
             "amount": 2.0,
@@ -228,7 +228,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "all-purpose flour"
             },
             "note": "",
-            "original": "2 teaspoons all-purpose flour"
+            "original_text": "2 teaspoons all-purpose flour"
         },
         {
             "amount": 1.0,
@@ -239,7 +239,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "dry white wine"
             },
             "note": "",
-            "original": "1 cup dry white wine"
+            "original_text": "1 cup dry white wine"
         },
         {
             "amount": 2.0,
@@ -250,7 +250,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "low-sodium chicken broth"
             },
             "note": "",
-            "original": "2 cups low-sodium chicken broth"
+            "original_text": "2 cups low-sodium chicken broth"
         },
         {
             "amount": 1.0,
@@ -261,7 +261,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "broccoli(about 1 1/2 pounds)"
             },
             "note": "florets trimmed into 1-inch pieces (about 6 cups), stems discarded",
-            "original": "1 bunch broccoli(about 1 1/2 pounds), florets trimmed into 1-inch pieces (about 6 cups), stems discarded"
+            "original_text": "1 bunch broccoli(about 1 1/2 pounds), florets trimmed into 1-inch pieces (about 6 cups), stems discarded"
         },
         {
             "amount": 0.5,
@@ -272,7 +272,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "penne pasta"
             },
             "note": "ziti, cavatappi, or campanelle",
-            "original": "1/2 pound penne pasta, ziti, cavatappi, or campanelle"
+            "original_text": "1/2 pound penne pasta, ziti, cavatappi, or campanelle"
         },
         {
             "amount": 2.0,
@@ -283,7 +283,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "grated Asiago cheese(1 cup)"
             },
             "note": "plus extra for serving",
-            "original": "2 ounces grated Asiago cheese(1 cup), plus extra for serving"
+            "original_text": "2 ounces grated Asiago cheese(1 cup), plus extra for serving"
         },
         {
             "amount": 1.0,
@@ -294,7 +294,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "oil-packed sun-dried tomato(7 to 8 1/2 ounces), rinsed, patted dry, and cut into 1/4-inch strips"
             },
             "note": "about 1 cup",
-            "original": "1 jar oil-packed sun-dried tomato(7 to 8 1/2 ounces), rinsed, patted dry, and cut into 1/4-inch strips (about 1 cup)"
+            "original_text": "1 jar oil-packed sun-dried tomato(7 to 8 1/2 ounces), rinsed, patted dry, and cut into 1/4-inch strips (about 1 cup)"
         },
         {
             "amount": 1.0,
@@ -305,7 +305,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "minced fresh parsley leaves"
             },
             "note": "",
-            "original": "1 tablespoon minced fresh parsley leaves"
+            "original_text": "1 tablespoon minced fresh parsley leaves"
         },
         {
             "amount": 0,
@@ -316,7 +316,7 @@ AMERICAS_TEST_KITCHEN = {
                 "text": "Ground black pepper"
             },
             "note": "",
-            "original": "  Ground black pepper"
+            "original_text": "  Ground black pepper"
         }
     ],
     "recipeInstructions": "Note: Be sure to use low-sodium chicken broth in this recipe; regular chicken broth will make the dish extremely salty. The broccoli is blanched in the same water that is later used to cook the pasta. Remove the broccoli when it is tender at the edges but still crisp at the core-it will continue to cook with residual heat. If you can't find Asiago cheese, Parmesan is an acceptable alternative.\nLightly browning chicken breast strips in butter started building flavor into our pasta with chicken recipe. We kept the chicken tender and added more flavor by letting the strips finish cooking in the sauce, and we kept the broccoli fresh and crisp by blanching it in the boiling pasta water and then putting it aside until the dish was assembled. But our real breakthrough in developing this pasta and chicken recipe was to eliminate the cream typically used in this dish and to create instead a broth-based sauce, which we rounded out with a few tablespoons of butter, a handful of Asiago cheese, and some sun-dried tomatoes.\nBring 4 quarts water to rolling boil, covered, in stockpot.\nMeanwhile, heat 1 tablespoon butter in 12-inch nonstick skillet over high heat until just beginning to brown, about 1 minute. Add chicken in single layer; cook for 1 minute without stirring, then stir chicken and continue to cook until most, but not all, of pink color has disappeared and chicken is lightly browned around the edges, about 2 minutes longer. Transfer chicken to clean bowl; set aside.\nReturn skillet to high heat and add 1 tablespoon butter; add onion and 1/4 teaspoon salt and cook, stirring occasionally, until browned about edges, 2 to 3 minutes. Stir in garlic, red pepper flakes, thyme, and flour; cook, stirring constantly, until fragrant, about 30 seconds. Add wine and chicken broth; bring to simmer, then reduce heat to medium and continue to simmer, stirring occasionally, until sauce has thickened slightly and reduced to 1 1/4 cups, about 15 minutes.\nWhile sauce simmers, add 1 tablespoon salt and broccoli to boiling water; cook until broccoli is tender but still crisp at center, about 2 minutes. Using slotted spoon, transfer broccoli to large paper towel-lined plate. Return water to boil; stir in pasta and cook until al dente. Drain, reserving 1/2 cup pasta cooking water; return pasta to pot.\nStir remaining 2 tablespoons butter, Asiago, sun-dried tomatoes, parsley, and chicken into sauce in skillet; cook until chicken is hot and cooked through, about 1 minute. Off heat, season to taste with pepper. Pour chicken/sauce mixture over pasta and add broccoli; toss gently to combine, adding pasta cooking water as needed to adjust sauce consistency. Serve immediately, passing additional Asiago and the lemon wedges (if using) separately.\n\nImported from http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes"
@@ -385,7 +385,7 @@ CHEF_KOCH = {
                 "id": 87275
             },
             "note": "küchenfertig",
-            "original": "16 große Garnele(n) , küchenfertig"
+            "original_text": "16 große Garnele(n) , küchenfertig"
         },
         {
             "amount": 100,
@@ -398,7 +398,7 @@ CHEF_KOCH = {
                 "id": 20591
             },
             "note": "alternativ Bulgur",
-            "original": "100 g Couscous , alternativ Bulgur"
+            "original_text": "100 g Couscous , alternativ Bulgur"
         },
         {
             "amount": 250,
@@ -411,7 +411,7 @@ CHEF_KOCH = {
                 "id": 77431
             },
             "note": "",
-            "original": "250 ml Wasser"
+            "original_text": "250 ml Wasser"
         },
         {
             "amount": 1,
@@ -424,7 +424,7 @@ CHEF_KOCH = {
                 "id": 76775
             },
             "note": "",
-            "original": "1 EL Gemüsebrühe"
+            "original_text": "1 EL Gemüsebrühe"
         },
         {
             "amount": 1,
@@ -437,7 +437,7 @@ CHEF_KOCH = {
                 "id": 72882
             },
             "note": "",
-            "original": "1 TL Kurkuma"
+            "original_text": "1 TL Kurkuma"
         },
         {
             "amount": 6,
@@ -450,7 +450,7 @@ CHEF_KOCH = {
                 "id": 98083
             },
             "note": "",
-            "original": "6 EL Olivenöl"
+            "original_text": "6 EL Olivenöl"
         },
         {
             "amount": 6.0,
@@ -463,7 +463,7 @@ CHEF_KOCH = {
                 "id": 59547
             },
             "note": "getrocknet",
-            "original": "6 Tomate(n) , getrocknet"
+            "original_text": "6 Tomate(n) , getrocknet"
         },
         {
             "amount": 0.5,
@@ -476,7 +476,7 @@ CHEF_KOCH = {
                 "id": 22509
             },
             "note": "",
-            "original": "½ kleine Zucchini"
+            "original_text": "½ kleine Zucchini"
         },
         {
             "amount": 1,
@@ -489,7 +489,7 @@ CHEF_KOCH = {
                 "id": 35378
             },
             "note": "",
-            "original": "1 Paprika"
+            "original_text": "1 Paprika"
         },
         {
             "amount": 0.5,
@@ -502,7 +502,7 @@ CHEF_KOCH = {
                 "id": 93018
             },
             "note": "",
-            "original": "½ Bund Frühlingszwiebel(n)"
+            "original_text": "½ Bund Frühlingszwiebel(n)"
         },
         {
             "amount": 1,
@@ -515,7 +515,7 @@ CHEF_KOCH = {
                 "id": 64329
             },
             "note": "",
-            "original": "1 Zehe/n Knoblauch"
+            "original_text": "1 Zehe/n Knoblauch"
         },
         {
             "amount": 1,
@@ -528,7 +528,7 @@ CHEF_KOCH = {
                 "id": 69287
             },
             "note": "Koriander und Minze, frisch und fein geschnitten",
-            "original": "1 EL Petersilie , Koriander und Minze, frisch und fein geschnitten"
+            "original_text": "1 EL Petersilie , Koriander und Minze, frisch und fein geschnitten"
         },
         {
             "amount": 1.0,
@@ -541,7 +541,7 @@ CHEF_KOCH = {
                 "id": 44688
             },
             "note": "Bio",
-            "original": "1 Zitrone(n) , Bio"
+            "original_text": "1 Zitrone(n) , Bio"
         },
         {
             "amount": 0,
@@ -554,7 +554,7 @@ CHEF_KOCH = {
                 "id": 99102
             },
             "note": "Ras el-Hanout",
-            "original": "Salz und Pfeffer , Ras el-Hanout"
+            "original_text": "Salz und Pfeffer , Ras el-Hanout"
         }
     ],
     "recipeInstructions": "Wasser, Gemüsebrühe, Kurkuma und Öl erhitzen. Couscous unter Rühren zufügen und quellen lassen, bis er al dente ist.\r\n\nGemüse putzen. Zucchini vierteln und in Scheiben, Paprika entkernen und das Fruchtfleisch in Streifen schneiden. Getrocknete Tomaten fein würfeln, Frühlingszwiebeln in feine Ringe schneiden. \r\n\nAlles vermengen und mit gepresstem Knoblauch, Zitrone, den Kräutern, Salz, Pfeffer und Ras el-Hanout würzen bzw. abschmecken.\r\n\n4 Blätter Pergament ausbreiten, etwas Couscous darauf geben, das Gemüse gleichmäßig darüber verteilen und die Gambas obenauf setzen. Diese noch nach Geschmack mit Salz und Pfeffer würzen und das Pergament verschließen. \r\n\nIm vorgeheizten Backofen bei 180°C Umluft ca. 20-25 Minuten garen.\r\n\nAnrichten: Couscous, Gemüse und Garnelen im Pergament auf einen Teller legen, das Pergament oben etwas öffnen, und aus dem Pergament heraus genießen! Guten Appetit!\n\nImported from https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html"
@@ -608,7 +608,7 @@ CHEF_KOCH2 = {
                 "text": "Brokkoli"
             },
             "note": "bissfest gegart",
-            "original": "500 g Brokkoli , bissfest gegart"
+            "original_text": "500 g Brokkoli , bissfest gegart"
         },
         {
             "amount": 2.0,
@@ -619,7 +619,7 @@ CHEF_KOCH2 = {
                 "text": ""
             },
             "note": "getrennt",
-            "original": "2 Ei(er) , getrennt"
+            "original_text": "2 Ei(er) , getrennt"
         },
         {
             "amount": 2.0,
@@ -630,7 +630,7 @@ CHEF_KOCH2 = {
                 "text": "Speisestärke"
             },
             "note": "",
-            "original": "2 TL Speisestärke"
+            "original_text": "2 TL Speisestärke"
         },
         {
             "amount": 100.0,
@@ -641,7 +641,7 @@ CHEF_KOCH2 = {
                 "text": "Käse (Emmentaler)"
             },
             "note": "geraffelt",
-            "original": "100 g Käse (Emmentaler), geraffelt"
+            "original_text": "100 g Käse (Emmentaler), geraffelt"
         },
         {
             "amount": 3.0,
@@ -652,7 +652,7 @@ CHEF_KOCH2 = {
                 "text": "Sonnenblumenkerne"
             },
             "note": "",
-            "original": "3 EL Sonnenblumenkerne"
+            "original_text": "3 EL Sonnenblumenkerne"
         },
         {
             "amount": 0,
@@ -663,7 +663,7 @@ CHEF_KOCH2 = {
                 "text": "Paniermehl"
             },
             "note": "",
-            "original": "Paniermehl"
+            "original_text": "Paniermehl"
         },
         {
             "amount": 0,
@@ -674,7 +674,7 @@ CHEF_KOCH2 = {
                 "text": "Margarine"
             },
             "note": "",
-            "original": "Margarine"
+            "original_text": "Margarine"
         },
         {
             "amount": 0,
@@ -685,7 +685,7 @@ CHEF_KOCH2 = {
                 "text": "Salz und Pfeffer"
             },
             "note": "",
-            "original": "Salz und Pfeffer"
+            "original_text": "Salz und Pfeffer"
         },
         {
             "amount": 0,
@@ -696,7 +696,7 @@ CHEF_KOCH2 = {
                 "text": "Paprikapulver"
             },
             "note": "",
-            "original": "Paprikapulver"
+            "original_text": "Paprikapulver"
         },
         {
             "amount": 0,
@@ -707,7 +707,7 @@ CHEF_KOCH2 = {
                 "text": "Muskat"
             },
             "note": "",
-            "original": "Muskat"
+            "original_text": "Muskat"
         }
     ],
     "recipeInstructions": "Der Brokkoli wird in kleine Stücke geschnitten, möglichst nicht zermantschen. Das Eigelb wird mit der Speisestärke vermischt und dem Brokkoli beigefügt. Das Eiweiß wird zu Schnee geschlagen, danach wird der Käse mit dem Eiweiß vermengt und das Eiweiß-Käse-Gemisch zum Brokkoli gegeben, ebenso die Sonnenblumenkerne. Mit den angegebenen Gewürzen bestreuen und mit einem Teigschaber gut vermischen. Wenn der Teig sehr nass ist, dann kann man noch etwas Paniermehl oder auch Haferflocken zugeben. \r\n\nAus dem Teig lassen sich ca. 12 Bratlinge formen, diese werden in Paniermehl gewälzt und dann in der Pfanne von beiden Seiten solange gebraten, bis sie braun sind.\r\n\nDazu passt (Kräuter-)Baguette. Oder man serviert es dem vegetarisch essenden Teil der Familie, während die anderen Frikadellen bekommen. Diese Bratlinge eignen sich zum Einfrieren.\n\nImported from https://www.chefkoch.de/rezepte/804871184310070/Brokkoli-Bratlinge.html"
@@ -735,7 +735,7 @@ COOKPAD = {
                 "id": 25535
             },
             "note": "",
-            "original": "Chicken cuts"
+            "original_text": "Chicken cuts"
         },
         {
             "amount": 0,
@@ -748,7 +748,7 @@ COOKPAD = {
                 "id": 94137
             },
             "note": "peeled and split",
-            "original": "Moringa or Malunggay pods, peeled and split"
+            "original_text": "Moringa or Malunggay pods, peeled and split"
         },
         {
             "amount": 1,
@@ -761,7 +761,7 @@ COOKPAD = {
                 "id": 36609
             },
             "note": "",
-            "original": "1 chicken broth cube"
+            "original_text": "1 chicken broth cube"
         },
         {
             "amount": 2,
@@ -774,7 +774,7 @@ COOKPAD = {
                 "id": 49092
             },
             "note": "2-3",
-            "original": "2-3 c Water"
+            "original_text": "2-3 c Water"
         },
         {
             "amount": 1,
@@ -787,7 +787,7 @@ COOKPAD = {
                 "id": 82190
             },
             "note": "chopped",
-            "original": "1 small onion, chopped"
+            "original_text": "1 small onion, chopped"
         },
         {
             "amount": 2,
@@ -800,7 +800,7 @@ COOKPAD = {
                 "id": 95377
             },
             "note": "chopped",
-            "original": "2 garlic cloves, chopped"
+            "original_text": "2 garlic cloves, chopped"
         },
         {
             "amount": 1,
@@ -813,7 +813,7 @@ COOKPAD = {
                 "id": 76267
             },
             "note": "",
-            "original": "1 thumb ginger"
+            "original_text": "1 thumb ginger"
         },
         {
             "amount": 0,
@@ -826,7 +826,7 @@ COOKPAD = {
                 "id": 62969
             },
             "note": "",
-            "original": "to taste Salt & pepper"
+            "original_text": "to taste Salt & pepper"
         },
         {
             "amount": 0,
@@ -839,7 +839,7 @@ COOKPAD = {
                 "id": 62924
             },
             "note": "",
-            "original": "Cooking oil"
+            "original_text": "Cooking oil"
         }
     ],
     "recipeInstructions": 'Sauté the onions, garlic and ginger in oil until fragrant.\nAdd the peeled Moringa pods, with seeds. You can search the net on how to peel the pods. Forgot to take a photo of it, just remove the hard skin with a knife.\nAdd the chicken pieces, a few tbsp water, sauté the cover. Let the juices of chicken come out.\nDissolve the chicken broth cube in water then add to your pot.\nCook until Moringa pods are tender. Taste and season accordingly. Delicious to eat and pour soup over rice.\n\nImported from https://cookpad.com/us/recipes/14815875-chicken-and-moringa-drumsticks-soup',
@@ -872,7 +872,7 @@ COOKS_COUNTRY = {
                 "id": 52725
             },
             "note": "",
-            "original": "2 tablespoons extra-virgin olive oil"
+            "original_text": "2 tablespoons extra-virgin olive oil"
         },
         {
             "amount": 1,
@@ -885,7 +885,7 @@ COOKS_COUNTRY = {
                 "id": 65557
             },
             "note": "peeled, deveined, and halved lengthwise",
-            "original": "1 pound large shrimp, peeled, deveined, and halved lengthwise"
+            "original_text": "1 pound large shrimp, peeled, deveined, and halved lengthwise"
         },
         {
             "amount": 4,
@@ -898,7 +898,7 @@ COOKS_COUNTRY = {
                 "id": 28234
             },
             "note": "minced",
-            "original": "4 medium cloves garlic, minced"
+            "original_text": "4 medium cloves garlic, minced"
         },
         {
             "amount": 0.125,
@@ -911,7 +911,7 @@ COOKS_COUNTRY = {
                 "id": 80301
             },
             "note": "",
-            "original": "1/8 teaspoon red pepper flakes"
+            "original_text": "1/8 teaspoon red pepper flakes"
         },
         {
             "amount": 0.5,
@@ -924,7 +924,7 @@ COOKS_COUNTRY = {
                 "id": 31663
             },
             "note": "",
-            "original": "1/2 cup dry white wine"
+            "original_text": "1/2 cup dry white wine"
         },
         {
             "amount": 1,
@@ -937,7 +937,7 @@ COOKS_COUNTRY = {
                 "id": 49820
             },
             "note": "",
-            "original": "1  (8-ounce) bottle clam broth"
+            "original_text": "1  (8-ounce) bottle clam broth"
         },
         {
             "amount": 3,
@@ -950,7 +950,7 @@ COOKS_COUNTRY = {
                 "id": 40742
             },
             "note": "",
-            "original": "3 tablespoons lemon juice"
+            "original_text": "3 tablespoons lemon juice"
         },
         {
             "amount": 0,
@@ -963,7 +963,7 @@ COOKS_COUNTRY = {
                 "id": 33475
             },
             "note": "",
-            "original": "  Table salt"
+            "original_text": "  Table salt"
         },
         {
             "amount": 1,
@@ -976,7 +976,7 @@ COOKS_COUNTRY = {
                 "id": 53928
             },
             "note": "",
-            "original": "1 pound linguine"
+            "original_text": "1 pound linguine"
         },
         {
             "amount": 3,
@@ -989,7 +989,7 @@ COOKS_COUNTRY = {
                 "id": 97985
             },
             "note": "",
-            "original": "3 tablespoons drained small capers"
+            "original_text": "3 tablespoons drained small capers"
         },
         {
             "amount": 0.3333333333333333,
@@ -1002,7 +1002,7 @@ COOKS_COUNTRY = {
                 "id": 96771
             },
             "note": "",
-            "original": "1/3 cup chopped fresh parsley leaves"
+            "original_text": "1/3 cup chopped fresh parsley leaves"
         },
         {
             "amount": 4,
@@ -1015,7 +1015,7 @@ COOKS_COUNTRY = {
                 "id": 36998
             },
             "note": "softened",
-            "original": "4 tablespoons unsalted butter, softened"
+            "original_text": "4 tablespoons unsalted butter, softened"
         },
         {
             "amount": 0,
@@ -1028,7 +1028,7 @@ COOKS_COUNTRY = {
                 "id": 94947
             },
             "note": "",
-            "original": "  Ground black pepper"
+            "original_text": "  Ground black pepper"
         }
     ],
     "recipeInstructions": 'Note: Be sure to toss the shrimp and sauce with the pasta immediately after draining. The hot pasta will heat the shrimp and melt the butter.\nTo prepare our Shrimp Piccata Pasta, we seared the shrimp over high heat until just barely cooked through, then set them aside until the sauce was prepared. We used just one pan for cooking both the shrimp and the sauce so the sauce picked up the flavors left behind by the shrimp. We made sure to cook the red pepper flakes with the garlic to maximize their flavor. For cooking pasta, we recommend 1 tablespoon of table salt for every gallon of water. Pasta cooked in unsalted water will taste very bland.\nBring 4 quarts water to boil in pot for cooking pasta. Meanwhile, heat 1 tablespoon oil in large skillet over high heat. Add shrimp and cook, stirring, until just opaque, about 1 minute. Transfer to large plate. Heat remaining tablespoon oil in empty skillet over medium heat. Add garlic and pepper flakes and cook until fragrant but not browned, about 30 seconds. Add wine, increase heat to high, and simmer until liquid is reduced and syrupy, about 2 minutes. Add clam broth and lemon juice, bring to boil, and cook until mixture is reduced to 1/3 cup, about 8 minutes.\nAs the sauce cooks, add 1 tablespoon salt and pasta to boiling water and cook until al dente. Reserving 1/2 cup cooking water, drain pasta, then transfer to large serving bowl. Toss with sauce, shrimp, capers, parsley, and butter until butter melts and shrimp is warmed through. (Add reserved cooking water if sauce seems dry.) Adjust seasonings with salt and pepper. Serve.\n\nImported from http://www.cookscountry.com/recipes/2202-shrimp-piccata-pasta',
@@ -1117,7 +1117,7 @@ DELISH = {
                 "id": 10770
             },
             "note": "stalks trimmed",
-            "original": "2 lb. asparagus, stalks trimmed"
+            "original_text": "2 lb. asparagus, stalks trimmed"
         },
         {
             "amount": 0.75,
@@ -1130,7 +1130,7 @@ DELISH = {
                 "id": 25687
             },
             "note": "",
-            "original": "3/4 c. heavy cream"
+            "original_text": "3/4 c. heavy cream"
         },
         {
             "amount": 3,
@@ -1143,7 +1143,7 @@ DELISH = {
                 "id": 68355
             },
             "note": "minced",
-            "original": "3 cloves garlic, minced"
+            "original_text": "3 cloves garlic, minced"
         },
         {
             "amount": 0,
@@ -1156,7 +1156,7 @@ DELISH = {
                 "id": 40426
             },
             "note": "",
-            "original": "Kosher salt"
+            "original_text": "Kosher salt"
         },
         {
             "amount": 0,
@@ -1169,7 +1169,7 @@ DELISH = {
                 "id": 14584
             },
             "note": "",
-            "original": "Freshly ground black pepper"
+            "original_text": "Freshly ground black pepper"
         },
         {
             "amount": 1,
@@ -1182,7 +1182,7 @@ DELISH = {
                 "id": 71150
             },
             "note": "",
-            "original": "1 c. freshly grated Parmesan"
+            "original_text": "1 c. freshly grated Parmesan"
         },
         {
             "amount": 1,
@@ -1195,7 +1195,7 @@ DELISH = {
                 "id": 80698
             },
             "note": "",
-            "original": "1 c. shredded mozzarella"
+            "original_text": "1 c. shredded mozzarella"
         },
         {
             "amount": 0,
@@ -1208,7 +1208,7 @@ DELISH = {
                 "id": 36674
             },
             "note": "optional",
-            "original": "Red pepper flakes, for garnish (optional)"
+            "original_text": "Red pepper flakes, for garnish (optional)"
         }
     ],
     "recipeInstructions": 'Preheat oven to 400º. Place asparagus in a 9"-x-13" baking dish and pour over heavy cream and scatter with garlic. Generously season with salt and pepper, then sprinkle with Parmesan, mozzarella and red pepper flakes (if using).\nBake until cheese is golden and melty and asparagus is tender, about 25 to 30 minutes, and serve.\n\nImported from https://www.delish.com/cooking/recipe-ideas/recipes/a52405/cheesy-baked-asparagus-recipe/',
@@ -1293,7 +1293,7 @@ FOOD_NETWORK = {
                 "id": 98024
             },
             "note": "cooked until tender and halved",
-            "original": "2 pounds new red potatoes, cooked until tender and halved"
+            "original_text": "2 pounds new red potatoes, cooked until tender and halved"
         },
         {
             "amount": 1,
@@ -1306,7 +1306,7 @@ FOOD_NETWORK = {
                 "id": 85596
             },
             "note": "peeled and cut into 1/4-inch thick slices",
-            "original": "1 Spanish onion, peeled and cut into 1/4-inch thick slices"
+            "original_text": "1 Spanish onion, peeled and cut into 1/4-inch thick slices"
         },
         {
             "amount": 1,
@@ -1319,7 +1319,7 @@ FOOD_NETWORK = {
                 "id": 95189
             },
             "note": "",
-            "original": "1 red bell pepper"
+            "original_text": "1 red bell pepper"
         },
         {
             "amount": 1,
@@ -1332,7 +1332,7 @@ FOOD_NETWORK = {
                 "id": 87142
             },
             "note": "",
-            "original": "1 yellow bell pepper"
+            "original_text": "1 yellow bell pepper"
         },
         {
             "amount": 2,
@@ -1345,7 +1345,7 @@ FOOD_NETWORK = {
                 "id": 51619
             },
             "note": "",
-            "original": "2 jalapeno chiles"
+            "original_text": "2 jalapeno chiles"
         },
         {
             "amount": 0,
@@ -1358,7 +1358,7 @@ FOOD_NETWORK = {
                 "id": 47011
             },
             "note": "",
-            "original": "Vegetable oil"
+            "original_text": "Vegetable oil"
         },
         {
             "amount": 0,
@@ -1371,7 +1371,7 @@ FOOD_NETWORK = {
                 "id": 61976
             },
             "note": "",
-            "original": "Salt and freshly ground pepper"
+            "original_text": "Salt and freshly ground pepper"
         },
         {
             "amount": 2,
@@ -1384,7 +1384,7 @@ FOOD_NETWORK = {
                 "id": 77483
             },
             "note": "",
-            "original": "2 tablespoons butter"
+            "original_text": "2 tablespoons butter"
         }
     ],
     "recipeInstructions": 'Heat grill to high. Brush potatoes halves, onion slices, peppers, and chiles with oil and season with salt and pepper, to taste. Grill potatoes and onions for 2 to 3 minutes per side or until just cooked through and slightly charred. Remove from heat, cut each potato half in half again, and finely chop the onions.\nGrill peppers and chiles until charred on all sides. Remove from the grill, place in a bowl, cover, and let steam for 5 minutes. Remove skin and finely dice.\nMelt butter in a 9-inch cast iron skillet on the grates of the grill. Add the potatoes, onions, peppers, and chiles all in 1 layer and pack down. Cook until crisp and nicely browned.\n\nImported from https://www.foodnetwork.com/recipes/bobby-flay/cast-iron-home-fries-recipe-1945083',
@@ -1489,7 +1489,7 @@ GIALLOZAFFERANO = {
                 "id": 48969
             },
             "note": "",
-            "original": "Spinaci 650 g"
+            "original_text": "Spinaci 650 g"
         },
         {
             "amount": 0,
@@ -1502,7 +1502,7 @@ GIALLOZAFFERANO = {
                 "id": 24720
             },
             "note": "raffermo o secco",
-            "original": "Pane (raffermo o secco) 80 g"
+            "original_text": "Pane (raffermo o secco) 80 g"
         },
         {
             "amount": 0,
@@ -1515,7 +1515,7 @@ GIALLOZAFFERANO = {
                 "id": 25817
             },
             "note": "",
-            "original": "Latte intero 400 g"
+            "original_text": "Latte intero 400 g"
         },
         {
             "amount": 0,
@@ -1528,7 +1528,7 @@ GIALLOZAFFERANO = {
                 "id": 82857
             },
             "note": "",
-            "original": "Olio extravergine d'oliva 40 g"
+            "original_text": "Olio extravergine d'oliva 40 g"
         },
         {
             "amount": 0,
@@ -1541,7 +1541,7 @@ GIALLOZAFFERANO = {
                 "id": 38254
             },
             "note": "",
-            "original": "Uova (medie) 2"
+            "original_text": "Uova (medie) 2"
         },
         {
             "amount": 0,
@@ -1554,7 +1554,7 @@ GIALLOZAFFERANO = {
                 "id": 52246
             },
             "note": "",
-            "original": "Farina 00 160 g"
+            "original_text": "Farina 00 160 g"
         },
         {
             "amount": 0,
@@ -1567,7 +1567,7 @@ GIALLOZAFFERANO = {
                 "id": 25275
             },
             "note": "",
-            "original": "Pangrattato 40 g"
+            "original_text": "Pangrattato 40 g"
         },
         {
             "amount": 0,
@@ -1580,7 +1580,7 @@ GIALLOZAFFERANO = {
                 "id": 66484
             },
             "note": "",
-            "original": "Sale fino q.b."
+            "original_text": "Sale fino q.b."
         },
         {
             "amount": 0,
@@ -1593,7 +1593,7 @@ GIALLOZAFFERANO = {
                 "id": 38556
             },
             "note": "",
-            "original": "Pepe nero q.b."
+            "original_text": "Pepe nero q.b."
         },
         {
             "amount": 0,
@@ -1606,7 +1606,7 @@ GIALLOZAFFERANO = {
                 "id": 13027
             },
             "note": "",
-            "original": "Noce moscata q.b."
+            "original_text": "Noce moscata q.b."
         },
         {
             "amount": 0,
@@ -1619,7 +1619,7 @@ GIALLOZAFFERANO = {
                 "id": 30269
             },
             "note": "",
-            "original": "Burro 80 g"
+            "original_text": "Burro 80 g"
         },
         {
             "amount": 0,
@@ -1632,7 +1632,7 @@ GIALLOZAFFERANO = {
                 "id": 52383
             },
             "note": "",
-            "original": "Salvia q.b."
+            "original_text": "Salvia q.b."
         },
         {
             "amount": 0,
@@ -1645,7 +1645,7 @@ GIALLOZAFFERANO = {
                 "id": 74463
             },
             "note": "",
-            "original": "Trentingrana 100 g"
+            "original_text": "Trentingrana 100 g"
         }
     ],
     "recipeInstructions": "Per preparare gli strangolapreti alla trentina come prima cosa cuocete gli spinaci. Ve ne serviranno 650 freschi per ottenerne 300 g cotti e molto ben strizzati. Se usate spinaci freschi potete sbollentarli in acqua leggermente salata per qualche minuto. Se utilizzate quelli in busta potete cuocerli al vapore. Ripulite i panini dalla crosta esterna (potrete usarla come indicato nel consiglio in fondo alla ricetta!) e tagliate la mollica che servirà per gli strangolapreti: dovrete ottenere dei cubetti di 1 cm. Trasferiteli all'interno di una ciotola 1 , unite circa metà dose di latte 2 e l'olio 3 .\nMescolate leggermente 4 e tenete da parte. Versate gli spinaci strizzati all'interno di un contenitore stretto e alto 5 , aggiungete il latte rimasto 6 .\nUnite anche le uova 7 e regolate di sale 8 e pepe. Aggiungete anche la noce moscata 9\ne frullate il tutto con un minipimer 10 fino ad ottenere una crema liscia 11 . Versate quindi la crema di spinaci all'interno della ciotola con il pane 12\ne mescolate con un mestolo di legno 13 . Aggiungete la farina 14 e il pangrattato 15 .\nMescolate ancora con il mestolo 16 , poi terminate l'impasto lavorandolo brevemente con le mani anche per sentirne la consistenza 17 . Lasciatelo riposare qualche minuto. Inumidite due cucchiai 18\ne prelevate una porzione d'impasto, circa mezzo cucchiaio 19 . Trasferite il primo mucchietto su un canovaccio ben infarinato 20 e proseguite in questo modo per tutti gli altri 21 . Si andranno a formare delle quenelle.\nSpolverizzate con poca farina i mucchietti e lavoratene uno ad uno con le mani 22 , in modo da arrotondarli leggermente come fossero canederli, ma schiacciando leggermente per creare una forma conica 23 . Ogni tanto infarinatevi bene le mani, in questo modo sarà più facile lavorare il composto e terranno meglio la cottura. Se preferite potete realizzare la classica forma a quenelle lavorando il composto solo con i due cucchiai inumiditi 24 . Poi dovrete comunque leggermente spolverizzare con la farina.\nMettete sul fuoco due tegami con dell'acqua, che servirà per la cottura degli gnocchi. Salate l'acqua e non appena inizierà a sobbollire tuffate pochi gnocchi alla volta 25 . Dato che la cottura è delicata, per cuocerli tutti insieme serviranno almeno due tegami. Se riducete le dosi o avete modo di cuocerli un po' alla volta potete anche utilizzarne uno solo. Nel frattempo preparate anche il condimento. In un tegame aggiungete burro e salvia 26 , lasciate fondere il burro e insaporire le foglioline 27 .\nNon appena gli gnocchi saliranno a galla aspettate 2-3 minuti e scolateli 28 . In tutto ci vorranno circa 8 minuti. Scolateli e conservateli in una ciotola. Intanto cuocete gli altri. Poi trasferite gli gnocchi su un piatto 29 , guarnite con abbondante Trentingrana grattugiato 30\naggiungete abbondante burro fuso 31 e decorate con le foglioline di salvia 32 . Servite gli gnocchi alla trentina ancora caldi 33 !\n\nImported from https://ricette.giallozafferano.it/Strangolapreti-alla-trentina.html",
@@ -1722,7 +1722,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 30740
             },
             "note": "",
-            "original": "2 courgette"
+            "original_text": "2 courgette"
         },
         {
             "amount": 1,
@@ -1735,7 +1735,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 18237
             },
             "note": "",
-            "original": "1 aubergine"
+            "original_text": "1 aubergine"
         },
         {
             "amount": 1,
@@ -1748,7 +1748,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 45433
             },
             "note": "",
-            "original": "1 poivron vert"
+            "original_text": "1 poivron vert"
         },
         {
             "amount": 1,
@@ -1761,7 +1761,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 87346
             },
             "note": "",
-            "original": "1 poivron rouge"
+            "original_text": "1 poivron rouge"
         },
         {
             "amount": 3,
@@ -1774,7 +1774,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 72072
             },
             "note": "",
-            "original": "3 tomate"
+            "original_text": "3 tomate"
         },
         {
             "amount": 1,
@@ -1787,7 +1787,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 71957
             },
             "note": "",
-            "original": "1 oignon"
+            "original_text": "1 oignon"
         },
         {
             "amount": 2,
@@ -1800,7 +1800,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 13268
             },
             "note": "",
-            "original": "2 gousse ail"
+            "original_text": "2 gousse ail"
         },
         {
             "amount": 1,
@@ -1813,7 +1813,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 69671
             },
             "note": "",
-            "original": "1 bouquet garni"
+            "original_text": "1 bouquet garni"
         },
         {
             "amount": 0,
@@ -1826,7 +1826,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 93860
             },
             "note": "",
-            "original": "huile d'olive"
+            "original_text": "huile d'olive"
         },
         {
             "amount": 0,
@@ -1839,7 +1839,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 37570
             },
             "note": "",
-            "original": "sel"
+            "original_text": "sel"
         },
         {
             "amount": 0,
@@ -1852,7 +1852,7 @@ JOURNAL_DES_FEMMES = {
                 "id": 72413
             },
             "note": "",
-            "original": "poivre"
+            "original_text": "poivre"
         }
     ],
     "recipeInstructions": "Lavez et détaillez les courgettes, l'aubergine, le poivron vert et le rouge, en cubes de taille moyenne. Coupez les tomates en quartiers et émincez l'oignon.\nDans une poêle, versez un peu d'huile d'olive et faites-y revenir les uns après les autres les différents légumes pendant 5 minutes pour qu'ils colorent. Commencez par les poivrons, puis les aubergines, les courgettes et enfin les oignons et les tomates que vous cuirez ensemble.\nAprès avoir fait cuire les légumes, ajoutez-les tous aux tomates et aux oignons, baissez le feu puis mélangez. Ajoutez un beau bouquet garni de thym, de romarin et de laurier, salez, poivrez, puis couvrez pour laisser mijoter 40 minutes en remuant régulièrement.\nÀ environ 10 minutes du terme de la cuisson, ajoutez les deux belles gousses d'ail écrasées puis couvrez de nouveau. N'hésitez pas à goûter et à assaisonner de nouveau selon vos goûts.\nDégustez avec des grillades ou un barbecue.\n\nImported from https://cuisine.journaldesfemmes.fr/recette/317747-ratatouille",
@@ -1901,7 +1901,7 @@ MADAME_DESSERT = {
                 "id": 34974
             },
             "note": "60 – 80% Kakaogehalt",
-            "original": "170 g hochwertige Zartbitterschokolade (60 – 80% Kakaogehalt)"
+            "original_text": "170 g hochwertige Zartbitterschokolade (60 – 80% Kakaogehalt)"
         },
         {
             "amount": 700,
@@ -1914,7 +1914,7 @@ MADAME_DESSERT = {
                 "id": 22124
             },
             "note": "",
-            "original": "700 ml Vollmilch"
+            "original_text": "700 ml Vollmilch"
         },
         {
             "amount": 120,
@@ -1927,7 +1927,7 @@ MADAME_DESSERT = {
                 "id": 73161
             },
             "note": "",
-            "original": "120 ml Sahne"
+            "original_text": "120 ml Sahne"
         },
         {
             "amount": 1,
@@ -1940,7 +1940,7 @@ MADAME_DESSERT = {
                 "id": 13554
             },
             "note": "",
-            "original": "1 gute Prise Salz"
+            "original_text": "1 gute Prise Salz"
         },
         {
             "amount": 1,
@@ -1953,7 +1953,7 @@ MADAME_DESSERT = {
                 "id": 40030
             },
             "note": "",
-            "original": "1 TL Vanilleextrakt"
+            "original_text": "1 TL Vanilleextrakt"
         },
         {
             "amount": 150,
@@ -1966,7 +1966,7 @@ MADAME_DESSERT = {
                 "id": 42645
             },
             "note": "",
-            "original": "150 g Zucker"
+            "original_text": "150 g Zucker"
         },
         {
             "amount": 30,
@@ -1979,7 +1979,7 @@ MADAME_DESSERT = {
                 "id": 97177
             },
             "note": "",
-            "original": "30 g Speisestärke"
+            "original_text": "30 g Speisestärke"
         },
         {
             "amount": 6,
@@ -1992,7 +1992,7 @@ MADAME_DESSERT = {
                 "id": 28851
             },
             "note": "bei Raumtemperatur",
-            "original": "6 Eigelbe (Größe L) (bei Raumtemperatur)"
+            "original_text": "6 Eigelbe (Größe L) (bei Raumtemperatur)"
         }
     ],
     "recipeInstructions": 'Hacke die Schokolade fein und stelle sie beiseite.\nGib die Milch zusammen mit der Sahne, etwas Salz, dem Vanilleextrakt und 50g des Zuckers in einen Topf. Koche alles kurz unter gelegentlichem Rühren auf. Reduziere die Hitze anschließend auf eine mittlere Stufe.\nWährend die Milch warm wird, vermische den restlichen Zucker mit der Stärke in einer Schüssel. Gib anschließend die Eigelbe dazu und rühre sie unter.\nGib etwa 1/3 der heißen Milch-Mischung zu den Eingelben und rühre alles glatt. Gieße alles zusammen langsam und gleichmäßig unter stetigem Rühren zurück in den Topf.\nErwärme den Pudding unter stetigem Rühren für etwa 3 bis 4 Minuten, bis es einmal kurz aufblubbert und eindickt. Am besten verwendest du hierfür einen hitzebeständigen Teigschaber rühren.\nHat dein Pudding die perfekte Konsistenz erreicht und eine große Luftblase ist in der Mitte nach oben gestiegen, kannst du den Topf vom Herd nehmen, die Platte ausschalten und die klein gehackte Schokolade unterrühren. Die Schokolade sollte sich vollständig auflösen und einen homogenen Pudding bilden. Gieße den Schokoladenpudding in eine große Form oder mehrere kleine Dessert Gläser.\nJe nachdem wie du deinen Pudding am liebsten magst – warm, kalt, mit Haut oder ohne Haut – liest du dir am besten noch einmal meine Tipps im Rezept auf dem Blog durch.\nMacht es euch lecker!Eure Madame Dessert\n\nImported from https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/#webpage',
@@ -2073,7 +2073,7 @@ MARMITON = {
                 "id": 42909
             },
             "note": "",
-            "original": "1 kg d'épaule agneau"
+            "original_text": "1 kg d'épaule agneau"
         },
         {
             "amount": 200,
@@ -2086,7 +2086,7 @@ MARMITON = {
                 "id": 85309
             },
             "note": "",
-            "original": "200 g d'oseille"
+            "original_text": "200 g d'oseille"
         },
         {
             "amount": 80,
@@ -2099,7 +2099,7 @@ MARMITON = {
                 "id": 73257
             },
             "note": "",
-            "original": "80 g de beurre"
+            "original_text": "80 g de beurre"
         },
         {
             "amount": 2,
@@ -2112,7 +2112,7 @@ MARMITON = {
                 "id": 83735
             },
             "note": "",
-            "original": "2 oignons moyens"
+            "original_text": "2 oignons moyens"
         },
         {
             "amount": 1,
@@ -2125,7 +2125,7 @@ MARMITON = {
                 "id": 14047
             },
             "note": "",
-            "original": "1 jaunes d'oeuf"
+            "original_text": "1 jaunes d'oeuf"
         },
         {
             "amount": 1,
@@ -2138,7 +2138,7 @@ MARMITON = {
                 "id": 15209
             },
             "note": "",
-            "original": "1 cuillères à soupe de farine"
+            "original_text": "1 cuillères à soupe de farine"
         },
         {
             "amount": 20,
@@ -2151,7 +2151,7 @@ MARMITON = {
                 "id": 68642
             },
             "note": "",
-            "original": "20 cl de bouillon"
+            "original_text": "20 cl de bouillon"
         },
         {
             "amount": 0,
@@ -2164,7 +2164,7 @@ MARMITON = {
                 "id": 69656
             },
             "note": "",
-            "original": "huile"
+            "original_text": "huile"
         },
         {
             "amount": 0,
@@ -2177,7 +2177,7 @@ MARMITON = {
                 "id": 34688
             },
             "note": "",
-            "original": "poivre"
+            "original_text": "poivre"
         },
         {
             "amount": 0,
@@ -2190,7 +2190,7 @@ MARMITON = {
                 "id": 48783
             },
             "note": "",
-            "original": "sel"
+            "original_text": "sel"
         }
     ],
     "recipeInstructions": "Dans une poêle, faire sauter l'agneau coupé en gros dés avec l'huile et le beurre. Le laisser colorer et assaisonner.\nRéserver la viande au chaud et la remplacer par les oignons émincés et la farine. Les faire revenir jusqu'à coloration et mouiller avec le bouillon. Assaisonner et ajouter l'oseille.\nReplacer les dés d'agneau et laisser cuire à feu doux, à couvert pendant 30 min.\nAu moment de servir, mettre les morceaux de viande dans le plat de service.\nIncorporer très vite le jaune d'oeuf et napper la viande de sauce.\n\nImported from https://www.marmiton.org/recettes/recette_fricassee-d-agneau-a-l-oseille_22719.aspx",
@@ -2232,7 +2232,7 @@ TASTE_OF_HOME = {
                 "id": 17347
             },
             "note": "thawed",
-            "original": "1 package frozen puff pastry (17.30 ounces), thawed"
+            "original_text": "1 package frozen puff pastry (17.30 ounces), thawed"
         },
         {
             "amount": 1,
@@ -2245,7 +2245,7 @@ TASTE_OF_HOME = {
                 "id": 13103
             },
             "note": "",
-            "original": "1 large egg"
+            "original_text": "1 large egg"
         },
         {
             "amount": 1,
@@ -2258,7 +2258,7 @@ TASTE_OF_HOME = {
                 "id": 57562
             },
             "note": "",
-            "original": "1 tablespoon water"
+            "original_text": "1 tablespoon water"
         },
         {
             "amount": 0,
@@ -2271,7 +2271,7 @@ TASTE_OF_HOME = {
                 "id": 85465
             },
             "note": "",
-            "original": "RHUBARB TOPPING:"
+            "original_text": "RHUBARB TOPPING:"
         },
         {
             "amount": 12,
@@ -2284,7 +2284,7 @@ TASTE_OF_HOME = {
                 "id": 32374
             },
             "note": "1/2 inch x 7 inches",
-            "original": "12 rhubarb ribs (1/2 inch x 7 inches)"
+            "original_text": "12 rhubarb ribs (1/2 inch x 7 inches)"
         },
         {
             "amount": 1,
@@ -2297,7 +2297,7 @@ TASTE_OF_HOME = {
                 "id": 33911
             },
             "note": "",
-            "original": "1 cup orange juice"
+            "original_text": "1 cup orange juice"
         },
         {
             "amount": 0.5,
@@ -2310,7 +2310,7 @@ TASTE_OF_HOME = {
                 "id": 16787
             },
             "note": "",
-            "original": "1/2 cup honey"
+            "original_text": "1/2 cup honey"
         },
         {
             "amount": 2,
@@ -2323,7 +2323,7 @@ TASTE_OF_HOME = {
                 "id": 93110
             },
             "note": "",
-            "original": "2 tablespoons amaretto"
+            "original_text": "2 tablespoons amaretto"
         },
         {
             "amount": 0,
@@ -2336,7 +2336,7 @@ TASTE_OF_HOME = {
                 "id": 43403
             },
             "note": "",
-            "original": "FILLING:"
+            "original_text": "FILLING:"
         },
         {
             "amount": 1,
@@ -2349,7 +2349,7 @@ TASTE_OF_HOME = {
                 "id": 66105
             },
             "note": "",
-            "original": "1 package (8 ounces) mascarpone cheese"
+            "original_text": "1 package (8 ounces) mascarpone cheese"
         },
         {
             "amount": 2,
@@ -2362,7 +2362,7 @@ TASTE_OF_HOME = {
                 "id": 62097
             },
             "note": "",
-            "original": "2 tablespoons amaretto"
+            "original_text": "2 tablespoons amaretto"
         },
         {
             "amount": 1,
@@ -2375,7 +2375,7 @@ TASTE_OF_HOME = {
                 "id": 89242
             },
             "note": "",
-            "original": "1 tablespoon honey"
+            "original_text": "1 tablespoon honey"
         }
     ],
     "recipeInstructions": 'Preheat oven to 400°. Unfold 1 pastry sheet and place on a parchment-lined baking sheet; repeat with remaining pastry sheet. Whisk egg and water; brush over pastries. Using a sharp knife, score a 1-in. border around edges of pastry sheets (do not cut through). With a fork, prick center of pastries. Bake until golden brown, about 15 minutes. With a spatula, press down center portion of pastries, leaving outer edges intact. Remove to wire racks to cool.\nMeanwhile, for topping, arrange rhubarb in a single layer in a 13x9-in. baking dish. Combine orange juice, honey and amaretto; pour over rhubarb. Bake at 400° until rhubarb is just tender but still holds its shape, about 10 minutes. Remove with a slotted spoon, reserving cooking liquid; let rhubarb cool. Transfer reserved cooking liquid to a small saucepan; bring to a boil over medium-high heat. Reduce heat; simmer until reduced to 1/2 cup, about 20 minutes. Cool.\nFor filling, stir together mascarpone cheese, amaretto and honey until smooth. Spread mascarpone mixture over center of each pastry. Top with rhubarb ribs. Brush rhubarb with cooled cooking liquid. Refrigerate leftovers.\n\nImported from https://www.tasteofhome.com/recipes/rhubarb-tart/',
@@ -2403,7 +2403,7 @@ THE_SPRUCE_EATS = {
                 "id": 84919
             },
             "note": "",
-            "original": "2 tablespoons butter"
+            "original_text": "2 tablespoons butter"
         },
         {
             "amount": 1.5,
@@ -2416,7 +2416,7 @@ THE_SPRUCE_EATS = {
                 "id": 89800
             },
             "note": "chopped",
-            "original": "1 1/2 to 2 cups onion (chopped)"
+            "original_text": "1 1/2 to 2 cups onion (chopped)"
         },
         {
             "amount": 1,
@@ -2429,7 +2429,7 @@ THE_SPRUCE_EATS = {
                 "id": 70601
             },
             "note": "chopped",
-            "original": "1 cup celery (chopped)"
+            "original_text": "1 cup celery (chopped)"
         },
         {
             "amount": 2,
@@ -2442,7 +2442,7 @@ THE_SPRUCE_EATS = {
                 "id": 72417
             },
             "note": "peeled and chopped",
-            "original": "2 large carrots (peeled and chopped)"
+            "original_text": "2 large carrots (peeled and chopped)"
         },
         {
             "amount": 2,
@@ -2455,7 +2455,7 @@ THE_SPRUCE_EATS = {
                 "id": 14124
             },
             "note": "about 1 pound, diced",
-            "original": "2 to 3 cups ham (about 1 pound, diced)"
+            "original_text": "2 to 3 cups ham (about 1 pound, diced)"
         },
         {
             "amount": 1,
@@ -2468,7 +2468,7 @@ THE_SPRUCE_EATS = {
                 "id": 63566
             },
             "note": "minced",
-            "original": "1 clove garlic (minced)"
+            "original_text": "1 clove garlic (minced)"
         },
         {
             "amount": 2,
@@ -2481,7 +2481,7 @@ THE_SPRUCE_EATS = {
                 "id": 10572
             },
             "note": "",
-            "original": "2 cups vegetable broth"
+            "original_text": "2 cups vegetable broth"
         },
         {
             "amount": 1,
@@ -2494,7 +2494,7 @@ THE_SPRUCE_EATS = {
                 "id": 28583
             },
             "note": "",
-            "original": "1 cup water"
+            "original_text": "1 cup water"
         },
         {
             "amount": 4,
@@ -2507,7 +2507,7 @@ THE_SPRUCE_EATS = {
                 "id": 16911
             },
             "note": "peeled and diced",
-            "original": "4 to 5 cups potatoes (peeled and diced)"
+            "original_text": "4 to 5 cups potatoes (peeled and diced)"
         },
         {
             "amount": 3,
@@ -2520,7 +2520,7 @@ THE_SPRUCE_EATS = {
                 "id": 40407
             },
             "note": "",
-            "original": "3 tablespoons all-purpose flour"
+            "original_text": "3 tablespoons all-purpose flour"
         },
         {
             "amount": 1,
@@ -2533,7 +2533,7 @@ THE_SPRUCE_EATS = {
                 "id": 19424
             },
             "note": "",
-            "original": "1 cup heavy cream"
+            "original_text": "1 cup heavy cream"
         },
         {
             "amount": 1,
@@ -2546,7 +2546,7 @@ THE_SPRUCE_EATS = {
                 "id": 61156
             },
             "note": "or whole milk, more if needed to thin",
-            "original": "1 cup half-and-half (or whole milk, more if needed to thin)"
+            "original_text": "1 cup half-and-half (or whole milk, more if needed to thin)"
         },
         {
             "amount": 0,
@@ -2559,7 +2559,7 @@ THE_SPRUCE_EATS = {
                 "id": 75657
             },
             "note": "to taste",
-            "original": "Dash salt (to taste)"
+            "original_text": "Dash salt (to taste)"
         },
         {
             "amount": 0,
@@ -2572,7 +2572,7 @@ THE_SPRUCE_EATS = {
                 "id": 49484
             },
             "note": "to taste",
-            "original": "Dash freshly ground black pepper (to taste)"
+            "original_text": "Dash freshly ground black pepper (to taste)"
         },
         {
             "amount": 0,
@@ -2585,7 +2585,7 @@ THE_SPRUCE_EATS = {
                 "id": 73062
             },
             "note": "chopped",
-            "original": "Optional: 2 tablespoons fresh parsley (chopped)"
+            "original_text": "Optional: 2 tablespoons fresh parsley (chopped)"
         },
         {
             "amount": 0,
@@ -2598,7 +2598,7 @@ THE_SPRUCE_EATS = {
                 "id": 73287
             },
             "note": "sliced",
-            "original": "Garnish: green onions or chives (sliced)"
+            "original_text": "Garnish: green onions or chives (sliced)"
         },
         {
             "amount": 0,
@@ -2611,7 +2611,7 @@ THE_SPRUCE_EATS = {
                 "id": 18932
             },
             "note": "shredded",
-            "original": "Optional: cheddar cheese or cheddar-jack blend (shredded)"
+            "original_text": "Optional: cheddar cheese or cheddar-jack blend (shredded)"
         }
     ],
     "recipeInstructions": "Gather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nAdd vegetable broth, water, and potatoes.\nCover and cook for about 25 minutes, until potatoes are tender.\nWhisk flour into the heavy cream until smooth.\nStir into the hot mixture.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\nGather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes.\nCover and cook on HIGH for about 2 to 3 hours, or until the potatoes are very tender.\nWhisk flour into the heavy cream until smooth.\nStir the flour-cream mixture into the slow cooker.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\n\nImported from https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
@@ -2652,7 +2652,7 @@ TUDOGOSTOSO = {
                 "id": 49120
             },
             "note": "",
-            "original": "2 colheres (sopa) de azeite"
+            "original_text": "2 colheres (sopa) de azeite"
         },
         {
             "amount": 10,
@@ -2665,7 +2665,7 @@ TUDOGOSTOSO = {
                 "id": 97394
             },
             "note": "",
-            "original": "10 tomates-cereja cortados ao meio"
+            "original_text": "10 tomates-cereja cortados ao meio"
         },
         {
             "amount": 0,
@@ -2678,7 +2678,7 @@ TUDOGOSTOSO = {
                 "id": 37419
             },
             "note": "",
-            "original": "meia colher (chá) de tomilho fresco"
+            "original_text": "meia colher (chá) de tomilho fresco"
         },
         {
             "amount": 0,
@@ -2691,7 +2691,7 @@ TUDOGOSTOSO = {
                 "id": 52258
             },
             "note": "",
-            "original": "meia colher (chá) de alecrim fresco picado"
+            "original_text": "meia colher (chá) de alecrim fresco picado"
         },
         {
             "amount": 2,
@@ -2704,7 +2704,7 @@ TUDOGOSTOSO = {
                 "id": 95359
             },
             "note": "",
-            "original": "2 colheres (sopa) de uvas-passas pretas sem sementes"
+            "original_text": "2 colheres (sopa) de uvas-passas pretas sem sementes"
         },
         {
             "amount": 300,
@@ -2717,7 +2717,7 @@ TUDOGOSTOSO = {
                 "id": 90511
             },
             "note": "",
-            "original": "300 g de bacalhau dessalgado e desfiado"
+            "original_text": "300 g de bacalhau dessalgado e desfiado"
         },
         {
             "amount": 0,
@@ -2730,7 +2730,7 @@ TUDOGOSTOSO = {
                 "id": 69986
             },
             "note": "",
-            "original": "meio pimentão amarelo pequeno picado"
+            "original_text": "meio pimentão amarelo pequeno picado"
         },
         {
             "amount": 1,
@@ -2743,7 +2743,7 @@ TUDOGOSTOSO = {
                 "id": 41844
             },
             "note": "",
-            "original": "1 xícara (chá) de arroz lavado e escorrido"
+            "original_text": "1 xícara (chá) de arroz lavado e escorrido"
         },
         {
             "amount": 1,
@@ -2756,7 +2756,7 @@ TUDOGOSTOSO = {
                 "id": 79508
             },
             "note": "",
-            "original": "1 sachê de tempero knorr meu arroz extra alho"
+            "original_text": "1 sachê de tempero knorr meu arroz extra alho"
         },
         {
             "amount": 2,
@@ -2769,7 +2769,7 @@ TUDOGOSTOSO = {
                 "id": 86625
             },
             "note": "",
-            "original": "2 xícaras (chá) de água"
+            "original_text": "2 xícaras (chá) de água"
         }
     ],
     "recipeInstructions": "Em uma tigela, misture 1 colher (sopa) de azeite, os tomates, as ervas e as passas. Reserve. Em uma panela média, aqueça o azeite restante em fogo médio e refogue o bacalhau e o pimentão. Junte o arroz e refogue por mais 3 minutos. Acrescente o sachê do tempero Meu Arroz KNORR Extra Alho e refogue rapidamente. Adicione a água. Cozinhe com a panela parcialmente tampada por 10 minutos ou até secar o líquido. Retire do fogo e reserve tampado por 5 minutos. Acrescente, no arroz, a mistura de tomate reservada, mexendo delicadamente. Tampe a panela e reserve por 5 minutos. Sirva em seguida. Informações Adicionais Créditos: Knorr\n\nImported from https://www.tudogostoso.com.br/receita/146568-arroz-com-bacalhau-tomate-e-ervas.html",
