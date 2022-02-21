@@ -2,7 +2,7 @@ import json
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient
+from cookbook.models import Ingredient, Recipe, Step
 
 
 class OpenEats(Integration):
