@@ -131,9 +131,7 @@ def get_from_scraper(scrape, request):
                 recipe_json['steps'][0]['ingredients'].append(
                     {
                         'amount': 0,
-                        'unit': {
-                            'name': '',
-                        },
+                        'unit': None,
                         'food': {
                             'name': x,
                         },
@@ -275,9 +273,9 @@ def parse_keywords(keyword_json, space):
         kw = normalize_string(kw)
         if len(kw) != 0:
             if k := Keyword.objects.filter(name=kw, space=space).first():
-                keywords.append({'name': str(k)})
+                keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
             else:
-                keywords.append({'name': kw})
+                keywords.append({'label': kw, 'name': kw})
 
     return keywords
 

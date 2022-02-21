@@ -621,9 +621,12 @@ class RecipeSerializer(RecipeBaseSerializer):
 
 
 class RecipeImageSerializer(WritableNestedModelSerializer):
+    image = serializers.ImageField(required=False, allow_null=True)
+    image_url = serializers.CharField(max_length=4096, required=False, allow_null=True)
+
     class Meta:
         model = Recipe
-        fields = ['image', ]
+        fields = ['image', 'image_url', ]
 
 
 class RecipeImportSerializer(SpacedModelSerializer):

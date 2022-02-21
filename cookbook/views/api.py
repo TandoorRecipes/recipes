@@ -5,6 +5,7 @@ import uuid
 from collections import OrderedDict
 
 import requests
+from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
@@ -23,6 +24,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from recipe_scrapers import NoSchemaFoundInWildMode, WebsiteNotImplementedError, scrape_me
+from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
@@ -706,20 +708,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         serializer = self.serializer_class(obj, data=request.data, partial=True)
 
-        if self.request.space.demo:
-            raise PermissionDenied(detail='Not available in demo', code=None)
-
         if serializer.is_valid():
             serializer.save()
+            image = None
 
-            if serializer.validated_data == {}:
-                obj.image = None
-            else:
-                img, filetype = handle_image(request, obj.image)
+            if 'image' in serializer.validated_data:
+                image = obj.image
+            elif 'image_url' in serializer.validated_data:
+                try:
+                    response = requests.get(serializer.validated_data['image_url'])
+                    image = File(io.BytesIO(response.content))
+                    print('test')
+                except UnidentifiedImageError as e:
+                    print(e)
+                    pass
+                except MissingSchema as e:
+                    print(e)
+                    pass
+                except Exception as e:
+                    print(e)
+                    pass
+
+            if image is not None:
+                img, filetype = handle_image(request, image)
                 obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
-            obj.save()
+                obj.save()
+                return Response(serializer.data)
 
-            return Response(serializer.data)
         return Response(serializer.errors, 400)
 
     # TODO: refactor API to use post/put/delete or leave as put and change VUE to use list_recipe after creating
