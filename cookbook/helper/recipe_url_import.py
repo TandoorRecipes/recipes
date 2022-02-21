@@ -33,7 +33,7 @@ def get_from_scraper(scrape, request):
     except Exception:
         description = ''
 
-    recipe_json['description'] = parse_description(description)
+    recipe_json['description'] = parse_description(description)[:512]
     recipe_json['internal'] = True
 
     try:
