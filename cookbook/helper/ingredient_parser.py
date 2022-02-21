@@ -203,7 +203,7 @@ class IngredientParser:
     def parse(self, x):
         # initialize default values
         amount = 0
-        unit = ''
+        unit = None
         ingredient = ''
         note = ''
         unit_note = ''
