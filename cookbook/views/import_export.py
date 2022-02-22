@@ -99,7 +99,7 @@ def import_recipe(request):
                 t.setDaemon(True)
                 t.start()
 
-                return JsonResponse({'import_id': [il.pk]})
+                return JsonResponse({'import_id': il.pk})
             except NotImplementedError:
                 return JsonResponse(
                     {

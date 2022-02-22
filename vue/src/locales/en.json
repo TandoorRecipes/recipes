@@ -336,6 +336,8 @@
     "Website": "Website",
     "App": "App",
     "Bookmarklet": "Bookmarklet",
+    "import_duplicates": "To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.",
+    "paste_json": "Paste json or html source here to load recipe.",
     "search_no_recipes": "Could not find any recipes!",
     "search_import_help_text": "Import a recipe from an external website or application.",
     "search_create_help_text": "Create a new recipe directly in Tandoor.",
