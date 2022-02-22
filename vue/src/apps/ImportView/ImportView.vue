@@ -9,14 +9,16 @@
 
             <div class="row">
                 <div class="col col-md-12">
-                    <b-tabs content-class="mt-3">
-                        <b-tab v-bind:title="$t('Website')" active>
+                    <b-tabs content-class="mt-3" v-model="tab_index">
+                        <!-- URL Tab -->
+                        <b-tab v-bind:title="$t('Website')" id="id_tab_url">
 
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-button block v-b-toggle.id_accordion_url variant="info">Website</b-button>
                                 </b-card-header>
-                                <b-collapse id="id_accordion_url" visible accordion="url_import_accordion" role="tabpanel">
+                                <b-collapse id="id_accordion_url" visible accordion="url_import_accordion"
+                                            role="tabpanel">
                                     <b-card-body>
                                         <b-input-group>
                                             <b-input v-model="website_url" placeholder="Website URL"
@@ -40,10 +42,14 @@
 
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_add_options variant="info">Additional Options</b-button>
+                                    <b-button block v-b-toggle.id_accordion_add_options variant="info">Additional
+                                        Options
+                                    </b-button>
                                 </b-card-header>
-                                <b-collapse id="id_accordion_add_options" accordion="url_import_accordion" role="tabpanel">
-                                    <b-card-body v-if="recipe_json !== undefined"> <!-- TODO disable/show message if not imported yet -->
+                                <b-collapse id="id_accordion_add_options" accordion="url_import_accordion"
+                                            role="tabpanel">
+                                    <b-card-body v-if="recipe_json !== undefined">
+                                        <!-- TODO disable/show message if not imported yet -->
 
                                         <div class="row">
                                             <div class="col col-md-12 text-center">
@@ -119,7 +125,8 @@
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-button block v-b-toggle.id_accordion_import variant="info">Import</b-button>
                                 </b-card-header>
-                                <b-collapse id="id_accordion_import" visible accordion="url_import_accordion" role="tabpanel">
+                                <b-collapse id="id_accordion_import" visible accordion="url_import_accordion"
+                                            role="tabpanel">
                                     <b-card-body>
 
                                         <b-button-group>
@@ -134,16 +141,50 @@
 
 
                         </b-tab>
-                        <b-tab v-bind:title="$t('App')">
-                            <!-- TODO implement app import -->
+                        <!-- App Tab -->
+                        <b-tab v-bind:title="$t('App')" active>
+
+                            <select class="form-control" v-model="recipe_app">
+                                <option v-for="i in INTEGRATIONS" :value="i.id" v-bind:key="i.id">{{ i.name }}</option>
+                            </select>
+
+                            <b-form-checkbox v-model="import_duplicates" name="check-button" switch
+                                             style="margin-top: 1vh">
+                                {{ $t('import_duplicates') }}
+                            </b-form-checkbox>
+
+                            <b-form-file
+                                class="my-2"
+                                multiple
+                                v-model="recipe_files"
+                                :placeholder="$t('Select_File')"
+                                drop-placeholder="Drop recipe files here...">
+                            </b-form-file>
+                            <button @click="importAppRecipe()" class="btn btn-primary shadow-none" type="button"
+                                    id="id_btn_app"><i class="fas fa-file-archive"></i> {{ $t('Import') }}
+                            </button>
                         </b-tab>
+                        <!-- Source Tab -->
                         <b-tab v-bind:title="$t('Source')">
-                            <!-- TODO implement source import -->
+
+                            <div class="input-group mt-4">
+                                <b-textarea class="form-control input-group-append" v-model="source_data" rows=10
+                                          :placeholder="$t('paste_json')" style="font-size: 12px">
+                                </b-textarea>
+                            </div>
+                            <b-button @click="loadRecipe()" variant="primary"><i class="fas fa-code"></i> {{ $t('Import') }} </b-button>
+
                         </b-tab>
+                        <!-- Bookmarklet Tab -->
                         <b-tab v-bind:title="$t('Bookmarklet')">
-                            <!-- TODO get code for bookmarklet here and provide some instructions -->
-                            <a class="btn btn-outline-info btn-sm" href="#">
-                                Bookmark Text </a>
+                            <!-- TODO get code for bookmarklet -->
+                            <!-- TODO localize -->
+                            Some pages cannot be imported from their URL, the Bookmarklet can be used to import from
+                            some of them anyway.
+                            1. Drag the following button to your bookmarks bar <a class="btn btn-outline-info btn-sm"
+                                                                                  href="#"> Bookmark Text </a>
+                            2. Open the page you want to import from
+                            3. Click on the bookmark to perform the import
                         </b-tab>
 
                     </b-tabs>
@@ -167,6 +208,7 @@ import {resolveDjangoUrl, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/u
 import axios from "axios";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import draggable from "vuedraggable";
+import {INTEGRATIONS} from "@/utils/integration";
 
 Vue.use(BootstrapVue)
 
@@ -181,6 +223,8 @@ export default {
     },
     data() {
         return {
+            tab_index: 0,
+            // URL import
             LS_IMPORT_RECENT: 'import_recent_urls', //TODO use central helper to manage all local storage keys (and maybe even access)
             website_url: '',
             recent_urls: [],
@@ -189,10 +233,12 @@ export default {
             recipe_data: undefined,
             recipe_tree: undefined,
             recipe_images: [],
-            automatic: true,
-            error: undefined,
-            loading: false,
-            preview: false,
+            // App Import
+            INTEGRATIONS: INTEGRATIONS,
+            recipe_app: undefined,
+            import_duplicates: false,
+            recipe_files: [],
+
         }
     },
     mounted() {
@@ -238,9 +284,7 @@ export default {
             this.recipe_json = undefined
             this.recipe_tree = undefined
             this.recipe_images = []
-            this.error = undefined
-            this.loading = true
-            this.preview = false
+
             axios.post(resolveDjangoUrl('api_recipe_from_source'), {
                 'url': this.website_url,
                 'data': this.source_data,
@@ -254,19 +298,28 @@ export default {
 
                 this.recipe_tree = response.data['recipe_tree'];
                 this.recipe_html = response.data['recipe_html'];
-                this.recipe_images = response.data['recipe_images']; //todo change on backend as well after old view is deprecated
-                if (this.automatic) {
-                    this.recipe_data = this.recipe_json;
-                    this.preview = false
-                } else {
-                    this.preview = true
-                }
-                this.loading = false
+                this.recipe_images = response.data['recipe_images'];
+
+                this.tab_index = 0
             }).catch((err) => {
-                this.error = err.data
-                this.loading = false
-                console.log(err.response)
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
+            })
+        },
+        /**
+         * Import recipes with uploaded files and app integration
+         */
+        importAppRecipe: function () {
+            let formData = new FormData();
+            formData.append('type', this.recipe_app);
+            formData.append('duplicates', this.import_duplicates)
+            for (let i = 0; i < this.recipe_files.length; i++) {
+                formData.append('files', this.recipe_files[i]);
+            }
+            axios.post(resolveDjangoUrl('view_import'), formData, {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
+                window.location.href = resolveDjangoUrl('view_import_response', response.data['import_id'])
+            }).catch((err) => {
+                console.log(err)
+                StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
             })
         },
         /**
