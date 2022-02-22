@@ -334,7 +334,7 @@ def parse_keywords(keyword_json, space):
         kw = normalize_string(kw)
         if len(kw) != 0:
             if k := Keyword.objects.filter(name=kw, space=space).first():
-                keywords.append({'id': str(k.id), 'text': str(k)})
+                keywords.append({'id': str(k.id), 'text': str(k.name)})
             else:
                 keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
 
