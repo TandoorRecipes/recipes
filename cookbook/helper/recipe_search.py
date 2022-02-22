@@ -13,8 +13,8 @@ from cookbook.filters import RecipeFilter
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
-from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields,
-                             SearchPreference, ViewLog, RecipeBook)
+from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, RecipeBook, SearchFields,
+                             SearchPreference, ViewLog)
 from recipes import settings
 
 
@@ -28,7 +28,7 @@ class RecipeSearch():
         self._queryset = None
         if f := params.get('filter', None):
             custom_filter = CustomFilter.objects.filter(id=f, space=self._request.space).filter(Q(created_by=self._request.user) |
-                                                                                         Q(shared=self._request.user) | Q(recipebook__shared=self._request.user)).first()
+                                                                                                Q(shared=self._request.user) | Q(recipebook__shared=self._request.user)).first()
             if custom_filter:
                 self._params = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
@@ -40,7 +40,7 @@ class RecipeSearch():
             self._search_prefs = request.user.searchpreference
         else:
             self._search_prefs = SearchPreference()
-        self._string = params.get('query').strip() if params.get('query', None) else None
+        self._string = self._params.get('query').strip() if self._params.get('query', None) else None
         self._rating = self._params.get('rating', None)
         self._keywords = {
             'or': self._params.get('keywords_or', None) or self._params.get('keywords', None),
@@ -205,7 +205,7 @@ class RecipeSearch():
                 else:
                     self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
             if self._sort_includes('score') and self._fulltext_include and self._fuzzy_match is not None:
-                self._queryset = self._queryset.annotate(score=Sum(F('rank')+F('simularity')))
+                self._queryset = self._queryset.annotate(score=F('rank')+F('simularity'))
         else:
             query_filter = Q()
             for f in [x + '__unaccent__iexact' if x in self._unaccent_include else x + '__iexact' for x in SearchFields.objects.all().values_list('field', flat=True)]:
