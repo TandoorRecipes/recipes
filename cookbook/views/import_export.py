@@ -11,6 +11,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportExportBase, ImportForm
 from cookbook.helper.permission_helper import group_required
+from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.cookbookapp import CookBookApp
@@ -123,6 +124,9 @@ def export_recipe(request):
                 recipes = form.cleaned_data['recipes']
                 if form.cleaned_data['all']:
                     recipes = Recipe.objects.filter(space=request.space, internal=True).all()
+                elif filter := form.cleaned_data['filter']:
+                    search = RecipeSearch(request, filter=filter)
+                    recipes = search.get_queryset(Recipe.objects.filter(space=request.space, internal=True))
 
                 integration = get_integration(request, form.cleaned_data['type'])
 
