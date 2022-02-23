@@ -52,10 +52,12 @@ export default {
         page_count: function () {
             return Math.ceil(this.page_count_pagination / this.per_page_count)
         },
+        display_recipes: function() {
+          return this.recipes.slice((this.current_page - 1 - 1) * 2, (this.current_page - 1) * 2)
+        }
     },
     data() {
         return {
-            display_recipes: [],
             current_page: 1,
             per_page_count: 2,
             bounce_left: false,
@@ -66,18 +68,23 @@ export default {
     methods: {
         pageChange: function (page) {
             this.current_page = page
-            this.display_recipes = this.recipes.slice((this.current_page - 1 - 1) * 2, (this.current_page - 1) * 2)
             this.loadRecipeDetails(page)
         },
         loadRecipeDetails: function (page) {
             this.display_recipes.forEach((recipe, index) => {
+              if (recipe.recipe_content.steps === undefined) {
                 let apiClient = new ApiApiFactory()
 
                 apiClient.retrieveRecipe(recipe.recipe).then((result) => {
-                    let new_entry = Object.assign({}, recipe)
-                    new_entry.recipe_content = result.data
-                    this.$set(this.display_recipes, index, new_entry)
+                  let new_entry = Object.assign({}, recipe)
+                  new_entry.recipe_content = result.data
+                  this.recipes.forEach((rec, i) => {
+                    if (rec.recipe === new_entry.recipe) {
+                      this.$set(this.recipes, i, new_entry)
+                    }
+                  })
                 })
+              }
             })
         },
         swipeLeft: function () {
