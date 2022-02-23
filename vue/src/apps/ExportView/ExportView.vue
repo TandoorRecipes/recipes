@@ -17,7 +17,7 @@
                     {{ $t("All recipes") }}
                 </b-form-checkbox>
 
-                <multiselect
+                <!-- <multiselect
                     :searchable="true"
                     :disabled="disabled_multiselect"
                     v-model="recipe_list"
@@ -35,7 +35,17 @@
                     :loading="recipes_loading"
                     @search-change="searchRecipes"
                 >
-                </multiselect>
+                </multiselect> -->
+                <generic-multiselect
+                    class="input-group-text m-0 p-0"
+                    @change="recipe_list = $event.val"
+                    label="name"
+                    :model="Models.RECIPE"
+                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                    v-bind:placeholder="$t('Recipe')"
+                    :limit="20"
+                    :multiple="true"
+                />
                 <generic-multiselect
                     @change="filter = $event.val"
                     :model="Models.CUSTOM_FILTER"
@@ -61,7 +71,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import LoadingSpinner from "@/components/LoadingSpinner"
 
 import { StandardToasts, makeToast, resolveDjangoUrl, ApiMixin } from "@/utils/utils"
-import Multiselect from "vue-multiselect"
+// import Multiselect from "vue-multiselect"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import { ApiApiFactory } from "@/utils/openapi/api.ts"
 import axios from "axios"
@@ -74,7 +84,7 @@ export default {
     ResolveUrlMixin,
     ToastMixin,
   ],*/
-    components: { Multiselect, GenericMultiselect },
+    components: { GenericMultiselect },
     mixins: [ApiMixin],
     data() {
         return {
@@ -92,7 +102,7 @@ export default {
     },
     mounted() {
         if (this.export_id) this.insertRequested()
-        else this.searchRecipes("")
+        // else this.searchRecipes("")
     },
     methods: {
         insertRequested: function () {
@@ -110,26 +120,22 @@ export default {
                     console.log(err)
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
                 })
-                .then((e) => this.searchRecipes(""))
+            // .then((e) => this.searchRecipes(""))
         },
 
-        searchRecipes: function (query) {
-            let apiFactory = new ApiApiFactory()
+        // searchRecipes: function (query) {
+        //     this.recipes_loading = true
 
-            this.recipes_loading = true
-
-            let maxResultLenght = 1000
-            apiFactory
-                .listRecipes(query, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 1, maxResultLenght)
-                .then((response) => {
-                    this.recipes = response.data.results
-                    this.recipes_loading = false
-                })
-                .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
-                })
-        },
+        //     this.genericAPI(this.Models.RECIPE, this.Actions.LIST, { query: query })
+        //         .then((response) => {
+        //             this.recipes = response.data.results
+        //             this.recipes_loading = false
+        //         })
+        //         .catch((err) => {
+        //             console.log(err)
+        //             StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+        //         })
+        // },
 
         exportRecipe: function () {
             if (this.recipe_list.length < 1 && this.export_all == false && this.filter === undefined) {
@@ -142,7 +148,7 @@ export default {
             let formData = new FormData()
             formData.append("type", this.recipe_app)
             formData.append("all", this.export_all)
-            formData.append("filter", this.filter?.id)
+            formData.append("filter", this.filter?.id ?? null)
 
             for (var i = 0; i < this.recipe_list.length; i++) {
                 formData.append("recipes", this.recipe_list[i].id)
