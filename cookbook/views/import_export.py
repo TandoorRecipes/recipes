@@ -124,8 +124,8 @@ def export_recipe(request):
                 recipes = form.cleaned_data['recipes']
                 if form.cleaned_data['all']:
                     recipes = Recipe.objects.filter(space=request.space, internal=True).all()
-                elif filter := form.cleaned_data['filter']:
-                    search = RecipeSearch(request, filter=filter)
+                elif custom_filter := form.cleaned_data['custom_filter']:
+                    search = RecipeSearch(request, filter=custom_filter)
                     recipes = search.get_queryset(Recipe.objects.filter(space=request.space, internal=True))
 
                 integration = get_integration(request, form.cleaned_data['type'])

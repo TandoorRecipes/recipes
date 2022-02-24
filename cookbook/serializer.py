@@ -424,7 +424,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             sm_category = validated_data['supermarket_category']
             sc_name = sm_category.pop('name', None)
             validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
-                name=name,
+                name=sc_name,
                 space=space, defaults=sm_category)
         onhand = validated_data.pop('food_onhand', None)
 
