@@ -16,7 +16,7 @@
                                         <b-button variant="light" v-b-tooltip.hover :title="$t('Random Recipes')" @click="openRandom()">
                                             <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
                                         </b-button>
-                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('advanced_search_settings')" v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'">
+                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover :title="$t('Advanced Settings')" v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'">
                                             <!-- TODO consider changing this icon to a filter -->
                                             <i class="fas fa-caret-down" v-if="!search.advanced_search_visible"></i>
                                             <i class="fas fa-caret-up" v-if="search.advanced_search_visible"></i>

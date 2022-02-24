@@ -6,7 +6,7 @@
         <b-sidebar id="related-recipes" backdrop right bottom no-header shadow="sm" style="z-index: 10000" @shown="updatePinnedRecipes()">
             <template #default="{ hide }">
                 <div class="d-flex flex-column justify-content-end h-100 p-3 align-items-end">
-                    <h5>{{$t("Planned")}} <i class="fas fa-calendar fa-fw"></i></h5>
+                    <h5>Planned <i class="fas fa-calendar fa-fw"></i></h5>
 
                     <div class="text-right">
                         <template v-if="planned_recipes.length > 0">
@@ -24,11 +24,11 @@
                             </div>
                         </template>
                         <template v-else>
-                            <span class="text-muted">{{$t("nothing_planned_today")}}</span>
+                            <span class="text-muted">You have nothing planned for today!</span>
                         </template>
                     </div>
 
-                    <h5>{{$t("Pinned")}} <i class="fas fa-thumbtack fa-fw"></i></h5>
+                    <h5>Pinned <i class="fas fa-thumbtack fa-fw"></i></h5>
 
                     <template v-if="pinned_recipes.length > 0">
                         <div class="text-right">
@@ -53,7 +53,7 @@
                         </div>
                     </template>
                     <template v-else>
-                        <span class="text-muted">{{$t("no_pinned_recipes")}}</span>
+                        <span class="text-muted">You have no pinned recipes!</span>
                     </template>
 
                     <template v-if="related_recipes.length > 0">
@@ -77,8 +77,8 @@
             </template>
             <template #footer="{ hide }">
                 <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
-                    <strong class="mr-auto">{{$t("Quick actions")}}</strong>
-                    <b-button size="sm" @click="hide">{{$t("Close")}}</b-button>
+                    <strong class="mr-auto">Quick actions</strong>
+                    <b-button size="sm" @click="hide">Close</b-button>
                 </div>
             </template>
         </b-sidebar>
