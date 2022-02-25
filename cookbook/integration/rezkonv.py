@@ -60,9 +60,14 @@ class RezKonv(Integration):
     def split_recipe_file(self, file):
         recipe_list = []
         current_recipe = ''
-
+        encoding_list = ['windows-1250', 'latin-1'] #TODO build algorithm to try trough encodings and fail if none work, use for all importers
+        encoding = 'windows-1250'
         for fl in file.readlines():
-            line = fl.decode("windows-1250")
+            try:
+                line = fl.decode(encoding)
+            except UnicodeDecodeError:
+                encoding = 'latin-1'
+                line = fl.decode(encoding)
             if line.startswith('=====') and 'rezkonv' in line.lower():
                 if current_recipe != '':
                     recipe_list.append(current_recipe)
