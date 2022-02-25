@@ -983,6 +983,7 @@ export default {
                             unit: unit,
                             food: { name: result.data.food },
                             note: result.data.note,
+                            original_text: ing,
                         })
                     })
                     order++

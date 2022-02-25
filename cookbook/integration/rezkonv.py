@@ -1,6 +1,6 @@
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class RezKonv(Integration):
@@ -44,11 +44,11 @@ class RezKonv(Integration):
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
             if len(ingredient.strip()) > 0:
-                amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-                f = ingredient_parser.get_food(ingredient)
+                amount, unit, food, note = ingredient_parser.parse(ingredient)
+                f = ingredient_parser.get_food(food)
                 u = ingredient_parser.get_unit(unit)
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                    food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                 ))
         recipe.steps.add(step)
 
