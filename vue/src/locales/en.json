@@ -350,5 +350,15 @@
     "InheritFields_help": "The values of these fields will be inheritted from parent (Exception: blank shopping categories are not inheritted)",
     "last_viewed": "Last Viewed",
     "created_on": "Created On",
-    "updatedon": "Updated On"
+    "updatedon": "Updated On",
+    "advanced_search_settings": "Advanced Search Settings",
+    "nothing_planned_today": "You have nothing planned for today!",
+    "no_pinned_recipes": "You have no pinned recipes!",
+    "Planned": "Planned",
+    "Pinned": "Pinned",
+    "Quick actions": "Quick actions",
+    "Ratings": "Ratings",
+    "Internal": "Internal",
+    "Units": "Units",
+    "Random Recipes": "Random Recipes"
 }
