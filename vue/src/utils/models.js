@@ -1,7 +1,6 @@
 /*
  * Utility CLASS to define model configurations
  * */
-import i18n from "@/i18n"
 
 // TODO this needs rethought and simplified
 // maybe a function that returns a single dictionary based on action?
@@ -51,7 +50,7 @@ export class Models {
                     type: "lookup",
                     field: "target",
                     list: "self",
-                    sticky_options: [{ id: 0, name: i18n.t("tree_root") }],
+                    sticky_options: [{ id: 0, name: "tree_root" }],
                 },
             },
         },
@@ -59,7 +58,7 @@ export class Models {
 
     // MODELS - inherits and takes precedence over MODEL_TYPES and ACTIONS
     static FOOD = {
-        name: i18n.t("Food"), // *OPTIONAL* : parameters will be built model -> model_type -> default
+        name: "Food", // *OPTIONAL* : parameters will be built model -> model_type -> default
         apiName: "Food", // *REQUIRED* : the name that is used in api.ts for this model
         model_type: this.TREE, // *OPTIONAL* : model specific params for api, if not present will attempt modeltype_create then default_create
         paginated: true,
@@ -100,15 +99,15 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
-                    placeholder: "",
+                    label: "Name", // form.label always translated in utils.getForm()
+                    placeholder: "", // form.placeholder always translated
                     subtitle_field: "full_name",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description", // form.label always translated in utils.getForm()
                     placeholder: "",
                 },
                 recipe: {
@@ -116,31 +115,31 @@ export class Models {
                     type: "lookup",
                     field: "recipe",
                     list: "RECIPE",
-                    label: i18n.t("Recipe"),
-                    help_text: i18n.t("food_recipe_help"),
+                    label: "Recipe", // form.label always translated in utils.getForm()
+                    help_text: "food_recipe_help", // form.help_text always translated
                 },
                 onhand: {
                     form_field: true,
                     type: "checkbox",
                     field: "food_onhand",
-                    label: i18n.t("OnHand"),
-                    help_text: i18n.t("OnHand_help"),
+                    label: "OnHand",
+                    help_text: "OnHand_help",
                 },
                 ignore_shopping: {
                     form_field: true,
                     type: "checkbox",
                     field: "ignore_shopping",
-                    label: i18n.t("Ignore_Shopping"),
-                    help_text: i18n.t("ignore_shopping_help"),
+                    label: "Ignore_Shopping",
+                    help_text: "ignore_shopping_help",
                 },
                 shopping_category: {
                     form_field: true,
                     type: "lookup",
                     field: "supermarket_category",
                     list: "SHOPPING_CATEGORY",
-                    label: i18n.t("Shopping_Category"),
+                    label: "Shopping_Category",
                     allow_create: true,
-                    help_text: i18n.t("shopping_category_help"),
+                    help_text: "shopping_category_help", // form.help_text always translated
                 },
                 substitute: {
                     form_field: true,
@@ -149,17 +148,17 @@ export class Models {
                     multiple: true,
                     field: "substitute",
                     list: "FOOD",
-                    label: i18n.t("Substitutes"),
+                    label: "Substitutes",
                     allow_create: false,
-                    help_text: i18n.t("substitute_help"),
+                    help_text: "substitute_help",
                 },
                 substitute_siblings: {
                     form_field: true,
                     advanced: true,
                     type: "checkbox",
                     field: "substitute_siblings",
-                    label: i18n.t("substitute_siblings"),
-                    help_text: i18n.t("substitute_siblings_help"),
+                    label: "substitute_siblings", // form.label always translated in utils.getForm()
+                    help_text: "substitute_siblings_help", // form.help_text always translated
                     condition: { field: "parent", value: true, condition: "field_exists" },
                 },
                 substitute_children: {
@@ -167,8 +166,8 @@ export class Models {
                     advanced: true,
                     type: "checkbox",
                     field: "substitute_children",
-                    label: i18n.t("substitute_children"),
-                    help_text: i18n.t("substitute_children_help"),
+                    label: "substitute_children",
+                    help_text: "substitute_children_help",
                     condition: { field: "numchild", value: 0, condition: "gt" },
                 },
                 inherit_fields: {
@@ -178,9 +177,9 @@ export class Models {
                     multiple: true,
                     field: "inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
-                    label: i18n.t("InheritFields"),
+                    label: "InheritFields",
                     condition: { field: "food_children_exist", value: true, condition: "preference_equals" },
-                    help_text: i18n.t("InheritFields_help"),
+                    help_text: "InheritFields_help",
                 },
                 child_inherit_fields: {
                     form_field: true,
@@ -189,17 +188,17 @@ export class Models {
                     multiple: true,
                     field: "child_inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
-                    label: i18n.t("ChildInheritFields"),
+                    label: "ChildInheritFields", // form.label always translated in utils.getForm()
                     condition: { field: "numchild", value: 0, condition: "gt" },
-                    help_text: i18n.t("ChildInheritFields_help"),
+                    help_text: "ChildInheritFields_help", // form.help_text always translated
                 },
                 reset_inherit: {
                     form_field: true,
                     advanced: true,
                     type: "checkbox",
                     field: "reset_inherit",
-                    label: i18n.t("reset_children"),
-                    help_text: i18n.t("reset_children_help"),
+                    label: "reset_children",
+                    help_text: "reset_children_help",
                     condition: { field: "numchild", value: 0, condition: "gt" },
                 },
                 form_function: "FoodCreateDefault",
@@ -215,7 +214,7 @@ export class Models {
     }
 
     static KEYWORD = {
-        name: i18n.t("Keyword"), // *OPTIONAL: parameters will be built model -> model_type -> default
+        name: "Keyword", // *OPTIONAL: parameters will be built model -> model_type -> default
         apiName: "Keyword",
         model_type: this.TREE,
         paginated: true,
@@ -232,21 +231,21 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
                 icon: {
                     form_field: true,
                     type: "emoji",
                     field: "icon",
-                    label: i18n.t("Icon"),
+                    label: "Icon",
                 },
                 full_name: {
                     form_field: true,
@@ -258,7 +257,7 @@ export class Models {
     }
 
     static UNIT = {
-        name: i18n.t("Unit"),
+        name: "Unit",
         apiName: "Unit",
         paginated: true,
         create: {
@@ -268,14 +267,14 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
             },
@@ -284,7 +283,7 @@ export class Models {
     }
 
     static SHOPPING_LIST = {
-        name: i18n.t("Shopping_list"),
+        name: "Shopping_list",
         apiName: "ShoppingListEntry",
         list: {
             params: ["id", "checked", "supermarket", "options"],
@@ -297,7 +296,7 @@ export class Models {
                     type: "lookup",
                     field: "unit",
                     list: "UNIT",
-                    label: i18n.t("Unit"),
+                    label: "Unit",
                     allow_create: true,
                 },
                 food: {
@@ -305,7 +304,7 @@ export class Models {
                     type: "lookup",
                     field: "food",
                     list: "FOOD",
-                    label: i18n.t("Food"),
+                    label: "Food", // form.label always translated in utils.getForm()
                     allow_create: true,
                 },
             },
@@ -313,7 +312,7 @@ export class Models {
     }
 
     static RECIPE_BOOK = {
-        name: i18n.t("Recipe_Book"),
+        name: "Recipe_Book",
         apiName: "RecipeBook",
         create: {
             params: [["name", "description", "icon", "filter"]],
@@ -322,27 +321,27 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
                 icon: {
                     form_field: true,
                     type: "emoji",
                     field: "icon",
-                    label: i18n.t("Icon"),
+                    label: "Icon",
                 },
                 filter: {
                     form_field: true,
                     type: "lookup",
                     field: "filter",
-                    label: i18n.t("Custom Filter"),
+                    label: "Custom Filter",
                     list: "CUSTOM_FILTER",
                 },
             },
@@ -350,7 +349,7 @@ export class Models {
     }
 
     static SHOPPING_CATEGORY = {
-        name: i18n.t("Shopping_Category"),
+        name: "Shopping_Category",
         apiName: "SupermarketCategory",
         create: {
             params: [["name", "description"]],
@@ -359,14 +358,14 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name", // form.label always translated in utils.getForm()
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
             },
@@ -374,7 +373,7 @@ export class Models {
     }
 
     static SHOPPING_CATEGORY_RELATION = {
-        name: i18n.t("Shopping_Category_Relation"),
+        name: "Shopping_Category_Relation",
         apiName: "SupermarketCategoryRelation",
         create: {
             params: [["category", "supermarket", "order"]],
@@ -383,14 +382,14 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
             },
@@ -398,7 +397,7 @@ export class Models {
     }
 
     static SUPERMARKET = {
-        name: i18n.t("Supermarket"),
+        name: "Supermarket",
         apiName: "Supermarket",
         ordered_tags: [{ field: "category_to_supermarket", label: "category::name", color: "info" }],
         create: {
@@ -408,14 +407,14 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
                 categories: {
@@ -425,7 +424,7 @@ export class Models {
                     list_label: "category::name",
                     ordered: true, // ordered lookups assume working with relation field
                     field: "category_to_supermarket",
-                    label: i18n.t("Categories"),
+                    label: "Categories", // form.label always translated in utils.getForm()
                     placeholder: "",
                 },
             },
@@ -441,7 +440,7 @@ export class Models {
     }
 
     static AUTOMATION = {
-        name: i18n.t("Automation"),
+        name: "Automation",
         apiName: "Automation",
         paginated: true,
         list: {
@@ -456,47 +455,74 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 description: {
                     form_field: true,
                     type: "text",
                     field: "description",
-                    label: i18n.t("Description"),
+                    label: "Description",
                     placeholder: "",
                 },
                 type: {
                     form_field: true,
                     type: "choice",
                     options: [
-                        { value: "FOOD_ALIAS", text: i18n.t("Food_Alias") },
-                        { value: "UNIT_ALIAS", text: i18n.t("Unit_Alias") },
-                        { value: "KEYWORD_ALIAS", text: i18n.t("Keyword_Alias") },
+                        { value: "FOOD_ALIAS", text: "Food_Alias" },
+                        { value: "UNIT_ALIAS", text: "Unit_Alias" },
+                        { value: "KEYWORD_ALIAS", text: "Keyword_Alias" },
                     ],
                     field: "type",
-                    label: i18n.t("Type"),
+                    label: "Type",
                     placeholder: "",
                 },
                 param_1: {
                     form_field: true,
                     type: "text",
                     field: "param_1",
-                    label: i18n.t("Parameter") + " 1",
+                    label: {
+                        function: "translate",
+                        phrase: "parameter_count",
+                        params: [
+                            {
+                                token: "count",
+                                attribute: "1",
+                            },
+                        ],
+                    },
                     placeholder: "",
                 },
                 param_2: {
                     form_field: true,
                     type: "text",
                     field: "param_2",
-                    label: i18n.t("Parameter") + " 2",
+                    label: {
+                        function: "translate",
+                        phrase: "parameter_count",
+                        params: [
+                            {
+                                token: "count",
+                                attribute: "2",
+                            },
+                        ],
+                    },
                     placeholder: "",
                 },
                 param_3: {
                     form_field: true,
                     type: "text",
                     field: "param_3",
-                    label: i18n.t("Parameter") + " 3",
+                    label: {
+                        function: "translate",
+                        phrase: "parameter_count",
+                        params: [
+                            {
+                                token: "count",
+                                attribute: "3",
+                            },
+                        ],
+                    },
                     placeholder: "",
                 },
             },
@@ -504,7 +530,7 @@ export class Models {
     }
 
     static RECIPE = {
-        name: i18n.t("Recipe"),
+        name: "Recipe",
         apiName: "Recipe",
         list: {
             params: [
@@ -546,7 +572,7 @@ export class Models {
     }
 
     static CUSTOM_FILTER = {
-        name: i18n.t("Custom Filter"),
+        name: "Custom Filter",
         apiName: "CustomFilter",
 
         create: {
@@ -556,7 +582,7 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name", // form.label always translated in utils.getForm()
                     placeholder: "",
                 },
 
@@ -566,14 +592,14 @@ export class Models {
                     field: "shared",
                     list: "USER",
                     list_label: "username",
-                    label: i18n.t("shared_with"),
+                    label: "shared_with",
                     multiple: true,
                 },
             },
         },
     }
     static USER_NAME = {
-        name: i18n.t("User"),
+        name: "User",
         apiName: "User",
         list: {
             params: ["filter_list"],
@@ -581,7 +607,7 @@ export class Models {
     }
 
     static MEAL_TYPE = {
-        name: i18n.t("Meal_Type"),
+        name: "Meal_Type",
         apiName: "MealType",
         list: {
             params: ["filter_list"],
@@ -589,7 +615,7 @@ export class Models {
     }
 
     static MEAL_PLAN = {
-        name: i18n.t("Meal_Plan"),
+        name: "Meal_Plan",
         apiName: "MealPlan",
         list: {
             params: ["options"],
@@ -597,7 +623,7 @@ export class Models {
     }
 
     static USERFILE = {
-        name: i18n.t("File"),
+        name: "File",
         apiName: "UserFile",
         paginated: false,
         list: {
@@ -612,27 +638,27 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "name",
-                    label: i18n.t("Name"),
+                    label: "Name",
                     placeholder: "",
                 },
                 file: {
                     form_field: true,
                     type: "file",
                     field: "file",
-                    label: i18n.t("File"),
+                    label: "File", // form.label always translated in utils.getForm()
                     placeholder: "",
                 },
             },
         },
     }
     static USER = {
-        name: i18n.t("User"),
+        name: "User",
         apiName: "User",
         paginated: false,
     }
 
     static STEP = {
-        name: i18n.t("Step"),
+        name: "Step",
         apiName: "Step",
         list: {
             params: ["recipe", "query", "page", "pageSize", "options"],
@@ -652,10 +678,11 @@ export class Actions {
                         token: "type",
                         from: "model",
                         attribute: "name",
+                        translate: true,
                     },
                 ],
             },
-            ok_label: i18n.t("Save"),
+            ok_label: { function: "translate", phrase: "Save" },
         },
     }
     static UPDATE = {
@@ -669,6 +696,7 @@ export class Actions {
                     token: "type",
                     from: "model",
                     attribute: "name",
+                    translate: true,
                 },
             ],
         },
@@ -685,10 +713,11 @@ export class Actions {
                         token: "type",
                         from: "model",
                         attribute: "name",
+                        translate: true,
                     },
                 ],
             },
-            ok_label: i18n.t("Delete"),
+            ok_label: { function: "translate", phrase: "Delete" },
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -736,10 +765,11 @@ export class Actions {
                         token: "type",
                         from: "model",
                         attribute: "name",
+                        translate: true,
                     },
                 ],
             },
-            ok_label: i18n.t("Merge"),
+            ok_label: { function: "translate", phrase: "Merge" },
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -756,6 +786,7 @@ export class Actions {
                             token: "type",
                             from: "model",
                             attribute: "name",
+                            translate: true,
                         },
                     ],
                 },
@@ -784,10 +815,11 @@ export class Actions {
                         token: "type",
                         from: "model",
                         attribute: "name",
+                        translate: true,
                     },
                 ],
             },
-            ok_label: i18n.t("Move"),
+            ok_label: { function: "translate", phrase: "Move" },
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -804,6 +836,7 @@ export class Actions {
                             token: "type",
                             from: "model",
                             attribute: "name",
+                            translate: true,
                         },
                     ],
                 },
