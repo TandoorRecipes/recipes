@@ -591,6 +591,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
+    original_text = models.CharField(max_length=256, null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')

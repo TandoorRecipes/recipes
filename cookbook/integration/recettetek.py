@@ -1,14 +1,15 @@
-import re
+import imghdr
 import json
-import requests
+import re
 from io import BytesIO
 from zipfile import ZipFile
-import imghdr
+
+import requests
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class RecetteTek(Integration):
@@ -58,11 +59,11 @@ class RecetteTek(Integration):
             ingredient_parser = IngredientParser(self.request, True)
             for ingredient in file['ingredients'].split('\n'):
                 if len(ingredient.strip()) > 0:
-                    amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
+                    amount, unit, food, note = ingredient_parser.parse(food)
                     f = ingredient_parser.get_food(ingredient)
                     u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                        food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                     ))
         except Exception as e:
             print(recipe.name, ': failed to parse recipe ingredients ', str(e))

@@ -481,11 +481,15 @@ class IngredientSerializer(WritableNestedModelSerializer):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data.pop('original_text', None)
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Ingredient
         fields = (
             'id', 'food', 'unit', 'amount', 'note', 'order',
-            'is_header', 'no_amount'
+            'is_header', 'no_amount', 'original_text'
         )
 
 

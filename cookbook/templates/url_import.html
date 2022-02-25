@@ -473,9 +473,9 @@
 
                             <div class="card" style="margin-top: 4px">
                                 <div class="card-body">
-                                    <div class="row" v-if="i.original">
+                                    <div class="row" v-if="i.original_text">
                                         <div class="col-md-12" style="margin-bottom: 4px">
-                                            <span class="text-muted"><i class="fas fa-globe"></i> [[i.original]]</span>
+                                            <span class="text-muted"><i class="fas fa-globe"></i> [[i.original_text]]</span>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -1024,7 +1024,7 @@
                                     amount: String(response.body.amount),
                                     ingredient: {id: Math.random() * 1000, text: response.body.food},
                                     note: response.body.note,
-                                    original: v
+                                    original_text: v
                                 }
                                 this.recipe_json.recipeIngredient.push(new_ingredient)
                             }).catch((err) => {
