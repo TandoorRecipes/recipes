@@ -360,5 +360,6 @@
     "Ratings": "Ratings",
     "Internal": "Internal",
     "Units": "Units",
-    "Random Recipes": "Random Recipes"
+    "Random Recipes": "Random Recipes",
+    "parameter_count": "Parameter {count}"
 }
