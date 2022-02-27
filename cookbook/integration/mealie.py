@@ -12,7 +12,7 @@ from cookbook.models import Ingredient, Recipe, Step
 class Mealie(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        return re.match(r'^recipes/([A-Za-z\d-])+/([A-Za-z\d-])+.json$', zip_info_object.filename)
+        return re.match(r'^recipes/([A-Za-z\d\s\-_()\[\]\u00C0-\u017F])+/([A-Za-z\d\s\-_()\[\]\u00C0-\u017F])+.json$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
