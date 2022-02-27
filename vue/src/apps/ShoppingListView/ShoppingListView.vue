@@ -1493,7 +1493,7 @@ export default {
         flex-grow: 1;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 6vh;
+        height: 60vh; /* TODO use proper fill height here to not render list underneath bottom buttons */
         padding-right: 8px !important;
     }
 }
