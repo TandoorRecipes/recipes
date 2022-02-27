@@ -335,5 +335,10 @@
     "sort_by": "Sortiere nach",
     "Random Recipes": "Zufällige Rezepte",
     "recipe_filter": "Rezept-Filter",
-    "parameter_count": "Parameter {count}"
+    "parameter_count": "Parameter {count}",
+    "Supermarkets": "Supermärkte",
+    "User": "Benutzer",
+    "Keyword": "Schlüsselwort",
+    "Advanced": "Erweitert",
+    "Substitutes": "Zusätze"
 }
