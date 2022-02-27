@@ -934,6 +934,8 @@ export default {
                 this.ui = Object.assign({}, this.ui, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
+        this.$i18n.locale = window.CUSTOM_LOCALE
+        console.log(window.CUSTOM_LOCALE)
     },
     methods: {
         // this.genericAPI inherited from ApiMixin

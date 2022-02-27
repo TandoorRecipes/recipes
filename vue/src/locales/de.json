@@ -334,5 +334,6 @@
     "last_viewed": "Letztens besucht",
     "sort_by": "Sortiere nach",
     "Random Recipes": "Zufällige Rezepte",
-    "recipe_filter": "Rezept-Filter"
+    "recipe_filter": "Rezept-Filter",
+    "parameter_count": "Parameter {count}"
 }
