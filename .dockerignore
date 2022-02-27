@@ -1,4 +1,4 @@
-node_modules
+**/node_modules
 npm-debug.log
 Dockerfile*
 docker-compose*
@@ -12,6 +12,21 @@ LICENSE
 .env.template
 .github
 .idea
+.prettierignore
 LICENSE.md
 docs
 update.sh
+.pytest_cache
+cookbook/tests
+mediafiles
+staticfiles
+db.sqlite3
+pytest.ini
+vue/**/*.vue
+vue/**/*.ts
+**/.openapi-generator
+mkdocs.yml
+vue/babel.config*
+vue/package.json
+vue/tsconfig.json
+vue/src/utils/openapi

@@ -71,9 +71,7 @@ export default {
             image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
-    mounted() {
-        console.log(this.value)
-    },
+    mounted() {},
     computed: {
         entry: function () {
             return this.value.originalItem

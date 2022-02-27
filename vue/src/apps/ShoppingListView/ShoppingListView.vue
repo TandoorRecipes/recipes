@@ -36,7 +36,7 @@
                                 <!-- add to shopping form -->
 
                                 <b-row class="justify-content-md-center align-items-center pl-1 pr-1" v-if="entrymode">
-                                    <b-col cols="12" md="3" v-if="!entry_mode_simple" class="d-none d-md-block mt-1">
+                                    <b-col cols="12" md="3" v-if="!ui.entry_mode_simple" class="d-none d-md-block mt-1">
                                         <b-form-input
                                             size="lg"
                                             min="1"
@@ -46,13 +46,13 @@
                                             style="font-size: 16px; border-radius: 5px !important; border: 1px solid #e8e8e8 !important"
                                         ></b-form-input>
                                     </b-col>
-                                    <b-col cols="12" md="4" v-if="!entry_mode_simple" class="mt-1">
+                                    <b-col cols="12" md="4" v-if="!ui.entry_mode_simple" class="mt-1">
                                         <lookup-input :class_list="'mb-0'" :form="formUnit" :model="Models.UNIT" @change="new_item.unit = $event" :show_label="false" :clear="clear" />
                                     </b-col>
-                                    <b-col cols="12" md="4" v-if="!entry_mode_simple" class="mt-1">
+                                    <b-col cols="12" md="4" v-if="!ui.entry_mode_simple" class="mt-1">
                                         <lookup-input :class_list="'mb-0'" :form="formFood" :model="Models.FOOD" @change="new_item.food = $event" :show_label="false" :clear="clear" />
                                     </b-col>
-                                    <b-col cols="12" md="11" v-if="entry_mode_simple" class="mt-1">
+                                    <b-col cols="12" md="11" v-if="ui.entry_mode_simple" class="mt-1">
                                         <b-form-input size="lg" type="text" :placeholder="$t('QuickEntry')" v-model="new_item.ingredient" @keyup.enter="addItem"></b-form-input>
                                     </b-col>
                                     <b-col cols="12" md="1" class="d-none d-md-block mt-1">
@@ -60,7 +60,7 @@
                                             <i class="btn fas fa-cart-plus fa-lg px-0 text-success" @click="addItem" />
                                         </b-button>
                                     </b-col>
-                                    <b-col cols="12" md="3" v-if="!entry_mode_simple" class="d-block d-md-none mt-1">
+                                    <b-col cols="12" md="3" v-if="!ui.entry_mode_simple" class="d-block d-md-none mt-1">
                                         <b-row>
                                             <b-col cols="9">
                                                 <b-form-input
@@ -82,10 +82,10 @@
                                 </b-row>
 
                                 <b-row class="row justify-content-around mt-2" v-if="entrymode">
-                                    <b-form-checkbox switch v-model="entry_mode_simple">
+                                    <b-form-checkbox switch v-model="ui.entry_mode_simple">
                                         {{ $t("QuickEntry") }}
                                     </b-form-checkbox>
-                                    <b-button variant="success" size="sm" class="d-flex d-md-none p-0" v-if="entry_mode_simple">
+                                    <b-button variant="success" size="sm" class="d-flex d-md-none p-0" v-if="ui.entry_mode_simple">
                                         <i class="btn fas fa-cart-plus" @click="addItem" />
                                     </b-button>
                                 </b-row>
@@ -123,7 +123,7 @@
                                             <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
                                                 <!-- passing an array of values to the table grouped by Food -->
                                                 <transition-group name="slide-fade">
-                                                    <div v-for="(entries, x) in Object.entries(s)" :key="x">
+                                                    <div class="mx-4" v-for="(entries, x) in Object.entries(s)" :key="x">
                                                         <transition name="slide-fade" mode="out-in">
                                                             <ShoppingLineItem
                                                                 :entries="entries[1]"
@@ -156,9 +156,6 @@
                                 <b-input-group-prepend is-text>
                                     <input type="number" :min="1" v-model="add_recipe_servings" style="width: 3em" />
                                 </b-input-group-prepend>
-                                <!-- <b-input-group-prepend is-text>
-                                    <b>{{ $t("Recipe") }}</b>
-                                </b-input-group-prepend> -->
                                 <generic-multiselect
                                     class="input-group-text m-0 p-0"
                                     @change="new_recipe = $event.val"
@@ -189,6 +186,9 @@
                             <td>{{ r.recipe_mealplan.recipe_name }}</td>
                             <td class="block-inline">
                                 <b-form-input min="1" type="number" :debounce="300" :value="r.recipe_mealplan.servings" @input="updateServings($event, r.list_recipe)"></b-form-input>
+                            </td>
+                            <td>
+                                <i class="btn text-primary far fa-eye fa-lg px-2 border-0" variant="link" :title="$t('view_recipe')" @click="editRecipeList($event, r)" />
                             </td>
                             <td>
                                 <i class="btn text-danger fas fa-trash fa-lg px-2 border-0" variant="link" :title="$t('Delete')" @click="deleteRecipe($event, r.list_recipe)" />
@@ -401,14 +401,14 @@
                             </div>
                             <div v-if="settings.mealplan_autoadd_shopping">
                                 <div class="row">
-                                    <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
+                                    <div class="col col-md-6">{{ $t("mealplan_autoexclude_onhand") }}</div>
                                     <div class="col col-md-6 text-right">
                                         <input type="checkbox" class="form-control settings-checkbox" v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings" />
                                     </div>
                                 </div>
                                 <div class="row sm mb-3">
                                     <div class="col">
-                                        <em class="small text-muted">{{ $t("mealplan_autoadd_shopping_desc") }}</em>
+                                        <em class="small text-muted">{{ $t("mealplan_autoexclude_onhand_desc") }}</em>
                                     </div>
                                 </div>
                             </div>
@@ -432,7 +432,10 @@
                                 <div class="col col-md-6 text-right">
                                     <generic-multiselect
                                         size="sm"
-                                        @change="settings.shopping_share = $event.valsaveSettings()"
+                                        @change="
+                                            settings.shopping_share = $event.val
+                                            saveSettings()
+                                        "
                                         :model="Models.USER"
                                         :initial_selection="settings.shopping_share"
                                         label="username"
@@ -557,22 +560,42 @@
                 </div>
             </b-tab>
         </b-tabs>
+
+        <transition name="slided-fade">
+            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
+                <div class="col-6">
+                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode"
+                        ><i class="fas fa-cart-plus"></i>
+                        {{ $t("New Entry") }}
+                    </a>
+                </div>
+                <div class="col-6">
+                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
+                        <template #button-content> <i class="fas fa-download"></i> {{ $t("Export") }} </template>
+                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
+                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
+                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')" icon="fas fa-clipboard-list" />
+                        <CopyToClipboard :items="csvData" :settings="settings" format="table" :label="$t('copy_markdown_table')" icon="fab fa-markdown" />
+                    </b-dropdown>
+                </div>
+            </div>
+        </transition>
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
                     <b-form-select v-model="group_by" :options="group_by_choices" size="sm"></b-form-select>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
-                    <b-form-select v-model="selected_supermarket" :options="supermarkets" text-field="name" value-field="id" size="sm"></b-form-select>
+                    <b-form-select v-model="ui.selected_supermarket" :options="supermarkets" text-field="name" value-field="id" size="sm"></b-form-select>
                 </b-form-group>
                 <!-- TODO: shade filters red when they are actually filtering content -->
                 <b-form-group v-bind:label="$t('ShowDelayed')" label-for="popover-input-3" content-cols="1" class="mb-1">
                     <b-form-checkbox v-model="show_delay"></b-form-checkbox>
                 </b-form-group>
-                <b-form-group v-bind:label="$t('ShowUncategorizedFood')" label-for="popover-input-4" content-cols="1" class="mb-1" v-if="!selected_supermarket">
+                <b-form-group v-bind:label="$t('ShowUncategorizedFood')" label-for="popover-input-4" content-cols="1" class="mb-1" v-if="!ui.selected_supermarket">
                     <b-form-checkbox v-model="show_undefined_categories"></b-form-checkbox>
                 </b-form-group>
-                <b-form-group v-bind:label="$t('SupermarketCategoriesOnly')" label-for="popover-input-5" content-cols="1" class="mb-1" v-if="selected_supermarket">
+                <b-form-group v-bind:label="$t('SupermarketCategoriesOnly')" label-for="popover-input-5" content-cols="1" class="mb-1" v-if="ui.selected_supermarket">
                     <b-form-checkbox v-model="supermarket_categories_only"></b-form-checkbox>
                 </b-form-group>
             </div>
@@ -637,26 +660,7 @@
                 </ContextMenuItem>
             </template>
         </ContextMenu>
-        <transition name="slided-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none" style="background: rgba(255, 255, 255, 0.6)" v-if="current_tab === 0">
-                <div class="col-6">
-                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode"
-                        ><i class="fas fa-cart-plus"></i>
-                        {{ $t("New Entry") }}
-                    </a>
-                </div>
-                <div class="col-6">
-                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
-                        <template #button-content> <i class="fas fa-download"></i> {{ $t("Export") }} </template>
-                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')" icon="far fa-file-pdf" />
-                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv" :label="$t('download_csv')" icon="fas fa-file-csv" />
-                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')" icon="fas fa-clipboard-list" />
-                        <CopyToClipboard :items="csvData" :settings="settings" format="table" :label="$t('copy_markdown_table')" icon="fab fa-markdown" />
-                    </b-dropdown>
-                </div>
-            </div>
-        </transition>
-        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" />
+        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)" :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe" />
     </div>
 </template>
 
@@ -711,13 +715,15 @@ export default {
             group_by_choices: ["created_by", "category", "recipe"],
             supermarkets: [],
             shopping_categories: [],
-            selected_supermarket: undefined,
             show_undefined_categories: true,
             supermarket_categories_only: false,
             shopcat: null,
             delay: 0,
             clear: Math.random(),
-            entry_mode_simple: false,
+            ui: {
+                entry_mode_simple: false,
+                selected_supermarket: undefined,
+            },
             settings: {
                 shopping_auto_sync: 0,
                 default_delay: 4,
@@ -766,14 +772,15 @@ export default {
             let shopping_list = this.items
 
             // filter out list items that are delayed
+
             if (!this.show_delay && shopping_list) {
-                shopping_list = shopping_list.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) < new Date(Date.now()))
+                shopping_list = shopping_list.filter((x) => !x.delay_until || Date.parse(x?.delay_until) < new Date(Date.now()))
             }
 
             // if a supermarket is selected and filtered to only supermarket categories filter out everything else
-            if (this.selected_supermarket && this.supermarket_categories_only) {
+            if (this.ui.selected_supermarket && this.supermarket_categories_only) {
                 let shopping_categories = this.supermarkets // category IDs configured on supermarket
-                    .filter((x) => x.id === this.selected_supermarket)
+                    .filter((x) => x.id === this.ui.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
                     .flat()
                     .map((x) => x.category.id)
@@ -784,12 +791,12 @@ export default {
             }
 
             var groups = { false: {}, true: {} } // force unchecked to always be first
-            if (this.selected_supermarket) {
+            if (this.ui.selected_supermarket) {
                 // TODO: make nulls_first a user setting
                 groups.false[this.$t("Undefined")] = {}
                 groups.true[this.$t("Undefined")] = {}
                 let super_cats = this.supermarkets
-                    .filter((x) => x.id === this.selected_supermarket)
+                    .filter((x) => x.id === this.ui.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
                     .flat()
                     .map((x) => x.category.name)
@@ -843,7 +850,7 @@ export default {
             return this.items.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) > new Date(Date.now())).length < this.items.length
         },
         filterApplied() {
-            return (this.itemsDelayed && !this.show_delay) || !this.show_undefined_categories || (this.supermarket_categories_only && this.selected_supermarket)
+            return (this.itemsDelayed && !this.show_delay) || !this.show_undefined_categories || (this.supermarket_categories_only && this.ui.selected_supermarket)
         },
         Recipes() {
             // hiding recipes associated with shopping list items that are complete
@@ -869,10 +876,13 @@ export default {
         },
     },
     watch: {
-        selected_supermarket(newVal, oldVal) {
-            this.supermarket_categories_only = this.settings.filter_to_supermarket
-            localStorage.setItem("shopping_v2_selected_supermarket", JSON.stringify(this.selected_supermarket))
+        ui: {
+            handler() {
+                this.$cookies.set(SETTINGS_COOKIE_NAME, this.ui)
+            },
+            deep: true,
         },
+
         new_recipe: {
             handler() {
                 this.add_recipe_servings = this.new_recipe.servings
@@ -903,8 +913,8 @@ export default {
         "settings.default_delay": function (newVal, oldVal) {
             this.delay = Number(newVal)
         },
-        entry_mode_simple(newVal) {
-            this.$cookies.set(SETTINGS_COOKIE_NAME, newVal)
+        "ui.selected_supermarket": function (newVal, oldVal) {
+            this.supermarket_categories_only = this.settings.filter_to_supermarket
         },
     },
     mounted() {
@@ -921,15 +931,16 @@ export default {
         }
         this.$nextTick(function () {
             if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-                this.entry_mode_simple = this.$cookies.get(SETTINGS_COOKIE_NAME)
-                this.selected_supermarket = localStorage.getItem("shopping_v2_selected_supermarket") || undefined
+                this.ui = Object.assign({}, this.ui, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
+        this.$i18n.locale = window.CUSTOM_LOCALE
+        console.log(window.CUSTOM_LOCALE)
     },
     methods: {
         // this.genericAPI inherited from ApiMixin
         addItem: function () {
-            if (this.entry_mode_simple) {
+            if (this.ui.entry_mode_simple) {
                 if (this.new_item.ingredient !== "" && this.new_item.ingredient !== undefined) {
                     this.genericPostAPI("api_ingredient_from_string", { text: this.new_item.ingredient }).then((result) => {
                         let unit = null
@@ -996,7 +1007,7 @@ export default {
                 })
         },
         resetFilters: function () {
-            this.selected_supermarket = undefined
+            this.ui.selected_supermarket = undefined
             this.supermarket_categories_only = this.settings.filter_to_supermarket
             this.show_undefined_categories = true
             this.group_by = "category"
@@ -1083,7 +1094,7 @@ export default {
         },
         getShoppingList: function (autosync = false) {
             let params = {}
-            params.supermarket = this.selected_supermarket
+            params.supermarket = this.ui.selected_supermarket
 
             params.options = { query: { recent: 1 } }
             if (autosync) {
@@ -1401,7 +1412,18 @@ export default {
             this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
         finishShopping() {
+            this.add_recipe_servings = 1
+            this.new_recipe = { id: undefined }
+            this.edit_recipe_list = undefined
             this.getShoppingList()
+        },
+        editRecipeList(e, r) {
+            this.new_recipe = { id: r.recipe_mealplan.recipe, name: r.recipe_mealplan.recipe_name, servings: r.recipe_mealplan.servings, list_recipe: r.list_recipe }
+            this.$nextTick(function () {
+                this.$bvModal.show(`shopping_${this.new_recipe.id}`)
+            })
+
+            // this.$bvModal.show(`shopping_${this.new_recipe.id}`)
         },
     },
     directives: {
@@ -1464,14 +1486,25 @@ export default {
     font-size: 20px;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     #shoppinglist {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 65vh;
+        height: 60vh; /* TODO use proper fill height here to not render list underneath bottom buttons */
+        padding-right: 8px !important;
+    }
+}
+@media screen and (min-height: 700px) and (max-width: 768px) {
+    #shoppinglist {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 72vh;
         padding-right: 8px !important;
     }
 }

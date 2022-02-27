@@ -2,6 +2,8 @@
     <div>
         <b-form-group v-bind:label="label" class="mb-3">
             <b-form-input v-model="new_value" type="text" :placeholder="placeholder"></b-form-input>
+            <em v-if="help" class="small text-muted">{{ help }}</em>
+            <small v-if="subtitle" class="text-muted">{{ subtitle }}</small>
         </b-form-group>
     </div>
 </template>
@@ -14,7 +16,8 @@ export default {
         label: { type: String, default: "Text Field" },
         value: { type: String, default: "" },
         placeholder: { type: String, default: "You Should Add Placeholder Text" },
-        show_merge: { type: Boolean, default: false },
+        help: { type: String, default: undefined },
+        subtitle: { type: String, default: undefined },
     },
     data() {
         return {

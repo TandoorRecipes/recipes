@@ -62,9 +62,10 @@ class TreeManager(MP_NodeManager):
     # model.Manager get_or_create() is not compatible with MP_Tree
     def get_or_create(self, *args, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
-        try:
-            return self.get(name__exact=kwargs['name'], space=kwargs['space']), False
-        except self.model.DoesNotExist:
+
+        if obj := self.filter(name__iexact=kwargs['name'], space=kwargs['space']).first():
+            return obj, False
+        else:
             with scopes_disabled():
                 try:
                     defaults = kwargs.pop('defaults', None)
@@ -96,13 +97,6 @@ class TreeModel(MP_Node):
             return f"{self.icon} {self.name}"
         else:
             return f"{self.name}"
-
-    # MP_Tree move uses raw SQL to execute move, override behavior to force a save triggering post_save signal
-    def move(self, *args, **kwargs):
-        super().move(*args, **kwargs)
-        # treebeard bypasses ORM, need to retrieve the object again to avoid writing previous state back to disk
-        obj = self.__class__.objects.get(id=self.id)
-        obj.save()
 
     @property
     def parent(self):
@@ -488,8 +482,10 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
+    # TODO when savings a food as substitute children - assume children and descednants are also substitutes for siblings
     # exclude fields not implemented yet
-    inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', 'substitute_children', 'substitute_siblings'])
+    inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', ])
+    # TODO add inherit children_inherit, parent_inherit, Do Not Inherit
 
     # WARNING: Food inheritance relies on post_save signals, avoid using UPDATE to update Food objects unless you intend to bypass those signals
     if SORT_TREE_BY_NAME:
@@ -501,6 +497,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
     inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True)
+    substitute = models.ManyToManyField("self", blank=True)
+    substitute_siblings = models.BooleanField(default=False)
+    substitute_children = models.BooleanField(default=False)
+    child_inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True, related_name='child_inherit')
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -514,34 +514,63 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         else:
             return super().delete()
 
+    # MP_Tree move uses raw SQL to execute move, override behavior to force a save triggering post_save signal
+
+    def move(self, *args, **kwargs):
+        super().move(*args, **kwargs)
+        # treebeard bypasses ORM, need to explicity save to trigger post save signals retrieve the object again to avoid writing previous state back to disk
+        obj = self.__class__.objects.get(id=self.id)
+        if parent := obj.get_parent():
+            # child should inherit what the parent defines it should inherit
+            fields = list(parent.child_inherit_fields.all() or parent.inherit_fields.all())
+            if len(fields) > 0:
+                obj.inherit_fields.set(fields)
+        obj.save()
+
     @staticmethod
-    def reset_inheritance(space=None):
+    def reset_inheritance(space=None, food=None):
         # resets inherited fields to the space defaults and updates all inherited fields to root object values
-        inherit = space.food_inherit.all()
+        if food:
+            # if child inherit fields is preset children should be set to that, otherwise inherit this foods inherited fields
+            inherit = list((food.child_inherit_fields.all() or food.inherit_fields.all()).values('id', 'field'))
+            tree_filter = Q(path__startswith=food.path, space=space, depth=food.depth+1)
+        else:
+            inherit = list(space.food_inherit.all().values('id', 'field'))
+            tree_filter = Q(space=space)
 
         # remove all inherited fields from food
-        Through = Food.objects.filter(space=space).first().inherit_fields.through
+        Through = Food.objects.filter(tree_filter).first().inherit_fields.through
         Through.objects.all().delete()
         # food is going to inherit attributes
-        if space.food_inherit.all().count() > 0:
+        if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
             for i in inherit:
                 Through.objects.bulk_create([
-                    Through(food_id=x, foodinheritfield_id=i.id)
-                    for x in Food.objects.filter(space=space).values_list('id', flat=True)
+                    Through(food_id=x, foodinheritfield_id=i['id'])
+                    for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
                 ])
 
-            inherit = inherit.values_list('field', flat=True)
-            if 'ignore_shopping' in inherit:
-                # get food at root that have children that need updated
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=True)).update(ignore_shopping=True)
-                Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, space=space, ignore_shopping=False)).update(ignore_shopping=False)
+            inherit = [x['field'] for x in inherit]
+            for field in ['ignore_shopping', 'substitute_children', 'substitute_siblings']:
+                if field in inherit:
+                    if food and getattr(food, field, None):
+                        food.get_descendants().update(**{f"{field}": True})
+                    elif food and not getattr(food, field, True):
+                        food.get_descendants().update(**{f"{field}": False})
+                    else:
+                        # get food at root that have children that need updated
+                        Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": True}, space=space)).update(**{f"{field}": True})
+                        Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": False}, space=space)).update(**{f"{field}": False})
+
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
-                # find top node that has category set
-                category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
-                for root in category_roots:
-                    root.get_descendants().update(supermarket_category=root.supermarket_category)
+                if food and food.supermarket_category:
+                    food.get_descendants().update(supermarket_category=food.supermarket_category)
+                elif food is None:
+                    # find top node that has category set
+                    category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
+                    for root in category_roots:
+                        root.get_descendants().update(supermarket_category=root.supermarket_category)
 
     class Meta:
         constraints = [
@@ -554,14 +583,15 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
-    # a pre-delete signal on Food checks if the Ingredient is part of a Step, if it is raises a ProtectedError instead of cascading the delete
+    # delete method on Food and Unit checks if they are part of a Recipe, if it is raises a ProtectedError instead of cascading the delete
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
-    unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
+    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -609,7 +639,7 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     )
     proteins = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     calories = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    source = models.CharField( max_length=512, default="", null=True, blank=True)
+    source = models.CharField(max_length=512, default="", null=True, blank=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -725,6 +755,7 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
     icon = models.CharField(max_length=16, blank=True, null=True)
     shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -852,11 +883,12 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     def __str__(self):
         return f'Shopping list entry {self.id}'
 
-    # TODO deprecate
     def get_shared(self):
-        return self.shoppinglist_set.first().shared.all()
+        try:
+            return self.shoppinglist_set.first().shared.all()
+        except AttributeError:
+            return self.created_by.userpreference.shopping_share.all()
 
-    # TODO deprecate
     def get_owner(self):
         try:
             return self.created_by or self.shoppinglist_set.first().created_by
@@ -880,6 +912,12 @@ class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, Pe
 
     def __str__(self):
         return f'Shopping list {self.id}'
+
+    def get_shared(self):
+        try:
+            return self.shared.all() or self.created_by.userpreference.shopping_share.all()
+        except AttributeError:
+            return []
 
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
@@ -996,6 +1034,26 @@ class ImportLog(models.Model, PermissionModelMixin):
         return f"{self.created_at}:{self.type}"
 
 
+class ExportLog(models.Model, PermissionModelMixin):
+    type = models.CharField(max_length=32)
+    running = models.BooleanField(default=True)
+    msg = models.TextField(default="")
+
+    total_recipes = models.IntegerField(default=0)
+    exported_recipes = models.IntegerField(default=0)
+    cache_duration = models.IntegerField(default=0)
+    possibly_not_expired = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.created_at}:{self.type}"
+
+
 class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models.Model, PermissionModelMixin):
     html = models.TextField()
     url = models.CharField(max_length=256, null=True, blank=True)
@@ -1051,7 +1109,7 @@ class SearchPreference(models.Model, PermissionModelMixin):
     istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
     trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True, default=nameSearchField)
     fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
-    trigram_threshold = models.DecimalField(default=0.1, decimal_places=2, max_digits=3)
+    trigram_threshold = models.DecimalField(default=0.2, decimal_places=2, max_digits=3)
 
 
 class UserFile(ExportModelOperationsMixin('user_files'), models.Model, PermissionModelMixin):
@@ -1093,3 +1151,34 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+
+class CustomFilter(models.Model, PermissionModelMixin):
+    RECIPE = 'RECIPE'
+    FOOD = 'FOOD'
+    KEYWORD = 'KEYWORD'
+
+    MODELS = (
+        (RECIPE, _('Recipe')),
+        (FOOD, _('Food')),
+        (KEYWORD, _('Keyword')),
+    )
+
+    name = models.CharField(max_length=128, null=False, blank=False)
+    type = models.CharField(max_length=128, choices=(MODELS), default=MODELS[0])
+    # could use JSONField, but requires installing extension on SQLite,  don't need to search the objects, so seems unecessary
+    search = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shared = models.ManyToManyField(User, blank=True, related_name='f_shared_with')
+
+    objects = ScopedManager(space='space')
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='cf_unique_name_per_space')
+        ]

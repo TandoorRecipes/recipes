@@ -5,7 +5,7 @@ import requests
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient
+from cookbook.models import Ingredient, Recipe, Step
 
 
 class RecipeSage(Integration):
@@ -31,7 +31,7 @@ class RecipeSage(Integration):
         except Exception as e:
             print('failed to parse yield or time ', str(e))
 
-        ingredient_parser = IngredientParser(self.request,True)
+        ingredient_parser = IngredientParser(self.request, True)
         ingredients_added = False
         for s in file['recipeInstructions']:
             step = Step.objects.create(
@@ -41,11 +41,11 @@ class RecipeSage(Integration):
                 ingredients_added = True
 
                 for ingredient in file['recipeIngredient']:
-                    amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-                    f = ingredient_parser.get_food(ingredient)
+                    amount, unit, food, note = ingredient_parser.parse(ingredient)
+                    f = ingredient_parser.get_food(food)
                     u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                        food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                     ))
             recipe.steps.add(step)
 
@@ -88,12 +88,16 @@ class RecipeSage(Integration):
 
         return data
 
-    def get_files_from_recipes(self, recipes, cookie):
+    def get_files_from_recipes(self, recipes, el, cookie):
         json_list = []
         for r in recipes:
             json_list.append(self.get_file_from_recipe(r))
 
-        return [['export.json', json.dumps(json_list)]]
+            el.exported_recipes += 1
+            el.msg += self.get_recipe_processed_msg(r)
+            el.save()
+
+        return [[self.get_export_file_name('json'), json.dumps(json_list)]]
 
     def split_recipe_file(self, file):
         return json.loads(file.read().decode("utf-8"))

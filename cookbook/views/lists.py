@@ -186,6 +186,22 @@ def automation(request):
 
 
 @group_required('user')
+def custom_filter(request):
+    # recipe-param is the name of the parameters used when filtering recipes by this attribute
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Custom Filters"),
+            "config": {
+                'model': "CUSTOM_FILTER",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[

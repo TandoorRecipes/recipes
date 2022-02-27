@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import TelegramBot, ShoppingList, ShoppingListEntry
+from cookbook.models import ShoppingList, ShoppingListEntry, TelegramBot
 
 
 @group_required('user')
@@ -48,11 +48,11 @@ def hook(request, token):
             request.space = tb.space  # TODO this is likely a bad idea. Verify and test
             request.user = tb.created_by
             ingredient_parser = IngredientParser(request, False)
-            amount, unit, ingredient, note = ingredient_parser.parse(data['message']['text'])
-            f = ingredient_parser.get_food(ingredient)
+            amount, unit, food, note = ingredient_parser.parse(data['message']['text'])
+            f = ingredient_parser.get_food(food)
             u = ingredient_parser.get_unit(unit)
 
-            ShoppingListEntry.objects.create(food=f, unit=u, amount=amount, created_by=request.user, space=request.space)
+            ShoppingListEntry.objects.create(food=f, unit=u, amount=amount, original_text=ingredient, created_by=request.user, space=request.space)
 
             return JsonResponse({'data': data['message']['text']})
     except Exception:

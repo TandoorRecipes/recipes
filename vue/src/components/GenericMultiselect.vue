@@ -1,9 +1,10 @@
 <template>
     <multiselect
+        :id="id"
         v-model="selected_objects"
         :options="objects"
         :close-on-select="true"
-        :clear-on-select="true"
+        :clear-on-select="multiple"
         :hide-selected="multiple"
         :preserve-search="true"
         :internal-search="false"
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import Vue from "vue"
 import Multiselect from "vue-multiselect"
 import { ApiMixin } from "@/utils/utils"
 
@@ -33,9 +35,10 @@ export default {
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
+            id: undefined,
             loading: false,
             objects: [],
-            selected_objects: [],
+            selected_objects: undefined,
         }
     },
     props: {
@@ -48,7 +51,7 @@ export default {
         },
         label: { type: String, default: "name" },
         parent_variable: { type: String, default: undefined },
-        limit: { type: Number, default: 10 },
+        limit: { type: Number, default: 25 },
         sticky_options: {
             type: Array,
             default() {
@@ -61,6 +64,10 @@ export default {
                 return []
             },
         },
+        initial_single_selection: {
+            type: Object,
+            default: undefined,
+        },
         multiple: { type: Boolean, default: true },
         allow_create: { type: Boolean, default: false },
         create_placeholder: { type: String, default: "You Forgot to Add a Tag Placeholder" },
@@ -70,18 +77,69 @@ export default {
         initial_selection: function (newVal, oldVal) {
             // watch it
             this.selected_objects = newVal
+            let get_details = []
+            let empty = {}
+            empty[this.label] = `..${this.$t("loading")}..`
+            this.selected_objects.forEach((x) => {
+                if (typeof x !== "object") {
+                    this.selected_objects[this.selected_objects.indexOf(x)] = { ...empty, id: x }
+                    get_details.push(x)
+                }
+            })
+            get_details.forEach((x) => {
+                this.genericAPI(this.model, this.Actions.FETCH, { id: x })
+                    .then((result) => {
+                        // this.selected_objects[this.selected_objects.map((y) => y.id).indexOf(x)] = result.data
+                        Vue.set(this.selected_objects, this.selected_objects.map((y) => y.id).indexOf(x), result.data)
+                    })
+                    .catch((err) => {
+                        this.selected_objects = this.selected_objects.filter((y) => y.id !== x)
+                    })
+            })
+        },
+        initial_single_selection: function (newVal, oldVal) {
+            // watch it
+            this.selected_objects = newVal
+            if (typeof this.selected_objects !== "object") {
+                let empty = {}
+                empty[this.label] = `..${this.$t("loading")}..`
+                this.selected_objects = { ...empty, id: this.selected_objects }
+                this.genericAPI(this.model, this.Actions.FETCH, { id: this.selected_objects })
+                    .then((result) => {
+                        this.selected_objects = result.data
+                    })
+                    .catch((err) => {
+                        this.selected_objects = undefined
+                    })
+            }
         },
         clear: function (newVal, oldVal) {
-            this.selected_objects = []
+            if (this.multiple || !this.initial_single_selection) {
+                this.selected_objects = []
+            } else {
+                this.selected_objects = undefined
+            }
         },
     },
     mounted() {
+        this.id = Math.random()
         this.search("")
-        this.selected_objects = this.initial_selection
+        if (this.multiple || !this.initial_single_selection) {
+            this.selected_objects = this.initial_selection
+        } else {
+            this.selected_objects = this.initial_single_selection
+        }
     },
     computed: {
         lookupPlaceholder() {
             return this.placeholder || this.model.name || this.$t("Search")
+        },
+        nothingSelected() {
+            if (this.multiple || !this.initial_single_selection) {
+                return this.selected_objects.length === 0 && this.initial_selection.length === 0
+            } else {
+                return !this.selected_objects && !this.initial_single_selection
+            }
         },
     },
     methods: {
@@ -95,8 +153,9 @@ export default {
             }
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
-                if (this.selected_objects.length === 0 && this.initial_selection.length === 0 && this.objects.length > 0) {
+                if (this.nothingSelected && this.objects.length > 0) {
                     this.objects.forEach((item) => {
+                        // select default items when present in object
                         if ("default" in item) {
                             if (item.default) {
                                 if (this.multiple) {

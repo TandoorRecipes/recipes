@@ -75,7 +75,7 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if request.resolver_match.url_name in 'view_search' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_search' %}"><i
-                        class="fas fa-book"></i> {% trans 'Cookbook' %}</a>
+                        class="fas fa-book"></i> {% trans 'Recipes' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'view_plan' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_plan' %}"><i
