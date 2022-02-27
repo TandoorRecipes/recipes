@@ -12,7 +12,7 @@ class Chowdown(Integration):
 
     def import_file_name_filter(self, zip_info_object):
         print("testing", zip_info_object.filename)
-        return re.match(r'^(_)*recipes/([A-Za-z\d\s-])+.md$', zip_info_object.filename)
+        return re.match(r'^(_)*recipes/([A-Za-z\d\s\-_()\[\]\u00C0-\u017F])+.md$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
         ingredient_mode = False
