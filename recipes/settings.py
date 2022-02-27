@@ -57,6 +57,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "index"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
@@ -138,6 +139,7 @@ ENABLE_SIGNUP = bool(int(os.getenv('ENABLE_SIGNUP', False)))
 ENABLE_METRICS = bool(int(os.getenv('ENABLE_METRICS', False)))
 
 ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
+EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -186,6 +188,15 @@ if LDAP_AUTH:
     }
     AUTH_LDAP_ALWAYS_UPDATE_USER = bool(int(os.getenv('AUTH_LDAP_ALWAYS_UPDATE_USER', True)))
     AUTH_LDAP_CACHE_TIMEOUT = int(os.getenv('AUTH_LDAP_CACHE_TIMEOUT', 3600))
+    if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
+        AUTH_LDAP_GLOBAL_OPTIONS = {ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE')}
+    if DEBUG:
+        LOGGING = {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "handlers": {"console": {"class": "logging.StreamHandler"}},
+            "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+        }
 
 AUTHENTICATION_BACKENDS += [
     'django.contrib.auth.backends.ModelBackend',

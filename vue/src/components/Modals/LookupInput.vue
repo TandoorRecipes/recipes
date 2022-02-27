@@ -8,17 +8,20 @@
                 @change="new_value = $event.val"
                 @remove="new_value = undefined"
                 :initial_selection="initialSelection"
+                :initial_single_selection="initialSingleSelection"
                 :model="model"
-                :multiple="useMultiple"
+                :multiple="useMultiple || false"
                 :sticky_options="sticky_options"
                 :allow_create="form.allow_create"
                 :create_placeholder="createPlaceholder"
                 :clear="clear"
+                :label="list_label"
                 style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                 :placeholder="modelName"
                 @new="addNew"
             >
             </generic-multiselect>
+            <em v-if="help" class="small text-muted">{{ help }}</em>
         </b-form-group>
     </div>
 </template>
@@ -47,12 +50,14 @@ export default {
         class_list: { type: String, default: "mb-3" },
         show_label: { type: Boolean, default: true },
         clear: { type: Number },
+        help: { type: String, default: undefined },
     },
     data() {
         return {
             new_value: undefined,
             field: undefined,
             label: undefined,
+            list_label: undefined,
             sticky_options: undefined,
             first_run: true,
         }
@@ -62,34 +67,37 @@ export default {
         this.field = this.form?.field ?? "You Forgot To Set Field Name"
         this.label = this.form?.label ?? ""
         this.sticky_options = this.form?.sticky_options ?? []
+        this.sticky_options = this.sticky_options.map((x) => {
+            return { ...x, name: this.$t(x.name) }
+        })
+        this.list_label = this.form?.list_label ?? undefined
+        if (this.list_label?.includes("::")) {
+            this.list_label = this.list_label.split("::")[1]
+        }
     },
     computed: {
         modelName() {
-            return this?.model?.name ?? this.$t("Search")
+            return this.$t(this?.model?.name) ?? this.$t("Search")
         },
         useMultiple() {
             return this.form?.multiple || this.form?.ordered || false
         },
         initialSelection() {
-            if (!this.new_value) {
-                return
+            if (!this.new_value || !this.useMultiple) {
+                return undefined
             }
-            let this_value = this.new_value
-            let arrayValues = undefined
-            // multiselect is expect to get an array of objects - make sure it gets one
-            if (Array.isArray(this_value)) {
-                arrayValues = this_value
-            } else if (!this_value) {
-                arrayValues = []
-            } else if (typeof this_value === "object") {
-                arrayValues = [this_value]
-            } else {
-                arrayValues = [{ id: -1, name: this_value }]
-            }
+
             if (this.form?.ordered && this.first_run) {
-                return this.flattenItems(arrayValues)
+                return this.flattenItems(this.new_value)
             } else {
-                return arrayValues
+                return this.new_value
+            }
+        },
+        initialSingleSelection() {
+            if (this.useMultiple) {
+                return undefined
+            } else {
+                return this.new_value
             }
         },
         createPlaceholder() {
@@ -130,7 +138,7 @@ export default {
             let item = undefined
             let label = this.form.list_label.split("::")
             itemlist.forEach((x) => {
-                item = {}
+                item = { ...x }
                 for (const [k, v] of Object.entries(x)) {
                     if (k == label[0]) {
                         item["id"] = v.id
@@ -142,14 +150,15 @@ export default {
                 flat_items.push(item)
             })
             this.first_run = false
+
             return flat_items
         },
         unflattenItem: function (itemList) {
             let unflat_items = []
             let item = undefined
-            let this_label = undefined
             let label = this.form.list_label.split("::")
             let order = 0
+            let this_label
             itemList.forEach((x) => {
                 item = {}
                 item[label[0]] = {}

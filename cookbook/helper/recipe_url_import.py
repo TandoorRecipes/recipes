@@ -1,6 +1,7 @@
 import random
 import re
 from html import unescape
+from unicodedata import decomposition
 
 from django.utils.dateparse import parse_duration
 from isodate import parse_duration as iso_parse_duration
@@ -116,7 +117,7 @@ def get_from_scraper(scrape, request):
                             'id': random.randrange(10000, 99999)
                         },
                         'note': note,
-                        'original': x
+                        'original_text': x
                     }
                 )
             except Exception:
@@ -132,7 +133,7 @@ def get_from_scraper(scrape, request):
                             'id': random.randrange(10000, 99999)
                         },
                         'note': '',
-                        'original': x
+                        'original_text': x
                     }
                 )
         recipe_json['recipeIngredient'] = ingredients
@@ -198,7 +199,7 @@ def parse_ingredients(ingredients):
                                 'id': random.randrange(10000, 99999)
                             },
                             'note': note,
-                            'original': x
+                            'original_text': x
                         }
                     )
             except Exception:
@@ -214,7 +215,7 @@ def parse_ingredients(ingredients):
                             'id': random.randrange(10000, 99999)
                         },
                         'note': '',
-                        'original': x
+                        'original_text': x
                     }
                 )
 
@@ -332,7 +333,7 @@ def parse_keywords(keyword_json, space):
         kw = normalize_string(kw)
         if len(kw) != 0:
             if k := Keyword.objects.filter(name=kw, space=space).first():
-                keywords.append({'id': str(k.id), 'text': str(k)})
+                keywords.append({'id': str(k.id), 'text': str(k.name)})
             else:
                 keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
 

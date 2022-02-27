@@ -176,6 +176,129 @@ export interface CookLog {
 /**
  * 
  * @export
+ * @interface CustomFilter
+ */
+export interface CustomFilter {
+    /**
+     * 
+     * @type {number}
+     * @memberof CustomFilter
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomFilter
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomFilter
+     */
+    search: string;
+    /**
+     * 
+     * @type {Array<CustomFilterShared>}
+     * @memberof CustomFilter
+     */
+    shared?: Array<CustomFilterShared>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomFilter
+     */
+    created_by?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CustomFilterShared
+ */
+export interface CustomFilterShared {
+    /**
+     * 
+     * @type {number}
+     * @memberof CustomFilterShared
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomFilterShared
+     */
+    username?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ExportLog
+ */
+export interface ExportLog {
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLog
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExportLog
+     */
+    type: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExportLog
+     */
+    msg?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ExportLog
+     */
+    running?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLog
+     */
+    total_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLog
+     */
+    exported_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLog
+     */
+    cache_duration?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ExportLog
+     */
+    possibly_not_expired?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExportLog
+     */
+    created_by?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExportLog
+     */
+    created_at?: string;
+}
+/**
+ * 
+ * @export
  * @interface Food
  */
 export interface Food {
@@ -211,10 +334,10 @@ export interface Food {
     recipe?: FoodRecipe | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof Food
      */
-    food_onhand?: boolean;
+    food_onhand?: string | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -245,6 +368,42 @@ export interface Food {
      * @memberof Food
      */
     full_name?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    ignore_shopping?: boolean;
+    /**
+     * 
+     * @type {Array<FoodSubstitute>}
+     * @memberof Food
+     */
+    substitute?: Array<FoodSubstitute> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    substitute_siblings?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    substitute_children?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
+    substitute_onhand?: string;
+    /**
+     * 
+     * @type {Array<FoodInheritFields>}
+     * @memberof Food
+     */
+    child_inherit_fields?: Array<FoodInheritFields> | null;
 }
 /**
  * 
@@ -361,6 +520,25 @@ export enum FoodShoppingUpdateDeleteEnum {
     True = 'true'
 }
 
+/**
+ * 
+ * @export
+ * @interface FoodSubstitute
+ */
+export interface FoodSubstitute {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodSubstitute
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodSubstitute
+     */
+    name?: string;
+}
 /**
  * 
  * @export
@@ -607,10 +785,10 @@ export interface IngredientFood {
     recipe?: FoodRecipe | null;
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof IngredientFood
      */
-    food_onhand?: boolean;
+    food_onhand?: string | null;
     /**
      * 
      * @type {FoodSupermarketCategory}
@@ -641,6 +819,42 @@ export interface IngredientFood {
      * @memberof IngredientFood
      */
     full_name?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    ignore_shopping?: boolean;
+    /**
+     * 
+     * @type {Array<FoodSubstitute>}
+     * @memberof IngredientFood
+     */
+    substitute?: Array<FoodSubstitute> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    substitute_siblings?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientFood
+     */
+    substitute_children?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientFood
+     */
+    substitute_onhand?: string;
+    /**
+     * 
+     * @type {Array<FoodInheritFields>}
+     * @memberof IngredientFood
+     */
+    child_inherit_fields?: Array<FoodInheritFields> | null;
 }
 /**
  * 
@@ -707,6 +921,37 @@ export interface InlineResponse2001 {
 /**
  * 
  * @export
+ * @interface InlineResponse20010
+ */
+export interface InlineResponse20010 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20010
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20010
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20010
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ViewLog>}
+     * @memberof InlineResponse20010
+     */
+    results?: Array<ViewLog>;
+}
+/**
+ * 
+ * @export
  * @interface InlineResponse2002
  */
 export interface InlineResponse2002 {
@@ -761,10 +1006,10 @@ export interface InlineResponse2003 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Keyword>}
+     * @type {Array<ExportLog>}
      * @memberof InlineResponse2003
      */
-    results?: Array<Keyword>;
+    results?: Array<ExportLog>;
 }
 /**
  * 
@@ -792,10 +1037,10 @@ export interface InlineResponse2004 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<RecipeOverview>}
+     * @type {Array<Keyword>}
      * @memberof InlineResponse2004
      */
-    results?: Array<RecipeOverview>;
+    results?: Array<Keyword>;
 }
 /**
  * 
@@ -823,10 +1068,10 @@ export interface InlineResponse2005 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Step>}
+     * @type {Array<RecipeOverview>}
      * @memberof InlineResponse2005
      */
-    results?: Array<Step>;
+    results?: Array<RecipeOverview>;
 }
 /**
  * 
@@ -854,10 +1099,10 @@ export interface InlineResponse2006 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<SupermarketCategoryRelation>}
+     * @type {Array<Step>}
      * @memberof InlineResponse2006
      */
-    results?: Array<SupermarketCategoryRelation>;
+    results?: Array<Step>;
 }
 /**
  * 
@@ -885,10 +1130,10 @@ export interface InlineResponse2007 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<SyncLog>}
+     * @type {Array<SupermarketCategoryRelation>}
      * @memberof InlineResponse2007
      */
-    results?: Array<SyncLog>;
+    results?: Array<SupermarketCategoryRelation>;
 }
 /**
  * 
@@ -916,10 +1161,10 @@ export interface InlineResponse2008 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Unit>}
+     * @type {Array<SyncLog>}
      * @memberof InlineResponse2008
      */
-    results?: Array<Unit>;
+    results?: Array<SyncLog>;
 }
 /**
  * 
@@ -947,10 +1192,10 @@ export interface InlineResponse2009 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ViewLog>}
+     * @type {Array<Unit>}
      * @memberof InlineResponse2009
      */
-    results?: Array<ViewLog>;
+    results?: Array<Unit>;
 }
 /**
  * 
@@ -1081,10 +1326,10 @@ export interface MealPlan {
     created_by?: string;
     /**
      * 
-     * @type {Array<MealPlanShared>}
+     * @type {Array<CustomFilterShared>}
      * @memberof MealPlan
      */
-    shared?: Array<MealPlanShared> | null;
+    shared?: Array<CustomFilterShared> | null;
     /**
      * 
      * @type {string}
@@ -1182,7 +1427,7 @@ export interface MealPlanRecipe {
      * @type {any}
      * @memberof MealPlanRecipe
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<MealPlanRecipeKeywords>}
@@ -1255,6 +1500,12 @@ export interface MealPlanRecipe {
      * @memberof MealPlanRecipe
      */
     _new?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRecipe
+     */
+    recent?: string;
 }
 /**
  * 
@@ -1274,25 +1525,6 @@ export interface MealPlanRecipeKeywords {
      * @memberof MealPlanRecipeKeywords
      */
     label?: string;
-}
-/**
- * 
- * @export
- * @interface MealPlanShared
- */
-export interface MealPlanShared {
-    /**
-     * 
-     * @type {number}
-     * @memberof MealPlanShared
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof MealPlanShared
-     */
-    username?: string;
 }
 /**
  * 
@@ -1372,7 +1604,7 @@ export interface Recipe {
      * @type {any}
      * @memberof Recipe
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<RecipeKeywords>}
@@ -1490,16 +1722,22 @@ export interface RecipeBook {
     icon?: string | null;
     /**
      * 
-     * @type {Array<MealPlanShared>}
+     * @type {Array<CustomFilterShared>}
      * @memberof RecipeBook
      */
-    shared: Array<MealPlanShared>;
+    shared: Array<CustomFilterShared>;
     /**
      * 
      * @type {string}
      * @memberof RecipeBook
      */
     created_by?: string;
+    /**
+     * 
+     * @type {RecipeBookFilter}
+     * @memberof RecipeBook
+     */
+    filter?: RecipeBookFilter | null;
 }
 /**
  * 
@@ -1537,6 +1775,43 @@ export interface RecipeBookEntry {
      * @memberof RecipeBookEntry
      */
     recipe_content?: string;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeBookFilter
+ */
+export interface RecipeBookFilter {
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookFilter
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBookFilter
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBookFilter
+     */
+    search: string;
+    /**
+     * 
+     * @type {Array<CustomFilterShared>}
+     * @memberof RecipeBookFilter
+     */
+    shared?: Array<CustomFilterShared>;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBookFilter
+     */
+    created_by?: string;
 }
 /**
  * 
@@ -1715,25 +1990,25 @@ export interface RecipeNutrition {
      * @type {string}
      * @memberof RecipeNutrition
      */
-    carbohydrates?: string;
+    carbohydrates: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeNutrition
      */
-    fats?: string;
+    fats: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeNutrition
      */
-    proteins?: string;
+    proteins: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeNutrition
      */
-    calories?: string;
+    calories: string;
     /**
      * 
      * @type {string}
@@ -1770,7 +2045,7 @@ export interface RecipeOverview {
      * @type {any}
      * @memberof RecipeOverview
      */
-    image?: any;
+    image?: any | null;
     /**
      * 
      * @type {Array<MealPlanRecipeKeywords>}
@@ -1843,6 +2118,12 @@ export interface RecipeOverview {
      * @memberof RecipeOverview
      */
     _new?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeOverview
+     */
+    recent?: string;
 }
 /**
  * 
@@ -1923,12 +2204,6 @@ export interface RecipeSteps {
      * @type {string}
      * @memberof RecipeSteps
      */
-    type?: RecipeStepsTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeSteps
-     */
     instruction?: string;
     /**
      * 
@@ -1991,18 +2266,6 @@ export interface RecipeSteps {
      */
     numrecipe?: string;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum RecipeStepsTypeEnum {
-    Text = 'TEXT',
-    Time = 'TIME',
-    File = 'FILE',
-    Recipe = 'RECIPE'
-}
-
 /**
  * 
  * @export
@@ -2041,10 +2304,10 @@ export interface ShoppingList {
     entries: Array<ShoppingListEntries> | null;
     /**
      * 
-     * @type {Array<MealPlanShared>}
+     * @type {Array<CustomFilterShared>}
      * @memberof ShoppingList
      */
-    shared: Array<MealPlanShared>;
+    shared: Array<CustomFilterShared>;
     /**
      * 
      * @type {boolean}
@@ -2528,12 +2791,6 @@ export interface Step {
      * @type {string}
      * @memberof Step
      */
-    type?: StepTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof Step
-     */
     instruction?: string;
     /**
      * 
@@ -2596,18 +2853,6 @@ export interface Step {
      */
     numrecipe?: string;
 }
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum StepTypeEnum {
-    Text = 'TEXT',
-    Time = 'TIME',
-    File = 'FILE',
-    Recipe = 'RECIPE'
-}
-
 /**
  * 
  * @export
@@ -2957,6 +3202,12 @@ export interface UserPreference {
      * @type {boolean}
      * @memberof UserPreference
      */
+    use_fractions?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
     use_kj?: boolean;
     /**
      * 
@@ -2972,10 +3223,10 @@ export interface UserPreference {
     show_recent?: boolean;
     /**
      * 
-     * @type {Array<MealPlanShared>}
+     * @type {Array<CustomFilterShared>}
      * @memberof UserPreference
      */
-    plan_share?: Array<MealPlanShared> | null;
+    plan_share?: Array<CustomFilterShared> | null;
     /**
      * 
      * @type {number}
@@ -3026,10 +3277,10 @@ export interface UserPreference {
     mealplan_autoexclude_onhand?: boolean;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<CustomFilterShared>}
      * @memberof UserPreference
      */
-    shopping_share?: Array<number>;
+    shopping_share?: Array<CustomFilterShared> | null;
     /**
      * 
      * @type {number}
@@ -3054,6 +3305,24 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     filter_to_supermarket?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    shopping_add_onhand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    left_handed?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    food_children_exist?: string;
 }
 
 /**
@@ -3231,6 +3500,72 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(cookLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCustomFilter: async (customFilter?: CustomFilter, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/custom-filter/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExportLog: async (exportLog?: ExportLog, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/export-log/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(exportLog, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4061,6 +4396,72 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('destroyCookLog', 'id', id)
             const localVarPath = `/api/cook-log/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyCustomFilter: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyCustomFilter', 'id', id)
+            const localVarPath = `/api/custom-filter/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyExportLog: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyExportLog', 'id', id)
+            const localVarPath = `/api/export-log/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4954,6 +5355,74 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        listCustomFilters: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/custom-filter/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExportLogs: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/export-log/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         listFoodInheritFields: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food-inherit-field/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5273,23 +5742,38 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+         * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+         * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+         * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+         * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
          * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+         * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+         * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+         * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
          * @param {number} [units] ID of unit a recipe should have.
-         * @param {number} [rating] Rating a recipe should have. [0 - 5]
+         * @param {number} [rating] Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.
          * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
-         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
-         * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+         * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+         * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+         * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+         * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
          * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
+         * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [updatedon] Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes: async (query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listRecipes: async (query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5310,8 +5794,40 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['keywords'] = keywords;
             }
 
+            if (keywordsOr !== undefined) {
+                localVarQueryParameter['keywords_or'] = keywordsOr;
+            }
+
+            if (keywordsAnd !== undefined) {
+                localVarQueryParameter['keywords_and'] = keywordsAnd;
+            }
+
+            if (keywordsOrNot !== undefined) {
+                localVarQueryParameter['keywords_or_not'] = keywordsOrNot;
+            }
+
+            if (keywordsAndNot !== undefined) {
+                localVarQueryParameter['keywords_and_not'] = keywordsAndNot;
+            }
+
             if (foods !== undefined) {
                 localVarQueryParameter['foods'] = foods;
+            }
+
+            if (foodsOr !== undefined) {
+                localVarQueryParameter['foods_or'] = foodsOr;
+            }
+
+            if (foodsAnd !== undefined) {
+                localVarQueryParameter['foods_and'] = foodsAnd;
+            }
+
+            if (foodsOrNot !== undefined) {
+                localVarQueryParameter['foods_or_not'] = foodsOrNot;
+            }
+
+            if (foodsAndNot !== undefined) {
+                localVarQueryParameter['foods_and_not'] = foodsAndNot;
             }
 
             if (units !== undefined) {
@@ -5326,16 +5842,20 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['books'] = books;
             }
 
-            if (keywordsOr !== undefined) {
-                localVarQueryParameter['keywords_or'] = keywordsOr;
-            }
-
-            if (foodsOr !== undefined) {
-                localVarQueryParameter['foods_or'] = foodsOr;
-            }
-
             if (booksOr !== undefined) {
                 localVarQueryParameter['books_or'] = booksOr;
+            }
+
+            if (booksAnd !== undefined) {
+                localVarQueryParameter['books_and'] = booksAnd;
+            }
+
+            if (booksOrNot !== undefined) {
+                localVarQueryParameter['books_or_not'] = booksOrNot;
+            }
+
+            if (booksAndNot !== undefined) {
+                localVarQueryParameter['books_and_not'] = booksAndNot;
             }
 
             if (internal !== undefined) {
@@ -5348,6 +5868,30 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (_new !== undefined) {
                 localVarQueryParameter['new'] = _new;
+            }
+
+            if (timescooked !== undefined) {
+                localVarQueryParameter['timescooked'] = timescooked;
+            }
+
+            if (cookedon !== undefined) {
+                localVarQueryParameter['cookedon'] = cookedon;
+            }
+
+            if (createdon !== undefined) {
+                localVarQueryParameter['createdon'] = createdon;
+            }
+
+            if (updatedon !== undefined) {
+                localVarQueryParameter['updatedon'] = updatedon;
+            }
+
+            if (viewedon !== undefined) {
+                localVarQueryParameter['viewedon'] = viewedon;
+            }
+
+            if (makenow !== undefined) {
+                localVarQueryParameter['makenow'] = makenow;
             }
 
             if (page !== undefined) {
@@ -6194,6 +6738,80 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(cookLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateCustomFilter: async (id: string, customFilter?: CustomFilter, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateCustomFilter', 'id', id)
+            const localVarPath = `/api/custom-filter/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateExportLog: async (id: string, exportLog?: ExportLog, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateExportLog', 'id', id)
+            const localVarPath = `/api/export-log/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(exportLog, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7145,6 +7763,72 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('retrieveCookLog', 'id', id)
             const localVarPath = `/api/cook-log/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveCustomFilter: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveCustomFilter', 'id', id)
+            const localVarPath = `/api/custom-filter/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveExportLog: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveExportLog', 'id', id)
+            const localVarPath = `/api/export-log/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8180,6 +8864,80 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCustomFilter: async (id: string, customFilter?: CustomFilter, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateCustomFilter', 'id', id)
+            const localVarPath = `/api/custom-filter/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExportLog: async (id: string, exportLog?: ExportLog, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateExportLog', 'id', id)
+            const localVarPath = `/api/export-log/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(exportLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food.
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
@@ -9056,6 +9814,26 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createCustomFilter(customFilter?: CustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createCustomFilter(customFilter, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createExportLog(exportLog?: ExportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createExportLog(exportLog, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9305,6 +10083,26 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async destroyCookLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.destroyCookLog(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyCustomFilter(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyCustomFilter(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyExportLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyExportLog(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9572,6 +10370,26 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async listCustomFilters(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CustomFilter>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCustomFilters(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listExportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExportLogs(page, pageSize, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async listFoodInheritFields(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<FoodInheritField>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFoodInheritFields(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
@@ -9620,7 +10438,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
+        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKeywords(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9663,24 +10481,39 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+         * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+         * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+         * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+         * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
          * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+         * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+         * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+         * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
          * @param {number} [units] ID of unit a recipe should have.
-         * @param {number} [rating] Rating a recipe should have. [0 - 5]
+         * @param {number} [rating] Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.
          * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
-         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
-         * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+         * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+         * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+         * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+         * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
          * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
+         * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [updatedon] Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, foods, units, rating, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options);
+        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, updatedon, viewedon, makenow, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9722,7 +10555,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
+        async listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2006>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSteps(recipe, query, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9742,7 +10575,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2006>> {
+        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2007>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategoryRelations(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9771,7 +10604,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSyncLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2007>> {
+        async listSyncLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2008>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSyncLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9792,7 +10625,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2008>> {
+        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2009>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUnits(query, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9830,7 +10663,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2009>> {
+        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20010>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -9925,6 +10758,28 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async partialUpdateCookLog(id: string, cookLog?: CookLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateCookLog(id, cookLog, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateCustomFilter(id: string, customFilter?: CustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateCustomFilter(id, customFilter, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateExportLog(id: string, exportLog?: ExportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateExportLog(id, exportLog, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10210,6 +11065,26 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveCookLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveCookLog(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveCustomFilter(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveCustomFilter(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveExportLog(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveExportLog(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10519,6 +11394,28 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCustomFilter(id: string, customFilter?: CustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCustomFilter(id, customFilter, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateExportLog(id: string, exportLog?: ExportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExportLog(id, exportLog, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food.
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
@@ -10801,6 +11698,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCustomFilter(customFilter?: CustomFilter, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.createCustomFilter(customFilter, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExportLog(exportLog?: ExportLog, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.createExportLog(exportLog, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11026,6 +11941,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         destroyCookLog(id: string, options?: any): AxiosPromise<void> {
             return localVarFp.destroyCookLog(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyCustomFilter(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyCustomFilter(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyExportLog(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyExportLog(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11266,6 +12199,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        listCustomFilters(options?: any): AxiosPromise<Array<CustomFilter>> {
+            return localVarFp.listCustomFilters(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
+            return localVarFp.listExportLogs(page, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         listFoodInheritFields(options?: any): AxiosPromise<Array<FoodInheritField>> {
             return localVarFp.listFoodInheritFields(options).then((request) => request(axios, basePath));
         },
@@ -11310,7 +12261,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
+        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
             return localVarFp.listKeywords(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11348,24 +12299,39 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+         * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+         * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+         * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+         * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
          * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+         * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+         * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+         * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
          * @param {number} [units] ID of unit a recipe should have.
-         * @param {number} [rating] Rating a recipe should have. [0 - 5]
+         * @param {number} [rating] Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.
          * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
-         * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
-         * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+         * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+         * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+         * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+         * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
          * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
+         * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [updatedon] Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
+         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
-            return localVarFp.listRecipes(query, keywords, foods, units, rating, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(axios, basePath));
+        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
+            return localVarFp.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, updatedon, viewedon, makenow, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11403,7 +12369,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
+        listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2006> {
             return localVarFp.listSteps(recipe, query, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11421,7 +12387,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2006> {
+        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2007> {
             return localVarFp.listSupermarketCategoryRelations(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11447,7 +12413,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSyncLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2007> {
+        listSyncLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2008> {
             return localVarFp.listSyncLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11466,7 +12432,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2008> {
+        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2009> {
             return localVarFp.listUnits(query, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11500,7 +12466,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2009> {
+        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20010> {
             return localVarFp.listViewLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -11587,6 +12553,26 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         partialUpdateCookLog(id: string, cookLog?: CookLog, options?: any): AxiosPromise<CookLog> {
             return localVarFp.partialUpdateCookLog(id, cookLog, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateCustomFilter(id: string, customFilter?: CustomFilter, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.partialUpdateCustomFilter(id, customFilter, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateExportLog(id: string, exportLog?: ExportLog, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.partialUpdateExportLog(id, exportLog, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11846,6 +12832,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveCookLog(id: string, options?: any): AxiosPromise<CookLog> {
             return localVarFp.retrieveCookLog(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveCustomFilter(id: string, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.retrieveCustomFilter(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveExportLog(id: string, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.retrieveExportLog(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12124,6 +13128,26 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCustomFilter(id: string, customFilter?: CustomFilter, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.updateCustomFilter(id, customFilter, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this export log.
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExportLog(id: string, exportLog?: ExportLog, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.updateExportLog(id, exportLog, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food.
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
@@ -12386,6 +13410,28 @@ export class ApiApi extends BaseAPI {
      */
     public createCookLog(cookLog?: CookLog, options?: any) {
         return ApiApiFp(this.configuration).createCookLog(cookLog, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {CustomFilter} [customFilter] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createCustomFilter(customFilter?: CustomFilter, options?: any) {
+        return ApiApiFp(this.configuration).createCustomFilter(customFilter, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {ExportLog} [exportLog] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createExportLog(exportLog?: ExportLog, options?: any) {
+        return ApiApiFp(this.configuration).createExportLog(exportLog, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12664,6 +13710,28 @@ export class ApiApi extends BaseAPI {
      */
     public destroyCookLog(id: string, options?: any) {
         return ApiApiFp(this.configuration).destroyCookLog(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this custom filter.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyCustomFilter(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyCustomFilter(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this export log.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyExportLog(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyExportLog(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12958,6 +14026,28 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
+    public listCustomFilters(options?: any) {
+        return ApiApiFp(this.configuration).listCustomFilters(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listExportLogs(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listExportLogs(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
     public listFoodInheritFields(options?: any) {
         return ApiApiFp(this.configuration).listFoodInheritFields(options).then((request) => request(this.axios, this.basePath));
     }
@@ -13057,25 +14147,40 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [query] Query string matched (fuzzy) against recipe name. In the future also fulltext search.
-     * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter.
+     * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+     * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+     * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+     * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+     * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
      * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
+     * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+     * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+     * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+     * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
      * @param {number} [units] ID of unit a recipe should have.
-     * @param {number} [rating] Rating a recipe should have. [0 - 5]
+     * @param {number} [rating] Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.
      * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-     * @param {string} [keywordsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided keywords.
-     * @param {string} [foodsOr] If recipe should have all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided foods.
-     * @param {string} [booksOr] If recipe should be in all (AND&#x3D;false) or any (OR&#x3D;&lt;b&gt;true&lt;/b&gt;) of the provided books.
+     * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+     * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+     * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+     * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
      * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {string} [random] Returns the results in randomized order. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {number} [timescooked] Filter recipes cooked X times or more.  Negative values returns cooked less than X times
+     * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [updatedon] Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [viewedon] Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on or before date.
+     * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listRecipes(query?: string, keywords?: number, foods?: number, units?: number, rating?: number, books?: string, keywordsOr?: string, foodsOr?: string, booksOr?: string, internal?: string, random?: string, _new?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listRecipes(query, keywords, foods, units, rating, books, keywordsOr, foodsOr, booksOr, internal, random, _new, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, updatedon, viewedon, makenow, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13343,6 +14448,30 @@ export class ApiApi extends BaseAPI {
      */
     public partialUpdateCookLog(id: string, cookLog?: CookLog, options?: any) {
         return ApiApiFp(this.configuration).partialUpdateCookLog(id, cookLog, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this custom filter.
+     * @param {CustomFilter} [customFilter] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateCustomFilter(id: string, customFilter?: CustomFilter, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateCustomFilter(id, customFilter, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this export log.
+     * @param {ExportLog} [exportLog] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateExportLog(id: string, exportLog?: ExportLog, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateExportLog(id, exportLog, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13654,6 +14783,28 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveCookLog(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveCookLog(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this custom filter.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveCustomFilter(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveCustomFilter(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this export log.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveExportLog(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveExportLog(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13989,6 +15140,30 @@ export class ApiApi extends BaseAPI {
      */
     public updateCookLog(id: string, cookLog?: CookLog, options?: any) {
         return ApiApiFp(this.configuration).updateCookLog(id, cookLog, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this custom filter.
+     * @param {CustomFilter} [customFilter] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateCustomFilter(id: string, customFilter?: CustomFilter, options?: any) {
+        return ApiApiFp(this.configuration).updateCustomFilter(id, customFilter, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this export log.
+     * @param {ExportLog} [exportLog] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateExportLog(id: string, exportLog?: ExportLog, options?: any) {
+        return ApiApiFp(this.configuration).updateExportLog(id, exportLog, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

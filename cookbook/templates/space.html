@@ -88,9 +88,8 @@
         <h4>
             {% trans 'Members' %}
             <small class="text-muted"
-                >{{ space_users|length }}/ {% if request.space.max_users > 0 %} {{ request.space.max_users }}{% else
-                %}∞{% endif %}</small
-            >
+                >{{ space_users|length }}/{% if request.space.max_users > 0 %} {{ request.space.max_users }}{% else %}∞{% endif %}
+            </small>
             <a class="btn btn-success float-right" href="{% url 'new_invite_link' %}"
                 ><i class="fas fa-plus-circle"></i> {% trans 'Invite User' %}</a
             >

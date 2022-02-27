@@ -179,6 +179,7 @@ class ImportForm(ImportExportBase):
 class ExportForm(ImportExportBase):
     recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none(), required=False)
     all = forms.BooleanField(required=False)
+    custom_filter = forms.IntegerField(required=False)
 
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
