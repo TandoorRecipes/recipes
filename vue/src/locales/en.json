@@ -366,4 +366,7 @@
     "User": "User",
     "Keyword": "Keyword",
     "Advanced": "Advanced"
+    "parameter_count": "Parameter {count}",
+    "Page": "Page",
+    "Reset": "Reset"
 }
