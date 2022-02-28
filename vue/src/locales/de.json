@@ -335,5 +335,14 @@
     "sort_by": "Sortiere nach",
     "Random Recipes": "Zufällige Rezepte",
     "recipe_filter": "Rezept-Filter",
-    "parameter_count": "Parameter {count}"
+    "parameter_count": "Parameter {count}",
+    "select_keyword": "Stichwort auswählen",
+    "add_keyword": "Stichwort hinzufügen",
+    "select_file": "Datei auswählen",
+    "select_recipe": "Rezept auswählen",
+    "select_unit": "Einheit wählen",
+    "select_food": "Zutat auswählen",
+    "remove_selection": "Abwählen",
+    "empty_list": "Liste ist leer.",
+    "Select": "Auswählen"
 }
