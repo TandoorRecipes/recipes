@@ -249,7 +249,7 @@
     "shopping_auto_sync_desc": "Bei 0 wird Auto-Sync deaktiviert. Beim Betrachten einer Einkaufsliste wird die Liste alle gesetzten Sekunden aktualisiert, um mögliche Änderungen anderer zu zeigen. Nützlich, wenn mehrere Personen einkaufen und mobile Daten nutzen.",
     "MoveCategory": "Verschieben nach: ",
     "mealplan_autoadd_shopping_desc": "Essensplan-Zutaten automatisch zur Einkaufsliste hinzufügen.",
-    "Pin": "Pin",
+    "Pin": "Anheften",
     "mark_complete": "Vollständig markieren",
     "shopping_add_onhand_desc": "Markiere Lebensmittel als \"Vorrätig\", wenn von der Einkaufsliste abgehakt wurden.",
     "left_handed": "Linkshänder-Modus",
@@ -341,4 +341,9 @@
     "Keyword": "Schlüsselwort",
     "Advanced": "Erweitert",
     "Substitutes": "Zusätze"
+    "parameter_count": "Parameter {count}",
+    "copy_to_new": "Kopiere zu neuem Rezept",
+    "Page": "Seite",
+    "Reset": "Zurücksetzen",
+    "search_rank": "Such-Rang"
 }
