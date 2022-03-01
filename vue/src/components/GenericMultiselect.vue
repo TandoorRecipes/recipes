@@ -1,5 +1,6 @@
 <template>
     <multiselect
+        :id="id"
         v-model="selected_objects"
         :options="objects"
         :close-on-select="true"
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import Vue from "vue"
 import Multiselect from "vue-multiselect"
 import { ApiMixin } from "@/utils/utils"
 
@@ -33,6 +35,7 @@ export default {
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
+            id: undefined,
             loading: false,
             objects: [],
             selected_objects: undefined,
@@ -74,10 +77,41 @@ export default {
         initial_selection: function (newVal, oldVal) {
             // watch it
             this.selected_objects = newVal
+            let get_details = []
+            let empty = {}
+            empty[this.label] = `..${this.$t("loading")}..`
+            this.selected_objects.forEach((x) => {
+                if (typeof x !== "object") {
+                    this.selected_objects[this.selected_objects.indexOf(x)] = { ...empty, id: x }
+                    get_details.push(x)
+                }
+            })
+            get_details.forEach((x) => {
+                this.genericAPI(this.model, this.Actions.FETCH, { id: x })
+                    .then((result) => {
+                        // this.selected_objects[this.selected_objects.map((y) => y.id).indexOf(x)] = result.data
+                        Vue.set(this.selected_objects, this.selected_objects.map((y) => y.id).indexOf(x), result.data)
+                    })
+                    .catch((err) => {
+                        this.selected_objects = this.selected_objects.filter((y) => y.id !== x)
+                    })
+            })
         },
         initial_single_selection: function (newVal, oldVal) {
             // watch it
             this.selected_objects = newVal
+            if (typeof this.selected_objects !== "object") {
+                let empty = {}
+                empty[this.label] = `..${this.$t("loading")}..`
+                this.selected_objects = { ...empty, id: this.selected_objects }
+                this.genericAPI(this.model, this.Actions.FETCH, { id: this.selected_objects })
+                    .then((result) => {
+                        this.selected_objects = result.data
+                    })
+                    .catch((err) => {
+                        this.selected_objects = undefined
+                    })
+            }
         },
         clear: function (newVal, oldVal) {
             if (this.multiple || !this.initial_single_selection) {
@@ -88,6 +122,7 @@ export default {
         },
     },
     mounted() {
+        this.id = Math.random()
         this.search("")
         if (this.multiple || !this.initial_single_selection) {
             this.selected_objects = this.initial_selection
@@ -133,7 +168,6 @@ export default {
                         }
                     })
                 }
-                // this.removeMissingItems()  # This removes items that are on another page of results
             })
         },
         selectionChanged: function () {
@@ -146,13 +180,6 @@ export default {
                 this.search("")
             }, 750)
         },
-        // removeMissingItems: function () {
-        //     if (this.multiple) {
-        //         this.selected_objects = this.selected_objects.filter((x) => !this.objects.map((y) => y.id).includes(x))
-        //     } else {
-        //         this.selected_objects = this.objects.filter((x) => x.id === this.selected_objects.id)[0]
-        //     }
-        // },
     },
 }
 </script>

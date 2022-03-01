@@ -5,19 +5,17 @@ from smtplib import SMTPException
 
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import (ImportRecipeForm, InviteLinkForm,
-                            MealPlanForm, Storage, StorageForm)
-from cookbook.helper.permission_helper import (GroupRequiredMixin,
-                                               group_required)
-from cookbook.models import (InviteLink, MealPlan, MealType, Recipe,
-                             RecipeBook, RecipeImport, ShareLink, Step, UserPreference)
+from cookbook.forms import ImportRecipeForm, InviteLinkForm, MealPlanForm, Storage, StorageForm
+from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
+from cookbook.models import (InviteLink, MealPlan, MealType, Recipe, RecipeBook, RecipeImport,
+                             ShareLink, Step, UserPreference)
 from cookbook.views.edit import SpaceFormMixing
 from recipes import settings
 

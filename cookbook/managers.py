@@ -1,7 +1,5 @@
 from django.contrib.postgres.aggregates import StringAgg
-from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, SearchVector,
-)
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db import models
 from django.db.models import Q
 from django.utils import translation

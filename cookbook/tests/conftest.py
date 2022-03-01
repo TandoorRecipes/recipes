@@ -158,6 +158,31 @@ def dict_compare(d1, d2, details=False):
         return any([not added, not removed, not modified, not modified_dicts])
 
 
+def transpose(text, number=2):
+
+    # select random token
+    tokens = text.split()
+    positions = list(i for i, e in enumerate(tokens) if len(e) > 1)
+
+    if positions:
+
+        token_pos = random.choice(positions)
+
+        # select random positions in token
+        positions = random.sample(range(len(tokens[token_pos])), number)
+
+        # swap the positions
+        l = list(tokens[token_pos])
+        for first, second in zip(positions[::2], positions[1::2]):
+            l[first], l[second] = l[second], l[first]
+
+        # replace original tokens with swapped
+        tokens[token_pos] = ''.join(l)
+
+    # return text with the swapped token
+    return ' '.join(tokens)
+
+
 @pytest.fixture
 def recipe_1_s1(space_1, u1_s1):
     return get_random_recipe(space_1, u1_s1)

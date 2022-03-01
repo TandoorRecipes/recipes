@@ -15,7 +15,7 @@ from django.core.files import File
 from django.db.models import (Case, Count, Exists, F, IntegerField, OuterRef, ProtectedError, Q,
                               Subquery, Value, When)
 from django.db.models.fields.related import ForeignObjectRel
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -42,19 +42,20 @@ from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, Food, FoodInheritField,
-                             ImportLog, ExportLog, Ingredient, Keyword, MealPlan, MealType, Recipe, RecipeBook,
-                             RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
-                             ShoppingListRecipe, Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile,
-                             UserPreference, ViewLog)
+from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
+                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
+                             Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
+                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UserFile, UserPreference, ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
-                                 CookLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
-                                 FoodShoppingUpdateSerializer, ImportLogSerializer, ExportLogSerializer,
+                                 CookLogSerializer, CustomFilterSerializer, ExportLogSerializer,
+                                 FoodInheritFieldSerializer, FoodSerializer,
+                                 FoodShoppingUpdateSerializer, ImportLogSerializer,
                                  IngredientSerializer, KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookEntrySerializer,
                                  RecipeBookSerializer, RecipeImageSerializer,
@@ -107,6 +108,7 @@ class ExtendedRecipeMixin():
     '''
     ExtendedRecipe annotates a queryset with recipe_image and recipe_count values
     '''
+
     @classmethod
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
         extended = str2bool(request.query_params.get('extended', None))
@@ -138,19 +140,17 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
     schema = FilterSchema()
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         query = self.request.query_params.get('query', None)
-        fuzzy = self.request.user.searchpreference.lookup
+        fuzzy = self.request.user.searchpreference.lookup or any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.trigram.values_list('field', flat=True)])
 
         if query is not None and query not in ["''", '']:
             if fuzzy:
-                self.queryset = (
-                    self.queryset
-                    .annotate(starts=Case(When(name__istartswith=query, then=(Value(.3, output_field=IntegerField()))), default=Value(0)))
-                    .annotate(trigram=TrigramSimilarity('name', query))
-                    .annotate(sort=F('starts')+F('trigram'))
-                    .order_by('-sort')
-                )
+                if any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                    self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
+                else:
+                    self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name', query))
+                self.queryset = self.queryset.order_by('-trigram')
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 filter = Q(name__icontains=query)
@@ -161,7 +161,7 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                     self.queryset
                         .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
                                               default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(filter).order_by('-starts', 'name')
+                        .filter(filter).order_by('-starts', Lower('name').asc())
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -175,16 +175,16 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
 
         limit = self.request.query_params.get('limit', None)
         random = self.request.query_params.get('random', False)
+        if random:
+            self.queryset = self.queryset.order_by("?")
         if limit is not None:
-            if random:
-                self.queryset = self.queryset.order_by("?")
             self.queryset = self.queryset[:int(limit)]
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class)
 
 
 class MergeMixin(ViewSetMixin):
-    @ decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
-    @ decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
+    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def merge(self, request, pk, target):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
 
@@ -276,12 +276,12 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
                     self.queryset = self.model.objects.none()
         else:
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request, serializer=self.serializer_class, tree=True)
-        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class, tree=True)
 
-    @ decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
-    @ decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+    @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
+    @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
     def move(self, request, pk, parent):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
         if self.model.node_order_by:
@@ -404,7 +404,7 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsUser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).order_by('name')
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         return super().get_queryset()
 
 
@@ -461,7 +461,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
         return self.queryset.annotate(shopping_status=Exists(shopping_status)).prefetch_related('onhand_users', 'inherit_fields').select_related('recipe', 'supermarket_category')
 
-    @ decorators.action(detail=True,  methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer,)
+    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
         if self.request.space.demo:
@@ -492,7 +492,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
@@ -511,7 +511,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     """
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         queryset = self.queryset.filter(
@@ -525,7 +525,6 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
         book_id = self.request.query_params.get('book', None)
         if book_id is not None:
             queryset = queryset.filter(book__pk=book_id)
-
         return queryset
 
 
@@ -540,7 +539,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner | CustomIsShared]
 
     def get_queryset(self):
         queryset = self.queryset.filter(
@@ -630,20 +629,35 @@ class RecipeViewSet(viewsets.ModelViewSet):
     # TODO split read and write permission for meal plan guest
     permission_classes = [CustomIsShare | CustomIsGuest]
     pagination_class = RecipePagination
-    # TODO the boolean params below (keywords_or through new) should be updated to boolean types with front end refactored accordingly
+
     query_params = [
         QueryParam(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
-        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter.'), qtype='int'),
+        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), qtype='int'),
+        QueryParam(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), qtype='int'),
+        QueryParam(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), qtype='int'),
+        QueryParam(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), qtype='int'),
+        QueryParam(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), qtype='int'),
         QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), qtype='int'),
+        QueryParam(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), qtype='int'),
+        QueryParam(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), qtype='int'),
+        QueryParam(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), qtype='int'),
+        QueryParam(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), qtype='int'),
         QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
-        QueryParam(name='rating', description=_('Rating a recipe should have. [0 - 5]'), qtype='int'),
+        QueryParam(name='rating', description=_('Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), qtype='int'),
         QueryParam(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
-        QueryParam(name='keywords_or', description=_('If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided keywords.')),
-        QueryParam(name='foods_or', description=_('If recipe should have all (AND=''false'') or any (OR=''<b>true</b>'') of the provided foods.')),
-        QueryParam(name='books_or', description=_('If recipe should be in all (AND=''false'') or any (OR=''<b>true</b>'') of the provided books.')),
+        QueryParam(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), qtype='int'),
+        QueryParam(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), qtype='int'),
+        QueryParam(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), qtype='int'),
+        QueryParam(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), qtype='int'),
         QueryParam(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
         QueryParam(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
         QueryParam(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
+        QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='int'),
+        QueryParam(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='updatedon', description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='viewedon', description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+        QueryParam(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']')),
     ]
     schema = QueryParamAutoSchema()
 
@@ -658,7 +672,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not (share and self.detail):
             self.queryset = self.queryset.filter(space=self.request.space)
 
-        # self.queryset = search_recipes(self.request, self.queryset, self.request.GET)
         params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x in list(self.request.GET)}
         search = RecipeSearch(self.request, **params)
         self.queryset = search.get_queryset(self.queryset).prefetch_related('cooklog_set')
@@ -873,7 +886,6 @@ class ExportLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-
 class BookmarkletImportViewSet(viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
@@ -904,7 +916,19 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = CustomFilter.objects
+    serializer_class = CustomFilterSerializer
+    permission_classes = [CustomIsOwner]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
+            space=self.request.space).distinct()
+        return super().get_queryset()
+
 # -------------- non django rest api views --------------------
+
+
 def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:
         return Dropbox

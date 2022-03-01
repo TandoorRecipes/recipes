@@ -6,11 +6,17 @@ Please have a look at the [list of pull requests](https://github.com/vabene1111/
 a complete list of contributions.
 Below are some of the larger contributions made yet.
 
-
-- @tourn provided the serving feature and **several** other improvements!
-- @l0c4lh057 provided a much improved ingredient text parser in [#277](https://github.com/vabene1111/recipes/pull/277)
-- @sebimarkgraf added nutritional information [#199](https://github.com/vabene1111/recipes/pull/199)
-- @cazier added reverse proxy authentication [#88](https://github.com/vabene1111/recipes/pull/88)
+- [vabene1111]
+- [Kaibu]
+- [smilerz]
+- [MaxJa4] Docker builds and other improvements
+- [tourn] provided the serving feature and **several** other improvements!
+- [l0c4lh057] provided a much improved ingredient text parser in [#277](https://github.com/vabene1111/recipes/pull/277)
+- [sebimarkgraf] added nutritional information [#199](https://github.com/vabene1111/recipes/pull/199)
+- [cazier] added reverse proxy authentication [#88](https://github.com/vabene1111/recipes/pull/88)
+- [murphy83] added support for IPv6 #1490
+- [TheHaf] added custom serving size component #1411
+- [lostlont] added LDAP support #960
 
 ## Translations
 
@@ -30,6 +36,7 @@ Below are some of the larger contributions made yet.
 ### German
 [eTaurus](https://www.transifex.com/user/profile/eTaurus/)
 [l0c4lh057](https://www.transifex.com/user/profile/l0c4lh057/)
+[hyperbit00]
 
 ### Hungarian
 [igazka](https://www.transifex.com/user/profile/igazka/)

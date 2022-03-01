@@ -55,6 +55,7 @@
                     </b-input-group-prepend>
 
                     <b-form-spinbutton min="1" v-model="recipe_servings" inline style="height: 3em"></b-form-spinbutton>
+                    <!-- <CustomInputSpinButton v-model.number="recipe_servings" style="height: 3em" /> -->
 
                     <b-input-group-append>
                         <b-button variant="secondary" @click="$bvModal.hide(`shopping_${modal_id}`)">{{ $t("Cancel") }} </b-button>
@@ -75,6 +76,7 @@ const { ApiApiFactory } = require("@/utils/openapi/api")
 import { StandardToasts } from "@/utils/utils"
 import IngredientsCard from "@/components/IngredientsCard"
 import LoadingSpinner from "@/components/LoadingSpinner"
+// import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 
 export default {
     name: "ShoppingModal",
@@ -105,12 +107,6 @@ export default {
         },
     },
     watch: {
-        recipe: {
-            handler() {
-                this.loadRecipe()
-            },
-            deep: true,
-        },
         servings: function (newVal) {
             this.recipe_servings = parseInt(newVal)
         },
