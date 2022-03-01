@@ -370,5 +370,11 @@
     "select_food": "Select Food",
     "remove_selection": "Deselect",
     "empty_list": "List is empty.",
-    "Select": "Select"
+    "Select": "Select",
+    "Supermarkets": "Supermarkets",
+    "User": "User",
+    "Keyword": "Keyword",
+    "Advanced": "Advanced",
+    "Page": "Page",
+    "Reset": "Reset"
 }

@@ -6,6 +6,7 @@ from zipfile import ZipFile
 
 import requests
 
+from django.utils.translation import gettext as _
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
@@ -49,7 +50,7 @@ class RecetteTek(Integration):
         # Append the original import url to the step (if it exists)
         try:
             if file['url'] != '':
-                step.instruction += '\n\nImported from: ' + file['url']
+                step.instruction += '\n\n' + _('Imported from') + ': ' + file['url']
                 step.save()
         except Exception as e:
             print(recipe.name, ': failed to import source url ', str(e))
