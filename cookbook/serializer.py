@@ -337,7 +337,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = SupermarketCategory.objects.get_or_create(name__iexact=name, space=space, defaults=validated_data)
+        obj, created = SupermarketCategory.objects.get_or_create(name=name, space=space)
         return obj
 
     def update(self, instance, validated_data):
