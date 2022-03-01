@@ -344,5 +344,6 @@
     "copy_to_new": "Kopiere zu neuem Rezept",
     "Page": "Seite",
     "Reset": "Zurücksetzen",
-    "search_rank": "Such-Rang"
+    "search_rank": "Such-Rang",
+    "paste_ingredients": "Zutaten einfügen"
 }

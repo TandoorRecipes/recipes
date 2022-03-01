@@ -802,7 +802,7 @@ export default {
                 no_amount: false,
             })
             this.sortIngredients(step)
-            this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).focus())
+            this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).select())
         },
         removeIngredient: function (step, ingredient) {
             if (confirm(this.$t("confirm_delete", { object: this.$t("Ingredient") }))) {
