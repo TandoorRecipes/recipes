@@ -35,7 +35,7 @@ def shopping_helper(qs, request):
         qs = qs.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
         supermarket_order = ['checked'] + supermarket_order
 
-    return qs.order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
+    return qs.distinct().order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
 
 
 class RecipeShoppingEditor():
@@ -66,8 +66,12 @@ class RecipeShoppingEditor():
             self.servings = getattr(self._shopping_list_recipe, 'servings', None) or getattr(self.mealplan, 'servings', None) or getattr(self.recipe, 'servings', None)
 
     @property
+    def _recipe_servings(self):
+        return getattr(self.recipe, 'servings', None) or getattr(getattr(self.mealplan, 'recipe', None), 'servings', None) or getattr(getattr(self._shopping_list_recipe, 'recipe', None), 'servings', None)
+
+    @property
     def _servings_factor(self):
-        return self.servings / self.recipe.servings
+        return Decimal(self.servings)/Decimal(self._recipe_servings)
 
     @property
     def _shared_users(self):

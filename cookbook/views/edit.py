@@ -2,22 +2,16 @@ import os
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
-from cookbook.forms import (CommentForm, ExternalRecipeForm,
-                            MealPlanForm,
-                            StorageForm, SyncForm,
-                            )
-from cookbook.helper.permission_helper import (GroupRequiredMixin,
-                                               OwnerRequiredMixin,
-                                               group_required)
-from cookbook.models import (Comment, MealPlan,
-                             MealType, Recipe, RecipeImport,
-                             Storage, Sync, UserPreference)
+from cookbook.forms import CommentForm, ExternalRecipeForm, MealPlanForm, StorageForm, SyncForm
+from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
+from cookbook.models import (Comment, MealPlan, MealType, Recipe, RecipeImport, Storage, Sync,
+                             UserPreference)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud

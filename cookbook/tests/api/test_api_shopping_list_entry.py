@@ -90,7 +90,10 @@ def test_add(arg, request, obj_1):
     c = request.getfixturevalue(arg[0])
     r = c.post(
         reverse(LIST_URL),
-        {'food': model_to_dict(obj_1.food), 'amount': 1},
+        {'food': {
+            'id': obj_1.food.__dict__['id'],
+            'name': obj_1.food.__dict__['name'],
+        }, 'amount': 1},
         content_type='application/json'
     )
     response = json.loads(r.content)

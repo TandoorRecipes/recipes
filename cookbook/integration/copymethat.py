@@ -4,11 +4,12 @@ from zipfile import ZipFile
 
 from bs4 import BeautifulSoup
 
+from django.utils.translation import gettext as _
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes, parse_servings
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 from recipes.settings import DEBUG
 
 
@@ -41,11 +42,11 @@ class CopyMeThat(Integration):
         for ingredient in file.find_all("li", {"class": "recipeIngredient"}):
             if ingredient.text == "":
                 continue
-            amount, unit, ingredient, note = ingredient_parser.parse(ingredient.text.strip())
-            f = ingredient_parser.get_food(ingredient)
+            amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
+            f = ingredient_parser.get_food(food)
             u = ingredient_parser.get_unit(unit)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                food=f, unit=u, amount=amount, note=note, original_text=ingredient.text.strip(), space=self.request.space,
             ))
 
         for s in file.find_all("li", {"class": "instruction"}):
@@ -60,7 +61,7 @@ class CopyMeThat(Integration):
 
         try:
             if file.find("a", {"id": "original_link"}).text != '':
-                step.instruction += "\n\nImported from: " + file.find("a", {"id": "original_link"}).text
+                step.instruction += "\n\n" + _("Imported from") + ": " + file.find("a", {"id": "original_link"}).text
                 step.save()
         except AttributeError:
             pass

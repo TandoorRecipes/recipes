@@ -348,3 +348,33 @@ follow these instructions:
 - Start Tandoor containers again (`docker-compose up -d`)
 - Wait for at least 2-3 minutes and then check if everything is working now (migrations can take quite some time!)
 - If not, check logs of the web_recipes container with `docker logs <container_name>` and make sure that all migrations are indeed already done
+
+### Sub Path nginx config
+
+If hosting under a sub-path you might want to change the default nginx config (which gets mounted through the named volume from the application container into the nginx container)
+with the following config. 
+
+```nginx
+location /my_app { # change to subfolder name
+    include /config/nginx/proxy.conf; 
+    proxy_pass https://mywebapp.com/; # change to your host name:port
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Script-Name /my_app; # change to subfolder name
+    proxy_cookie_path / /my_app; # change to subfolder name
+}
+
+location /media/ {
+    include /config/nginx/proxy.conf;
+    alias /mediafiles/;
+    client_max_body_size 16M;
+
+}
+
+location /static/ {
+    include /config/nginx/proxy.conf;
+    alias /staticfiles/;
+    client_max_body_size 16M;
+
+}
+```

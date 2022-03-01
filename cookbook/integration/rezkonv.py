@@ -1,6 +1,6 @@
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class RezKonv(Integration):
@@ -44,11 +44,11 @@ class RezKonv(Integration):
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
             if len(ingredient.strip()) > 0:
-                amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-                f = ingredient_parser.get_food(ingredient)
+                amount, unit, food, note = ingredient_parser.parse(ingredient)
+                f = ingredient_parser.get_food(food)
                 u = ingredient_parser.get_unit(unit)
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                    food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                 ))
         recipe.steps.add(step)
 
@@ -60,9 +60,14 @@ class RezKonv(Integration):
     def split_recipe_file(self, file):
         recipe_list = []
         current_recipe = ''
-
+        encoding_list = ['windows-1250', 'latin-1'] #TODO build algorithm to try trough encodings and fail if none work, use for all importers
+        encoding = 'windows-1250'
         for fl in file.readlines():
-            line = fl.decode("windows-1250")
+            try:
+                line = fl.decode(encoding)
+            except UnicodeDecodeError:
+                encoding = 'latin-1'
+                line = fl.decode(encoding)
             if line.startswith('=====') and 'rezkonv' in line.lower():
                 if current_recipe != '':
                     recipe_list.append(current_recipe)
