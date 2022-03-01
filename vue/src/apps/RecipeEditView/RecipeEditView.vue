@@ -65,8 +65,11 @@
                         :preserve-search="true"
                         :internal-search="false"
                         :limit="options_limit"
-                        placeholder="Select Keyword"
-                        tag-placeholder="Add Keyword"
+                        :placeholder="$t('select_keyword')"
+                        :tag-placeholder="$t('add_keyword')"
+                        :select-label="$t('Select')"
+                        :selected-label="$t('Selected')"
+                        :deselect-label="$t('remove_selection')"
                         :taggable="true"
                         @tag="addKeyword"
                         label="label"
@@ -76,6 +79,7 @@
                         :loading="keywords_loading"
                         @search-change="searchKeywords"
                     >
+                       <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                     </multiselect>
                 </div>
             </div>
@@ -244,8 +248,10 @@
                                             :clear-on-select="true"
                                             :allow-empty="true"
                                             :preserve-search="true"
-                                            placeholder="Select File"
-                                            select-label="Select"
+                                            :placeholder="$t('select_file')"
+                                            :select-label="$t('Select')"
+                                            :selected-label="$t('Selected')"
+                                            :deselect-label="$t('remove_selection')"
                                             :id="'id_step_' + step.id + '_file'"
                                             label="name"
                                             track-by="name"
@@ -254,6 +260,7 @@
                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                             @search-change="searchFiles"
                                         >
+                                          <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                         </multiselect>
                                         <b-input-group-append>
                                             <b-button
@@ -283,14 +290,17 @@
                                         :preserve-search="true"
                                         :internal-search="false"
                                         :limit="options_limit"
-                                        placeholder="Select Recipe"
-                                        select-label="Select"
+                                        :placeholder="$t('select_recipe')"
+                                        :select-label="$t('Select')"
+                                        :selected-label="$t('Selected')"
+                                        :deselect-label="$t('remove_selection')"
                                         :id="'id_step_' + step.id + '_recipe'"
                                         :custom-label="(opt) => recipes.find((x) => x.id === opt).name"
                                         :multiple="false"
                                         :loading="recipes_loading"
                                         @search-change="searchRecipes"
                                     >
+                                      <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                     </multiselect>
                                 </div>
                             </div>
@@ -338,9 +348,11 @@
                                                                         :preserve-search="true"
                                                                         :internal-search="false"
                                                                         :limit="options_limit"
-                                                                        placeholder="Select Unit"
-                                                                        tag-placeholder="Create"
-                                                                        select-label="Select"
+                                                                        :placeholder="$t('select_unit')"
+                                                                        :tag-placeholder="$t('Create')"
+                                                                        :select-label="$t('Select')"
+                                                                        :selected-label="$t('Selected')"
+                                                                        :deselect-label="$t('remove_selection')"
                                                                         :taggable="true"
                                                                         @tag="addUnitType"
                                                                         :id="`unit_${step_index}_${index}`"
@@ -350,6 +362,7 @@
                                                                         :loading="units_loading"
                                                                         @search-change="searchUnits"
                                                                     >
+                                                                      <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                                                     </multiselect>
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-6 small-padding" v-if="!ingredient.is_header">
@@ -365,9 +378,11 @@
                                                                         :preserve-search="true"
                                                                         :internal-search="false"
                                                                         :limit="options_limit"
-                                                                        placeholder="Select Food"
-                                                                        tag-placeholder="Create"
-                                                                        select-label="Select"
+                                                                        :placeholder="$t('select_food')"
+                                                                        :tag-placeholder="$t('Create')"
+                                                                        :select-label="$t('Select')"
+                                                                        :selected-label="$t('Selected')"
+                                                                        :deselect-label="$t('remove_selection')"
                                                                         :taggable="true"
                                                                         @tag="addFoodType"
                                                                         :id="`ingredient_${step_index}_${index}`"
@@ -377,6 +392,7 @@
                                                                         :loading="foods_loading"
                                                                         @search-change="searchFoods"
                                                                     >
+                                                                      <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                                                     </multiselect>
                                                                 </div>
                                                                 <div class="small-padding" v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
