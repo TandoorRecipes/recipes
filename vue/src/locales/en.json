@@ -361,5 +361,11 @@
     "Internal": "Internal",
     "Units": "Units",
     "Random Recipes": "Random Recipes",
-    "parameter_count": "Parameter {count}"
+    "parameter_count": "Parameter {count}",
+    "Supermarkets": "Supermarkets",
+    "User": "User",
+    "Keyword": "Keyword",
+    "Advanced": "Advanced",
+    "Page": "Page",
+    "Reset": "Reset"
 }
