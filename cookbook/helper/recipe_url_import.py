@@ -3,8 +3,8 @@ import re
 from html import unescape
 from unicodedata import decomposition
 
-from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_duration
+from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
 from recipe_scrapers._utils import get_minutes
@@ -64,7 +64,7 @@ def get_from_scraper(scrape, request):
             recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
         except Exception:
             try:
-                get_minutes(scrape.schema.data.get("totalTime")) or 0
+                recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("totalTime")) or 0
             except Exception:
                 pass
 
