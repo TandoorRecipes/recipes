@@ -335,5 +335,6 @@
     "sort_by": "Sortiere nach",
     "Random Recipes": "Zufällige Rezepte",
     "recipe_filter": "Rezept-Filter",
-    "parameter_count": "Parameter {count}"
+    "parameter_count": "Parameter {count}",
+    "paste_ingredients": "Zutaten einfügen"
 }
