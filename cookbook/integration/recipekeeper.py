@@ -4,6 +4,7 @@ from zipfile import ZipFile
 
 from bs4 import BeautifulSoup
 
+from django.utils.translation import gettext as _
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes, parse_servings
 from cookbook.integration.integration import Integration
@@ -59,7 +60,7 @@ class RecipeKeeper(Integration):
             step.instruction += s.text + ' \n'
 
         if file.find("span", {"itemprop": "recipeSource"}).text != '':
-            step.instruction += "\n\nImported from: " + file.find("span", {"itemprop": "recipeSource"}).text
+            step.instruction += "\n\n" + _("Imported from") + ": " + file.find("span", {"itemprop": "recipeSource"}).text
             step.save()
 
         recipe.steps.add(step)
