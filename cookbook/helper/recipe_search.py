@@ -89,7 +89,10 @@ class RecipeSearch():
 
         self._search_type = self._search_prefs.search or 'plain'
         if self._string:
-            self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
+            if self._postgres:
+                self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
+            else:
+                self._unaccent_include = []
             self._icontains_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
             self._istartswith_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
             self._trigram_include = None
