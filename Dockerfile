@@ -15,9 +15,7 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN sed -i '/cryptography==/d' ./requirements.txt
-
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev python3-dev libffi-dev cargo openldap-dev && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev build-essential rustc && \
     echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
