@@ -15,11 +15,12 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev python3-dev && \
     echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip install wheel==0.36.2 && \
+    venv/bin/pip install wheel==0.37.1 && \
+    venv/bin/pip install setuptools_rust==1.1.2 && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 
