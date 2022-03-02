@@ -361,5 +361,20 @@
     "Internal": "Internal",
     "Units": "Units",
     "Random Recipes": "Random Recipes",
-    "parameter_count": "Parameter {count}"
+    "parameter_count": "Parameter {count}",
+    "select_keyword": "Select Keyword",
+    "add_keyword": "Add Keyword",
+    "select_file": "Select File",
+    "select_recipe": "Select Recipe",
+    "select_unit": "Select Unit",
+    "select_food": "Select Food",
+    "remove_selection": "Deselect",
+    "empty_list": "List is empty.",
+    "Select": "Select",
+    "Supermarkets": "Supermarkets",
+    "User": "User",
+    "Keyword": "Keyword",
+    "Advanced": "Advanced",
+    "Page": "Page",
+    "Reset": "Reset"
 }

@@ -60,24 +60,24 @@
                                     <b-popover target="id_settings_button" triggers="click" placement="bottom">
                                         <b-tabs content-class="mt-1 text-nowrap" small>
                                             <b-tab :title="$t('Settings')" active :title-link-class="['mx-0']">
-                                                <b-form-group v-bind:label="$t('Recently_Viewed')" label-for="popover-input-1" label-cols="6" class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.recently_viewed" id="popover-input-1" size="sm"></b-form-input>
+                                                <b-form-group v-bind:label="$t('Recently_Viewed')" label-for="popover-input-1" label-cols="8" class="mb-1">
+                                                    <b-form-input type="number" v-model="ui.recently_viewed" id="popover-input-1" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
 
-                                                <b-form-group v-bind:label="$t('Recipes_per_page')" label-for="popover-input-page-count" label-cols="6" class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.page_size" id="popover-input-page-count" size="sm"></b-form-input>
+                                                <b-form-group v-bind:label="$t('Recipes_per_page')" label-for="popover-input-page-count" label-cols="8" class="mb-1">
+                                                    <b-form-input type="number" v-model="ui.page_size" id="popover-input-page-count" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
 
-                                                <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-2" label-cols="6" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_meal_plan" id="popover-input-2" size="sm"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-2" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_meal_plan" id="popover-input-2" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
 
-                                                <b-form-group v-if="ui.show_meal_plan" v-bind:label="$t('Meal_Plan_Days')" label-for="popover-input-5" label-cols="6" class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.meal_plan_days" id="popover-input-5" size="sm"></b-form-input>
+                                                <b-form-group v-if="ui.show_meal_plan" v-bind:label="$t('Meal_Plan_Days')" label-for="popover-input-5" label-cols="8" class="mb-1">
+                                                    <b-form-input type="number" v-model="ui.meal_plan_days" id="popover-input-5" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
 
-                                                <b-form-group v-bind:label="$t('Sort_by_new')" label-for="popover-input-3" label-cols="6" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.sort_by_new" id="popover-input-3" size="sm"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('Sort_by_new')" label-for="popover-input-3" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.sort_by_new" id="popover-input-3" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <div class="row" style="margin-top: 1vh">
                                                     <div class="col-12">
@@ -87,58 +87,58 @@
                                             </b-tab>
                                             <b-tab :title="$t('fields')" :title-link-class="['mx-0']">
                                                 <b-form-group v-bind:label="$t('show_keywords')" label-for="popover-show_keywords" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_keywords" id="popover-show_keywords" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_keywords" id="popover-show_keywords" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_foods')" label-for="popover-show_foods" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_foods" id="popover-show_foods" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_foods" id="popover-show_foods" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_books')" label-for="popover-input-show_books" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_books" id="popover-input-show_books" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_books" id="popover-input-show_books" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_rating')" label-for="popover-show_rating" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_rating" id="popover-show_rating" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_rating" id="popover-show_rating" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_units')" label-for="popover-show_units" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_units" id="popover-show_units" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_units" id="popover-show_units" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_filters')" label-for="popover-show_filters" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_filters" id="popover-show_filters" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_filters" id="popover-show_filters" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_sortby')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_sortby" id="popover-show_sortby" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_sortby" id="popover-show_sortby" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('times_cooked')" label-for="popover-show_timescooked" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_timescooked" id="popover-show_cooked" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_timescooked" id="popover-show_cooked" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('make_now')" label-for="popover-show_makenow" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_makenow" id="popover-show_makenow" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_makenow" id="popover-show_makenow" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('last_cooked')" label-for="popover-show_cookedon" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_cookedon" id="popover-show_cookedon" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_cookedon" id="popover-show_cookedon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('last_viewed')" label-for="popover-show_viewedon" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_viewedon" id="popover-show_viewedon" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_viewedon" id="popover-show_viewedon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('created_on')" label-for="popover-show_createdon" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_createdon" id="popover-show_createdon" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_createdon" id="popover-show_createdon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('updatedon')" label-for="popover-show_updatedon" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_updatedon" id="popover-show_updatedon" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.show_updatedon" id="popover-show_updatedon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                             </b-tab>
 
                                             <b-tab :title="$t('advanced')" :title-link-class="['mx-0']">
                                                 <b-form-group v-bind:label="$t('remember_search')" label-for="popover-rem-search" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.remember_search" id="popover-rem-search" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.remember_search" id="popover-rem-search" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-if="ui.remember_search" v-bind:label="$t('remember_hours')" label-for="popover-input-rem-hours" label-cols="8" class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.remember_hours" id="popover-rem-hours" size="sm"></b-form-input>
+                                                    <b-form-input type="number" v-model="ui.remember_hours" id="popover-rem-hours" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
                                                 <b-form-group v-bind:label="$t('tree_select')" label-for="popover-input-treeselect" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.tree_select" id="popover-input-treeselect" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.tree_select" id="popover-input-treeselect" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <b-form-group v-if="debug" v-bind:label="$t('sql_debug')" label-for="popover-input-sqldebug" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.sql_debug" id="popover-input-sqldebug" size="sm"></b-form-checkbox>
+                                                    <b-form-checkbox switch v-model="ui.sql_debug" id="popover-input-sqldebug" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                             </b-tab>
                                         </b-tabs>
@@ -231,7 +231,7 @@
                                                             @change="refreshData(false)"
                                                             class="shadow-none"
                                                             switch
-                                                            style="width: 4em"
+                                                            style="width: 5em"
                                                         >
                                                             <span class="text-uppercase" v-if="search.search_keywords[a].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
@@ -293,7 +293,7 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_foods[i].operator" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox v-model="search.search_foods[i].operator" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 5em">
                                                             <span class="text-uppercase" v-if="search.search_foods[i].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -339,7 +339,7 @@
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_books[i].operator" name="check-button" @change="refreshData(false)" class="shadow-none" style="width: 4em" switch>
+                                                        <b-form-checkbox v-model="search.search_books[i].operator" name="check-button" @change="refreshData(false)" class="shadow-none" style="width: 5em" switch>
                                                             <span class="text-uppercase" v-if="search.search_books[i].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
@@ -371,7 +371,7 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_rating_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox v-model="search.search_rating_gte" name="check-button" @change="refreshData(false)" class="shadow-none" switch style="width: 5em">
                                                             <span class="text-uppercase" v-if="search.search_rating_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
