@@ -21,12 +21,13 @@ if [ -z "${SECRET_KEY}" ]; then
     display_warning "The environment variable 'SECRET_KEY' is not set but REQUIRED for running Tandoor!"
 fi
 
-# POSTGRES_PASSWORD must be set in .env file
-if [ -z "${POSTGRES_PASSWORD}" ]; then
-    display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
-fi
-
+# Only check PSQL related config and readiness if it's actually used
 if [ $DB_ENGINE == "django.db.backends.postgresql" ]; then
+
+	# POSTGRES_PASSWORD must be set in .env file
+	if [ -z "${POSTGRES_PASSWORD}" ]; then
+		display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
+	fi
 
 	echo "Waiting for database to be ready..."
 
