@@ -29,7 +29,7 @@ Jinja2==3.0.3
 django-webpack-loader==1.4.1
 django-js-reverse==0.9.1
 django-allauth==0.47.0
-recipe-scrapers==13.18.0
+recipe-scrapers==13.19.0
 django-scopes==1.2.0
 pytest==6.2.5
 pytest-django==4.5.2
