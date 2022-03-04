@@ -34,7 +34,7 @@ if [ "${DB_ENGINE}" != 'django.db.backends.sqlite3' ]; then
       display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
   fi
 
-  while pg_isready --host=${POSTGRES_HOST} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
+  while pg_isready --host=${POSTGRES_HOST} --port=${POSTGRES_PORT} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
       sleep 5
   done
 fi

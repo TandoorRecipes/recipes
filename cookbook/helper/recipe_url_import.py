@@ -3,8 +3,8 @@ import re
 from html import unescape
 from unicodedata import decomposition
 
-from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_duration
+from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
 from recipe_scrapers._utils import get_minutes
@@ -28,9 +28,14 @@ def get_from_scraper(scrape, request):
             recipe_json['name'] = ''
 
     try:
-        description = scrape.schema.data.get("description") or ''
+        description = scrape.description()  or None
     except Exception:
-        description = ''
+        description = None
+    if not description:
+        try:
+            description = scrape.schema.data.get("description") or ''
+        except Exception:
+            description = ''
 
     recipe_json['description'] = parse_description(description)
 
@@ -51,20 +56,26 @@ def get_from_scraper(scrape, request):
     recipe_json['servings'] = max(servings, 1)
 
     try:
-        recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+        recipe_json['prepTime'] = get_minutes(scrape.prep_time()) or 0
     except Exception:
-        recipe_json['prepTime'] = 0
+        try:
+            recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+        except Exception:
+            recipe_json['prepTime'] = 0
     try:
-        recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+        recipe_json['cookTime'] = get_minutes(scrape.cook_time()) or 0
     except Exception:
-        recipe_json['cookTime'] = 0
+        try:
+            recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+        except Exception:
+            recipe_json['cookTime'] = 0
 
     if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
         try:
             recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
         except Exception:
             try:
-                get_minutes(scrape.schema.data.get("totalTime")) or 0
+                recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("totalTime")) or 0
             except Exception:
                 pass
 
@@ -85,15 +96,23 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
     try:
-        if scrape.schema.data.get('recipeCategory'):
-            keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+        if scrape.category():
+            keywords += listify_keywords(scrape.category())
     except Exception:
-        pass
+        try:
+            if scrape.schema.data.get('recipeCategory'):
+                keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+        except Exception:
+            pass
     try:
-        if scrape.schema.data.get('recipeCuisine'):
-            keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+        if scrape.cuisine():
+            keywords += listify_keywords(scrape.cuisine())
     except Exception:
-        pass
+        try:
+            if scrape.schema.data.get('recipeCuisine'):
+                keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+        except Exception:
+            pass
     try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
@@ -146,9 +165,9 @@ def get_from_scraper(scrape, request):
     except Exception:
         recipe_json['recipeInstructions'] = ""
 
-    if scrape.url:
-        recipe_json['url'] = scrape.url
-        recipe_json['recipeInstructions'] += "\n\n" + _("Imported from") + ": " + scrape.url
+    if scrape.canonical_url():
+        recipe_json['url'] = scrape.canonical_url()
+        recipe_json['recipeInstructions'] += "\n\n" + _("Imported from") + ": " + scrape.canonical_url()
     return recipe_json
 
 
