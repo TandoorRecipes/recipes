@@ -44,7 +44,8 @@
                             <!-- OPTIONS -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_add_options variant="info" :disabled="recipe_json === undefined">Options
+                                    <b-button block v-b-toggle.id_accordion_add_options variant="info"
+                                              :disabled="recipe_json === undefined">Options
                                     </b-button>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_add_options" accordion="url_import_accordion"
@@ -107,19 +108,48 @@
                                         Steps
                                         <div class="row">
                                             <div class="col col-md-12">
-                                                <b-button @click="splitSteps('\n')">Split</b-button>
-                                                <b-button @click="mergeSteps()">Merge all</b-button>
-
-                                                <b-list-group>
-                                                    <b-list-group-item v-for="s in recipe_json.steps"
-                                                                       v-bind:key="s.instruction"><b-textarea
-                                                        style="white-space: pre-wrap" v-model="s.instruction" max-rows="10"> </b-textarea>
-                                                        <b-button disabled>Delete</b-button>
-                                                        <b-button disabled>Merge</b-button>
-                                                    </b-list-group-item>
-                                                </b-list-group>
+                                                <b-button @click="splitAllSteps('\n')" variant="secondary"><i class="far fa-object-ungroup"></i> All</b-button>
+                                                <b-button @click="mergeAllSteps()" variant="primary"><i class="far fa-object-group"></i> all</b-button>
                                             </div>
+                                        </div>
+                                        <div class="row mt-2" v-for="(s, index) in recipe_json.steps"
+                                             v-bind:key="index">
+                                            <div class="col col-md-4">
+                                                <draggable :list="s.ingredients" group="ingredients"
+                                                           :empty-insert-threshold="10">
+                                                    <b-list-group-item v-for="i in s.ingredients"
+                                                                       v-bind:key="i.original_text"><i
+                                                        class="far fa-arrows"></i> {{ i.original_text }}
+                                                    </b-list-group-item>
+                                                </draggable>
+                                            </div>
+                                            <div class="col col-md-8">
+                                                <b-input-group>
+                                                    <b-textarea
+                                                        style="white-space: pre-wrap" v-model="s.instruction"
+                                                        max-rows="10"></b-textarea>
+                                                    <b-input-group-append>
+                                                        <b-button variant="secondary" @click="splitStep(s,'\n')"><i class="far fa-object-ungroup"></i></b-button>
+                                                        <b-button variant="danger"
+                                                            @click="recipe_json.steps.splice(recipe_json.steps.findIndex(x => x === s),1)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </b-button>
 
+                                                    </b-input-group-append>
+                                                </b-input-group>
+
+
+                                                <b-button @click="mergeStep(s)" variant="primary"
+                                                          v-if="index + 1 < recipe_json.steps.length"><i class="far fa-object-group"></i>
+                                                </b-button>
+
+                                                <b-button variant="success"
+                                                    @click="recipe_json.steps.splice(recipe_json.steps.findIndex(x => x === s) +1,0,{ingredients:[], instruction: ''})">
+                                                    <i class="fas fa-plus"></i>
+                                                </b-button>
+
+
+                                            </div>
                                         </div>
 
                                     </b-card-body>
@@ -129,12 +159,13 @@
                             <!-- ADVANCED OPTIONS -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_advanced_options variant="info" :disabled="recipe_json === undefined">Advanced Options</b-button>
+                                    <b-button block v-b-toggle.id_accordion_advanced_options variant="info"
+                                              :disabled="recipe_json === undefined">Advanced Options
+                                    </b-button>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_advanced_options" visible accordion="url_import_accordion"
                                             role="tabpanel" v-model="collapse_visible.advanced_options">
                                     <b-card-body>
-
 
 
                                     </b-card-body>
@@ -144,16 +175,18 @@
                             <!-- IMPORT -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_import variant="info" :disabled="recipe_json === undefined">Import</b-button>
+                                    <b-button block v-b-toggle.id_accordion_import variant="info"
+                                              :disabled="recipe_json === undefined">Import
+                                    </b-button>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_import" visible accordion="url_import_accordion"
                                             role="tabpanel" v-model="collapse_visible.import">
                                     <b-card-body>
 
                                         <b-button-group>
-                                            <b-button @click="importRecipe()">Import & View</b-button>
+                                            <b-button disabled>Import & View</b-button>
                                             <b-button @click="importRecipe()">Import & Edit</b-button>
-                                            <b-button @click="importRecipe()">Import & start new import</b-button>
+                                            <b-button disabled>Import & start new import</b-button>
                                         </b-button-group>
 
                                     </b-card-body>
@@ -189,10 +222,12 @@
 
                             <div class="input-group mt-4">
                                 <b-textarea class="form-control input-group-append" v-model="source_data" rows=10
-                                          :placeholder="$t('paste_json')" style="font-size: 12px">
+                                            :placeholder="$t('paste_json')" style="font-size: 12px">
                                 </b-textarea>
                             </div>
-                            <b-button @click="loadRecipe()" variant="primary"><i class="fas fa-code"></i> {{ $t('Import') }} </b-button>
+                            <b-button @click="loadRecipe()" variant="primary"><i class="fas fa-code"></i>
+                                {{ $t('Import') }}
+                            </b-button>
 
                         </b-tab>
                         <!-- Bookmarklet Tab -->
@@ -244,7 +279,7 @@ export default {
     data() {
         return {
             tab_index: 0,
-            collapse_visible : {
+            collapse_visible: {
                 url: true,
                 options: false,
                 advanced_options: false,
@@ -350,36 +385,64 @@ export default {
             })
         },
         /**
-         * Splits the steps of a given recipe at the split character (e.g. \n or \n\n)
+         * utility function used by splitAllSteps and splitStep to split a single step object into multiple step objects
+         * @param step: single step
+         * @param split_character: character to split steps at
+         * @return array of step objects
+         */
+        splitStepObject: function (step, split_character) {
+            let steps = []
+            step.instruction.split(split_character).forEach(part => {
+                if (part.trim() !== '') {
+                    steps.push({'instruction': part, 'ingredients': []})
+                }
+            })
+            steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
+            return steps
+        },
+        /**
+         * Splits all steps of a given recipe at the split character (e.g. \n or \n\n)
          * @param split_character: character to split steps at
          */
-        splitSteps: function (split_character) {
+        splitAllSteps: function (split_character) {
             let steps = []
             this.recipe_json.steps.forEach(step => {
-                step.instruction.split(split_character).forEach(part => {
-                    if (part.trim() !== ''){
-                        steps.push({'instruction': part, 'ingredients': []})
-                    }
-                })
-            })
-            this.recipe_json.steps.forEach(step => {
-                if (step.ingredients.length > 0) {
-                    console.log('found ingredients', step.ingredients)
-                    steps[0].ingredients = steps[0].ingredients.concat(step.ingredients)
-                }
+                steps = steps.concat(this.splitStepObject(step, split_character))
             })
             this.recipe_json.steps = steps
         },
         /**
-         * Merge steps of a given recipe into one
+         * Splits the given step at the split character (e.g. \n or \n\n)
+         * @param step: step ingredients to split
+         * @param split_character: character to split steps at
          */
-        mergeSteps: function (){
+        splitStep: function (step, split_character) {
+            let old_index = this.recipe_json.steps.findIndex(x => x === step)
+            let new_steps = this.splitStepObject(step, split_character)
+            this.recipe_json.steps.splice(old_index, 1, ...new_steps)
+        },
+        /**
+         * Merge all steps of a given recipe into one
+         */
+        mergeAllSteps: function () {
             let step = {'instruction': '', 'ingredients': []}
             this.recipe_json.steps.forEach(s => {
                 step.instruction += s.instruction + '\n'
                 step.ingredients = step.ingredients.concat(s.ingredients)
             })
             this.recipe_json.steps = [step]
+        },
+        /**
+         * Merge two steps (the given and next one)
+         */
+        mergeStep: function (step) {
+            let step_index = this.recipe_json.steps.findIndex(x => x === step)
+            let removed_steps = this.recipe_json.steps.splice(step_index, 2)
+
+            this.recipe_json.steps.splice(step_index, 0, {
+                'instruction': removed_steps.flatMap(x => x.instruction).join('\n'),
+                'ingredients': removed_steps.flatMap(x => x.ingredients)
+            })
         },
         /**
          * Clear list of recently imported recipe urls
