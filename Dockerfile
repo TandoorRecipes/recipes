@@ -1,7 +1,7 @@
 FROM python:3.10-alpine3.15
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev py-cryptography
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev py-cryptography openldap
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
