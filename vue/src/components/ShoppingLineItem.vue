@@ -7,7 +7,7 @@
                     <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i></div>
                 </b-button>
             </b-col>
-            <b-col cols="1" class="align-items-center d-flex">
+            <b-col cols="2" md="1" class="align-items-center d-flex">
                 <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true" @click.stop="$emit('open-context-menu', $event, entries)">
                     <button
                         aria-haspopup="true"
@@ -23,7 +23,7 @@
             <b-col cols="1" class="px-1 justify-content-center align-items-center d-none d-md-flex">
                 <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
             </b-col>
-            <b-col cols="8" md="9">
+            <b-col cols="7" md="9">
                 <b-row class="d-flex h-100">
                     <b-col cols="5" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
                         <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong> {{ Object.entries(formatAmount)[0][0] }}
@@ -86,7 +86,7 @@
                     <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0" v-if="settings.left_handed">
                         <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                     </b-col>
-                    <b-col cols="1" class="align-items-center d-flex">
+                    <b-col cols="2" md="1" class="align-items-center d-flex">
                         <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true" @click.stop="$emit('open-context-menu', $event, e)">
                             <button
                                 aria-haspopup="true"
@@ -102,7 +102,7 @@
                     <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
                         <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                     </b-col>
-                    <b-col cols="8" md="9">
+                    <b-col cols="7" md="9">
                         <b-row class="d-flex align-items-center h-100">
                             <b-col cols="5" md="3" class="d-flex align-items-center">
                                 <strong class="mr-1">{{ formatOneAmount(e) }}</strong> {{ formatOneUnit(e) }}

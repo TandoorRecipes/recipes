@@ -62,9 +62,10 @@ class TreeManager(MP_NodeManager):
     # model.Manager get_or_create() is not compatible with MP_Tree
     def get_or_create(self, *args, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
-        try:
-            return self.get(name__iexact=kwargs['name'], space=kwargs['space']), False
-        except self.model.DoesNotExist:
+
+        if obj := self.filter(name__iexact=kwargs['name'], space=kwargs['space']).first():
+            return obj, False
+        else:
             with scopes_disabled():
                 try:
                     defaults = kwargs.pop('defaults', None)
@@ -590,6 +591,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
+    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 

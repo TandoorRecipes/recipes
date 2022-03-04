@@ -349,7 +349,7 @@ export function getConfig(model, action) {
     }
 
     let config = {
-        name: model.name,
+        name: i18n.t(model.name),
         apiName: model.apiName,
     }
     // spread operator merges dictionaries - last item in list takes precedence
@@ -391,8 +391,11 @@ export function getForm(model, action, item1, item2) {
             value = v
         }
         if (value?.form_field) {
+            for (const [i, h] of Object.entries(value)) {
+                // console.log("formfield", i)
+            }
             value["value"] = item1?.[value?.field] ?? undefined
-            value["help"] = item1?.[value?.help_text_field] ?? value?.help_text ?? undefined
+            value["help"] = item1?.[value?.help_text_field] ?? formTranslate(value?.help_text) ?? undefined
             value["subtitle"] = item1?.[value?.subtitle_field] ?? value?.subtitle ?? undefined
             form.fields.push({
                 ...value,
@@ -410,23 +413,31 @@ export function getForm(model, action, item1, item2) {
 
 function formTranslate(translate, model, item1, item2) {
     if (typeof translate !== "object") {
-        return translate
+        return i18n.t(translate)
     }
     let phrase = translate.phrase
     let options = {}
-    let obj = undefined
-    translate?.params.forEach(function (x, index) {
-        switch (x.from) {
+    let value = undefined
+    translate?.params?.forEach(function (x, index) {
+        switch (x?.from) {
             case "item1":
-                obj = item1
+                value = item1[x.attribute]
                 break
             case "item2":
-                obj = item2
+                value = item2[x.attribute]
                 break
             case "model":
-                obj = model
+                value = model[x.attribute]
+                break
+            default:
+                value = x.attribute
         }
-        options[x.token] = obj[x.attribute]
+
+        if (x.translate) {
+            options[x.token] = i18n.t(value)
+        } else {
+            options[x.token] = value
+        }
     })
     return i18n.t(phrase, options)
 }

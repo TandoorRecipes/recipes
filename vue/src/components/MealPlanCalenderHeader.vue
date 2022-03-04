@@ -21,11 +21,11 @@
         </div>
         <div class="actionArea pt-1 pb-1 d-none d-lg-flex">
             <span class="period-span-1 pt-1 pb-1 pl-1 pr-1 d-none d-xl-inline-flex text-body align-items-center">
-                <small>Period:</small>
+                <small>{{ $t('Period') }}:</small>
                 <b-form-select class="ml-1" id="UomInput" v-model="settings.displayPeriodUom" :options="options.displayPeriodUom"></b-form-select>
             </span>
             <span class="period-span-2 pt-1 pb-1 pl-1 pr-1 mr-1 ml-1 d-none d-xl-inline-flex text-body align-items-center">
-                <small>Periods:</small>
+                <small>{{ $t('Periods') }}:</small>
                 <b-form-select class="ml-1" id="UomInput" v-model="settings.displayPeriodCount" :options="options.displayPeriodCount"></b-form-select>
             </span>
             <span

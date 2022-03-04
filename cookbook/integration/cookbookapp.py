@@ -2,6 +2,7 @@ import base64
 import gzip
 import json
 import re
+from gettext import gettext as _
 from io import BytesIO
 
 import requests
@@ -11,8 +12,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
-from gettext import gettext as _
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class CookBookApp(Integration):
@@ -51,11 +51,11 @@ class CookBookApp(Integration):
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in recipe_json['recipeIngredient']:
-                f = ingredient_parser.get_food(ingredient['ingredient']['text'])
-                u = ingredient_parser.get_unit(ingredient['unit']['text'])
-                step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=ingredient['amount'], note=ingredient['note'], space=self.request.space,
-                ))
+            f = ingredient_parser.get_food(ingredient['ingredient']['text'])
+            u = ingredient_parser.get_unit(ingredient['unit']['text'])
+            step.ingredients.add(Ingredient.objects.create(
+                food=f, unit=u, amount=ingredient['amount'], note=ingredient['note'],  space=self.request.space,
+            ))
 
         if len(images) > 0:
             try:

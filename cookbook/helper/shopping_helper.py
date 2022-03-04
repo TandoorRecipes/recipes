@@ -35,7 +35,7 @@ def shopping_helper(qs, request):
         qs = qs.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
         supermarket_order = ['checked'] + supermarket_order
 
-    return qs.order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
+    return qs.distinct().order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
 
 
 class RecipeShoppingEditor():
