@@ -4,8 +4,10 @@ from html import unescape
 from unicodedata import decomposition
 
 from django.utils.dateparse import parse_duration
+from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
+from recipe_scrapers._utils import get_minutes
 
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -29,9 +31,14 @@ def get_from_scraper(scrape, request):
             recipe_json['name'] = ''
 
     try:
-        description = scrape.schema.data.get("description") or ''
+        description = scrape.description()  or None
     except Exception:
-        description = ''
+        description = None
+    if not description:
+        try:
+            description = scrape.schema.data.get("description") or ''
+        except Exception:
+            description = ''
 
     recipe_json['description'] = parse_description(description)[:512]
     recipe_json['internal'] = True
@@ -53,13 +60,19 @@ def get_from_scraper(scrape, request):
     recipe_json['servings'] = max(servings, 1)
 
     try:
-        recipe_json['working_time'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+        recipe_json['working_time'] = get_minutes(scrape.prep_time()) or 0
     except Exception:
-        recipe_json['working_time'] = 0
+        try:
+            recipe_json['working_time'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+        except Exception:
+            recipe_json['working_time'] = 0
     try:
-        recipe_json['waiting_time'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+        recipe_json['waiting_time'] = get_minutes(scrape.cook_time()) or 0
     except Exception:
-        recipe_json['waiting_time'] = 0
+        try:
+            recipe_json['waiting_time'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+        except Exception:
+            recipe_json['waiting_time'] = 0
 
     if recipe_json['working_time'] + recipe_json['waiting_time'] == 0:
         try:
@@ -87,15 +100,23 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
     try:
-        if scrape.schema.data.get('recipeCategory'):
-            keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+        if scrape.category():
+            keywords += listify_keywords(scrape.category())
     except Exception:
-        pass
+        try:
+            if scrape.schema.data.get('recipeCategory'):
+                keywords += listify_keywords(scrape.schema.data.get("recipeCategory"))
+        except Exception:
+            pass
     try:
-        if scrape.schema.data.get('recipeCuisine'):
-            keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+        if scrape.cuisine():
+            keywords += listify_keywords(scrape.cuisine())
     except Exception:
-        pass
+        try:
+            if scrape.schema.data.get('recipeCuisine'):
+                keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
+        except Exception:
+            pass
     try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
@@ -142,8 +163,8 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
 
-    if scrape.url:
-        recipe_json['source_url'] = scrape.url
+    if scrape.canonical_url():
+        recipe_json['source_url'] = scrape.canonical_url()
     return recipe_json
 
 
@@ -305,56 +326,6 @@ def normalize_string(string):
     unescaped_string = re.sub(r'\n\s*\n', '\n\n', unescaped_string)
     unescaped_string = unescaped_string.replace("\xa0", " ").replace("\t", " ").strip()
     return unescaped_string
-
-
-# TODO deprecate when merged into recipe_scapers
-
-
-def get_minutes(time_text):
-    if time_text is None:
-        return 0
-    TIME_REGEX = re.compile(
-        r"(\D*(?P<hours>\d*.?(\s\d)?\/?\d+)\s*(hours|hrs|hr|h|óra))?(\D*(?P<minutes>\d+)\s*(minutes|mins|min|m|perc))?",
-        re.IGNORECASE,
-    )
-    try:
-        return int(time_text)
-    except Exception:
-        pass
-
-    if time_text.startswith("P") and "T" in time_text:
-        time_text = time_text.split("T", 2)[1]
-    if "-" in time_text:
-        time_text = time_text.split("-", 2)[
-            1
-        ]  # sometimes formats are like this: '12-15 minutes'
-    if " to " in time_text:
-        time_text = time_text.split("to", 2)[
-            1
-        ]  # sometimes formats are like this: '12 to 15 minutes'
-
-    empty = ''
-    for x in time_text:
-        if 'fraction' in decomposition(x):
-            f = decomposition(x[-1:]).split()
-            empty += f" {f[1].replace('003', '')}/{f[3].replace('003', '')}"
-        else:
-            empty += x
-    time_text = empty
-    matched = TIME_REGEX.search(time_text)
-
-    minutes = int(matched.groupdict().get("minutes") or 0)
-
-    if "/" in (hours := matched.groupdict().get("hours") or ''):
-        number = hours.split(" ")
-        if len(number) == 2:
-            minutes += 60 * int(number[0])
-        fraction = number[-1:][0].split("/")
-        minutes += 60 * float(int(fraction[0]) / int(fraction[1]))
-    else:
-        minutes += 60 * float(hours)
-
-    return int(minutes)
 
 
 def iso_duration_to_minutes(string):

@@ -67,6 +67,9 @@ export default {
         this.field = this.form?.field ?? "You Forgot To Set Field Name"
         this.label = this.form?.label ?? ""
         this.sticky_options = this.form?.sticky_options ?? []
+        this.sticky_options = this.sticky_options.map((x) => {
+            return { ...x, name: this.$t(x.name) }
+        })
         this.list_label = this.form?.list_label ?? undefined
         if (this.list_label?.includes("::")) {
             this.list_label = this.list_label.split("::")[1]
@@ -74,7 +77,7 @@ export default {
     },
     computed: {
         modelName() {
-            return this?.model?.name ?? this.$t("Search")
+            return this.$t(this?.model?.name) ?? this.$t("Search")
         },
         useMultiple() {
             return this.form?.multiple || this.form?.ordered || false

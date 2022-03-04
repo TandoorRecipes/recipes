@@ -2,7 +2,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient
+from cookbook.models import Ingredient, Recipe, Step
 
 
 class Saffron(Integration):
@@ -47,11 +47,11 @@ class Saffron(Integration):
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
-            amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-            f = ingredient_parser.get_food(ingredient)
+            amount, unit, food, note = ingredient_parser.parse(ingredient)
+            f = ingredient_parser.get_food(food)
             u = ingredient_parser.get_unit(unit)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
             ))
         recipe.steps.add(step)
 
@@ -76,7 +76,7 @@ class Saffron(Integration):
 
                 for i in s.ingredients.all():
                     recipeIngredient.append(f'{float(i.amount)} {i.unit} {i.food}')
-       
+
         data += "Ingredients: \n"
         for ingredient in recipeIngredient:
             data += ingredient+"\n"
@@ -91,10 +91,10 @@ class Saffron(Integration):
         files = []
         for r in recipes:
             filename, data = self.get_file_from_recipe(r)
-            files.append([ filename, data ])
+            files.append([filename, data])
 
             el.exported_recipes += 1
             el.msg += self.get_recipe_processed_msg(r)
             el.save()
-            
+
         return files

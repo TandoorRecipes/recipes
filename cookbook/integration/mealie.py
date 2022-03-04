@@ -6,13 +6,13 @@ from zipfile import ZipFile
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient
+from cookbook.models import Ingredient, Recipe, Step
 
 
 class Mealie(Integration):
 
     def import_file_name_filter(self, zip_info_object):
-        return re.match(r'^recipes/([A-Za-z\d-])+/([A-Za-z\d-])+.json$', zip_info_object.filename)
+        return re.match(r'^recipes/([A-Za-z\d\s\-_()\[\]\u00C0-\u017F])+/([A-Za-z\d\s\-_()\[\]\u00C0-\u017F])+.json$', zip_info_object.filename)
 
     def get_recipe_from_file(self, file):
         recipe_json = json.loads(file.getvalue().decode("utf-8"))
@@ -45,12 +45,14 @@ class Mealie(Integration):
                             u = ingredient_parser.get_unit(ingredient['unit'])
                             amount = ingredient['quantity']
                             note = ingredient['note']
+                            original_text = None
                         else:
-                            amount, unit, ingredient, note = ingredient_parser.parse(ingredient['note'])
-                            f = ingredient_parser.get_food(ingredient)
+                            amount, unit, food, note = ingredient_parser.parse(ingredient['note'])
+                            f = ingredient_parser.get_food(food)
                             u = ingredient_parser.get_unit(unit)
+                            original_text = ingredient['note']
                         step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                            food=f, unit=u, amount=amount, note=note, original_text=original_text, space=self.request.space,
                         ))
                     except Exception:
                         pass
@@ -60,7 +62,8 @@ class Mealie(Integration):
             if '.zip' in f['name']:
                 import_zip = ZipFile(f['file'])
                 try:
-                    self.import_recipe_image(recipe, BytesIO(import_zip.read(f'recipes/{recipe_json["slug"]}/images/min-original.webp')), filetype=get_filetype(f'recipes/{recipe_json["slug"]}/images/original'))
+                    self.import_recipe_image(recipe, BytesIO(import_zip.read(f'recipes/{recipe_json["slug"]}/images/min-original.webp')),
+                                             filetype=get_filetype(f'recipes/{recipe_json["slug"]}/images/original'))
                 except Exception:
                     pass
 

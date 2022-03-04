@@ -337,7 +337,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = SupermarketCategory.objects.get_or_create(name__iexact=name, space=space, defaults=validated_data)
+        obj, created = SupermarketCategory.objects.get_or_create(name=name, space=space)
         return obj
 
     def update(self, instance, validated_data):
@@ -421,9 +421,11 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
+            sm_category = validated_data['supermarket_category']
+            sc_name = sm_category.pop('name', None)
             validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
-                name__iexact=validated_data.pop('supermarket_category')['name'],
-                space=self.context['request'].space)
+                name=sc_name,
+                space=space, defaults=sm_category)
         onhand = validated_data.pop('food_onhand', None)
 
         # assuming if on hand for user also onhand for shopping_share users
@@ -478,6 +480,10 @@ class IngredientSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('original_text', None)
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Ingredient
@@ -681,7 +687,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not  self.context['request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
@@ -736,11 +742,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
             value = Decimal(value)
         value = value.quantize(Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list

@@ -7,7 +7,7 @@ from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class NextcloudCookbook(Integration):
@@ -57,11 +57,11 @@ class NextcloudCookbook(Integration):
 
                 ingredient_parser = IngredientParser(self.request, True)
                 for ingredient in recipe_json['recipeIngredient']:
-                    amount, unit, ingredient, note = ingredient_parser.parse(ingredient)
-                    f = ingredient_parser.get_food(ingredient)
+                    amount, unit, food, note = ingredient_parser.parse(ingredient)
+                    f = ingredient_parser.get_food(food)
                     u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                        food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                     ))
             recipe.steps.add(step)
 
