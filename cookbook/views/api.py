@@ -1145,7 +1145,7 @@ def recipe_from_source(request):
                     'error': True,
                     'msg': _('Connection Refused.')
                 }, status=400)
-        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request)
+        recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
         if len(recipe_tree) == 0 and len(recipe_json) == 0:
             return JsonResponse({
                 'error': True,
@@ -1156,7 +1156,7 @@ def recipe_from_source(request):
                 'recipe_json': recipe_json,
                 'recipe_tree': recipe_tree,
                 'recipe_html': recipe_html,
-                'recipe_images': images,
+                'recipe_images': recipe_images,
             })
 
     else:
