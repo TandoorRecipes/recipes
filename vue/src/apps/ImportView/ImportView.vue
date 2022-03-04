@@ -11,14 +11,15 @@
                 <div class="col col-md-12">
                     <b-tabs content-class="mt-3" v-model="tab_index">
                         <!-- URL Tab -->
-                        <b-tab v-bind:title="$t('Website')" id="id_tab_url">
+                        <b-tab v-bind:title="$t('Website')" id="id_tab_url" active>
 
+                            <!-- URL -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-button block v-b-toggle.id_accordion_url variant="info">Website</b-button>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_url" visible accordion="url_import_accordion"
-                                            role="tabpanel">
+                                            role="tabpanel" v-model="collapse_visible.url">
                                     <b-card-body>
                                         <b-input-group>
                                             <b-input v-model="website_url" placeholder="Website URL"
@@ -40,16 +41,15 @@
                                 </b-collapse>
                             </b-card>
 
+                            <!-- OPTIONS -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_add_options variant="info">Additional
-                                        Options
+                                    <b-button block v-b-toggle.id_accordion_add_options variant="info" :disabled="recipe_json === undefined">Options
                                     </b-button>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_add_options" accordion="url_import_accordion"
-                                            role="tabpanel">
+                                            role="tabpanel" v-model="collapse_visible.options">
                                     <b-card-body v-if="recipe_json !== undefined">
-                                        <!-- TODO disable/show message if not imported yet -->
 
                                         <div class="row">
                                             <div class="col col-md-12 text-center">
@@ -64,6 +64,7 @@
                                                     recipe</small> <!-- TODO localize -->
                                             </div>
                                             <div class="col col-md-12 text-center">
+                                                <span v-if="recipe_images.length === 0">No additional images found in source.</span>
                                                 <b-img v-for="i in recipe_images" rounded thumbnail fluid :src="i"
                                                        style="max-height: 10vh" v-bind:key="i"
                                                        @click="recipe_json.image = i"></b-img>
@@ -107,10 +108,14 @@
                                         <div class="row">
                                             <div class="col col-md-12">
                                                 <b-button @click="splitSteps('\n')">Split</b-button>
+                                                <b-button @click="mergeSteps()">Merge all</b-button>
+
                                                 <b-list-group>
                                                     <b-list-group-item v-for="s in recipe_json.steps"
-                                                                       v-bind:key="s.instruction"><span
-                                                        style="white-space: pre-wrap">{{ s.instruction }}</span>
+                                                                       v-bind:key="s.instruction"><b-textarea
+                                                        style="white-space: pre-wrap" v-model="s.instruction" max-rows="10"> </b-textarea>
+                                                        <b-button disabled>Delete</b-button>
+                                                        <b-button disabled>Merge</b-button>
                                                     </b-list-group-item>
                                                 </b-list-group>
                                             </div>
@@ -121,12 +126,28 @@
                                 </b-collapse>
                             </b-card>
 
+                            <!-- ADVANCED OPTIONS -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_import variant="info">Import</b-button>
+                                    <b-button block v-b-toggle.id_accordion_advanced_options variant="info" :disabled="recipe_json === undefined">Advanced Options</b-button>
+                                </b-card-header>
+                                <b-collapse id="id_accordion_advanced_options" visible accordion="url_import_accordion"
+                                            role="tabpanel" v-model="collapse_visible.advanced_options">
+                                    <b-card-body>
+
+
+
+                                    </b-card-body>
+                                </b-collapse>
+                            </b-card>
+
+                            <!-- IMPORT -->
+                            <b-card no-body>
+                                <b-card-header header-tag="header" class="p-1" role="tab">
+                                    <b-button block v-b-toggle.id_accordion_import variant="info" :disabled="recipe_json === undefined">Import</b-button>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_import" visible accordion="url_import_accordion"
-                                            role="tabpanel">
+                                            role="tabpanel" v-model="collapse_visible.import">
                                     <b-card-body>
 
                                         <b-button-group>
@@ -139,10 +160,9 @@
                                 </b-collapse>
                             </b-card>
 
-
                         </b-tab>
                         <!-- App Tab -->
-                        <b-tab v-bind:title="$t('App')" active>
+                        <b-tab v-bind:title="$t('App')">
 
                             <select class="form-control" v-model="recipe_app">
                                 <option v-for="i in INTEGRATIONS" :value="i.id" v-bind:key="i.id">{{ i.name }}</option>
@@ -224,6 +244,12 @@ export default {
     data() {
         return {
             tab_index: 0,
+            collapse_visible : {
+                url: true,
+                options: false,
+                advanced_options: false,
+                import: false,
+            },
             // URL import
             LS_IMPORT_RECENT: 'import_recent_urls', //TODO use central helper to manage all local storage keys (and maybe even access)
             website_url: '',
@@ -244,7 +270,7 @@ export default {
     mounted() {
         let local_storage_recent = JSON.parse(window.localStorage.getItem(this.LS_IMPORT_RECENT))
         this.recent_urls = local_storage_recent !== null ? local_storage_recent : []
-
+        this.tab_index = 0 //TODO add ability to pass open tab via get parameter
     },
     methods: {
         /**
@@ -298,9 +324,10 @@ export default {
 
                 this.recipe_tree = response.data['recipe_tree'];
                 this.recipe_html = response.data['recipe_html'];
-                this.recipe_images = response.data['recipe_images'];
+                this.recipe_images = response.data['recipe_images'] !== undefined ? response.data['recipe_images'] : [];
 
-                this.tab_index = 0
+                this.tab_index = 0 // open tab 0 with import wizard
+                this.collapse_visible.options = true // open options collapse
             }).catch((err) => {
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
             })
@@ -330,7 +357,9 @@ export default {
             let steps = []
             this.recipe_json.steps.forEach(step => {
                 step.instruction.split(split_character).forEach(part => {
-                    steps.push({'instruction': part, 'ingredients': []})
+                    if (part.trim() !== ''){
+                        steps.push({'instruction': part, 'ingredients': []})
+                    }
                 })
             })
             this.recipe_json.steps.forEach(step => {
@@ -340,6 +369,17 @@ export default {
                 }
             })
             this.recipe_json.steps = steps
+        },
+        /**
+         * Merge steps of a given recipe into one
+         */
+        mergeSteps: function (){
+            let step = {'instruction': '', 'ingredients': []}
+            this.recipe_json.steps.forEach(s => {
+                step.instruction += s.instruction + '\n'
+                step.ingredients = step.ingredients.concat(s.ingredients)
+            })
+            this.recipe_json.steps = [step]
         },
         /**
          * Clear list of recently imported recipe urls
