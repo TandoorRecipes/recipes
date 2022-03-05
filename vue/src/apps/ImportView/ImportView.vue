@@ -105,52 +105,8 @@
                                             </div>
                                         </div>
 
-                                        Steps
-                                        <div class="row">
-                                            <div class="col col-md-12">
-                                                <b-button @click="splitAllSteps('\n')" variant="secondary"><i class="far fa-object-ungroup"></i> All</b-button>
-                                                <b-button @click="mergeAllSteps()" variant="primary"><i class="far fa-object-group"></i> all</b-button>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2" v-for="(s, index) in recipe_json.steps"
-                                             v-bind:key="index">
-                                            <div class="col col-md-4">
-                                                <draggable :list="s.ingredients" group="ingredients"
-                                                           :empty-insert-threshold="10">
-                                                    <b-list-group-item v-for="i in s.ingredients"
-                                                                       v-bind:key="i.original_text"><i
-                                                        class="far fa-arrows"></i> {{ i.original_text }}
-                                                    </b-list-group-item>
-                                                </draggable>
-                                            </div>
-                                            <div class="col col-md-8">
-                                                <b-input-group>
-                                                    <b-textarea
-                                                        style="white-space: pre-wrap" v-model="s.instruction"
-                                                        max-rows="10"></b-textarea>
-                                                    <b-input-group-append>
-                                                        <b-button variant="secondary" @click="splitStep(s,'\n')"><i class="far fa-object-ungroup"></i></b-button>
-                                                        <b-button variant="danger"
-                                                            @click="recipe_json.steps.splice(recipe_json.steps.findIndex(x => x === s),1)">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </b-button>
-
-                                                    </b-input-group-append>
-                                                </b-input-group>
-
-
-                                                <b-button @click="mergeStep(s)" variant="primary"
-                                                          v-if="index + 1 < recipe_json.steps.length"><i class="far fa-object-group"></i>
-                                                </b-button>
-
-                                                <b-button variant="success"
-                                                    @click="recipe_json.steps.splice(recipe_json.steps.findIndex(x => x === s) +1,0,{ingredients:[], instruction: ''})">
-                                                    <i class="fas fa-plus"></i>
-                                                </b-button>
-
-
-                                            </div>
-                                        </div>
+                                        <import-view-step-editor :recipe="recipe_json"
+                                                                 @change="recipe_json = $event"></import-view-step-editor>
 
                                     </b-card-body>
                                 </b-collapse>
@@ -181,12 +137,13 @@
                                 </b-card-header>
                                 <b-collapse id="id_accordion_import" visible accordion="url_import_accordion"
                                             role="tabpanel" v-model="collapse_visible.import">
-                                    <b-card-body>
+                                    <b-card-body class="text-center">
 
                                         <b-button-group>
-                                            <b-button disabled>Import & View</b-button>
-                                            <b-button @click="importRecipe()">Import & Edit</b-button>
-                                            <b-button disabled>Import & start new import</b-button>
+                                            <b-button @click="importRecipe('view')">Import & View</b-button>
+                                            <b-button @click="importRecipe('edit')">Import & Edit</b-button>
+                                            <b-button @click="importRecipe('import')">Import & start new import
+                                            </b-button>
                                         </b-button-group>
 
                                     </b-card-body>
@@ -232,14 +189,16 @@
                         </b-tab>
                         <!-- Bookmarklet Tab -->
                         <b-tab v-bind:title="$t('Bookmarklet')">
-                            <!-- TODO get code for bookmarklet -->
                             <!-- TODO localize -->
                             Some pages cannot be imported from their URL, the Bookmarklet can be used to import from
-                            some of them anyway.
+                            some of them anyway.<br/>
                             1. Drag the following button to your bookmarks bar <a class="btn btn-outline-info btn-sm"
-                                                                                  href="#"> Bookmark Text </a>
-                            2. Open the page you want to import from
-                            3. Click on the bookmark to perform the import
+                                                                                  :href="makeBookmarklet()">Import into
+                            Tandoor</a> <br/>
+
+                            2. Open the page you want to import from <br/>
+                            3. Click on the bookmark to perform the import <br/>
+
                         </b-tab>
 
                     </b-tabs>
@@ -259,11 +218,12 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {resolveDjangoUrl, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils";
+import {resolveDjangoStatic, resolveDjangoUrl, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils";
 import axios from "axios";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import draggable from "vuedraggable";
 import {INTEGRATIONS} from "@/utils/integration";
+import ImportViewStepEditor from "@/apps/ImportView/ImportViewStepEditor";
 
 Vue.use(BootstrapVue)
 
@@ -274,6 +234,7 @@ export default {
         ToastMixin,
     ],
     components: {
+        ImportViewStepEditor,
         draggable
     },
     data() {
@@ -299,39 +260,67 @@ export default {
             recipe_app: undefined,
             import_duplicates: false,
             recipe_files: [],
-
+            // Bookmarklet
+            BOOKMARKLET_CODE: window.BOOKMARKLET_CODE
         }
     },
     mounted() {
         let local_storage_recent = JSON.parse(window.localStorage.getItem(this.LS_IMPORT_RECENT))
         this.recent_urls = local_storage_recent !== null ? local_storage_recent : []
         this.tab_index = 0 //TODO add ability to pass open tab via get parameter
+
+        if (window.BOOKMARKLET_IMPORT_ID !== -1){
+            this.loadRecipe(window.BOOKMARKLET_IMPORT_ID)
+        }
     },
     methods: {
         /**
          * Import recipe based on the data configured by the client
+         * @param action: action to perform after import (options are: edit, view, import)
          */
-        importRecipe: function () {
+        importRecipe: function (action) {
             let apiFactory = new ApiApiFactory()
             apiFactory.createRecipe(this.recipe_json).then(response => { // save recipe
                 let recipe = response.data
                 apiFactory.imageRecipe(response.data.id, undefined, this.recipe_json.image).then(response => { // save recipe image
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                    window.location = resolveDjangoUrl('edit_recipe', recipe.id)
+                    this.afterImportAction(action, recipe)
                 }).catch(e => {
                     StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-                    window.location = resolveDjangoUrl('edit_recipe', recipe.id)
+                    this.afterImportAction(action, recipe)
                 })
             }).catch(err => {
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
             })
         },
         /**
+         * Action performed after URL import
+         * @param action: action to perform after import
+         *                edit: edit imported recipe
+         *                view: view imported recipe
+         *                import: restart the importer
+         * @param recipe: recipe that was imported
+         */
+        afterImportAction: function (action, recipe) {
+            switch (action) {
+                case 'edit':
+                    window.location = resolveDjangoUrl('edit_recipe', recipe.id)
+                    break;
+                case 'view':
+                    window.location = resolveDjangoUrl('view_recipe', recipe.id)
+                    break;
+                case 'import':
+                    location.reload();
+                    break;
+            }
+        },
+        /**
          * Requests the recipe to be loaded form the source (url/data) from the server
          * Updates all variables to contain what they need to render either simple preview or manual mapping mode
          */
-        loadRecipe: function () {
+        loadRecipe: function (bookmarklet) {
             console.log(this.website_url)
+            // keep list of recently imported urls
             if (this.website_url !== '') {
                 if (this.recent_urls.length > 5) {
                     this.recent_urls.pop()
@@ -341,6 +330,47 @@ export default {
                 }
                 window.localStorage.setItem(this.LS_IMPORT_RECENT, JSON.stringify(this.recent_urls))
             }
+
+            // reset all variables
+            this.recipe_data = undefined
+            this.recipe_json = undefined
+            this.recipe_tree = undefined
+            this.recipe_images = []
+
+            // load recipe
+            let payload = {
+                'url': this.website_url,
+                'data': this.source_data,
+                'auto': this.automatic,
+                'mode': this.mode
+            }
+
+            if (bookmarklet !== undefined){
+                payload['bookmarklet'] = bookmarklet
+            }
+
+            axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
+                this.recipe_json = response.data['recipe_json'];
+
+                this.$set(this.recipe_json, 'unused_keywords', this.recipe_json.keywords.filter(k => k.id === undefined))
+                this.$set(this.recipe_json, 'keywords', this.recipe_json.keywords.filter(k => k.id !== undefined))
+
+                this.recipe_tree = response.data['recipe_tree'];
+                this.recipe_html = response.data['recipe_html'];
+                this.recipe_images = response.data['recipe_images'] !== undefined ? response.data['recipe_images'] : [];
+
+                this.tab_index = 0 // open tab 0 with import wizard
+                this.collapse_visible.options = true // open options collapse
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
+            })
+        },
+        /**
+         * Requests the recipe to be loaded form the source (url/data) from the server
+         * Updates all variables to contain what they need to render either simple preview or manual mapping mode
+         */
+        loadBookmarkletRecipe: function () {
+
             this.recipe_data = undefined
             this.recipe_json = undefined
             this.recipe_tree = undefined
@@ -385,71 +415,22 @@ export default {
             })
         },
         /**
-         * utility function used by splitAllSteps and splitStep to split a single step object into multiple step objects
-         * @param step: single step
-         * @param split_character: character to split steps at
-         * @return array of step objects
-         */
-        splitStepObject: function (step, split_character) {
-            let steps = []
-            step.instruction.split(split_character).forEach(part => {
-                if (part.trim() !== '') {
-                    steps.push({'instruction': part, 'ingredients': []})
-                }
-            })
-            steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
-            return steps
-        },
-        /**
-         * Splits all steps of a given recipe at the split character (e.g. \n or \n\n)
-         * @param split_character: character to split steps at
-         */
-        splitAllSteps: function (split_character) {
-            let steps = []
-            this.recipe_json.steps.forEach(step => {
-                steps = steps.concat(this.splitStepObject(step, split_character))
-            })
-            this.recipe_json.steps = steps
-        },
-        /**
-         * Splits the given step at the split character (e.g. \n or \n\n)
-         * @param step: step ingredients to split
-         * @param split_character: character to split steps at
-         */
-        splitStep: function (step, split_character) {
-            let old_index = this.recipe_json.steps.findIndex(x => x === step)
-            let new_steps = this.splitStepObject(step, split_character)
-            this.recipe_json.steps.splice(old_index, 1, ...new_steps)
-        },
-        /**
-         * Merge all steps of a given recipe into one
-         */
-        mergeAllSteps: function () {
-            let step = {'instruction': '', 'ingredients': []}
-            this.recipe_json.steps.forEach(s => {
-                step.instruction += s.instruction + '\n'
-                step.ingredients = step.ingredients.concat(s.ingredients)
-            })
-            this.recipe_json.steps = [step]
-        },
-        /**
-         * Merge two steps (the given and next one)
-         */
-        mergeStep: function (step) {
-            let step_index = this.recipe_json.steps.findIndex(x => x === step)
-            let removed_steps = this.recipe_json.steps.splice(step_index, 2)
-
-            this.recipe_json.steps.splice(step_index, 0, {
-                'instruction': removed_steps.flatMap(x => x.instruction).join('\n'),
-                'ingredients': removed_steps.flatMap(x => x.ingredients)
-            })
-        },
-        /**
          * Clear list of recently imported recipe urls
          */
         clearRecentImports: function () {
             window.localStorage.setItem(this.LS_IMPORT_RECENT, JSON.stringify([]))
             this.recent_urls = []
+        },
+        makeBookmarklet: function () {
+            return 'javascript:(function(){' +
+                'if(window.bookmarkletTandoor!==undefined){' +
+                'bookmarkletTandoor();' +
+                '} else {' +
+                `localStorage.setItem("importURL", "${localStorage.getItem('BASE_PATH')}${this.resolveDjangoUrl('api:bookmarkletimport-list')}");` +
+                `localStorage.setItem("redirectURL", "${localStorage.getItem('BASE_PATH')}${this.resolveDjangoUrl('data_import_url')}");` +
+                `localStorage.setItem("token", "${window.API_TOKEN}");` +
+                `document.body.appendChild(document.createElement("script")).src="${localStorage.getItem('BASE_PATH')}${resolveDjangoStatic('/js/bookmarklet.js')}?r="+Math.floor(Math.random()*999999999)}` +
+                `})()`
         }
     }
 }

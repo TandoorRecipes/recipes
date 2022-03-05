@@ -1085,12 +1085,19 @@ def recipe_from_source(request):
             - url: url to use for importing recipe
             - data: if no url is given recipe is imported from provided source data
             - auto: true to return just the recipe as json, false to return source json, html and images as well
-    :return:
+            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
+    :return: JsonResponse containing the parsed json, original html,json and images
     """
     request_payload = json.loads(request.body.decode('utf-8'))
     url = request_payload.get('url', None)
     data = request_payload.get('data', None)
+    bookmarklet = request_payload.get('bookmarklet', None)
     auto = True if request_payload.get('auto', 'true') == 'true' else False
+
+    if bookmarklet := BookmarkletImport.objects.filter(pk=bookmarklet).first():
+        url = bookmarklet.url
+        data = bookmarklet.html
+        bookmarklet.delete()
 
     # headers to use for request to external sites
     external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
