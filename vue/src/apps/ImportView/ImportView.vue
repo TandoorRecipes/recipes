@@ -121,8 +121,10 @@
                                 </b-card-header>
                                 <b-collapse id="id_accordion_advanced_options" visible accordion="url_import_accordion"
                                             role="tabpanel" v-model="collapse_visible.advanced_options">
-                                    <b-card-body>
+                                    <b-card-body v-if="recipe_json !== undefined">
 
+                                        <import-view-advanced-mapping :recipe="recipe_json" :recipe_tree="recipe_tree" :recipe_images="recipe_images" :recipe_html="recipe_html"
+                                                                      @change="recipe_json = $event"></import-view-advanced-mapping>
 
                                     </b-card-body>
                                 </b-collapse>
@@ -224,6 +226,7 @@ import {ApiApiFactory} from "@/utils/openapi/api";
 import draggable from "vuedraggable";
 import {INTEGRATIONS} from "@/utils/integration";
 import ImportViewStepEditor from "@/apps/ImportView/ImportViewStepEditor";
+import ImportViewAdvancedMapping from "@/apps/ImportView/ImportViewAdvancedMapping";
 
 Vue.use(BootstrapVue)
 
@@ -234,8 +237,9 @@ export default {
         ToastMixin,
     ],
     components: {
+        ImportViewAdvancedMapping,
         ImportViewStepEditor,
-        draggable
+        draggable,
     },
     data() {
         return {
@@ -252,7 +256,7 @@ export default {
             recent_urls: [],
             source_data: '',
             recipe_json: undefined,
-            recipe_data: undefined,
+            recipe_html: undefined,
             recipe_tree: undefined,
             recipe_images: [],
             // App Import
@@ -269,7 +273,7 @@ export default {
         this.recent_urls = local_storage_recent !== null ? local_storage_recent : []
         this.tab_index = 0 //TODO add ability to pass open tab via get parameter
 
-        if (window.BOOKMARKLET_IMPORT_ID !== -1){
+        if (window.BOOKMARKLET_IMPORT_ID !== -1) {
             this.loadRecipe(window.BOOKMARKLET_IMPORT_ID)
         }
     },
@@ -332,7 +336,7 @@ export default {
             }
 
             // reset all variables
-            this.recipe_data = undefined
+            this.recipe_html = undefined
             this.recipe_json = undefined
             this.recipe_tree = undefined
             this.recipe_images = []
@@ -341,47 +345,13 @@ export default {
             let payload = {
                 'url': this.website_url,
                 'data': this.source_data,
-                'auto': this.automatic,
-                'mode': this.mode
             }
 
-            if (bookmarklet !== undefined){
+            if (bookmarklet !== undefined) {
                 payload['bookmarklet'] = bookmarklet
             }
 
             axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
-                this.recipe_json = response.data['recipe_json'];
-
-                this.$set(this.recipe_json, 'unused_keywords', this.recipe_json.keywords.filter(k => k.id === undefined))
-                this.$set(this.recipe_json, 'keywords', this.recipe_json.keywords.filter(k => k.id !== undefined))
-
-                this.recipe_tree = response.data['recipe_tree'];
-                this.recipe_html = response.data['recipe_html'];
-                this.recipe_images = response.data['recipe_images'] !== undefined ? response.data['recipe_images'] : [];
-
-                this.tab_index = 0 // open tab 0 with import wizard
-                this.collapse_visible.options = true // open options collapse
-            }).catch((err) => {
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
-            })
-        },
-        /**
-         * Requests the recipe to be loaded form the source (url/data) from the server
-         * Updates all variables to contain what they need to render either simple preview or manual mapping mode
-         */
-        loadBookmarkletRecipe: function () {
-
-            this.recipe_data = undefined
-            this.recipe_json = undefined
-            this.recipe_tree = undefined
-            this.recipe_images = []
-
-            axios.post(resolveDjangoUrl('api_recipe_from_source'), {
-                'url': this.website_url,
-                'data': this.source_data,
-                'auto': this.automatic,
-                'mode': this.mode
-            },).then((response) => {
                 this.recipe_json = response.data['recipe_json'];
 
                 this.$set(this.recipe_json, 'unused_keywords', this.recipe_json.keywords.filter(k => k.id === undefined))
@@ -421,6 +391,10 @@ export default {
             window.localStorage.setItem(this.LS_IMPORT_RECENT, JSON.stringify([]))
             this.recent_urls = []
         },
+        /**
+         * Create the code required for the bookmarklet
+         * @returns {string} javascript:// protocol code to be loaded into href attribute of link that can be bookmarked
+         */
         makeBookmarklet: function () {
             return 'javascript:(function(){' +
                 'if(window.bookmarkletTandoor!==undefined){' +

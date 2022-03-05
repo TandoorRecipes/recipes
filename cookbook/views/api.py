@@ -1084,7 +1084,6 @@ def recipe_from_source(request):
     :param request: standard request with additional post parameters
             - url: url to use for importing recipe
             - data: if no url is given recipe is imported from provided source data
-            - auto: true to return just the recipe as json, false to return source json, html and images as well
             - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
     :return: JsonResponse containing the parsed json, original html,json and images
     """
@@ -1092,7 +1091,6 @@ def recipe_from_source(request):
     url = request_payload.get('url', None)
     data = request_payload.get('data', None)
     bookmarklet = request_payload.get('bookmarklet', None)
-    auto = True if request_payload.get('auto', 'true') == 'true' else False
 
     if bookmarklet := BookmarkletImport.objects.filter(pk=bookmarklet).first():
         url = bookmarklet.url
@@ -1108,69 +1106,28 @@ def recipe_from_source(request):
             'msg': _('Nothing to do.')
         }, status=400)
 
-    # in auto mode scrape url directly with recipe scrapers library
-    if url and auto:
+    # in manual mode request complete page to return it later
+    if url:
         try:
-            scrape = scrape_me(url)
-        except (WebsiteNotImplementedError, AttributeError):
-            try:
-                scrape = scrape_me(url, wild_mode=True)
-            except NoSchemaFoundInWildMode:
-                return JsonResponse({
-                    'error': True,
-                    'msg': _('The requested site provided malformed data and cannot be read.')
-                }, status=400)
-        except ConnectionError:
+            data = requests.get(url, headers=external_request_headers).content
+        except requests.exceptions.ConnectionError:
             return JsonResponse({
                 'error': True,
-                'msg': _('The requested page could not be found.')
+                'msg': _('Connection Refused.')
             }, status=400)
-
-        try:
-            instructions = scrape.instructions()
-        except Exception:
-            instructions = ""
-        try:
-            ingredients = scrape.ingredients()
-        except Exception:
-            ingredients = []
-
-        if len(ingredients) + len(instructions) == 0:
-            return JsonResponse({
-                'error': True,
-                'msg': _('The requested site does not provide any recognized data format to import the recipe from.')
-            }, status=400)
-        else:
-            return JsonResponse({"recipe_json": get_from_scraper(scrape, request)})
-    elif data or (url and not auto):
-        # in manual mode request complete page to return it later
-        if not data or data == 'undefined':
-            try:
-                data = requests.get(url, headers=external_request_headers).content
-            except requests.exceptions.ConnectionError:
-                return JsonResponse({
-                    'error': True,
-                    'msg': _('Connection Refused.')
-                }, status=400)
-        recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
-        if len(recipe_tree) == 0 and len(recipe_json) == 0:
-            return JsonResponse({
-                'error': True,
-                'msg': _('No usable data could be found.')
-            }, status=400)
-        else:
-            return JsonResponse({
-                'recipe_json': recipe_json,
-                'recipe_tree': recipe_tree,
-                'recipe_html': recipe_html,
-                'recipe_images': recipe_images,
-            })
-
-    else:
+    recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
+    if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse({
             'error': True,
-            'msg': _('I couldn\'t find anything to do.')
+            'msg': _('No usable data could be found.')
         }, status=400)
+    else:
+        return JsonResponse({
+            'recipe_json': recipe_json,
+            'recipe_tree': recipe_tree,
+            'recipe_html': recipe_html,
+            'recipe_images': recipe_images,
+        })
 
 
 @group_required('admin')
