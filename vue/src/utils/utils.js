@@ -146,6 +146,27 @@ export function resolveDjangoUrl(url, params = null) {
 }
 
 /*
+ * Utility functions to use djangos static files
+ * */
+
+export const StaticMixin = {
+    methods: {
+        /**
+         * access django static files from javascript
+         * @param {string} param path to static file
+         */
+        resolveDjangoStatic: function (param) {
+            return resolveDjangoStatic(param)
+        },
+    },
+}
+
+export function resolveDjangoStatic(param) {
+    let url = localStorage.getItem('STATIC_URL') + param
+    return url.replace('//','/') //replace // with / in case param started with / which resulted in // after the static base url
+}
+
+/*
  * other utilities
  * */
 export function getUserPreference(pref = undefined) {

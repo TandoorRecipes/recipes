@@ -327,10 +327,10 @@ def user_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                    len(search_form.cleaned_data['icontains'])
-                    + len(search_form.cleaned_data['istartswith'])
-                    + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext'])
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
                 )
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
@@ -647,7 +647,10 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    return render(request, 'test.html', {})
+    if (api_token := Token.objects.filter(user=request.user).first()) is None:
+        api_token = Token.objects.create(user=request.user)
+
+    return render(request, 'test.html', {'api_token': api_token})
 
 
 def test2(request):
