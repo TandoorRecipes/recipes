@@ -8,28 +8,30 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-03-08 01:31+0000\n"
+"Last-Translator: Felipe Castro <felipefcastro@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:277
 msgid "Ingredients"
-msgstr ""
+msgstr "Ingredientes"
 
 #: .\cookbook\forms.py:56
 msgid "Default unit"
-msgstr ""
+msgstr "Unidade padrão"
 
 #: .\cookbook\forms.py:57
 msgid "Use fractions"
-msgstr ""
+msgstr "Usar frações"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
@@ -37,64 +39,68 @@ msgstr ""
 
 #: .\cookbook\forms.py:59
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:60
 msgid "Navbar color"
-msgstr ""
+msgstr "Cor da Barra de :Navegação"
 
 #: .\cookbook\forms.py:61
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Fixar barra"
 
 #: .\cookbook\forms.py:62
 msgid "Default page"
-msgstr ""
+msgstr "Página padrão"
 
 #: .\cookbook\forms.py:63
 msgid "Show recent recipes"
-msgstr ""
+msgstr "Mostrar receitas recentes"
 
 #: .\cookbook\forms.py:64
 msgid "Search style"
-msgstr ""
+msgstr "Estilo da busca"
 
 #: .\cookbook\forms.py:65
 msgid "Plan sharing"
-msgstr ""
+msgstr "Compartilhar plano"
 
 #: .\cookbook\forms.py:66
 msgid "Ingredient decimal places"
-msgstr ""
+msgstr "Número de decimais (ingredientes)"
 
 #: .\cookbook\forms.py:67
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Sincronizar automaticamente período da Lista de compras"
 
 #: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:77 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "Comentários"
 
 #: .\cookbook\forms.py:72
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"Cor da barra superior. Nem todas as cores funcionam com todos os temas, "
+"teste!"
 
 #: .\cookbook\forms.py:74
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr ""
+msgstr "Unidade padrão ao inserir novo ingrediente em uma receita."
 
 #: .\cookbook\forms.py:76
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Habilitar suporte para frações em quantidade dos ingredientes (ex. Converte "
+"decimais para frações automaticamente)"
 
 #: .\cookbook\forms.py:78
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Exibir informações nutricionais em Joules ao invés de Calorias"
 
 #: .\cookbook\forms.py:79
 msgid "Users with whom newly created meal plans should be shared by default."
