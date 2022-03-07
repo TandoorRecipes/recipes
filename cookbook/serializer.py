@@ -364,16 +364,23 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'description', 'category_to_supermarket')
 
 
-class RecipeSimpleSerializer(serializers.ModelSerializer):
+class RecipeSimpleSerializer(WritableNestedModelSerializer):
     url = serializers.SerializerMethodField('get_url')
 
     def get_url(self, obj):
         return reverse('view_recipe', args=[obj.id])
 
+    def create(self, validated_data):
+        # don't allow writing to Recipe via this API
+        return Recipe.objects.get(**validated_data)
+
+    def update(self, instance, validated_data):
+        # don't allow writing to Recipe via this API
+        return Recipe.objects.get(**validated_data)
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'url')
-        read_only_fields = ['id', 'name', 'url']
 
 
 class FoodSimpleSerializer(serializers.ModelSerializer):
@@ -427,6 +434,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
                 name=sc_name,
                 space=space, defaults=sm_category)
         onhand = validated_data.pop('food_onhand', None)
+        if recipe := validated_data.get('recipe', None):
+            validated_data['recipe'] = Recipe.objects.get(**recipe)
 
         # assuming if on hand for user also onhand for shopping_share users
         if not onhand is None:

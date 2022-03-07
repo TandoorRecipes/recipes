@@ -376,5 +376,8 @@
     "Keyword": "Keyword",
     "Advanced": "Advanced",
     "Page": "Page",
-    "Reset": "Reset"
+    "Reset": "Reset",
+    "Create Food": "Create Food",
+    "create_food_desc": "Create a food and link it to this recipe.",
+    "additional_options": "Additional Options"
 }
