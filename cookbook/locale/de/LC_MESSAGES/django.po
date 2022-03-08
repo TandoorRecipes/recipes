@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: 2022-02-06 21:31+0000\n"
-"Last-Translator: David Laukamp <dlkmp@live.de>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2022-03-09 18:31+0000\n"
+"Last-Translator: karawedi <wedi.nick@gmail.com>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,16 +293,12 @@ msgstr ""
 "A. führen niedrigere Werte zum ignorieren von mehr Tippfehlern)."
 
 #: .\cookbook\forms.py:445
-#, fuzzy
-#| msgid ""
-#| "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
-#| "for full desciption of choices."
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
 "Suchmethode auswählen. Klicke <a href=\"/docs/search/\">hier</a> für eine "
-"Auflistung der Optionen."
+"vollständige Erklärung der Optionen."
 
 #: .\cookbook\forms.py:446
 msgid ""
@@ -538,10 +534,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "Es muss die Abfrage oder der Hash_Key angeben werden"
 
 #: .\cookbook\helper\shopping_helper.py:148
-#, fuzzy
-#| msgid "You must supply a created_by"
 msgid "You must supply a servings size"
-msgstr "Die Angabe der Verfassers ist notwendig"
+msgstr "Sie müssen eine Portionsgröße angeben"
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
@@ -735,11 +729,16 @@ msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Liste der Zutaten-IDs aus dem Rezept, wenn keine Angabe erfolgt, werden alle "
+"Zutaten hinzugefügt."
 
 #: .\cookbook\serializer.py:980
+#, fuzzy
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Wenn Sie eine \"list_recipe\"-ID, sowie 0 Portionen angeben, wird diese "
+"Einkaufsliste gelöscht."
 
 #: .\cookbook\serializer.py:988
 msgid "Amount of food to add to the shopping list"
@@ -751,8 +750,11 @@ msgid "ID of unit to use for the shopping list"
 msgstr "ID der Einheit, die für die Einkaufsliste verwendet werden soll"
 
 #: .\cookbook\serializer.py:990
+#, fuzzy
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Wenn diese Option auf wahr gesetzt ist, werden alle Lebensmittel aus den "
+"aktiven Einkaufslisten gelöscht."
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
