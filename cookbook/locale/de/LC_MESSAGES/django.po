@@ -3107,7 +3107,7 @@ msgstr ""
 "paar Stunden."
 
 #: .\cookbook\views\new.py:232
-msgid "Email to user could not be send, please share link manually."
+msgid "Email could not be sent to user. Please share the link manually."
 msgstr ""
 "Email konnte an den Benutzer nicht gesendet werden. Bitte teile den Link "
 "manuell."

@@ -227,7 +227,7 @@ class InviteLinkCreate(GroupRequiredMixin, CreateView):
                     messages.add_message(self.request, messages.ERROR,
                                          _('You have send to many emails, please share the link manually or wait a few hours.'))
             except (SMTPException, BadHeaderError, TimeoutError):
-                messages.add_message(self.request, messages.ERROR, _('Email to user could not be send, please share link manually.'))
+                messages.add_message(self.request, messages.ERROR, _('Email could not be sent to user. Please share the link manually.'))
 
         return HttpResponseRedirect(reverse('view_space'))
 

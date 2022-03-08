@@ -2501,7 +2501,7 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\new.py:245
-msgid "Email to user could not be send, please share link manually."
+msgid "Email could not be sent to user. Please share the link manually."
 msgstr ""
 
 #: .\cookbook\views\views.py:128
