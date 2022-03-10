@@ -39,7 +39,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     instructions = step.instruction
 
     tags = markdown_tags + [
-        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead', 'img'
     ]
     parsed_md = md.markdown(
         instructions,
@@ -48,7 +48,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )
-    markdown_attrs['*'] = markdown_attrs['*'] + ['class']
+    markdown_attrs['*'] = markdown_attrs['*'] + ['class', 'width', 'height']
 
     instructions = bleach.clean(parsed_md, tags, markdown_attrs)
 
