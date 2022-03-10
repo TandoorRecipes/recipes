@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
+
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-12" style="text-align: center">
+            <h3>{% trans "Sign In" %}</h3>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
+            <hr>
+            <h6>{% trans "Social Network Login Failure" %}</h6>
+
+            <p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
+
+            <a class="btn btn-secondary" href="{% url 'account_login' %}">{% trans "Back" %}</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
