@@ -21,22 +21,66 @@
                                 <b-collapse id="id_accordion_url" visible accordion="url_import_accordion"
                                             role="tabpanel" v-model="collapse_visible.url">
                                     <b-card-body>
-                                        <b-input-group>
-                                            <b-input v-model="website_url" placeholder="Website URL"
-                                                     @paste="loadRecipe()"></b-input>
-                                            <b-input-group-append>
-                                                <b-button variant="primary" @click="loadRecipe()"><i
-                                                    class="fas fa-search"></i>
-                                                </b-button>
-                                            </b-input-group-append>
-                                        </b-input-group>
 
-                                        <a href="#" @click="clearRecentImports()">Clear recent imports</a>
-                                        <ul>
-                                            <li v-for="x in recent_urls" v-bind:key="x">
-                                                <a href="#" @click="website_url=x; loadRecipe()">{{ x }}</a>
-                                            </li>
-                                        </ul>
+                                        <div class="row">
+                                            <div class="col col-md-12">
+                                                <b-checkbox v-model="import_multiple" switch><span
+                                                    v-if="import_multiple">Multiple Recipes</span><span
+                                                    v-if="!import_multiple">Single Recipe</span></b-checkbox>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col col-md-12">
+                                                <b-input-group>
+                                                    <b-input v-model="website_url" placeholder="Website URL"></b-input>
+                                                    <b-input-group-append>
+                                                        <b-button variant="primary" @click="loadRecipe(false,undefined)"
+                                                                  v-if="!import_multiple"><i
+                                                            class="fas fa-search fa-fw"></i>
+                                                        </b-button>
+                                                        <b-button variant="primary"
+                                                                  @click="website_url_list.push(website_url); website_url=''"
+                                                                  v-if="import_multiple"><i
+                                                            class="fas fa-plus fa-fw"></i>
+                                                        </b-button>
+                                                    </b-input-group-append>
+
+                                                </b-input-group>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col col-md-12">
+                                                <div v-if="!import_multiple">
+                                                    <a href="#" @click="clearRecentImports()">Clear recent imports</a>
+                                                    <ul>
+                                                        <li v-for="x in recent_urls" v-bind:key="x">
+                                                            <a href="#"
+                                                               @click="website_url=x; loadRecipe(false, undefined)">{{
+                                                                    x
+                                                                }}</a>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                                <div v-if="import_multiple">
+                                                    <a href="#" @click="website_url_list = []"
+                                                       v-if="website_url_list.length > 0">Clear import list</a>
+                                                    <ul>
+                                                        <li v-for="x in website_url_list" v-bind:key="x">
+                                                            {{ x }}
+                                                        </li>
+                                                    </ul>
+
+                                                    <b-button :disabled="website_url_list.length < 1"
+                                                              @click="autoImport()">Import
+                                                    </b-button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </b-card-body>
                                 </b-collapse>
                             </b-card>
@@ -112,24 +156,6 @@
                                 </b-collapse>
                             </b-card>
 
-                            <!-- ADVANCED OPTIONS -->
-                            <b-card no-body>
-                                <b-card-header header-tag="header" class="p-1" role="tab">
-                                    <b-button block v-b-toggle.id_accordion_advanced_options variant="info"
-                                              :disabled="recipe_json === undefined">Advanced Options
-                                    </b-button>
-                                </b-card-header>
-                                <b-collapse id="id_accordion_advanced_options" visible accordion="url_import_accordion"
-                                            role="tabpanel" v-model="collapse_visible.advanced_options">
-                                    <b-card-body v-if="recipe_json !== undefined">
-
-                                        <import-view-advanced-mapping :recipe="recipe_json" :recipe_tree="recipe_tree" :recipe_images="recipe_images" :recipe_html="recipe_html"
-                                                                      @change="recipe_json = $event"></import-view-advanced-mapping>
-
-                                    </b-card-body>
-                                </b-collapse>
-                            </b-card>
-
                             <!-- IMPORT -->
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
@@ -184,7 +210,8 @@
                                             :placeholder="$t('paste_json')" style="font-size: 12px">
                                 </b-textarea>
                             </div>
-                            <b-button @click="loadRecipe()" variant="primary"><i class="fas fa-code"></i>
+                            <b-button @click="loadRecipe(false, undefined)" variant="primary"><i
+                                class="fas fa-code"></i>
                                 {{ $t('Import') }}
                             </b-button>
 
@@ -226,7 +253,6 @@ import {ApiApiFactory} from "@/utils/openapi/api";
 import draggable from "vuedraggable";
 import {INTEGRATIONS} from "@/utils/integration";
 import ImportViewStepEditor from "@/apps/ImportView/ImportViewStepEditor";
-import ImportViewAdvancedMapping from "@/apps/ImportView/ImportViewAdvancedMapping";
 
 Vue.use(BootstrapVue)
 
@@ -237,7 +263,6 @@ export default {
         ToastMixin,
     ],
     components: {
-        ImportViewAdvancedMapping,
         ImportViewStepEditor,
         draggable,
     },
@@ -253,6 +278,12 @@ export default {
             // URL import
             LS_IMPORT_RECENT: 'import_recent_urls', //TODO use central helper to manage all local storage keys (and maybe even access)
             website_url: '',
+            website_url_list: [
+                'https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/',
+                'https://www.essen-und-trinken.de/rezepte/58294-rzpt-schokoladenpudding',
+                'https://www.chefkoch.de/rezepte/1825781296124455/Schokoladenpudding-selbst-gemacht.html'
+            ],
+            import_multiple: false,
             recent_urls: [],
             source_data: '',
             recipe_json: undefined,
@@ -274,19 +305,21 @@ export default {
         this.tab_index = 0 //TODO add ability to pass open tab via get parameter
 
         if (window.BOOKMARKLET_IMPORT_ID !== -1) {
-            this.loadRecipe(window.BOOKMARKLET_IMPORT_ID)
+            this.loadRecipe(false, window.BOOKMARKLET_IMPORT_ID)
         }
     },
     methods: {
         /**
          * Import recipe based on the data configured by the client
          * @param action: action to perform after import (options are: edit, view, import)
+         * @param data: if parameter is passed ignore global application state and import form data variable
          */
-        importRecipe: function (action) {
+        importRecipe: function (action, data) {
             let apiFactory = new ApiApiFactory()
-            apiFactory.createRecipe(this.recipe_json).then(response => { // save recipe
+            let recipe_json = data !== undefined ? data : this.recipe_json
+            apiFactory.createRecipe(recipe_json).then(response => { // save recipe
                 let recipe = response.data
-                apiFactory.imageRecipe(response.data.id, undefined, this.recipe_json.image).then(response => { // save recipe image
+                apiFactory.imageRecipe(response.data.id, undefined, recipe_json.image).then(response => { // save recipe image
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
                     this.afterImportAction(action, recipe)
                 }).catch(e => {
@@ -303,6 +336,7 @@ export default {
          *                edit: edit imported recipe
          *                view: view imported recipe
          *                import: restart the importer
+         *                nothing: do nothing
          * @param recipe: recipe that was imported
          */
         afterImportAction: function (action, recipe) {
@@ -316,14 +350,17 @@ export default {
                 case 'import':
                     location.reload();
                     break;
+                case 'nothing':
+                    break;
             }
         },
         /**
          * Requests the recipe to be loaded form the source (url/data) from the server
          * Updates all variables to contain what they need to render either simple preview or manual mapping mode
+         * @param silent do not open the options tab after loading the recipe
+         * @param bookmarklet id of bookmarklet import to load instead of url, default undefined
          */
-        loadRecipe: function (bookmarklet) {
-            console.log(this.website_url)
+        loadRecipe: function (silent, bookmarklet) {
             // keep list of recently imported urls
             if (this.website_url !== '') {
                 if (this.recent_urls.length > 5) {
@@ -351,7 +388,7 @@ export default {
                 payload['bookmarklet'] = bookmarklet
             }
 
-            axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
+            return axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
                 this.recipe_json = response.data['recipe_json'];
 
                 this.$set(this.recipe_json, 'unused_keywords', this.recipe_json.keywords.filter(k => k.id === undefined))
@@ -361,11 +398,27 @@ export default {
                 this.recipe_html = response.data['recipe_html'];
                 this.recipe_images = response.data['recipe_images'] !== undefined ? response.data['recipe_images'] : [];
 
-                this.tab_index = 0 // open tab 0 with import wizard
-                this.collapse_visible.options = true // open options collapse
+                if (!silent) {
+                    this.tab_index = 0 // open tab 0 with import wizard
+                    this.collapse_visible.options = true // open options collapse
+                }
+                return this.recipe_json
             }).catch((err) => {
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
             })
+        },
+        /**
+         * Function to automatically import multiple urls
+         * Takes input from website_url_list
+         */
+        autoImport: function () {
+            this.website_url_list.forEach(r => {
+                this.website_url = r
+                this.loadRecipe(true, undefined).then((recipe_json) => {
+                    this.importRecipe('nothing', recipe_json) //TODO handle feedback of what was imported and what not
+                })
+            })
+            this.website_url_list = []
         },
         /**
          * Import recipes with uploaded files and app integration
