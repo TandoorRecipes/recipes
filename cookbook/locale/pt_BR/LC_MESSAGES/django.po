@@ -3,41 +3,35 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# Translators:
-# vabene1111 <vabene1234@googlemail.com>, 2021
-#
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: vabene1111 <vabene1234@googlemail.com>, 2021\n"
-"Language-Team: Latvian (https://www.transifex.com/django-recipes/"
-"teams/110507/lv/)\n"
-"Language: lv\n"
+"PO-Revision-Date: 2022-03-08 01:31+0000\n"
+"Last-Translator: Felipe Castro <felipefcastro@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/pt_BR/>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
-"2);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:277
 msgid "Ingredients"
-msgstr "Sastāvdaļas"
+msgstr "Ingredientes"
 
 #: .\cookbook\forms.py:56
 msgid "Default unit"
-msgstr ""
+msgstr "Unidade padrão"
 
 #: .\cookbook\forms.py:57
-#, fuzzy
-#| msgid "System Information"
 msgid "Use fractions"
-msgstr "Sistēmas informācija"
+msgstr "Usar frações"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
@@ -45,105 +39,88 @@ msgstr ""
 
 #: .\cookbook\forms.py:59
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:60
 msgid "Navbar color"
-msgstr ""
+msgstr "Cor da Barra de :Navegação"
 
 #: .\cookbook\forms.py:61
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Fixar barra"
 
 #: .\cookbook\forms.py:62
 msgid "Default page"
-msgstr ""
+msgstr "Página padrão"
 
 #: .\cookbook\forms.py:63
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show recent recipes"
-msgstr "Iepirkšanās receptes"
+msgstr "Mostrar receitas recentes"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Search"
 msgid "Search style"
-msgstr "Meklēt"
+msgstr "Estilo da busca"
 
 #: .\cookbook\forms.py:65
 msgid "Plan sharing"
-msgstr ""
+msgstr "Compartilhar plano"
 
 #: .\cookbook\forms.py:66
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Sastāvdaļas"
+msgstr "Número de decimais (ingredientes)"
 
 #: .\cookbook\forms.py:67
-#, fuzzy
-#| msgid "Shopping list currently empty"
 msgid "Shopping list auto sync period"
-msgstr "Iepirkumu saraksts pašlaik ir tukšs"
+msgstr "Sincronizar automaticamente período da Lista de compras"
 
 #: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:77 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr "Komentāri"
+msgstr "Comentários"
 
 #: .\cookbook\forms.py:72
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
-"Augšējās navigācijas joslas krāsa. Ne visas krāsas darbojas ar visām tēmām, "
-"vienkārši izmēģiniet tās!"
+"Cor da barra superior. Nem todas as cores funcionam com todos os temas, "
+"teste!"
 
 #: .\cookbook\forms.py:74
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr "Noklusējuma vienība, ko izmantot, ievietojot receptē jaunu sastāvdaļu."
+msgstr "Unidade padrão ao inserir novo ingrediente em uma receita."
 
 #: .\cookbook\forms.py:76
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
-"Iespējot daļskaitļus sastāvdaļu daudzumos (piemēram, decimāldaļas "
-"automātiski pārveidot par daļskaitļiem)"
+"Habilitar suporte para frações em quantidade dos ingredientes (ex. Converte "
+"decimais para frações automaticamente)"
 
 #: .\cookbook\forms.py:78
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Exibir informações nutricionais em Joules ao invés de Calorias"
 
 #: .\cookbook\forms.py:79
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Lietotāji, ar kuriem jaunizveidotie maltīšu saraksti/iepirkumu saraksti tiks "
-"kopīgoti pēc noklusējuma."
 
 #: .\cookbook\forms.py:80
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Users with whom to share shopping lists."
-msgstr "Atvērt iepirkumu sarakstu"
+msgstr ""
 
 #: .\cookbook\forms.py:82
 msgid "Show recently viewed recipes on search page."
-msgstr "Parādīt nesen skatītās receptes meklēšanas lapā."
+msgstr ""
 
 #: .\cookbook\forms.py:83
 msgid "Number of decimals to round ingredients."
-msgstr "Ciparu skaits pēc komata decimāldaļām sastāvdaļās."
+msgstr ""
 
 #: .\cookbook\forms.py:84
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr ""
-"Ja vēlaties, lai jūs varētu izveidot un redzēt komentārus zem receptēm."
 
 #: .\cookbook\forms.py:86 .\cookbook\forms.py:493
 msgid ""
@@ -152,12 +129,6 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
-"Iestatot 0, tiks atspējota automātiskā sinhronizācija. Apskatot iepirkumu "
-"sarakstu, saraksts tiek atjaunināts ik pēc noteiktām sekundēm, lai "
-"sinhronizētu citas personas veiktas izmaiņas. Noderīgi, iepērkoties ar "
-"vairākiem cilvēkiem, taču, iespējams, izmantos nedaudz vairāk mobilo datu. "
-"Ja tas ir zemāks par instances ierobežojumu, tas tiek atiestatīts, "
-"saglabājot."
 
 #: .\cookbook\forms.py:89
 msgid "Makes the navbar stick to the top of the page."
@@ -176,36 +147,34 @@ msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Abi lauki nav obligāti. Ja neviens nav norādīts, tā vietā tiks parādīts "
-"lietotājvārds"
 
 #: .\cookbook\forms.py:129 .\cookbook\forms.py:298
 #: .\cookbook\templates\url_import.html:161
 msgid "Name"
-msgstr "Vārds"
+msgstr ""
 
 #: .\cookbook\forms.py:130 .\cookbook\forms.py:299
 #: .\cookbook\templates\space.html:44 .\cookbook\templates\stats.html:24
 #: .\cookbook\templates\url_import.html:195
 #: .\cookbook\templates\url_import.html:585 .\cookbook\views\lists.py:97
 msgid "Keywords"
-msgstr "Atslēgvārdi"
+msgstr ""
 
 #: .\cookbook\forms.py:131
 msgid "Preparation time in minutes"
-msgstr "Pagatavošanas laiks minūtēs"
+msgstr ""
 
 #: .\cookbook\forms.py:132
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr "Gaidīšanas laiks (vārīšana / cepšana) minūtēs"
+msgstr ""
 
 #: .\cookbook\forms.py:133 .\cookbook\forms.py:267 .\cookbook\forms.py:300
 msgid "Path"
-msgstr "Ceļš"
+msgstr ""
 
 #: .\cookbook\forms.py:134
 msgid "Storage UID"
-msgstr "Krātuves UID"
+msgstr ""
 
 #: .\cookbook\forms.py:164
 msgid "Default"
@@ -219,27 +188,25 @@ msgstr ""
 
 #: .\cookbook\forms.py:197
 msgid "Add your comment: "
-msgstr "Pievienot komentāru: "
+msgstr ""
 
 #: .\cookbook\forms.py:212
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr "Atstājiet tukšu Dropbox un ievadiet lietotnes paroli Nextcloud."
+msgstr ""
 
 #: .\cookbook\forms.py:219
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr "Atstājiet tukšu Nextcloud un ievadiet API tokenu Dropbox."
+msgstr ""
 
 #: .\cookbook\forms.py:228
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
-"Atstājiet tukšu Dropbox un ievadiet tikai Nextcloud bāzes URL (<kods> /"
-"remote.php/webdav/ </code> tiek pievienots automātiski)"
 
 #: .\cookbook\forms.py:266 .\cookbook\views\edit.py:166
 msgid "Storage"
-msgstr "Krātuve"
+msgstr ""
 
 #: .\cookbook\forms.py:268
 msgid "Active"
@@ -247,29 +214,25 @@ msgstr ""
 
 #: .\cookbook\forms.py:274
 msgid "Search String"
-msgstr "Meklēšanas virkne"
+msgstr ""
 
 #: .\cookbook\forms.py:301
 msgid "File ID"
-msgstr "Faila ID"
+msgstr ""
 
 #: .\cookbook\forms.py:323
 msgid "You must provide at least a recipe or a title."
-msgstr "Jums jānorāda vismaz recepte vai nosaukums."
+msgstr ""
 
 #: .\cookbook\forms.py:336
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
-"Iestatījumos varat uzskaitīt noklusējuma lietotājus, ar kuriem koplietot "
-"receptes."
 
 #: .\cookbook\forms.py:337
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
 msgstr ""
-"Lai formatētu šo lauku, varat izmantot Markdown. Skatiet <a href=\"/docs/"
-"markdown/\"> dokumentus šeit </a>"
 
 #: .\cookbook\forms.py:363
 msgid "Maximum number of users for this space reached."
@@ -342,10 +305,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\forms.py:460
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Meklēt"
+msgstr ""
 
 #: .\cookbook\forms.py:461
 msgid "Fuzzy Lookups"
@@ -364,16 +325,12 @@ msgid "Starts With"
 msgstr ""
 
 #: .\cookbook\forms.py:465
-#, fuzzy
-#| msgid "Search"
 msgid "Fuzzy Search"
-msgstr "Meklēt"
+msgstr ""
 
 #: .\cookbook\forms.py:466
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Teskts"
+msgstr ""
 
 #: .\cookbook\forms.py:491
 msgid ""
@@ -418,10 +375,8 @@ msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
 
 #: .\cookbook\forms.py:508
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Share Shopping List"
-msgstr "Iepirkumu saraksts"
+msgstr ""
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
@@ -457,7 +412,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:517 .\cookbook\templates\shopping_list.html:322
 msgid "List Prefix"
-msgstr "Saraksta prefikss"
+msgstr ""
 
 #: .\cookbook\forms.py:518
 msgid "Auto On Hand"
@@ -472,16 +427,12 @@ msgid "Reset all food to inherit the fields configured."
 msgstr ""
 
 #: .\cookbook\forms.py:541
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Ēdiens, kas būtu jāaizstāj."
+msgstr ""
 
 #: .\cookbook\forms.py:542
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Parādīt nesen skatītās receptes meklēšanas lapā."
+msgstr ""
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -492,7 +443,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:136
 #: .\cookbook\helper\permission_helper.py:159 .\cookbook\views\views.py:148
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Jūs neesat pieteicies un tāpēc nevarat skatīt šo lapu!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:140
 #: .\cookbook\helper\permission_helper.py:146
@@ -504,23 +455,21 @@ msgstr "Jūs neesat pieteicies un tāpēc nevarat skatīt šo lapu!"
 #: .\cookbook\views\views.py:159 .\cookbook\views\views.py:166
 #: .\cookbook\views\views.py:232
 msgid "You do not have the required permissions to view this page!"
-msgstr "Jums nav nepieciešamo atļauju, lai apskatītu šo lapu!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187
 #: .\cookbook\helper\permission_helper.py:202
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "Jūs nevarat mainīt šo objektu, jo tas nepieder jums!"
+msgstr ""
 
 #: .\cookbook\helper\recipe_search.py:486
 msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:148
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a servings size"
-msgstr "Jums jānorāda vismaz recepte vai nosaukums."
+msgstr ""
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
@@ -544,22 +493,17 @@ msgid "The following recipes were ignored because they already existed:"
 msgstr ""
 
 #: .\cookbook\integration\integration.py:225
-#, fuzzy, python-format
-#| msgid "Imported new recipe!"
+#, python-format
 msgid "Imported %s recipes."
-msgstr "Importēta jauna recepte!"
+msgstr ""
 
 #: .\cookbook\integration\paprika.py:46
-#, fuzzy
-#| msgid "Note"
 msgid "Notes"
-msgstr "Piezīme"
+msgstr ""
 
 #: .\cookbook\integration\paprika.py:49
-#, fuzzy
-#| msgid "Information"
 msgid "Nutritional Information"
-msgstr "Informācija"
+msgstr ""
 
 #: .\cookbook\integration\paprika.py:53 .\cookbook\templates\url_import.html:42
 msgid "Source"
@@ -569,7 +513,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:231
 #: .\cookbook\templates\url_import.html:462
 msgid "Servings"
-msgstr "Porciju skaits"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
@@ -577,13 +521,13 @@ msgstr ""
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr "Pagatavošanas laiks"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\base.html:78
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "Pavārgrāmata"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
@@ -607,19 +551,19 @@ msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr "Brokastis"
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr "Pusdienas"
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr "Vakariņas"
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr "Cits"
+msgstr ""
 
 #: .\cookbook\models.py:246
 msgid ""
@@ -630,31 +574,31 @@ msgstr ""
 #: .\cookbook\models.py:300 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:53
 msgid "Search"
-msgstr "Meklēt"
+msgstr ""
 
 #: .\cookbook\models.py:301 .\cookbook\templates\base.html:82
 #: .\cookbook\templates\meal_plan.html:7
 #: .\cookbook\templates\meal_plan_new.html:7 .\cookbook\views\delete.py:181
 #: .\cookbook\views\edit.py:220 .\cookbook\views\new.py:184
 msgid "Meal-Plan"
-msgstr "Maltīšu plāns"
+msgstr ""
 
 #: .\cookbook\models.py:302 .\cookbook\templates\base.html:90
 msgid "Books"
-msgstr "Grāmatas"
+msgstr ""
 
 #: .\cookbook\models.py:310
 msgid "Small"
-msgstr "Mazs"
+msgstr ""
 
 #: .\cookbook\models.py:310
 msgid "Large"
-msgstr "Liels"
+msgstr ""
 
 #: .\cookbook\models.py:310 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr "Jauns"
+msgstr ""
 
 #: .\cookbook\models.py:513
 msgid " is part of a recipe step and cannot be deleted"
@@ -677,22 +621,16 @@ msgid "Raw"
 msgstr ""
 
 #: .\cookbook\models.py:1106
-#, fuzzy
-#| msgid "Food"
 msgid "Food Alias"
-msgstr "Ēdiens"
+msgstr ""
 
 #: .\cookbook\models.py:1106
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Vienības"
+msgstr ""
 
 #: .\cookbook\models.py:1106
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Atslēgvārdi"
+msgstr ""
 
 #: .\cookbook\serializer.py:180
 msgid "A user is required"
@@ -739,7 +677,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:37
 #: .\cookbook\templates\space.html:109
 msgid "Edit"
-msgstr "Rediģēt"
+msgstr ""
 
 #: .\cookbook\tables.py:115 .\cookbook\tables.py:138
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -747,23 +685,23 @@ msgstr "Rediģēt"
 #: .\cookbook\templates\generic\edit_template.html:28
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr "Izdzēst"
+msgstr ""
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr "Kļūda 404"
+msgstr ""
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr "Lapa, kuru jūs meklējat nav atrodama."
+msgstr ""
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr "Doties uz Sākumu"
+msgstr ""
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr "Ziņot par kļūdu"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
@@ -777,7 +715,7 @@ msgstr ""
 #: .\cookbook\templates\settings.html:17
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid "Settings"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
@@ -800,10 +738,8 @@ msgid "Primary"
 msgstr ""
 
 #: .\cookbook\templates\account\email.html:47
-#, fuzzy
-#| msgid "Make Header"
 msgid "Make Primary"
-msgstr "Izveidot galveni"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
@@ -816,10 +752,8 @@ msgid "Remove"
 msgstr ""
 
 #: .\cookbook\templates\account\email.html:58
-#, fuzzy
-#| msgid "Warning"
 msgid "Warning:"
-msgstr "Brīdinājums"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -856,7 +790,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:71
 msgid "Confirm"
-msgstr "Apstiprināt"
+msgstr ""
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -868,7 +802,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:289
 msgid "Login"
-msgstr "Pieslēgties"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -918,18 +852,14 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Change Password"
-msgstr "Izmaiņas saglabātas!"
+msgstr ""
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:76
-#, fuzzy
-#| msgid "Settings"
 msgid "Password"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
@@ -959,10 +889,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "API Tokens"
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -974,10 +902,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "change password"
-msgstr "Izmaiņas saglabātas!"
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
@@ -992,13 +918,11 @@ msgstr ""
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr "Reģistrēties"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:12
-#, fuzzy
-#| msgid "Create your Account"
 msgid "Create an Account"
-msgstr "Izveidot savu kontu"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
@@ -1022,7 +946,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr "Izveidot lietotāju"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
@@ -1040,28 +964,26 @@ msgstr ""
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:279
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr "API dokumentācija"
+msgstr ""
 
 #: .\cookbook\templates\base.html:86
 msgid "Shopping"
-msgstr "Iepirkšanās"
+msgstr ""
 
 #: .\cookbook\templates\base.html:113
 msgid "Keyword"
-msgstr "Atslēgvārds"
+msgstr ""
 
 #: .\cookbook\templates\base.html:125 .\cookbook\views\lists.py:114
-#, fuzzy
-#| msgid "Food"
 msgid "Foods"
-msgstr "Ēdiens"
+msgstr ""
 
 #: .\cookbook\templates\base.html:137
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\space.html:47 .\cookbook\templates\stats.html:26
 #: .\cookbook\views\lists.py:131
 msgid "Units"
-msgstr "Vienības"
+msgstr ""
 
 #: .\cookbook\templates\base.html:151
 #: .\cookbook\templates\shopping_list.html:208
@@ -1070,77 +992,69 @@ msgid "Supermarket"
 msgstr ""
 
 #: .\cookbook\templates\base.html:163
-#, fuzzy
-#| msgid "Batch edit Category"
 msgid "Supermarket Category"
-msgstr "Rediģēt vairākas kategorijas uzreiz"
+msgstr ""
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:180
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Informācija"
+msgstr ""
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:200
-#, fuzzy
-#| msgid "File ID"
 msgid "Files"
-msgstr "Faila ID"
+msgstr ""
 
 #: .\cookbook\templates\base.html:201
 msgid "Batch Edit"
-msgstr "Rediģēt vairākus"
+msgstr ""
 
 #: .\cookbook\templates\base.html:213 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr "Vēsture"
+msgstr ""
 
 #: .\cookbook\templates\base.html:228
 #: .\cookbook\templates\export_response.html:7
 #: .\cookbook\templates\shopping_list.html:310
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr "Eksportēt"
+msgstr ""
 
 #: .\cookbook\templates\base.html:244 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
-msgstr "Importēt recepti"
+msgstr ""
 
 #: .\cookbook\templates\base.html:246
 #: .\cookbook\templates\shopping_list.html:165
 #: .\cookbook\templates\shopping_list.html:188
 msgid "Create"
-msgstr "Izveidot"
+msgstr ""
 
 #: .\cookbook\templates\base.html:259
 #: .\cookbook\templates\generic\list_template.html:14
 #: .\cookbook\templates\space.html:69 .\cookbook\templates\stats.html:43
 msgid "External Recipes"
-msgstr "Ārējās receptes"
+msgstr ""
 
 #: .\cookbook\templates\base.html:262 .\cookbook\templates\space.html:8
 #: .\cookbook\templates\space.html:20 .\cookbook\templates\space.html:150
-#, fuzzy
-#| msgid "Settings"
 msgid "Space Settings"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\base.html:267 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr "Sistēma"
+msgstr ""
 
 #: .\cookbook\templates\base.html:269
 msgid "Admin"
-msgstr "Administrators"
+msgstr ""
 
 #: .\cookbook\templates\base.html:273
 msgid "Markdown Guide"
-msgstr "Markdown rokasgrāmata"
+msgstr ""
 
 #: .\cookbook\templates\base.html:275
 msgid "GitHub"
-msgstr "Github"
+msgstr ""
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
@@ -1148,7 +1062,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
-msgstr "API pārlūks"
+msgstr ""
 
 #: .\cookbook\templates\base.html:284
 msgid "Log out"
@@ -1156,36 +1070,33 @@ msgstr ""
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr "Rediģēt vairākas kategorijas uzreiz"
+msgstr ""
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr "Rediģēt vairākas receptes uzreiz"
+msgstr ""
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
-"Pievienojiet norādītos atslēgvārdus visām receptēm, kurās ir atrodams vārds"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:82
 msgid "Sync"
-msgstr "Sinhronizēt"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr "Pārvaldīt vērotās mapes"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
-"Šajā lapā jūs varat pārvaldīt visas krātuves mapju atrašanās vietas, kuras "
-"jāuzrauga un jāsinhronizē."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr "Ceļam jābūt šādā formātā"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:20
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
@@ -1198,7 +1109,7 @@ msgstr "Ceļam jābūt šādā formātā"
 #: .\cookbook\templates\shopping_list.html:311
 #: .\cookbook\templates\space.html:155
 msgid "Save"
-msgstr "Saglabāt"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
@@ -1206,53 +1117,47 @@ msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
-msgstr "Sinhronizēt tagad!"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:29
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show Recipes"
-msgstr "Iepirkšanās receptes"
+msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:30
-#, fuzzy
-#| msgid "Show Links"
 msgid "Show Log"
-msgstr "Rādīt saites"
+msgstr ""
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr "Recepšu importēšana"
+msgstr ""
 
 #: .\cookbook\templates\batch\waiting.html:28
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
-"Tas var aizņemt dažas minūtes, atkarībā no sinhronizēto recepšu skaita, "
-"lūdzu, uzgaidiet."
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
-msgstr "Recepšu grāmatas"
+msgstr ""
 
 #: .\cookbook\templates\export.html:8 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr "Eksportēt receptes"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr "Importēt jaunu recepti"
+msgstr ""
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
-msgstr "Rediģēt recepti"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr "Rediģēt sastāvdaļas"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
@@ -1264,31 +1169,24 @@ msgid ""
 "them.\n"
 "    "
 msgstr ""
-"\n"
-"         Šādu veidlapu var izmantot, ja nejauši izveidotas divas (vai "
-"vairāk) vienības vai sastāvdaļas, kam vajadzētu būt\n"
-"         vienādām.\n"
-"         Tas apvieno divas vienības vai sastāvdaļas un atjaunina visas "
-"receptes, kas izmanto tās.\n"
-"    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
-msgstr "Vai tiešām vēlaties apvienot šīs divas vienības?"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr "Apvienot"
+msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
-msgstr "Vai tiešām vēlaties apvienot šīs divas sastāvdaļas?"
+msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "Vai tiešām vēlaties izdzēst %(title)s: <b>%(object)s</b> "
+msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
@@ -1304,53 +1202,51 @@ msgstr ""
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr "Skatīt"
+msgstr ""
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr "Dzēst sākotnējo failu"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
 msgid "List"
-msgstr "Saraksts"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:33
 #: .\cookbook\templates\shopping_list.html:33
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Try the new shopping list"
-msgstr "Atvērt iepirkumu sarakstu"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:45
 msgid "Filter"
-msgstr "Filtrs"
+msgstr ""
 
 #: .\cookbook\templates\generic\list_template.html:50
 msgid "Import all"
-msgstr "Importēt visu"
+msgstr ""
 
 #: .\cookbook\templates\generic\table_template.html:76
 #: .\cookbook\templates\recipes_table.html:121
 msgid "previous"
-msgstr "iepriekšējais"
+msgstr ""
 
 #: .\cookbook\templates\generic\table_template.html:98
 #: .\cookbook\templates\recipes_table.html:143
 msgid "next"
-msgstr "nākamais"
+msgstr ""
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr "Skatīt žurnālu"
+msgstr ""
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr "Pagatavošanas žurnāls"
+msgstr ""
 
 #: .\cookbook\templates\import.html:6 .\cookbook\templates\test.html:6
 msgid "Import Recipes"
-msgstr "Importēt receptes"
+msgstr ""
 
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
 #: .\cookbook\templates\import_response.html:7
@@ -1362,25 +1258,25 @@ msgstr "Importēt receptes"
 #: .\cookbook\templates\url_import.html:618 .\cookbook\views\delete.py:89
 #: .\cookbook\views\edit.py:200
 msgid "Import"
-msgstr "Importēt"
+msgstr ""
 
 #: .\cookbook\templates\include\recipe_open_modal.html:7
 #: .\cookbook\views\delete.py:39 .\cookbook\views\edit.py:260
 #: .\cookbook\views\new.py:53
 msgid "Recipe"
-msgstr "Recepte"
+msgstr ""
 
 #: .\cookbook\templates\include\recipe_open_modal.html:18
 msgid "Close"
-msgstr "Aizvērt"
+msgstr ""
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
-msgstr "Atvērt recepti"
+msgstr ""
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr "Drošības brīdinājums"
+msgstr ""
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1394,49 +1290,40 @@ msgid ""
 "can be used.\n"
 "    "
 msgstr ""
-"\n"
-"         Lauki <b>Parole un Token</b> datu bāzē tiek glabāti kā <b>vienkārši "
-"teksti</b>.\n"
-"         Tas ir nepieciešams, jo tie ir nepieciešami, lai veiktu API "
-"pieprasījumus, taču tas arī palielina risku,\n"
-"         ka kāds tos nozog. <br/>\n"
-"         Lai ierobežotu iespējamos bojājumus, varat izmantot tokenus vai "
-"kontus ar ierobežotu piekļuvi.\n"
-"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr "Meklēt recepti ..."
+msgstr ""
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr "Jauna recepte"
+msgstr ""
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr "Izvērsta meklēšana"
+msgstr ""
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr "Atiestatīt meklēšanu"
+msgstr ""
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr "Pēdējoreiz skatīts"
+msgstr ""
 
 #: .\cookbook\templates\index.html:87 .\cookbook\templates\space.html:37
 #: .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr "Receptes"
+msgstr ""
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr "Lai apskatītu receptes, piesakieties"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr "Markdown informācija"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -1453,76 +1340,54 @@ msgid ""
 "below.\n"
 "    "
 msgstr ""
-"\n"
-"         Markdown ir iezīmēšanas valoda, kuru var izmantot, lai viegli "
-"formatētu tekstu.\n"
-"         Šajā vietnē tiek izmantota <a href=\"https://python-markdown.github."
-"io/\" target=\"_blank\">Python Markdown</a> bibliotēka, lai\n"
-"         pārveidotu savu tekstu HTML formātā. Tās pilno dokumentāciju var "
-"atrast\n"
-"         <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
-"target=\"_blank\">šeit</a>.\n"
-"         Nepilnīga, bet, visticamāk, pietiekama dokumentācija ir atrodama "
-"zemāk.\n"
-"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr "Galvenes"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr "Formatēšana"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
 msgstr ""
-"Lai teskts pārietu uz nākamo rindu jāievieto divas atstarpes pēc līnijas "
-"beigām"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
-msgstr "vai atstājot tukšu rindu starp tekstu."
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr "Šis teksts ir treknrakstā"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr "Šis teksts ir kursīvā"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr "Blokzīmes arī ir pieejamas"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr "Saraksti"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
-"Saraksti var tikt numurēti vai nenumurēti. Ir <b>svarīgi atstāt tukšu rindu "
-"pirms saraksta!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr "Numurēts saraksts"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -1531,12 +1396,12 @@ msgstr "Numurēts saraksts"
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr "nenumurēta saraksta punkts"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr "Nenumurēts saraksts"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -1545,19 +1410,17 @@ msgstr "Nenumurēts saraksts"
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr "numurēta saraksta punkts"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr "Attēli un saites"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
-"Saites var formatēt, izmantojot Markdown. Šī lietojumprogramma arī ļauj "
-"ielīmēt saites tieši Markdown laukos bez jebkāda formatējuma."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
@@ -1566,7 +1429,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr "Tabulas"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
@@ -1580,43 +1443,43 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr "Tabula"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr "Galvene"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr "Šūna"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
-msgstr "Maltītes plāna skats"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:18
 msgid "Created by"
-msgstr "Izveidojis"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:20
 #: .\cookbook\templates\shopping_list.html:232
 msgid "Shared with"
-msgstr "Kopīgots ar"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipes_table.html:64
 msgid "Last cooked"
-msgstr "Pēdējoreiz gatavots"
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr "Nekad nav gatavojis."
+msgstr ""
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
-msgstr "Citas maltītes šajā dienā"
+msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
@@ -1624,10 +1487,8 @@ msgid "No Permissions"
 msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:17
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr "Jūs neesat pieteicies un tāpēc nevarat skatīt šo lapu!"
+msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
@@ -1640,12 +1501,10 @@ msgid "No Permission"
 msgstr ""
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to perform this action!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
-msgstr "Jums nav nepieciešamo atļauju, lai veiktu šo darbību!"
+msgstr ""
 
 #: .\cookbook\templates\no_space_info.html:6
 #: .\cookbook\templates\no_space_info.html:13
@@ -1680,10 +1539,8 @@ msgstr ""
 
 #: .\cookbook\templates\no_space_info.html:48
 #: .\cookbook\templates\no_space_info.html:56
-#, fuzzy
-#| msgid "Create User"
 msgid "Create Space"
-msgstr "Izveidot lietotāju"
+msgstr ""
 
 #: .\cookbook\templates\no_space_info.html:51
 msgid "Create your own recipe space."
@@ -1709,48 +1566,46 @@ msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
-msgstr "pēc"
+msgstr ""
 
 #: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:147
 #: .\cookbook\views\edit.py:180
 msgid "Comment"
-msgstr "Komentēt"
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:19
 #: .\cookbook\templates\recipes_table.html:23
 #: .\cookbook\templates\url_import.html:447
 msgid "Recipe Image"
-msgstr "Receptes attēls"
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:51
 #: .\cookbook\templates\url_import.html:452
 msgid "Preparation time ca."
-msgstr "Pagatavošanas laiks apm."
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:57
 #: .\cookbook\templates\url_import.html:457
 msgid "Waiting time ca."
-msgstr "Gaidīšanas laiks apm."
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:60
 msgid "External"
-msgstr "Ārējs"
+msgstr ""
 
 #: .\cookbook\templates\recipes_table.html:86
 msgid "Log Cooking"
-msgstr "Veikt ierakstus pagatavošanas žurnālā"
+msgstr ""
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr "Recepšu Sākums"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
 #: .\cookbook\templates\settings.html:172
-#, fuzzy
-#| msgid "Search String"
 msgid "Search Settings"
-msgstr "Meklēšanas virkne"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1765,10 +1620,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:19
-#, fuzzy
-#| msgid "Search"
 msgid "Search Methods"
-msgstr "Meklēt"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1850,10 +1703,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
-#, fuzzy
-#| msgid "Search Recipe"
 msgid "Search Fields"
-msgstr "Meklēt recepti"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1891,10 +1742,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Meklēt"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1911,47 +1760,35 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:28
 msgid "Account"
-msgstr "Konts"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:35
 msgid "Preferences"
 msgstr ""
 
 #: .\cookbook\templates\settings.html:42
-#, fuzzy
-#| msgid "Settings"
 msgid "API-Settings"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:49
-#, fuzzy
-#| msgid "Search String"
 msgid "Search-Settings"
-msgstr "Meklēšanas virkne"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:56
-#, fuzzy
-#| msgid "Search String"
 msgid "Shopping-Settings"
-msgstr "Meklēšanas virkne"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:65
-#, fuzzy
-#| msgid "Settings"
 msgid "Name Settings"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:73
-#, fuzzy
-#| msgid "Settings"
 msgid "Account Settings"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:75
-#, fuzzy
-#| msgid "Settings"
 msgid "Emails"
-msgstr "Iestatījumi"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:78
 #: .\cookbook\templates\socialaccount\connections.html:11
@@ -1960,35 +1797,31 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:91
 msgid "Language"
-msgstr "Valoda"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:121
 msgid "Style"
-msgstr "Stils"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:142
 msgid "API Token"
-msgstr "API Tokens"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:143
 msgid ""
 "You can use both basic authentication and token based authentication to "
 "access the REST API."
 msgstr ""
-"Lai piekļūtu REST API, varat izmantot gan pamata autentifikāciju, gan tokena "
-"autentifikāciju."
 
 #: .\cookbook\templates\settings.html:160
 msgid ""
 "Use the token as an Authorization header prefixed by the word token as shown "
 "in the following examples:"
 msgstr ""
-"Izmantojiet token, kā Authorization header, kas pievienota vārdam token, kā "
-"parādīts šajos piemēros:"
 
 #: .\cookbook\templates\settings.html:162
 msgid "or"
-msgstr "vai"
+msgstr ""
 
 #: .\cookbook\templates\settings.html:173
 msgid ""
@@ -2043,47 +1876,43 @@ msgid "Perfect for large Databases"
 msgstr ""
 
 #: .\cookbook\templates\settings.html:207
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Shopping Settings"
-msgstr "Iepirkumu saraksts"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr "Pavārgrāmatu iestatīšana"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
-msgstr "Uzstādīt"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:15
 msgid ""
 "To start using this application you must first create a superuser account."
 msgstr ""
-"Lai sāktu izmantot šo lietojumprogrammu, vispirms jāizveido superlietotāja "
-"konts."
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser account"
-msgstr "Izveidojiet superlietotāja kontu"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:8
 #: .\cookbook\templates\shopping_list.html:29
 #: .\cookbook\templates\shopping_list.html:663
 msgid "Shopping List"
-msgstr "Iepirkumu saraksts"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:55
 msgid "Search Recipe"
-msgstr "Meklēt recepti"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:72
 msgid "Shopping Recipes"
-msgstr "Iepirkšanās receptes"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:74
 msgid "No recipes selected"
-msgstr "Nav izvēlēta neviena recepte"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:131
 msgid "Entry Mode"
@@ -2095,11 +1924,11 @@ msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:152
 msgid "Amount"
-msgstr "Summa"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:164
 msgid "Select Unit"
-msgstr "Atlasiet vienību"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:166
 #: .\cookbook\templates\shopping_list.html:189
@@ -2108,11 +1937,11 @@ msgstr "Atlasiet vienību"
 #: .\cookbook\templates\url_import.html:505
 #: .\cookbook\templates\url_import.html:537
 msgid "Select"
-msgstr "Atlasīt"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:187
 msgid "Select Food"
-msgstr "Atlasīt ēdienu"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:218
 msgid "Select Supermarket"
@@ -2120,21 +1949,19 @@ msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:242
 msgid "Select User"
-msgstr "Atlasīt lietotāju"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:258
 msgid "Finished"
-msgstr "Pabeigts"
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:267
-#, fuzzy
-#| msgid "You are offline, shopping list might not syncronize."
 msgid "You are offline, shopping list might not synchronize."
-msgstr "Jūs esat bezsaistē. Iepirkumu saraksts netiek sinhronizēts."
+msgstr ""
 
 #: .\cookbook\templates\shopping_list.html:318
 msgid "Copy/Export"
-msgstr "Kopēt/eksportēt"
+msgstr ""
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -2195,33 +2022,31 @@ msgstr ""
 
 #: .\cookbook\templates\space.html:34 .\cookbook\templates\stats.html:19
 msgid "Number of objects"
-msgstr "Objektu skaits"
+msgstr ""
 
 #: .\cookbook\templates\space.html:54 .\cookbook\templates\stats.html:30
 msgid "Recipe Imports"
-msgstr "Recepšu imports"
+msgstr ""
 
 #: .\cookbook\templates\space.html:62 .\cookbook\templates\stats.html:38
 msgid "Objects stats"
-msgstr "Objektu statistika"
+msgstr ""
 
 #: .\cookbook\templates\space.html:65 .\cookbook\templates\stats.html:41
 msgid "Recipes without Keywords"
-msgstr "Receptes bez atslēgas vārdiem"
+msgstr ""
 
 #: .\cookbook\templates\space.html:73 .\cookbook\templates\stats.html:45
 msgid "Internal Recipes"
-msgstr "Iekšējās receptes"
+msgstr ""
 
 #: .\cookbook\templates\space.html:89
 msgid "Members"
 msgstr ""
 
 #: .\cookbook\templates\space.html:95
-#, fuzzy
-#| msgid "Invite Links"
 msgid "Invite User"
-msgstr "Uzaicinājuma saites"
+msgstr ""
 
 #: .\cookbook\templates\space.html:107
 msgid "User"
@@ -2232,10 +2057,8 @@ msgid "Groups"
 msgstr ""
 
 #: .\cookbook\templates\space.html:119
-#, fuzzy
-#| msgid "Admin"
 msgid "admin"
-msgstr "Administrators"
+msgstr ""
 
 #: .\cookbook\templates\space.html:120
 msgid "user"
@@ -2254,37 +2077,33 @@ msgid "Update"
 msgstr ""
 
 #: .\cookbook\templates\space.html:130
-#, fuzzy
-#| msgid "You cannot edit this storage!"
 msgid "You cannot edit yourself."
-msgstr "Jūs nevarat rediģēt šo krātuvi!"
+msgstr ""
 
 #: .\cookbook\templates\space.html:136
-#, fuzzy
-#| msgid "There are no recipes in this book yet."
 msgid "There are no members in your space yet!"
-msgstr "Šajā grāmatā vēl nav receptes."
+msgstr ""
 
 #: .\cookbook\templates\space.html:143 .\cookbook\templates\system.html:21
 #: .\cookbook\views\lists.py:85
 msgid "Invite Links"
-msgstr "Uzaicinājuma saites"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:4
 msgid "Stats"
-msgstr "Statistika"
+msgstr ""
 
 #: .\cookbook\templates\stats.html:10
 msgid "Statistics"
-msgstr "Statistika"
+msgstr ""
 
 #: .\cookbook\templates\system.html:22
 msgid "Show Links"
-msgstr "Rādīt saites"
+msgstr ""
 
 #: .\cookbook\templates\system.html:32
 msgid "System Information"
-msgstr "Sistēmas informācija"
+msgstr ""
 
 #: .\cookbook\templates\system.html:34
 msgid ""
@@ -2296,27 +2115,20 @@ msgid ""
 "recipes/releases\">here</a>.\n"
 "    "
 msgstr ""
-"\n"
-"         Django Receptes ir atvērtā koda bezmaksas programmatūras "
-"lietojumprogramma. To var atrast vietnē\n"
-"         <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"         Izmaiņu žurnāli ir atrodami <a href=\"https://github.com/vabene1111/"
-"recipes/releases\">šeit</a>.\n"
-"    "
 
 #: .\cookbook\templates\system.html:48
 msgid "Media Serving"
-msgstr "Multivides rādīšana"
+msgstr ""
 
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80
 msgid "Warning"
-msgstr "Brīdinājums"
+msgstr ""
 
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80 .\cookbook\templates\system.html:95
 msgid "Ok"
-msgstr "Ok"
+msgstr ""
 
 #: .\cookbook\templates\system.html:51
 msgid ""
@@ -2327,22 +2139,15 @@ msgid ""
 "            your installation.\n"
 "        "
 msgstr ""
-"Rādīt multivides failus, izmantojot gunicorn / python, <b>nav ieteicams</"
-"b>!\n"
-"             Lūdzu, izpildiet aprakstītās darbības\n"
-"             <a href=\"https://github.com/vabene1111/recipes/releases/"
-"tag/0.8.1\">šeit</a>, lai atjauninātu\n"
-"             jūsu instalāciju.\n"
-"        "
 
 #: .\cookbook\templates\system.html:57 .\cookbook\templates\system.html:73
 #: .\cookbook\templates\system.html:88 .\cookbook\templates\system.html:102
 msgid "Everything is fine!"
-msgstr "Viss ir kārtībā!"
+msgstr ""
 
 #: .\cookbook\templates\system.html:62
 msgid "Secret Key"
-msgstr "Slepenā atslēga"
+msgstr ""
 
 #: .\cookbook\templates\system.html:66
 msgid ""
@@ -2356,19 +2161,10 @@ msgid ""
 "file.\n"
 "        "
 msgstr ""
-"\n"
-"            Jūsu failā <code>.env</code> nav konfigurēts <code>SECRET_KEY</"
-"code>. Django izvēlējās \n"
-"             noklusējuma atslēgu, \n"
-"             kas atrodama komplektā ar instalāciju un ir publiski zināma un "
-"nedroša! Lūdzu, iestatiet\n"
-"             <code>SECRET_KEY</code> konfigurācijas failā <code>.env</"
-"code>.\n"
-"        "
 
 #: .\cookbook\templates\system.html:78
 msgid "Debug Mode"
-msgstr "Atkļūdošanas režīms"
+msgstr ""
 
 #: .\cookbook\templates\system.html:82
 msgid ""
@@ -2380,20 +2176,14 @@ msgid ""
 "file.\n"
 "        "
 msgstr ""
-"\n"
-"            Šī lietojumprogramma joprojām darbojas atkļūdošanas režīmā. Tas, "
-"visticamāk, nav vajadzīgs. Atkļūdošanas režīma izslēgšanai\n"
-"             ir jāiestata\n"
-"             <code>DEBUG = 0</code> konfigurācijas failā <code>.env</code>.\n"
-"        "
 
 #: .\cookbook\templates\system.html:93
 msgid "Database"
-msgstr "Datubāze"
+msgstr ""
 
 #: .\cookbook\templates\system.html:95
 msgid "Info"
-msgstr "Info"
+msgstr ""
 
 #: .\cookbook\templates\system.html:97
 msgid ""
@@ -2403,25 +2193,18 @@ msgid ""
 "            features only work with postgres databases.\n"
 "        "
 msgstr ""
-"\n"
-"             Šī lietojumprogramma nedarbojas, izmantojot Postgres datubāzi. "
-"Tas ir labi, bet nav ieteicams, jo dažas\n"
-"             funkcijas darbojas tikai ar Postgres datu bāzēm.\n"
-"        "
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
-msgstr "URL importēšana"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:33
 msgid "Drag me to your bookmarks to import recipes from anywhere"
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:34
-#, fuzzy
-#| msgid "Bookmark saved!"
 msgid "Bookmark Me!"
-msgstr "Grāmatzīme saglabāta!"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:38
 msgid "URL"
@@ -2433,17 +2216,15 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:44
 msgid "Text"
-msgstr "Teskts"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:46
-#, fuzzy
-#| msgid "File ID"
 msgid "File"
-msgstr "Faila ID"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:64
 msgid "Enter website URL"
-msgstr "Ievadiet vietnes URL"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:104
 msgid "Select recipe files to import or drop them here..."
@@ -2454,10 +2235,8 @@ msgid "Paste json or html source here to load recipe."
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:153
-#, fuzzy
-#| msgid "View Recipe"
 msgid "Preview Recipe Data"
-msgstr "Skatīt recepti"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:154
 msgid "Drag recipe attributes from the right into the appropriate box below."
@@ -2497,16 +2276,12 @@ msgid "Image"
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:246
-#, fuzzy
-#| msgid "Preparation Time"
 msgid "Prep Time"
-msgstr "Pagatavošanas laiks"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:261
-#, fuzzy
-#| msgid "Time"
 msgid "Cook Time"
-msgstr "Laiks"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:282
 msgid "Ingredients dragged here will be appended to current list."
@@ -2515,7 +2290,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:304
 #: .\cookbook\templates\url_import.html:579
 msgid "Instructions"
-msgstr "Instrukcijas"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:309
 msgid ""
@@ -2523,10 +2298,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:332
-#, fuzzy
-#| msgid "Discovered Recipes"
 msgid "Discovered Attributes"
-msgstr "Atrastās receptes"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:334
 msgid ""
@@ -2535,10 +2308,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:351
-#, fuzzy
-#| msgid "Show as header"
 msgid "Show Blank Field"
-msgstr "Rādīt kā galveni"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:356
 msgid "Blank Field"
@@ -2549,54 +2320,46 @@ msgid "Items dragged to Blank Field will be appended."
 msgstr ""
 
 #: .\cookbook\templates\url_import.html:407
-#, fuzzy
-#| msgid "Delete Step"
 msgid "Delete Text"
-msgstr "Dzēst soli"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:420
-#, fuzzy
-#| msgid "Delete Recipe"
 msgid "Delete image"
-msgstr "Dzēst recepti"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:436
 msgid "Recipe Name"
-msgstr "Receptes nosaukums"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:440
-#, fuzzy
-#| msgid "Recipe Markup Specification"
 msgid "Recipe Description"
-msgstr "Recepšu Markup specifikācija"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:504
 #: .\cookbook\templates\url_import.html:536
 #: .\cookbook\templates\url_import.html:596
 msgid "Select one"
-msgstr "Izvēlies vienu"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:554
 msgid "Note"
-msgstr "Piezīme"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:597
-#, fuzzy
-#| msgid "All Keywords"
 msgid "Add Keyword"
-msgstr "Visi atslēgvārdi"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:610
 msgid "All Keywords"
-msgstr "Visi atslēgvārdi"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:613
 msgid "Import all keywords, not only the ones already existing."
-msgstr "Importējiet visus atslēgvārdus, ne tikai jau esošos."
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:640
 msgid "Information"
-msgstr "Informācija"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:642
 msgid ""
@@ -2608,32 +2371,22 @@ msgid ""
 "data feel free to post an example in the\n"
 "                                    github issues."
 msgstr ""
-" Pašlaik tikai vietnes, kurās tiek izmantots ld+json vai microdata ir "
-"iespējams\n"
-"                                     importēt. Lielākā daļa lielo recepšu "
-"lapu to atbalsta. Ja jūsu vietni nevar importēt, bet\n"
-"                                     tev šķiet,\n"
-"                                     ka tai ir sava veida strukturēti dati, "
-"nekautrējieties ievietot piemēru\n"
-"                                     Github."
 
 #: .\cookbook\templates\url_import.html:650
 msgid "Google ld+json Info"
-msgstr "Google ld+json informācija"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:653
 msgid "GitHub Issues"
-msgstr "GitHub Issues"
+msgstr ""
 
 #: .\cookbook\templates\url_import.html:655
 msgid "Recipe Markup Specification"
-msgstr "Recepšu Markup specifikācija"
+msgstr ""
 
 #: .\cookbook\views\api.py:88 .\cookbook\views\api.py:174
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "Parametrs filter_list ir nepareizi formatēts"
+msgstr ""
 
 #: .\cookbook\views\api.py:194 .\cookbook\views\api.py:295
 #, python-brace-format
@@ -2784,11 +2537,11 @@ msgstr ""
 
 #: .\cookbook\views\api.py:971
 msgid "Sync successful!"
-msgstr "Sinhronizācija ir veiksmīga!"
+msgstr ""
 
 #: .\cookbook\views\api.py:976
 msgid "Error synchronizing with Storage"
-msgstr "Sinhronizējot ar krātuvi, radās kļūda"
+msgstr ""
 
 #: .\cookbook\views\api.py:1055
 msgid "Nothing to do."
@@ -2796,29 +2549,25 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1070
 msgid "The requested site provided malformed data and cannot be read."
-msgstr "Pieprasītā vietne sniedza nepareizus datus, kurus nevar nolasīt."
+msgstr ""
 
 #: .\cookbook\views\api.py:1077
 msgid "The requested page could not be found."
-msgstr "Pieprasīto lapu nevarēja atrast."
+msgstr ""
 
 #: .\cookbook\views\api.py:1095
 msgid ""
 "The requested site does not provide any recognized data format to import the "
 "recipe from."
 msgstr ""
-"Pieprasītajā vietnē nav norādīts atzīts datu formāts, no kura varētu "
-"importēt recepti."
 
 #: .\cookbook\views\api.py:1109
 msgid "Connection Refused."
 msgstr ""
 
 #: .\cookbook\views\api.py:1118
-#, fuzzy
-#| msgid "The requested page could not be found."
 msgid "No usable data could be found."
-msgstr "Pieprasīto lapu nevarēja atrast."
+msgstr ""
 
 #: .\cookbook\views\api.py:1134
 msgid "I couldn't find anything to do."
@@ -2840,57 +2589,54 @@ msgstr ""
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] "Partijas rediģēšana pabeigta. %(count)d recepte tika atjaunināta."
-msgstr[1] "Partijas rediģēšana pabeigta. %(count)d receptes tika atjauninātas."
-msgstr[2] "Partijas rediģēšana pabeigta. %(count)d receptes tika atjauninātas."
+msgstr[0] ""
+msgstr[1] ""
 
 #: .\cookbook\views\delete.py:101
 msgid "Monitor"
-msgstr "Uzraudzīt"
+msgstr ""
 
 #: .\cookbook\views\delete.py:125 .\cookbook\views\lists.py:71
 #: .\cookbook\views\new.py:101
 msgid "Storage Backend"
-msgstr "Krātuves aizmugursistēma"
+msgstr ""
 
 #: .\cookbook\views\delete.py:135
 msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
 msgstr ""
-"Nevarēja izdzēst šo krātuves aizmugursistēmu, jo tā tiek izmantota vismaz "
-"vienā uzraugā."
 
 #: .\cookbook\views\delete.py:158
 msgid "Recipe Book"
-msgstr "Recepšu grāmata"
+msgstr ""
 
 #: .\cookbook\views\delete.py:170
 msgid "Bookmarks"
-msgstr "Grāmatzīmes"
+msgstr ""
 
 #: .\cookbook\views\delete.py:192 .\cookbook\views\new.py:238
 msgid "Invite Link"
-msgstr "Uzaicinājuma saite"
+msgstr ""
 
 #: .\cookbook\views\edit.py:125
 msgid "You cannot edit this storage!"
-msgstr "Jūs nevarat rediģēt šo krātuvi!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:149
 msgid "Storage saved!"
-msgstr "Krātuve saglabāta!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:155
 msgid "There was an error updating this storage backend!"
-msgstr "Atjauninot šo krātuves aizmugursistēmu, radās kļūda!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:248
 msgid "Changes saved!"
-msgstr "Izmaiņas saglabātas!"
+msgstr ""
 
 #: .\cookbook\views\edit.py:252
 msgid "Error saving changes!"
-msgstr "Saglabājot izmaiņas, radās kļūda!"
+msgstr ""
 
 #: .\cookbook\views\import_export.py:107 .\cookbook\views\import_export.py:143
 msgid "Importing is not implemented for this provider"
@@ -2904,43 +2650,39 @@ msgstr ""
 
 #: .\cookbook\views\lists.py:25
 msgid "Import Log"
-msgstr "Importēšanas žurnāls"
+msgstr ""
 
 #: .\cookbook\views\lists.py:38
 msgid "Discovery"
-msgstr "Atklāšana"
+msgstr ""
 
 #: .\cookbook\views\lists.py:54
 msgid "Shopping Lists"
-msgstr "Iepirkšanās saraksti"
+msgstr ""
 
 #: .\cookbook\views\lists.py:148
 msgid "Supermarkets"
 msgstr ""
 
 #: .\cookbook\views\lists.py:164
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Shopping Categories"
-msgstr "Iepirkšanās receptes"
+msgstr ""
 
 #: .\cookbook\views\lists.py:217
 msgid "Steps"
-msgstr "Soļi"
+msgstr ""
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Iepirkumu saraksts"
+msgstr ""
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
-msgstr "Importēta jauna recepte!"
+msgstr ""
 
 #: .\cookbook\views\new.py:129
 msgid "There was an error importing this recipe!"
-msgstr "Importējot šo recepti, radās kļūda!"
+msgstr ""
 
 #: .\cookbook\views\new.py:212
 msgid "Hello"
@@ -2998,11 +2740,11 @@ msgstr ""
 
 #: .\cookbook\views\views.py:174
 msgid "You do not have the required permissions to perform this action!"
-msgstr "Jums nav nepieciešamo atļauju, lai veiktu šo darbību!"
+msgstr ""
 
 #: .\cookbook\views\views.py:185
 msgid "Comment saved!"
-msgstr "Komentārs saglabāts!"
+msgstr ""
 
 #: .\cookbook\views\views.py:276
 msgid "This feature is not available in the demo version!"
@@ -3028,27 +2770,22 @@ msgid ""
 "forgotten your superuser credentials please consult the django documentation "
 "on how to reset passwords."
 msgstr ""
-"Iestatīšanas lapu var izmantot tikai pirmā lietotāja izveidei! Ja esat "
-"aizmirsis sava superlietotāja informāciju, lūdzu, skatiet Django "
-"dokumentāciju par paroļu atiestatīšanu."
 
 #: .\cookbook\views\views.py:480
 msgid "Passwords dont match!"
-msgstr "Paroles nesakrīt!"
+msgstr ""
 
 #: .\cookbook\views\views.py:496
 msgid "User has been created, please login!"
-msgstr "Lietotājs ir izveidots, lūdzu, piesakieties!"
+msgstr ""
 
 #: .\cookbook\views\views.py:512
 msgid "Malformed Invite Link supplied!"
-msgstr "Nepareiza uzaicinājuma saite!"
+msgstr ""
 
 #: .\cookbook\views\views.py:519
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You are already member of a space and therefore cannot join this one."
-msgstr "Jūs neesat pieteicies un tāpēc nevarat skatīt šo lapu!"
+msgstr ""
 
 #: .\cookbook\views\views.py:530
 msgid "Successfully joined space."
@@ -3056,7 +2793,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:536
 msgid "Invite Link not valid or already used!"
-msgstr "Uzaicinājuma saite nav derīga vai jau izmantota!"
+msgstr ""
 
 #: .\cookbook\views\views.py:617
 msgid ""
@@ -3069,259 +2806,3 @@ msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
-
-#~ msgid "Time"
-#~ msgstr "Laiks"
-
-#~ msgid "Log Recipe Cooking"
-#~ msgstr "Saglabāt recepšu pagatavošanu žurnālā"
-
-#~ msgid "All fields are optional and can be left empty."
-#~ msgstr "Visi lauki nav obligāti, un tos var atstāt tukšus."
-
-#~ msgid "Rating"
-#~ msgstr "Vērtējums"
-
-#~ msgid "New Unit"
-#~ msgstr "Jaunā vienība"
-
-#~ msgid "New unit that other gets replaced by."
-#~ msgstr "Jauna vienība, ar kuru cits tiek aizstāts."
-
-#~ msgid "Old Unit"
-#~ msgstr "Vecā vienība"
-
-#~ msgid "Unit that should be replaced."
-#~ msgstr "Vienība, kas jāaizstāj."
-
-#~ msgid "New Food"
-#~ msgstr "Jauns ēdiens"
-
-#~ msgid "New food that other gets replaced by."
-#~ msgstr "Jauns ēdiens, ar kuru citi tiek aizstāti."
-
-#~ msgid "Old Food"
-#~ msgstr "Vecais ēdiens"
-
-#~ msgid "New Entry"
-#~ msgstr "Jauns ieraksts"
-
-#~ msgid "Title"
-#~ msgstr "Virsraksts"
-
-#~ msgid "Note (optional)"
-#~ msgstr "Piezīme (neobligāti)"
-
-#~ msgid ""
-#~ "You can use markdown to format this field. See the <a href=\"/docs/"
-#~ "markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">docs here</a>"
-#~ msgstr ""
-#~ "Lai formatētu šo lauku, varat izmantot Markdown. Skatiet <a href=\"/docs/"
-#~ "markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentāciju "
-#~ "šeit</a>"
-
-#~ msgid "Create only note"
-#~ msgstr "Izveidot tikai piezīmi"
-
-#~ msgid "Plan"
-#~ msgstr "Plāns"
-
-#~ msgid "Number of Days"
-#~ msgstr "Dienu skaits"
-
-#~ msgid "Weekday offset"
-#~ msgstr "Nedēļas dienas nobīde"
-
-#~ msgid ""
-#~ "Number of days starting from the first day of the week to offset the "
-#~ "default view."
-#~ msgstr ""
-#~ "Dienu skaits, sākot no nedēļas pirmās dienas, lai nobīdītu noklusējuma "
-#~ "skatu."
-
-#~ msgid "Edit plan types"
-#~ msgstr "Rediģēt plānu veidus"
-
-#~ msgid "Show help"
-#~ msgstr "Parādīt palīdzību"
-
-#~ msgid "Week iCal export"
-#~ msgstr "Nedēļas iCal eksports"
-
-#~ msgid "Add to Shopping"
-#~ msgstr "Pievienot iepirkumiem"
-
-#~ msgid "New meal type"
-#~ msgstr "Jauns maltītes veids"
-
-#~ msgid "Meal Plan Help"
-#~ msgstr "Ēdienreižu plāna palīdzība"
-
-#~ msgid "Units merged!"
-#~ msgstr "Vienības ir apvienotas!"
-
-#~ msgid "Foods merged!"
-#~ msgstr "Ēdieni apvienoti!"
-
-#~ msgid "Utensils"
-#~ msgstr "Piederumi"
-
-#~ msgid "Storage Data"
-#~ msgstr "Krātuves dati"
-
-#~ msgid "Storage Backends"
-#~ msgstr "Krātuves backendi"
-
-#~ msgid "Configure Sync"
-#~ msgstr "Konfigurēt sinhronizāciju"
-
-#~ msgid "Discovered Recipes"
-#~ msgstr "Atrastās receptes"
-
-#~ msgid "Discovery Log"
-#~ msgstr "Atrastās žurnāls"
-
-#~ msgid "Units & Ingredients"
-#~ msgstr "Vienības un sastāvdaļas"
-
-#~ msgid "New Book"
-#~ msgstr "Jauna grāmata"
-
-#~ msgid "Toggle Recipes"
-#~ msgstr "Pārslēgt receptes"
-
-#~ msgid "There are no recipes in this book yet."
-#~ msgstr "Šajā grāmatā vēl nav receptes."
-
-#~ msgid "Waiting Time"
-#~ msgstr "Gaidīšanas laiks"
-
-#~ msgid "Select Keywords"
-#~ msgstr "Atlasīt atslēgvārdus"
-
-#~ msgid "Nutrition"
-#~ msgstr "Uzturs"
-
-#~ msgid "Delete Step"
-#~ msgstr "Dzēst soli"
-
-#~ msgid "Calories"
-#~ msgstr "Kalorijas"
-
-#~ msgid "Carbohydrates"
-#~ msgstr "Ogļhidrāti"
-
-#~ msgid "Fats"
-#~ msgstr "Tauki"
-
-#~ msgid "Proteins"
-#~ msgstr "Olbaltumvielas"
-
-#~ msgid "Step"
-#~ msgstr "Solis"
-
-#~ msgid "Show as header"
-#~ msgstr "Rādīt kā galveni"
-
-#~ msgid "Hide as header"
-#~ msgstr "Slēpt kā galveni"
-
-#~ msgid "Move Up"
-#~ msgstr "Pārvietot uz augšu"
-
-#~ msgid "Move Down"
-#~ msgstr "Pārvietot uz leju"
-
-#~ msgid "Step Name"
-#~ msgstr "Soļa nosaukums"
-
-#~ msgid "Step Type"
-#~ msgstr "Soļa tips"
-
-#~ msgid "Step time in Minutes"
-#~ msgstr "Soļa laiks minūtēs"
-
-#, fuzzy
-#~| msgid "Select one"
-#~ msgid "Select File"
-#~ msgstr "Izvēlies vienu"
-
-#, fuzzy
-#~| msgid "Delete Recipe"
-#~ msgid "Select Recipe"
-#~ msgstr "Dzēst recepti"
-
-#~ msgid "Delete Ingredient"
-#~ msgstr "Dzēst sastāvdaļu"
-
-#~ msgid "Make Header"
-#~ msgstr "Izveidot galveni"
-
-#~ msgid "Make Ingredient"
-#~ msgstr "Pagatavot sastāvdaļu"
-
-#~ msgid "Disable Amount"
-#~ msgstr "Atspējot summu"
-
-#~ msgid "Enable Amount"
-#~ msgstr "Iespējot summu"
-
-#~ msgid "Save & View"
-#~ msgstr "Saglabāt un skatīt"
-
-#~ msgid "Add Step"
-#~ msgstr "Pievienot soli"
-
-#~ msgid "Add Nutrition"
-#~ msgstr "Pievienot uzturu"
-
-#~ msgid "Remove Nutrition"
-#~ msgstr "Noņemt uzturu"
-
-#~ msgid "View Recipe"
-#~ msgstr "Skatīt recepti"
-
-#~ msgid "Delete Recipe"
-#~ msgstr "Dzēst recepti"
-
-#~ msgid ""
-#~ "A username is not required, if left blank the new user can choose one."
-#~ msgstr ""
-#~ "Lietotājvārds nav nepieciešams. Ja tas tiks atstāts tukšs, lietotājs to "
-#~ "varēs izvēlēties pats."
-
-#~ msgid "Imported from"
-#~ msgstr "Importēts no"
-
-#~ msgid "Link"
-#~ msgstr "Saite"
-
-#~ msgid "Logout"
-#~ msgstr "Izlogoties"
-
-#~ msgid "Website Import"
-#~ msgstr "Vietnes importēšana"
-
-#~ msgid "There was an error creating a resource!"
-#~ msgstr "Radot resursu, radās kļūda!"
-
-#~ msgid ""
-#~ "The requested page refused to provide any information (Status Code 403)."
-#~ msgstr ""
-#~ "Pieprasītā lapa atteicās sniegt jebkādu informāciju (statusa kods 403)."
-
-#~ msgid ""
-#~ "Include <code>- [ ]</code> in list for easier usage in markdown based "
-#~ "documents."
-#~ msgstr ""
-#~ "Iekļaujiet <code> - [] </code> sarakstā, lai atvieglotu lietošanu "
-#~ "dokumentos, kuru pamatā ir marķējums (markdown)."
-
-#~ msgid "Backup & Restore"
-#~ msgstr "Dublēšana un atjaunošana"
-
-#~ msgid "Download Backup"
-#~ msgstr "Lejupielādējiet dublējumu"
-
-#~ msgid "Preference for given user already exists"
-#~ msgstr "Priekšroka konkrētam lietotājam jau pastāv"
