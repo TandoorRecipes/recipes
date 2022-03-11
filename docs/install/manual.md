@@ -19,9 +19,25 @@ Give the user permissions: `chown -R recipes:www-data /var/www/recipes`
 
 Create virtual env: `python3.9 -m venv /var/www/recipes`
 
-Install Javascript Tools
+Install Javascript Tools (nodejs >= 12 required)
 ```shell
-sudo apt install nodejs
+### Just use one of these possibilites!
+# Using Ubuntu
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Using Debian, as root
+curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+apt-get install -y nodejs
+
+# Using a RPM based distro
+## ... as root
+curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
+
+## ... no root privileges
+curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
+```
+```shell
 sudo npm install --global yarn
 ```
 
@@ -29,6 +45,12 @@ sudo npm install --global yarn
 
 ```shell
 sudo apt install libpq-dev postgresql
+```
+
+### Install LDAP requirements
+
+```shell
+sudo apt install libsasl2-dev python-dev libldap2-dev libssl-dev
 ```
 
 ###Install project requirements
