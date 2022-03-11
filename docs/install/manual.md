@@ -41,6 +41,9 @@ curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
 sudo npm install --global yarn
 ```
 
+!!! info "NodeJS installation issues"
+    If you run into problems with the NodeJS installation, please refer to the [official documentation](https://github.com/nodesource/distributions/blob/master/README.md).
+
 ### Install postgresql requirements
 
 ```shell
