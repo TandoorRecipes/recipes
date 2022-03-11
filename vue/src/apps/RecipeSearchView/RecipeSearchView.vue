@@ -1148,7 +1148,10 @@ export default {
         },
         showSQL: function () {
             let params = this.buildParams()
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {})
+            params.options.query.debug = true
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
+                console.log(result.data)
+            })
         },
         // TODO refactor to combine with load KeywordChildren
         loadFoodChildren({ action, parentNode, callback }) {
