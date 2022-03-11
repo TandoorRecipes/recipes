@@ -53,7 +53,7 @@ sudo apt install libpq-dev postgresql
 sudo apt install libsasl2-dev python-dev libldap2-dev libssl-dev
 ```
 
-###Install project requirements
+### Install project requirements
 
 !!! warning "Update"
     Dependencies change with most updates so the following steps need to be re-run with every update or else the application might stop working.
