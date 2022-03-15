@@ -7,35 +7,35 @@
                     <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i></div>
                 </b-button>
             </b-col>
-            <b-col cols="2" md="1" class="align-items-center d-flex">
+            <b-col cols="1" md="1" class="align-items-center d-flex">
                 <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true" @click.stop="$emit('open-context-menu', $event, entries)">
                     <button
                         aria-haspopup="true"
                         aria-expanded="false"
                         type="button"
                         :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 dropdown-toggle-no-caret"
                     >
-                        <i class="fas fa-ellipsis-v fa-lg"></i>
+                        <i class="fas fa-ellipsis-v"></i>
                     </button>
                 </div>
             </b-col>
             <b-col cols="1" class="px-1 justify-content-center align-items-center d-none d-md-flex">
                 <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
             </b-col>
-            <b-col cols="7" md="9">
+            <b-col cols="8" md="9">
                 <b-row class="d-flex h-100">
-                    <b-col cols="5" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
+                    <b-col cols="6" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
                         <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong> {{ Object.entries(formatAmount)[0][0] }}
                     </b-col>
-                    <b-col cols="5" md="3" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
+                    <b-col cols="6" md="3" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
                         <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">
                             {{ x[1] }} &ensp;
                             {{ x[0] }}
                         </div>
                     </b-col>
 
-                    <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
+                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
                         {{ formatFood }}
                     </b-col>
                     <b-col cols="3" data-html2canvas-ignore="true" class="align-items-center d-none d-md-flex justify-content-end">
@@ -179,7 +179,7 @@ export default {
         formatAmount: function () {
             let amount = {}
             this.entries.forEach((entry) => {
-                let unit = entry?.unit?.name ?? "----"
+                let unit = entry?.unit?.name ?? "---"
                 if (entry.amount) {
                     if (amount[unit]) {
                         amount[unit] += entry.amount
