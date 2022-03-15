@@ -105,7 +105,7 @@
                                                     class="btn dropdown-toggle btn-link text-decoration-none text-dark pr-2 dropdown-toggle-no-caret"
                                                     @click.stop="openContextMenu($event, s, true)"
                                                 >
-                                                    <i class="fas fa-ellipsis-v fa-lg"></i>
+                                                    <i class="fas fa-ellipsis-v"></i>
                                                 </button>
 
                                                 <b-button
@@ -116,7 +116,7 @@
                                                     :aria-expanded="'true' ? x == 'false' : 'true'"
                                                 >
                                                     <i class="fa fa-chevron-right rotate" />
-                                                    <span class="h5 ml-2 text-secondary">{{ i }}</span>
+                                                    <span class="h6 ml-2 text-secondary">{{ i }}</span>
                                                 </b-button>
                                             </div>
 
