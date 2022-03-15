@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-03-06 19:35+0000\n"
+"PO-Revision-Date: 2022-03-16 22:31+0000\n"
 "Last-Translator: Adrian M <adriankoooo@gmail.com>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
@@ -34,7 +34,7 @@ msgstr "Alapértelmezett mértékegység"
 
 #: .\cookbook\forms.py:57
 msgid "Use fractions"
-msgstr ""
+msgstr "Törtek használata"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
@@ -42,46 +42,44 @@ msgstr ""
 
 #: .\cookbook\forms.py:59
 msgid "Theme"
-msgstr ""
+msgstr "Kinézet"
 
 #: .\cookbook\forms.py:60
 msgid "Navbar color"
-msgstr ""
+msgstr "Navigációs sáv színe"
 
 #: .\cookbook\forms.py:61
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Ragadós navigációs sáv"
 
 #: .\cookbook\forms.py:62
 msgid "Default page"
-msgstr ""
+msgstr "Alapértelmezett oldal"
 
 #: .\cookbook\forms.py:63
 msgid "Show recent recipes"
-msgstr ""
+msgstr "Legutóbbi receptek megjelenítése"
 
 #: .\cookbook\forms.py:64
 msgid "Search style"
-msgstr ""
+msgstr "Keresés stílusa"
 
 #: .\cookbook\forms.py:65
 msgid "Plan sharing"
-msgstr ""
+msgstr "Terv megosztása"
 
 #: .\cookbook\forms.py:66
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Hozzávalók"
+msgstr "Összetevők tizedesjegyei"
 
 #: .\cookbook\forms.py:67
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Bevásárlólista automatikus szinkronizálásának periódusa"
 
 #: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:77 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "Megjegyzések"
 
 #: .\cookbook\forms.py:72
 msgid ""
@@ -107,6 +105,7 @@ msgstr ""
 #: .\cookbook\forms.py:78
 msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr ""
+"A tápanyag energiamennyiségek kalória helyett joule-ban történő megjelenítése"
 
 #: .\cookbook\forms.py:79
 msgid "Users with whom newly created meal plans should be shared by default."
@@ -118,15 +117,17 @@ msgstr ""
 
 #: .\cookbook\forms.py:82
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Nemrég megtekintett receptek megjelenítése a keresési oldalon."
 
 #: .\cookbook\forms.py:83
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "A kerekítendő összetevők tizedesjegyeinek száma."
 
 #: .\cookbook\forms.py:84
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr ""
+"Ha azt szeretné, hogy hozzászólásokat tudjon létrehozni és látni a receptek "
+"alatt."
 
 #: .\cookbook\forms.py:86 .\cookbook\forms.py:493
 msgid ""
