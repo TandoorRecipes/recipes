@@ -109,6 +109,9 @@ in combination with [jrcs's letsencrypt companion](https://hub.docker.com/r/jrcs
 
 Please refer to the appropriate documentation on how to setup the reverse proxy and networks.
 
+!!!!!!warning "Adjust client_max_body_size"
+    By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the ```client_max_body_size``` variable in the jwilder nginx configuration. 
+
 Remember to add the appropriate environment variables to the `.env` file:
 
 ```
