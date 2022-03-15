@@ -14,8 +14,8 @@ It can be run and accessed on port 80 using:
 
 ```shell
 docker run -d \
-    -v ./staticfiles:/opt/recipes/staticfiles \
-    -v ./mediafiles:/opt/recipes/mediafiles \
+    -v "$(pwd)"/staticfiles:/opt/recipes/staticfiles \
+    -v "$(pwd)"/mediafiles:/opt/recipes/mediafiles \
     -p 80:8080 \
     -e SECRET_KEY=YOUR_SECRET_KEY \
     -e DB_ENGINE=django.db.backends.postgresql \
