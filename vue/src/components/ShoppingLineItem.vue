@@ -1,13 +1,13 @@
 <template>
     <div id="shopping_line_item">
         <b-row align-h="start">
-            <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0" v-if="settings.left_handed">
+            <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0" v-if="settings.left_handed">
                 <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
                 <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
                     <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i></div>
                 </b-button>
             </b-col>
-            <b-col cols="1" md="1" class="align-items-center d-flex">
+            <b-col cols="1"  class="align-items-center d-flex">
                 <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true" @click.stop="$emit('open-context-menu', $event, entries)">
                     <button
                         aria-haspopup="true"
@@ -23,7 +23,7 @@
             <b-col cols="1" class="px-1 justify-content-center align-items-center d-none d-md-flex">
                 <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
             </b-col>
-            <b-col cols="8" md="9">
+            <b-col cols="8" >
                 <b-row class="d-flex h-100">
                     <b-col cols="6" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
                         <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong> {{ Object.entries(formatAmount)[0][0] }}
@@ -47,7 +47,7 @@
                     </b-col>
                 </b-row>
             </b-col>
-            <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none" v-if="!settings.left_handed">
+            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0" v-if="!settings.left_handed">
                 <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
                     <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i></div>
                 </b-button>
