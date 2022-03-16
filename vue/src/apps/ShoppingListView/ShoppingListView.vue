@@ -123,9 +123,9 @@
                                             <div class="collapse" :id="'section-' + sectionID(x, i)" visible role="tabpanel" :class="{ show: x == 'false' }">
                                                 <!-- passing an array of values to the table grouped by Food -->
                                                 <transition-group name="slide-fade">
-                                                    <div class="mx-4" v-for="(entries, x) in Object.entries(s)" :key="x">
+                                                    <div class="ml-4 mr-0" v-for="(entries, x) in Object.entries(s)" :key="x">
                                                         <transition name="slide-fade" mode="out-in">
-                                                            <ShoppingLineItem
+                                                            <shopping-line-item
                                                                 :entries="entries[1]"
                                                                 :groupby="group_by"
                                                                 :settings="settings"
