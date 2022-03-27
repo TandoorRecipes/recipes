@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-03-16 22:31+0000\n"
+"PO-Revision-Date: 2022-03-27 18:00+0000\n"
 "Last-Translator: Adrian M <adriankoooo@gmail.com>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
@@ -110,10 +110,12 @@ msgstr ""
 #: .\cookbook\forms.py:79
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
+"Azok a felhasználók, akikkel az újonnan létrehozott étkezési terveket "
+"alapértelmezés szerint meg kell osztani."
 
 #: .\cookbook\forms.py:80
 msgid "Users with whom to share shopping lists."
-msgstr ""
+msgstr "Felhasználók, akikkel megosztja a bevásárlólistákat."
 
 #: .\cookbook\forms.py:82
 msgid "Show recently viewed recipes on search page."
@@ -136,24 +138,32 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"A 0-ra állítás kikapcsolja az automatikus szinkronizálást. A bevásárlólista "
+"megtekintésekor a lista minden beállított másodpercben frissül, hogy "
+"szinkronizálja a más által esetleg elvégzett módosításokat. Hasznos, ha több "
+"emberrel együtt vásárol, de egy kicsit több mobiladatot használhat. Ha "
+"alacsonyabb, mint a lehetséges határérték, akkor a mentéskor visszaáll."
 
 #: .\cookbook\forms.py:89
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "A navigációs sávot az oldal tetejére rögzíti."
 
 #: .\cookbook\forms.py:90 .\cookbook\forms.py:496
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
+"Automatikusan hozzáadja az étkezési terv hozzávalóit a bevásárlólistához."
 
 #: .\cookbook\forms.py:91
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Mellőzze a kéznél lévő összetevőket."
 
 #: .\cookbook\forms.py:108
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Mindkét mező opcionális. Ha egyiket sem adjuk meg, akkor a felhasználónév "
+"jelenik meg helyette"
 
 #: .\cookbook\forms.py:129 .\cookbook\forms.py:298
 #: .\cookbook\templates\url_import.html:161
@@ -185,13 +195,16 @@ msgstr "Tárhely UID"
 
 #: .\cookbook\forms.py:164
 msgid "Default"
-msgstr ""
+msgstr "Alapértelmezett"
 
 #: .\cookbook\forms.py:175 .\cookbook\templates\url_import.html:97
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"A duplikációk elkerülése érdekében a meglévő receptekkel azonos nevű "
+"recepteket a rendszer figyelmen kívül hagyja. Jelölje be ezt a négyzetet, ha "
+"mindent importálni szeretne."
 
 #: .\cookbook\forms.py:197
 msgid "Add your comment: "
@@ -200,28 +213,34 @@ msgstr "Add hozzá a kommented:"
 #: .\cookbook\forms.py:212
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
+"A dropbox esetében hagyja üresen, a nextcloud esetében pedig adja meg az "
+"alkalmazás jelszavát."
 
 #: .\cookbook\forms.py:219
 msgid "Leave empty for nextcloud and enter api token for dropbox."
 msgstr ""
+"A nextcloud esetében hagyja üresen, a dropbox esetében pedig adja meg az api "
+"tokent."
 
 #: .\cookbook\forms.py:228
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Hagyja üresen a dropbox esetén, és csak a nextcloud alap url-jét adja meg "
+"(<code>/remote.php/webdav/</code> automatikusan hozzáadódik)"
 
 #: .\cookbook\forms.py:266 .\cookbook\views\edit.py:166
 msgid "Storage"
-msgstr ""
+msgstr "Tárhely"
 
 #: .\cookbook\forms.py:268
 msgid "Active"
-msgstr ""
+msgstr "Aktív"
 
 #: .\cookbook\forms.py:274
 msgid "Search String"
-msgstr ""
+msgstr "Keresési kifejezés"
 
 #: .\cookbook\forms.py:301
 msgid "File ID"
@@ -229,11 +248,13 @@ msgstr "Fájl ID:"
 
 #: .\cookbook\forms.py:323
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "Legalább egy receptet vagy címet kell megadnia."
 
 #: .\cookbook\forms.py:336
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
+"A beállításokban megadhatja a receptek megosztására szolgáló alapértelmezett "
+"felhasználókat."
 
 #: .\cookbook\forms.py:337
 msgid ""
@@ -243,31 +264,36 @@ msgstr ""
 
 #: .\cookbook\forms.py:363
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Elérte a felhasználók maximális számát ezen a területen."
 
 #: .\cookbook\forms.py:369
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Az e-mail cím már foglalt!"
 
 #: .\cookbook\forms.py:377
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"Az e-mail cím megadása nem kötelező, de ha van, a meghívó linket elküldi a "
+"felhasználónak."
 
 #: .\cookbook\forms.py:392
 msgid "Name already taken."
-msgstr ""
+msgstr "A név már foglalt."
 
 #: .\cookbook\forms.py:403
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Feltételek és adatvédelem elfogadása"
 
 #: .\cookbook\forms.py:435
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Meghatározza, hogy a keresés mennyire bizonytalan, ha trigram-hasonlósági "
+"párosítást használ (pl. az alacsony értékek azt jelentik, hogy több gépelési "
+"hibát figyelmen kívül hagynak)."
 
 #: .\cookbook\forms.py:445
 msgid ""
@@ -280,72 +306,86 @@ msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"A receptek szerkesztése és importálása során az egységek, kulcsszavak és "
+"összetevők bizonytalan megfeleltetése."
 
 #: .\cookbook\forms.py:448
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Az ékezetek figyelmen kívül hagyásával keresendő mezők.  Ennek az opciónak a "
+"kiválasztása javíthatja vagy ronthatja a keresés minőségét a nyelvtől függően"
 
 #: .\cookbook\forms.py:450
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Részleges egyezések keresésére szolgáló mezők.  (pl. a 'Pie' keresése a "
+"'pie' és a 'piece' és a 'soapie' kifejezéseket adja vissza.)"
 
 #: .\cookbook\forms.py:452
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Mezők a szó eleji egyezések kereséséhez. (pl. a 'sa' keresés a 'salad' és a "
+"'sandwich' kifejezéseket adja vissza)"
 
 #: .\cookbook\forms.py:454
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Mezők a \" bizonytalan\" kereséshez. (pl. a 'recpie' keresés megtalálja a "
+"'recipe' szót.) Megjegyzés: ez az opció ütközik a 'web' és a 'raw' keresési "
+"módszerekkel."
 
 #: .\cookbook\forms.py:456
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Mezők a teljes szöveges kereséshez.  Megjegyzés: A 'web', 'phrase' és 'raw' "
+"keresési módszerek csak teljes szöveges mezőkkel működnek."
 
 #: .\cookbook\forms.py:460
 msgid "Search Method"
-msgstr ""
+msgstr "Keresési módszer"
 
 #: .\cookbook\forms.py:461
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Bizonytalan keresések"
 
 #: .\cookbook\forms.py:462
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ékezetek ignorálása"
 
 #: .\cookbook\forms.py:463
 msgid "Partial Match"
-msgstr ""
+msgstr "Részleges találat"
 
 #: .\cookbook\forms.py:464
 msgid "Starts Wtih"
-msgstr ""
+msgstr "Kezdődik a következővel"
 
 #: .\cookbook\forms.py:465
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Bizonytalan keresés"
 
 #: .\cookbook\forms.py:466
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Szöveg"
+msgstr "Teljes szöveg"
 
 #: .\cookbook\forms.py:491
 msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"A felhasználók látni fogják a bevásárlólistára felvett összes terméket.  "
+"Ahhoz, hogy láthassák a saját listájukon szereplő tételeket, hozzá kell "
+"adniuk téged."
 
 #: .\cookbook\forms.py:497
 msgid ""
