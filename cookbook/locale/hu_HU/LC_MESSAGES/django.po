@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-18 14:52+0100\n"
-"PO-Revision-Date: 2022-03-27 18:00+0000\n"
+"PO-Revision-Date: 2022-03-28 01:56+0000\n"
 "Last-Translator: Adrian M <adriankoooo@gmail.com>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
@@ -392,107 +392,118 @@ msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Amikor étkezési tervet ad hozzá a bevásárlólistához (kézzel vagy "
+"automatikusan), vegye fel az összes kapcsolódó receptet."
 
 #: .\cookbook\forms.py:498
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Amikor étkezési tervet ad hozzá a bevásárlólistához (kézzel vagy "
+"automatikusan), zárja ki a kéznél lévő összetevőket."
 
 #: .\cookbook\forms.py:499
 msgid "Default number of hours to delay a shopping list entry."
-msgstr ""
+msgstr "A bevásárlólista bejegyzés késleltetésének alapértelmezett ideje."
 
 #: .\cookbook\forms.py:500
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Szűrje a bevásárlólistát úgy, hogy csak a szupermarket kategóriákat "
+"tartalmazza."
 
 #: .\cookbook\forms.py:501
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "A legutóbbi bevásárlólista bejegyzések megjelenítendő napjai."
 
 #: .\cookbook\forms.py:502
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
+"Jelölje meg a \" Kéznél van\" jelölést, ha a bevásárlólistáról kipipálta az "
+"élelmiszert."
 
 #: .\cookbook\forms.py:503
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "A CSV exportáláshoz használandó elválasztójel."
 
 #: .\cookbook\forms.py:504
 msgid "Prefix to add when copying list to the clipboard."
-msgstr ""
+msgstr "A lista vágólapra másolásakor hozzáadandó előtag."
 
 #: .\cookbook\forms.py:508
 msgid "Share Shopping List"
-msgstr ""
+msgstr "Bevásárlólista megosztása"
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
-msgstr ""
+msgstr "Automatikus szinkronizálás"
 
 #: .\cookbook\forms.py:510
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Automatikus étkezési terv hozzáadása"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Kéznél levő kihagyása"
 
 #: .\cookbook\forms.py:512
 msgid "Include Related"
-msgstr ""
+msgstr "Tartalmazza a kapcsolódókat"
 
 #: .\cookbook\forms.py:513
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Alapértelmezett késleltetési órák"
 
 #: .\cookbook\forms.py:514
 msgid "Filter to Supermarket"
-msgstr ""
+msgstr "Szűrő a szupermarkethez"
 
 #: .\cookbook\forms.py:515
 msgid "Recent Days"
-msgstr ""
+msgstr "Legutóbbi napok"
 
 #: .\cookbook\forms.py:516
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "CSV elválasztó"
 
 #: .\cookbook\forms.py:517 .\cookbook\templates\shopping_list.html:322
 msgid "List Prefix"
-msgstr ""
+msgstr "Lista előtagja"
 
 #: .\cookbook\forms.py:518
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Automatikus Kéznél lévő"
 
 #: .\cookbook\forms.py:528
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Élelmiszer-öröklés visszaállítása"
 
 #: .\cookbook\forms.py:529
 msgid "Reset all food to inherit the fields configured."
-msgstr ""
+msgstr "Állítsa vissza az összes ételt, hogy örökölje a konfigurált mezőket."
 
 #: .\cookbook\forms.py:541
 msgid "Fields on food that should be inherited by default."
 msgstr ""
+"Az élelmiszerek azon mezői, amelyeket alapértelmezés szerint örökölni kell."
 
 #: .\cookbook\forms.py:542
 msgid "Show recipe counts on search filters"
-msgstr ""
+msgstr "A receptek számának megjelenítése a keresési szűrőkön"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"A spamek elkerülése érdekében a kért e-mailt nem küldtük el. Kérjük, várjon "
+"néhány percet, és próbálja meg újra."
 
 #: .\cookbook\helper\permission_helper.py:136
 #: .\cookbook\helper\permission_helper.py:159 .\cookbook\views\views.py:148
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Ön nincs bejelentkezve, ezért nem tudja megtekinteni ezt az oldalt!"
 
 #: .\cookbook\helper\permission_helper.py:140
 #: .\cookbook\helper\permission_helper.py:146
@@ -504,104 +515,111 @@ msgstr ""
 #: .\cookbook\views\views.py:159 .\cookbook\views\views.py:166
 #: .\cookbook\views\views.py:232
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "Nem rendelkezik a szükséges jogosultságokkal az oldal megtekintéséhez!"
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187
 #: .\cookbook\helper\permission_helper.py:202
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
+"Nem léphetsz kapcsolatba ezzel az objektummal, mivel nem a te tulajdonod!"
 
 #: .\cookbook\helper\recipe_search.py:473
 msgid "One of queryset or hash_key must be provided"
-msgstr ""
+msgstr "A queryset vagy a hash_key valamelyikét meg kell adni"
 
 #: .\cookbook\helper\shopping_helper.py:54
 msgid "You must supply a recipe or mealplan"
-msgstr ""
+msgstr "Receptet vagy étkezési tervet kell megadnia"
 
 #: .\cookbook\helper\shopping_helper.py:58
 msgid "You must supply a created_by"
-msgstr ""
+msgstr "Meg kell adnia egy created_by"
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Nem sikerült elemezni a sablon kódját."
 
 #: .\cookbook\integration\integration.py:200
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"Az importáló egy .zip fájlt várt. A megfelelő importálótípust választotta az "
+"adataihoz?"
 
 #: .\cookbook\integration\integration.py:203
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Az importálás során váratlan hiba történt. Kérjük, ellenőrizze, hogy "
+"érvényes fájlt töltött-e fel."
 
 #: .\cookbook\integration\integration.py:208
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "A következő recepteket figyelmen kívül hagytuk, mert már léteztek:"
 
 #: .\cookbook\integration\integration.py:212
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "Importálva %s recept."
 
 #: .\cookbook\integration\paprika.py:46
 msgid "Notes"
-msgstr ""
+msgstr "Jegyzetek"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Nutritional Information"
-msgstr ""
+msgstr "Táplálkozási információk"
 
 #: .\cookbook\integration\paprika.py:53 .\cookbook\templates\url_import.html:42
 msgid "Source"
-msgstr ""
+msgstr "Forrás"
 
 #: .\cookbook\integration\saffron.py:23
 #: .\cookbook\templates\include\log_cooking.html:18
 #: .\cookbook\templates\url_import.html:231
 #: .\cookbook\templates\url_import.html:462
 msgid "Servings"
-msgstr ""
+msgstr "Adagok"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "Várakozási idő"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "Előkészítési idő"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\base.html:78
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr ""
+msgstr "Szakácskönyv"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "Szekció"
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Újraépíti a teljes szöveges keresési indexet a Recept oldalon"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgress databases use full text search, no index to rebuild"
 msgstr ""
+"Csak a Postgress adatbázisok használnak teljes szöveges keresést, nincs "
+"újjáépítendő index"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "A receptindex újjáépítése befejeződött."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "A receptindex újjáépítése sikertelen."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -617,46 +635,48 @@ msgstr "Vacsora"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr ""
+msgstr "Egyéb"
 
 #: .\cookbook\models.py:246
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Maximális tárhely a fájloknak MB-ban. 0 a korlátlan, -1 a fájlfeltöltés "
+"letiltásához."
 
 #: .\cookbook\models.py:300 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:53
 msgid "Search"
-msgstr ""
+msgstr "Keresés"
 
 #: .\cookbook\models.py:301 .\cookbook\templates\base.html:82
 #: .\cookbook\templates\meal_plan.html:7
 #: .\cookbook\templates\meal_plan_new.html:7 .\cookbook\views\delete.py:181
 #: .\cookbook\views\edit.py:220 .\cookbook\views\new.py:184
 msgid "Meal-Plan"
-msgstr ""
+msgstr "Étkezési terv"
 
 #: .\cookbook\models.py:302 .\cookbook\templates\base.html:90
 msgid "Books"
-msgstr ""
+msgstr "Könyvek"
 
 #: .\cookbook\models.py:310
 msgid "Small"
-msgstr ""
+msgstr "Kicsi"
 
 #: .\cookbook\models.py:310
 msgid "Large"
-msgstr ""
+msgstr "Nagy"
 
 #: .\cookbook\models.py:310 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #: .\cookbook\models.py:512
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " egy recept része, ezért nem törölhető"
 
 #: .\cookbook\models.py:586 .\cookbook\templates\url_import.html:44
 msgid "Text"
@@ -664,7 +684,7 @@ msgstr "Szöveg"
 
 #: .\cookbook\models.py:586
 msgid "Time"
-msgstr ""
+msgstr "Idő"
 
 #: .\cookbook\models.py:586 .\cookbook\templates\url_import.html:46
 #, fuzzy
@@ -677,23 +697,23 @@ msgstr "Fájl ID:"
 #: .\cookbook\views\delete.py:39 .\cookbook\views\edit.py:260
 #: .\cookbook\views\new.py:53
 msgid "Recipe"
-msgstr ""
+msgstr "Recept"
 
 #: .\cookbook\models.py:1041 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Egyszerű"
 
 #: .\cookbook\models.py:1042 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Kifejezés"
 
 #: .\cookbook\models.py:1043 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: .\cookbook\models.py:1044 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Nyers"
 
 #: .\cookbook\models.py:1082
 #, fuzzy
@@ -703,7 +723,7 @@ msgstr "Új Étel"
 
 #: .\cookbook\models.py:1082
 msgid "Unit Alias"
-msgstr ""
+msgstr "Egység álneve"
 
 #: .\cookbook\models.py:1082
 #, fuzzy
@@ -713,42 +733,46 @@ msgstr "Kulcsszavak"
 
 #: .\cookbook\serializer.py:175
 msgid "A user is required"
-msgstr ""
+msgstr "Egy felhasználó szükséges"
 
 #: .\cookbook\serializer.py:195
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "A fájlok feltöltése nem engedélyezett ezen a tárhelyen."
 
 #: .\cookbook\serializer.py:206
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Elérte a fájlfeltöltési limitet."
 
 #: .\cookbook\serializer.py:962
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Meglévő bevásárlólista frissítése"
 
 #: .\cookbook\serializer.py:964
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"A hozzáadandó összetevők azonosítóinak listája a receptből, ha nincs "
+"megadva, az összes összetevő hozzáadásra kerül."
 
 #: .\cookbook\serializer.py:965
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
-msgstr ""
+msgstr "A list_recipe azonosító és a 0 adag megadása törli a bevásárlólistát."
 
 #: .\cookbook\serializer.py:973
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "A bevásárlólistához hozzáadandó élelmiszerek mennyisége"
 
 #: .\cookbook\serializer.py:974
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "A bevásárlólistához használandó egység azonosítója"
 
 #: .\cookbook\serializer.py:975
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Ha igazra van állítva, akkor minden élelmiszert töröl az aktív "
+"bevásárlólistákról."
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
@@ -756,7 +780,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:37
 #: .\cookbook\templates\space.html:109
 msgid "Edit"
-msgstr ""
+msgstr "Szerkesztés"
 
 #: .\cookbook\tables.py:115 .\cookbook\tables.py:138
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -764,28 +788,28 @@ msgstr ""
 #: .\cookbook\templates\generic\edit_template.html:28
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr ""
+msgstr "Törlés"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "404-es hiba"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr ""
+msgstr "A keresett oldal nem található."
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "Vissza a főoldalra"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "Hiba jelentése"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "E-mail címek"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -794,68 +818,70 @@ msgstr ""
 #: .\cookbook\templates\settings.html:17
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid "Settings"
-msgstr ""
+msgstr "Beállítások"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "A te fiókodhoz a következő e-mail címek tartoznak:"
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "Ellenőrizve"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "Nem ellenőrzött"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "Elsődleges"
 
 #: .\cookbook\templates\account\email.html:47
 msgid "Make Primary"
-msgstr ""
+msgstr "Legyen elsődleges"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Ellenőrzés újraküldése"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\generic\delete_template.html:56
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
-msgstr ""
+msgstr "Eltávolítás"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "Figyelmeztetés:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Jelenleg nincs e-mail címe beállítva. Tényleg adjon hozzá egy e-mail címet, "
+"hogy értesítéseket kaphasson, visszaállíthassa a jelszavát stb."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "E-mail cím hozzáadása"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "E-mail hozzáadása"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Tényleg el akarja távolítani a kiválasztott e-mail címet?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "E-mail cím megerősítése"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -869,7 +895,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:71
 msgid "Confirm"
-msgstr ""
+msgstr "Megerősítés"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -881,48 +907,48 @@ msgstr ""
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:289
 msgid "Login"
-msgstr ""
+msgstr "Bejelentkezés"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
 #: .\cookbook\templates\account\signup.html:69
 #: .\cookbook\templates\account\signup_closed.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "Bejelentkezés"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "Regisztráció"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\login.html:41
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "Jelszó visszaállítása"
 
 #: .\cookbook\templates\account\login.html:40
 msgid "Lost your password?"
-msgstr ""
+msgstr "Elfelejtette a jelszavát?"
 
 #: .\cookbook\templates\account\login.html:52
 msgid "Social Login"
-msgstr ""
+msgstr "Közösségi bejelentkezés"
 
 #: .\cookbook\templates\account\login.html:53
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "A bejelentkezéshez a következő szolgáltatók bármelyikét használhatja."
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "Kijelentkezés"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Biztos, hogy ki akarsz jelentkezni?"
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
@@ -932,44 +958,48 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
 msgid "Change Password"
-msgstr ""
+msgstr "Jelszó módosítása"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:76
 msgid "Password"
-msgstr ""
+msgstr "Jelszó"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Elfelejtette jelszavát?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:10
 msgid "Password Reset"
-msgstr ""
+msgstr "Jelszó visszaállítása"
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Elfelejtette jelszavát? Adja meg az alábbiakban az e-mail címét, és mi "
+"küldünk egy e-mailt, amellyel visszaállíthatja a jelszót."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr ""
+msgstr "A jelszó visszaállítása le van tiltva ezen a példányon."
 
 #: .\cookbook\templates\account\password_reset_done.html:16
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Küldtünk neked egy e-mailt. Kérjük, lépjen kapcsolatba velünk, ha néhány "
+"percen belül nem kapja meg."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
-msgstr ""
+msgstr "Rossz Token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -982,103 +1012,101 @@ msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr ""
+msgstr "jelszó módosítása"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "A jelszava megváltozott."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "Jelszó beállítása"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr ""
+msgstr "Regisztráció"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "Fiók létrehozása"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Elfogadom a következőket"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Feltételek és szabályok"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "és"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Adatvédelmi szabályzat"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "Felhasználó létrehozása"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "Már van fiókja?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Regisztráció lezárva"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "Sajnáljuk, de a regisztráció jelenleg zárva van."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:279
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr ""
+msgstr "API dokumentáció"
 
 #: .\cookbook\templates\base.html:86
 msgid "Shopping"
-msgstr ""
+msgstr "Bevásárlás"
 
 #: .\cookbook\templates\base.html:113
 msgid "Keyword"
-msgstr ""
+msgstr "Kulcsszó"
 
 #: .\cookbook\templates\base.html:125 .\cookbook\views\lists.py:114
-#, fuzzy
-#| msgid "New Food"
 msgid "Foods"
-msgstr "Új Étel"
+msgstr "Ételek"
 
 #: .\cookbook\templates\base.html:137
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\space.html:47 .\cookbook\templates\stats.html:26
 #: .\cookbook\views\lists.py:131
 msgid "Units"
-msgstr ""
+msgstr "Egységek"
 
 #: .\cookbook\templates\base.html:151
 #: .\cookbook\templates\shopping_list.html:208
 #: .\cookbook\templates\supermarket.html:7
 msgid "Supermarket"
-msgstr ""
+msgstr "Szupermarket"
 
 #: .\cookbook\templates\base.html:163
 msgid "Supermarket Category"
-msgstr ""
+msgstr "Szupermarket kategória"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:180
 msgid "Automations"
-msgstr ""
+msgstr "Automatizációk"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:200
 #, fuzzy
@@ -1088,98 +1116,102 @@ msgstr "Fájl ID:"
 
 #: .\cookbook\templates\base.html:201
 msgid "Batch Edit"
-msgstr ""
+msgstr "Csoportos szerkesztés"
 
 #: .\cookbook\templates\base.html:213 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr ""
+msgstr "Előzmények"
 
 #: .\cookbook\templates\base.html:228 .\cookbook\templates\export.html:14
 #: .\cookbook\templates\export.html:20
 #: .\cookbook\templates\shopping_list.html:310
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr ""
+msgstr "Export"
 
 #: .\cookbook\templates\base.html:244 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
-msgstr ""
+msgstr "Recept importálása"
 
 #: .\cookbook\templates\base.html:246
 #: .\cookbook\templates\shopping_list.html:165
 #: .\cookbook\templates\shopping_list.html:188
 msgid "Create"
-msgstr ""
+msgstr "Létrehozás"
 
 #: .\cookbook\templates\base.html:259
 #: .\cookbook\templates\generic\list_template.html:14
 #: .\cookbook\templates\space.html:69 .\cookbook\templates\stats.html:43
 msgid "External Recipes"
-msgstr ""
+msgstr "Külső receptek"
 
 #: .\cookbook\templates\base.html:262 .\cookbook\templates\space.html:8
 #: .\cookbook\templates\space.html:20 .\cookbook\templates\space.html:150
 msgid "Space Settings"
-msgstr ""
+msgstr "Tér beállítások"
 
 #: .\cookbook\templates\base.html:267 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr ""
+msgstr "Rendszer"
 
 #: .\cookbook\templates\base.html:269
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #: .\cookbook\templates\base.html:273
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Markdown útmutató"
 
 #: .\cookbook\templates\base.html:275
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Tandoor fordítása"
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
-msgstr ""
+msgstr "API böngésző"
 
 #: .\cookbook\templates\base.html:284
 msgid "Log out"
-msgstr ""
+msgstr "Kijelentkezés"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr ""
+msgstr "Kategória csoportos szerkesztése"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr ""
+msgstr "Receptek csoportos szerkesztése"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
+"A megadott kulcsszavak hozzáadása az összes olyan recepthez, amely tartalmaz "
+"egy szót"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:82
 msgid "Sync"
-msgstr ""
+msgstr "Szinkronizálás"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr ""
+msgstr "Megfigyelt mappák kezelése"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"Ezen az oldalon kezelheti az összes olyan tárhely mappát, amelyek figyelve "
+"és szinkronizálva lesznek."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr ""
+msgstr "Az elérési útnak a következő formátumúnak kell lennie"
 
 #: .\cookbook\templates\batch\monitor.html:20
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
@@ -1193,55 +1225,57 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:311
 #: .\cookbook\templates\space.html:155
 msgid "Save"
-msgstr ""
+msgstr "Mentés"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
-msgstr ""
+msgstr "Külső tárhely kezelése"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
-msgstr ""
+msgstr "Szinkronizálj most!"
 
 #: .\cookbook\templates\batch\monitor.html:29
 msgid "Show Recipes"
-msgstr ""
+msgstr "Receptek mutatása"
 
 #: .\cookbook\templates\batch\monitor.html:30
 msgid "Show Log"
-msgstr ""
+msgstr "Napló megjelenítése"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr ""
+msgstr "Receptek importálása"
 
 #: .\cookbook\templates\batch\waiting.html:28
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
+"Ez a szinkronizált receptek számától függően néhány percet vehet igénybe, "
+"kérjük, várjon."
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
-msgstr ""
+msgstr "Receptkönyvek"
 
 #: .\cookbook\templates\export.html:6 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr ""
+msgstr "Receptek exportálása"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr ""
+msgstr "Új recept importálása"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
-msgstr ""
+msgstr "Recept szerkesztése"
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr ""
+msgstr "Összetevők szerkesztése"
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
@@ -1256,16 +1290,16 @@ msgstr ""
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
-msgstr ""
+msgstr "Biztos, hogy össze akarja vonni ezt a két egységet?"
 
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr ""
+msgstr "Egyesítés"
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
-msgstr ""
+msgstr "Biztos vagy benne, hogy ezt a két összetevőt szeretnéd egyesíteni?"
 
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
@@ -1274,63 +1308,63 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
-msgstr ""
+msgstr "Védett"
 
 #: .\cookbook\templates\generic\delete_template.html:41
 msgid "Cascade"
-msgstr ""
+msgstr "Kaszkád"
 
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr ""
+msgstr "Megtekintés"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr ""
+msgstr "Eredeti fájl törlése"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: .\cookbook\templates\generic\list_template.html:33
 #: .\cookbook\templates\shopping_list.html:33
 msgid "Try the new shopping list"
-msgstr ""
+msgstr "Próbálja ki az új bevásárlólistát"
 
 #: .\cookbook\templates\generic\list_template.html:45
 msgid "Filter"
-msgstr ""
+msgstr "Szűrő"
 
 #: .\cookbook\templates\generic\list_template.html:50
 msgid "Import all"
-msgstr ""
+msgstr "Importáljon mindent"
 
 #: .\cookbook\templates\generic\table_template.html:76
 #: .\cookbook\templates\recipes_table.html:121
 msgid "previous"
-msgstr ""
+msgstr "előző"
 
 #: .\cookbook\templates\generic\table_template.html:98
 #: .\cookbook\templates\recipes_table.html:143
 msgid "next"
-msgstr ""
+msgstr "következő"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Napló megtekintése"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Főzési napló"
 
 #: .\cookbook\templates\import.html:6 .\cookbook\templates\test.html:6
 msgid "Import Recipes"
-msgstr ""
+msgstr "Receptek importálása"
 
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
 #: .\cookbook\templates\import_response.html:7
@@ -1342,7 +1376,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:618 .\cookbook\views\delete.py:89
 #: .\cookbook\views\edit.py:200
 msgid "Import"
-msgstr ""
+msgstr "Importálás"
 
 #: .\cookbook\templates\include\log_cooking.html:9
 msgid "Log Recipe Cooking"
@@ -1350,24 +1384,24 @@ msgstr ""
 
 #: .\cookbook\templates\include\log_cooking.html:15
 msgid "All fields are optional and can be left empty."
-msgstr ""
+msgstr "Minden mező opcionális és üresen hagyható."
 
 #: .\cookbook\templates\include\log_cooking.html:21
 msgid "Rating"
-msgstr ""
+msgstr "Értékelés"
 
 #: .\cookbook\templates\include\log_cooking.html:29
 #: .\cookbook\templates\include\recipe_open_modal.html:18
 msgid "Close"
-msgstr ""
+msgstr "Bezár"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
-msgstr ""
+msgstr "Recept megnyitása"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Biztonsági figyelmeztetés"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1384,37 +1418,37 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr ""
+msgstr "Recept keresése..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Új recept"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr ""
+msgstr "Speciális keresés"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr ""
+msgstr "Keresés visszaállítása"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr ""
+msgstr "Utoljára megtekintett"
 
 #: .\cookbook\templates\index.html:87 .\cookbook\templates\space.html:37
 #: .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr ""
+msgstr "Receptek"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Bejelentkezés a receptek megtekintéséhez"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr ""
+msgstr "Markdown információ"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -1434,40 +1468,40 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr ""
+msgstr "Fejlécek"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr ""
+msgstr "Formázás"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
-msgstr ""
+msgstr "A sortörés a sor vége után két szóköz hozzáadásával történik"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line inbetween."
-msgstr ""
+msgstr "vagy egy üres sort hagyva közöttük."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Ez a szöveg félkövér"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr ""
+msgstr "Ez a szöveg dőlt betűs"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "A blokkidézetek is lehetségesek"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Listák"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
@@ -1478,7 +1512,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr ""
+msgstr "Rendezett lista"
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -1487,12 +1521,12 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr ""
+msgstr "rendezetlen listaelem"
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr ""
+msgstr "Rendezetlen lista"
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -1501,26 +1535,29 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr ""
+msgstr "rendezett listaelem"
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr ""
+msgstr "Képek és linkek"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
+"A hivatkozásokat Markdown segítségével lehet formázni. Ez az alkalmazás azt "
+"is lehetővé teszi, hogy a linkeket közvetlenül a Markdown mezőkbe illessze "
+"be, mindenféle formázás nélkül."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr ""
+msgstr "Ez egy kép lesz"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr ""
+msgstr "Táblázatok"
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
@@ -1534,73 +1571,76 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr ""
+msgstr "Táblázat"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr ""
+msgstr "Fejléc"
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr ""
+msgstr "Cella"
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
-msgstr ""
+msgstr "Étkezési terv nézet"
 
 #: .\cookbook\templates\meal_plan_entry.html:18
 msgid "Created by"
-msgstr ""
+msgstr "Létrehozta"
 
 #: .\cookbook\templates\meal_plan_entry.html:20
 #: .\cookbook\templates\shopping_list.html:232
 msgid "Shared with"
-msgstr ""
+msgstr "Megosztva"
 
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipes_table.html:64
 msgid "Last cooked"
-msgstr ""
+msgstr "Utoljára főzve"
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr ""
+msgstr "Soha nem főzött még."
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
-msgstr ""
+msgstr "Egyéb ételek ezen a napon"
 
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr ""
+msgstr "Nincs jogosultság"
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
 msgstr ""
+"Önnek nincsenek csoportjai, ezért nem tudja használni ezt az alkalmazást."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Kérjük, forduljon a rendszergazdához."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
 msgid "No Permission"
-msgstr ""
+msgstr "Nincs engedély"
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
 msgstr ""
+"Ön nem rendelkezik a szükséges jogosultságokkal az oldal megtekintéséhez "
+"vagy a művelet végrehajtásához."
 
 #: .\cookbook\templates\no_space_info.html:6
 #: .\cookbook\templates\no_space_info.html:13
 msgid "No Space"
-msgstr ""
+msgstr "Nincs hely"
 
 #: .\cookbook\templates\no_space_info.html:17
 msgid ""
@@ -1611,82 +1651,86 @@ msgstr ""
 #: .\cookbook\templates\no_space_info.html:18
 msgid ""
 "You can either be invited into an existing space or create your own one."
-msgstr ""
+msgstr "Meghívást kaphatsz egy meglévő térbe, vagy létrehozhatod a sajátodat."
 
 #: .\cookbook\templates\no_space_info.html:31
 #: .\cookbook\templates\no_space_info.html:40
 msgid "Join Space"
-msgstr ""
+msgstr "Csatlakozz a térhez"
 
 #: .\cookbook\templates\no_space_info.html:34
 msgid "Join an existing space."
-msgstr ""
+msgstr "Csatlakozz egy meglévő térhez."
 
 #: .\cookbook\templates\no_space_info.html:35
 msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
 msgstr ""
+"Egy meglévő térhez való csatlakozáshoz add meg a meghívó tokenedet, vagy "
+"kattints a meghívó linkre, amelyet a tér tulajdonosa küldött neked."
 
 #: .\cookbook\templates\no_space_info.html:48
 #: .\cookbook\templates\no_space_info.html:56
 msgid "Create Space"
-msgstr ""
+msgstr "Tér létrehozása"
 
 #: .\cookbook\templates\no_space_info.html:51
 msgid "Create your own recipe space."
-msgstr ""
+msgstr "Hozzon létre saját receptteret."
 
 #: .\cookbook\templates\no_space_info.html:52
 msgid "Start your own recipe space and invite other users to it."
-msgstr ""
+msgstr "Indítsd el a saját receptteredet, és hívj meg oda más felhasználókat."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr ""
+msgstr "Offline"
 
 #: .\cookbook\templates\offline.html:19
 msgid "You are currently offline!"
-msgstr ""
+msgstr "Jelenleg offline vagy!"
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
 "The recipes listed below are available for offline viewing because you have "
 "recently viewed them. Keep in mind that data might be outdated."
 msgstr ""
+"Az alább felsorolt receptek offline megtekinthetők, mivel Ön nemrégiben már "
+"megtekintette őket. Ne feledje, hogy az adatok elavultak lehetnek."
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
-msgstr ""
+msgstr "által"
 
 #: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:147
 #: .\cookbook\views\edit.py:180
 msgid "Comment"
-msgstr ""
+msgstr "Megjegyzés"
 
 #: .\cookbook\templates\recipes_table.html:19
 #: .\cookbook\templates\recipes_table.html:23
 #: .\cookbook\templates\url_import.html:447
 msgid "Recipe Image"
-msgstr ""
+msgstr "Recept kép"
 
 #: .\cookbook\templates\recipes_table.html:51
 #: .\cookbook\templates\url_import.html:452
 msgid "Preparation time ca."
-msgstr ""
+msgstr "Elkészítési idő kb."
 
 #: .\cookbook\templates\recipes_table.html:57
 #: .\cookbook\templates\url_import.html:457
 msgid "Waiting time ca."
-msgstr ""
+msgstr "Várakozási idő kb."
 
 #: .\cookbook\templates\recipes_table.html:60
 msgid "External"
-msgstr ""
+msgstr "Külső"
 
 #: .\cookbook\templates\recipes_table.html:86
 msgid "Log Cooking"
-msgstr ""
+msgstr "Főzés naplózása"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
@@ -1696,7 +1740,7 @@ msgstr ""
 #: .\cookbook\templates\search_info.html:9
 #: .\cookbook\templates\settings.html:172
 msgid "Search Settings"
-msgstr ""
+msgstr "Keresési beállítások"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1712,7 +1756,7 @@ msgstr ""
 
 #: .\cookbook\templates\search_info.html:19
 msgid "Search Methods"
-msgstr ""
+msgstr "Keresési módszerek"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1795,7 +1839,7 @@ msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
 msgid "Search Fields"
-msgstr ""
+msgstr "Keresési mezők"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1834,7 +1878,7 @@ msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
 msgid "Search Index"
-msgstr ""
+msgstr "Keresési index"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1851,35 +1895,35 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:28
 msgid "Account"
-msgstr ""
+msgstr "Fiók"
 
 #: .\cookbook\templates\settings.html:35
 msgid "Preferences"
-msgstr ""
+msgstr "Beállítások"
 
 #: .\cookbook\templates\settings.html:42
 msgid "API-Settings"
-msgstr ""
+msgstr "API beállítások"
 
 #: .\cookbook\templates\settings.html:49
 msgid "Search-Settings"
-msgstr ""
+msgstr "Keresési beállítások"
 
 #: .\cookbook\templates\settings.html:56
 msgid "Shopping-Settings"
-msgstr ""
+msgstr "Bevásárlási beállítások"
 
 #: .\cookbook\templates\settings.html:65
 msgid "Name Settings"
-msgstr ""
+msgstr "Név beállításai"
 
 #: .\cookbook\templates\settings.html:73
 msgid "Account Settings"
-msgstr ""
+msgstr "Fiók beállítások"
 
 #: .\cookbook\templates\settings.html:75
 msgid "Emails"
-msgstr ""
+msgstr "E-mailek"
 
 #: .\cookbook\templates\settings.html:78
 #: .\cookbook\templates\socialaccount\connections.html:11
