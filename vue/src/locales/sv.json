@@ -207,5 +207,15 @@
     "Manage_Books": "Hantera böcker",
     "Keywords": "Nyckelord",
     "Move": "Flytta",
-    "Parent": "Förälder"
+    "Parent": "Förälder",
+    "merge_selection": "Ersätt alla förekomster av {source} med den valda {type}.",
+    "Shopping_Category": "Shopping kategori",
+    "move_selection": "Välj en förälder {type} att flytta {source} till.",
+    "Create_New_Shopping Category": "Skapa ny shoppingkategori",
+    "Create_New_Meal_Type": "Lägg till ny måltidstyp",
+    "tree_root": "Roten av trädet",
+    "Meal_Plan_Days": "Framtida måltidsplaner",
+    "Automate": "Automatisera",
+    "Shopping_Categories": "Shopping kategorier",
+    "Unit_Alias": "Enhetsalias"
 }
