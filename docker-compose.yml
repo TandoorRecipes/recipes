@@ -1,0 +1,8 @@
+# docker buildx bake --set "*.platform=linux/amd64" --push -f docker-compose.yml
+
+version: "3.7"
+
+services:
+  tandoor:
+    build: .
+    image: eu.gcr.io/kettenbach-it/tandoor:1.0.5.2

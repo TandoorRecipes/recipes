@@ -84,3 +84,5 @@ cookbook/static/vue
 vue/webpack-stats.json
 cookbook/templates/sw.js
 .prettierignore
+k8s
+

@@ -1,0 +1,42 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Tandoor" type="Python.DjangoServer" factoryName="Django server">
+    <module name="recipes" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="DJANGO_SETTINGS_MODULE" value="recipes.settings" />
+      <env name="SECRET_KEY" value="t4FGIM00gIJlnVga/eYdyhPGeBXBi9KyMFi1beH4zaLTQoi/lt" />
+      <env name="DB_ENGINE" value="django.db.backends.postgresql" />
+      <env name="POSTGRES_HOST" value="localhost" />
+      <env name="POSTGRES_PORT" value="5432" />
+      <env name="POSTGRES_USER" value="postgres" />
+      <env name="POSTGRES_PASSWORD" value="mysecretpassword" />
+      <env name="POSTGRES_DB" value="tandoor" />
+      <env name="ENABLE_METRICS" value="1" />
+      <env name="EMAIL_HOST" value="smtp.rz.kettenbach-it.de" />
+      <env name="DEFAULT_FROM_EMAIL" value="tandoor@kettenbach.biz" />
+      <env name="S3_ACCESS_KEY" value="GOOG1E532SBLTUKCPRH736EBAUKZ7K342RL6QTIF2D2JEE4SGNINIEJUDHTKQ" />
+      <env name="S3_SECRET_ACCESS_KEY" value="VsBVfKkWYLqxi5wbb3DTvVLumAagHKJccYAZx5Dz" />
+      <env name="S3_BUCKET_NAME" value="tandoor-dev" />
+      <env name="S3_ENDPOINT_URL" value="https://storage.googleapis.com" />
+      <env name="AWS_S3_REGION_NAME" value="auto" />
+      <env name="FRACTION_PREF_DEFAULT" value="1" />
+    </envs>
+    <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
+    <option name="WORKING_DIRECTORY" value="" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <option name="launchJavascriptDebuger" value="false" />
+    <option name="port" value="8000" />
+    <option name="host" value="" />
+    <option name="additionalOptions" value="" />
+    <option name="browserUrl" value="http://127.0.0.1:8000/" />
+    <option name="runTestServer" value="false" />
+    <option name="runNoReload" value="false" />
+    <option name="useCustomRunCommand" value="false" />
+    <option name="customRunCommand" value="" />
+    <method v="2" />
+  </configuration>
+</component>
