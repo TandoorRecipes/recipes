@@ -26,7 +26,7 @@
                     <small class="card-title">{{ c.updated_at }} {% trans 'by' %} {{ c.created_by.username }}</small> <a
                         href="{% url 'edit_comment' c.pk %}" class="d-print-none"><i
                         class="fas fa-pencil-alt"></i></a><br/>
-                    {{ c.text }}
+                    {{ c.text | urlize |linebreaks }}
                 </div>
             </div>
             <br/>

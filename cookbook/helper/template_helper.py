@@ -1,11 +1,14 @@
+from gettext import gettext as _
+
 import bleach
 import markdown as md
 from bleach_allowlist import markdown_attrs, markdown_tags
+from jinja2 import Template, TemplateSyntaxError, UndefinedError
+from markdown.extensions.tables import TableExtension
+
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
-from jinja2 import Template, TemplateSyntaxError, UndefinedError
-from gettext import gettext as _
-from markdown.extensions.tables import TableExtension
+
 
 class IngredientObject(object):
     amount = ""
@@ -36,7 +39,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     instructions = step.instruction
 
     tags = markdown_tags + [
-        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead', 'img'
     ]
     parsed_md = md.markdown(
         instructions,
@@ -45,7 +48,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )
-    markdown_attrs['*'] = markdown_attrs['*'] + ['class']
+    markdown_attrs['*'] = markdown_attrs['*'] + ['class', 'width', 'height']
 
     instructions = bleach.clean(parsed_md, tags, markdown_attrs)
 

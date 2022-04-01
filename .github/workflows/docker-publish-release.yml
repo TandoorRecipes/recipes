@@ -41,8 +41,8 @@ jobs:
           publish: true
           imageName: vabene1111/recipes
           tag: ${{ steps.get_version.outputs.VERSION }}
-          dockerHubUser: ${{ secrets.DOCKER_USERNAME }}
-          dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+          dockerUser: ${{ secrets.DOCKER_USERNAME }}
+          dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
       # Send discord notification
       - name: Discord notification
         env:

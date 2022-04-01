@@ -14,8 +14,8 @@ It can be run and accessed on port 80 using:
 
 ```shell
 docker run -d \
-    -v ./staticfiles:/opt/recipes/staticfiles \
-    -v ./mediafiles:/opt/recipes/mediafiles \
+    -v "$(pwd)"/staticfiles:/opt/recipes/staticfiles \
+    -v "$(pwd)"/mediafiles:/opt/recipes/mediafiles \
     -p 80:8080 \
     -e SECRET_KEY=YOUR_SECRET_KEY \
     -e DB_ENGINE=django.db.backends.postgresql \
@@ -102,12 +102,15 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/d
 !!!note
     Don't forget to [download and configure](#docker-compose) your ```.env``` file!
 
-#### **nginx-proxy**
+#### **jwilder's Nginx-proxy**
 
 This is a docker compose example using [jwilder's nginx reverse proxy](https://github.com/jwilder/docker-gen)
 in combination with [jrcs's letsencrypt companion](https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/).
 
 Please refer to the appropriate documentation on how to setup the reverse proxy and networks.
+
+!!! warning "Adjust client_max_body_size"
+    By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the ```client_max_body_size``` variable in the jwilder nginx configuration. 
 
 Remember to add the appropriate environment variables to the `.env` file:
 
@@ -151,6 +154,102 @@ In both cases, also make sure to mount `/media/` in your swag container to point
 Please refer to the [appropriate documentation](https://github.com/linuxserver/docker-swag#usage) for the container setup.
 
 For step-by-step instructions to set this up from scratch, see [this example](swag.md).
+
+#### **Pure Nginx**
+
+If you have Nginx installed locally on your host system without using any third party integration like Swag or similar, this is for you.
+
+You can use the Docker-Compose file from [Plain](#plain).
+!!!warning "Adjust Docker-Compose file"
+    Replace `80:80` with `PORT:80` with PORT being your desired outward-facing port.
+    In the nginx config example below, 8080 is used.
+
+An example configuration with LetsEncrypt to get you started can be seen below.
+Please note, that since every setup is different, you might need to adjust some things.
+
+!!!warning "Placeholders"
+    Don't forget to replace the domain and port.
+
+```nginx
+server {
+    if ($host = recipes.mydomain.tld) { # replace domain
+        return 301 https://$host$request_uri;
+    }
+
+    server_name recipes.mydomain.tld; # replace domain
+    listen 80;
+    return 404;
+}
+server {
+    server_name recipes.mydomain.tld; # replace domain
+    listen 443 ssl;
+
+    ssl_certificate /etc/letsencrypt/live/recipes.mydomain.tld/fullchain.pem; # replace domain
+    ssl_certificate_key /etc/letsencrypt/live/recipes.mydomain.tld/privkey.pem; # replace domain
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+        location / {
+            proxy_set_header Host $http_host; # try $host instead if this doesn't work
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://127.0.0.1:8080; # replace port
+            proxy_redirect http://127.0.0.1:8080 https://recipes.domain.tld; # replace port and domain
+        }
+}
+```
+
+!!!note
+    Don't forget to [download and configure](#docker-compose) your ```.env``` file!
+
+#### **Apache**
+
+You can use the Docker-Compose file from [Plain](#plain).
+!!!warning "Adjust Docker-Compose file"
+    Replace `80:80` with `PORT:80` with PORT being your desired outward-facing port.
+    In the Apache config example below, 8080 is used.
+
+If you use e.g. LetsEncrypt for SSL encryption, you can use the example configuration from [solaris7590](https://github.com/TandoorRecipes/recipes/issues/1312#issuecomment-1020034375) below.
+
+!!!warning "Placeholders"
+    Don't forget to replace the domain and port.
+
+```apache
+<IfModule mod_ssl.c>
+    <VirtualHost *:80>
+        ServerAdmin webmaster@mydomain.de # replace domain
+        ServerName mydomain.de # replace domain
+
+        Redirect permanent / https://mydomain.de/ # replace domain
+    </VirtualHost>
+
+    <VirtualHost *:443>
+        ServerAdmin webmaster@mydomain.de # replace domain
+        ServerName mydomain.de # replace domain
+
+        SSLEngine on
+
+        RequestHeader set X-Forwarded-Proto "https"
+        Header always set Access-Control-Allow-Origin "*"
+
+        ProxyPreserveHost  On
+        ProxyRequests Off
+        ProxyPass / http://localhost:8080/ # replace port
+        ProxyPassReverse / http://localhost:8080/ # replace port
+
+        SSLCertificateFile /etc/letsencrypt/live/mydomain.de/fullchain.pem # replace domain/path
+        SSLCertificateKeyFile /etc/letsencrypt/live/mydomain.de/privkey.pem # replace domain/path
+        Include /etc/letsencrypt/options-ssl-apache.conf
+
+        ErrorLog ${APACHE_LOG_DIR}/recipes_error.log
+        CustomLog ${APACHE_LOG_DIR}/recipes_access.log combined
+    </VirtualHost>
+</IfModule>
+```
+
+If you're having issues with the example configuration above, you can try [beedaddy](https://github.com/TandoorRecipes/recipes/issues/1312#issuecomment-1015252663)'s example config.
+
+!!!note
+    Don't forget to [download and configure](#docker-compose) your ```.env``` file!
 
 #### **Others**
 
@@ -213,3 +312,72 @@ configuration files for all user generated data (e.g. Postgresql and media files
 You can move everything to volumes if you prefer it this way, **but you cannot convert the nginx config file to a bind
 mount.**
 If you do so you will have to manually create the nginx config file and restart the container once after creating it.
+
+### **Required Headers**
+
+Please be sure to supply all required headers in your nginx/Apache/Caddy/... configuration!
+
+nginx:
+```nginx
+location / {
+    proxy_set_header Host $http_host; # try $host instead if this doesn't work
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_pass http://127.0.0.1:8080; # replace port
+    proxy_redirect http://127.0.0.1:8080 https://recipes.domain.tld; # replace port and domain
+}
+```
+
+Apache:
+```apache
+RequestHeader set X-Forwarded-Proto "https"
+Header always set Access-Control-Allow-Origin "*"
+
+ProxyPreserveHost  On
+ProxyRequests Off
+ProxyPass / http://localhost:8080/ # replace port
+ProxyPassReverse / http://localhost:8080/ # replace port
+```
+
+### **Setup issues on Raspberry Pi**
+
+!!!info
+    Always wait at least 2-3 minutes after the very first start, since migrations will take some time!
+
+If you're having issues with installing Tandoor on your Raspberry Pi or similar device,
+follow these instructions:
+
+- Stop all Tandoor containers (`docker-compose down`)
+- Delete local database folder (usually 'postgresql' in the same folder as your 'docker-compose.yml' file)
+- Start Tandoor containers again (`docker-compose up -d`)
+- Wait for at least 2-3 minutes and then check if everything is working now (migrations can take quite some time!)
+- If not, check logs of the web_recipes container with `docker logs <container_name>` and make sure that all migrations are indeed already done
+
+### Sub Path nginx config
+
+If hosting under a sub-path you might want to change the default nginx config (which gets mounted through the named volume from the application container into the nginx container)
+with the following config. 
+
+```nginx
+location /my_app { # change to subfolder name
+    include /config/nginx/proxy.conf; 
+    proxy_pass https://mywebapp.com/; # change to your host name:port
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Script-Name /my_app; # change to subfolder name
+    proxy_cookie_path / /my_app; # change to subfolder name
+}
+
+location /media/ {
+    include /config/nginx/proxy.conf;
+    alias /mediafiles/;
+    client_max_body_size 16M;
+
+}
+
+location /static/ {
+    include /config/nginx/proxy.conf;
+    alias /staticfiles/;
+    client_max_body_size 16M;
+
+}
+```

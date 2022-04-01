@@ -31,6 +31,9 @@
                         {{ $t("Print") }}
                     </button>
                 </a>
+                <a href="javascript:void(0);">
+                    <button class="dropdown-item" @click="copyToNew"><i class="fas fa-copy fa-fw"></i> {{ $t("copy_to_new") }}</button>
+                </a>
 
                 <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t("Export") }}</a>
 
@@ -49,7 +52,7 @@
 
         <cook-log :recipe="recipe" :modal_id="modal_id"></cook-log>
         <add-recipe-to-book :recipe="recipe" :modal_id="modal_id" :entryEditing_inital_servings="servings_value"></add-recipe-to-book>
-        <shopping-modal :recipe="recipe" :servings="servings_value" :modal_id="modal_id" />
+        <shopping-modal :recipe="recipe" :servings="servings_value" :modal_id="modal_id" :mealplan="undefined" />
 
         <b-modal :id="`modal-share-link_${modal_id}`" v-bind:title="$t('Share')" hide-footer>
             <div class="row">
@@ -65,9 +68,7 @@
 
         <meal-plan-edit-modal
             :entry="entryEditing"
-            :entryEditing_initial_recipe="[recipe]"
             :entryEditing_inital_servings="servings_value"
-            :entry-editing_initial_meal_type="[]"
             @save-entry="saveMealPlan"
             :modal_id="`modal-meal-plan_${modal_id}`"
             :allow_delete="false"
@@ -102,7 +103,7 @@ export default {
         return {
             servings_value: 0,
             recipe_share_link: undefined,
-            modal_id: this.recipe.id + Math.round(Math.random() * 100000),
+            modal_id: Math.round(Math.random() * 100000),
             options: {
                 entryEditing: {
                     date: null,
@@ -118,6 +119,7 @@ export default {
                 },
             },
             entryEditing: {},
+            mealplan: undefined,
         }
     },
     props: {
@@ -147,12 +149,19 @@ export default {
         },
         saveMealPlan: function (entry) {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
+            let reviewshopping = entry.addshopping && entry.reviewshopping
+            entry.addshopping = entry.addshopping && !entry.reviewshopping
 
             let apiClient = new ApiApiFactory()
             apiClient
                 .createMealPlan(entry)
                 .then((result) => {
                     this.$bvModal.hide(`modal-meal-plan_${this.modal_id}`)
+                    if (reviewshopping) {
+                        this.mealplan = result.data.id
+                        this.servings_value = result.data.servings
+                        this.addToShopping()
+                    }
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
                 })
                 .catch((error) => {
@@ -163,7 +172,9 @@ export default {
             this.entryEditing = this.options.entryEditing
             this.entryEditing.recipe = this.recipe
             this.entryEditing.date = moment(new Date()).format("YYYY-MM-DD")
-            this.$bvModal.show(`modal-meal-plan_${this.modal_id}`)
+            this.$nextTick(function () {
+                this.$bvModal.show(`modal-meal-plan_${this.modal_id}`)
+            })
         },
         createShareLink: function () {
             axios
@@ -193,6 +204,35 @@ export default {
         },
         addToShopping() {
             this.$bvModal.show(`shopping_${this.modal_id}`)
+        },
+        copyToNew: function () {
+            let recipename = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
+
+            let apiClient = new ApiApiFactory()
+            apiClient.retrieveRecipe(this.recipe.id).then((results) => {
+                let recipe = { ...results.data, ...{ id: undefined, name: recipename } }
+                recipe.steps = recipe.steps.map((step) => {
+                    return {
+                        ...step,
+                        ...{
+                            id: undefined,
+                            ingredients: step.ingredients.map((ingredient) => {
+                                return { ...ingredient, ...{ id: undefined } }
+                            }),
+                        },
+                    }
+                })
+                console.log(recipe)
+                apiClient
+                    .createRecipe(recipe)
+                    .then((newrecipe) => {
+                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        window.open(this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
+                    })
+                    .catch((error) => {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    })
+            })
         },
     },
 }

@@ -8,7 +8,7 @@
             :initialContent="value"
             :emojiData="emojiDataAll"
             :emojiGroups="emojiGroups"
-            triggerType="hover"
+            triggerType="click"
             :recentEmojisFeat="true"
             recentEmojisStorage="local"
             @contentChanged="setIcon"

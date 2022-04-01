@@ -10,6 +10,9 @@ Tandoor can be installed as a progressive web app (PWA) on mobile and desktop de
 #### Safari (iPhone/iPad)
 Open Tandoor, click Safari's share button, select `Add to Home Screen`
 
+### Chrome/Chromium
+Open Tandoor, click the `add Tandoor to the home screen` message that pops up at the bottom of the screen
+
 ### Desktop browsers
 
 #### Google Chrome 
@@ -17,6 +20,17 @@ Open Tandoor, open the menu behind the three vertical dots at the top right, sel
 
 #### Microsoft Edge
 Open Tandoor, open the menu behind the three horizontal dots at the top right, select `Apps > Install Tandoor Recipes`
+
+## Why is Tandoor not working correctly?
+If you just set up your Tandoor instance and you're having issues like...
+
+- Links not working
+- CSRF errors
+- CORS errors
+- No recipes are loading
+
+... then make sure, that you have set [all required headers](install/docker.md#required-headers) in your reverse proxy correctly.
+If that doesn't fix it, you can also refer to the appropriate sub section in the [reverse proxy documentation](install/docker.md#reverse-proxy) and verify your general webserver configuration.
 
 ## Why am I getting CSRF Errors?
 If you are getting CSRF Errors this is most likely due to a reverse proxy not passing the correct headers.
@@ -33,6 +47,10 @@ A discussion about that can be found at [Issue #452](https://github.com/vabene11
 The other common issue is that the recommended nginx container is removed from the deployment stack. 
 If removed, the nginx webserver needs to be replaced by something else that servers the /mediafiles/ directory or 
 `GUNICORN_MEDIA` needs to be enabled to allow media serving by the application container itself.
+
+## Why is Tandoor not working on my Raspberry Pi?
+
+Please refer to [here](install/docker.md#setup-issues-on-raspberry-pi).
 
 ## How can I create users?
 To create a new user click on your name (top right corner) and select system. There click on invite links and create a new invite link.

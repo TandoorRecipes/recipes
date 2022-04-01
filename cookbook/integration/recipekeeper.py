@@ -1,12 +1,14 @@
 import re
-from bs4 import BeautifulSoup
 from io import BytesIO
 from zipfile import ZipFile
 
+from bs4 import BeautifulSoup
+
+from django.utils.translation import gettext as _
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, iso_duration_to_minutes
+from cookbook.helper.recipe_url_import import iso_duration_to_minutes, parse_servings
 from cookbook.integration.integration import Integration
-from cookbook.models import Recipe, Step, Ingredient, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class RecipeKeeper(Integration):
@@ -45,11 +47,11 @@ class RecipeKeeper(Integration):
         for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
             if ingredient.text == "":
                 continue
-            amount, unit, ingredient, note = ingredient_parser.parse(ingredient.text.strip())
-            f = ingredient_parser.get_food(ingredient)
+            amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
+            f = ingredient_parser.get_food(food)
             u = ingredient_parser.get_unit(unit)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note, space=self.request.space,
+                food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
             ))
 
         for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
@@ -58,7 +60,7 @@ class RecipeKeeper(Integration):
             step.instruction += s.text + ' \n'
 
         if file.find("span", {"itemprop": "recipeSource"}).text != '':
-            step.instruction += "\n\nImported from: " + file.find("span", {"itemprop": "recipeSource"}).text
+            step.instruction += "\n\n" + _("Imported from") + ": " + file.find("span", {"itemprop": "recipeSource"}).text
             step.save()
 
         recipe.steps.add(step)
