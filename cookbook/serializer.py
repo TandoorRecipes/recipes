@@ -20,7 +20,8 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
                              UserFile, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
-from recipes.settings import MEDIA_URL
+from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
+from recipes.settings import MEDIA_URL, AWS_S3_ENDPOINT_URL, AWS_ACCESS_KEY_ID
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
@@ -54,7 +55,12 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.recipe_image:
-            return MEDIA_URL + obj.recipe_image
+            if AWS_ACCESS_KEY_ID and AWS_S3_ENDPOINT_URL:
+                storage = CachedS3Boto3Storage()
+                path = storage.url(obj.recipe_image)
+            else:
+                path = MEDIA_URL + obj.recipe_image
+            return path
 
 
 class CustomDecimalField(serializers.Field):
