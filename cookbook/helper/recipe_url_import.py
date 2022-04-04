@@ -40,7 +40,6 @@ def get_from_scraper(scrape, request):
         except Exception:
             description = ''
 
-    recipe_json['description'] = parse_description(description)[:512]
     recipe_json['internal'] = True
 
     try:
@@ -130,6 +129,11 @@ def get_from_scraper(scrape, request):
         recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
+
+    if len(parse_description(description)) > 256: # split at 256 as long descriptions dont look good on recipe cards
+        recipe_json['steps'][0]['instruction'] = f'*{parse_description(description)}*  \n\n' + recipe_json['steps'][0]['instruction']
+    else:
+        recipe_json['description'] = parse_description(description)[:512]
 
     try:
         for x in scrape.ingredients():
