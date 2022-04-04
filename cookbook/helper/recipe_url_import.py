@@ -51,12 +51,9 @@ def get_from_scraper(scrape, request):
             servings = scrape.schema.data.get('recipeYield') or 1
         except Exception:
             servings = 1
-    if type(servings) != int:
-        try:
-            servings = int(re.findall(r'\b\d+\b', servings)[0])
-        except Exception:
-            servings = 1
-    recipe_json['servings'] = max(servings, 1)
+
+    recipe_json['servings'] = parse_servings(servings)
+    recipe_json['servings_text'] = parse_servings_text(servings)
 
     try:
         recipe_json['working_time'] = get_minutes(scrape.prep_time()) or 0
