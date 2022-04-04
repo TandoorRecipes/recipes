@@ -172,7 +172,7 @@ class Integration:
                                 traceback.print_exc()
                                 self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
-                    elif '.json' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name']:
+                    elif '.json' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         il.total_recipes += len(data_list)
                         for d in data_list:

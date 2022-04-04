@@ -9,6 +9,7 @@ export const INTEGRATIONS = [
     {id: 'DOMESTICA', name: "Domestica", import: true, export: false},
     {id: 'MEALIE', name: "Mealie", import: true, export: false},
     {id: 'MEALMASTER', name: "Mealmaster", import: true, export: false},
+    {id: 'MELARECIPES', name: "Melarecipes", import: true, export: false},
     {id: 'NEXTCLOUD', name: "Nextcloud Cookbook", import: true, export: false},
     {id: 'OPENEATS', name: "Openeats", import: true, export: false},
     {id: 'PAPRIKA', name: "Paprika", import: true, export: false},

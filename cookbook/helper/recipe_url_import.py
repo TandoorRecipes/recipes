@@ -255,40 +255,22 @@ def parse_servings(servings):
     return servings
 
 
-def parse_cooktime(cooktime):
-    if type(cooktime) not in [int, float]:
+def parse_time(recipe_time):
+    if type(recipe_time) not in [int, float]:
         try:
-            cooktime = float(re.search(r'\d+', cooktime).group())
+            recipe_time = float(re.search(r'\d+', recipe_time).group())
         except (ValueError, AttributeError):
             try:
-                cooktime = round(iso_parse_duration(cooktime).seconds / 60)
+                recipe_time = round(iso_parse_duration(recipe_time).seconds / 60)
             except ISO8601Error:
                 try:
-                    if (type(cooktime) == list and len(cooktime) > 0):
-                        cooktime = cooktime[0]
-                    cooktime = round(parse_duration(cooktime).seconds / 60)
+                    if (type(recipe_time) == list and len(recipe_time) > 0):
+                        recipe_time = recipe_time[0]
+                    recipe_time = round(parse_duration(recipe_time).seconds / 60)
                 except AttributeError:
-                    cooktime = 0
+                    recipe_time = 0
 
-    return cooktime
-
-
-def parse_preptime(preptime):
-    if type(preptime) not in [int, float]:
-        try:
-            preptime = float(re.search(r'\d+', preptime).group())
-        except ValueError:
-            try:
-                preptime = round(iso_parse_duration(preptime).seconds / 60)
-            except ISO8601Error:
-                try:
-                    if (type(preptime) == list and len(preptime) > 0):
-                        preptime = preptime[0]
-                    preptime = round(parse_duration(preptime).seconds / 60)
-                except AttributeError:
-                    preptime = 0
-
-    return preptime
+    return recipe_time
 
 
 def parse_keywords(keyword_json, space):

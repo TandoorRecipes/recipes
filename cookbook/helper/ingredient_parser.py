@@ -208,6 +208,9 @@ class IngredientParser:
         note = ''
         unit_note = ''
 
+        if len(x) == 0:
+            raise ValueError('string to parse cannot be empty')
+
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
         if re.match('(.){1,6}\s\((.[^\(\)])+\)\s', x):
@@ -271,4 +274,9 @@ class IngredientParser:
 
         if unit_note not in note:
             note += ' ' + unit_note
-        return amount, self.apply_unit_automation(unit.strip()), self.apply_food_automation(ingredient.strip()), note.strip()
+        try:
+            unit = self.apply_unit_automation(unit.strip())
+        except Exception:
+            pass
+
+        return amount, unit, self.apply_food_automation(ingredient.strip()), note.strip()
