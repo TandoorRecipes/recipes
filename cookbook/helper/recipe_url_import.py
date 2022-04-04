@@ -31,7 +31,7 @@ def get_from_scraper(scrape, request):
             recipe_json['name'] = ''
 
     try:
-        description = scrape.description()  or None
+        description = scrape.description() or None
     except Exception:
         description = None
     if not description:
@@ -130,7 +130,7 @@ def get_from_scraper(scrape, request):
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
 
-    if len(parse_description(description)) > 256: # split at 256 as long descriptions dont look good on recipe cards
+    if len(parse_description(description)) > 256:  # split at 256 as long descriptions dont look good on recipe cards
         recipe_json['steps'][0]['instruction'] = f'*{parse_description(description)}*  \n\n' + recipe_json['steps'][0]['instruction']
     else:
         recipe_json['description'] = parse_description(description)[:512]
@@ -252,6 +252,15 @@ def parse_servings(servings):
             servings = int(re.findall(r'\b\d+\b', servings[0])[0])
         except KeyError:
             servings = 1
+    return servings
+
+
+def parse_servings_text(servings):
+    if type(servings) == str:
+        try:
+            servings = re.sub("\d+", '', servings).strip()
+        except Exception:
+            servings = ''
     return servings
 
 
