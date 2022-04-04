@@ -79,7 +79,7 @@
                         :loading="keywords_loading"
                         @search-change="searchKeywords"
                     >
-                       <template v-slot:noOptions>{{ $t("empty_list") }}</template>
+                        <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                     </multiselect>
                 </div>
             </div>
@@ -140,6 +140,24 @@
                             </div>
                         </b-collapse>
                     </div>
+                    <b-card-header header-tag="header" class="p-1" role="tab">
+                        <b-button squared block v-b-toggle.additional_collapse class="text-left" variant="outline-primary">{{ $t("additional_options") }}</b-button>
+                    </b-card-header>
+                    <b-collapse id="additional_collapse" class="mt-2" v-model="additional_visible">
+                        <b-form-group>
+                            <b-input-group-append>
+                                <b-input-group-text squared> {{ $t("Create Food") }}</b-input-group-text>
+                                <b-input-group-text squared>
+                                    <b-form-checkbox v-model="recipe.create_food"></b-form-checkbox>
+                                </b-input-group-text>
+                                <b-input-group-text squared v-if="recipe.create_food"> {{ $t("Name") }}</b-input-group-text>
+                                <b-form-input squared v-if="recipe.create_food" v-model="recipe.food_name" id="food_name"></b-form-input>
+                            </b-input-group-append>
+                            <em class="small text-muted">
+                                {{ $t("create_food_desc") }}
+                            </em>
+                        </b-form-group>
+                    </b-collapse>
                 </div>
             </div>
 
@@ -260,7 +278,7 @@
                                             style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                             @search-change="searchFiles"
                                         >
-                                          <template v-slot:noOptions>{{ $t("empty_list") }}</template>
+                                            <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                         </multiselect>
                                         <b-input-group-append>
                                             <b-button
@@ -300,7 +318,7 @@
                                         :loading="recipes_loading"
                                         @search-change="searchRecipes"
                                     >
-                                      <template v-slot:noOptions>{{ $t("empty_list") }}</template>
+                                        <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                     </multiselect>
                                 </div>
                             </div>
@@ -364,7 +382,7 @@
                                                                         :loading="units_loading"
                                                                         @search-change="searchUnits"
                                                                     >
-                                                                      <template v-slot:noOptions>{{ $t("empty_list") }}</template>
+                                                                        <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                                                     </multiselect>
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-6 small-padding" v-if="!ingredient.is_header">
@@ -394,7 +412,7 @@
                                                                         :loading="foods_loading"
                                                                         @search-change="searchFoods"
                                                                     >
-                                                                      <template v-slot:noOptions>{{ $t("empty_list") }}</template>
+                                                                        <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                                                     </multiselect>
                                                                 </div>
                                                                 <div class="small-padding" v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
@@ -619,6 +637,8 @@ export default {
             paste_step: undefined,
             show_file_create: false,
             step_for_file_create: undefined,
+            additional_visible: false,
+            create_food: undefined,
         }
     },
     computed: {
@@ -649,6 +669,12 @@ export default {
             handler() {
                 this.recipe_changed = this.recipe_changed !== undefined
             },
+        },
+        "recipe.name": function () {
+            this.recipe.food_name = this.recipe.name.toLowerCase()
+        },
+        "recipe.create_food": function () {
+            this.create_food = this.recipe.create_food
         },
     },
     methods: {
@@ -736,6 +762,9 @@ export default {
                 .then((response) => {
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
                     this.recipe_changed = false
+                    if (this.create_food) {
+                        apiFactory.createFood({ name: this.recipe.food_name, recipe: { id: this.recipe.id, name: this.recipe.name } })
+                    }
                     if (view_after) {
                         location.href = resolveDjangoUrl("view_recipe", this.recipe_id)
                     }

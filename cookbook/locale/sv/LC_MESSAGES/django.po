@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2021-04-12 20:22+0000\n"
-"Last-Translator: Olle Mineur <olle.mineur@gmail.com>\n"
+"PO-Revision-Date: 2022-03-29 20:36+0000\n"
+"Last-Translator: Marcus Alsterfjord <marcus@marcussite.se>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.3\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:91
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
@@ -192,13 +192,12 @@ msgstr "Du kan ange förvalda användare att dela recept med i inställningar."
 
 #: .\cookbook\forms.py:368
 #: .\cookbook\templates\forms\edit_internal_recipe.html:377
-#, fuzzy
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
 msgstr ""
 "Du kan använda markdown för att formatera detta fält. Se <a href=\"/docs/"
-"markdown/\">dokumentation här</a> för mer information"
+"markdown/\">dokumentation här</a> för mer information."
 
 #: .\cookbook\forms.py:393
 msgid "A username is not required, if left blank the new user can choose one."
@@ -247,7 +246,7 @@ msgstr "Importerade ifrån"
 #: .\cookbook\helper\template_helper.py:60
 #: .\cookbook\helper\template_helper.py:62
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Det gick inte att läsa mallkoden."
 
 #: .\cookbook\integration\integration.py:102
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
@@ -565,10 +564,12 @@ msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"På den här sidan kan du hantera alla lagringsmappar som ska övervakas och "
+"synkroniseras."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr ""
+msgstr "Sökvägen måste ha följande format"
 
 #: .\cookbook\templates\batch\monitor.html:27
 msgid "Sync Now!"
@@ -819,7 +820,6 @@ msgid "Delete Recipe"
 msgstr "Ta bort recept"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:441
-#, fuzzy
 msgid "Steps"
 msgstr "Steg"
 
@@ -999,7 +999,7 @@ msgstr "Recept"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Logga in för att se recept"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
@@ -1024,11 +1024,11 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr ""
+msgstr "Rubriker"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr ""
+msgstr "Formatering"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
@@ -1043,21 +1043,21 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Denna text är fetstil"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr ""
+msgstr "Denna text är kursiv"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Blockcitat är också möjligt"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Listor"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
@@ -1110,7 +1110,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr ""
+msgstr "Tabeller"
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
