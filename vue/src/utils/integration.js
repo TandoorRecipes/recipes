@@ -5,6 +5,7 @@ export const INTEGRATIONS = [
     {id: 'CHEFTAP', name: "Cheftap", import: true, export: false},
     {id: 'CHOWDOWN', name: "Chowdown", import: true, export: false},
     {id: 'COOKBOOKAPP', name: "CookBookApp", import: true, export: false},
+    {id: 'COOKMATE', name: "Cookmate", import: true, export: false},
     {id: 'COPYMETHAT', name: "CopyMeThat", import: true, export: false},
     {id: 'DOMESTICA', name: "Domestica", import: true, export: false},
     {id: 'MEALIE', name: "Mealie", import: true, export: false},
