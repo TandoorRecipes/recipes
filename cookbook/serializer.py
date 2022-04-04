@@ -10,6 +10,7 @@ from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
+from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
@@ -20,8 +21,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
                              UserFile, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
-from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
-from recipes.settings import MEDIA_URL, AWS_S3_ENDPOINT_URL, AWS_ACCESS_KEY_ID
+from recipes.settings import MEDIA_URL, AWS_ENABLED
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
@@ -55,7 +55,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.recipe_image:
-            if AWS_ACCESS_KEY_ID and AWS_S3_ENDPOINT_URL:
+            if AWS_ENABLED:
                 storage = CachedS3Boto3Storage()
                 path = storage.url(obj.recipe_image)
             else:
