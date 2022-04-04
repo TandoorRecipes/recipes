@@ -1,13 +1,13 @@
 <template>
-    <div v-if="recipe_json !== undefined">
-        Steps
+    <div v-if="recipe_json !== undefined" class="mt-2 mt-md-0">
+        <h5>Steps</h5>
         <div class="row">
             <div class="col col-md-12 text-center">
-                <b-button @click="splitAllSteps('\n')" variant="secondary"><i
-                    class="fas fa-expand-arrows-alt"></i> All
+                <b-button @click="splitAllSteps('\n')" variant="secondary" v-b-tooltip.hover :title="$t('Split_All_Steps')"><i
+                    class="fas fa-expand-arrows-alt"></i> {{ $t('All') }}
                 </b-button>
-                <b-button @click="mergeAllSteps()" variant="primary" class="ml-1"><i
-                    class="fas fa-compress-arrows-alt"></i> All
+                <b-button @click="mergeAllSteps()" variant="primary" class="ml-1" v-b-tooltip.hover :title="$t('Combine_All_Steps')"><i
+                    class="fas fa-compress-arrows-alt"></i> {{ $t('All') }}
                 </b-button>
             </div>
         </div>
