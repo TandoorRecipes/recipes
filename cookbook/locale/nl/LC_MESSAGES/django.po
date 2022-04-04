@@ -13,10 +13,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: 2022-02-09 01:31+0000\n"
+"PO-Revision-Date: 2022-04-05 10:31+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,10 +291,6 @@ msgstr ""
 "(lage waarden betekenen bijvoorbeeld dat meer typefouten genegeerd worden)."
 
 #: .\cookbook\forms.py:445
-#, fuzzy
-#| msgid ""
-#| "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
-#| "for full desciption of choices."
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
@@ -368,8 +364,6 @@ msgid "Partial Match"
 msgstr "Gedeeltelijke overeenkomst"
 
 #: .\cookbook\forms.py:464
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
 msgstr "Begint met"
 
@@ -529,10 +523,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "Er moet een queryset of hash_key opgegeven worden"
 
 #: .\cookbook\helper\shopping_helper.py:148
-#, fuzzy
-#| msgid "You must supply a created_by"
 msgid "You must supply a servings size"
-msgstr "Je moet een created_by aanleveren"
+msgstr "Je moet een portiegrootte aanleveren"
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
@@ -604,11 +596,9 @@ msgid "Rebuilds full text search index on Recipe"
 msgstr "Herbouwt de volledige tekst zoekindex van Recept"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-#, fuzzy
-#| msgid "Only Postgress databases use full text search, no index to rebuild"
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Alleen Postgress databases gebruiken volledige tekst zoekmethoden, geen "
+"Alleen Postgresql databases gebruiken volledige tekst zoekmethoden, geen "
 "index aanwezig om te herbouwen"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
@@ -732,18 +722,22 @@ msgstr ""
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Als je een list_recipe ID en portiegrootte van 0 opgeeft wordt dat "
+"boodschappenlijstje verwijderd."
 
 #: .\cookbook\serializer.py:988
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Hoeveelheid eten om aan het boodschappenlijstje toe te voegen"
 
 #: .\cookbook\serializer.py:989
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID of eenheid om te gebruik voor het boodschappenlijstje"
 
 #: .\cookbook\serializer.py:990
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Wanneer ingesteld op waar, wordt al het voedsel van actieve "
+"boodschappenlijstjes verwijderd."
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
@@ -1480,8 +1474,6 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr "of door een witregel te gebruiken."
 
@@ -1505,10 +1497,6 @@ msgid "Lists"
 msgstr "Lijsten"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1806,15 +1794,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:29
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Simple searches ignore punctuation and common words such as "
-#| "'the', 'a', 'and'. And will treat seperate words as required.\n"
-#| "            Searching for 'apple or flour' will return any recipe that "
-#| "includes both 'apple' and 'flour' anywhere in the fields that have been "
-#| "selected for a full text search.\n"
-#| "            "
 msgid ""
 " \n"
 "            Simple searches ignore punctuation and common words such as "
@@ -1851,23 +1830,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:39
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Web searches simulate functionality found on many web search "
-#| "sites supporting special syntax.\n"
-#| "            Placing quotes around several words will convert those words "
-#| "into a phrase.\n"
-#| "            'or' is recongized as searching for the word (or phrase) "
-#| "immediately before 'or' OR the word (or phrase) directly after.\n"
-#| "            '-' is recognized as searching for recipes that do not "
-#| "include the word (or phrase) that comes immediately after. \n"
-#| "            For example searching for 'apple pie' or cherry -butter will "
-#| "return any recipe that includes the phrase 'apple pie' or the word "
-#| "'cherry' \n"
-#| "            in any field included in the full text search but exclude any "
-#| "recipe that has the word 'butter' in any field included.\n"
-#| "            "
 msgid ""
 " \n"
 "            Web searches simulate functionality found on many web search "
@@ -1913,19 +1875,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:59
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Another approach to searching that also requires Postgresql "
-#| "is fuzzy search or trigram similarity. A trigram is a group of three "
-#| "consecutive characters.\n"
-#| "            For example searching for 'apple' will create x trigrams "
-#| "'app', 'ppl', 'ple' and will create a score of how closely words match "
-#| "the generated trigrams.\n"
-#| "            One benefit of searching trigams is that a search for "
-#| "'sandwich' will find mispelled words such as 'sandwhich' that would be "
-#| "missed by other methods.\n"
-#| "            "
 msgid ""
 " \n"
 "            Another approach to searching that also requires Postgresql is "
@@ -2061,10 +2010,8 @@ msgid "Search-Settings"
 msgstr "Zoek instellingen"
 
 #: .\cookbook\templates\settings.html:56
-#, fuzzy
-#| msgid "Search-Settings"
 msgid "Shopping-Settings"
-msgstr "Zoek instellingen"
+msgstr "Boodschappen instellingen"
 
 #: .\cookbook\templates\settings.html:65
 msgid "Name Settings"
@@ -2180,10 +2127,8 @@ msgid "Perfect for large Databases"
 msgstr "Perfect voor grote databases"
 
 #: .\cookbook\templates\settings.html:207
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Shopping Settings"
-msgstr "Boodschappenlijst"
+msgstr "Boodschappen instellingen"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -2263,8 +2208,6 @@ msgid "Finished"
 msgstr "Afgerond"
 
 #: .\cookbook\templates\shopping_list.html:267
-#, fuzzy
-#| msgid "You are offline, shopping list might not syncronize."
 msgid "You are offline, shopping list might not synchronize."
 msgstr "Je bent offline, de boodschappenlijst synchroniseert mogelijk niet."
 
@@ -2804,93 +2747,113 @@ msgstr "{child.name} is succesvol verplaatst naar {parent.name}"
 #: .\cookbook\views\api.py:474
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} is verwijderd van het boodschappenlijstje."
 
 #: .\cookbook\views\api.py:479 .\cookbook\views\api.py:729
 #: .\cookbook\views\api.py:742
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "{obj.name} is toegevoegd aan het boodschappenlijstje."
 
 #: .\cookbook\views\api.py:591
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
+"ID van het recept waar de stap onderdeel van is. Herhaal parameter voor "
+"meerdere."
 
 #: .\cookbook\views\api.py:592
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "Zoekterm komt overeen (fuzzy) met object naam."
 
 #: .\cookbook\views\api.py:635
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
+"Zoekterm komt overeen (fuzzy) met recept naam. In de toekomst wordt zoeken "
+"op volledige tekst ondersteund."
 
 #: .\cookbook\views\api.py:636
 msgid "ID of keyword a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID van etiket dat een recept moet hebben. Herhaal parameter voor meerdere."
 
 #: .\cookbook\views\api.py:637
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID van ingrediënt dat een recept moet hebben. Herhaal parameter voor "
+"meerdere."
 
 #: .\cookbook\views\api.py:638
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID van eenheid dat een recept moet hebben."
 
 #: .\cookbook\views\api.py:639
 msgid "Rating a recipe should have. [0 - 5]"
-msgstr ""
+msgstr "Waardering die een recept moet hebben. [0 - 5]"
 
 #: .\cookbook\views\api.py:640
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
+"ID van boek dat een recept moet hebben. Herhaal parameter voor meerdere."
 
 #: .\cookbook\views\api.py:641
 msgid ""
 "If recipe should have all (AND=false) or any (OR=<b>true</b>) of the "
 "provided keywords."
 msgstr ""
+"Als een recept alle moet hebben (AND=onwaar) of sommige (OR=<b>waar</b>) van "
+"de gegeven zoektermen."
 
 #: .\cookbook\views\api.py:642
 msgid ""
 "If recipe should have all (AND=false) or any (OR=<b>true</b>) of the "
 "provided foods."
 msgstr ""
+"Als een recept alle moet hebben (AND=onwaar) of sommige (OR=<b>waar</b>) van "
+"de gegeven ingrediënten."
 
 #: .\cookbook\views\api.py:643
 msgid ""
 "If recipe should be in all (AND=false) or any (OR=<b>true</b>) of the "
 "provided books."
 msgstr ""
+"Als een recept alle moet hebben (AND=onwaar) of sommige (OR=<b>waar</b>) van "
+"de gegeven boeken."
 
 #: .\cookbook\views\api.py:644
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr ""
+"Wanneer alleen interne recepten gevonden moeten worden. [waar/<b>onwaar</b>]"
 
 #: .\cookbook\views\api.py:645
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr ""
+msgstr "Geeft de resultaten in willekeurige volgorde weer. [waar/<b>onwaar</b>]"
 
 #: .\cookbook\views\api.py:646
 msgid "Returns new results first in search results. [true/<b>false</b>]"
-msgstr ""
+msgstr "Geeft nieuwe resultaten eerst weer. [waar/<b>onwaar</b>]"
 
 #: .\cookbook\views\api.py:784
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr ""
+"Geeft het boodschappenlijstje item met een primaire sleutel van id.  "
+"Meerdere waarden toegestaan."
 
 #: .\cookbook\views\api.py:787
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
 "b>]<br>  - recent includes unchecked items and recently completed items."
 msgstr ""
+"Filter boodschappenlijstjes op aangevinkt.  [waar,onwaar,beide,<b>recent</b>]"
+"<br>  - recent bevat niet aangevinkte en recent voltooide items."
 
 #: .\cookbook\views\api.py:789
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
+"Geeft items op boodschappenlijstjes gesorteerd per supermarktcategorie weer."
 
 #: .\cookbook\views\api.py:949 .\cookbook\views\data.py:42
 #: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
@@ -2929,11 +2892,9 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1109
 msgid "Connection Refused."
-msgstr ""
+msgstr "Verbinding geweigerd."
 
 #: .\cookbook\views\api.py:1118
-#, fuzzy
-#| msgid "No useable data could be found."
 msgid "No usable data could be found."
 msgstr "Er is geen bruikbare data gevonden."
 
@@ -3017,6 +2978,8 @@ msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"De PDF exporter is niet ingeschakeld op deze instantie gezien het in een "
+"experimentele staat is."
 
 #: .\cookbook\views\lists.py:25
 msgid "Import Log"
