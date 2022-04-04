@@ -10,6 +10,7 @@ from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
+from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
@@ -20,7 +21,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
                              UserFile, UserPreference, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
-from recipes.settings import MEDIA_URL
+from recipes.settings import MEDIA_URL, AWS_ENABLED
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
@@ -54,7 +55,12 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.recipe_image:
-            return MEDIA_URL + obj.recipe_image
+            if AWS_ENABLED:
+                storage = CachedS3Boto3Storage()
+                path = storage.url(obj.recipe_image)
+            else:
+                path = MEDIA_URL + obj.recipe_image
+            return path
 
 
 class CustomDecimalField(serializers.Field):
@@ -364,16 +370,23 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'description', 'category_to_supermarket')
 
 
-class RecipeSimpleSerializer(serializers.ModelSerializer):
+class RecipeSimpleSerializer(WritableNestedModelSerializer):
     url = serializers.SerializerMethodField('get_url')
 
     def get_url(self, obj):
         return reverse('view_recipe', args=[obj.id])
 
+    def create(self, validated_data):
+        # don't allow writing to Recipe via this API
+        return Recipe.objects.get(**validated_data)
+
+    def update(self, instance, validated_data):
+        # don't allow writing to Recipe via this API
+        return Recipe.objects.get(**validated_data)
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'url')
-        read_only_fields = ['id', 'name', 'url']
 
 
 class FoodSimpleSerializer(serializers.ModelSerializer):
@@ -427,6 +440,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
                 name=sc_name,
                 space=space, defaults=sm_category)
         onhand = validated_data.pop('food_onhand', None)
+        if recipe := validated_data.get('recipe', None):
+            validated_data['recipe'] = Recipe.objects.get(**recipe)
 
         # assuming if on hand for user also onhand for shopping_share users
         if not onhand is None:
