@@ -38,7 +38,8 @@ Overview of the capabilities of the different integrations.
 | Plantoeat          | ✔️      | ❌  |  ✔     |
 | CookBookApp        | ✔️      | ⌚  |  ✔️     |
 | CopyMeThat         | ✔️      | ❌  |  ✔️     |
-| CopyMeThat         | ✔️      | ⌚  |  ✔️     |
+| Melarecipes         | ✔️      | ⌚  |  ✔️     |
+| Cookmate         | ✔️      | ⌚  |  ✔️     |
 | PDF (experimental) | ⌚️      | ✔️  |  ✔️     |
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented

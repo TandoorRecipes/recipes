@@ -5,6 +5,8 @@ import traceback
 import uuid
 from io import BytesIO, StringIO
 from zipfile import BadZipFile, ZipFile
+
+import lxml
 from django.core.cache import cache
 import datetime
 
@@ -16,6 +18,7 @@ from django.http import HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django_scopes import scope
+from lxml import etree
 
 from cookbook.forms import ImportExportBase
 from cookbook.helper.image_processing import get_filetype, handle_image
@@ -144,7 +147,7 @@ class Integration:
                                 il.imported_recipes += 1
                                 il.save()
                         import_zip.close()
-                    elif '.zip' in f['name'] or '.paprikarecipes' in f['name']:
+                    elif '.zip' in f['name'] or '.paprikarecipes' in f['name'] or '.mcb' in f['name']:
                         import_zip = ZipFile(f['file'])
                         file_list = []
                         for z in import_zip.filelist:
@@ -157,9 +160,16 @@ class Integration:
                             file_list = self.split_recipe_file(BytesIO(import_zip.read('recipes.html')))
                             il.total_recipes += len(file_list)
 
+                        if isinstance(self, cookbook.integration.cookmate.Cookmate):
+                            new_file_list = []
+                            for file in file_list:
+                                new_file_list += etree.parse(BytesIO(import_zip.read(file.filename))).getroot().getchildren()
+                            il.total_recipes = len(new_file_list)
+                            file_list = new_file_list
+
                         for z in file_list:
                             try:
-                                if isinstance(z, Tag):
+                                if not hasattr(z, 'filename'):
                                     recipe = self.get_recipe_from_file(z)
                                 else:
                                     recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))

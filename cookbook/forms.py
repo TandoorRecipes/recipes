@@ -159,6 +159,7 @@ class ImportExportBase(forms.Form):
     PLANTOEAT = 'PLANTOEAT'
     COOKBOOKAPP = 'COOKBOOKAPP'
     COPYMETHAT = 'COPYMETHAT'
+    COOKMATE = 'COOKMATE'
     PDF = 'PDF'
 
     type = forms.ChoiceField(choices=(
@@ -167,6 +168,7 @@ class ImportExportBase(forms.Form):
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
         (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
         (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
+        (COOKMATE, 'Cookmate')
     ))
 
 

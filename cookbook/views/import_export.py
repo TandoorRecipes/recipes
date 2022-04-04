@@ -15,6 +15,7 @@ from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.cookmate import Cookmate
 from cookbook.integration.copymethat import CopyMeThat
 from cookbook.integration.default import Default
 from cookbook.integration.domestica import Domestica
@@ -77,6 +78,8 @@ def get_integration(request, export_type):
         return PDFexport(request, export_type)
     if export_type == ImportExportBase.MELARECIPES:
         return MelaRecipes(request, export_type)
+    if export_type == ImportExportBase.COOKMATE:
+        return Cookmate(request, export_type)
 
 
 @group_required('user')
