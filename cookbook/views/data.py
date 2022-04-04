@@ -1,29 +1,17 @@
-import json
-import uuid
 from datetime import datetime
-from io import BytesIO
 
-import requests
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.files import File
-from django.db.transaction import atomic
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
-from PIL import UnidentifiedImageError
-from requests.exceptions import MissingSchema
 from rest_framework.authtoken.models import Token
 
 from cookbook.forms import BatchEditForm, SyncForm
-from cookbook.helper.image_processing import handle_image
-from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required, has_group_permission
-from cookbook.helper.recipe_url_import import parse_cooktime
-from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe, RecipeImport, Step, Sync,
+from cookbook.models import (Comment, Food, Keyword, Recipe, RecipeImport, Sync,
                              Unit, UserPreference, BookmarkletImport)
 from cookbook.tables import SyncTable
 from recipes import settings

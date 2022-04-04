@@ -20,6 +20,7 @@ from cookbook.integration.default import Default
 from cookbook.integration.domestica import Domestica
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.mealmaster import MealMaster
+from cookbook.integration.melarecipes import MelaRecipes
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
@@ -74,6 +75,8 @@ def get_integration(request, export_type):
         return CopyMeThat(request, export_type)
     if export_type == ImportExportBase.PDF:
         return PDFexport(request, export_type)
+    if export_type == ImportExportBase.MELARECIPES:
+        return MelaRecipes(request, export_type)
 
 
 @group_required('user')
