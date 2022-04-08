@@ -52,7 +52,11 @@ Below are some of the larger contributions made yet.
 
 [hds](https://www.transifex.com/user/profile/hds/)  
 [mlopezifu](https://www.transifex.com/user/profile/mlopezifu/)  
-[stormsz](https://www.transifex.com/user/profile/stormsz/)  
+[stormsz](https://www.transifex.com/user/profile/stormsz/)
+
+### Russian
+
+[amillerr](https://github.com/amillerr)
 
 ### Spanish
 
