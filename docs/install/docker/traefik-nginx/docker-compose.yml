@@ -11,6 +11,7 @@ services:
       - default
 
   web_recipes:
+    restart: always
     image: vabene1111/recipes
     env_file:
       - ./.env
