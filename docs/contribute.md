@@ -80,7 +80,7 @@ You can simply register an account and then follow these steps to add translatio
 3. Select Tandoor and on the top right hand corner select `Watch project Tandoor` (click on `Not watching`)
 4. Go back to the dashboard. It now shows you the relevant translations for your languages. Click the pencil icon to get started.
 
-!!!! info "Creating a new languagte"
+!!! info "Creating a new languagte"
     To create a new language you must first select Tandoor (the project) and then a component.
     Here you will have the option to add the language. Afterwards you can also simply add it to the other components as well.
 
