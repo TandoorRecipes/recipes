@@ -30,8 +30,8 @@ services:
       - web_recipes
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
-      - staticfiles:/static
-      - ./mediafiles:/media
+      - staticfiles:/static:ro
+      - ./mediafiles:/media:ro
 
 volumes:
   nginx_config:
