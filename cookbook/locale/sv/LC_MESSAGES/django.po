@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2022-03-29 20:36+0000\n"
+"PO-Revision-Date: 2022-04-10 09:51+0000\n"
 "Last-Translator: Marcus Alsterfjord <marcus@marcussite.se>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
@@ -1068,7 +1068,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr ""
+msgstr "Ordnad lista"
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -1077,12 +1077,12 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr ""
+msgstr "oordnat listobjekt"
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr ""
+msgstr "Oordnad lista"
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -1091,11 +1091,11 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr ""
+msgstr "ordnat listobjekt"
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr ""
+msgstr "Bilder & länkar"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
@@ -1106,7 +1106,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr ""
+msgstr "Detta kommer att bli en bild"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
@@ -1124,34 +1124,34 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr ""
+msgstr "Tabell"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr ""
+msgstr "Sidhuvud"
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr ""
+msgstr "Cell"
 
 #: .\cookbook\templates\meal_plan.html:101
 msgid "New Entry"
-msgstr ""
+msgstr "Ny post"
 
 #: .\cookbook\templates\meal_plan.html:113
 #: .\cookbook\templates\shopping_list.html:52
 msgid "Search Recipe"
-msgstr ""
+msgstr "Sök recept"
 
 #: .\cookbook\templates\meal_plan.html:139
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: .\cookbook\templates\meal_plan.html:141
 msgid "Note (optional)"
-msgstr ""
+msgstr "Anmärkning (valfritt)"
 
 #: .\cookbook\templates\meal_plan.html:143
 msgid ""
@@ -1162,26 +1162,26 @@ msgstr ""
 #: .\cookbook\templates\meal_plan.html:147
 #: .\cookbook\templates\meal_plan.html:251
 msgid "Serving Count"
-msgstr ""
+msgstr "Antal portioner"
 
 #: .\cookbook\templates\meal_plan.html:153
 msgid "Create only note"
-msgstr ""
+msgstr "Skapa endast notering"
 
 #: .\cookbook\templates\meal_plan.html:168
 #: .\cookbook\templates\shopping_list.html:7
 #: .\cookbook\templates\shopping_list.html:29
 #: .\cookbook\templates\shopping_list.html:705
 msgid "Shopping List"
-msgstr ""
+msgstr "Inköpslista"
 
 #: .\cookbook\templates\meal_plan.html:172
 msgid "Shopping list currently empty"
-msgstr ""
+msgstr "Inköpslistan är för närvarande tom"
 
 #: .\cookbook\templates\meal_plan.html:175
 msgid "Open Shopping List"
-msgstr ""
+msgstr "Öppna inköpslistan"
 
 #: .\cookbook\templates\meal_plan.html:189
 msgid "Plan"
@@ -1208,7 +1208,7 @@ msgstr ""
 
 #: .\cookbook\templates\meal_plan.html:219
 msgid "Show help"
-msgstr ""
+msgstr "Visa hjälp"
 
 #: .\cookbook\templates\meal_plan.html:220
 msgid "Week iCal export"
@@ -1373,7 +1373,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:22
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #: .\cookbook\templates\settings.html:38
 msgid "Link social account"
@@ -1422,7 +1422,7 @@ msgstr ""
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser account"
-msgstr ""
+msgstr "Skapa ett superanvändarkonto"
 
 #: .\cookbook\templates\shopping_list.html:75
 msgid "Shopping Recipes"
@@ -1479,13 +1479,15 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
 msgid "Account Connections"
-msgstr ""
+msgstr "Kontokopplingar"
 
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
+"Du kan logga in på ditt konto med någon av följande tredje parts\n"
+"             konton:"
 
 #: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
@@ -1495,10 +1497,12 @@ msgstr ""
 msgid ""
 "You currently have no social network accounts connected to this account."
 msgstr ""
+"Du har för närvarande inga sociala nätverkskonton kopplade till det här "
+"kontot."
 
 #: .\cookbook\templates\socialaccount\connections.html:47
 msgid "Add a 3rd Party Account"
-msgstr ""
+msgstr "Lägg till ett konto från tredje part"
 
 #: .\cookbook\templates\stats.html:4
 msgid "Stats"
@@ -1534,7 +1538,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:22
 msgid "Show Links"
-msgstr ""
+msgstr "Visa länkar"
 
 #: .\cookbook\templates\system.html:32
 msgid "System Information"

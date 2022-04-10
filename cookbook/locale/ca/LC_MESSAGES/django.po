@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: 2022-04-08 22:31+0000\n"
+"PO-Revision-Date: 2022-04-10 09:51+0000\n"
 "Last-Translator: Rubens <rubenixnagios@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -89,7 +89,7 @@ msgid ""
 "try them out!"
 msgstr ""
 "Color de la barra de navegació superior. No tots els colors funcionen amb "
-"tots els temes, només cal provar-los."
+"tots els temes, cal provar-los!"
 
 #: .\cookbook\forms.py:74
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
@@ -208,7 +208,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:197
 msgid "Add your comment: "
-msgstr "Afegir el teu comentari:"
+msgstr "Afegir el teu comentari: "
 
 #: .\cookbook\forms.py:212
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -501,7 +501,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:136
 #: .\cookbook\helper\permission_helper.py:159 .\cookbook\views\views.py:148
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "No heu iniciat la sessió i, per tant, no podeu veure aquesta pàgina."
+msgstr "No heu iniciat la sessió, no podeu veure aquesta pàgina."
 
 #: .\cookbook\helper\permission_helper.py:140
 #: .\cookbook\helper\permission_helper.py:146
@@ -635,6 +635,8 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Emmagatzematge màxim de fitxers per espai en MB. 0 per il·limitat, -1 per "
+"desactivar la càrrega de fitxers."
 
 #: .\cookbook\models.py:300 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:53
@@ -667,7 +669,7 @@ msgstr "Nova"
 
 #: .\cookbook\models.py:513
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " forma part d'un pas de recepta i no es pot suprimir"
 
 #: .\cookbook\models.py:1065 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -1005,8 +1007,6 @@ msgid "Register"
 msgstr "Registre"
 
 #: .\cookbook\templates\account\signup.html:12
-#, fuzzy
-#| msgid "Create your Account"
 msgid "Create an Account"
 msgstr "Crear Compte"
 
@@ -1475,10 +1475,8 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
-msgstr "o bé deixant una línia en blanc entremig."
+msgstr "o deixant una línia en blanc entremig."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
@@ -1969,18 +1967,24 @@ msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
 msgstr ""
+"Hi ha moltes opcions per configurar la cerca en funció de les vostres "
+"preferències personals."
 
 #: .\cookbook\templates\settings.html:174
 msgid ""
 "Usually you do <b>not need</b> to configure any of them and can just stick "
 "with either the default or one of the following presets."
 msgstr ""
+"Normalment <b>no cal</b> configurar cap d'ells i només podeu quedar-vos amb "
+"el valor predeterminat o amb un dels següents valors predefinits."
 
 #: .\cookbook\templates\settings.html:175
 msgid ""
 "If you do want to configure the search you can read about the different "
 "options <a href=\"/docs/search/\">here</a>."
 msgstr ""
+"Si vols configurar la cerca, pots llegir les diferents opcions <a href=\"/"
+"docs/search/\">aquí</a>."
 
 #: .\cookbook\templates\settings.html:180
 msgid "Fuzzy"
@@ -1992,6 +1996,8 @@ msgid ""
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Trobeu el que necessiteu encara que la cerca o la recepta contingui errors "
+"d'ortografia. Pot ser que tornin més resultats dels necessaris."
 
 #: .\cookbook\templates\settings.html:182
 msgid "This is the default behavior"
@@ -2011,6 +2017,8 @@ msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Permet un control minuciós sobre els resultats de la cerca, però és possible "
+"que no es tornin si hi han errors ortogràfics."
 
 #: .\cookbook\templates\settings.html:190
 msgid "Perfect for large Databases"
@@ -2188,10 +2196,8 @@ msgid "Members"
 msgstr "Membres"
 
 #: .\cookbook\templates\space.html:95
-#, fuzzy
-#| msgid "Invite Links"
 msgid "Invite User"
-msgstr "Enllaços Invitació"
+msgstr "Convida Usuari"
 
 #: .\cookbook\templates\space.html:107
 msgid "User"
@@ -2202,8 +2208,6 @@ msgid "Groups"
 msgstr "Grups"
 
 #: .\cookbook\templates\space.html:119
-#, fuzzy
-#| msgid "Admin"
 msgid "admin"
 msgstr "Admin"
 
@@ -2376,31 +2380,27 @@ msgstr "Importació d’URL"
 
 #: .\cookbook\templates\url_import.html:33
 msgid "Drag me to your bookmarks to import recipes from anywhere"
-msgstr ""
+msgstr "Arrossega als marcadors per importar receptes des de qualsevol lloc"
 
 #: .\cookbook\templates\url_import.html:34
-#, fuzzy
-#| msgid "Bookmark saved!"
 msgid "Bookmark Me!"
-msgstr "Marcador desat!"
+msgstr "Marca'm!"
 
 #: .\cookbook\templates\url_import.html:38
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\cookbook\templates\url_import.html:40
 msgid "App"
-msgstr ""
+msgstr "App"
 
 #: .\cookbook\templates\url_import.html:44
 msgid "Text"
 msgstr "Text"
 
 #: .\cookbook\templates\url_import.html:46
-#, fuzzy
-#| msgid "File ID"
 msgid "File"
-msgstr "ID d'Arxiu"
+msgstr "Arxiu"
 
 #: .\cookbook\templates\url_import.html:64
 msgid "Enter website URL"
@@ -2409,20 +2409,20 @@ msgstr "Introduïu l'URL del lloc web"
 #: .\cookbook\templates\url_import.html:104
 msgid "Select recipe files to import or drop them here..."
 msgstr ""
+"Seleccioneu fitxers de receptes per importar-los o deixeu-los anar aquí..."
 
 #: .\cookbook\templates\url_import.html:125
 msgid "Paste json or html source here to load recipe."
-msgstr ""
+msgstr "Enganxa json o html aquí per carregar la recepta."
 
 #: .\cookbook\templates\url_import.html:153
-#, fuzzy
-#| msgid "View Recipe"
 msgid "Preview Recipe Data"
-msgstr "Veure Recepta"
+msgstr "Previsualitzar dades Recepta"
 
 #: .\cookbook\templates\url_import.html:154
 msgid "Drag recipe attributes from the right into the appropriate box below."
 msgstr ""
+"Arrossega atributs de la recepta des de la dreta al quadre corresponent."
 
 #: .\cookbook\templates\url_import.html:163
 #: .\cookbook\templates\url_import.html:180
@@ -2435,43 +2435,39 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:307
 #: .\cookbook\templates\url_import.html:358
 msgid "Clear Contents"
-msgstr ""
+msgstr "Neteja comentaris"
 
 #: .\cookbook\templates\url_import.html:165
 msgid "Text dragged here will be appended to the name."
-msgstr ""
+msgstr "Text arrossegat aquí s'afegirà al nom."
 
 #: .\cookbook\templates\url_import.html:178
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #: .\cookbook\templates\url_import.html:182
 msgid "Text dragged here will be appended to the description."
-msgstr ""
+msgstr "Text arrossegat aquí s'afegirà a la descripció."
 
 #: .\cookbook\templates\url_import.html:199
 msgid "Keywords dragged here will be appended to current list"
-msgstr ""
+msgstr "Paraules clau arrossegades aquí s'afegiran a la llista actual"
 
 #: .\cookbook\templates\url_import.html:214
 msgid "Image"
-msgstr ""
+msgstr "Imatge"
 
 #: .\cookbook\templates\url_import.html:246
-#, fuzzy
-#| msgid "Preparation Time"
 msgid "Prep Time"
-msgstr "Temps de preparació"
+msgstr "Temps preparació"
 
 #: .\cookbook\templates\url_import.html:261
-#, fuzzy
-#| msgid "Time"
 msgid "Cook Time"
-msgstr "Temps"
+msgstr "Temps Cocció"
 
 #: .\cookbook\templates\url_import.html:282
 msgid "Ingredients dragged here will be appended to current list."
-msgstr ""
+msgstr "Ingredients arrossegats aquí s'afegiran a la llista actual."
 
 #: .\cookbook\templates\url_import.html:304
 #: .\cookbook\templates\url_import.html:579
@@ -2482,54 +2478,48 @@ msgstr "Instruccions"
 msgid ""
 "Recipe instructions dragged here will be appended to current instructions."
 msgstr ""
+"Instruccions de la recepta arrossegades aquí s'afegiran a les instruccions "
+"actuals."
 
 #: .\cookbook\templates\url_import.html:332
-#, fuzzy
-#| msgid "Discovered Recipes"
 msgid "Discovered Attributes"
-msgstr "Receptes Descobertes"
+msgstr "Atributs Descoberts"
 
 #: .\cookbook\templates\url_import.html:334
 msgid ""
 "Drag recipe attributes from below into the appropriate box on the left. "
 "Click any node to display its full properties."
 msgstr ""
+"Arrossega atributs de la recepta des de sota al quadre corresponent de "
+"l'esquerra. Feu clic a qualsevol node per mostrar les seves propietats."
 
 #: .\cookbook\templates\url_import.html:351
-#, fuzzy
-#| msgid "Show as header"
 msgid "Show Blank Field"
-msgstr "Mostra com a capçalera"
+msgstr "Mostra Camp en Blanc"
 
 #: .\cookbook\templates\url_import.html:356
 msgid "Blank Field"
-msgstr ""
+msgstr "Camp en Blanc"
 
 #: .\cookbook\templates\url_import.html:360
 msgid "Items dragged to Blank Field will be appended."
-msgstr ""
+msgstr "S'afegiran Elements arrossegats al camp en blanc."
 
 #: .\cookbook\templates\url_import.html:407
-#, fuzzy
-#| msgid "Delete Step"
 msgid "Delete Text"
-msgstr "Esborra Pas"
+msgstr "Esborra Text"
 
 #: .\cookbook\templates\url_import.html:420
-#, fuzzy
-#| msgid "Delete Recipe"
 msgid "Delete image"
-msgstr "Esborra Recepta"
+msgstr "Esborra Imatge"
 
 #: .\cookbook\templates\url_import.html:436
 msgid "Recipe Name"
 msgstr "Nom de la Recepta"
 
 #: .\cookbook\templates\url_import.html:440
-#, fuzzy
-#| msgid "Recipe Markup Specification"
 msgid "Recipe Description"
-msgstr "Especificació de marcatge de receptes"
+msgstr "Descripció de Recepta"
 
 #: .\cookbook\templates\url_import.html:504
 #: .\cookbook\templates\url_import.html:536
@@ -2542,10 +2532,8 @@ msgid "Note"
 msgstr "Nota"
 
 #: .\cookbook\templates\url_import.html:597
-#, fuzzy
-#| msgid "All Keywords"
 msgid "Add Keyword"
-msgstr "Totes les paraules clau"
+msgstr "Afegir paraula clau"
 
 #: .\cookbook\templates\url_import.html:610
 msgid "All Keywords"
@@ -2591,106 +2579,112 @@ msgid "Recipe Markup Specification"
 msgstr "Especificació de marcatge de receptes"
 
 #: .\cookbook\views\api.py:88 .\cookbook\views\api.py:174
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "El paràmetre filter_list té un format incorrecte"
+msgstr "El paràmetre updated_at té un format incorrecte"
 
 #: .\cookbook\views\api.py:194 .\cookbook\views\api.py:295
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
-msgstr ""
+msgstr "No {self.basename} amb id {pk} existeix"
 
 #: .\cookbook\views\api.py:198
 msgid "Cannot merge with the same object!"
-msgstr ""
+msgstr "No es pot fusionar amb el mateix objecte!"
 
 #: .\cookbook\views\api.py:205
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
-msgstr ""
+msgstr "No {self.basename} amb id {target} existeix"
 
 #: .\cookbook\views\api.py:210
 msgid "Cannot merge with child object!"
-msgstr ""
+msgstr "No es pot combinar amb l'objecte fill!"
 
 #: .\cookbook\views\api.py:243
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
-msgstr ""
+msgstr "{source.name} s'ha fusionat amb {target.name}"
 
 #: .\cookbook\views\api.py:248
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
-msgstr ""
+msgstr "Error en intentar combinar {source.name} amb {target.name}"
 
 #: .\cookbook\views\api.py:304
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
-msgstr ""
+msgstr "{child.name} s'ha mogut correctament a l'arrel."
 
 #: .\cookbook\views\api.py:307 .\cookbook\views\api.py:325
 msgid "An error occurred attempting to move "
-msgstr ""
+msgstr "Error a l'intentar moure "
 
 #: .\cookbook\views\api.py:310
 msgid "Cannot move an object to itself!"
-msgstr ""
+msgstr "No es pot moure un objecte cap a si mateix!"
 
 #: .\cookbook\views\api.py:316
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
-msgstr ""
+msgstr "No existeix {self.basename} amb identificador {parent}"
 
 #: .\cookbook\views\api.py:322
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
-msgstr ""
+msgstr "{child.name} s'ha mogut correctament al pare {parent.name}"
 
 #: .\cookbook\views\api.py:474
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} eliminat de la llista de la compra."
 
 #: .\cookbook\views\api.py:479 .\cookbook\views\api.py:729
 #: .\cookbook\views\api.py:742
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "Afegit {obj.name} a la llista de la compra."
 
 #: .\cookbook\views\api.py:591
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
-msgstr ""
+msgstr "ID de recepta forma part d'un pas. Per a múltiples repeteix paràmetre."
 
 #: .\cookbook\views\api.py:592
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "La cadena de consulta coincideix (difusa) amb el nom de l'objecte."
 
 #: .\cookbook\views\api.py:635
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
+"Cadena de consulta coincideix (difusa) amb el nom de la recepta. En el futur "
+"també cerca text complet."
 
 #: .\cookbook\views\api.py:636
 msgid "ID of keyword a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID de la paraula clau que hauria de tenir una recepta. Per a múltiples "
+"repeteix paràmetre."
 
 #: .\cookbook\views\api.py:637
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID d'aliments que ha de tenir una recepta. Per a múltiples repeteix "
+"paràmetres."
 
 #: .\cookbook\views\api.py:638
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID d'unitat que hauria de tenir una recepta."
 
 #: .\cookbook\views\api.py:639
 msgid "Rating a recipe should have. [0 - 5]"
-msgstr ""
+msgstr "Valoració que hauria de tenir una recepta. [0 - 5]"
 
 #: .\cookbook\views\api.py:640
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
+"ID del llibre hauria d'haver-hi en una recepta. Per al paràmetre de "
+"repetició múltiple."
 
 #: .\cookbook\views\api.py:641
 msgid ""
@@ -2742,6 +2736,7 @@ msgstr ""
 #: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr ""
+"Aquesta funció encara no està disponible a la versió allotjada de tandoor!"
 
 #: .\cookbook\views\api.py:971
 msgid "Sync successful!"
@@ -2753,7 +2748,7 @@ msgstr "Error de sincronització amb emmagatzematge"
 
 #: .\cookbook\views\api.py:1055
 msgid "Nothing to do."
-msgstr ""
+msgstr "Res a fer."
 
 #: .\cookbook\views\api.py:1070
 msgid "The requested site provided malformed data and cannot be read."
@@ -2774,29 +2769,27 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1109
 msgid "Connection Refused."
-msgstr ""
+msgstr "Connexió Refusada."
 
 #: .\cookbook\views\api.py:1118
-#, fuzzy
-#| msgid "The requested page could not be found."
 msgid "No usable data could be found."
-msgstr "No s'ha pogut trobar la pàgina sol·licitada."
+msgstr "No s'han trobat dades utilitzables."
 
 #: .\cookbook\views\api.py:1134
 msgid "I couldn't find anything to do."
-msgstr ""
+msgstr "No es pot trobar res a fer."
 
 #: .\cookbook\views\data.py:34 .\cookbook\views\data.py:129
 #: .\cookbook\views\edit.py:49 .\cookbook\views\import_export.py:81
 #: .\cookbook\views\new.py:33
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Has arribat al nombre màxim de receptes per al vostre espai."
 
 #: .\cookbook\views\data.py:38 .\cookbook\views\data.py:133
 #: .\cookbook\views\edit.py:53 .\cookbook\views\import_export.py:85
 #: .\cookbook\views\new.py:37
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Tens més usuaris dels permesos al teu espai."
 
 #: .\cookbook\views\data.py:111
 #, python-format
@@ -2856,13 +2849,15 @@ msgstr "Error al desar canvis!"
 
 #: .\cookbook\views\import_export.py:107 .\cookbook\views\import_export.py:143
 msgid "Importing is not implemented for this provider"
-msgstr ""
+msgstr "Importació no implementada en aquest proveïdor"
 
 #: .\cookbook\views\import_export.py:130
 msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"L'exportador de PDF no està habilitat en aquesta instància perquè encara es "
+"troba en un estat experimental."
 
 #: .\cookbook\views\lists.py:25
 msgid "Import Log"
@@ -2877,26 +2872,20 @@ msgid "Shopping Lists"
 msgstr "Llistes de Compra"
 
 #: .\cookbook\views\lists.py:148
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarkets"
-msgstr "Supermercat"
+msgstr "Supermercats"
 
 #: .\cookbook\views\lists.py:164
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Shopping Categories"
-msgstr "Llista de Compra de Receptes"
+msgstr "Categories de Compres"
 
 #: .\cookbook\views\lists.py:217
 msgid "Steps"
 msgstr "Passos"
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Llista de la Compra"
+msgstr "Nova Llista de Compra"
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
@@ -2908,57 +2897,62 @@ msgstr "S'ha produït un error en importar la recepta!"
 
 #: .\cookbook\views\new.py:212
 msgid "Hello"
-msgstr ""
+msgstr "Hola"
 
 #: .\cookbook\views\new.py:212
 msgid "You have been invited by "
-msgstr ""
+msgstr "Convidat per "
 
 #: .\cookbook\views\new.py:213
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " per unir-se al seu espai de Receptes "
 
 #: .\cookbook\views\new.py:214
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Click per activar el teu compte: "
 
 #: .\cookbook\views\new.py:215
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Si l'enllaç no funciona, utilitzeu el codi següent per unir-vos a l'espai: "
 
 #: .\cookbook\views\new.py:216
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "Invitació vàlida fins "
 
 #: .\cookbook\views\new.py:217
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recipes és un gestor de receptes de codi obert. Comprova a GitHub "
 
 #: .\cookbook\views\new.py:220
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Invitació de receptes Tandoor"
 
 #: .\cookbook\views\new.py:227
 msgid "Invite link successfully send to user."
-msgstr ""
+msgstr "Enllaç d'invitació enviat a l'usuari."
 
 #: .\cookbook\views\new.py:230
 msgid ""
 "You have send to many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
+"Masses emails enviats, compartiu l'enllaç manualment o espereu unes hores."
 
 #: .\cookbook\views\new.py:232
 msgid "Email could not be sent to user. Please share the link manually."
-msgstr ""
+msgstr "No es pot enviar email a l'usuari. Comparteix l'enllaç manualment."
 
 #: .\cookbook\views\views.py:126
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
+"Espai de Receptes creat correctament. Comenceu afegint algunes receptes o "
+"convida altres persones a unir-se."
 
 #: .\cookbook\views\views.py:174
 msgid "You do not have the required permissions to perform this action!"
@@ -2970,21 +2964,23 @@ msgstr "Comentari Desat!"
 
 #: .\cookbook\views\views.py:276
 msgid "This feature is not available in the demo version!"
-msgstr ""
+msgstr "Funció no està disponible a la versió de demostració!"
 
 #: .\cookbook\views\views.py:335
 msgid "You must select at least one field to search!"
-msgstr ""
+msgstr "Heu de seleccionar almenys un camp per cercar!"
 
 #: .\cookbook\views\views.py:340
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
+"Per utilitzar aquest mètode de cerca, heu de seleccionar almenys un camp de "
+"cerca de text complet!"
 
 #: .\cookbook\views\views.py:344
 msgid "Fuzzy search is not compatible with this search method!"
-msgstr ""
+msgstr "Cerca difusa no és compatible amb aquest mètode de cerca!"
 
 #: .\cookbook\views\views.py:473
 msgid ""
@@ -3009,14 +3005,12 @@ msgid "Malformed Invite Link supplied!"
 msgstr "S'ha proporcionat un enllaç d'invitació mal format."
 
 #: .\cookbook\views\views.py:519
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You are already member of a space and therefore cannot join this one."
-msgstr "No heu iniciat la sessió i, per tant, no podeu veure aquesta pàgina."
+msgstr "Ja ets membre d'un espai, no pots unir-te a aquest."
 
 #: .\cookbook\views\views.py:530
 msgid "Successfully joined space."
-msgstr ""
+msgstr "Unit correctament a l'espai."
 
 #: .\cookbook\views\views.py:536
 msgid "Invite Link not valid or already used!"
@@ -3027,12 +3021,16 @@ msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
+"Notificació d'enllaços compartits no activada en aquesta instància. Aviseu "
+"l'administrador per informar dels problemes."
 
 #: .\cookbook\views\views.py:623
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+"L'enllaç per compartir receptes s'ha desactivat! Per obtenir informació "
+"addicional, poseu-vos en contacte amb l'administrador."
 
 #~ msgid "Time"
 #~ msgstr "Temps"
