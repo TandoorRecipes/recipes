@@ -61,7 +61,8 @@ def search(request):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
         f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(
+                             Lower('name').asc()),
                          space=request.space)
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -226,6 +227,11 @@ def supermarket(request):
 
 
 @group_required('user')
+def ingredient_editor(request):
+    return render(request, 'ingredient_editor.html', {})
+
+
+@group_required('user')
 def meal_plan_entry(request, pk):
     plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
 
@@ -327,10 +333,10 @@ def user_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                    len(search_form.cleaned_data['icontains'])
-                    + len(search_form.cleaned_data['istartswith'])
-                    + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext'])
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
                 )
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))

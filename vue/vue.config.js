@@ -45,6 +45,10 @@ const pages = {
         entry: "./src/apps/MealPlanView/main.js",
         chunks: ["chunk-vendors"],
     },
+    ingredient_editor_view: {
+        entry: "./src/apps/IngredientEditorView/main.js",
+        chunks: ["chunk-vendors"],
+    },
     shopping_list_view: {
         entry: "./src/apps/ShoppingListView/main.js",
         chunks: ["chunk-vendors"],
