@@ -29,16 +29,20 @@
                 </td>
                 <td style="width: 30vw">
                     <generic-multiselect @change="i.unit = $event.val;"
-                                         :initial_selection="i.unit"
+                                         :initial_single_selection="i.unit"
                                          :model="Models.UNIT"
                                          :search_on_load="false"
+                                         :allow_create="true"
+                                         :create_placeholder="$t('Create')"
                                          :multiple="false"></generic-multiselect>
                 </td>
                 <td style="width: 30vw">
                     <generic-multiselect @change="i.food = $event.val;"
-                                         :initial_selection="i.food"
+                                         :initial_single_selection="i.food"
                                          :model="Models.FOOD"
                                          :search_on_load="false"
+                                         :allow_create="true"
+                                         :create_placeholder="$t('Create')"
                                          :multiple="false"></generic-multiselect>
                 </td>
                 <td style="width: 30vw">
@@ -108,7 +112,7 @@ export default {
             }).catch((r, e) => {
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
             })
-        }
+        },
     },
 }
 </script>

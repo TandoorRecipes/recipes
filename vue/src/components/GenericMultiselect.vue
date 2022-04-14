@@ -19,6 +19,7 @@
         @search-change="search"
         @input="selectionChanged"
         @tag="addNew"
+        @open="selectOpened()"
     >
     </multiselect>
 </template>
@@ -26,7 +27,7 @@
 <script>
 import Vue from "vue"
 import Multiselect from "vue-multiselect"
-import {ApiMixin} from "@/utils/utils"
+import {ApiMixin, StandardToasts} from "@/utils/utils"
 
 export default {
     name: "GenericMultiselect",
@@ -173,15 +174,30 @@ export default {
                 }
             })
         },
+        selectOpened: function () {
+            if (this.objects.length < 1) {
+                this.search("")
+            }
+        },
         selectionChanged: function () {
             this.$emit("change", {var: this.parent_variable, val: this.selected_objects})
         },
         addNew(e) {
-            this.$emit("new", e)
-            // could refactor as Promise - seems unnecessary
-            setTimeout(() => {
-                this.search("")
-            }, 750)
+            //TODO add ability to choose field name other than "name"
+            console.log('CREATEING NEW with -> ' , e)
+            this.genericAPI(this.model, this.Actions.CREATE, {name: e}).then(result => {
+                let createdObj = result.data?.results ?? result.data
+                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                if (this.multiple) {
+                    this.selected_objects.push(createdObj)
+                } else {
+                    this.selected_objects = createdObj
+                }
+                this.objects.push(createdObj)
+                this.selectionChanged()
+            }).catch((r, err) => {
+                StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+            })
         },
     },
 }
