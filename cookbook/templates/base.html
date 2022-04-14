@@ -219,6 +219,18 @@
                         </div>
                         <div class="row m-0">
                             <div class="col-4">
+                                <a href="{% url 'view_ingredient_editor' %}" class="p-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-th-list fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                            {% trans 'Ingredient Editor' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
                                 <a href="{% url 'view_export' %}" class="p-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
