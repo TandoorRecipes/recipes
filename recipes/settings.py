@@ -377,6 +377,7 @@ LANGUAGES = [
     ('pl', _('Polish')),
     ('ru', _('Russian')),
     ('es', _('Spanish')),
+    ('sv', _('Swedish')),
 ]
 
 # Static files (CSS, JavaScript, Images)
