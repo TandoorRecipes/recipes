@@ -46,6 +46,7 @@ export class StandardToasts {
     static FAIL_FETCH = "FAIL_FETCH"
     static FAIL_UPDATE = "FAIL_UPDATE"
     static FAIL_DELETE = "FAIL_DELETE"
+    static FAIL_DELETE_PROTECTED = "FAIL_DELETE_PROTECTED"
     static FAIL_MOVE = "FAIL_MOVE"
     static FAIL_MERGE = "FAIL_MERGE"
 
@@ -80,6 +81,9 @@ export class StandardToasts {
                 break
             case StandardToasts.FAIL_DELETE:
                 makeToast(i18n.tc("Failure"), i18n.tc("err_deleting_resource"), "danger")
+                break
+            case StandardToasts.FAIL_DELETE_PROTECTED:
+                makeToast(i18n.tc("Protected"), i18n.tc("err_deleting_protected_resource"), "danger")
                 break
             case StandardToasts.FAIL_MOVE:
                 makeToast(i18n.tc("Failure"), i18n.tc("err_moving_resource") + (err_details ? "\n" + err_details : ""), "danger")

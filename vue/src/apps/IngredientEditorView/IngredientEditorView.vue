@@ -5,6 +5,9 @@
                 <generic-multiselect @change="food = $event.val; refreshList()"
                                      :model="Models.FOOD"
                                      :multiple="false"></generic-multiselect>
+                <b-button @click="show_food_delete=true" :disabled="food === null"> <i class="fas fa-trash-alt"></i></b-button>
+                <generic-modal-form :model="Models.FOOD" :action="Actions.DELETE" :show="show_food_delete" :item1="food"
+                                @finish-action="food = null; show_food_delete=false"/>
             </div>
             <div class="col-md-6">
                 <generic-multiselect @change="unit = $event.val; refreshList()"
@@ -16,11 +19,11 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th>Amount</th>
-                <th>Unit</th>
-                <th>Food</th>
-                <th>Note</th>
-                <th>Save</th>
+                <th>{{$t('Amount')}}</th>
+                <th>{{$t('Unit')}}</th>
+                <th>{{$t('Food')}}</th>
+                <th>{{$t('Note')}}</th>
+                <th>{{$t('Save')}}</th>
             </tr>
             </thead>
             <tr v-for="i in ingredients" v-bind:key="i.id">
@@ -68,18 +71,21 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiMixin, StandardToasts} from "@/utils/utils"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import GenericMultiselect from "@/components/GenericMultiselect";
+import GenericModalForm from "@/components/Modals/GenericModalForm";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientEditorView",
     mixins: [ApiMixin],
-    components: {GenericMultiselect},
+    components: {GenericMultiselect, GenericModalForm},
     data() {
         return {
             ingredients: [],
             food: null,
             unit: null,
+            show_food_delete: false,
+            show_unit_delete: false,
         }
     },
     computed: {},
