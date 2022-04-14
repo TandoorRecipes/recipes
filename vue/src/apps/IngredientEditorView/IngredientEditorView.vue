@@ -1,6 +1,8 @@
 <template>
     <div id="app">
-        <div class="row">
+        <beta-warning></beta-warning>
+
+        <div class="row mt-2">
             <div class="col col-md-6">
                 <generic-multiselect @change="food = $event.val; refreshList()"
                                      :model="Models.FOOD"
@@ -11,7 +13,8 @@
                 <b-button @click="generic_model = Models.FOOD; generic_action=Actions.MERGE" :disabled="food === null">
                     <i class="fas fa-compress-arrows-alt"></i>
                 </b-button>
-                <generic-modal-form :model="Models.FOOD" :action="generic_action" :show="generic_model === Models.FOOD" :item1="food"
+                <generic-modal-form :model="Models.FOOD" :action="generic_action" :show="generic_model === Models.FOOD"
+                                    :item1="food"
                                     @finish-action="food = null; generic_action=null; generic_model=null"/>
             </div>
             <div class="col col-md-6">
@@ -45,7 +48,10 @@
                         <th>{{ $t('Unit') }}</th>
                         <th>{{ $t('Food') }}</th>
                         <th>{{ $t('Note') }}</th>
-                        <th>{{ $t('Save') }}</th>
+                        <th>
+                            <b-button variant="success" @click="updateIngredient()"><i class="fas fa-save"></i>
+                            </b-button>
+                        </th>
                     </tr>
                     </thead>
                     <tr v-if="loading">
@@ -56,10 +62,11 @@
                     <template v-if="!loading">
                         <tr v-for="i in ingredients" v-bind:key="i.id">
                             <td style="width: 5vw">
-                                <input type="number" class="form-control" v-model="i.amount">
+                                <input type="number" class="form-control" v-model="i.amount"
+                                       @input="$set(i, 'changed', true)">
                             </td>
                             <td style="width: 30vw">
-                                <generic-multiselect @change="i.unit = $event.val;"
+                                <generic-multiselect @change="i.unit = $event.val; $set(i, 'changed', true)"
                                                      :initial_single_selection="i.unit"
                                                      :model="Models.UNIT"
                                                      :search_on_load="false"
@@ -68,7 +75,7 @@
                                                      :multiple="false"></generic-multiselect>
                             </td>
                             <td style="width: 30vw">
-                                <generic-multiselect @change="i.food = $event.val;"
+                                <generic-multiselect @change="i.food = $event.val; $set(i, 'changed', true)"
                                                      :initial_single_selection="i.food"
                                                      :model="Models.FOOD"
                                                      :search_on_load="false"
@@ -77,11 +84,12 @@
                                                      :multiple="false"></generic-multiselect>
                             </td>
                             <td style="width: 30vw">
-                                <input class="form-control" v-model="i.note">
+                                <input class="form-control" v-model="i.note" @keydown="$set(i, 'changed', true)">
 
                             </td>
                             <td style="width: 5vw">
-                                <b-button variant="primary" @click="updateIngredient(i)"><i class="fas fa-save"></i>
+                                <b-button :disabled="i.changed !== true" :variant="(i.changed !== true) ? 'primary' : 'success'" @click="updateIngredient(i)">
+                                    <i class="fas fa-save"></i>
                                 </b-button>
                             </td>
 
@@ -106,13 +114,14 @@ import {ApiApiFactory} from "@/utils/openapi/api";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import BetaWarning from "@/components/BetaWarning";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientEditorView",
     mixins: [ApiMixin],
-    components: {LoadingSpinner, GenericMultiselect, GenericModalForm},
+    components: {BetaWarning, LoadingSpinner, GenericMultiselect, GenericModalForm},
     data() {
         return {
             ingredients: [],
@@ -154,11 +163,24 @@ export default {
             }
         },
         updateIngredient: function (i) {
-            let apiClient = new ApiApiFactory()
-            apiClient.updateIngredient(i.id, i).then(r => {
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
-            }).catch((r, e) => {
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+            let update_list = []
+            if (i === undefined) {
+                this.ingredients.forEach(x => {
+                    if (x.changed) {
+                        update_list.push(x)
+                    }
+                })
+            } else {
+                update_list = [i]
+            }
+
+            update_list.forEach(i => {
+                let apiClient = new ApiApiFactory()
+                apiClient.updateIngredient(i.id, i).then(r => {
+                    this.$set(i, 'changed', false)
+                }).catch((r, e) => {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                })
             })
         },
     },
