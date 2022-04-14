@@ -4,7 +4,6 @@ metadata:
   labels:
     app: recipes
   name: recipes-nginx-config
-  namespace: default
 data:
   nginx-config: |-
     events {
