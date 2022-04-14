@@ -7,7 +7,7 @@
         </template>
 
         <template v-else>
-            <td class="d-print-non" v-if="detailed && !show_shopping" @click="done">
+            <td class="d-print-none" v-if="detailed && !show_shopping" @click="done">
                 <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
                 <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
             </td>
