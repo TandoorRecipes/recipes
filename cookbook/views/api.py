@@ -600,11 +600,11 @@ class IngredientViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset.filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
-        if food and re.match(r'^([1-9])+$', food):
+        if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
 
         unit = self.request.query_params.get('unit', None)
-        if unit and re.match(r'^([1-9])+$', unit):
+        if unit and re.match(r'^(\d)+$', unit):
             queryset = queryset.filter(unit_id=unit)
 
         return queryset

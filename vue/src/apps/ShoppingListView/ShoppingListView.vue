@@ -440,7 +440,6 @@
                                         :initial_selection="settings.shopping_share"
                                         label="username"
                                         :multiple="true"
-                                        :allow_create="false"
                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                         :placeholder="$t('User')"
                                     />
