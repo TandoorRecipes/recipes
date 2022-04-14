@@ -176,8 +176,11 @@ export default {
                     StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    if (err.response.status === 403){
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE_PROTECTED)
+                    }else {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    }
                     this.$emit("finish-action", "cancel")
                 })
         },
