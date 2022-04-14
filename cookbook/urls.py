@@ -47,7 +47,6 @@ router.register(r'user-name', api.UserNameViewSet, basename='username')
 router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
@@ -72,6 +71,7 @@ urlpatterns = [
     path('settings/', views.user_settings, name='view_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
+    path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 
     path('import/', import_export.import_recipe, name='view_import'),
@@ -116,7 +116,8 @@ urlpatterns = [
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/get_facets/', api.get_facets, name='api_get_facets'),
 
-    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),  # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
+    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
+    # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
 

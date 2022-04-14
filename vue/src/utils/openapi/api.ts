@@ -472,7 +472,7 @@ export interface FoodRecipe {
      * @type {string}
      * @memberof FoodRecipe
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
@@ -537,7 +537,7 @@ export interface FoodSubstitute {
      * @type {string}
      * @memberof FoodSubstitute
      */
-    name?: string;
+    name: string;
 }
 /**
  * 
@@ -746,6 +746,12 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     no_amount?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Ingredient
+     */
+    original_text?: string | null;
 }
 /**
  * 
@@ -1905,6 +1911,12 @@ export interface RecipeIngredients {
      * @memberof RecipeIngredients
      */
     no_amount?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    original_text?: string | null;
 }
 /**
  * 
@@ -2173,7 +2185,7 @@ export interface RecipeSimple {
      * @type {string}
      * @memberof RecipeSimple
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
