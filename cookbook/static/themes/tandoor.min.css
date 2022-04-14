@@ -9548,7 +9548,8 @@ a.text-dark:focus, a.text-dark:hover {
 @media print {
     *, :after, :before {
         text-shadow: none !important;
-        box-shadow: none !important
+        box-shadow: none !important;
+        background-color: transparent !important;
     }
 
     a:not(.btn) {
