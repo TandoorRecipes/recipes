@@ -4,6 +4,7 @@
             <div class="col-md-6">
                 <generic-multiselect @change="food = $event.val; refreshList()"
                                      :model="Models.FOOD"
+                                     :initial_single_selection="food"
                                      :multiple="false"></generic-multiselect>
                 <b-button @click="show_food_delete=true" :disabled="food === null"> <i class="fas fa-trash-alt"></i></b-button>
                 <generic-modal-form :model="Models.FOOD" :action="Actions.DELETE" :show="show_food_delete" :item1="food"
@@ -12,7 +13,12 @@
             <div class="col-md-6">
                 <generic-multiselect @change="unit = $event.val; refreshList()"
                                      :model="Models.UNIT"
+                                     :initial_single_selection="unit"
                                      :multiple="false"></generic-multiselect>
+<!--TODO remove unit/Food from list when deleted -->
+                 <b-button @click="show_unit_delete=true" :disabled="unit === null"> <i class="fas fa-trash-alt"></i></b-button>
+                <generic-modal-form :model="Models.UNIT" :action="Actions.DELETE" :show="show_unit_delete" :item1="unit"
+                                @finish-action="unit = null; show_unit_delete=false"/>
             </div>
         </div>
 
