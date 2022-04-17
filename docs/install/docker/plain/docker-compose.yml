@@ -9,6 +9,7 @@ services:
       - ./.env
 
   web_recipes:
+    restart: always
     image: vabene1111/recipes
     env_file:
       - ./.env
