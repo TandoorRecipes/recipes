@@ -61,6 +61,7 @@
                         :show_move="useMove"
                         :show_shopping="useShopping"
                         :show_onhand="useOnhand"
+                        :show_ingredient_editor="useIngredientEditor"
                         @item-action="$emit('item-action', { action: $event, source: item })"
                     >
                     </generic-context-menu>
@@ -132,11 +133,12 @@ import GenericOrderedPill from "@/components/GenericOrderedPill"
 import RecipeCard from "@/components/RecipeCard"
 import { mixin as clickaway } from "vue-clickaway"
 import { createPopper } from "@popperjs/core"
+import {ApiMixin} from "@/utils/utils";
 
 export default {
     name: "GenericHorizontalCard",
     components: { GenericContextMenu, RecipeCard, Badges, GenericPill, GenericOrderedPill },
-    mixins: [clickaway],
+    mixins: [clickaway, ApiMixin],
     props: {
         item: { type: Object },
         model: { type: Object },
@@ -185,6 +187,9 @@ export default {
         },
         useDrag: function () {
             return this.useMove || this.useMerge
+        },
+        useIngredientEditor: function (){
+            return (this.model === this.Models.FOOD || this.model === this.Models.UNIT)
         },
         itemTags: function () {
             return this.model?.tags ?? []

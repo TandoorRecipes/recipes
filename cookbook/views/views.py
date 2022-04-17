@@ -228,7 +228,15 @@ def supermarket(request):
 
 @group_required('user')
 def ingredient_editor(request):
-    return render(request, 'ingredient_editor.html', {})
+    template_vars = {'food_id': -1, 'unit_id': -1}
+    food_id = request.GET.get('food_id', None)
+    if food_id and re.match(r'^(\d)+$', food_id):
+        template_vars['food_id'] = food_id
+
+    unit_id = request.GET.get('unit_id', None)
+    if unit_id and re.match(r'^(\d)+$', unit_id):
+        template_vars['unit_id'] = unit_id
+    return render(request, 'ingredient_editor.html', template_vars)
 
 
 @group_required('user')

@@ -80,7 +80,7 @@ import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import {CardMixin, ApiMixin, getConfig} from "@/utils/utils"
+import {CardMixin, ApiMixin, getConfig, resolveDjangoUrl} from "@/utils/utils"
 import {StandardToasts, ToastMixin} from "@/utils/utils"
 
 import GenericInfiniteCards from "@/components/GenericInfiniteCards"
@@ -158,7 +158,6 @@ export default {
             let target = e?.target ?? undefined
             this.this_item = source
             this.this_target = target
-
             switch (e.action) {
                 case "delete":
                     this.this_action = this.Actions.DELETE
@@ -173,6 +172,16 @@ export default {
                     this.this_action = this.Actions.UPDATE
                     this.show_modal = true
                     break
+                case "ingredient-editor": {
+                    let url = resolveDjangoUrl("view_ingredient_editor")
+                    if (this.this_model === this.Models.FOOD) {
+                        window.location.href = url + '?food_id=' + e.source.id
+                    }
+                    if (this.this_model === this.Models.UNIT) {
+                        window.location.href = url + '?unit_id=' + e.source.id
+                    }
+                    break
+                }
                 case "move":
                     if (target == null) {
                         this.this_item = e.source
