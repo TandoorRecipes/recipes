@@ -752,6 +752,12 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     original_text?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Ingredient
+     */
+    used_in_recipes?: string;
 }
 /**
  * 
@@ -1917,6 +1923,12 @@ export interface RecipeIngredients {
      * @memberof RecipeIngredients
      */
     original_text?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    used_in_recipes?: string;
 }
 /**
  * 
