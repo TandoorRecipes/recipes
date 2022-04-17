@@ -42,8 +42,8 @@ services:
       - web_recipes
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
-      - staticfiles:/static
-      - ${MEDIA_FILES_DIR:-./mediafiles}:/media
+      - staticfiles:/static:ro
+      - ${MEDIA_FILES_DIR:-./mediafiles}:/media:ro
     networks:
       tandoor:
         ipv6_address: ${IPV6_PREFIX:?NO_IPV6_PREFIX}::4
