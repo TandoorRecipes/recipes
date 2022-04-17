@@ -496,7 +496,11 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 class IngredientSimpleSerializer(WritableNestedModelSerializer):
     food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True)
+    used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
     amount = CustomDecimalField()
+
+    def get_used_in_recipes(self, obj):
+        return list(Recipe.objects.filter(steps__ingredients=obj.id).values('id', 'name'))
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -510,7 +514,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         model = Ingredient
         fields = (
             'id', 'food', 'unit', 'amount', 'note', 'order',
-            'is_header', 'no_amount', 'original_text'
+            'is_header', 'no_amount', 'original_text', 'used_in_recipes',
         )
 
 

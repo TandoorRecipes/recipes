@@ -60,7 +60,14 @@
                         </td>
                     </tr>
                     <template v-if="!loading">
-                        <tr v-for="i in ingredients" v-bind:key="i.id">
+                        <tbody v-for="i in ingredients" v-bind:key="i.id">
+                        <tr v-if="i.used_in_recipes.length > 0">
+                            <td colspan="5">
+                                <a v-for="r in i.used_in_recipes" :href="resolveDjangoUrl('view_recipe',r.id)"
+                                   v-bind:key="r.id" target="_blank" rel="noreferrer nofollow">{{ r.name }}</a>
+                            </td>
+                        </tr>
+                        <tr>
                             <td style="width: 5vw">
                                 <input type="number" class="form-control" v-model="i.amount"
                                        @input="$set(i, 'changed', true)">
@@ -93,9 +100,16 @@
                                           @click="updateIngredient(i)">
                                     <i class="fas fa-save"></i>
                                 </b-button>
+                                 <b-button variant="danger"
+                                          @click="deleteIngredient(i)">
+                                    <i class="fas fa-trash"></i>
+                                </b-button>
                             </td>
 
                         </tr>
+                        </tbody>
+
+
                     </template>
 
                 </table>
@@ -111,7 +125,7 @@ import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiMixin, StandardToasts} from "@/utils/utils"
+import {ApiMixin, ResolveUrlMixin, StandardToasts} from "@/utils/utils"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import GenericMultiselect from "@/components/GenericMultiselect";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
@@ -122,7 +136,7 @@ Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientEditorView",
-    mixins: [ApiMixin],
+    mixins: [ApiMixin, ResolveUrlMixin],
     components: {BetaWarning, LoadingSpinner, GenericMultiselect, GenericModalForm},
     data() {
         return {
@@ -199,6 +213,18 @@ export default {
                 })
             })
         },
+        deleteIngredient: function (i){
+            if (confirm(this.$t('delete_confirmation', this.$t('Ingredient')))){
+                let apiClient = new ApiApiFactory()
+                apiClient.destroyIngredient(i.id).then(r => {
+                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    this.ingredients = this.ingredients.filter(li => li.id !== i.id)
+                }).catch(e => {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                })
+            }
+        }
+
     },
 }
 </script>
