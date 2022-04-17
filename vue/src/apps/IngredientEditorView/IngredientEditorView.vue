@@ -88,7 +88,9 @@
 
                             </td>
                             <td style="width: 5vw">
-                                <b-button :disabled="i.changed !== true" :variant="(i.changed !== true) ? 'primary' : 'success'" @click="updateIngredient(i)">
+                                <b-button :disabled="i.changed !== true"
+                                          :variant="(i.changed !== true) ? 'primary' : 'success'"
+                                          @click="updateIngredient(i)">
                                     <i class="fas fa-save"></i>
                                 </b-button>
                             </td>
@@ -137,6 +139,20 @@ export default {
     computed: {},
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
+        if (window.DEFAULT_FOOD !== -1) {
+            this.food = {id: window.DEFAULT_FOOD}
+            let apiClient = new ApiApiFactory()
+            apiClient.retrieveFood(this.food.id).then(r => {
+                this.food = r.data
+            })
+        }
+        if (window.DEFAULT_UNIT !== -1) {
+            this.unit = {id: window.DEFAULT_UNIT}
+            let apiClient = new ApiApiFactory()
+            apiClient.retrieveUnit(this.unit.id).then(r => {
+                this.unit = r.data
+            })
+        }
         this.refreshList()
     },
     methods: {

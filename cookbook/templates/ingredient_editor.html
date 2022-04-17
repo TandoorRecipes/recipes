@@ -30,6 +30,8 @@
     {% endif %}
 
     <script type="application/javascript">
+        window.DEFAULT_FOOD = {{ food_id }}
+        window.DEFAULT_UNIT = {{ unit_id }}
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
     </script>
 
