@@ -739,7 +739,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         mealplan = super().create(validated_data)
-        if self.context['request'].data.get('addshopping', False):
+        if self.context['request'].data.get('addshopping', False) and self.context['request'].data.get('recipe', None):
             SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
             SLR.create(mealplan=mealplan, servings=validated_data['servings'])
         return mealplan
