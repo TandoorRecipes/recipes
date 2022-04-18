@@ -34,7 +34,7 @@
                     </template>
                     <p class="mt-1">
                         <last-cooked :recipe="recipe"></last-cooked>
-                        <keywords-component :recipe="recipe" style="margin-top: 4px"></keywords-component>
+                        <keywords-component :recipe="recipe" style="margin-top: 4px; position: relative; z-index: 3;"></keywords-component>
                     </p>
                     <transition name="fade" mode="in-out">
                         <div class="row mt-3" v-if="show_detail">
