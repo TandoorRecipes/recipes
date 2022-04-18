@@ -318,6 +318,7 @@ def user_settings(request):
                 up.use_fractions = form.cleaned_data['use_fractions']
                 up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
+                up.left_handed = form.cleaned_data['left_handed']
 
                 up.save()
 
