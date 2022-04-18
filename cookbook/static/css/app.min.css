@@ -1,3 +1,7 @@
+.brand-icon {
+    height: 40px;
+}
+
 .spinner-tandoor {
     animation: rotation 3s infinite linear;
     content: url("../assets/spinner.svg");
