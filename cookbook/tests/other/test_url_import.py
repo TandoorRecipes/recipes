@@ -5,11 +5,13 @@ import pytest
 
 from django.urls import reverse
 
+from cookbook.helper.recipe_url_import import get_from_youtube_scraper
+
+from cookbook.tests.conftest import validate_recipe
 from ._recipes import (
     ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, CHEF_KOCH2, COOKPAD,
     COOKS_COUNTRY, DELISH, FOOD_NETWORK, GIALLOZAFFERANO, JOURNAL_DES_FEMMES,
     MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO)
-from cookbook.tests.conftest import validate_recipe
 
 IMPORT_SOURCE_URL = 'api_recipe_from_source'
 DATA_DIR = "cookbook/tests/other/test_data/"
@@ -60,9 +62,9 @@ def test_recipe_import(arg, u1_s1):
     url = arg['url']
     for f in list(arg['file']) :  # url and files get popped later
         if 'cookbook' in os.getcwd():
-            test_file = os.path.join(os.getcwd(), 'other', 'test_data', f)
+            test_file = os.path.join(os.getcwd(), 'test_data', f)
         else:
-            test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', f)
+            test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'test_data', f)
         with open(test_file, 'r', encoding='UTF-8') as d:
             response = u1_s1.post(
                 reverse(IMPORT_SOURCE_URL),
@@ -75,3 +77,19 @@ def test_recipe_import(arg, u1_s1):
             )
         recipe = json.loads(response.content)['recipe_json']
         validate_recipe(arg, recipe)
+
+
+def test_youtube_import(url='https://www.youtube.com/watch?v=8yPTW1RTFb4'):
+    expected_response = {
+        'name': 'How to Make Italian Bruschetta - Recipe in description',
+        'description': "Bruschetta is an Italian classic, full of tomato and basil goodness, and is the perfect appetizer or light meal. Fun fact: Bruschetta is pronounced 'Broo-sket-tuh.'\n\nIf you enjoyed this video make sure to give it a 'like' and leave a comment!\n\nPreparation time: 35 minutes.\nDifficulty: Easy\nCalories per serving: about 120 kcal.\n\nIngredients for 6 people:\n1 kg of tomatoes (vine tomatoes)\n3 onions\n4 cloves of garlic\nOlive oil\n1 bunch of basil\n1 ciabatta\n\nDice the tomatoes. Chop the onions finely (or coarsely, it depends on your taste) and add to the bowl with the tomatoes. Peel and press the garlic (only three cloves) and drop in the bowl. Season with salt (preferably ground sea salt) and pepper. Leave to stand a few moments and then fill it with olive oil.\n\nSprinkle the bread with a few drops of olive oil, rub with the remaining garlic clove and slide it into the oven (only bread) at about 200 ° C. Remove from the oven once crispy (this takes about 8 min.). Finely chop the basil and place in bowl with the tomatoes, garlic and onion to season.\n\nPlace everything on the table and serve - if you like, try adding mozzarella or Parmesan cheese.\n\nAuthor: pierrehh \n\nNew videos added weekly\nSUBSCRIBE NOW - http://bit.ly/1MbySIl\n\nImported from: https://www.youtube.com/watch?v=8yPTW1RTFb4",
+        'servings': 1,
+        'prepTime': 0,
+        'cookTime': 0,
+        'image': 'https://i.ytimg.com/vi/8yPTW1RTFb4/sddefault.jpg',
+        'keywords': [],
+        'recipeIngredient': [],
+        'recipeInstructions': ''
+    }
+    recipe_json = get_from_youtube_scraper(url)
+    assert recipe_json == expected_response

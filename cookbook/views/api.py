@@ -40,7 +40,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
-from cookbook.helper.recipe_url_import import get_from_scraper
+from cookbook.helper.recipe_url_import import get_from_scraper, get_from_youtube_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
@@ -1136,6 +1136,7 @@ def recipe_from_source(request):
     data = request.POST.get('data', None)
     mode = request.POST.get('mode', None)
     auto = request.POST.get('auto', 'true')
+    is_valid_youtube_url = (mode == 'url' and auto == 'true' and re.match("^(https?\:\/\/)?(www\.youtube\.com|youtu\.be)\/.+$", url))
 
     HEADERS = {
         "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
@@ -1150,7 +1151,28 @@ def recipe_from_source(request):
             status=400
         )
 
-    if mode == 'url' and auto == 'true':
+    if is_valid_youtube_url:
+        try:
+            r = requests.get(url)
+            is_unavailable_video = "This video isn't available anymore" in r.text
+            if is_unavailable_video:
+                return JsonResponse(
+                        {
+                            'error': True,
+                            'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
+                        },
+                        status=400)
+        except ConnectionError:
+            return JsonResponse(
+                {
+                    'error': True,
+                    'msg': _('The requested page could not be found.')
+                },
+                status=400
+            )
+
+        return JsonResponse({"recipe_json": get_from_youtube_scraper(url)})
+    elif mode == 'url' and auto == 'true':
         try:
             scrape = scrape_me(url)
         except (WebsiteNotImplementedError, AttributeError):
