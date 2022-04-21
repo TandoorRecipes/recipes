@@ -2467,7 +2467,7 @@ msgid ""
 msgstr ""
 "Das direkte ausliefern von Mediendateien mit gunicorn/python ist <b>nicht "
 "empfehlenswert</b>! Bitte folge den beschriebenen Schritten <a href=\"https"
-"\\://github.com/vabene1111/recipes/releases/tag/0.8.1\">hier</a>, um Ihre "
+"://github.com/vabene1111/recipes/releases/tag/0.8.1\">hier</a>, um Ihre "
 "Installation zu aktualisieren.\n"
 "        "
 
