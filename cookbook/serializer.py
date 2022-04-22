@@ -12,6 +12,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, Keyword,
@@ -649,6 +650,12 @@ class RecipeSerializer(RecipeBaseSerializer):
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 
+    def validate(self, data):
+        above_limit, msg = above_space_limit(self.context['request'].space)
+        if above_limit:
+            raise serializers.ValidationError(msg)
+        return super().validate(data)
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
@@ -971,12 +978,19 @@ class AutomationSerializer(serializers.ModelSerializer):
 # CORS, REST and Scopes aren't currently working
 # Scopes are evaluating before REST has authenticated the user assigning a None space
 # I've made the change below to fix the bookmarklet, other serializers likely need a similar/better fix
-class BookmarkletImportSerializer(serializers.ModelSerializer):
+class BookmarkletImportListSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].user.userpreference.space
         return super().create(validated_data)
 
+    class Meta:
+        model = BookmarkletImport
+        fields = ('id', 'url', 'created_by', 'created_at')
+        read_only_fields = ('created_by', 'space')
+
+
+class BookmarkletImportSerializer(BookmarkletImportListSerializer):
     class Meta:
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')

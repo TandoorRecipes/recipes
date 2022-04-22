@@ -106,10 +106,12 @@
 
                                         <div class="row">
                                             <div class="col-12 col-md-8 offset-0 offset-md-2">
-                                                <h4 class="text-center flex-grow-1" v-b-tooltip.hover.bottom :title="$t('Click_To_Edit')" v-if="!edit_name"
+                                                <h4 class="text-center flex-grow-1" v-b-tooltip.hover.bottom
+                                                    :title="$t('Click_To_Edit')" v-if="!edit_name"
                                                     @click="edit_name = true">{{
                                                         recipe_json.name
-                                                    }} <span class="text-primary"><i class="fa fa-edit"></i> </span> </h4>
+                                                    }} <span class="text-primary"><i class="fa fa-edit"></i> </span>
+                                                </h4>
                                                 <b-input-group v-if="edit_name" class="mb-2">
                                                     <b-input
                                                         class="form-control form-control-borderless form-control-search"
@@ -235,6 +237,11 @@
                                 {{ $t('import_duplicates') }}
                             </b-form-checkbox>
 
+                            <a href="recipe_app_info.help_url"
+                               v-if="recipe_app_info !== undefined && recipe_app_info.help_url !== ''">{{
+                                    $t('Help')
+                                }}</a>
+
                             <b-form-file
                                 class="my-2"
                                 multiple
@@ -312,6 +319,11 @@ export default {
         RecipeCard,
         ImportViewStepEditor
     },
+    computed: {
+        recipe_app_info: function () {
+            return this.INTEGRATIONS.filter(x => x.id === this.recipe_app)[0]
+        },
+    },
     data() {
         return {
             tab_index: 0,
@@ -343,7 +355,8 @@ export default {
             recipe_files: [],
             loading: false,
             empty_input: false,
-            edit_name: false,// Bookmarklet
+            edit_name: false,
+            // Bookmarklet
             BOOKMARKLET_CODE: window.BOOKMARKLET_CODE
         }
     },
@@ -422,7 +435,7 @@ export default {
                 window.localStorage.setItem(this.LS_IMPORT_RECENT, JSON.stringify(this.recent_urls))
             }
 
-            if (this.website_url === '') {
+            if (this.website_url === '' && bookmarklet === undefined) {
                 this.empty_input = true
                 setTimeout(() => {
                     this.empty_input = false
@@ -541,7 +554,7 @@ export default {
                 `localStorage.setItem("token", "${window.API_TOKEN}");` +
                 `document.body.appendChild(document.createElement("script")).src="${localStorage.getItem('BASE_PATH')}${resolveDjangoStatic('/js/bookmarklet.js')}?r="+Math.floor(Math.random()*999999999)}` +
                 `})()`
-        }
+        },
     },
     directives: {
         hover: {

@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportExportBase, ImportForm
-from cookbook.helper.permission_helper import group_required
+from cookbook.helper.permission_helper import group_required, above_space_limit
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
@@ -84,12 +84,9 @@ def get_integration(request, export_type):
 
 @group_required('user')
 def import_recipe(request):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
-        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
-        return HttpResponseRedirect(reverse('index'))
-
-    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
-        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('index'))
 
     if request.method == "POST":
