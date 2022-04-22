@@ -1,41 +1,27 @@
-import json
-import uuid
 from datetime import datetime
-from io import BytesIO
 
-import requests
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.files import File
-from django.db.transaction import atomic
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
-from PIL import UnidentifiedImageError
-from requests.exceptions import MissingSchema
+from rest_framework.authtoken.models import Token
 
 from cookbook.forms import BatchEditForm, SyncForm
-from cookbook.helper.image_processing import handle_image
-from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.permission_helper import group_required, has_group_permission
-from cookbook.helper.recipe_url_import import parse_cooktime
-from cookbook.models import (Comment, Food, Ingredient, Keyword, Recipe, RecipeImport, Step, Sync,
-                             Unit, UserPreference)
+from cookbook.helper.permission_helper import group_required, has_group_permission, above_space_limit
+from cookbook.models import (Comment, Food, Keyword, Recipe, RecipeImport, Sync,
+                             Unit, UserPreference, BookmarkletImport)
 from cookbook.tables import SyncTable
 from recipes import settings
 
 
 @group_required('user')
 def sync(request):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
-        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
-        return HttpResponseRedirect(reverse('index'))
-
-    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
-        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('index'))
 
     if request.space.demo or settings.HOSTED:
@@ -123,103 +109,21 @@ def batch_edit(request):
 
 
 @group_required('user')
-@atomic
 def import_url(request):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
-        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('index'))
 
-    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
-        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
-        return HttpResponseRedirect(reverse('index'))
+    if (api_token := Token.objects.filter(user=request.user).first()) is None:
+        api_token = Token.objects.create(user=request.user)
 
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        data['cookTime'] = parse_cooktime(data.get('cookTime', ''))
-        data['prepTime'] = parse_cooktime(data.get('prepTime', ''))
-
-        recipe = Recipe.objects.create(
-            name=data['name'],
-            description=data['description'],
-            waiting_time=data['cookTime'],
-            working_time=data['prepTime'],
-            servings=data['servings'],
-            internal=True,
-            created_by=request.user,
-            space=request.space,
-        )
-
-        step = Step.objects.create(
-            instruction=data['recipeInstructions'], space=request.space,
-        )
-
-        recipe.steps.add(step)
-
-        for kw in data['keywords']:
-            if data['all_keywords']:  # do not remove this check :) https://github.com/vabene1111/recipes/issues/645
-                k, created = Keyword.objects.get_or_create(name=kw['text'], space=request.space)
-                recipe.keywords.add(k)
-            else:
-                try:
-                    k = Keyword.objects.get(name=kw['text'], space=request.space)
-                    recipe.keywords.add(k)
-                except ObjectDoesNotExist:
-                    pass
-
-        ingredient_parser = IngredientParser(request, True)
-        for ing in data['recipeIngredient']:
-            original = ing.pop('original', None) or ing.pop('original_text', None)
-            ingredient = Ingredient(original_text=original, space=request.space, )
-
-            if food_text := ing['ingredient']['text'].strip():
-                ingredient.food = ingredient_parser.get_food(food_text)
-
-            if ing['unit']:
-                if unit_text := ing['unit']['text'].strip():
-                    ingredient.unit = ingredient_parser.get_unit(unit_text)
-
-            # TODO properly handle no_amount recipes
-            if isinstance(ing['amount'], str):
-                try:
-                    ingredient.amount = float(ing['amount'].replace(',', '.'))
-                except ValueError:
-                    ingredient.no_amount = True
-                    pass
-            elif isinstance(ing['amount'], float) \
-                    or isinstance(ing['amount'], int):
-                ingredient.amount = ing['amount']
-            ingredient.note = ing['note'].strip() if 'note' in ing else ''
-
-            ingredient.save()
-            step.ingredients.add(ingredient)
-
-        if 'image' in data and data['image'] != '' and data['image'] is not None:
-            try:
-                response = requests.get(data['image'])
-
-                img, filetype = handle_image(request, File(BytesIO(response.content), name='image'))
-                recipe.image = File(
-                    img, name=f'{uuid.uuid4()}_{recipe.pk}{filetype}'
-                )
-                recipe.save()
-            except UnidentifiedImageError as e:
-                print(e)
-                pass
-            except MissingSchema as e:
-                print(e)
-                pass
-            except Exception as e:
-                print(e)
-                pass
-
-        return HttpResponse(reverse('view_recipe', args=[recipe.pk]))
-
+    bookmarklet_import_id = -1
     if 'id' in request.GET:
-        context = {'bookmarklet': request.GET.get('id', '')}
-    else:
-        context = {}
+        if bookmarklet_import := BookmarkletImport.objects.filter(id=request.GET['id']).first():
+            bookmarklet_import_id = bookmarklet_import.pk
 
-    return render(request, 'url_import.html', context)
+    return render(request, 'url_import.html', {'api_token': api_token, 'bookmarklet_import_id': bookmarklet_import_id})
 
 
 class Object(object):

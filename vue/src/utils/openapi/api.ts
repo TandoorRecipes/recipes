@@ -472,7 +472,7 @@ export interface FoodRecipe {
      * @type {string}
      * @memberof FoodRecipe
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {string}
@@ -537,7 +537,7 @@ export interface FoodSubstitute {
      * @type {string}
      * @memberof FoodSubstitute
      */
-    name: string;
+    name?: string;
 }
 /**
  * 
@@ -752,12 +752,6 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     original_text?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Ingredient
-     */
-    used_in_recipes?: string;
 }
 /**
  * 
@@ -1862,6 +1856,12 @@ export interface RecipeImage {
      * @memberof RecipeImage
      */
     image?: any | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeImage
+     */
+    image_url?: string | null;
 }
 /**
  * 
@@ -1923,12 +1923,6 @@ export interface RecipeIngredients {
      * @memberof RecipeIngredients
      */
     original_text?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof RecipeIngredients
-     */
-    used_in_recipes?: string;
 }
 /**
  * 
@@ -2197,7 +2191,7 @@ export interface RecipeSimple {
      * @type {string}
      * @memberof RecipeSimple
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {string}
@@ -5239,10 +5233,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * 
          * @param {string} id A unique integer value identifying this recipe.
          * @param {any} [image] 
+         * @param {string} [imageUrl] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        imageRecipe: async (id: string, image?: any, options: any = {}): Promise<RequestArgs> => {
+        imageRecipe: async (id: string, image?: any, imageUrl?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('imageRecipe', 'id', id)
             const localVarPath = `/api/recipe/{id}/image/`
@@ -5262,6 +5257,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (image !== undefined) { 
                 localVarFormParams.append('image', image as any);
+            }
+    
+            if (imageUrl !== undefined) { 
+                localVarFormParams.append('image_url', imageUrl as any);
             }
     
     
@@ -10353,11 +10352,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} id A unique integer value identifying this recipe.
          * @param {any} [image] 
+         * @param {string} [imageUrl] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async imageRecipe(id: string, image?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.imageRecipe(id, image, options);
+        async imageRecipe(id: string, image?: any, imageUrl?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.imageRecipe(id, image, imageUrl, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12186,11 +12186,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * 
          * @param {string} id A unique integer value identifying this recipe.
          * @param {any} [image] 
+         * @param {string} [imageUrl] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        imageRecipe(id: string, image?: any, options?: any): AxiosPromise<RecipeImage> {
-            return localVarFp.imageRecipe(id, image, options).then((request) => request(axios, basePath));
+        imageRecipe(id: string, image?: any, imageUrl?: string, options?: any): AxiosPromise<RecipeImage> {
+            return localVarFp.imageRecipe(id, image, imageUrl, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14004,12 +14005,13 @@ export class ApiApi extends BaseAPI {
      * 
      * @param {string} id A unique integer value identifying this recipe.
      * @param {any} [image] 
+     * @param {string} [imageUrl] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public imageRecipe(id: string, image?: any, options?: any) {
-        return ApiApiFp(this.configuration).imageRecipe(id, image, options).then((request) => request(this.axios, this.basePath));
+    public imageRecipe(id: string, image?: any, imageUrl?: string, options?: any) {
+        return ApiApiFp(this.configuration).imageRecipe(id, image, imageUrl, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

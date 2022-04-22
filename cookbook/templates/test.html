@@ -1,26 +1,36 @@
 {% extends "base.html" %}
-{% load crispy_forms_filters %}
-{% load i18n %}
+{% load render_bundle from webpack_loader %}
 {% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load custom_tags %}
 
-{% block title %}{% trans 'Import Recipes' %}{% endblock %}
+{% block title %}Test{% endblock %}
 
-{% block extra_head %}
-    {{ form.media }}
+
+{% block content_fluid %}
+
+    <div id="app">
+
+        <import-view></import-view>
+    </div>
+
+
 {% endblock %}
 
 
-{% block content %}
-    <h2>{% trans 'Import' %}</h2>
-    <div class="row">
-        <div class="col col-md-12">
-            <form action="." method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <button class="btn btn-success" type="submit"><i class="fas fa-file-import"></i> {% trans 'Import' %}
-                </button>
-            </form>
-        </div>
-    </div>
+{% block script %}
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
 
+    <script type="application/javascript">
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+        window.API_TOKEN = '{{ api_token }}'
+        window.BOOKMARKLET_IMPORT_ID = {{ bookmarklet_import_id }}
+    </script>
+
+    {% render_bundle 'import_view' %}
 {% endblock %}
