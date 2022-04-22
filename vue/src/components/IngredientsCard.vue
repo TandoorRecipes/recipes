@@ -184,11 +184,11 @@ export default {
                 })
                 .catch((err) => {
                     if (del_shopping) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                     } else if (this.selected_shoppingrecipe) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                     } else {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                     }
                     this.$emit("shopping-failed")
                 })

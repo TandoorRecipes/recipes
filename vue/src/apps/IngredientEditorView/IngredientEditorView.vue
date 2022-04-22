@@ -187,7 +187,7 @@ export default {
                     this.ingredients = result.data
                     this.loading = false
                 }).catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
                     this.loading = false
                 })
             }
@@ -208,8 +208,8 @@ export default {
                 let apiClient = new ApiApiFactory()
                 apiClient.updateIngredient(i.id, i).then(r => {
                     this.$set(i, 'changed', false)
-                }).catch((r, e) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                }).catch(err => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
             })
         },
@@ -219,8 +219,8 @@ export default {
                 apiClient.destroyIngredient(i.id).then(r => {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                     this.ingredients = this.ingredients.filter(li => li.id !== i.id)
-                }).catch(e => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                }).catch(err => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                 })
             }
         }

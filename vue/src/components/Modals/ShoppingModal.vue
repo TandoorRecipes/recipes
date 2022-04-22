@@ -188,7 +188,7 @@ export default {
                     this.$emit("finish")
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                 })
 
             this.$bvModal.hide(`shopping_${this.modal_id}`)

@@ -98,8 +98,8 @@ export default {
       apiFactory.createRecipeBookEntry({book: this.selected_book.id, recipe: this.recipe.id}).then(r => {
         this.recipe_book_list.push(r.data)
         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
-      }).catch(e => {
-          StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+      }).catch(err => {
+          StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
       })
     },
     removeFromBook: function (book_entry) {

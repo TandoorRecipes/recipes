@@ -275,8 +275,7 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
                 })
         },
         getThis: function (id, callback) {
@@ -295,8 +294,7 @@ export default {
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     })
                     .catch((err) => {
-                        console.log(err)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                     })
             } else {
                 this.genericAPI(this.this_model, this.Actions.UPDATE, item)
@@ -305,8 +303,7 @@ export default {
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        console.log(err, err.response)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                     })
             }
         },
@@ -432,7 +429,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
                 })
         },
         getRecipes: function (col, item) {

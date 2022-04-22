@@ -177,9 +177,9 @@ export default {
                 })
                 .catch((err) => {
                     if (err.response.status === 403){
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE_PROTECTED)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE_PROTECTED, err)
                     }else {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                     }
                     this.$emit("finish-action", "cancel")
                 })
@@ -204,8 +204,7 @@ export default {
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        console.log(err, err.response)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                         this.$emit("finish-action", "cancel")
                     })
             }
@@ -227,8 +226,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MOVE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MOVE, err)
                     this.$emit("finish-action", "cancel")
                 })
         },
@@ -252,9 +250,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
-                    //TODO error checking not working with OpenAPI methods
-                    console.log("Error", err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MERGE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MERGE, err)
                     this.$emit("finish-action", "cancel")
                 })
 
