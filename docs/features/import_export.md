@@ -227,6 +227,12 @@ CookBookApp can export .zip files containing .html files. Upload the entire ZIP 
 
 CopyMeThat can export .zip files containing an `.html` file as well as a folder containing all the images. Upload the entire ZIP to Tandoor to import all included recipes.
 
+## Cookmate
+Cookmate allows you to export a `.mcb` file which you can simply upload to tandoor and import all your recipes.
+
+## RecetteTek
+RecetteTek exports are `.rtk` files which can simply be uploaded to tandoor to import all your recipes. 
+
 ## Melarecipes
 
 Melarecipes provides multiple export formats but only the `MelaRecipes` format can export the complete collection.
