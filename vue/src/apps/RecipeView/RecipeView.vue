@@ -5,7 +5,7 @@
         </template>
 
         <div v-if="!loading">
-            <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)" />
+            <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)"/>
             <div class="row">
                 <div class="col-12" style="text-align: center">
                     <h3>{{ recipe.name }}</h3>
@@ -29,7 +29,7 @@
                 <keywords-component :recipe="recipe"></keywords-component>
             </div>
 
-            <hr />
+            <hr/>
             <div class="row">
                 <div class="col col-md-3">
                     <div class="row d-flex" style="padding-left: 16px">
@@ -38,8 +38,8 @@
                         </div>
                         <div class="my-auto" style="padding-right: 4px">
                             <span class="text-primary"
-                                ><b>{{ $t("Preparation") }}</b></span
-                            ><br />
+                            ><b>{{ $t("Preparation") }}</b></span
+                            ><br/>
                             {{ recipe.working_time }} {{ $t("min") }}
                         </div>
                     </div>
@@ -52,8 +52,8 @@
                         </div>
                         <div class="my-auto" style="padding-right: 4px">
                             <span class="text-primary"
-                                ><b>{{ $t("Waiting") }}</b></span
-                            ><br />
+                            ><b>{{ $t("Waiting") }}</b></span
+                            ><br/>
                             {{ recipe.waiting_time }} {{ $t("min") }}
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                             <i class="fas fa-pizza-slice fa-2x text-primary"></i>
                         </div>
                         <div class="my-auto" style="padding-right: 4px">
-                            <CustomInputSpinButton v-model.number="servings" />
+                            <CustomInputSpinButton v-model.number="servings"/>
                         </div>
                         <div class="my-auto">
                             <span class="text-primary">
@@ -82,16 +82,18 @@
                     <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
                 </div>
             </div>
-            <hr />
+            <hr/>
 
             <div class="row">
-                <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2" v-if="recipe && ingredient_count > 0">
+                <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2"
+                     v-if="recipe && ingredient_count > 0">
                     <ingredients-card
                         :recipe="recipe.id"
                         :steps="recipe.steps"
                         :ingredient_factor="ingredient_factor"
                         :servings="servings"
                         :header="true"
+                        id="ingredient_container"
                         @checked-state-changed="updateIngredientCheckedState"
                         @change-servings="servings = $event"
                     />
@@ -100,13 +102,16 @@
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
                     <div class="row">
                         <div class="col-12">
-                            <img class="img img-fluid rounded" :src="recipe.image" style="max-height: 30vh" :alt="$t('Recipe_Image')" v-if="recipe.image !== null" @load="onImgLoad" />
+                            <img class="img img-fluid rounded" :src="recipe.image" :alt="$t('Recipe_Image')"
+                                 v-if="recipe.image !== null" @load="onImgLoad"
+                                 :style="{ 'max-height': ingredient_height }"/>
                         </div>
                     </div>
 
                     <div class="row" style="margin-top: 2vh; margin-bottom: 2vh">
                         <div class="col-12">
-                            <Nutrition-component :recipe="recipe" :ingredient_factor="ingredient_factor"></Nutrition-component>
+                            <Nutrition-component :recipe="recipe" id="nutrition_container"
+                                                 :ingredient_factor="ingredient_factor"></Nutrition-component>
                         </div>
                     </div>
                 </div>
@@ -116,7 +121,8 @@
                 <div v-if="recipe.file_path.includes('.pdf')">
                     <PdfViewer :recipe="recipe"></PdfViewer>
                 </div>
-                <div v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg') || recipe.file_path.includes('.gif')">
+                <div
+                    v-if="recipe.file_path.includes('.png') || recipe.file_path.includes('.jpg') || recipe.file_path.includes('.jpeg') || recipe.file_path.includes('.gif')">
                     <ImageViewer :recipe="recipe"></ImageViewer>
                 </div>
             </template>
@@ -136,7 +142,8 @@
 
         <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
 
-        <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh" v-if="share_uid !== 'None'">
+        <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh"
+             v-if="share_uid !== 'None'">
             <div class="col col-md-12">
                 <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)">{{ $t("Report Abuse") }}</a>
             </div>
@@ -146,13 +153,13 @@
 
 <script>
 import Vue from "vue"
-import { BootstrapVue } from "bootstrap-vue"
+import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import { apiLoadRecipe } from "@/utils/api"
+import {apiLoadRecipe} from "@/utils/api"
 
 import RecipeContextMenu from "@/components/RecipeContextMenu"
-import { ResolveUrlMixin, ToastMixin } from "@/utils/utils"
+import {ResolveUrlMixin, ToastMixin} from "@/utils/utils"
 
 import PdfViewer from "@/components/PdfViewer"
 import ImageViewer from "@/components/ImageViewer"
@@ -209,6 +216,7 @@ export default {
             start_time: "",
             share_uid: window.SHARE_UID,
             wake_lock: null,
+            ingredient_height: '250'
         }
     },
     watch: {
@@ -220,12 +228,13 @@ export default {
         this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
         this.requestWakeLock()
+        window.addEventListener('resize', this.handleRezise);
     },
     beforeUnmount() {
         this.destroyWakeLock()
     },
     methods: {
-        requestWakeLock: async function() {
+        requestWakeLock: async function () {
             if ('wakeLock' in navigator) {
                 try {
                     this.wake_lock = await navigator.wakeLock.request('screen')
@@ -235,7 +244,14 @@ export default {
                 }
             }
         },
-        destroyWakeLock: function() {
+        handleRezise: function () {
+            if (document.getElementById('nutrition_container') !== null) {
+                this.ingredient_height = document.getElementById('ingredient_container').clientHeight - document.getElementById('nutrition_container').clientHeight
+            } else {
+                this.ingredient_height = document.getElementById('ingredient_container').clientHeight
+            }
+        },
+        destroyWakeLock: function () {
             if (this.wake_lock != null) {
                 this.wake_lock.release()
                     .then(() => {
@@ -245,7 +261,7 @@ export default {
 
             document.removeEventListener('visibilitychange', this.visibilityChange)
         },
-        visibilityChange: async function() {
+        visibilityChange: async function () {
             if (this.wake_lock != null && document.visibilityState === 'visible') {
                 await this.requestWakeLock()
             }
@@ -271,12 +287,16 @@ export default {
                     this.start_time = moment().format("yyyy-MM-DDTHH:mm")
                 }
 
-                
-                if(recipe.image === null) this.printReady()
+
+                if (recipe.image === null) this.printReady()
 
                 this.recipe = this.rootrecipe = recipe
                 this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
                 this.loading = false
+
+                setTimeout(() => {
+                    this.handleRezise()
+                }, 100)
             })
         },
         updateStartTime: function (e) {
@@ -300,12 +320,12 @@ export default {
                 this.servings = this.servings_cache?.[e.id] ?? e.servings
             }
         },
-        printReady: function(){
+        printReady: function () {
             const template = document.createElement("template");
             template.id = "printReady";
             document.body.appendChild(template);
         },
-        onImgLoad: function(){
+        onImgLoad: function () {
             this.printReady()
         },
     },
