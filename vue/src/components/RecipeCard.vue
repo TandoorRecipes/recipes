@@ -24,7 +24,7 @@
             <b-card-text style="text-overflow: ellipsis">
                 <template v-if="recipe !== null">
                     <recipe-rating :recipe="recipe"></recipe-rating>
-                    <template v-if="recipe.description !== null">
+                    <template v-if="recipe.description !== null && recipe.description !== undefined">
                         <span v-if="recipe.description.length > text_length">
                             {{ recipe.description.substr(0, text_length) + "\u2026" }}
                         </span>

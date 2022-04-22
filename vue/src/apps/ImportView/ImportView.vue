@@ -37,7 +37,8 @@
                                                     v-model="website_url"
                                                     placeholder="Website URL" @paste="onURLPaste"></b-input>
                                                 <b-input-group-append>
-                                                    <b-button variant="primary" @click="loadRecipe(false,undefined)"
+                                                    <b-button variant="primary"
+                                                              @click="loadRecipe(website_url,false,undefined)"
                                                               v-if="!import_multiple"><i
                                                         class="fas fa-search fa-fw"></i>
                                                     </b-button>
@@ -57,7 +58,7 @@
                                                         <ul>
                                                             <li v-for="x in recent_urls" v-bind:key="x">
                                                                 <a href="#"
-                                                                   @click="website_url=x; loadRecipe(false, undefined)">{{
+                                                                   @click="loadRecipe(x, false, undefined)">{{
                                                                         x
                                                                     }}</a>
                                                             </li>
@@ -195,7 +196,8 @@
                             </b-card>
 
                             <!-- IMPORT -->
-                            <b-card no-body v-if="recipe_json !== undefined">
+                            <b-card no-body
+                                    v-if="recipe_json !== undefined || (imported_recipes.length > 0 || failed_imports.length>0)">
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
                                         <b-button block v-b-toggle.id_accordion_import variant="info"
@@ -207,18 +209,53 @@
                                             role="tabpanel" v-model="collapse_visible.import">
                                     <b-card-body class="text-center">
                                         <b-row>
-                                            <b-col cols="12" md="6" xl="4" offset="0" offset-md="3" offset-xl="4">
+                                            <b-col cols="12" md="6" xl="4" offset="0" offset-md="3" offset-xl="4"
+                                                   v-if="!import_multiple">
+
                                                 <recipe-card :recipe="recipe_json" :detailed="false"
-                                                             :show_context_menu="false"></recipe-card>
+                                                             :show_context_menu="false"
+                                                ></recipe-card>
+                                            </b-col>
+                                            <b-col>
+                                                <b-list-group>
+                                                    <b-list-group-item
+                                                        v-for="r in imported_recipes"
+                                                        v-bind:key="r.id"
+                                                        v-hover>
+                                                        <div class="clearfix">
+                                                            <a class="float-left" target="_blank"
+                                                               rel="noreferrer nofollow"
+                                                               :href="resolveDjangoUrl('view_recipe',r.id)">{{
+                                                                    r.name
+                                                                }}</a>
+                                                            <span class="float-right">Imported</span>
+                                                            <!-- TODO  localize -->
+                                                        </div>
+                                                    </b-list-group-item>
+
+                                                    <b-list-group-item
+                                                        v-for="u in failed_imports"
+                                                        v-bind:key="u"
+                                                        v-hover>
+                                                        <div class="clearfix">
+                                                            <a class="float-left" target="_blank"
+                                                               rel="noreferrer nofollow" :href="u">{{ u }}</a>
+                                                            <span class="float-right">Failed</span>
+                                                            <!-- TODO  localize -->
+                                                        </div>
+                                                    </b-list-group-item>
+                                                </b-list-group>
                                             </b-col>
                                         </b-row>
                                     </b-card-body>
                                     <b-card-footer class="text-center">
                                         <b-button-group>
-                                            <b-button @click="importRecipe('view')">Import & View</b-button>
-                                            <b-button @click="importRecipe('edit')" variant="success">Import & Edit
+                                            <b-button @click="importRecipe('view')" v-if="!import_multiple">Import & View</b-button> <!-- TODO localize -->
+                                            <b-button @click="importRecipe('edit')" variant="success" v-if="!import_multiple">Import & Edit
                                             </b-button>
-                                            <b-button @click="importRecipe('import')">Import & Restart
+                                            <b-button @click="importRecipe('import')" v-if="!import_multiple">Import & Restart
+                                            </b-button>
+                                            <b-button @click="location.reload()">Restart
                                             </b-button>
                                         </b-button-group>
                                     </b-card-footer>
@@ -261,7 +298,7 @@
                                             :placeholder="$t('paste_json')" style="font-size: 12px">
                                 </b-textarea>
                             </div>
-                            <b-button @click="loadRecipe(false, undefined)" variant="primary"><i
+                            <b-button @click="loadRecipe('',false, undefined)" variant="primary"><i
                                 class="fas fa-code"></i>
                                 {{ $t('Import') }}
                             </b-button>
@@ -339,7 +376,9 @@ export default {
             website_url_list: [
                 'https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/',
                 'https://www.essen-und-trinken.de/rezepte/58294-rzpt-schokoladenpudding',
-                'https://www.chefkoch.de/rezepte/1825781296124455/Schokoladenpudding-selbst-gemacht.html'
+                'https://www.chefkoch.de/rezepte/1825781296124455/Schokoladenpudding-selbst-gemacht.html',
+                'test.com',
+                'https://bla.com'
             ],
             import_multiple: false,
             recent_urls: [],
@@ -348,6 +387,8 @@ export default {
             recipe_html: undefined,
             recipe_tree: undefined,
             recipe_images: [],
+            imported_recipes: [],
+            failed_imports: [],
             // App Import
             INTEGRATIONS: INTEGRATIONS,
             recipe_app: undefined,
@@ -366,7 +407,7 @@ export default {
         this.tab_index = 0 //TODO add ability to pass open tab via get parameter
 
         if (window.BOOKMARKLET_IMPORT_ID !== -1) {
-            this.loadRecipe(false, window.BOOKMARKLET_IMPORT_ID)
+            this.loadRecipe('', false, window.BOOKMARKLET_IMPORT_ID)
         }
     },
     methods: {
@@ -374,24 +415,43 @@ export default {
          * Import recipe based on the data configured by the client
          * @param action: action to perform after import (options are: edit, view, import)
          * @param data: if parameter is passed ignore global application state and import form data variable
+         * @param silent do not show any messages for imports
          */
-        importRecipe: function (action, data) {
-            this.$set(this.recipe_json, 'keywords', this.recipe_json.keywords.filter(k => k.show))
+        importRecipe: function (action, data, silent) {
+            if (this.recipe_json !== undefined) {
+                this.$set(this.recipe_json, 'keywords', this.recipe_json.keywords.filter(k => k.show))
+            }
 
             let apiFactory = new ApiApiFactory()
             let recipe_json = data !== undefined ? data : this.recipe_json
-            apiFactory.createRecipe(recipe_json).then(response => { // save recipe
-                let recipe = response.data
-                apiFactory.imageRecipe(response.data.id, undefined, recipe_json.image).then(response => { // save recipe image
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                    this.afterImportAction(action, recipe)
-                }).catch(e => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-                    this.afterImportAction(action, recipe)
+            if (recipe_json !== undefined) {
+                apiFactory.createRecipe(recipe_json).then(response => { // save recipe
+                    let recipe = response.data
+                    apiFactory.imageRecipe(response.data.id, undefined, recipe_json.image).then(response => { // save recipe image
+                        if (!silent) {
+                            StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        }
+                        this.afterImportAction(action, recipe)
+                    }).catch(e => {
+                        if (!silent) {
+                            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        }
+                        this.afterImportAction(action, recipe)
+                    })
+                }).catch(err => {
+                    if (recipe_json.source_url !== '') {
+                        this.failed_imports.push(recipe_json.source_url)
+                    }
+                    if (!silent) {
+                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    }
                 })
-            }).catch(err => {
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
-            })
+            } else {
+                console.log('cant import recipe without data')
+                if (!silent) {
+                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                }
+            }
         },
         /**
          * Action performed after URL import
@@ -413,6 +473,9 @@ export default {
                 case 'import':
                     location.reload();
                     break;
+                case 'multi_import':
+                    this.imported_recipes.push(recipe)
+                    break;
                 case 'nothing':
                     break;
             }
@@ -420,22 +483,23 @@ export default {
         /**
          * Requests the recipe to be loaded form the source (url/data) from the server
          * Updates all variables to contain what they need to render either simple preview or manual mapping mode
+         * @param url url to import (optional, empty string for bookmarklet imports)
          * @param silent do not open the options tab after loading the recipe
          * @param bookmarklet id of bookmarklet import to load instead of url, default undefined
          */
-        loadRecipe: function (silent, bookmarklet) {
+        loadRecipe: function (url, silent, bookmarklet) {
             // keep list of recently imported urls
-            if (this.website_url !== '') {
+            if (url !== '') {
                 if (this.recent_urls.length > 5) {
                     this.recent_urls.pop()
                 }
-                if (this.recent_urls.filter(x => x === this.website_url).length === 0) {
-                    this.recent_urls.push(this.website_url)
+                if (this.recent_urls.filter(x => x === url).length === 0) {
+                    this.recent_urls.push(url)
                 }
                 window.localStorage.setItem(this.LS_IMPORT_RECENT, JSON.stringify(this.recent_urls))
             }
 
-            if (this.website_url === '' && bookmarklet === undefined) {
+            if (url === '' && bookmarklet === undefined) {
                 this.empty_input = true
                 setTimeout(() => {
                     this.empty_input = false
@@ -443,7 +507,9 @@ export default {
                 return
             }
 
-            this.loading = true
+            if (!silent) {
+                this.loading = true
+            }
 
             // reset all variables
             this.recipe_html = undefined
@@ -453,7 +519,7 @@ export default {
 
             // load recipe
             let payload = {
-                'url': this.website_url,
+                'url': url,
                 'data': this.source_data,
             }
 
@@ -484,7 +550,11 @@ export default {
                 }
                 return this.recipe_json
             }).catch((err) => {
+                if (url !== '') {
+                    this.failed_imports.push(url)
+                }
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
+                throw "Load Recipe Error"
             })
         },
         /**
@@ -492,13 +562,13 @@ export default {
          * Takes input from website_url_list
          */
         autoImport: function () {
+            this.collapse_visible.import = true
             this.website_url_list.forEach(r => {
-                this.website_url = r
-                this.loadRecipe(true, undefined).then((recipe_json) => {
-                    this.importRecipe('nothing', recipe_json) //TODO handle feedback of what was imported and what not
+                this.loadRecipe(r, true, undefined).then((recipe_json) => {
+                    this.website_url_list = this.website_url_list.filter(u => u !== r)
+                    this.importRecipe('multi_import', recipe_json) //TODO handle feedback of what was imported and what not
                 })
             })
-            this.website_url_list = []
         },
         /**
          * Import recipes with uploaded files and app integration

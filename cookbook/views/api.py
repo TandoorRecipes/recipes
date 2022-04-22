@@ -1199,7 +1199,7 @@ def recipe_from_source(request):
             'recipe_json': recipe_json,
             'recipe_tree': recipe_tree,
             'recipe_html': recipe_html,
-            'recipe_images': recipe_images,
+            'recipe_images': list(dict.fromkeys(recipe_images)),
         })
 
 
