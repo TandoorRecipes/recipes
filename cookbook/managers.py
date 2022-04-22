@@ -16,6 +16,7 @@ DICTIONARY = {
     'it': 'italian',
     # 'lv': 'Latvian',
     'es': 'spanish',
+    'sv': 'swedish',
 }
 
 

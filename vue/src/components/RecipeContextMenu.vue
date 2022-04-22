@@ -206,11 +206,11 @@ export default {
             this.$bvModal.show(`shopping_${this.modal_id}`)
         },
         copyToNew: function () {
-            let recipename = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
+            let recipe_name = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
 
             let apiClient = new ApiApiFactory()
             apiClient.retrieveRecipe(this.recipe.id).then((results) => {
-                let recipe = { ...results.data, ...{ id: undefined, name: recipename } }
+                let recipe = { ...results.data, ...{ id: undefined, name: recipe_name } }
                 recipe.steps = recipe.steps.map((step) => {
                     return {
                         ...step,
@@ -222,12 +222,14 @@ export default {
                         },
                     }
                 })
-                console.log(recipe)
+                if (recipe.nutrition !== null){
+                    delete recipe.nutrition.id
+                }
                 apiClient
                     .createRecipe(recipe)
-                    .then((newrecipe) => {
+                    .then((new_recipe) => {
                         StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                        window.open(this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
+                        window.open(this.resolveDjangoUrl("view_recipe", new_recipe.data.id))
                     })
                     .catch((error) => {
                         StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)

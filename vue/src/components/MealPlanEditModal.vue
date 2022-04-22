@@ -48,7 +48,6 @@
                                         :initial_single_selection="entryEditing.meal_type"
                                         :allow_create="true"
                                         :create_placeholder="$t('Create_New_Meal_Type')"
-                                        @new="createMealType"
                                     ></generic-multiselect>
                                     <span class="text-danger" v-if="missing_meal_type">{{ $t("Meal_Type_Required") }}</span>
                                     <small tabindex="-1" class="form-text text-muted" v-if="!missing_meal_type">{{ $t("Meal_Type") }}</small>
@@ -226,20 +225,6 @@ export default {
                 this.entryEditing.shared = event.val
             } else {
                 this.entryEditing.meal_type = null
-            }
-        },
-        createMealType(event) {
-            if (event != "") {
-                let apiClient = new ApiApiFactory()
-
-                apiClient
-                    .createMealType({ name: event })
-                    .then((e) => {
-                        this.$emit("reload-meal-types")
-                    })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
-                    })
             }
         },
         selectRecipe(event) {
