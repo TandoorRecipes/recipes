@@ -133,6 +133,37 @@ export interface BookmarkletImport {
 /**
  * 
  * @export
+ * @interface BookmarkletImportList
+ */
+export interface BookmarkletImportList {
+    /**
+     * 
+     * @type {number}
+     * @memberof BookmarkletImportList
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImportList
+     */
+    url?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImportList
+     */
+    created_by?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImportList
+     */
+    created_at?: string;
+}
+/**
+ * 
+ * @export
  * @interface CookLog
  */
 export interface CookLog {
@@ -472,7 +503,7 @@ export interface FoodRecipe {
      * @type {string}
      * @memberof FoodRecipe
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
@@ -537,7 +568,7 @@ export interface FoodSubstitute {
      * @type {string}
      * @memberof FoodSubstitute
      */
-    name?: string;
+    name: string;
 }
 /**
  * 
@@ -752,6 +783,12 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     original_text?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Ingredient
+     */
+    used_in_recipes?: string;
 }
 /**
  * 
@@ -1655,6 +1692,12 @@ export interface Recipe {
     updated_at?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Recipe
+     */
+    source_url?: string | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof Recipe
      */
@@ -1923,6 +1966,12 @@ export interface RecipeIngredients {
      * @memberof RecipeIngredients
      */
     original_text?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeIngredients
+     */
+    used_in_recipes?: string;
 }
 /**
  * 
@@ -2191,7 +2240,7 @@ export interface RecipeSimple {
      * @type {string}
      * @memberof RecipeSimple
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
@@ -10374,7 +10423,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listBookmarkletImports(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BookmarkletImport>>> {
+        async listBookmarkletImports(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BookmarkletImportList>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listBookmarkletImports(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -12206,7 +12255,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listBookmarkletImports(options?: any): AxiosPromise<Array<BookmarkletImport>> {
+        listBookmarkletImports(options?: any): AxiosPromise<Array<BookmarkletImportList>> {
             return localVarFp.listBookmarkletImports(options).then((request) => request(axios, basePath));
         },
         /**
