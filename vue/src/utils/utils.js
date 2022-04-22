@@ -50,48 +50,100 @@ export class StandardToasts {
     static FAIL_MOVE = "FAIL_MOVE"
     static FAIL_MERGE = "FAIL_MERGE"
 
-    static makeStandardToast(toast, err_details = undefined) { //TODO err_details render very ugly, improve this maybe by using a custom toast component (in conjunction with error logging maybe)
+    static makeStandardToast(context, toast, err) {
+        let title = ''
+        let msg = ''
+        let variant = ''
+
         switch (toast) {
             case StandardToasts.SUCCESS_CREATE:
-                makeToast(i18n.tc("Success"), i18n.tc("success_creating_resource") + (err_details ? "\n" + err_details : ""), "success")
+                variant = 'success'
+                title = i18n.tc("Success")
+                msg = i18n.tc("success_creating_resource")
                 break
             case StandardToasts.SUCCESS_FETCH:
-                makeToast(i18n.tc("Success"), i18n.tc("success_fetching_resource") + (err_details ? "\n" + err_details : ""), "success")
+                variant = 'success'
+                title = i18n.tc("Success")
+                msg = i18n.tc("success_fetching_resource")
                 break
             case StandardToasts.SUCCESS_UPDATE:
-                makeToast(i18n.tc("Success"), i18n.tc("success_updating_resource") + (err_details ? "\n" + err_details : ""), "success")
+                variant = 'success'
+                title = i18n.tc("Success")
+                msg = i18n.tc("success_updating_resource")
                 break
             case StandardToasts.SUCCESS_DELETE:
-                makeToast(i18n.tc("Success"), i18n.tc("success_deleting_resource") + (err_details ? "\n" + err_details : ""), "success")
+                variant = 'success'
+                title = i18n.tc("Success")
+                msg = i18n.tc("success_deleting_resource")
                 break
             case StandardToasts.SUCCESS_MOVE:
-                makeToast(i18n.tc("Success"), i18n.tc("success_moving_resource") + (err_details ? "\n" + err_details : ""), "success")
+                variant = 'success'
+                title = i18n.tc("Success")
+                msg = i18n.tc("success_moving_resource")
                 break
             case StandardToasts.SUCCESS_MERGE:
-                makeToast(i18n.tc("Success"), i18n.tc("success_merging_resource") + (err_details ? "\n" + err_details : ""), "success")
+                variant = 'success'
+                title = i18n.tc("Success")
+                msg = i18n.tc("success_merging_resource")
                 break
             case StandardToasts.FAIL_CREATE:
-                makeToast(i18n.tc("Failure"), i18n.tc("err_creating_resource") + (err_details ? "\n" + err_details : ""), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_creating_resource")
                 break
             case StandardToasts.FAIL_FETCH:
-                makeToast(i18n.tc("Failure"), i18n.tc("err_fetching_resource") + (err_details ? "\n" + err_details : ""), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_fetching_resource")
                 break
             case StandardToasts.FAIL_UPDATE:
-                makeToast(i18n.tc("Failure"), i18n.tc("err_updating_resource") + (err_details ? "\n" + err_details : ""), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_updating_resource")
                 break
             case StandardToasts.FAIL_DELETE:
-                makeToast(i18n.tc("Failure"), i18n.tc("err_deleting_resource") + (err_details ? "\n" + err_details : ""), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_deleting_resource")
                 break
             case StandardToasts.FAIL_DELETE_PROTECTED:
-                makeToast(i18n.tc("Protected"), i18n.tc("err_deleting_protected_resource"), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_deleting_protected_resource")
                 break
             case StandardToasts.FAIL_MOVE:
-                makeToast(i18n.tc("Failure"), i18n.tc("err_moving_resource") + (err_details ? "\n" + err_details : ""), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_moving_resource")
                 break
             case StandardToasts.FAIL_MERGE:
-                makeToast(i18n.tc("Failure"), i18n.tc("err_merging_resource") + (err_details ? "\n" + err_details : ""), "danger")
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_merging_resource")
                 break
         }
+
+
+        let DEBUG = localStorage.getItem("DEBUG") === "True" || false
+
+        if (err !== undefined) {
+            if (DEBUG && err.response.headers['content-type'] === 'application/json' && err.response.status < 500) {
+                console.log('ERROR ', JSON.stringify(err.response.data))
+                msg = context.$createElement('div', {}, [
+                    context.$createElement('span', {}, [msg]),
+                    context.$createElement('br', {}, []),
+                    context.$createElement('code', {'class': 'mt-2'}, [JSON.stringify(err.response.data)])
+                ])
+            }
+        }
+
+        let toaster = new BToast()
+        toaster.$bvToast.toast(msg, {
+            title: title,
+            variant: variant,
+            toaster: "b-toaster-bottom-right",
+            solid: true,
+        })
     }
 }
 
@@ -167,7 +219,7 @@ export const StaticMixin = {
 
 export function resolveDjangoStatic(param) {
     let url = localStorage.getItem('STATIC_URL') + param
-    return url.replace('//','/') //replace // with / in case param started with / which resulted in // after the static base url
+    return url.replace('//', '/') //replace // with / in case param started with / which resulted in // after the static base url
 }
 
 /*

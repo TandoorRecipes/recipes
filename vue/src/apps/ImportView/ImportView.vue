@@ -17,8 +17,7 @@
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
-                                        <b-button block v-b-toggle.id_accordion_url variant="info">Website</b-button>
-                                        <!-- TODO localize -->
+                                        <b-button block v-b-toggle.id_accordion_url variant="info">{{ $t('Website') }}</b-button>
                                     </b-col>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_url" visible accordion="url_import_accordion"
@@ -30,7 +29,7 @@
                                                     <b-checkbox v-model="import_multiple" switch><span
                                                         v-if="import_multiple">Multiple Recipes</span><span
                                                         v-if="!import_multiple">Single Recipe</span></b-checkbox>
-                                                    <!-- TODO localize -->
+                                                    <!-- TODO localize or maybe icons ? -->
                                                 </div>
                                             </div>
                                             <b-input-group class="mt-2" :class="{ bounce: empty_input }"
@@ -38,8 +37,7 @@
                                                 <b-input
                                                     class="form-control form-control-lg form-control-borderless form-control-search"
                                                     v-model="website_url"
-                                                    placeholder="Website URL" @paste="onURLPaste"></b-input>
-                                                <!-- TODO localize -->
+                                                    placeholder="https://..." @paste="onURLPaste"></b-input>
                                                 <b-input-group-append>
                                                     <b-button variant="primary"
                                                               @click="loadRecipe(website_url,false,undefined)"><i
@@ -47,15 +45,15 @@
                                                     </b-button>
                                                 </b-input-group-append>
                                             </b-input-group>
-                                            <b-textarea rows="10" placeholder="Enter one URL per line"
+                                            <b-textarea rows="10" :placeholder="$t('one_url_per_line')"
                                                         v-model="website_url_list"
-                                                        v-if="import_multiple"> <!-- TODO localize -->
+                                                        v-if="import_multiple">
                                             </b-textarea>
 
                                             <b-button class="float-right" v-if="import_multiple"
-                                                                  :disabled="website_url_list.length < 1"
-                                                                  @click="autoImport()">Import
-                                                        </b-button>
+                                                      :disabled="website_url_list.length < 1"
+                                                      @click="autoImport()">{{ $t('Import') }}
+                                            </b-button>
 
                                             <div class="row mt-2"> <!-- TODO remove -->
                                                 <div class="col col-md-12">
@@ -89,7 +87,7 @@
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
                                         <b-button block v-b-toggle.id_accordion_add_options variant="info"
-                                                  :disabled="recipe_json === undefined">Options
+                                                  :disabled="recipe_json === undefined">{{ $t('Options') }}
                                         </b-button>
                                     </b-col>
                                 </b-card-header>
@@ -127,9 +125,8 @@
 
                                         <div class="row mt-1">
                                             <div class="col col-md-12 text-center">
-                                                <small class="text-muted">Click the image you want to import for this
-                                                    recipe</small> <!-- TODO localize -->
-                                                <span v-if="recipe_images.length === 0">No additional images found in source.</span>
+                                                <small class="text-muted">{{$t('click_image_import')}}</small><br/>
+                                                <span v-if="recipe_images.length === 0">{{$t('no_more_images_found')}}</span>
                                                 <div class="scrolling-wrapper-flexbox">
                                                     <div class="wrapper-card" v-for="i in recipe_images"
                                                          v-bind:key="i"
@@ -147,7 +144,7 @@
                                                 <b-card no-body>
                                                     <b-card-title>
                                                         <div class="clearfix">
-                                                            <span class="float-left h5">Keywords</span>
+                                                            <span class="float-left h5">{{$t('Keywords')}}</span>
                                                             <b-button-group class="float-right">
                                                                 <b-button class="float-right" variant="primary"
                                                                           @click="$set(recipe_json, 'keywords', recipe_json.keywords.map(x => {x.show = true; return x}))">
@@ -194,7 +191,7 @@
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
                                         <b-button block v-b-toggle.id_accordion_import variant="info"
-                                                  :disabled="recipe_json === undefined">Import
+                                                  :disabled="recipe_json === undefined">{{ $t('Import') }}
                                         </b-button>
                                     </b-col>
                                 </b-card-header>
@@ -391,7 +388,8 @@ export default {
             empty_input: false,
             edit_name: false,
             // Bookmarklet
-            BOOKMARKLET_CODE: window.BOOKMARKLET_CODE
+            BOOKMARKLET_CODE: window.BOOKMARKLET_CODE,
+            error: undefined
         }
     },
     mounted() {
@@ -422,12 +420,12 @@ export default {
                     let recipe = response.data
                     apiFactory.imageRecipe(response.data.id, undefined, recipe_json.image).then(response => { // save recipe image
                         if (!silent) {
-                            StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                            StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                         }
                         this.afterImportAction(action, recipe)
                     }).catch(e => {
                         if (!silent) {
-                            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                            StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                         }
                         this.afterImportAction(action, recipe)
                     })
@@ -436,13 +434,13 @@ export default {
                         this.failed_imports.push(recipe_json.source_url)
                     }
                     if (!silent) {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                     }
                 })
             } else {
                 console.log('cant import recipe without data')
                 if (!silent) {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                 }
             }
         },
@@ -543,10 +541,11 @@ export default {
                 }
                 return this.recipe_json
             }).catch((err) => {
+                this.loading = false
                 if (url !== '') {
                     this.failed_imports.push(url)
                 }
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH, err.response.data.msg)
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 throw "Load Recipe Error"
             })
         },
@@ -577,15 +576,14 @@ export default {
                 window.location.href = resolveDjangoUrl('view_import_response', response.data['import_id'])
             }).catch((err) => {
                 console.log(err)
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
             })
         },
         /**
          * Handles pasting URLs
          */
         onURLPaste: function (evt) {
-            this.website_url = evt.clipboardData.getData('text')
-            this.loadRecipe(false, undefined)
+            this.loadRecipe(evt.clipboardData.getData('text'), false, undefined)
             return true;
         },
         /**loadRecipe(false,undefined)

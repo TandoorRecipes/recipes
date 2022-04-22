@@ -451,7 +451,7 @@ export default {
                     this.periodChangedCallback(this.current_period)
                 })
                 .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                 })
 
             this.refreshMealTypes()
@@ -474,7 +474,7 @@ export default {
                         }
                     })
                     .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                     })
             })
         },
@@ -488,10 +488,10 @@ export default {
                     .updateMealType(this.meal_types[index].id, this.meal_types[index])
                     .then((e) => {
                         this.periodChangedCallback(this.current_period)
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                     })
             } else {
                 this.$set(this.meal_types[index], "editing", true)
@@ -504,10 +504,10 @@ export default {
                 .destroyMealType(this.meal_types[index].id)
                 .then((e) => {
                     this.periodChangedCallback(this.current_period)
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
                 })
         },
         updateEmoji: function (field, value) {
@@ -583,7 +583,7 @@ export default {
                             list.splice(index, 1)
                         })
                         .catch((error) => {
-                            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                            StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                         })
                 }
             })
@@ -635,7 +635,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient.updateMealPlan(entry.id, entry).catch((error) => {
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
             })
         },
         createEntry(entry) {
@@ -646,7 +646,7 @@ export default {
             apiClient
                 .createMealPlan(entry)
                 .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                 })
                 .then((entry_result) => {
                     this.plan_entries.push(entry_result.data)

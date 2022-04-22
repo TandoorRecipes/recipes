@@ -175,20 +175,20 @@ export default {
             this.genericAPI(this.Models.RECIPE, this.Actions.SHOPPING, params)
                 .then((result) => {
                     if (del_shopping) {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                     } else if (this.selected_shoppingrecipe) {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     } else {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     }
                 })
                 .catch((err) => {
                     if (del_shopping) {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
                     } else if (this.selected_shoppingrecipe) {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                     } else {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                     }
                     this.$emit("shopping-failed")
                 })

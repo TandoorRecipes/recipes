@@ -118,7 +118,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
                 })
             // .then((e) => this.searchRecipes(""))
         },
@@ -133,7 +133,7 @@ export default {
         //         })
         //         .catch((err) => {
         //             console.log(err)
-        //             StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+        //             StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
         //         })
         // },
 

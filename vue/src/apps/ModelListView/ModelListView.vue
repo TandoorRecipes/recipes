@@ -276,7 +276,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
                 })
         },
         getThis: function (id, callback) {
@@ -292,21 +292,21 @@ export default {
                         this.items_left = [result.data].concat(this.destroyCard(result?.data?.id, this.items_left))
                         // this creates a deep copy to make sure that columns stay independent
                         this.items_right = [{...result.data}].concat(this.destroyCard(result?.data?.id, this.items_right))
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     })
                     .catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                     })
             } else {
                 this.genericAPI(this.this_model, this.Actions.UPDATE, item)
                     .then((result) => {
                         this.refreshThis(item.id)
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, err.response)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                     })
             }
         },
@@ -315,7 +315,7 @@ export default {
             let api = new ApiApiFactory()
             food.shopping = true
             api.createShoppingListEntry({food: food, amount: 1}).then(() => {
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 this.refreshCard(food, this.items_left)
                 this.refreshCard({...food}, this.items_right)
             })
@@ -339,7 +339,7 @@ export default {
             this.genericAPI(this.this_model, this.Actions.MOVE, {source: source_id, target: target_id})
                 .then((result) => {
                     this.moveUpdateItem(source_id, target_id)
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MOVE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -378,7 +378,7 @@ export default {
             })
                 .then((result) => {
                     this.mergeUpdateItem(source_id, target_id)
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MERGE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
                     //TODO error checking not working with OpenAPI methods
@@ -432,7 +432,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
                 })
         },
         getRecipes: function (col, item) {
