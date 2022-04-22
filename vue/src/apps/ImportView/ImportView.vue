@@ -18,6 +18,7 @@
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
                                         <b-button block v-b-toggle.id_accordion_url variant="info">Website</b-button>
+                                        <!-- TODO localize -->
                                     </b-col>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_url" visible accordion="url_import_accordion"
@@ -29,28 +30,34 @@
                                                     <b-checkbox v-model="import_multiple" switch><span
                                                         v-if="import_multiple">Multiple Recipes</span><span
                                                         v-if="!import_multiple">Single Recipe</span></b-checkbox>
+                                                    <!-- TODO localize -->
                                                 </div>
                                             </div>
-                                            <b-input-group class="mt-2" :class="{ bounce: empty_input }">
+                                            <b-input-group class="mt-2" :class="{ bounce: empty_input }"
+                                                           v-if="!import_multiple">
                                                 <b-input
                                                     class="form-control form-control-lg form-control-borderless form-control-search"
                                                     v-model="website_url"
                                                     placeholder="Website URL" @paste="onURLPaste"></b-input>
+                                                <!-- TODO localize -->
                                                 <b-input-group-append>
                                                     <b-button variant="primary"
-                                                              @click="loadRecipe(website_url,false,undefined)"
-                                                              v-if="!import_multiple"><i
+                                                              @click="loadRecipe(website_url,false,undefined)"><i
                                                         class="fas fa-search fa-fw"></i>
-                                                    </b-button>
-                                                    <b-button variant="primary"
-                                                              @click="addWebsiteToURLList(website_url); website_url=''"
-                                                              v-if="import_multiple"><i
-                                                        class="fas fa-plus fa-fw"></i>
                                                     </b-button>
                                                 </b-input-group-append>
                                             </b-input-group>
+                                            <b-textarea rows="10" placeholder="Enter one URL per line"
+                                                        v-model="website_url_list"
+                                                        v-if="import_multiple"> <!-- TODO localize -->
+                                            </b-textarea>
 
-                                            <div class="row mt-2">
+                                            <b-button class="float-right" v-if="import_multiple"
+                                                                  :disabled="website_url_list.length < 1"
+                                                                  @click="autoImport()">Import
+                                                        </b-button>
+
+                                            <div class="row mt-2"> <!-- TODO remove -->
                                                 <div class="col col-md-12">
                                                     <div v-if="!import_multiple">
                                                         <a href="#" @click="clearRecentImports()">Clear recent
@@ -64,20 +71,6 @@
                                                             </li>
                                                         </ul>
 
-                                                    </div>
-                                                    <div v-if="import_multiple">
-                                                        <a href="#" @click="website_url_list = []"
-                                                           v-if="website_url_list.length > 0">Clear import list</a>
-                                                        <ul>
-                                                            <li v-for="x in website_url_list" v-bind:key="x">
-                                                                {{ x }}
-                                                            </li>
-                                                        </ul>
-
-                                                        <b-button class="float-right"
-                                                                  :disabled="website_url_list.length < 1"
-                                                                  @click="autoImport()">Import
-                                                        </b-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -250,10 +243,14 @@
                                     </b-card-body>
                                     <b-card-footer class="text-center">
                                         <b-button-group>
-                                            <b-button @click="importRecipe('view')" v-if="!import_multiple">Import & View</b-button> <!-- TODO localize -->
-                                            <b-button @click="importRecipe('edit')" variant="success" v-if="!import_multiple">Import & Edit
+                                            <b-button @click="importRecipe('view')" v-if="!import_multiple">Import &
+                                                View
+                                            </b-button> <!-- TODO localize -->
+                                            <b-button @click="importRecipe('edit')" variant="success"
+                                                      v-if="!import_multiple">Import & Edit
                                             </b-button>
-                                            <b-button @click="importRecipe('import')" v-if="!import_multiple">Import & Restart
+                                            <b-button @click="importRecipe('import')" v-if="!import_multiple">Import &
+                                                Restart
                                             </b-button>
                                             <b-button @click="location.reload()">Restart
                                             </b-button>
@@ -373,13 +370,9 @@ export default {
             // URL import
             LS_IMPORT_RECENT: 'import_recent_urls', //TODO use central helper to manage all local storage keys (and maybe even access)
             website_url: '',
-            website_url_list: [
-                'https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/',
-                'https://www.essen-und-trinken.de/rezepte/58294-rzpt-schokoladenpudding',
-                'https://www.chefkoch.de/rezepte/1825781296124455/Schokoladenpudding-selbst-gemacht.html',
-                'test.com',
-                'https://bla.com'
-            ],
+            website_url_list: 'https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/\nhttps://www.essen-und-trinken.de/rezepte/58294-rzpt-schokoladenpudding\n' +
+                'https://www.chefkoch.de/rezepte/1825781296124455/Schokoladenpudding-selbst-gemacht.html\ntest.com\nhttps://bla.com',
+
             import_multiple: false,
             recent_urls: [],
             source_data: '',
@@ -563,12 +556,12 @@ export default {
          */
         autoImport: function () {
             this.collapse_visible.import = true
-            this.website_url_list.forEach(r => {
+            this.website_url_list.split('\n').forEach(r => {
                 this.loadRecipe(r, true, undefined).then((recipe_json) => {
-                    this.website_url_list = this.website_url_list.filter(u => u !== r)
-                    this.importRecipe('multi_import', recipe_json) //TODO handle feedback of what was imported and what not
+                    this.importRecipe('multi_import', recipe_json, true)
                 })
             })
+            this.website_url_list = ''
         },
         /**
          * Import recipes with uploaded files and app integration
@@ -586,14 +579,6 @@ export default {
                 console.log(err)
                 StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
             })
-        },
-        /**
-         * Adds Website to url list, prevents duplicates
-         */
-        addWebsiteToURLList: function (url) {
-            if (this.website_url_list.indexOf(url) === -1 && url !== '') {
-                this.website_url_list.push(url)
-            }
         },
         /**
          * Handles pasting URLs
