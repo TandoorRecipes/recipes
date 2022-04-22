@@ -133,6 +133,7 @@ def validate_recipe(expected, recipe):
     for key in expected_lists:
         for k in expected_lists[key]:
             try:
+                print('comparing ', any([dict_compare(k, i) for i in target_lists[key]]))
                 assert any([dict_compare(k, i) for i in target_lists[key]])
             except AssertionError:
                 for result in [dict_compare(k, i, details=True) for i in target_lists[key]]:

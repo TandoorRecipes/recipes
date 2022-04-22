@@ -492,7 +492,7 @@ export default {
                 window.localStorage.setItem(this.LS_IMPORT_RECENT, JSON.stringify(this.recent_urls))
             }
 
-            if (url === '' && bookmarklet === undefined) {
+            if (url === '' && bookmarklet === undefined && this.source_data === '') {
                 this.empty_input = true
                 setTimeout(() => {
                     this.empty_input = false

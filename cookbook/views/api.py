@@ -1160,6 +1160,8 @@ def recipe_from_source(request):
             - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
     :return: JsonResponse containing the parsed json, original html,json and images
     """
+    if request.method == 'GET':
+        return HttpResponse(status=405)
     request_payload = json.loads(request.body.decode('utf-8'))
     url = request_payload.get('url', None)
     data = request_payload.get('data', None)
@@ -1187,6 +1189,11 @@ def recipe_from_source(request):
             return JsonResponse({
                 'error': True,
                 'msg': _('Connection Refused.')
+            }, status=400)
+        except requests.exceptions.MissingSchema:
+            return JsonResponse({
+                'error': True,
+                'msg': _('Bad URL Schema.')
             }, status=400)
     recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
