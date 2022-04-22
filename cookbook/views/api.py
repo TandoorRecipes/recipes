@@ -1160,6 +1160,8 @@ def recipe_from_source(request):
             - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
     :return: JsonResponse containing the parsed json, original html,json and images
     """
+    if request.method == 'GET':
+        return HttpResponse(status=405)
     request_payload = json.loads(request.body.decode('utf-8'))
     url = request_payload.get('url', None)
     data = request_payload.get('data', None)
