@@ -43,7 +43,8 @@ class NextcloudCookbook(Integration):
         if 'keywords' in recipe_json:
             try:
                 for x in recipe_json['keywords'].split(','):
-                    recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=x)[0])
+                    if x.strip() != '':
+                        recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=x)[0])
             except Exception:
                 pass
 

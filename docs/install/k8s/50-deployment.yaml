@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: recipes
-  namespace: default
   labels:
     app: recipes
     environment: production

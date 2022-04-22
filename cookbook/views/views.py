@@ -61,7 +61,8 @@ def search(request):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
         f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(
+                             Lower('name').asc()),
                          space=request.space)
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -226,6 +227,19 @@ def supermarket(request):
 
 
 @group_required('user')
+def ingredient_editor(request):
+    template_vars = {'food_id': -1, 'unit_id': -1}
+    food_id = request.GET.get('food_id', None)
+    if food_id and re.match(r'^(\d)+$', food_id):
+        template_vars['food_id'] = food_id
+
+    unit_id = request.GET.get('unit_id', None)
+    if unit_id and re.match(r'^(\d)+$', unit_id):
+        template_vars['unit_id'] = unit_id
+    return render(request, 'ingredient_editor.html', template_vars)
+
+
+@group_required('user')
 def meal_plan_entry(request, pk):
     plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
 
@@ -304,6 +318,7 @@ def user_settings(request):
                 up.use_fractions = form.cleaned_data['use_fractions']
                 up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
+                up.left_handed = form.cleaned_data['left_handed']
 
                 up.save()
 

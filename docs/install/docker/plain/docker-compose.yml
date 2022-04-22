@@ -9,6 +9,7 @@ services:
       - ./.env
 
   web_recipes:
+    restart: always
     image: vabene1111/recipes
     env_file:
       - ./.env
@@ -30,8 +31,8 @@ services:
       - web_recipes
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
-      - staticfiles:/static
-      - ./mediafiles:/media
+      - staticfiles:/static:ro
+      - ./mediafiles:/media:ro
 
 volumes:
   nginx_config:
