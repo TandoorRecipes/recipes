@@ -1,6 +1,3 @@
-"""
-Source: https://djangosnippets.org/snippets/1703/
-"""
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -12,7 +9,7 @@ from django.utils.translation import gettext as _
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 
-from cookbook.models import ShareLink
+from cookbook.models import ShareLink, Recipe, UserPreference
 
 
 def get_allowed_groups(groups_required):
@@ -262,3 +259,38 @@ class CustomIsShare(permissions.BasePermission):
         if share:
             return share_link_valid(obj, share)
         return False
+
+
+def above_space_limit(space):  # TODO add file storage limit
+    """
+    Test if the space has reached any limit (e.g. max recipes, users, ..)
+    :param space: Space to test for limits
+    :return: Tuple (True if above or equal any limit else false, message)
+    """
+    r_limit, r_msg = above_space_recipe_limit(space)
+    u_limit, u_msg = above_space_user_limit(space)
+    return r_limit or u_limit, (r_msg + ' ' + u_msg).strip()
+
+
+def above_space_recipe_limit(space):
+    """
+    Test if a space has reached its recipe limit
+    :param space: Space to test for limits
+    :return: Tuple (True if above or equal limit else false, message)
+    """
+    limit = space.max_recipes != 0 and Recipe.objects.filter(space=space).count() >= space.max_recipes
+    if limit:
+        return True, _('You have reached the maximum number of recipes for your space.')
+    return False, ''
+
+
+def above_space_user_limit(space):
+    """
+    Test if a space has reached its user limit
+    :param space: Space to test for limits
+    :return: Tuple (True if above or equal limit else false, message)
+    """
+    limit = space.max_users != 0 and UserPreference.objects.filter(space=space).count() > space.max_users
+    if limit:
+        return True, _('You have more users than allowed in your space.')
+    return False, ''

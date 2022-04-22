@@ -9,7 +9,7 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
 from cookbook.forms import CommentForm, ExternalRecipeForm, MealPlanForm, StorageForm, SyncForm
-from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
+from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required, above_space_limit
 from cookbook.models import (Comment, MealPlan, MealType, Recipe, RecipeImport, Storage, Sync,
                              UserPreference)
 from cookbook.provider.dropbox import Dropbox
@@ -39,12 +39,9 @@ def convert_recipe(request, pk):
 
 @group_required('user')
 def internal_recipe_update(request, pk):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() > request.space.max_recipes:  # TODO move to central helper function
-        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
-        return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
-
-    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
-        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
 
     recipe_instance = get_object_or_404(Recipe, pk=pk, space=request.space)

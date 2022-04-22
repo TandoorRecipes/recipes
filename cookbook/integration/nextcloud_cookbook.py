@@ -31,6 +31,9 @@ class NextcloudCookbook(Integration):
         except Exception:
             pass
 
+        if 'url' in recipe_json:
+            recipe.source_url = recipe_json['url'].strip()
+
         if 'recipeCategory' in recipe_json:
             try:
                 recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=recipe_json['recipeCategory'])[0])

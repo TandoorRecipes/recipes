@@ -5,6 +5,7 @@ import uuid
 from collections import OrderedDict
 
 import requests
+from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
@@ -23,6 +24,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from recipe_scrapers import NoSchemaFoundInWildMode, WebsiteNotImplementedError, scrape_me
+from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
@@ -68,7 +70,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializ
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer)
+                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer)
 from recipes import settings
 
 
@@ -767,20 +769,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         serializer = self.serializer_class(obj, data=request.data, partial=True)
 
-        if self.request.space.demo:
-            raise PermissionDenied(detail='Not available in demo', code=None)
-
         if serializer.is_valid():
             serializer.save()
+            image = None
 
-            if serializer.validated_data == {}:
-                obj.image = None
-            else:
-                img, filetype = handle_image(request, obj.image)
+            if 'image' in serializer.validated_data:
+                image = obj.image
+            elif 'image_url' in serializer.validated_data:
+                try:
+                    response = requests.get(serializer.validated_data['image_url'])
+                    image = File(io.BytesIO(response.content))
+                    print('test')
+                except UnidentifiedImageError as e:
+                    print(e)
+                    pass
+                except MissingSchema as e:
+                    print(e)
+                    pass
+                except Exception as e:
+                    print(e)
+                    pass
+
+            if image is not None:
+                img, filetype = handle_image(request, image)
                 obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
-            obj.save()
+                obj.save()
+                return Response(serializer.data)
 
-            return Response(serializer.data)
         return Response(serializer.errors, 400)
 
     # TODO: refactor API to use post/put/delete or leave as put and change VUE to use list_recipe after creating
@@ -959,6 +974,11 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
     serializer_class = BookmarkletImportSerializer
     permission_classes = [CustomIsUser]
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return BookmarkletImportListSerializer
+        return self.serializer_class
+
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space).all()
 
@@ -1132,102 +1152,55 @@ def get_plan_ical(request, from_date, to_date):
 
 @group_required('user')
 def recipe_from_source(request):
-    url = request.POST.get('url', None)
-    data = request.POST.get('data', None)
-    mode = request.POST.get('mode', None)
-    auto = request.POST.get('auto', 'true')
+    """
+    function to retrieve a recipe from a given url or source string
+    :param request: standard request with additional post parameters
+            - url: url to use for importing recipe
+            - data: if no url is given recipe is imported from provided source data
+            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
+    :return: JsonResponse containing the parsed json, original html,json and images
+    """
+    request_payload = json.loads(request.body.decode('utf-8'))
+    url = request_payload.get('url', None)
+    data = request_payload.get('data', None)
+    bookmarklet = request_payload.get('bookmarklet', None)
 
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
-    }
+    if bookmarklet := BookmarkletImport.objects.filter(pk=bookmarklet).first():
+        url = bookmarklet.url
+        data = bookmarklet.html
+        bookmarklet.delete()
 
-    if (not url and not data) or (mode == 'url' and not url) or (mode == 'source' and not data):
-        return JsonResponse(
-            {
-                'error': True,
-                'msg': _('Nothing to do.')
-            },
-            status=400
-        )
+    # headers to use for request to external sites
+    external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
 
-    if mode == 'url' and auto == 'true':
+    if not url and not data:
+        return JsonResponse({
+            'error': True,
+            'msg': _('Nothing to do.')
+        }, status=400)
+
+    # in manual mode request complete page to return it later
+    if url:
         try:
-            scrape = scrape_me(url)
-        except (WebsiteNotImplementedError, AttributeError):
-            try:
-                scrape = scrape_me(url, wild_mode=True)
-            except NoSchemaFoundInWildMode:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('The requested site provided malformed data and cannot be read.')  # noqa: E501
-                    },
-                    status=400)
-        except ConnectionError:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _('The requested page could not be found.')
-                },
-                status=400
-            )
-
-        try:
-            instructions = scrape.instructions()
-        except Exception:
-            instructions = ""
-        try:
-            ingredients = scrape.ingredients()
-        except Exception:
-            ingredients = []
-        if len(ingredients) + len(instructions) == 0:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _(
-                        'The requested site does not provide any recognized data format to import the recipe from.')
-                    # noqa: E501
-                },
-                status=400)
-        else:
-            return JsonResponse({"recipe_json": get_from_scraper(scrape, request)})
-    elif (mode == 'source') or (mode == 'url' and auto == 'false'):
-        if not data or data == 'undefined':
-            try:
-                data = requests.get(url, headers=HEADERS).content
-            except requests.exceptions.ConnectionError:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('Connection Refused.')
-                    },
-                    status=400
-                )
-        recipe_json, recipe_tree, recipe_html, images = get_recipe_from_source(data, url, request)
-        if len(recipe_tree) == 0 and len(recipe_json) == 0:
-            return JsonResponse(
-                {
-                    'error': True,
-                    'msg': _('No usable data could be found.')
-                },
-                status=400
-            )
-        else:
+            data = requests.get(url, headers=external_request_headers).content
+        except requests.exceptions.ConnectionError:
             return JsonResponse({
-                'recipe_tree': recipe_tree,
-                'recipe_json': recipe_json,
-                'recipe_html': recipe_html,
-                'images': images,
-            })
-
-    else:
-        return JsonResponse(
-            {
                 'error': True,
-                'msg': _('I couldn\'t find anything to do.')
-            },
-            status=400
-        )
+                'msg': _('Connection Refused.')
+            }, status=400)
+    recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
+    if len(recipe_tree) == 0 and len(recipe_json) == 0:
+        return JsonResponse({
+            'error': True,
+            'msg': _('No usable data could be found.')
+        }, status=400)
+    else:
+        return JsonResponse({
+            'recipe_json': recipe_json,
+            'recipe_tree': recipe_tree,
+            'recipe_html': recipe_html,
+            'recipe_images': list(dict.fromkeys(recipe_images)),
+        })
 
 
 @group_required('admin')

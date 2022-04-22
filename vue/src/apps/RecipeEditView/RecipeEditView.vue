@@ -370,6 +370,9 @@
                                                     <div v-for="(ingredient, index) in step.ingredients"
                                                          :key="ingredient.id">
                                                         <hr class="d-md-none"/>
+                                                        <div class="text-center">
+                                                            <small class="text-muted"><i class="fas fa-globe"></i> {{ingredient.original_text}}</small>
+                                                        </div>
                                                         <div class="d-flex">
                                                             <div class="flex-grow-0 handle align-self-start">
                                                                 <button type="button"

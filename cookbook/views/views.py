@@ -662,11 +662,10 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    with scopes_disabled():
-        result = ShoppingList.objects.filter(
-            Q(created_by=request.user) | Q(shared=request.user)).filter(
-            space=request.space).values().distinct()
-    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
+    if (api_token := Token.objects.filter(user=request.user).first()) is None:
+        api_token = Token.objects.create(user=request.user)
+
+    return render(request, 'test.html', {'api_token': api_token})
 
 
 def test2(request):

@@ -138,6 +138,9 @@
                     @checked-state-changed="updateIngredientCheckedState"
                 ></step-component>
             </div>
+
+            <h5 class="d-print-none"><i class="fas fa-file-import"></i> {{ $t("Imported_From") }}</h5>
+            <span class="text-muted mt-1"><a :href="recipe.source_url">{{ recipe.source_url }}</a></span>
         </div>
 
         <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>

@@ -32,7 +32,14 @@ class CopyMeThat(Integration):
             recipe.servings = parse_servings(file.find("a", {"id": "recipeYield"}).text.strip())
             recipe.working_time = iso_duration_to_minutes(file.find("span", {"meta": "prepTime"}).text.strip())
             recipe.waiting_time = iso_duration_to_minutes(file.find("span", {"meta": "cookTime"}).text.strip())
-            recipe.save()
+            recipe.description = (file.find("div ", {"id": "description"}).text.strip())[:512]
+
+        except AttributeError:
+            pass
+
+        try:
+            if len(file.find("span", {"id": "starred"}).text.strip()) > 0:
+                recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=_('Favorite'))[0])
         except AttributeError:
             pass
 

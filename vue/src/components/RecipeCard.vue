@@ -2,7 +2,7 @@
     <b-card no-body v-hover v-if="recipe">
         <a :href="clickUrl()">
             <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="recipe_image" v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
-            <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1">
+            <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1" v-if="show_context_menu">
                 <a>
                     <recipe-context-menu :recipe="recipe" class="float-right" v-if="recipe !== null"></recipe-context-menu>
                 </a>
@@ -24,7 +24,7 @@
             <b-card-text style="text-overflow: ellipsis">
                 <template v-if="recipe !== null">
                     <recipe-rating :recipe="recipe"></recipe-rating>
-                    <template v-if="recipe.description !== null">
+                    <template v-if="recipe.description !== null && recipe.description !== undefined">
                         <span v-if="recipe.description.length > text_length">
                             {{ recipe.description.substr(0, text_length) + "\u2026" }}
                         </span>
@@ -78,6 +78,7 @@ export default {
         footer_text: String,
         footer_icon: String,
         detailed: { type: Boolean, default: true },
+        show_context_menu: { type: Boolean, default: true }
     },
     mounted() {},
     computed: {
