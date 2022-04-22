@@ -70,7 +70,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializ
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer)
+                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer)
 from recipes import settings
 
 
@@ -973,6 +973,11 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
     permission_classes = [CustomIsUser]
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return BookmarkletImportListSerializer
+        return self.serializer_class
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space).all()

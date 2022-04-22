@@ -113,6 +113,14 @@ def get_from_scraper(scrape, request):
                 keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
         except Exception:
             pass
+
+    if source_url := scrape.canonical_url():
+        recipe_json['source_url'] = source_url
+        try:
+            keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
+        except Exception:
+            pass
+
     try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
@@ -136,19 +144,18 @@ def get_from_scraper(scrape, request):
         for x in scrape.ingredients():
             try:
                 amount, unit, ingredient, note = ingredient_parser.parse(x)
-                recipe_json['steps'][0]['ingredients'].append(
-                    {
-                        'amount': amount,
-                        'unit': {
-                            'name': unit,
-                        },
-                        'food': {
-                            'name': ingredient,
-                        },
-                        'note': note,
-                        'original_text': x
-                    }
-                )
+                ingredient = {
+                    'amount': amount,
+                    'food': {
+                        'name': ingredient,
+                    },
+                    'unit': None,
+                    'note': note,
+                    'original_text': x
+                }
+                if unit:
+                    ingredient['unit'] = {'name': unit, }
+                recipe_json['steps'][0]['ingredients'].append(ingredient)
             except Exception:
                 recipe_json['steps'][0]['ingredients'].append(
                     {
@@ -164,8 +171,6 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
 
-    if scrape.canonical_url():
-        recipe_json['source_url'] = scrape.canonical_url()
     return recipe_json
 
 

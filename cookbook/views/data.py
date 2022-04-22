@@ -10,7 +10,7 @@ from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
 from cookbook.forms import BatchEditForm, SyncForm
-from cookbook.helper.permission_helper import group_required, has_group_permission
+from cookbook.helper.permission_helper import group_required, has_group_permission, above_space_limit
 from cookbook.models import (Comment, Food, Keyword, Recipe, RecipeImport, Sync,
                              Unit, UserPreference, BookmarkletImport)
 from cookbook.tables import SyncTable
@@ -19,12 +19,9 @@ from recipes import settings
 
 @group_required('user')
 def sync(request):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
-        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
-        return HttpResponseRedirect(reverse('index'))
-
-    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
-        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('index'))
 
     if request.space.demo or settings.HOSTED:
@@ -113,12 +110,9 @@ def batch_edit(request):
 
 @group_required('user')
 def import_url(request):
-    if request.space.max_recipes != 0 and Recipe.objects.filter(space=request.space).count() >= request.space.max_recipes:  # TODO move to central helper function
-        messages.add_message(request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
-        return HttpResponseRedirect(reverse('index'))
-
-    if request.space.max_users != 0 and UserPreference.objects.filter(space=request.space).count() > request.space.max_users:
-        messages.add_message(request, messages.WARNING, _('You have more users than allowed in your space.'))
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('index'))
 
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
@@ -129,7 +123,7 @@ def import_url(request):
         if bookmarklet_import := BookmarkletImport.objects.filter(id=request.GET['id']).first():
             bookmarklet_import_id = bookmarklet_import.pk
 
-    return render(request, 'test.html', {'api_token': api_token, 'bookmarklet_import_id': bookmarklet_import_id})
+    return render(request, 'url_import.html', {'api_token': api_token, 'bookmarklet_import_id': bookmarklet_import_id})
 
 
 class Object(object):
