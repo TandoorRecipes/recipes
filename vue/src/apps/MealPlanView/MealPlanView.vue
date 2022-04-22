@@ -2,7 +2,7 @@
     <div>
         <b-tabs content-class="mt-3" v-model="current_tab">
             <b-tab :title="$t('Planner')" active>
-                <div class="row">
+                <div class="row calender-row">
                     <div class="col-12 calender-parent">
                         <calendar-view
                             :show-date="showDate"
@@ -693,18 +693,23 @@ export default {
     opacity: 0;
 }
 
+.calender-row {
+    height: calc(100% - 240px);
+}
+
 .calender-parent {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: hidden;
-    height: 70vh;
+    height: 100%
 }
 
 .cv-item {
     white-space: inherit !important;
 }
+
 
 .isHovered {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
@@ -836,5 +841,11 @@ having to override as much.
 .ghost {
     opacity: 0.5;
     background: #c8ebfb;
+}
+
+@media (max-width: 767.9px) {
+    .periodLabel {
+        font-size: 18px !important;
+    }
 }
 </style>
