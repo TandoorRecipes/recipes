@@ -164,8 +164,8 @@ export default {
                     }
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 })
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                 })
         },
         createMealPlan(data) {
@@ -231,8 +231,8 @@ export default {
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                         window.open(this.resolveDjangoUrl("view_recipe", new_recipe.data.id))
                     })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                     })
             })
         },

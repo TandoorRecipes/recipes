@@ -1499,8 +1499,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 })
                 .catch((err) => {
-                    console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                 })
         },
         addField: function (field, count) {

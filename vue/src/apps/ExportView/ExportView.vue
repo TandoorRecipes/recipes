@@ -117,8 +117,7 @@ export default {
                     this.recipe_list.push(response.data)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
                 })
             // .then((e) => this.searchRecipes(""))
         },

@@ -116,8 +116,8 @@ export default {
                 .then((result) => {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                 })
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
         },
         refreshData: function () {
@@ -137,8 +137,8 @@ export default {
                         this.$emit("refresh")
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                     })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                     })
             }
         },

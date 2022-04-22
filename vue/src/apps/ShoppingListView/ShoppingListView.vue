@@ -1121,8 +1121,7 @@ export default {
                     this.clear += 1
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                 })
         },
         deleteSupermarket: function (s) {
@@ -1133,8 +1132,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                 })
         },
         deleteCategory: function (c) {
@@ -1149,8 +1147,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                 })
         },
         resetFilters: function () {
@@ -1192,8 +1189,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                 })
         },
         deleteThis: function (item) {
@@ -1209,8 +1205,7 @@ export default {
             entries.forEach((x) => {
                 promises.push(
                     api.destroyShoppingListEntry(x).catch((err) => {
-                        console.log(err)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                     })
                 )
             })
@@ -1265,9 +1260,8 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
                     if (!autosync) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
                     }
                 })
         },
@@ -1356,8 +1350,7 @@ export default {
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
         },
         saveThis: function (thisItem, toast = true) {
@@ -1372,8 +1365,7 @@ export default {
                         }
                     })
                     .catch((err) => {
-                        console.log(err)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                     })
             } else {
                 return api
@@ -1384,8 +1376,7 @@ export default {
                         }
                     })
                     .catch((err) => {
-                        console.log(err, err.response)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                     })
             }
         },
@@ -1415,8 +1406,7 @@ export default {
                 })
                 .catch((err) => {
                     this.auto_sync_blocked = false
-                    console.log(err, err.response)
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
         },
         updateFood: function (food, field) {
@@ -1435,8 +1425,7 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
         },
         updateServings(e, plan) {
