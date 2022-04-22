@@ -130,10 +130,10 @@ export default {
                 .then((result) => {
                     let new_book = result.data
                     this.refreshData()
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 })
                 .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                 })
         },
         appendRecipeFilter: function (page, book) {

@@ -162,10 +162,10 @@ export default {
                         this.servings_value = result.data.servings
                         this.addToShopping()
                     }
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 })
                 .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                 })
         },
         createMealPlan(data) {
@@ -228,11 +228,11 @@ export default {
                 apiClient
                     .createRecipe(recipe)
                     .then((new_recipe) => {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                         window.open(this.resolveDjangoUrl("view_recipe", new_recipe.data.id))
                     })
                     .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                     })
             })
         },

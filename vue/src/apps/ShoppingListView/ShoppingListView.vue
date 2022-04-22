@@ -1113,7 +1113,7 @@ export default {
                 .then((results) => {
                     if (results?.data) {
                         this.items.push(results.data)
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     } else {
                         console.log("no data returned")
                     }
@@ -1122,7 +1122,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                 })
         },
         deleteSupermarket: function (s) {
@@ -1130,11 +1130,11 @@ export default {
             api.destroySupermarket(s.id)
                 .then(() => {
                     this.getSupermarkets()
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
                 })
         },
         deleteCategory: function (c) {
@@ -1146,11 +1146,11 @@ export default {
                     this.getSupermarkets()
                     this.getShoppingCategories()
                     this.new_supermarket.value.category_to_supermarket = this.new_supermarket.value.category_to_supermarket.filter((x) => x.category.id != c_id)
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
                 })
         },
         resetFilters: function () {
@@ -1179,7 +1179,7 @@ export default {
                 promises.push(this.saveThis({id: entry, delay_until: delay_date}, false))
             })
             Promise.all(promises).then(() => {
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                 this.items = this.items.filter((x) => !entries.includes(x.id))
                 this.delay = this.defaultDelay
             })
@@ -1189,11 +1189,11 @@ export default {
             api.destroyShoppingListRecipe(recipe)
                 .then((x) => {
                     this.items = this.items.filter((x) => x.list_recipe !== recipe)
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
                 })
         },
         deleteThis: function (item) {
@@ -1210,14 +1210,14 @@ export default {
                 promises.push(
                     api.destroyShoppingListEntry(x).catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE)
                     })
                 )
             })
 
             Promise.all(promises).then((result) => {
                 this.items = this.items.filter((x) => !entries.includes(x.id))
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
             })
         },
         editSupermarket(s) {
@@ -1267,7 +1267,7 @@ export default {
                 .catch((err) => {
                     console.log(err)
                     if (!autosync) {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_FETCH)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
                     }
                 })
         },
@@ -1353,11 +1353,11 @@ export default {
             let api = ApiApiFactory()
             api.partialUpdateUserPreference(this.settings.user, this.settings)
                 .then((result) => {
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                 })
                 .catch((err) => {
                     console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                 })
         },
         saveThis: function (thisItem, toast = true) {
@@ -1368,24 +1368,24 @@ export default {
                     .createShoppingListEntry(thisItem)
                     .then((result) => {
                         if (toast) {
-                            StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                            StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                         }
                     })
                     .catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                     })
             } else {
                 return api
                     .partialUpdateShoppingListEntry(thisItem.id, thisItem)
                     .then((result) => {
                         if (toast) {
-                            StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                            StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                         }
                     })
                     .catch((err) => {
                         console.log(err, err.response)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                     })
             }
         },
@@ -1416,7 +1416,7 @@ export default {
                 .catch((err) => {
                     this.auto_sync_blocked = false
                     console.log(err, err.response)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                 })
         },
         updateFood: function (food, field) {
@@ -1429,14 +1429,14 @@ export default {
             return api
                 .partialUpdateFood(food.id, food)
                 .then((result) => {
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     if (food?.numchild > 0) {
                         this.getShoppingList() // if food has children, just get the whole list.  probably could be more efficient
                     }
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                 })
         },
         updateServings(e, plan) {
@@ -1450,26 +1450,26 @@ export default {
             let api = new ApiApiFactory()
             api.createSupermarketCategory({name: this.new_category.value})
                 .then((result) => {
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     this.shopping_categories.push(result.data)
                     this.new_category.value = undefined
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                 })
         },
         addSupermarket: function () {
             let api = new ApiApiFactory()
             api.createSupermarket({name: this.new_supermarket.value})
                 .then((result) => {
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     this.supermarkets.push(result.data)
                     this.new_supermarket.value = undefined
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                 })
         },
         saveSupermarketCategoryOrder(e) {
@@ -1495,11 +1495,11 @@ export default {
                 apiClient
                     .destroySupermarketCategoryRelation(e.removed.element.id)
                     .then((result) => {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                         this.supermarkets = temp_supermarkets
                     })
             }
@@ -1522,11 +1522,11 @@ export default {
                     .then((updated_supermarket) => {
                         let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
                         Vue.set(this.supermarkets, idx, updated_supermarket)
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                         this.supermarkets = temp_supermarkets
                     })
             }
@@ -1536,11 +1536,11 @@ export default {
                     .then((updated_supermarket) => {
                         let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
                         Vue.set(this.supermarkets, idx, updated_supermarket)
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
                         this.supermarkets = temp_supermarkets
                     })
             }

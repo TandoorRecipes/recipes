@@ -87,21 +87,21 @@ export default {
             apiFactory.createRecipeBook({ name: name }).then((r) => {
                 this.books.push(r.data)
                 this.selected_book = r.data
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
             })
         },
         addToBook: function () {
             let apiFactory = new ApiApiFactory()
             apiFactory.createRecipeBookEntry({ book: this.selected_book.id, recipe: this.recipe.id }).then((r) => {
                 this.recipe_book_list.push(r.data)
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
             })
         },
         removeFromBook: function (book_entry) {
             let apiFactory = new ApiApiFactory()
             apiFactory.destroyRecipeBookEntry(book_entry.id).then((r) => {
                 this.recipe_book_list = this.recipe_book_list.filter((e) => e.id !== book_entry.id)
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
             })
         },
         loadBookEntries: function () {

@@ -66,7 +66,7 @@ export default {
             }
             this.genericAPI(this.Models.FOOD, this.Actions.SHOPPING, params).then((result) => {
                 this.shopping = true
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
             })
         },
         cancelDelete() {
@@ -80,7 +80,7 @@ export default {
             this.genericAPI(this.Models.FOOD, this.Actions.SHOPPING, params).then(() => {
                 this.shopping = false
                 this.$refs["shopping" + this.item.id].$emit("close")
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
             })
         },
     },
