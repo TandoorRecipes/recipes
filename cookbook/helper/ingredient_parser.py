@@ -219,6 +219,13 @@ class IngredientParser:
         if len(ingredient) == 0:
             raise ValueError('string to parse cannot be empty')
 
+        # some people/languages put amount and unit at the end of the ingredient string
+        # if something like this is detected move it to the beginning so the parser can handle it
+        if re.search(r'^([A-z])+(.)*[1-9](\d)*\s([A-z])+', ingredient):
+            match = re.search(r'[1-9](\d)*\s([A-z])+', ingredient)
+            print(f'reording from {ingredient} to {ingredient[match.start():match.end()] + " " + ingredient.replace(ingredient[match.start():match.end()], "")}')
+            ingredient = ingredient[match.start():match.end()] + ' ' + ingredient.replace(ingredient[match.start():match.end()], '')
+
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
         if re.match('(.){1,6}\s\((.[^\(\)])+\)\s', ingredient):
