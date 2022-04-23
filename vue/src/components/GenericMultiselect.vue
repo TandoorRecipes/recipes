@@ -140,7 +140,7 @@ export default {
         },
         nothingSelected() {
             if (this.multiple || !this.initial_single_selection) {
-                return this.selected_objects.length === 0 && this.initial_selection.length === 0
+                return this.selected_objects?.length === 0 && this.initial_selection?.length === 0
             } else {
                 return !this.selected_objects && !this.initial_single_selection
             }
@@ -187,7 +187,7 @@ export default {
             console.log('CREATEING NEW with -> ' , e)
             this.genericAPI(this.model, this.Actions.CREATE, {name: e}).then(result => {
                 let createdObj = result.data?.results ?? result.data
-                StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 if (this.multiple) {
                     this.selected_objects.push(createdObj)
                 } else {
@@ -196,7 +196,7 @@ export default {
                 this.objects.push(createdObj)
                 this.selectionChanged()
             }).catch((r, err) => {
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
             })
         },
     },

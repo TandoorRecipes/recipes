@@ -233,7 +233,7 @@ export default {
         this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
         this.requestWakeLock()
-        window.addEventListener('resize', this.handleRezise);
+        window.addEventListener('resize', this.handleResize);
     },
     beforeUnmount() {
         this.destroyWakeLock()
@@ -249,7 +249,7 @@ export default {
                 }
             }
         },
-        handleRezise: function () {
+        handleResize: function () {
             if (document.getElementById('nutrition_container') !== null) {
                 this.ingredient_height = document.getElementById('ingredient_container').clientHeight - document.getElementById('nutrition_container').clientHeight
             } else {
@@ -300,7 +300,7 @@ export default {
                 this.loading = false
 
                 setTimeout(() => {
-                    this.handleRezise()
+                    this.handleResize()
                 }, 100)
             })
         },

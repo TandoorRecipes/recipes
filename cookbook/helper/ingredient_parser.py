@@ -124,7 +124,7 @@ class IngredientParser:
 
     def parse_amount(self, x):
         amount = 0
-        unit = ''
+        unit = None
         note = ''
 
         did_check_frac = False
@@ -155,7 +155,7 @@ class IngredientParser:
                 except ValueError:
                     unit = x[end:]
 
-        if unit.startswith('(') or unit.startswith('-'):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
+        if unit is not None and (unit.startswith('(') or unit.startswith('-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
             unit = ''
             note = x
         return amount, unit, note
@@ -230,7 +230,7 @@ class IngredientParser:
                 # a fraction for the amount
                 if len(tokens) > 2:
                     try:
-                        if not unit == '':
+                        if unit is not None:
                             # a unit is already found, no need to try the second argument for a fraction
                             # probably not the best method to do it, but I didn't want to make an if check and paste the exact same thing in the else as already is in the except  # noqa: E501
                             raise ValueError
@@ -252,7 +252,7 @@ class IngredientParser:
                             # try to use second argument as unit and everything else as ingredient, use everything as ingredient if it fails  # noqa: E501
                             try:
                                 ingredient, note = self.parse_ingredient(tokens[2:])
-                                if unit == '':
+                                if unit is None:
                                     unit = tokens[1]
                                 else:
                                     note = tokens[1]
