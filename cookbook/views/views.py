@@ -662,10 +662,15 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    if (api_token := Token.objects.filter(user=request.user).first()) is None:
-        api_token = Token.objects.create(user=request.user)
+    from cookbook.helper.ingredient_parser import IngredientParser
+    parser = IngredientParser(request, False)
 
-    return render(request, 'test.html', {'api_token': api_token})
+    data = {
+        'original': 'Pane (raffermo o secco) 80 g'
+    }
+    data['parsed'] = parser.parse(data['original'])
+
+    return render(request, 'test.html', {'data': data})
 
 
 def test2(request):
