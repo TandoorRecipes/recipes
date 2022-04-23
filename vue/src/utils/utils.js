@@ -148,6 +148,45 @@ export class StandardToasts {
 }
 
 /*
+ * Utility function to get random food icon from fontawesome
+ * */
+
+export const RandomIconMixin = {
+    name: "RandomIconMixin",
+    methods: {
+        getRandomFoodIcon: function () {
+            return getRandomFoodIcon()
+        },
+    },
+}
+
+export function getRandomFoodIcon() {
+    let icons = [
+        'fas fa-hamburger',
+        'fas fa-utensils',
+        'fas fa-apple-alt',
+        'fas fa-bacon',
+        'fas fa-bread-slice',
+        'fas fa-candy-cane',
+        'fas fa-carrot',
+        'fas fa-cheese',
+        'fas fa-cookie',
+        'fas fa-drumstick-bite',
+        'fas fa-egg',
+        'fas fa-fish',
+        'fas fa-hotdog',
+        'fas fa-ice-cream',
+        'fas fa-lemon',
+        'fas fa-pepper-hot',
+        'fas fa-pizza-slice',
+        'fas fa-cookie-bite'
+
+    ]
+
+    return icons[Math.floor(Math.random() * icons.length)];
+}
+
+/*
  * Utility functions to use djangos gettext
  * */
 

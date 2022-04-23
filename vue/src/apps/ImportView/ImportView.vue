@@ -17,7 +17,10 @@
                             <b-card no-body>
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
-                                        <b-button block v-b-toggle.id_accordion_url variant="info">{{ $t('Website') }}</b-button>
+                                        <b-button block v-b-toggle.id_accordion_url variant="info">{{
+                                                $t('Website')
+                                            }}
+                                        </b-button>
                                     </b-col>
                                 </b-card-header>
                                 <b-collapse id="id_accordion_url" visible accordion="url_import_accordion"
@@ -125,8 +128,11 @@
 
                                         <div class="row mt-1">
                                             <div class="col col-md-12 text-center">
-                                                <small class="text-muted">{{$t('click_image_import')}}</small><br/>
-                                                <span v-if="recipe_images.length === 0">{{$t('no_more_images_found')}}</span>
+                                                <small class="text-muted">{{ $t('click_image_import') }}</small><br/>
+                                                <span
+                                                    v-if="recipe_images.length === 0">{{
+                                                        $t('no_more_images_found')
+                                                    }}</span>
                                                 <div class="scrolling-wrapper-flexbox">
                                                     <div class="wrapper-card" v-for="i in recipe_images"
                                                          v-bind:key="i"
@@ -144,7 +150,7 @@
                                                 <b-card no-body>
                                                     <b-card-title>
                                                         <div class="clearfix">
-                                                            <span class="float-left h5">{{$t('Keywords')}}</span>
+                                                            <span class="float-left h5">{{ $t('Keywords') }}</span>
                                                             <b-button-group class="float-right">
                                                                 <b-button class="float-right" variant="primary"
                                                                           @click="$set(recipe_json, 'keywords', recipe_json.keywords.map(x => {x.show = true; return x}))">
@@ -258,31 +264,94 @@
                         </b-tab>
                         <!-- App Tab -->
                         <b-tab v-bind:title="$t('App')">
+                            <b-container>
+                                <h4>{{ $t('Select_App_To_Import') }}:</h4>
+                                <b-row class="mt-4">
+                                    <b-col cols="4" offset="0" offset-md="4" v-for="i in INTEGRATIONS_TD" :value="i.id"
+                                           v-bind:key="i.id">
+                                        <b-list-group style="max-width: 300px;">
+                                            <b-list-group-item class="d-flex align-items-center" v-hover
+                                                               style="cursor: pointer"
+                                                               v-bind:class="{ 'bg-success': recipe_app === i.id }"
+                                                               @click="recipe_app = i.id">
+                                                <b-avatar class="mr-3"><i :class="i.icon"
+                                                                          v-if="i.img_src === undefined"></i><img
+                                                    :src="i.img_src" v-if="i.img_src !== undefined" alt="Icon">
+                                                </b-avatar>
+                                                <span class="mr-auto">{{ i.name }}</span>
+                                                <b-badge variant="success" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Import_Supported')"><i
+                                                    class="fas fa-file-import fa-fw" v-if="i.import"></i></b-badge>
+                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Import_Not_Yet_Supported')"><i
+                                                    class="fas fa-file-import fa-fw" v-if="!i.import"></i></b-badge>
+                                                <b-badge variant="success" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Export_Supported')"><i
+                                                    class="fas fa-file-export fa-fw" v-if="i.export"></i></b-badge>
+                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Export_Not_Yet_Supported')"><i
+                                                    class="fas fa-file-export fa-fw" v-if="!i.export"></i></b-badge>
+                                            </b-list-group-item>
+                                        </b-list-group>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="mt-4">
+                                    <b-col cols="3" v-for="i in INTEGRATIONS_WO" :value="i.id" v-bind:key="i.id"
+                                           class="mt-1">
+                                        <b-list-group style="max-width: 300px;">
+                                            <b-list-group-item class="d-flex align-items-center" v-hover
+                                                               style="cursor: pointer"
+                                                               v-bind:class="{ 'bg-success': recipe_app === i.id }"
+                                                               @click="recipe_app = i.id">
+                                                <b-avatar class="mr-3"><i :class="i.icon"
+                                                                          v-if="i.img_src === undefined"></i><img
+                                                    :src="i.img_src" v-if="i.img_src !== undefined" alt="Icon">
+                                                </b-avatar>
+                                                <span class="mr-auto">{{ i.name }}</span>
+                                                <b-badge variant="success" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Import_Supported')"><i
+                                                    class="fas fa-file-import fa-fw" v-if="i.import"></i></b-badge>
+                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Import_Not_Yet_Supported')"><i
+                                                    class="fas fa-file-import fa-fw" v-if="!i.import"></i></b-badge>
+                                                <b-badge variant="success" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Export_Supported')"><i
+                                                    class="fas fa-file-export fa-fw" v-if="i.export"></i></b-badge>
+                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                         :title="$t('Export_Not_Yet_Supported')"><i
+                                                    class="fas fa-file-export fa-fw" v-if="!i.export"></i></b-badge>
+                                            </b-list-group-item>
+                                        </b-list-group>
+                                    </b-col>
+                                </b-row>
+                                <b-row v-if="recipe_app_info !== undefined && recipe_app_info.help_url !== ''"
+                                       class="mt-3">
+                                    <b-col cols="12" class="text-center">
+                                        {{ $t('Importer_Help') }} <a
+                                        :href="recipe_app_info.help_url"> {{ $t('Documentation') }}</a>
+                                    </b-col>
+                                </b-row>
 
-                            <select class="form-control" v-model="recipe_app">
-                                <option v-for="i in INTEGRATIONS" :value="i.id" v-bind:key="i.id">{{ i.name }}</option>
-                            </select>
+                                <b-form-checkbox v-model="import_duplicates" name="check-button" switch
+                                                 style="margin-top: 1vh">
+                                    {{ $t('import_duplicates') }}
+                                </b-form-checkbox>
 
-                            <b-form-checkbox v-model="import_duplicates" name="check-button" switch
-                                             style="margin-top: 1vh">
-                                {{ $t('import_duplicates') }}
-                            </b-form-checkbox>
 
-                            <a href="recipe_app_info.help_url"
-                               v-if="recipe_app_info !== undefined && recipe_app_info.help_url !== ''">{{
-                                    $t('Help')
-                                }}</a>
-
-                            <b-form-file
-                                class="my-2"
-                                multiple
-                                v-model="recipe_files"
-                                :placeholder="$t('Select_File')"
-                                drop-placeholder="Drop recipe files here...">
-                            </b-form-file>
-                            <button @click="importAppRecipe()" class="btn btn-primary shadow-none" type="button"
-                                    id="id_btn_app"><i class="fas fa-file-archive"></i> {{ $t('Import') }}
-                            </button>
+                                <b-form-file
+                                    class="my-2"
+                                    multiple
+                                    size="lg"
+                                    v-model="recipe_files"
+                                    :placeholder="$t('Select_File')"
+                                    drop-placeholder="Drop recipe files here...">
+                                </b-form-file>
+                                <div class="text-center">
+                                    <b-button @click="importAppRecipe()" size="lg"
+                                              id="id_btn_app"><i class="fas fa-file-archive"></i> {{ $t('Import') }}
+                                    </b-button>
+                                </div>
+                            </b-container>
                         </b-tab>
                         <!-- Source Tab -->
                         <b-tab v-bind:title="$t('Source')">
@@ -329,7 +398,15 @@ import {BootstrapVue} from 'bootstrap-vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import {resolveDjangoStatic, resolveDjangoUrl, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils";
+import {
+    RandomIconMixin,
+    resolveDjangoStatic,
+    resolveDjangoUrl,
+    ResolveUrlMixin,
+    StandardToasts,
+    ToastMixin
+} from "@/utils/utils";
+
 import axios from "axios";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import {INTEGRATIONS} from "@/utils/integration";
@@ -344,6 +421,7 @@ export default {
     mixins: [
         ResolveUrlMixin,
         ToastMixin,
+        RandomIconMixin
     ],
     components: {
         LoadingSpinner,
@@ -354,10 +432,21 @@ export default {
         recipe_app_info: function () {
             return this.INTEGRATIONS.filter(x => x.id === this.recipe_app)[0]
         },
+        INTEGRATIONS_WO: function () {
+            return this.INTEGRATIONS.filter((int) => {
+                return int.id !== "DEFAULT"
+            })
+
+        },
+        INTEGRATIONS_TD: function () {
+            return this.INTEGRATIONS.filter((int) => {
+                return int.id === "DEFAULT"
+            })
+        }
     },
     data() {
         return {
-            tab_index: 0,
+            tab_index: 1,
             collapse_visible: {
                 url: true,
                 options: false,
@@ -400,6 +489,9 @@ export default {
         if (window.BOOKMARKLET_IMPORT_ID !== -1) {
             this.loadRecipe('', false, window.BOOKMARKLET_IMPORT_ID)
         }
+        this.INTEGRATIONS.forEach((int) => {
+            int.icon = this.getRandomFoodIcon()
+        })
     },
     methods: {
         /**
@@ -420,12 +512,12 @@ export default {
                     let recipe = response.data
                     apiFactory.imageRecipe(response.data.id, undefined, recipe_json.image).then(response => { // save recipe image
                         if (!silent) {
-                            StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                         }
                         this.afterImportAction(action, recipe)
                     }).catch(e => {
                         if (!silent) {
-                            StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
                         }
                         this.afterImportAction(action, recipe)
                     })
@@ -434,13 +526,13 @@ export default {
                         this.failed_imports.push(recipe_json.source_url)
                     }
                     if (!silent) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                     }
                 })
             } else {
                 console.log('cant import recipe without data')
                 if (!silent) {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                 }
             }
         },
@@ -576,7 +668,7 @@ export default {
                 window.location.href = resolveDjangoUrl('view_import_response', response.data['import_id'])
             }).catch((err) => {
                 console.log(err)
-                StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
             })
         },
         /**
