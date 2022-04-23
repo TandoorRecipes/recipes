@@ -58,7 +58,7 @@ def test_ingredient_parser():
         "2L Wasser": (2, "L", "Wasser", ""),
         "1 (16 ounce) package dry lentils, rinsed": (1, "package", "dry lentils, rinsed", "16 ounce"),
         "2-3 c Water": (2, "c", "Water", "2-3"),
-        "Pane (raffermo o secco) 80 g": (0, None, "Pane 80 g", "raffermo o secco"),  # TODO this is actually not a good result but currently expected
+        "Pane (raffermo o secco) 80 g": (80, "g", "Pane", "raffermo o secco"),
     }
     # for German you could say that if an ingredient does not have
     # an amount # and it starts with a lowercase letter, then that
@@ -70,4 +70,5 @@ def test_ingredient_parser():
     for key, val in expectations.items():
         count += 1
         parsed = ingredient_parser.parse(key)
+        print(f'testing if {key} becomes {val}')
         assert parsed == val
