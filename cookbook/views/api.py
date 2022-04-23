@@ -594,6 +594,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
 
     def get_serializer_class(self):
         if self.request and self.request.query_params.get('simple', False):
@@ -1192,6 +1193,11 @@ def recipe_from_source(request):
             return JsonResponse({
                 'error': True,
                 'msg': _('Connection Refused.')
+            }, status=400)
+        except requests.exceptions.MissingSchema:
+            return JsonResponse({
+                'error': True,
+                'msg': _('Bad URL Schema.')
             }, status=400)
     recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
