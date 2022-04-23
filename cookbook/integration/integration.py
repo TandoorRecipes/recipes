@@ -253,7 +253,7 @@ class Integration:
         :param image_file: ByteIO stream containing the image
         :param filetype: type of file to write bytes to, default to .jpeg if unknown
         """
-        recipe.image = File(handle_image(self.request, File(image_file, name='image'), filetype=filetype)[0], name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
+        recipe.image = File(handle_image(self.request, File(image_file, name='image'), filetype=filetype), name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
         recipe.save()
 
     def get_recipe_from_file(self, file):
