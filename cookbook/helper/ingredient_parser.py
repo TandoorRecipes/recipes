@@ -4,7 +4,7 @@ import unicodedata
 
 from django.core.cache import caches
 
-from cookbook.models import Unit, Food, Automation
+from cookbook.models import Unit, Food, Automation, Ingredient
 
 
 class IngredientParser:
@@ -293,4 +293,14 @@ class IngredientParser:
         if unit:
             unit = self.apply_unit_automation(unit.strip())
 
-        return amount, unit, self.apply_food_automation(food.strip()), note.strip()
+        food = self.apply_food_automation(food.strip())
+        if len(food) > Food._meta.get_field('name').max_length:  # test if food name is to long
+            # try splitting it at a space and taking only the first arg
+            if len(food.split()) > 1 and len(food.split()[0]) < Food._meta.get_field('name').max_length:
+                note = ' '.join(food.split()[1:]) + ' ' + note
+                food = food.split()[0]
+            else:
+                note = food + ' ' + note
+                food = food[:Food._meta.get_field('name').max_length]
+
+        return amount, unit, food, note[:Ingredient._meta.get_field('note').max_length].strip()

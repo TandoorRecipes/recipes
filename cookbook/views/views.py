@@ -666,7 +666,7 @@ def test(request):
     parser = IngredientParser(request, False)
 
     data = {
-        'original': 'Creme Frainche'
+        'original': '1 LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl'
     }
     data['parsed'] = parser.parse(data['original'])
 
