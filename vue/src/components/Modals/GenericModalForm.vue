@@ -200,7 +200,7 @@ export default {
             } else {
                 this.genericAPI(this.model, this.Actions.UPDATE, this.form_data)
                     .then((result) => {
-                        this.$emit("finish-action")
+                        this.$emit("finish-action", { item: result.data })
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
@@ -246,7 +246,7 @@ export default {
                 target: this.form_data.target.id,
             })
                 .then((result) => {
-                    this.$emit("finish-action", { target: this.form_data.target.id })
+                    this.$emit("finish-action", { target: this.form_data.target.id, target_object: this.form_data.target }) //TODO temporary workaround to not change other apis
                     StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {

@@ -4,24 +4,31 @@
 
         <div class="row mt-2">
             <div class="col col-md-6">
-                <generic-multiselect @change="food = $event.val; refreshList()"
+                <generic-multiselect @change="food = $event.val; refreshList()" ref="food_multiselect"
                                      :model="Models.FOOD"
                                      :initial_single_selection="food"
                                      :multiple="false"></generic-multiselect>
-                <b-button @click="show_food_delete=true" :disabled="food === null"><i class="fas fa-trash-alt"></i>
+                <b-button @click="generic_model = Models.FOOD; generic_action=Actions.DELETE" :disabled="food === null">
+                    <i class="fas fa-trash-alt"></i>
                 </b-button>
                 <b-button @click="generic_model = Models.FOOD; generic_action=Actions.MERGE" :disabled="food === null">
                     <i class="fas fa-compress-arrows-alt"></i>
                 </b-button>
+
+                <b-button @click="generic_model = Models.FOOD; generic_action=Actions.UPDATE" :disabled="food === null">
+                    <i class="fas fa-edit"></i>
+                </b-button>
+
                 <generic-modal-form :model="Models.FOOD" :action="generic_action" :show="generic_model === Models.FOOD"
                                     :item1="food"
-                                    @finish-action="food = null; generic_action=null; generic_model=null"/>
+                                    @finish-action="finishGenericAction"/>
             </div>
             <div class="col col-md-6">
 
                 <generic-multiselect
                     @change="unit = $event.val; refreshList()"
                     :model="Models.UNIT"
+                    ref="unit_multiselect"
                     :initial_single_selection="unit"
                     :multiple="false"></generic-multiselect>
 
@@ -31,9 +38,12 @@
                 <b-button @click="generic_model = Models.UNIT; generic_action=Actions.MERGE" :disabled="unit === null">
                     <i class="fas fa-compress-arrows-alt"></i>
                 </b-button>
+                <b-button @click="generic_model = Models.UNIT; generic_action=Actions.UPDATE" :disabled="unit === null">
+                    <i class="fas fa-edit"></i>
+                </b-button>
                 <generic-modal-form :model="Models.UNIT" :action="generic_action" :show="generic_model === Models.UNIT"
                                     :item1="unit"
-                                    @finish-action="unit = null; generic_action=null; generic_model=null"/>
+                                    @finish-action="finishGenericAction()"/>
 
 
             </div>
@@ -100,7 +110,7 @@
                                           @click="updateIngredient(i)">
                                     <i class="fas fa-save"></i>
                                 </b-button>
-                                 <b-button variant="danger"
+                                <b-button variant="danger"
                                           @click="deleteIngredient(i)">
                                     <i class="fas fa-trash"></i>
                                 </b-button>
@@ -187,7 +197,7 @@ export default {
                     this.ingredients = result.data
                     this.loading = false
                 }).catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                     this.loading = false
                 })
             }
@@ -209,20 +219,79 @@ export default {
                 apiClient.updateIngredient(i.id, i).then(r => {
                     this.$set(i, 'changed', false)
                 }).catch(err => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
             })
         },
-        deleteIngredient: function (i){
-            if (confirm(this.$t('delete_confirmation', this.$t('Ingredient')))){
+        deleteIngredient: function (i) {
+            if (confirm(this.$t('delete_confirmation', this.$t('Ingredient')))) {
                 let apiClient = new ApiApiFactory()
                 apiClient.destroyIngredient(i.id).then(r => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                     this.ingredients = this.ingredients.filter(li => li.id !== i.id)
                 }).catch(err => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
             }
+        },
+        finishGenericAction: function (e) {
+            console.log('PARAMETER ', e)
+            if (e !== 'cancel') {
+                if (this.generic_action === this.Actions.DELETE) {
+                    this.ingredients = []
+                    if (this.generic_model === this.Models.FOOD) {
+                        this.food = null;
+                    } else {
+                        this.unit = null;
+                    }
+                }
+
+                if (this.generic_action === this.Actions.UPDATE) {
+                    if (this.generic_model === this.Models.FOOD) {
+                        this.food = e.item
+                        this.ingredients.forEach((element, i) => {
+                            if (element.food.id === this.food.id) {
+                                this.ingredients[i].food = this.food
+                            }
+                        })
+                    } else {
+                        this.unit = e.item
+                        this.ingredients.forEach((element, i) => {
+                            if (element.unit?.id === this.unit.id) {
+                                this.ingredients[i].unit = this.unit
+                            }
+                        })
+                    }
+                }
+
+                if (this.generic_action === this.Actions.MERGE) {
+                    if (this.generic_model === this.Models.FOOD) {
+                        this.ingredients.forEach((element, i) => {
+                            if (element.food.id === this.food.id) {
+                                this.ingredients[i].food = e.target_object
+                            }
+                        })
+                        this.food = e.target_object
+                    } else {
+                        this.ingredients.forEach((element, i) => {
+                            if (element.unit?.id === this.unit.id) {
+                                this.ingredients[i].unit = e.target_object
+                            }
+                        })
+                        this.unit = e.target_object
+                    }
+                    this.refreshList()
+                }
+            }
+
+            if (this.generic_model === this.Models.FOOD) {
+                this.$refs.food_multiselect.search('');
+            } else {
+                this.$refs.unit_multiselect.search('');
+            }
+
+            this.generic_action = null;
+            this.generic_model = null;
         }
 
     },

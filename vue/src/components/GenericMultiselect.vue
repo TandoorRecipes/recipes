@@ -140,7 +140,7 @@ export default {
         },
         nothingSelected() {
             if (this.multiple || !this.initial_single_selection) {
-                return this.selected_objects.length === 0 && this.initial_selection.length === 0
+                return this.selected_objects?.length === 0 && this.initial_selection?.length === 0
             } else {
                 return !this.selected_objects && !this.initial_single_selection
             }
