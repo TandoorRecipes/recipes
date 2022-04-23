@@ -4,7 +4,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 def test_ingredient_parser():
     expectations = {
         "2¼ l Wasser": (2.25, "l", "Wasser", ""),
-        "2¼l Wasser": (2.25, "l", "Wasser", ""),
+        "3¼l Wasser": (3.25, "l", "Wasser", ""),
         "¼ l Wasser": (0.25, "l", "Wasser", ""),
         "3l Wasser": (3, "l", "Wasser", ""),
         "4 l Wasser": (4, "l", "Wasser", ""),
@@ -32,7 +32,7 @@ def test_ingredient_parser():
         "1 Ei(er)": (1, None, "Ei(er)", ""),
         "1 Prise(n) Salz": (1, "Prise(n)", "Salz", ""),
         "etwas Wasser, lauwarmes": (0, None, "etwas Wasser", "lauwarmes"),
-        "Strudelblätter, fertige, für zwei Strudel": (0,None, "Strudelblätter", "fertige, für zwei Strudel"),
+        "Strudelblätter, fertige, für zwei Strudel": (0, None, "Strudelblätter", "fertige, für zwei Strudel"),
         "barrel-aged Bourbon": (0, None, "barrel-aged Bourbon", ""),
         "golden syrup": (0, None, "golden syrup", ""),
         "unsalted butter, for greasing": (0, None, "unsalted butter", "for greasing"),
@@ -58,7 +58,15 @@ def test_ingredient_parser():
         "2L Wasser": (2, "L", "Wasser", ""),
         "1 (16 ounce) package dry lentils, rinsed": (1, "package", "dry lentils, rinsed", "16 ounce"),
         "2-3 c Water": (2, "c", "Water", "2-3"),
-        "Pane (raffermo o secco) 80 g": (0, "", "Pane 80 g", "raffermo o secco"),  # TODO this is actually not a good result but currently expected
+        "Pane (raffermo o secco) 80 g": (80, "g", "Pane", "raffermo o secco"),
+        "1 Knoblauchzehe(n), gehackt oder gepresst": (1.0, None, 'Knoblauchzehe(n)', 'gehackt oder gepresst'),
+        # test for over long food entries to get properly split into the note field
+        "1 Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l": (
+            1.0, 'Lorem', 'ipsum', 'dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l'),
+        "1 LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl": (
+        1.0, None, 'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingeli',
+        'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl')
+
     }
     # for German you could say that if an ingredient does not have
     # an amount # and it starts with a lowercase letter, then that
@@ -70,4 +78,5 @@ def test_ingredient_parser():
     for key, val in expectations.items():
         count += 1
         parsed = ingredient_parser.parse(key)
+        print(f'testing if {key} becomes {val}')
         assert parsed == val

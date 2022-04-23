@@ -3,8 +3,8 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django_tables2.utils import A
 
-from .models import (CookLog, InviteLink, Keyword, Recipe, RecipeImport,
-                     ShoppingList, Storage, Sync, SyncLog, ViewLog)
+from .models import (CookLog, InviteLink, Recipe, RecipeImport,
+                     Storage, Sync, SyncLog, ViewLog)
 
 
 class ImageUrlColumn(tables.Column):
@@ -120,14 +120,6 @@ class RecipeImportTable(tables.Table):
         template_name = 'generic/table_template.html'
         fields = ('id', 'name', 'file_path')
 
-
-class ShoppingListTable(tables.Table):
-    id = tables.LinkColumn('view_shopping', args=[A('id')])
-
-    class Meta:
-        model = ShoppingList
-        template_name = 'generic/table_template.html'
-        fields = ('id', 'finished', 'created_by', 'created_at')
 
 
 class InviteLinkTable(tables.Table):
