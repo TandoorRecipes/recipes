@@ -7,7 +7,8 @@
                     <generic-multiselect @change="food = $event.val; refreshList()" ref="food_multiselect"
                                          :model="Models.FOOD"
                                          :initial_single_selection="food"
-                                         :multiple="false"></generic-multiselect>
+                                         :multiple="false"
+                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"></generic-multiselect>
 
                     <b-input-group-append>
                         <b-dropdown no-caret right :disabled="food === null">
@@ -39,13 +40,14 @@
             <div class="col col-md-6">
 
                 <b-input-group>
-             
-                        <generic-multiselect
-                            @change="unit = $event.val; refreshList()"
-                            :model="Models.UNIT"
-                            ref="unit_multiselect"
-                            :initial_single_selection="unit"
-                            :multiple="false"></generic-multiselect>
+
+                    <generic-multiselect
+                        @change="unit = $event.val; refreshList()"
+                        :model="Models.UNIT"
+                        ref="unit_multiselect"
+                        :initial_single_selection="unit"
+                        :multiple="false"
+                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"></generic-multiselect>
 
                     <b-input-group-append>
                         <b-dropdown no-caret right :disabled="unit === null">
