@@ -1,5 +1,6 @@
 import io
 import json
+import mimetypes
 import re
 import uuid
 from collections import OrderedDict
@@ -772,14 +773,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             image = None
+            filetype = ".jpeg" # fall-back to .jpeg, even if wrong, at least users will know it's an image and most image viewers can open it correctly anyways
 
             if 'image' in serializer.validated_data:
                 image = obj.image
+                filetype = mimetypes.guess_extension(serializer.validated_data['image'].content_type) or filetype
             elif 'image_url' in serializer.validated_data:
                 try:
                     response = requests.get(serializer.validated_data['image_url'])
                     image = File(io.BytesIO(response.content))
-                    print('test')
+                    filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
                 except UnidentifiedImageError as e:
                     print(e)
                     pass
@@ -791,7 +794,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     pass
 
             if image is not None:
-                img, filetype = handle_image(request, image)
+                img = handle_image(request, image, filetype)
                 obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
                 obj.save()
                 return Response(serializer.data)
