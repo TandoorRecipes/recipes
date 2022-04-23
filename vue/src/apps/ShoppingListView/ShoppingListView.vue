@@ -112,21 +112,21 @@
                                 </div>
                                 <!-- shopping list table -->
                                 <div v-if="items && items.length > 0">
-                                    <div v-for="(done, x) in Sections" :key="x">
-                                        <div v-if="x == 'true'"
+                                    <div v-for="(categories, checked_key) in Sections" :key="checked_key">
+                                        <div v-if="checked_key == 'true'"
                                              class="bg-header w-100 text-center d-flex justify-content-center align-items-center">
                                             <span class="h4 d-flex mt-1 mb-1">{{ $t("Completed") }}</span>
                                         </div>
 
-                                        <div v-for="(s, i) in done" :key="i">
+                                        <div v-for="(foods_group, category_key) in categories" :key="category_key">
                                             <div class="dropdown b-dropdown position-static inline-block"
-                                                 data-html2canvas-ignore="true" v-if="Object.entries(s).length > 0">
+                                                 data-html2canvas-ignore="true" v-if="Object.entries(foods_group).length > 0">
                                                 <button
                                                     aria-haspopup="true"
                                                     aria-expanded="false"
                                                     type="button"
                                                     class="btn dropdown-toggle btn-link text-decoration-none text-dark pr-2 dropdown-toggle-no-caret"
-                                                    @click.stop="openContextMenu($event, s, true)"
+                                                    @click.stop="openContextMenu($event, foods_group, true)"
                                                 >
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
@@ -135,20 +135,20 @@
                                                     class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
                                                     variant="link"
                                                     data-toggle="collapse"
-                                                    :href="'#section-' + sectionID(x, i)"
-                                                    :aria-expanded="'true' ? x == 'false' : 'true'"
+                                                    :href="'#section-' + sectionID(checked_key, category_key)"
+                                                    :aria-expanded="'true' ? checked_key == 'false' : 'true'"
                                                 >
                                                     <i class="fa fa-chevron-right rotate"/>
-                                                    <span class="h6 ml-2 text-secondary">{{ i }}</span>
+                                                    <span class="h6 ml-2 text-secondary">{{ category_key }}</span>
                                                 </b-button>
                                             </div>
 
-                                            <div class="collapse" :id="'section-' + sectionID(x, i)" visible
-                                                 role="tabpanel" :class="{ show: x == 'false' }">
+                                            <div class="collapse" :id="'section-' + sectionID(checked_key, category_key)" visible
+                                                 role="tabpanel" :class="{ show: checked_key == 'false' }">
                                                 <!-- passing an array of values to the table grouped by Food -->
                                                 <transition-group name="slide-fade">
-                                                    <div class="pl-4 pr-0" v-for="(entries, x) in Object.entries(s)"
-                                                         :key="x">
+                                                    <div class="pl-4 pr-0" v-for="(entries, index) in Object.entries(foods_group)"
+                                                         :key="index">
                                                         <transition name="slide-fade" mode="out-in">
                                                             <shopping-line-item
                                                                 :entries="entries[1]"
@@ -901,6 +901,8 @@ export default {
     },
     computed: {
         Sections() {
+            // Sections to display in list (checked/unchecked -> category -> food group -> entries)
+            // ordering/sorting is definied by the order in which categories are added to the sections array (even trough the dev console does not show it like this)
             function getKey(item, group_by, x) {
                 switch (group_by) {
                     case "category":
@@ -934,10 +936,12 @@ export default {
             }
 
             var groups = {false: {}, true: {}} // force unchecked to always be first
+            // TODO: make nulls_first a user setting
+            // add undefined group to both the checked and non checked
+            groups.false[this.$t("Undefined")] = {}
+            groups.true[this.$t("Undefined")] = {}
+            // category order is defined by order of insertion into groups variable
             if (this.ui.selected_supermarket) {
-                // TODO: make nulls_first a user setting
-                groups.false[this.$t("Undefined")] = {}
-                groups.true[this.$t("Undefined")] = {}
                 let super_cats = this.supermarkets
                     .filter((x) => x.id === this.ui.selected_supermarket)
                     .map((x) => x.category_to_supermarket)
@@ -1021,7 +1025,7 @@ export default {
     watch: {
         ui: {
             handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}})
+                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}}, "100y")
                 if (this.entrymode) {
                     this.$nextTick(function () {
                         this.setFocus()
@@ -1032,7 +1036,7 @@ export default {
         },
         entrymode: {
             handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}})
+                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}}, "100y")
                 if (this.entrymode) {
                     document.getElementById('shoppinglist').scrollTop = 0
                     this.$nextTick(function () {
