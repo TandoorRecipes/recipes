@@ -49,6 +49,9 @@
             </div>
         </div>
 
+        <b-pagination pills v-model="current_page" :total-rows="total_object_count" :per-page="page_size"
+                      @change="pageChange"></b-pagination>
+
         <div class="row mt-2">
             <div class="col col-md-12">
                 <table class="table table-bordered">
@@ -123,6 +126,9 @@
                     </template>
 
                 </table>
+
+                 <b-pagination pills v-model="current_page" :total-rows="total_object_count" :per-page="page_size"
+                      @change="pageChange"></b-pagination>
             </div>
         </div>
 
@@ -158,6 +164,9 @@ export default {
             generic_model: null,
             show_food_delete: false,
             show_unit_delete: false,
+            current_page: 1,
+            total_object_count: 0,
+            page_size: 50,
         }
     },
     computed: {},
@@ -186,21 +195,26 @@ export default {
             } else {
                 this.loading = true
                 let apiClient = new ApiApiFactory()
-                let params = {'query': {'simple': 1}}
+                let params = {'query': {'simple': 1,}}
                 if (this.food !== null) {
                     params.query.food = this.food.id
                 }
                 if (this.unit !== null) {
                     params.query.unit = this.unit.id
                 }
-                apiClient.listIngredients(params).then(result => {
-                    this.ingredients = result.data
+                apiClient.listIngredients(this.current_page, this.page_size,params).then(result => {
+                    this.ingredients = result.data.results
+                    this.total_object_count = result.data.count
                     this.loading = false
                 }).catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                     this.loading = false
                 })
             }
+        },
+        pageChange: function (page) {
+            this.current_page = page
+            this.refreshList()
         },
         updateIngredient: function (i) {
             let update_list = []
@@ -235,7 +249,6 @@ export default {
             }
         },
         finishGenericAction: function (e) {
-            console.log('PARAMETER ', e)
             if (e !== 'cancel') {
                 if (this.generic_action === this.Actions.DELETE) {
                     this.ingredients = []

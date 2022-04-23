@@ -593,6 +593,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser]
+    pagination_class = DefaultPagination
 
     def get_serializer_class(self):
         if self.request and self.request.query_params.get('simple', False):
