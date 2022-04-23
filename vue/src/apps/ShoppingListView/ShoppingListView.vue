@@ -1112,7 +1112,7 @@ export default {
                 if (this.new_item.ingredient !== "" && this.new_item.ingredient !== undefined) {
                     this.genericPostAPI("api_ingredient_from_string", {text: this.new_item.ingredient}).then((result) => {
                         let unit = null
-                        if (result.data.unit !== "") {
+                        if (result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
 
@@ -1158,7 +1158,7 @@ export default {
                 })
         },
         deleteCategory: function (c) {
-            // could be category relation or a catory
+            // could be category relation or a category
             let c_id = c?.category?.id ?? c.id
             let api = new ApiApiFactory()
             api.destroySupermarketCategory(c_id)
@@ -1198,9 +1198,10 @@ export default {
                 promises.push(this.saveThis({id: entry, delay_until: delay_date}, false))
             })
             Promise.all(promises).then(() => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                 this.items = this.items.filter((x) => !entries.includes(x.id))
                 this.delay = this.defaultDelay
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
         deleteRecipe: function (e, recipe) {
