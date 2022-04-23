@@ -1,7 +1,7 @@
 // containing all data and functions regarding the different integrations
 
 export const INTEGRATIONS = [
-    {id: 'DEFAULT', name: "Tandoor", import: true, export: true, help_url: 'https://docs.tandoor.dev/features/import_export/#default'},
+    {id: 'DEFAULT', name: "Tandoor", import: true, export: true, help_url: 'https://docs.tandoor.dev/features/import_export/#default', img_src: 'https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg'},
     {id: 'CHEFTAP', name: "Cheftap", import: true, export: false, help_url: 'https://docs.tandoor.dev/features/import_export/#cheftap'},
     {id: 'CHOWDOWN', name: "Chowdown", import: true, export: false, help_url: 'https://docs.tandoor.dev/features/import_export/#chowdown'},
     {id: 'COOKBOOKAPP', name: "CookBookApp", import: true, export: false, help_url: 'https://docs.tandoor.dev/features/import_export/#cookbookapp'},

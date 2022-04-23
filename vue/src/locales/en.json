@@ -393,5 +393,12 @@
     "Options": "Options",
     "Create Food": "Create Food",
     "create_food_desc": "Create a food and link it to this recipe.",
-    "additional_options": "Additional Options"
+    "additional_options": "Additional Options",
+    "Importer_Help": "More information and help on this importer:",
+    "Documentation": "Documentation",
+    "Select_App_To_Import": "Please select an App to Import from",
+    "Import_Supported": "Import supported",
+    "Export_Supported": "Export supported",
+    "Import_Not_Yet_Supported": "Import not yet supported",
+    "Export_Not_Yet_Supported": "Export not yet supported"
 }
