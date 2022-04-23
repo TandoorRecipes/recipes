@@ -270,7 +270,6 @@
     "CategoryInstruction": "Drag categories to change the order categories appear in shopping list.",
     "shopping_recent_days_desc": "Days of recent shopping list entries to display.",
     "shopping_recent_days": "Recent Days",
-    "create_shopping_new": "Add to NEW Shopping List",
     "download_pdf": "Download PDF",
     "download_csv": "Download CSV",
     "csv_delim_help": "Delimiter to use for CSV exports.",

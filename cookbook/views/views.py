@@ -11,9 +11,9 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Avg, Q, Sum
+from django.db.models import Avg, Q
 from django.db.models.functions import Lower
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -27,9 +27,9 @@ from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingP
                             SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
-from cookbook.models import (Comment, CookLog, Food, FoodInheritField, InviteLink, Keyword,
+from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
                              MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
-                             ShoppingList, Space, Unit, UserFile, ViewLog)
+                             Space, Unit, ViewLog)
 from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
@@ -254,35 +254,6 @@ def meal_plan_entry(request, pk):
         .order_by('meal_type').all()
 
     return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
-
-
-@group_required('user')
-def latest_shopping_list(request):
-    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
-                                                                                                 space=request.space).order_by(
-        '-created_at').first()
-
-    if sl:
-        return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')
-    else:
-        return HttpResponseRedirect(reverse('view_shopping') + '?edit=true')
-
-
-@group_required('user')
-def shopping_list(request, pk=None):  # TODO deprecate
-    html_list = request.GET.getlist('r')
-
-    recipes = []
-    for r in html_list:
-        r = r.replace('[', '').replace(']', '')
-        if len(r) < 10000 and re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
-            rid, multiplier = r.split(',')
-            if recipe := Recipe.objects.filter(pk=int(rid), space=request.space).first():
-                recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
-
-    edit = True if 'edit' in request.GET and request.GET['edit'] == 'true' else False
-
-    return render(request, 'shopping_list.html', {'shopping_list_id': pk, 'recipes': recipes, 'edit': edit})
 
 
 @group_required('guest')
