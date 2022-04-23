@@ -337,6 +337,12 @@
     </div>
 {% endif %}
 
+{% if HOSTED and request.space.max_recipes == 10 %}
+    <div class="bg-warning" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
+        {% trans 'You are using the free version of Tandor' %} <a class="btn-success btn-sm" href="https://tandoor.dev/manage">{% trans 'Upgrade Now' %}</a>
+    </div>
+{% endif %}
+
 <div class="container-fluid mt-2 mt-md-5 mt-xl-5 mt-lg-5{% if request.user.userpreference.left_handed %} left-handed {% endif %}"
      id="id_base_container">
     <div class="row">
