@@ -22,7 +22,7 @@
                                          :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
                     </div>
                 </b-button>
-                <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px"
+                <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"
                    :class="filterApplied ? 'text-danger' : 'text-primary'"/>
             </div>
         </div>
@@ -35,7 +35,7 @@
                     <i v-if="!loading" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
                     <span class="d-none d-md-block">{{ $t('Shopping_list') }}</span>
                 </template>
-                <div class="container p-0" id="shoppinglist">
+                <div class="container p-0 p-md-3" id="shoppinglist">
                     <div class="row">
                         <div class="col col-md-12 p-0 p-lg-3">
                             <div role="tablist">
@@ -52,6 +52,7 @@
                                                 :description="$t('Amount')"
                                                 v-model="new_item.amount"
                                                 style="font-size: 16px; border-radius: 5px !important; border: 1px solid #e8e8e8 !important"
+                                                ref="amount_input_complex"
                                             ></b-form-input>
                                         </b-col>
                                         <b-col cols="12" md="4" v-if="!ui.entry_mode_simple" class="mt-1">
@@ -67,10 +68,11 @@
                                         <b-col cols="12" md="11" v-if="ui.entry_mode_simple" class="mt-1">
                                             <b-form-input size="lg" type="text" :placeholder="$t('QuickEntry')"
                                                           v-model="new_item.ingredient"
-                                                          @keyup.enter="addItem"></b-form-input>
+                                                          @keyup.enter="addItem"
+                                                          ref="amount_input_simple"></b-form-input>
                                         </b-col>
                                         <b-col cols="12" md="1" class="d-none d-md-block mt-1">
-                                            <b-button variant="link" class="px-0">
+                                            <b-button variant="link" class="px-0" type="submit">
                                                 <i class="btn fas fa-cart-plus fa-lg px-0 text-success"
                                                    @click="addItem"/>
                                             </b-button>
@@ -861,7 +863,7 @@ export default {
             delay: 0,
             clear: Math.random(),
             ui: {
-                entry_mode_simple: false,
+                entry_mode_simple: true,
                 selected_supermarket: undefined,
             },
             settings: {
@@ -1019,14 +1021,23 @@ export default {
     watch: {
         ui: {
             handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, this.ui)
+                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}})
+                if (this.entrymode) {
+                    this.$nextTick(function () {
+                        this.setFocus()
+                    })
+                }
             },
             deep: true,
         },
         entrymode: {
             handler() {
+                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}})
                 if (this.entrymode) {
                     document.getElementById('shoppinglist').scrollTop = 0
+                    this.$nextTick(function () {
+                        this.setFocus()
+                    })
                 }
             }
         },
@@ -1078,13 +1089,23 @@ export default {
         }
         this.$nextTick(function () {
             if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-                this.ui = Object.assign({}, this.ui, this.$cookies.get(SETTINGS_COOKIE_NAME))
+                this.ui = Object.assign({}, this.ui, this.$cookies.get(SETTINGS_COOKIE_NAME).ui)
+                this.entrymode = this.$cookies.get(SETTINGS_COOKIE_NAME).settings.entrymode
             }
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
         console.log(window.CUSTOM_LOCALE)
     },
     methods: {
+        setFocus() {
+            if (this.ui.entry_mode_simple) {
+                this.$refs['amount_input_simple'].focus()
+            } else {
+                if (this.$refs['amount_input_complex']) {
+                    this.$refs['amount_input_complex'].focus()
+                }
+            }
+        },
         // this.genericAPI inherited from ApiMixin
         addItem: function () {
             if (this.ui.entry_mode_simple) {
@@ -1106,6 +1127,7 @@ export default {
             } else {
                 this.addEntry()
             }
+            this.setFocus()
         },
         addEntry: function (x) {
             let api = new ApiApiFactory()
@@ -1113,7 +1135,7 @@ export default {
                 .then((results) => {
                     if (results?.data) {
                         this.items.push(results.data)
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                     } else {
                         console.log("no data returned")
                     }
@@ -1121,7 +1143,7 @@ export default {
                     this.clear += 1
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
                 })
         },
         deleteSupermarket: function (s) {
@@ -1129,10 +1151,10 @@ export default {
             api.destroySupermarket(s.id)
                 .then(() => {
                     this.getSupermarkets()
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
         },
         deleteCategory: function (c) {
@@ -1144,10 +1166,10 @@ export default {
                     this.getSupermarkets()
                     this.getShoppingCategories()
                     this.new_supermarket.value.category_to_supermarket = this.new_supermarket.value.category_to_supermarket.filter((x) => x.category.id != c_id)
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
         },
         resetFilters: function () {
@@ -1176,7 +1198,7 @@ export default {
                 promises.push(this.saveThis({id: entry, delay_until: delay_date}, false))
             })
             Promise.all(promises).then(() => {
-                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                 this.items = this.items.filter((x) => !entries.includes(x.id))
                 this.delay = this.defaultDelay
             })
@@ -1186,10 +1208,10 @@ export default {
             api.destroyShoppingListRecipe(recipe)
                 .then((x) => {
                     this.items = this.items.filter((x) => x.list_recipe !== recipe)
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
         },
         deleteThis: function (item) {
@@ -1205,14 +1227,14 @@ export default {
             entries.forEach((x) => {
                 promises.push(
                     api.destroyShoppingListEntry(x).catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                     })
                 )
             })
 
             Promise.all(promises).then((result) => {
                 this.items = this.items.filter((x) => !entries.includes(x.id))
-                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
             })
         },
         editSupermarket(s) {
@@ -1261,7 +1283,7 @@ export default {
                 })
                 .catch((err) => {
                     if (!autosync) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                     }
                 })
         },
@@ -1347,10 +1369,10 @@ export default {
             let api = ApiApiFactory()
             api.partialUpdateUserPreference(this.settings.user, this.settings)
                 .then((result) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
         },
         saveThis: function (thisItem, toast = true) {
@@ -1361,22 +1383,22 @@ export default {
                     .createShoppingListEntry(thisItem)
                     .then((result) => {
                         if (toast) {
-                            StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                         }
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
                     })
             } else {
                 return api
                     .partialUpdateShoppingListEntry(thisItem.id, thisItem)
                     .then((result) => {
                         if (toast) {
-                            StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                         }
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                     })
             }
         },
@@ -1406,7 +1428,7 @@ export default {
                 })
                 .catch((err) => {
                     this.auto_sync_blocked = false
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
         },
         updateFood: function (food, field) {
@@ -1419,13 +1441,13 @@ export default {
             return api
                 .partialUpdateFood(food.id, food)
                 .then((result) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     if (food?.numchild > 0) {
                         this.getShoppingList() // if food has children, just get the whole list.  probably could be more efficient
                     }
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
         },
         updateServings(e, plan) {
@@ -1439,26 +1461,26 @@ export default {
             let api = new ApiApiFactory()
             api.createSupermarketCategory({name: this.new_category.value})
                 .then((result) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                     this.shopping_categories.push(result.data)
                     this.new_category.value = undefined
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                 })
         },
         addSupermarket: function () {
             let api = new ApiApiFactory()
             api.createSupermarket({name: this.new_supermarket.value})
                 .then((result) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                     this.supermarkets.push(result.data)
                     this.new_supermarket.value = undefined
                 })
                 .catch((err) => {
                     console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                 })
         },
         saveSupermarketCategoryOrder(e) {
@@ -1484,11 +1506,11 @@ export default {
                 apiClient
                     .destroySupermarketCategoryRelation(e.removed.element.id)
                     .then((result) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
                         this.supermarkets = temp_supermarkets
                     })
             }
@@ -1511,11 +1533,11 @@ export default {
                     .then((updated_supermarket) => {
                         let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
                         Vue.set(this.supermarkets, idx, updated_supermarket)
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
                         this.supermarkets = temp_supermarkets
                     })
             }
@@ -1525,11 +1547,11 @@ export default {
                     .then((updated_supermarket) => {
                         let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
                         Vue.set(this.supermarkets, idx, updated_supermarket)
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
                         console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
                         this.supermarkets = temp_supermarkets
                     })
             }
@@ -1646,7 +1668,13 @@ export default {
     padding-left: 5px;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 991.9px) {
+    #shoppinglist {
+        max-width: none;
+    }
+}
+
+@media (min-width: 992px) {
     #shoppinglist {
         overflow-y: auto;
         overflow-x: auto;

@@ -20,7 +20,7 @@
                         aria-expanded="false"
                         type="button"
                         :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 dropdown-toggle-no-caret">
+                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret">
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                 </div>
@@ -53,7 +53,7 @@
                                   class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
                             <div class="text-nowrap">
                                 <i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
-                                <span class="d-none d-md-inline-block">{{ $t("Details") }}</span>
+                                <span class="d-none d-md-inline-block"><span class="ml-2">{{ $t("Details") }}</span></span>
                             </div>
                         </b-button>
                     </b-col>
@@ -112,7 +112,7 @@
                                 aria-expanded="false"
                                 type="button"
                                 :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret"
                             >
                                 <i class="fas fa-ellipsis-v fa-lg"></i>
                             </button>
@@ -452,5 +452,17 @@ export default {
 
 .invis-border {
     border: 1px solid transparent;
+}
+
+@media (min-width: 992px) {
+   .fa-ellipsis-v {
+       font-size: 20px;
+   }
+}
+
+@media (min-width: 576px) {
+   .fa-ellipsis-v {
+       font-size: 16px;
+   }
 }
 </style>

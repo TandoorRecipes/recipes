@@ -3,12 +3,6 @@
         <div>
             <div class="row">
                 <div class="col col-md-12">
-                    <h2>{{ $t('Import') }}</h2>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col col-md-12">
                     <b-tabs content-class="mt-3" v-model="tab_index">
                         <!-- URL Tab -->
                         <b-tab v-bind:title="$t('Website')" id="id_tab_url" active>
@@ -282,13 +276,13 @@
                                                 <b-badge variant="success" class="ml-1" v-b-tooltip:top
                                                          :title="$t('Import_Supported')"><i
                                                     class="fas fa-file-import fa-fw" v-if="i.import"></i></b-badge>
-                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                <b-badge variant="warning" class="ml-1 text-muted" v-b-tooltip:top
                                                          :title="$t('Import_Not_Yet_Supported')"><i
                                                     class="fas fa-file-import fa-fw" v-if="!i.import"></i></b-badge>
                                                 <b-badge variant="success" class="ml-1" v-b-tooltip:top
                                                          :title="$t('Export_Supported')"><i
                                                     class="fas fa-file-export fa-fw" v-if="i.export"></i></b-badge>
-                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                <b-badge variant="warning" class="ml-1 text-muted" v-b-tooltip:top
                                                          :title="$t('Export_Not_Yet_Supported')"><i
                                                     class="fas fa-file-export fa-fw" v-if="!i.export"></i></b-badge>
                                             </b-list-group-item>
@@ -311,13 +305,13 @@
                                                 <b-badge variant="success" class="ml-1" v-b-tooltip:top
                                                          :title="$t('Import_Supported')"><i
                                                     class="fas fa-file-import fa-fw" v-if="i.import"></i></b-badge>
-                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                <b-badge variant="warning" class="ml-1 text-muted" v-b-tooltip:top
                                                          :title="$t('Import_Not_Yet_Supported')"><i
                                                     class="fas fa-file-import fa-fw" v-if="!i.import"></i></b-badge>
                                                 <b-badge variant="success" class="ml-1" v-b-tooltip:top
                                                          :title="$t('Export_Supported')"><i
                                                     class="fas fa-file-export fa-fw" v-if="i.export"></i></b-badge>
-                                                <b-badge variant="warning" class="ml-1" v-b-tooltip:top
+                                                <b-badge variant="warning" class="ml-1 text-muted" v-b-tooltip:top
                                                          :title="$t('Export_Not_Yet_Supported')"><i
                                                     class="fas fa-file-export fa-fw" v-if="!i.export"></i></b-badge>
                                             </b-list-group-item>
@@ -361,7 +355,7 @@
                                             :placeholder="$t('paste_json')" style="font-size: 12px">
                                 </b-textarea>
                             </div>
-                            <b-button @click="loadRecipe('',false, undefined)" variant="primary"><i
+                            <b-button class="mt-2" @click="loadRecipe('',false, undefined)" variant="primary"><i
                                 class="fas fa-code"></i>
                                 {{ $t('Import') }}
                             </b-button>
@@ -369,16 +363,23 @@
                         </b-tab>
                         <!-- Bookmarklet Tab -->
                         <b-tab v-bind:title="$t('Bookmarklet')">
-                            <!-- TODO localize -->
-                            Some pages cannot be imported from their URL, the Bookmarklet can be used to import from
-                            some of them anyway.<br/>
-                            1. Drag the following button to your bookmarks bar <a class="btn btn-outline-info btn-sm"
-                                                                                  :href="makeBookmarklet()">Import into
-                            Tandoor</a> <br/>
+                            <b-container>
+                                <b-row class="mt-4">
+                                    <b-col cols="12">
+                                        <!-- TODO localize -->
+                                        Some pages cannot be imported from their URL, the Bookmarklet can be used to
+                                        import from
+                                        some of them anyway.<br/>
+                                        1. Drag the following button to your bookmarks bar: <br/> <a
+                                        class="btn btn-outline-info btn-sm"
+                                        :href="makeBookmarklet()">Import into
+                                        Tandoor</a> <br/>
 
-                            2. Open the page you want to import from <br/>
-                            3. Click on the bookmark to perform the import <br/>
-
+                                        2. Open the page you want to import from <br/>
+                                        3. Click on the bookmark to perform the import <br/>
+                                    </b-col>
+                                </b-row>
+                            </b-container>
                         </b-tab>
 
                     </b-tabs>
@@ -446,7 +447,7 @@ export default {
     },
     data() {
         return {
-            tab_index: 1,
+            tab_index: 0,
             collapse_visible: {
                 url: true,
                 options: false,

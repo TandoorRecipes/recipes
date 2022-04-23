@@ -400,5 +400,9 @@
     "Import_Supported": "Import supported",
     "Export_Supported": "Export supported",
     "Import_Not_Yet_Supported": "Import not yet supported",
-    "Export_Not_Yet_Supported": "Export not yet supported"
+    "Export_Not_Yet_Supported": "Export not yet supported",
+    "Import_Result_Info": "{imported} of {total} recipes were imported",
+    "Recipes_In_Import": "Recipes in your import file",
+    "Toggle": "Toggle",
+    "Import_Error": "An Error occurred during your import. Please expand the Details at the bottom of the page to view it."
 }
