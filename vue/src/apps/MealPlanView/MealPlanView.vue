@@ -93,7 +93,7 @@
                                     <b-card-body class="p-4" v-if="meal_type.editing">
                                         <div class="form-group">
                                             <label>{{ $t("Name") }}</label>
-                                            <input class="form-control" placeholder="Name" v-model="meal_type.name" />
+                                            <input class="form-control" :placeholder="$t('Name')" v-model="meal_type.name" />
                                         </div>
                                         <div class="form-group">
                                             <emoji-input :field="'icon'" :label="$t('Icon')" :value="meal_type.icon"></emoji-input>

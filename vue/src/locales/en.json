@@ -403,5 +403,9 @@
     "Import_Result_Info": "{imported} of {total} recipes were imported",
     "Recipes_In_Import": "Recipes in your import file",
     "Toggle": "Toggle",
-    "Import_Error": "An Error occurred during your import. Please expand the Details at the bottom of the page to view it."
+    "Import_Error": "An Error occurred during your import. Please expand the Details at the bottom of the page to view it.",
+    "Warning_Delete_Supermarket_Category": "Deleting a supermarket category will also delete all relations to foods. Are you sure?",
+    "New_Supermarket": "Create new supermarket",
+    "New_Supermarket_Category": "Create new supermarket category",
+    "Are_You_Sure": "Are you sure?"
 }
