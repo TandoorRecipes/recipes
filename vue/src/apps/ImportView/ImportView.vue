@@ -218,8 +218,7 @@
                                                                :href="resolveDjangoUrl('view_recipe',r.id)">{{
                                                                     r.name
                                                                 }}</a>
-                                                            <span class="float-right">Imported</span>
-                                                            <!-- TODO  localize -->
+                                                            <span class="float-right">{{ $t('Imported') }}</span>
                                                         </div>
                                                     </b-list-group-item>
 
@@ -230,8 +229,7 @@
                                                         <div class="clearfix">
                                                             <a class="float-left" target="_blank"
                                                                rel="noreferrer nofollow" :href="u">{{ u }}</a>
-                                                            <span class="float-right">Failed</span>
-                                                            <!-- TODO  localize -->
+                                                            <span class="float-right">{{ $t('Failure') }}</span>
                                                         </div>
                                                     </b-list-group-item>
                                                 </b-list-group>
